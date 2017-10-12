@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="Base.Theme.DeckBuilder" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!-- Palette -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+
+
+
+    </style>
+
+    <style name="Theme.DeckBuilder" parent="Base.Theme.DeckBuilder">
+
+    </style>
+
+</resources>

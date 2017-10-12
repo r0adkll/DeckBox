@@ -1,0 +1,37 @@
+ext {
+
+    // Project Variables
+    minSdkVersion = 21
+    targetSdkVersion = 26
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.2'
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
+
+    // Testing Dependencies
+    junit_version =          '4.12'
+    espresso_version =       '3.0.0'
+    mockito_version =        '1.10.19'
+    runner_version =         '1.0.1'
+    kluent_version =         '1.27'
+
+    // Dependencies
+    bottombar_version =      '2.3.1'
+    butterknife_version =    '8.8.1'
+    dagger_version =         '2.11'
+    ftkit_version =          '0.5.2-SNAPSHOT'
+    glide_version =          '4.0.0'
+    leakcanary_version =     '1.5.1'
+    paperparcel_version =    '2.0.2'
+    play_version =           '11.4.2'
+    poketcg_version =        '1.0.1'
+    rxjava_version =         '2.1.3'
+    rxandroid_version =      '2.0.1'
+    rxbinding_version =      '2.0.0'
+    rxpref_version =         '2.0.0-RC3'
+    rxrelay_version =        '2.0.0'
+    support_version =        '26.1.0'
+    stetho_version =         '1.5.0'
+    timber_version =         '4.5.1'
+
+}
