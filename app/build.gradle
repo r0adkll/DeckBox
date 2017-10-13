@@ -1,3 +1,9 @@
+import io.pokemontcg.Pokemon
+import io.pokemontcg.model.Card
+import io.pokemontcg.requests.CardQueryBuilder
+import kotlin.Unit
+import kotlin.jvm.functions.Function1
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -16,6 +22,7 @@ android {
 
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -77,6 +84,24 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:$timber_version"
     implementation "com.roughike:bottom-bar:$bottombar_version"
+}
+
+
+task pokePrint {
+    def poke = new Pokemon()
+    def cards = poke.card().where(new Function1<CardQueryBuilder, Unit>() {
+        @Override
+        Unit invoke(CardQueryBuilder cardQueryBuilder) {
+            cardQueryBuilder.pageSize = 1000
+            cardQueryBuilder.setCode = "sm1|sm2|sm3"
+            return null
+        }
+    }).all()
+
+    Collections.shuffle(cards)
+    for (Card card: cards) {
+        println "\"${card.imageUrl}\","
+    }
 }
 
 

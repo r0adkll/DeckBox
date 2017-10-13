@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Deck Builder</string>
     <string name="app_description">Create and edit Pokémon Trading Card Game decks to share and compare with others in the community.</string>
+    <string name="action_continue">or continue here</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_next">Next</string>
+    <string name="onboarding_title_search">Search</string>
+    <string name="onboarding_subtitle_search">Browse and search Pokémon cards from every series of the trading card game.</string>
+    <string name="onboarding_title_build">Build</string>
+    <string name="onboarding_title_share">Share</string>
+    <string name="onboarding_subtitle_build">Create and edit decks from scratch or start from a theme deck. Build until you find the right combination.</string>
+    <string name="onboarding_subtitle_share">Find and share your deck online where others can comment and provide feedback to help you build a better deck</string>
+    <string name="action_finish">Finish</string>
 </resources>

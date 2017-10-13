@@ -33,7 +33,7 @@
         android:paddingEnd="34dp"
         android:text="@string/app_description"
         android:textSize="16sp"
-        android:textColor="@color/white70"
+        android:textColor="@color/white"
         />
 
     <com.google.android.gms.common.SignInButton
@@ -43,6 +43,18 @@
         android:layout_marginTop="32dp"
         android:layout_gravity="center"
         app:buttonSize="wide"
+        />
+    
+    <TextView
+        android:id="@+id/action_continue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:padding="@dimen/padding_small"
+        android:text="@string/action_continue"
+        android:textColor="@color/white87"
+        android:background="?attr/selectableItemBackground"
         />
 
 </LinearLayout>
