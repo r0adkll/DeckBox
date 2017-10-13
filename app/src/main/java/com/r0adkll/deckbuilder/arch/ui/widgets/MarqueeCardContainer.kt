@@ -6,6 +6,7 @@ import android.support.v4.util.Pools
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.FrameLayout
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.util.Utils
 import com.r0adkll.deckbuilder.GlideApp
@@ -97,6 +98,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
         }
         GlideApp.with(this)
                 .load(imageUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .placeholder(R.drawable.pokemon_card_back)
                 .into(view)
     }
