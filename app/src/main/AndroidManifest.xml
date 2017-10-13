@@ -22,6 +22,7 @@
 
         <activity android:name=".arch.ui.features.setup.SetupActivity" />
         <activity android:name=".arch.ui.features.onboarding.OnboardingActivity"/>
+        <activity android:name=".arch.ui.features.decks.DecksActivity"/>
 
     </application>
 

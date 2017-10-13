@@ -11,4 +11,7 @@
     <string name="onboarding_subtitle_build">Create and edit decks from scratch or start from a theme deck. Build until you find the right combination.</string>
     <string name="onboarding_subtitle_share">Find and share your deck online where others can comment and provide feedback to help you build a better deck</string>
     <string name="action_finish">Finish</string>
+    <string name="tab_decks">Decks</string>
+    <string name="tab_community">Community</string>
+    <string name="tab_collection">Collection</string>
 </resources>

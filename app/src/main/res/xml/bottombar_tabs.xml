@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_decks"
+        icon="@drawable/ic_cards_variant"
+        title="@string/tab_decks"
+        />
+    <tab
+        id="@+id/tab_community"
+        icon="@drawable/ic_forum_black_24dp"
+        title="@string/tab_community"
+        />
+    <tab
+        id="@+id/tab_collection"
+        icon="@drawable/ic_cards"
+        title="@string/tab_collection"
+        />
+</tabs>

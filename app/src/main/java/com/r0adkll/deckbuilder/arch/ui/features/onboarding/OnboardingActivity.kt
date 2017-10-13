@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding_page.*
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
-import timber.log.Timber
 
 
 class OnboardingActivity : BaseActivity() {
