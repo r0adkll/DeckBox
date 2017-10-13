@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Deck Builder</string>
+    <string name="app_description">Create and edit Pokémon Trading Card Game decks to share and compare with others in the community.</string>
 </resources>

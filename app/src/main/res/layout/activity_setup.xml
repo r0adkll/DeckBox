@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary">
+
+    <com.r0adkll.deckbuilder.arch.ui.widgets.MarqueeCardContainer
+        android:id="@+id/marquee_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marquee_card_height">
+
+
+    </com.r0adkll.deckbuilder.arch.ui.widgets.MarqueeCardContainer>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textSize="@dimen/display_1"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-medium"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:paddingStart="34dp"
+        android:paddingEnd="34dp"
+        android:text="@string/app_description"
+        android:textSize="16sp"
+        android:textColor="@color/white70"
+        />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/action_signin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_gravity="center"
+        app:buttonSize="wide"
+        />
+
+</LinearLayout>

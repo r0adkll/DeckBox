@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="padding_tiny">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_large">32dp</dimen>
+    <dimen name="padding_giant">64dp</dimen>
+
+    <dimen name="margin_tiny">8dp</dimen>
+    <dimen name="margin_small">16dp</dimen>
+    <dimen name="margin_normal">24dp</dimen>
+    <dimen name="margin_large">32dp</dimen>
+
+    <dimen name="font_caption">12sp</dimen>
+    <dimen name="font_body">14sp</dimen>
+    <dimen name="font_title">20sp</dimen>
+    <dimen name="font_subheading">14sp</dimen>
+    <dimen name="font_headline">24sp</dimen>
+    <dimen name="font_display1">34sp</dimen>
+    <dimen name="font_display2">45sp</dimen>
+    <dimen name="font_display3">56sp</dimen>
+    <dimen name="font_display4">112sp</dimen>
+
+</resources>

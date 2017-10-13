@@ -47,6 +47,8 @@ dependencies {
     implementation "com.android.support:design:$support_version"
 
     implementation "com.google.firebase:firebase-firestore:$play_version"
+    implementation "com.google.firebase:firebase-auth:$play_version"
+    implementation "com.google.android.gms:play-services-auth:$play_version"
 
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
@@ -64,6 +66,7 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:$rxbinding_version"
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rxbinding_version"
     implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
+    implementation "com.f2prateek.rx.preferences2:rx-preferences:$rxpref_version"
 
     implementation ("com.52inc:52Kit-core:$ftkit_version") {
         exclude group: 'io.reactivex'
@@ -75,3 +78,6 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
     implementation "com.roughike:bottom-bar:$bottombar_version"
 }
+
+
+apply plugin: 'com.google.gms.google-services'
