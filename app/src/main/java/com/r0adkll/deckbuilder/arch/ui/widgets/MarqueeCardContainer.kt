@@ -18,7 +18,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class MarqueeCardContainer @JvmOverloads constructor(
@@ -88,7 +90,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
         lp.gravity = Gravity.CENTER_VERTICAL
         addView(view, lp)
 
-        val imageUrl = CARDS[imageIndex]
+        val imageUrl = SHUFFLED_CARDS[imageIndex]
         ++imageIndex
         if (imageIndex >= CARDS.size) {
             imageIndex = 0
@@ -104,6 +106,11 @@ class MarqueeCardContainer @JvmOverloads constructor(
         const val CARD_WIDTH = 120f
         const val CARD_SPACING = 16f
 
+        val SHUFFLED_CARDS by lazy {
+            val cards = mutableListOf(*CARDS)
+            Collections.shuffle(cards)
+            cards
+        }
         val CARDS: Array<String> = arrayOf(
                 "https://images.pokemontcg.io/base1/4_hires.png",
                 "https://images.pokemontcg.io/base6/18_hires.png",
