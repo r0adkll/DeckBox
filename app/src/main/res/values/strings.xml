@@ -14,4 +14,10 @@
     <string name="tab_decks">Decks</string>
     <string name="tab_community">Community</string>
     <string name="tab_collection">Collection</string>
+    <string name="empty_decks_message">Looks like you don’t have any decks yet. Click below to add one and get started.</string>
+    <string name="activity_deck_builder">New deck</string>
+    <string name="tab_pokemon">Pokémon</string>
+    <string name="tab_trainer">Trainer</string>
+    <string name="tab_energy">Energy</string>
+    <string name="empty_deckbuilder_message">Looks like you haven\'t added any cards yet. Click the add icon to find cards to add.</string>
 </resources>

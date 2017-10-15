@@ -1,3 +1,5 @@
 <resources>
+    <style name="Theme.DeckBuilder.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.DeckBuilder.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

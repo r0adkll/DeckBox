@@ -3,9 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksActivity
+import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
-import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -17,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (firebase.currentUser != null) {
-            startActivity(DecksActivity.createIntent(this))
+            startActivity(HomeActivity.createIntent(this))
         }
         else {
             startActivity(OnboardingActivity.createIntent(this))

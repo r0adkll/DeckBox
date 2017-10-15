@@ -1,6 +1,7 @@
-package com.r0adkll.deckbuilder.arch.domain
+package com.r0adkll.deckbuilder.arch.domain.features.decks.model
 
 
+import com.r0adkll.deckbuilder.arch.domain.PokemonCard
 import io.pokemontcg.model.SuperType
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
@@ -8,9 +9,10 @@ import paperparcel.PaperParcelable
 
 @PaperParcel
 data class Deck(
+        val id: Long,
         val name: String,
         val description: String,
-        val cards: List<Card>
+        val cards: List<PokemonCard>
 ) : PaperParcelable {
 
     val standardLegal: Boolean get() = cards.none { !it.set.standardLegal }

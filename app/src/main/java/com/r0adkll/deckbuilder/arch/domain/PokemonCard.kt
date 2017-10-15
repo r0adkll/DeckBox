@@ -9,7 +9,7 @@ import paperparcel.PaperParcelable
 
 
 @PaperParcel
-data class Card(
+data class PokemonCard(
         val id: String,
         val name: String,
         val nationalPokedexNumber: Int?,
@@ -32,6 +32,6 @@ data class Card(
         val resistances: List<Effect>?
 ) : PaperParcelable {
     companion object {
-        @JvmField val CREATOR = PaperParcelCard.CREATOR
+        @JvmField val CREATOR = PaperParcelPokemonCard.CREATOR
     }
 }

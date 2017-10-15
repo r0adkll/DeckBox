@@ -13,7 +13,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksActivity
+import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
@@ -83,7 +83,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             firebaseAuth.signInWithCredential(credential)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
-                            startActivity(DecksActivity.createIntent(this@SetupActivity))
+                            startActivity(HomeActivity.createIntent(this@SetupActivity))
                             finish()
                         }
                         else {

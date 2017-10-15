@@ -35,6 +35,9 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.amshove.kluent:kluent:$kluent_version"
@@ -75,10 +78,10 @@ dependencies {
     implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
     implementation "com.f2prateek.rx.preferences2:rx-preferences:$rxpref_version"
 
-    implementation ("com.52inc:52Kit-core:$ftkit_version") {
+    implementation("com.52inc:52Kit-core:$ftkit_version") {
         exclude group: 'io.reactivex'
     }
-    implementation ("com.52inc:52Kit-kotlin:$ftkit_version") {
+    implementation("com.52inc:52Kit-kotlin:$ftkit_version") {
         exclude group: 'io.reactivex'
     }
 
@@ -99,7 +102,7 @@ task pokePrint {
     }).all()
 
     Collections.shuffle(cards)
-    for (Card card: cards) {
+    for (Card card : cards) {
         println "\"${card.imageUrl}\","
     }
 }
