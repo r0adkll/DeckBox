@@ -1,0 +1,82 @@
+package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
+
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChain
+import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
+import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldEqualTo
+import org.junit.Test
+
+
+class EvolutionChainTest {
+
+    @Test
+    fun testAddBasicPokemon() {
+        val pokemon = createPokemonCard().copy(id = "sm1-5", name = "Eevee")
+        val chain = EvolutionChain.create(pokemon)
+
+        chain.nodes.size.shouldEqualTo(1)
+        chain.contains(pokemon).shouldBeTrue()
+        chain.nodes[0].name.shouldEqualTo("Eevee")
+        chain.nodes[0].cards.size.shouldEqualTo(1)
+        chain.nodes[0].cards[0].shouldEqual(pokemon)
+    }
+
+
+    @Test
+    fun testAddEvolutionPokemon() {
+        val pokemon = createPokemonCard().copy(id = "sm1-5", name = "Eevee")
+        val pokemonStage1 = createPokemonCard().copy(id = "sm1-6", name = "Espeon-GX", evolvesFrom = "Eevee")
+        val chain = EvolutionChain.create(pokemon)
+
+        chain.addCard(pokemonStage1)
+
+        chain.nodes.size.shouldEqualTo(2)
+        chain.contains(pokemon).shouldBeTrue()
+        chain.contains(pokemonStage1).shouldBeTrue()
+        chain.nodes[0].name.shouldEqualTo("Eevee")
+        chain.nodes[1].name.shouldEqualTo("Espeon-GX")
+    }
+
+
+    @Test
+    fun testAddBasicOutOfOrder() {
+        val pokemon = createPokemonCard().copy(id = "sm1-5", name = "Eevee")
+        val pokemonStage1 = createPokemonCard().copy(id = "sm1-6", name = "Espeon-GX", evolvesFrom = "Eevee")
+        val chain = EvolutionChain.create(pokemonStage1)
+
+        chain.addCard(pokemon)
+
+        chain.nodes.size.shouldEqualTo(2)
+        chain.contains(pokemon).shouldBeTrue()
+        chain.contains(pokemonStage1).shouldBeTrue()
+        chain.nodes[0].name.shouldEqualTo("Eevee")
+        chain.nodes[1].name.shouldEqualTo("Espeon-GX")
+        chain.nodes[1].evolvesFrom?.shouldEqualTo("Eevee")
+    }
+
+
+    @Test
+    fun testAddMultipleBasic() {
+        val pokemon1 = createPokemonCard().copy(id = "sm1-5", name = "Eevee")
+        val pokemon2 = createPokemonCard().copy(id = "sm1-6", name = "Eevee")
+        val pokemon3 = createPokemonCard().copy(id = "sm1-7", name = "Eevee")
+        val pokemonStage1 = createPokemonCard().copy(id = "sm1-9", name = "Espeon-GX", evolvesFrom = "Eevee")
+        val chain = EvolutionChain.create(pokemon1)
+
+        chain.addCard(pokemonStage1)
+        chain.addCard(pokemon2)
+        chain.addCard(pokemon3)
+
+        chain.nodes.size.shouldEqualTo(2)
+        chain.contains(pokemon1)
+        chain.contains(pokemon2)
+        chain.contains(pokemon3)
+        chain.contains(pokemonStage1)
+        chain.nodes[0].cards.size.shouldEqualTo(3)
+        chain.nodes[0].name.shouldEqualTo("Eevee")
+        chain.nodes[1].cards.size.shouldEqualTo(1)
+        chain.nodes[1].name.shouldEqualTo("Espeon-GX")
+        chain.nodes[1].evolvesFrom?.shouldEqualTo("Eevee")
+    }
+}
