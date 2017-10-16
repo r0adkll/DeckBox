@@ -2,9 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChain
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
-import org.amshove.kluent.shouldBeTrue
-import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldEqualTo
+import org.amshove.kluent.*
 import org.junit.Test
 
 
@@ -17,7 +15,7 @@ class EvolutionChainTest {
 
         chain.nodes.size.shouldEqualTo(1)
         chain.contains(pokemon).shouldBeTrue()
-        chain.nodes[0].name.shouldEqualTo("Eevee")
+        chain.nodes[0].name?.shouldEqualTo("Eevee")
         chain.nodes[0].cards.size.shouldEqualTo(1)
         chain.nodes[0].cards[0].shouldEqual(pokemon)
     }
@@ -34,8 +32,8 @@ class EvolutionChainTest {
         chain.nodes.size.shouldEqualTo(2)
         chain.contains(pokemon).shouldBeTrue()
         chain.contains(pokemonStage1).shouldBeTrue()
-        chain.nodes[0].name.shouldEqualTo("Eevee")
-        chain.nodes[1].name.shouldEqualTo("Espeon-GX")
+        chain.nodes[0].name?.shouldEqualTo("Eevee")
+        chain.nodes[1].name.shouldBeNull()
     }
 
 
@@ -50,8 +48,8 @@ class EvolutionChainTest {
         chain.nodes.size.shouldEqualTo(2)
         chain.contains(pokemon).shouldBeTrue()
         chain.contains(pokemonStage1).shouldBeTrue()
-        chain.nodes[0].name.shouldEqualTo("Eevee")
-        chain.nodes[1].name.shouldEqualTo("Espeon-GX")
+        chain.nodes[0].name?.shouldEqualTo("Eevee")
+        chain.nodes[1].name.shouldBeNull()
         chain.nodes[1].evolvesFrom?.shouldEqualTo("Eevee")
     }
 
@@ -74,9 +72,9 @@ class EvolutionChainTest {
         chain.contains(pokemon3)
         chain.contains(pokemonStage1)
         chain.nodes[0].cards.size.shouldEqualTo(3)
-        chain.nodes[0].name.shouldEqualTo("Eevee")
+        chain.nodes[0].name?.shouldEqualTo("Eevee")
         chain.nodes[1].cards.size.shouldEqualTo(1)
-        chain.nodes[1].name.shouldEqualTo("Espeon-GX")
+        chain.nodes[1].name.shouldBeNull()
         chain.nodes[1].evolvesFrom?.shouldEqualTo("Eevee")
     }
 
@@ -87,12 +85,14 @@ class EvolutionChainTest {
         val pokemon2 = createPokemonCard().copy(id = "sm1-7", name = "Eevee")
         val pokemonStage1 = createPokemonCard().copy(id = "sm1-9", name = "Espeon-GX", evolvesFrom = "Eevee")
         val pokemonStage12 = createPokemonCard().copy(id = "sm1-10", name = "Umbreon-GX", evolvesFrom = "Eevee")
+        val pokemonDiff = createPokemonCard().copy(id = "sm2-10", name = "Tapu Lele")
 
         val chain = EvolutionChain.create(pokemon1)
         chain.addCard(pokemonStage1)
 
         chain.isChainFor(pokemon2).shouldBeTrue()
         chain.isChainFor(pokemonStage12).shouldBeTrue()
+        chain.isChainFor(pokemonDiff).shouldBeFalse()
     }
 
 
@@ -102,7 +102,7 @@ class EvolutionChainTest {
                 createPokemonCard().copy(id = "sm1-6", name = "Eevee"),
                 createPokemonCard().copy(id = "sm1-10", name = "Umbreon-GX", evolvesFrom = "Eevee"),
                 createPokemonCard().copy(id = "sm1-11", name = "Espeon-GX", evolvesFrom = "Eevee"),
-                createPokemonCard().copy(id = "sm2-20", name = "Tapu LeLe")
+                createPokemonCard().copy(id = "sm2-20", name = "Tapu Lele")
         )
 
         val chains = EvolutionChain.build(pokemons)

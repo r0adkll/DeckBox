@@ -13,12 +13,14 @@ class EvolutionChain {
 
 
     fun contains(card: PokemonCard): Boolean {
-        return nodes.find { it.name == card.name }?.cards?.find { it.id == card.id } != null
+        return nodes.find { it.cards.contains(card) } != null
     }
 
 
     fun isChainFor(card: PokemonCard): Boolean {
-        return nodes.find { it.name == card.name || it.evolvesFrom == card.name || it.name == card.evolvesFrom } != null
+        return nodes.find { it.name == card.name
+                || it.evolvesFrom == card.name
+                || (it.name != null && card.evolvesFrom != null && it.name == card.evolvesFrom) } != null
     }
 
 
@@ -41,14 +43,24 @@ class EvolutionChain {
                 }
             }
             else {
-                // Attempt to find node for previous evolution stage
-                val evolvesFromNode = nodes.find { it.name == card.evolvesFrom }
-                if (evolvesFromNode != null) {
+                // Attempt to find node for that evolution stage
+                val evolvesNode = nodes.find { it.evolvesFrom == card.evolvesFrom }
+                if (evolvesNode != null) {
                     // Found previous evolution form, create linking node
-                    val newNode = Node(card.name, card.evolvesFrom, arrayListOf(card))
-                    nodes.add(newNode)
-                    rectifyNodes()
+                    evolvesNode.cards.add(card)
                     return true
+                }
+
+                // Attempt to find node that this card evolves from
+                else {
+                    val evolvesFromNode = nodes.find { it.name == card.evolvesFrom }
+                    if (evolvesFromNode != null) {
+                        // Found previous evolution form, create linking node
+                        val newNode = Node(null, card.evolvesFrom, arrayListOf(card))
+                        nodes.add(newNode)
+                        rectifyNodes()
+                        return true
+                    }
                 }
             }
         }
@@ -57,7 +69,7 @@ class EvolutionChain {
 
 
     fun removeCard(card: PokemonCard): Boolean {
-        val node = nodes.find { it.name == card.name }
+        val node = nodes.find { it.cards.contains(card) }
         if (node != null) {
             if (node.cards.remove(card) && node.cards.isEmpty()) {
                 nodes.remove(node)
@@ -75,7 +87,7 @@ class EvolutionChain {
 
 
     class Node(
-            val name: String,
+            val name: String?,
             val evolvesFrom: String?,
             val cards: ArrayList<PokemonCard>
     )
@@ -85,7 +97,9 @@ class EvolutionChain {
 
         fun create(card: PokemonCard): EvolutionChain {
             val chain = EvolutionChain()
-            chain.nodes.add(Node(card.name, card.evolvesFrom, arrayListOf(card)))
+            // We don't want to set the name of a node unless it is the base to account for split evolutions i.e. eevee -> espeon, umbreon, etc.
+            val name = if (card.evolvesFrom == null) card.name else null
+            chain.nodes.add(Node(name, card.evolvesFrom, arrayListOf(card)))
             return chain
         }
 
