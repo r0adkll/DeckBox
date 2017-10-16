@@ -18,6 +18,7 @@ ext {
     // Dependencies
     bottombar_version =      '2.3.1'
     butterknife_version =    '8.8.1'
+    canvas_version =         '1.0.2'
     dagger_version =         '2.11'
     ftkit_version =          '0.5.2-SNAPSHOT'
     glide_version =          '4.0.0'

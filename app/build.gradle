@@ -84,28 +84,29 @@ dependencies {
     implementation("com.52inc:52Kit-kotlin:$ftkit_version") {
         exclude group: 'io.reactivex'
     }
+    implementation "com.52inc:canvasscript:$canvas_version"
 
     implementation "com.jakewharton.timber:timber:$timber_version"
     implementation "com.roughike:bottom-bar:$bottombar_version"
 }
 
 
-task pokePrint {
-    def poke = new Pokemon()
-    def cards = poke.card().where(new Function1<CardQueryBuilder, Unit>() {
-        @Override
-        Unit invoke(CardQueryBuilder cardQueryBuilder) {
-            cardQueryBuilder.pageSize = 1000
-            cardQueryBuilder.setCode = "sm1|sm2|sm3"
-            return null
-        }
-    }).all()
-
-    Collections.shuffle(cards)
-    for (Card card : cards) {
-        println "\"${card.imageUrl}\","
-    }
-}
+//task pokePrint {
+//    def poke = new Pokemon()
+//    def cards = poke.card().where(new Function1<CardQueryBuilder, Unit>() {
+//        @Override
+//        Unit invoke(CardQueryBuilder cardQueryBuilder) {
+//            cardQueryBuilder.pageSize = 1000
+//            cardQueryBuilder.setCode = "sm1|sm2|sm3"
+//            return null
+//        }
+//    }).all()
+//
+//    Collections.shuffle(cards)
+//    for (Card card : cards) {
+//        println "\"${card.imageUrl}\","
+//    }
+//}
 
 
 apply plugin: 'com.google.gms.google-services'
