@@ -1,11 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 import android.support.v4.view.PagerAdapter
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ftinc.kit.widget.EmptyView
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.PokemonCard
 import io.pokemontcg.model.SuperType

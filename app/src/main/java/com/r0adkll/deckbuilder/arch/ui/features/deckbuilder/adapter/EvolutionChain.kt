@@ -17,6 +17,11 @@ class EvolutionChain {
     }
 
 
+    fun isChainFor(card: PokemonCard): Boolean {
+        return nodes.find { it.name == card.name || it.evolvesFrom == card.name || it.name == card.evolvesFrom } != null
+    }
+
+
     fun addCard(card: PokemonCard): Boolean {
         val node = nodes.find { it.name == card.name }
         if (node != null) {
@@ -82,6 +87,25 @@ class EvolutionChain {
             val chain = EvolutionChain()
             chain.nodes.add(Node(card.name, card.evolvesFrom, arrayListOf(card)))
             return chain
+        }
+
+
+        fun build(cards: List<PokemonCard>): List<EvolutionChain> {
+            val chains = ArrayList<EvolutionChain>()
+
+            cards.forEach { card ->
+                val chain = chains.find { it.isChainFor(card) }
+                if (chain == null) {
+                    val newChain = EvolutionChain.create(card)
+                    chains += newChain
+                }
+                else {
+                    chain.addCard(card)
+                }
+
+            }
+
+            return chains
         }
     }
 }

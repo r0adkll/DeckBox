@@ -79,4 +79,36 @@ class EvolutionChainTest {
         chain.nodes[1].name.shouldEqualTo("Espeon-GX")
         chain.nodes[1].evolvesFrom?.shouldEqualTo("Eevee")
     }
+
+
+    @Test
+    fun testIsChainForCard() {
+        val pokemon1 = createPokemonCard().copy(id = "sm1-6", name = "Eevee")
+        val pokemon2 = createPokemonCard().copy(id = "sm1-7", name = "Eevee")
+        val pokemonStage1 = createPokemonCard().copy(id = "sm1-9", name = "Espeon-GX", evolvesFrom = "Eevee")
+        val pokemonStage12 = createPokemonCard().copy(id = "sm1-10", name = "Umbreon-GX", evolvesFrom = "Eevee")
+
+        val chain = EvolutionChain.create(pokemon1)
+        chain.addCard(pokemonStage1)
+
+        chain.isChainFor(pokemon2).shouldBeTrue()
+        chain.isChainFor(pokemonStage12).shouldBeTrue()
+    }
+
+
+    @Test
+    fun testBuildChainList() {
+        val pokemons = listOf(
+                createPokemonCard().copy(id = "sm1-6", name = "Eevee"),
+                createPokemonCard().copy(id = "sm1-10", name = "Umbreon-GX", evolvesFrom = "Eevee"),
+                createPokemonCard().copy(id = "sm1-11", name = "Espeon-GX", evolvesFrom = "Eevee"),
+                createPokemonCard().copy(id = "sm2-20", name = "Tapu LeLe")
+        )
+
+        val chains = EvolutionChain.build(pokemons)
+
+        chains.size.shouldEqualTo(2)
+        chains[0].nodes.size.shouldEqualTo(2)
+        chains[1].nodes.size.shouldEqualTo(1)
+    }
 }
