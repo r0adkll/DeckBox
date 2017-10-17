@@ -44,6 +44,6 @@ class SearchPresenter @Inject constructor(
 
     companion object {
 
-        private val handleUnknownError: (Throwable) -> Change = { t -> Change.Error(t.localizedMessage) }
+        private val handleUnknownError: (Throwable) -> Change = { t -> Change.Error(t.localizedMessage ?: t.message ?: "Unknown error has occured") }
     }
 }

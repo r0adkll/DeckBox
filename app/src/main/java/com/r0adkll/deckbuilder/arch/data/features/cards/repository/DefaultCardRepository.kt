@@ -6,6 +6,7 @@ import com.r0adkll.deckbuilder.arch.data.mappings.CardMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.util.Schedulers
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
 import io.pokemontcg.model.SuperType
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 class DefaultCardRepository @Inject constructor(
         val api: Pokemon,
-        val dataSource: CardDataSource
+        val dataSource: CardDataSource,
+        val schedulers: Schedulers
 ) : CardRepository {
 
     override fun getExpansions(): Observable<List<Expansion>> {
@@ -38,5 +40,6 @@ class DefaultCardRepository @Inject constructor(
                     name = query
                 }
                 .observeAll()
+                .subscribeOn(schedulers.network)
     }
 }

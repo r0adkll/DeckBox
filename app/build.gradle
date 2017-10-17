@@ -70,6 +70,9 @@ dependencies {
     implementation "nz.bradcampbell:paperparcel-kotlin:$paperparcel_version"
     kapt "nz.bradcampbell:paperparcel-compiler:$paperparcel_version"
 
+    implementation "com.evernote:android-state:$state_version"
+    kapt "com.evernote:android-state-processor:$state_version"
+
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:$rxbinding_version"

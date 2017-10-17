@@ -54,20 +54,16 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         searchback.setOnClickListener {
             supportFinishAfterTransition()
         }
-    }
 
-
-    override fun onStart() {
-        super.onStart()
         renderer.start()
         presenter.start()
     }
 
 
-    override fun onStop() {
+    override fun onDestroy() {
         presenter.stop()
         renderer.stop()
-        super.onStop()
+        super.onDestroy()
     }
 
 

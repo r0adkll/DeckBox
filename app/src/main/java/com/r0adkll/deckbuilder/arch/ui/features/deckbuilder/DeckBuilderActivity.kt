@@ -19,10 +19,14 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
 class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intentions, DeckBuilderUi.Actions{
+
+    @com.evernote.android.state.State
+    override var state: State = State.DEFAULT
 
     @Inject lateinit var renderer: DeckBuilderRenderer
     @Inject lateinit var presenter: DeckBuilderPresenter
@@ -31,8 +35,8 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     private val addPokemon: Relay<PokemonCard> = PublishRelay.create()
 
     private lateinit var adapter: DeckBuilderPagerAdapter
+    private var pickedCard: PokemonCard? = null
 
-    override var state: State = State.DEFAULT
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +80,8 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val result = SearchActivity.parseResult(requestCode, resultCode, data)
-        result?.let { addPokemon.accept(it) }
+        Timber.i("Search result: $result")
+        result?.let { pickedCard = it }
     }
 
 
@@ -107,6 +112,11 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
 
     override fun addCard(): Observable<PokemonCard> {
+        if (pickedCard != null) {
+            val initialValue = pickedCard
+            pickedCard = null
+            return addPokemon.mergeWith(Observable.just(initialValue))
+        }
         return addPokemon
     }
 
