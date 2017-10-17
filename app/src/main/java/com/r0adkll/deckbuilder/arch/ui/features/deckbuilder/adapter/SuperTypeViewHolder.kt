@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SimpleItemAnimator
 import android.view.View
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
@@ -27,6 +28,7 @@ class SuperTypeViewHolder(
         // Setup recycler
         recycler.layoutManager = LinearLayoutManager(itemView.context)
         recycler.adapter = adapter
+        (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
     }
 
     fun bind(cards: List<PokemonCard>) {

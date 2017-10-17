@@ -37,6 +37,13 @@ class PokemonCardView @JvmOverloads constructor(
     private val radius = dpToPx(8f)
     private val punchRadius = dpToPx(10f)
 
+    var card: PokemonCard? = null
+        set(value) {
+            field = value
+            loadImage()
+        }
+
+
     var evolution = Evolution.NONE
         set(value) {
             field = value
@@ -150,9 +157,9 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
-    fun setCard(card: PokemonCard) {
+    private fun loadImage() {
         GlideApp.with(this)
-                .load(card.imageUrl)
+                .load(card?.imageUrl)
                 .placeholder(R.drawable.pokemon_card_back)
                 .transition(withCrossFade())
                 .into(this)

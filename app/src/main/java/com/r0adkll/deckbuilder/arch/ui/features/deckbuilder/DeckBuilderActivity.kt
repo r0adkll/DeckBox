@@ -9,26 +9,30 @@ import android.support.v4.view.ViewPager
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.CardSet
 import com.r0adkll.deckbuilder.arch.domain.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
+import javax.inject.Inject
 
 
 class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intentions, DeckBuilderUi.Actions{
 
+    @Inject lateinit var renderer: DeckBuilderRenderer
+    @Inject lateinit var presenter: DeckBuilderPresenter
+
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
+    private val addPokemon: Relay<PokemonCard> = PublishRelay.create()
 
     private lateinit var adapter: DeckBuilderPagerAdapter
 
     override var state: State = State.DEFAULT
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +65,23 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
             }
         })
 
+        fab.setOnClickListener {
+
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        renderer.start()
+        presenter.start()
+    }
+
+
+    override fun onStop() {
+        presenter.stop()
+        renderer.stop()
+        super.onStop()
     }
 
 
@@ -72,12 +93,12 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
     override fun render(state: DeckBuilderUi.State) {
         this.state = state
-
+        renderer.render(state)
     }
 
 
     override fun addCard(): Observable<PokemonCard> {
-        return Observable.empty()
+        return addPokemon
     }
 
 

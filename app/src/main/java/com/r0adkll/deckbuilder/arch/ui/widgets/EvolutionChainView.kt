@@ -79,13 +79,6 @@ class EvolutionChainView @JvmOverloads constructor(
         }
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        // Render evolution links
-
-
-
-    }
 
     fun setOnPokemonCardClickListener(listener: (PokemonCard) -> Unit) {
         pokemonCardClickListener = object : OnPokemonCardClickListener {
@@ -103,13 +96,26 @@ class EvolutionChainView @JvmOverloads constructor(
             // Iterate through each node and generate a card for each card in the node
             chain.nodes.forEachIndexed { nodeIndex, node ->
                 node.cards.forEachIndexed { cardIndex, card ->
-                    val view = PokemonCardView(context)
-                    view.setCard(card)
+                    // Attempt to find existing view for index
+                    var view = getChildAt(nodeIndex + cardIndex)?.let { it as PokemonCardView }
+                    if (view == null) {
+                        view = PokemonCardView(context)
+                        addView(view)
+                    }
+
+                    // Only re-apply the card if it is different
+                    if (view.card != card) {
+                        view.card = card
+                    }
+
+                    // Set the evolution notch stage for the card
                     view.evolution = getEvolutionState(chain, nodeIndex, cardIndex)
 
+                    // Set click listener
                     view.setOnClickListener {
                         pokemonCardClickListener?.onPokemonCardClicked(card)
                     }
+
 
                     val lp = LayoutParams(cardWidth, LayoutParams.WRAP_CONTENT)
                     lp.marginStart = if (cardIndex == 0 && nodeIndex == 0) {
@@ -121,7 +127,7 @@ class EvolutionChainView @JvmOverloads constructor(
                     }
                     lp.topMargin = chainSpacing
                     lp.bottomMargin = chainSpacing
-                    addView(view, lp)
+                    view.layoutParams = lp
                 }
             }
         }

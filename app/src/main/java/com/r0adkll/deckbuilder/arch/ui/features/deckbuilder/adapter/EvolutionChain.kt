@@ -7,9 +7,7 @@ import com.r0adkll.deckbuilder.arch.domain.PokemonCard
 /**
  * Class that collects and defines evolution chains for pokemon in a deck
  */
-class EvolutionChain {
-
-    val nodes: ArrayList<Node> = ArrayList(3)
+data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
 
     val id: String
         get() = nodes.find { it.name != null }?.name ?: nodes.hashCode().toString()
