@@ -11,6 +11,9 @@ class EvolutionChain {
 
     val nodes: ArrayList<Node> = ArrayList(3)
 
+    val id: String
+        get() = nodes.find { it.name != null }?.name ?: nodes.hashCode().toString()
+
 
     fun contains(card: PokemonCard): Boolean {
         return nodes.find { it.cards.contains(card) } != null
@@ -20,7 +23,8 @@ class EvolutionChain {
     fun isChainFor(card: PokemonCard): Boolean {
         return nodes.find { it.name == card.name
                 || it.evolvesFrom == card.name
-                || (it.name != null && card.evolvesFrom != null && it.name == card.evolvesFrom) } != null
+                || (it.name != null && card.evolvesFrom != null && it.name == card.evolvesFrom)
+                || (it.cards.find { it.name == card.evolvesFrom } != null) } != null
     }
 
 
@@ -60,6 +64,17 @@ class EvolutionChain {
                         nodes.add(newNode)
                         rectifyNodes()
                         return true
+                    }
+                    else {
+                        // Last ditch, attempt to find evolvesFrom name in the list of cards
+                        val evolvesFromNode2 = nodes.find { it.cards.find { it.name == card.evolvesFrom } != null }
+                        if (evolvesFromNode2 != null) {
+                            // Found previous evolution form, create linking node
+                            val newNode = Node(null, card.evolvesFrom, arrayListOf(card))
+                            nodes.add(newNode)
+                            rectifyNodes()
+                            return true
+                        }
                     }
                 }
             }

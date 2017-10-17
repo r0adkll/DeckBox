@@ -5,9 +5,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.ImageView
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.*
 import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.PokemonCard
 
 
 class PokemonCardView @JvmOverloads constructor(
@@ -29,7 +35,7 @@ class PokemonCardView @JvmOverloads constructor(
     private var cachedHeight: Int = 0
 
     private val radius = dpToPx(8f)
-    private val punchRadius = dpToPx(20f)
+    private val punchRadius = dpToPx(10f)
 
     var evolution = Evolution.NONE
         set(value) {
@@ -62,6 +68,8 @@ class PokemonCardView @JvmOverloads constructor(
         }
 
         setImageResource(R.drawable.pokemon_card_back)
+        elevation = dpToPx(4f)
+        outlineProvider = CardOutlineProvider(radius)
     }
 
 
@@ -142,6 +150,15 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
+    fun setCard(card: PokemonCard) {
+        GlideApp.with(this)
+                .load(card.imageUrl)
+                .placeholder(R.drawable.pokemon_card_back)
+                .transition(withCrossFade())
+                .into(this)
+    }
+
+
     private fun drawEvolutionNotches(canvas: Canvas) {
         val y = boundsF?.centerY() ?: 0f / 2f
         when(evolution) {
@@ -168,6 +185,13 @@ class PokemonCardView @JvmOverloads constructor(
         MIDDLE,
         END,
         NONE
+    }
+
+
+    class CardOutlineProvider(private val radius: Float) : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            outline.setRoundRect(0, 0, view.width, view.height, radius)
+        }
     }
 
 

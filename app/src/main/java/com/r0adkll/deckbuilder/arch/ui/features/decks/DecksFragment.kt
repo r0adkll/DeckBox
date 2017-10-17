@@ -12,6 +12,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
@@ -58,7 +59,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         recycler.adapter = adapter
 
         fab.setOnClickListener {
-
+            startActivity(DeckBuilderActivity.createIntent(activity))
         }
     }
 

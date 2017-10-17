@@ -2,18 +2,12 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black30">
+    android:layout_height="wrap_content">
 
-    <FrameLayout
+    <com.r0adkll.deckbuilder.arch.ui.widgets.EvolutionChainView
+        android:id="@+id/evolution_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-            android:layout_width="256dp"
-            android:layout_height="wrap_content"
-            />
-
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        />
 
 </ScrollView>
