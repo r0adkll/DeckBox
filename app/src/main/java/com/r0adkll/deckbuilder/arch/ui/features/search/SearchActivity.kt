@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
@@ -55,15 +56,36 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
             supportFinishAfterTransition()
         }
 
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val category = when(tab.position) {
+                    0 -> SuperType.POKEMON
+                    1 -> SuperType.TRAINER
+                    2 -> SuperType.ENERGY
+                    else -> SuperType.POKEMON
+                }
+                searchView.setQuery("", false)
+                categoryChanges.accept(category)
+            }
+        })
+    }
+
+
+    override fun onStart() {
+        super.onStart()
         renderer.start()
         presenter.start()
     }
 
 
-    override fun onDestroy() {
+    override fun onStop() {
         presenter.stop()
         renderer.stop()
-        super.onDestroy()
+        super.onStop()
     }
 
 

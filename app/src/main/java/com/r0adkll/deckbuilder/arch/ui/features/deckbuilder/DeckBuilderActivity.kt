@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.view.Menu
+import android.view.MenuItem
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -42,6 +44,12 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        appbar?.setNavigationOnClickListener {
+            // TODO: Add some sort of persistance check here to make sure the user doesn't discard unsaved changes
+            supportFinishAfterTransition()
+        }
 
         adapter = DeckBuilderPagerAdapter(layoutInflater, pokemonCardClicks)
         pager.adapter = adapter
@@ -82,6 +90,23 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
         val result = SearchActivity.parseResult(requestCode, resultCode, data)
         Timber.i("Search result: $result")
         result?.let { pickedCard = it }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_deck_builder, menu)
+        return true
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_save -> {
+                // TODO: Save the built deck, or check if they can save
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 
