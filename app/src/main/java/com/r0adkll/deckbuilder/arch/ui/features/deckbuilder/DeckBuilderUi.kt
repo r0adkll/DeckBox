@@ -69,6 +69,10 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
         companion object {
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
+
+            val DEFAULT by lazy {
+                State(emptyList(), emptyList(), emptyList(), null, null)
+            }
         }
     }
 }
