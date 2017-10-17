@@ -35,7 +35,7 @@ class DefaultCardRepository @Inject constructor(
         return api.card()
                 .where {
                     supertype = type.displayName
-                    text = query
+                    name = query
                 }
                 .observeAll()
     }
