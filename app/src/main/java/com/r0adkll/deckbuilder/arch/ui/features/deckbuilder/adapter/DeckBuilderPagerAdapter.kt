@@ -26,7 +26,7 @@ class DeckBuilderPagerAdapter(
 
     override fun instantiateItem(container: ViewGroup?, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
-        val vh = SuperTypeViewHolder(view, pokemonCardClicks)
+        val vh = getViewHolder(position, view, pokemonCardClicks)
         viewHolders[position] = vh
         view.tag = vh
 
@@ -67,5 +67,10 @@ class DeckBuilderPagerAdapter(
         }
     }
 
+
+    private fun getViewHolder(position: Int, itemView: View, pokemonCardClicks: Relay<PokemonCard>): SuperTypeViewHolder = when(position) {
+        0 -> PokemonViewHolder(itemView, pokemonCardClicks)
+        else -> TrainerEnergyViewHolder(itemView, pokemonCardClicks)
+    }
 
 }
