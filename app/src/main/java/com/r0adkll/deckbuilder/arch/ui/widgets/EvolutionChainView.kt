@@ -9,7 +9,7 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.*
 import timber.log.Timber

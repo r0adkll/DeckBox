@@ -1,16 +1,12 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.repository
 
-import com.r0adkll.deckbuilder.arch.domain.CardSet
-import com.r0adkll.deckbuilder.arch.domain.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DecksRepository
-import io.pokemontcg.model.SubType
-import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import javax.inject.Inject
 
 
-class DecksDataRepository @Inject constructor(
+class DefaultDecksRepository @Inject constructor(
 
 ) : DecksRepository {
 

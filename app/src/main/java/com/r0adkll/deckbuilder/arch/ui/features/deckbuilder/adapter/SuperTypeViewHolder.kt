@@ -8,7 +8,7 @@ import android.view.View
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 
 
 class SuperTypeViewHolder(

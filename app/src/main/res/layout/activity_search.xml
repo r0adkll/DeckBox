@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <FrameLayout
+            android:id="@+id/search_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:outlineProvider="background"
+            android:elevation="@dimen/appbar_elevation"
+            android:background="@color/transparent"
+            android:theme="@style/ThemeOverlay.DeckBuilder.Search"
+            android:fitsSystemWindows="true"
+            tools:ignore="UnusedAttribute">
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="?attr/actionBarSize"
+
+                app:queryHint="Search Pokémon cards"
+                app:iconifiedByDefault="false"
+                />
+
+            <!-- wrapping layout needed for the touch ripple -->
+            <FrameLayout
+                android:id="@+id/searchback_container"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:paddingStart="4dp"
+                android:background="@android:color/transparent">
+
+                <ImageButton
+                    android:id="@+id/searchback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:srcCompat="@drawable/ic_arrow_back_padded"
+                    />
+
+            </FrameLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:padding="@dimen/padding_normal"
+                android:src="@drawable/ic_filter_outline"
+                android:alpha=".54"
+                />
+
+        </FrameLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="?attr/colorPrimary"
+            >
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_pokemon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_pokemon"
+                />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_trainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_trainer"
+                />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_energy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_energy"
+                />
+
+        </android.support.design.widget.TabLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.ftinc.kit.widget.EmptyView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar_layout"
+        android:paddingStart="@dimen/padding_giant"
+        android:paddingEnd="@dimen/padding_giant"
+        app:emptyIcon="@drawable/ic_empty_search"
+        app:emptyMessage="@string/empty_search_category"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar_layout"
+        />
+
+</RelativeLayout>

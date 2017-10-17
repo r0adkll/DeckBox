@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.domain.features.decks.model
 
 
-import com.r0adkll.deckbuilder.arch.domain.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import io.pokemontcg.model.SuperType
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
@@ -15,8 +15,8 @@ data class Deck(
         val cards: List<PokemonCard>
 ) : PaperParcelable {
 
-    val standardLegal: Boolean get() = cards.none { !it.set.standardLegal }
-    val expandedLegal: Boolean get() = cards.none { !it.set.expandedLegal }
+    val standardLegal: Boolean get() = cards.none { !(it.expansion?.standardLegal ?: false) }
+    val expandedLegal: Boolean get() = cards.none { !(it.expansion?.expandedLegal ?: false) }
     val pokemonCount: Int get() = cards.count { it.supertype == SuperType.POKEMON }
     val trainerCount: Int get() = cards.count { it.supertype == SuperType.TRAINER }
     val energyCount: Int get() = cards.count { it.supertype == SuperType.ENERGY }

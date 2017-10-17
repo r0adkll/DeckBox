@@ -9,11 +9,12 @@ import android.support.v4.view.ViewPager
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
+import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -66,8 +67,16 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
         })
 
         fab.setOnClickListener {
-
+            val intent = SearchActivity.createIntent(this)
+            startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val result = SearchActivity.parseResult(requestCode, resultCode, data)
+        result?.let { addPokemon.accept(it) }
     }
 
 

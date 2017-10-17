@@ -28,6 +28,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity" />
         </activity>
+        <activity android:name=".arch.ui.features.search.SearchActivity"/>
     </application>
 
 </manifest>

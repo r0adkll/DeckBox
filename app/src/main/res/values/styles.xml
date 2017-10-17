@@ -2,4 +2,23 @@
     <style name="Theme.DeckBuilder.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.DeckBuilder.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Widget.DeckBuilder.SearchView" parent="android:style/Widget.Material.SearchView">
+        <item name="android:searchIcon">@android:color/transparent</item>
+        <item name="android:searchHintIcon">@android:color/transparent</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
+        <item name="android:submitBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.DeckBuilder.Compat.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@android:color/transparent</item>
+        <item name="searchHintIcon">@android:color/transparent</item>
+        <item name="queryBackground">@android:color/transparent</item>
+        <item name="submitBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="ThemeOverlay.DeckBuilder.Search" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlActivated">?android:colorAccent</item>
+        <item name="android:searchViewStyle">@style/Widget.DeckBuilder.SearchView</item>
+        <item name="searchViewStyle">@style/Widget.DeckBuilder.Compat.SearchView</item>
+    </style>
 </resources>

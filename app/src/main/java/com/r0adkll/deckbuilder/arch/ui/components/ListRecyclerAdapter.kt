@@ -185,6 +185,15 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         this.itemClickListener = itemClickListener
     }
 
+
+    fun setOnItemClickListener(listener: (M) -> Unit) {
+        this.itemClickListener = object : OnItemClickListener<M> {
+            override fun onItemClick(v: View, item: M, position: Int) {
+                listener.invoke(item)
+            }
+        }
+    }
+
     /***********************************************************************************************
      *
      * Adapter Methods

@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 
-import com.r0adkll.deckbuilder.arch.domain.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 
 
 /**

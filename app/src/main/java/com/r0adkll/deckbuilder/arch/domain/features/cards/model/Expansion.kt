@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.domain
+package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 
 import paperparcel.PaperParcel
@@ -6,9 +6,9 @@ import paperparcel.PaperParcelable
 
 
 @PaperParcel
-data class CardSet(
+data class Expansion(
         val code: String,
-        val ptcgoCode: String,
+        val ptcgoCode: String?,
         val name: String,
         val series: String,
         val totalCards: Int,
@@ -18,6 +18,6 @@ data class CardSet(
         val symbolUrl: String
 ) : PaperParcelable {
     companion object {
-        @JvmField val CREATOR = PaperParcelCardSet.CREATOR
+        @JvmField val CREATOR = PaperParcelExpansion.CREATOR
     }
 }

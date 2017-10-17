@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.domain
+package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 
 import io.pokemontcg.model.SuperType
@@ -25,7 +25,7 @@ data class PokemonCard(
         val artist: String,
         val rarity: String,
         val series: String,
-        val set: CardSet,
+        val expansion: Expansion?,
         val text: List<String>?,
         val attacks: List<Attack>?,
         val weaknesses: List<Effect>?,
