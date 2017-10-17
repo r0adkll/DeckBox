@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
@@ -47,7 +48,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
             supportFinishAfterTransition()
         }
 
-        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.layoutManager = GridLayoutManager(this, 3)
         recycler.adapter = adapter
 
         searchback.setOnClickListener {

@@ -111,6 +111,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/appbar_layout"
+        android:padding="@dimen/padding_small"
+        android:clipToPadding="false"
         />
 
 </RelativeLayout>
