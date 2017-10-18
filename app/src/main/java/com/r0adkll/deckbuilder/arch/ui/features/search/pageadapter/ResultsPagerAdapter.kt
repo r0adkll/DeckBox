@@ -17,6 +17,7 @@ import io.pokemontcg.model.SuperType
 
 class ResultsPagerAdapter(
         val context: Context,
+        val scrollHideListener: KeyboardScrollHideListener,
         private val pokemonCardClicks: Relay<PokemonCard>
 ) : PagerAdapter() {
 
@@ -26,7 +27,7 @@ class ResultsPagerAdapter(
 
     override fun instantiateItem(container: ViewGroup?, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
-        val vh = SearchResultViewHolder(view, pokemonCardClicks)
+        val vh = SearchResultViewHolder(view, scrollHideListener, pokemonCardClicks)
         view.tag = vh
         viewHolders[position] = vh
 
@@ -92,6 +93,7 @@ class ResultsPagerAdapter(
 
     private class SearchResultViewHolder(
             itemView: View,
+            scrollHideListener: KeyboardScrollHideListener,
             pokemonCardClicks: Relay<PokemonCard>
     ) {
 
@@ -105,6 +107,8 @@ class ResultsPagerAdapter(
 
             recycler.layoutManager = GridLayoutManager(itemView.context, 3)
             recycler.adapter = adapter
+
+            recycler.addOnScrollListener(scrollHideListener)
         }
 
 

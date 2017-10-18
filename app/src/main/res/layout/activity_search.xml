@@ -22,7 +22,8 @@
             android:background="@color/transparent"
             android:theme="@style/ThemeOverlay.DeckBuilder.Search"
             android:fitsSystemWindows="true"
-            tools:ignore="UnusedAttribute">
+            tools:ignore="UnusedAttribute"
+            app:layout_scrollFlags="scroll|enterAlways|exitUntilCollapsed|snap">
 
             <android.support.v7.widget.SearchView
                 android:id="@+id/searchView"
