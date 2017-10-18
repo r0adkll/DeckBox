@@ -1,11 +1,11 @@
 package com.r0adkll.deckbuilder.arch.ui.components.delegates
 
-import android.app.Activity
 import android.os.Bundle
 import com.evernote.android.state.StateSaver
+import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 
 
-class StateSaverActivityDelegate(private val activity: Activity) : ActivityDelegate {
+class StateSaverActivityDelegate(private val activity: BaseActivity) : ActivityDelegate {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         StateSaver.restoreInstanceState(activity, savedInstanceState)

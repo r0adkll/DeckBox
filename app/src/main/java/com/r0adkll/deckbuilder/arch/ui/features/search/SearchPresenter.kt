@@ -20,6 +20,7 @@ class SearchPresenter @Inject constructor(
     override fun start() {
 
         val searchCards = intentions.searchCards()
+                .map { it.replace(",", "|") }
                 .flatMap { getSearchCardsObservable(it) }
 
         val switchCategories = intentions.switchCategories()

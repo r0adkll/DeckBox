@@ -4,16 +4,15 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
 import android.view.Menu
 import android.view.MenuItem
+import com.evernote.android.state.State
+import com.evernote.android.state.StateSaver
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
@@ -27,8 +26,8 @@ import javax.inject.Inject
 
 class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intentions, DeckBuilderUi.Actions{
 
-    @com.evernote.android.state.State
-    override var state: State = State.DEFAULT
+    @State
+    override var state: DeckBuilderUi.State = DeckBuilderUi.State.DEFAULT
 
     @Inject lateinit var renderer: DeckBuilderRenderer
     @Inject lateinit var presenter: DeckBuilderPresenter
@@ -37,13 +36,18 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     private val addPokemon: Relay<PokemonCard> = PublishRelay.create()
 
     private lateinit var adapter: DeckBuilderPagerAdapter
-    private var pickedCard: PokemonCard? = null
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
+        StateSaver.restoreInstanceState(this, savedInstanceState)
+
+//        val restoredState = savedInstanceState?.getParcelable<DeckBuilderUi.State>("ViewState")
+//        restoredState?.let {
+//            state = it
+//            Timber.i("State Restore: $state")
+//        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appbar?.setNavigationOnClickListener {
@@ -51,45 +55,38 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
             supportFinishAfterTransition()
         }
 
-        adapter = DeckBuilderPagerAdapter(layoutInflater, pokemonCardClicks)
+        adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks)
         pager.adapter = adapter
         pager.offscreenPageLimit = 3
-        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            }
-
-            override fun onPageSelected(position: Int) {
-                tabs.getTabAt(position)?.select()
-            }
-        })
-
-        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                pager.setCurrentItem(tab.position, true)
-            }
-        })
-
+        tabs.setupWithViewPager(pager)
         fab.setOnClickListener {
             val intent = SearchActivity.createIntent(this)
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
+
+        renderer.start()
+        presenter.start()
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+//        outState.putParcelable("ViewState", state)
+        StateSaver.saveInstanceState(this, outState)
+    }
+
+
+    override fun onDestroy() {
+        presenter.stop()
+        renderer.stop()
+        super.onDestroy()
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val result = SearchActivity.parseResult(requestCode, resultCode, data)
-        Timber.i("Search result: $result")
-        result?.let { pickedCard = it }
+        result?.let { addPokemon.accept(it) }
     }
 
 
@@ -110,20 +107,6 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     }
 
 
-    override fun onStart() {
-        super.onStart()
-        renderer.start()
-        presenter.start()
-    }
-
-
-    override fun onStop() {
-        presenter.stop()
-        renderer.stop()
-        super.onStop()
-    }
-
-
     override fun setupComponent(component: AppComponent) {
         component.plus(DeckBuilderModule(this))
                 .inject(this)
@@ -137,11 +120,6 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
 
     override fun addCard(): Observable<PokemonCard> {
-        if (pickedCard != null) {
-            val initialValue = pickedCard
-            pickedCard = null
-            return addPokemon.mergeWith(Observable.just(initialValue))
-        }
         return addPokemon
     }
 

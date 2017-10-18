@@ -26,7 +26,7 @@ abstract class BaseActivity : AppCompatActivity() {
         setupComponent(DeckApp.component)
 
         // Add the auto-state saving delegate by default
-        delegates += StateSaverActivityDelegate(this)
+        //addDelegate(StateSaverActivityDelegate(this))
 
         delegates.forEach { it.onCreate(savedInstanceState) }
     }
