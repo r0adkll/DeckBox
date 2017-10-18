@@ -49,6 +49,12 @@ class PokemonCardView @JvmOverloads constructor(
             invalidate()
         }
 
+    var count: Int = 1
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     var desaturateOnPress = false
         set(value) {
             field = value
@@ -145,6 +151,9 @@ class PokemonCardView @JvmOverloads constructor(
 
         // Draw from cache
         canvas.drawBitmap(cacheBitmap!!, bounds!!.left.toFloat(), bounds!!.top.toFloat(), null)
+
+        // Draw badge count
+
     }
 
 

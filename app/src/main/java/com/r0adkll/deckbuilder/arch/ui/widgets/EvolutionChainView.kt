@@ -93,8 +93,9 @@ class EvolutionChainView @JvmOverloads constructor(
         removeAllViews()
         evolutionChain?.let { chain ->
 
-            // Iterate through each node and generate a card for each card in the node
-            chain.nodes.forEachIndexed { nodeIndex, node ->
+            var node = chain.first()
+            var nodeIndex = 0
+            while(node != null) {
                 node.cards.forEachIndexed { cardIndex, card ->
                     // Attempt to find existing view for index
                     var view = getChildAt(nodeIndex + cardIndex)?.let { it as PokemonCardView }
@@ -129,7 +130,10 @@ class EvolutionChainView @JvmOverloads constructor(
                     lp.bottomMargin = chainSpacing
                     view.layoutParams = lp
                 }
+                node = node.next
+                nodeIndex++
             }
+
         }
     }
 

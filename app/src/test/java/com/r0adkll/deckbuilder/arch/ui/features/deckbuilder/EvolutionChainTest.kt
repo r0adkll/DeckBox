@@ -32,8 +32,8 @@ class EvolutionChainTest {
         chain.nodes.size.shouldEqualTo(2)
         chain.contains(pokemon).shouldBeTrue()
         chain.contains(pokemonStage1).shouldBeTrue()
-        chain.nodes[0].name?.shouldEqualTo("Eevee")
-        chain.nodes[1].name.shouldBeNull()
+        chain.first()!!.name?.shouldEqualTo("Eevee")
+        chain.last()!!.name?.shouldEqualTo("Espeon-GX")
     }
 
 
@@ -48,9 +48,10 @@ class EvolutionChainTest {
         chain.nodes.size.shouldEqualTo(2)
         chain.contains(pokemon).shouldBeTrue()
         chain.contains(pokemonStage1).shouldBeTrue()
-        chain.nodes[0].name?.shouldEqualTo("Eevee")
-        chain.nodes[1].name.shouldBeNull()
-        chain.nodes[1].evolvesFrom?.shouldEqualTo("Eevee")
+        chain.first().shouldNotBeNull()
+        chain.first()?.name?.shouldEqualTo("Eevee")
+        chain.last().shouldNotBeNull()
+        chain.last()?.name?.shouldEqualTo("Espeon-GX")
     }
 
 
@@ -71,11 +72,11 @@ class EvolutionChainTest {
         chain.contains(pokemon2)
         chain.contains(pokemon3)
         chain.contains(pokemonStage1)
-        chain.nodes[0].cards.size.shouldEqualTo(3)
-        chain.nodes[0].name?.shouldEqualTo("Eevee")
-        chain.nodes[1].cards.size.shouldEqualTo(1)
-        chain.nodes[1].name.shouldBeNull()
-        chain.nodes[1].evolvesFrom?.shouldEqualTo("Eevee")
+        chain.first()!!.cards.size.shouldEqualTo(3)
+        chain.first()!!.name?.shouldEqualTo("Eevee")
+        chain.last()!!.cards.size.shouldEqualTo(1)
+        chain.last()!!.name?.shouldEqualTo("Espeon-GX")
+        chain.last()!!.evolvesFrom?.shouldEqualTo("Eevee")
     }
 
 
