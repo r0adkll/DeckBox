@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@color/white"
+        >
 
         <FrameLayout
             android:id="@+id/search_toolbar"
@@ -68,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorColor="?attr/colorPrimary"
+            app:layout_scrollFlags="exitUntilCollapsed"
             >
 
             <android.support.design.widget.TabItem
@@ -94,25 +95,12 @@
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
-
-    <com.ftinc.kit.widget.EmptyView
-        android:id="@+id/empty_view"
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/appbar_layout"
-        android:paddingStart="@dimen/padding_giant"
-        android:paddingEnd="@dimen/padding_giant"
-        app:emptyIcon="@drawable/ic_empty_search"
-        app:emptyMessage="@string/empty_search_category"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/appbar_layout"
-        android:padding="@dimen/padding_small"
-        android:clipToPadding="false"
-        />
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

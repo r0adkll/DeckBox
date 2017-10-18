@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.util
 
+
 import android.os.Bundle
 import android.os.Parcelable
 
@@ -15,6 +16,8 @@ class Bundler {
     fun float(key: String, value: Float) = bundle.putFloat(key, value)
     fun double(key: String, value: Double) = bundle.putDouble(key, value)
     fun <T: Parcelable> parcel(key: String, value: T) = bundle.putParcelable(key, value)
+    fun <E: Enum<E>> serial(key: String, value: E) = bundle.putSerializable(key, value)
+    fun <E: Enum<E>> parcel(key: String, value: E) = bundle.putString(key, value.name)
 
     internal fun build(): Bundle = bundle
 }

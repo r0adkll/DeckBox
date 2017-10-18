@@ -16,8 +16,8 @@ class DeckBuilderPresenter @Inject constructor(
 
     override fun start() {
 
-        val addCard = intentions.addCard()
-                .map { Change.AddCard(it) as Change }
+        val addCard = intentions.addCards()
+                .map { Change.AddCards(it) as Change }
 
         val removeCard = intentions.removeCard()
                 .map { Change.RemoveCard(it) as Change }

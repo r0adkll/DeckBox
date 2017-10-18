@@ -2,7 +2,8 @@
 <HorizontalScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.EvolutionChainView
         android:id="@+id/evolution_view"

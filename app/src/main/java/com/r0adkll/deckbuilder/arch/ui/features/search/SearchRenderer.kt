@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
 
 
@@ -14,13 +15,20 @@ class SearchRenderer(
 
     override fun start() {
 
+        subscribeToSuperType(SuperType.POKEMON)
+        subscribeToSuperType(SuperType.TRAINER)
+        subscribeToSuperType(SuperType.ENERGY)
+
+        // Subscribe to query text changes
         disposables += state
-                .map { it.results }
-                .distinctUntilChanged()
+                .map { it.results[it.category]?.query ?: "" }
                 .subscribeOn(comp)
                 .observeOn(main)
-                .subscribe { actions.setResults(it) }
+                .subscribe {
+                    actions.setQueryText(it)
+                }
 
+        // Subscribe to the category change itself
         disposables += state
                 .map { it.category }
                 .distinctUntilChanged()
@@ -28,27 +36,53 @@ class SearchRenderer(
                 .observeOn(main)
                 .subscribe { actions.setCategory(it) }
 
+
         disposables += state
-                .map { it.isLoading }
+                .map { it.selected }
                 .distinctUntilChanged()
                 .subscribeOn(comp)
                 .observeOn(main)
-                .subscribe { actions.showLoading(it) }
+                .subscribe { actions.setSelectedCards(it) }
+    }
 
+
+    private fun subscribeToSuperType(superType: SuperType) {
         disposables += state
-                .mapNullable { it.error }
+                .mapNullable { it.results[superType]?.results }
                 .distinctUntilChanged()
                 .subscribeOn(comp)
                 .observeOn(main)
                 .subscribe {
-                    val error = it.value
-                    if (error != null) {
-                        actions.showError(error)
-                    }
-                    else {
-                        actions.hideError()
+                    val value = it.value
+                    if (value != null) {
+                        actions.setResults(superType, value)
                     }
                 }
 
+        disposables += state
+                .mapNullable { it.results[superType]?.isLoading }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe {
+                    val value = it.value
+                    if (value != null) {
+                        actions.showLoading(superType, value)
+                    }
+                }
+
+        disposables += state
+                .mapNullable { it.results[superType]?.error }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe {
+                    val value = it.value
+                    if (value != null) {
+                        actions.showError(superType, value)
+                    } else {
+                        actions.hideError(superType)
+                    }
+                }
     }
 }

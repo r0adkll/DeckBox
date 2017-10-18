@@ -20,13 +20,17 @@ class SearchPresenter @Inject constructor(
     override fun start() {
 
         val searchCards = intentions.searchCards()
-                .map { it.replace(",", "|") }
                 .flatMap { getSearchCardsObservable(it) }
+
+        val selectCard = intentions.selectCard()
+                .map { Change.CardSelected(it) as Change }
 
         val switchCategories = intentions.switchCategories()
                 .map { Change.CategorySwitched(it) as Change }
 
-        val merged = searchCards.mergeWith(switchCategories)
+        val merged = searchCards
+                .mergeWith(selectCard)
+                .mergeWith(switchCategories)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
@@ -36,9 +40,12 @@ class SearchPresenter @Inject constructor(
 
 
     fun getSearchCardsObservable(text: String): Observable<Change> {
-        return repository.search(ui.state.category, text)
+        return repository.search(ui.state.category, text.replace(",", "|"))
                 .map { Change.ResultsLoaded(it) as Change }
-                .startWith(Change.IsLoading as Change)
+                .startWith(listOf(
+                        Change.QuerySubmitted(text) as Change,
+                        Change.IsLoading as Change
+                ))
                 .onErrorReturn(handleUnknownError)
     }
 

@@ -17,6 +17,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.DeckBuilderP
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import io.pokemontcg.Pokemon
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
@@ -33,7 +34,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     @Inject lateinit var presenter: DeckBuilderPresenter
 
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
-    private val addPokemon: Relay<PokemonCard> = PublishRelay.create()
+    private val addPokemon: Relay<List<PokemonCard>> = PublishRelay.create()
 
     private lateinit var adapter: DeckBuilderPagerAdapter
 
@@ -53,7 +54,13 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
         pager.offscreenPageLimit = 3
         tabs.setupWithViewPager(pager)
         fab.setOnClickListener {
-            val intent = SearchActivity.createIntent(this)
+            val superType = when(tabs.selectedTabPosition) {
+                0 -> SuperType.POKEMON
+                1 -> SuperType.TRAINER
+                2 -> SuperType.ENERGY
+                else -> SuperType.POKEMON
+            }
+            val intent = SearchActivity.createIntent(this, superType)
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
 
@@ -105,7 +112,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     }
 
 
-    override fun addCard(): Observable<PokemonCard> {
+    override fun addCards(): Observable<List<PokemonCard>> {
         return addPokemon
     }
 

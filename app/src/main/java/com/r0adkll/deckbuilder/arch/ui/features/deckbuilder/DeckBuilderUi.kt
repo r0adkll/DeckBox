@@ -16,7 +16,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     interface Intentions {
 
-        fun addCard(): Observable<PokemonCard>
+        fun addCards(): Observable<List<PokemonCard>>
         fun removeCard(): Observable<PokemonCard>
         fun editDeckName(): Observable<String>
         fun editDeckDescription(): Observable<String>
@@ -43,11 +43,13 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
     ) : PaperParcelable {
 
         fun reduce(change: Change): State = when(change) {
-            is Change.AddCard -> when(change.card.supertype) {
-                SuperType.POKEMON -> this.copy(pokemonCards = pokemonCards.plus(change.card))
-                SuperType.TRAINER -> this.copy(trainerCards = trainerCards.plus(change.card))
-                SuperType.ENERGY -> this.copy(energyCards = energyCards.plus(change.card))
-                SuperType.UNKNOWN -> this
+            is Change.AddCards -> {
+                val pokemons = change.cards.filter { it.supertype == SuperType.POKEMON }
+                val trainers = change.cards.filter { it.supertype == SuperType.TRAINER }
+                val energies = change.cards.filter { it.supertype == SuperType.ENERGY }
+                this.copy(pokemonCards = pokemonCards.plus(pokemons),
+                        trainerCards = trainerCards.plus(trainers),
+                        energyCards = energyCards.plus(energies))
             }
             is Change.RemoveCard -> when(change.card.supertype) {
                 SuperType.POKEMON -> this.copy(pokemonCards = pokemonCards.minus(change.card))
@@ -61,7 +63,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
 
         sealed class Change(val logText: String) {
-            class AddCard(val card: PokemonCard) : Change("user -> added ${card.name}")
+            class AddCards(val cards: List<PokemonCard>) : Change("user -> added ${cards.size} cards")
             class RemoveCard(val card: PokemonCard) : Change("user -> removing ${card.name}")
             class EditName(val name: String) : Change("user -> name changed $name")
             class EditDescription(val description: String) : Change ("user -> desc changed $description")
