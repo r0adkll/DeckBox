@@ -41,13 +41,6 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
-        StateSaver.restoreInstanceState(this, savedInstanceState)
-
-//        val restoredState = savedInstanceState?.getParcelable<DeckBuilderUi.State>("ViewState")
-//        restoredState?.let {
-//            state = it
-//            Timber.i("State Restore: $state")
-//        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appbar?.setNavigationOnClickListener {
@@ -66,13 +59,6 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
         renderer.start()
         presenter.start()
-    }
-
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-//        outState.putParcelable("ViewState", state)
-        StateSaver.saveInstanceState(this, outState)
     }
 
 
