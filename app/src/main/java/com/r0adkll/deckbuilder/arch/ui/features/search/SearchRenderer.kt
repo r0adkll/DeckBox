@@ -21,11 +21,12 @@ class SearchRenderer(
 
         // Subscribe to query text changes
         disposables += state
-                .map { it.results[it.category]?.query ?: "" }
+                .map { Pair(it.category, it.results[it.category]?.query ?: "") }
+                .distinctUntilChanged { t -> t.first }
                 .subscribeOn(comp)
                 .observeOn(main)
                 .subscribe {
-                    actions.setQueryText(it)
+                    actions.setQueryText(it.second)
                 }
 
         // Subscribe to the category change itself

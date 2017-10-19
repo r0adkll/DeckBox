@@ -4,7 +4,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import com.ftinc.kit.kotlin.extensions.color
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -17,6 +19,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrol
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
+import com.r0adkll.deckbuilder.util.extensions.find
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findEnum
 import io.pokemontcg.model.SuperType
@@ -39,6 +42,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
     private lateinit var adapter: ResultsPagerAdapter
+    private var selectionSnackBar: Snackbar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,7 +115,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     override fun searchCards(): Observable<String> {
         return searchView.queryTextChanges()
                 .map { it.toString() }
-                .filter { it.length > 3 }
+                .filter { !it.isEmpty() }
                 .uiDebounce()
     }
 
@@ -140,6 +144,27 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         val data = Intent()
         data.putParcelableArrayListExtra(EXTRA_SELECTED_CARDS, ArrayList(cards))
         setResult(RESULT_OK, data)
+
+        adapter.setSelectedCards(cards)
+
+        val text = resources.getQuantityString(R.plurals.card_selection_count, cards.size, cards.size)
+        if (selectionSnackBar == null) {
+            selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.action_finish, { supportFinishAfterTransition() })
+                    .setActionTextColor(color(R.color.primaryColor))
+        }
+
+        if (cards.isNotEmpty()) {
+            selectionSnackBar?.setText(text)
+            if (selectionSnackBar?.isShown != true) {
+                selectionSnackBar?.show()
+            }
+        }
+        else {
+            if (selectionSnackBar?.isShown == true) {
+                selectionSnackBar?.dismiss()
+            }
+        }
     }
 
 

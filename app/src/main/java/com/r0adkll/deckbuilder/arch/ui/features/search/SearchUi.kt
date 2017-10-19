@@ -28,7 +28,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun setCategory(superType: SuperType)
         fun setResults(superType: SuperType, cards: List<PokemonCard>)
         fun setSelectedCards(cards: List<PokemonCard>)
-
         fun showLoading(superType: SuperType, isLoading: Boolean)
         fun showError(superType: SuperType, description: String)
         fun hideError(superType: SuperType)

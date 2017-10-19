@@ -43,10 +43,10 @@ class EvolutionChainView @JvmOverloads constructor(
         setWillNotDraw(false)
         cardWidth = (resources.displayMetrics.widthPixels - (2 * stageSpacing + 2 * linkSpacing)) / 3
 
-        linkPaint.color = color(R.color.primaryColor)
+        linkPaint.color = color(R.color.secondaryColor)
         linkPaint.style = Paint.Style.FILL
 
-        linkBarPaint.color = color(R.color.primaryColor)
+        linkBarPaint.color = color(R.color.secondaryColor)
         linkBarPaint.style = Paint.Style.STROKE
         linkBarPaint.strokeWidth = linkRadius
     }

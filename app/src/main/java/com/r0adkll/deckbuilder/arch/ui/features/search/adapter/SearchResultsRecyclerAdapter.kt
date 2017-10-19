@@ -13,14 +13,19 @@ class SearchResultsRecyclerAdapter(
         context: Context
 ) : ListRecyclerAdapter<PokemonCard, PokemonCardViewHolder>(context) {
 
+    private var selectedCards: List<PokemonCard> = emptyList()
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
-        return PokemonCardViewHolder.create(inflater, parent)
+        return PokemonCardViewHolder.create(inflater, parent, true)
     }
 
 
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         super.onBindViewHolder(vh, i)
-        vh.bind(items[i])
+        val card = items[i]
+        val count = selectedCards.count { it.id == card.id }
+        vh.bind(card, count)
     }
 
 
@@ -28,6 +33,12 @@ class SearchResultsRecyclerAdapter(
         val diff = calculateDiff(items, cards)
         items = ArrayList(diff.new)
         diff.diff.dispatchUpdatesTo(DiffUpdateCallback())
+    }
+
+
+    fun setSelectedCards(cards: List<PokemonCard>) {
+        selectedCards = cards
+        notifyDataSetChanged()
     }
 
 

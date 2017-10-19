@@ -55,6 +55,13 @@ class ResultsPagerAdapter(
     }
 
 
+    fun setSelectedCards(cards: List<PokemonCard>) {
+        viewHolders[0]?.setSelectedCards(cards)
+        viewHolders[1]?.setSelectedCards(cards)
+        viewHolders[2]?.setSelectedCards(cards)
+    }
+
+
     fun setCards(type: SuperType, cards: List<PokemonCard>) {
         when(type) {
             SuperType.POKEMON -> viewHolders[0]?.bind(cards)
@@ -114,6 +121,11 @@ class ResultsPagerAdapter(
 
         fun bind(cards: List<PokemonCard>) {
             adapter.setCards(cards)
+        }
+
+
+        fun setSelectedCards(cards: List<PokemonCard>) {
+            adapter.setSelectedCards(cards)
         }
 
 
