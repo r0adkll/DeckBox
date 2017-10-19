@@ -106,16 +106,18 @@ class EvolutionChainView @JvmOverloads constructor(
                     }
 
                     // Only re-apply the card if it is different
-                    if (view.card != card) {
-                        view.card = card
+                    if (view.card != card.card) {
+                        view.card = card.card
                     }
+
+                    view.count = card.count
 
                     // Set the evolution notch stage for the card
                     view.evolution = getEvolutionState(chain, nodeIndex, cardIndex)
 
                     // Set click listener
                     view.setOnClickListener {
-                        pokemonCardClickListener?.onPokemonCardClicked(card)
+                        pokemonCardClickListener?.onPokemonCardClicked(card.card)
                     }
 
 

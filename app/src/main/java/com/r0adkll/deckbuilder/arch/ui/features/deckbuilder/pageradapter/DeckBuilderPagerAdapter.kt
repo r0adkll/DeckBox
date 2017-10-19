@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import io.pokemontcg.model.SuperType
 
 
@@ -20,9 +21,6 @@ class DeckBuilderPagerAdapter(
 ) : PagerAdapter() {
 
     private val inflater = LayoutInflater.from(context)
-    private var pokemonCards: List<PokemonCard> = emptyList()
-    private var trainerCards: List<PokemonCard> = emptyList()
-    private var energyCards: List<PokemonCard> = emptyList()
     private val viewHolders: Array<SuperTypeViewHolder<*>?> = Array(3, { _ -> null })
 
 
@@ -32,13 +30,6 @@ class DeckBuilderPagerAdapter(
         vh.setup()
         viewHolders[position] = vh
         view.tag = vh
-
-        vh.bind(when(position) {
-            0 -> pokemonCards
-            1 -> trainerCards
-            else -> energyCards
-        })
-
         container?.addView(view)
         return view
     }
@@ -59,19 +50,16 @@ class DeckBuilderPagerAdapter(
         else -> ""
     }
 
-    fun setCards(type: SuperType, cards: List<PokemonCard>) {
+    fun setCards(type: SuperType, cards: List<StackedPokemonCard>) {
         when(type) {
             SuperType.POKEMON -> {
-                pokemonCards = cards
-                viewHolders[0]?.bind(pokemonCards)
+                viewHolders[0]?.bind(cards)
             }
             SuperType.TRAINER -> {
-                trainerCards = cards
-                viewHolders[1]?.bind(trainerCards)
+                viewHolders[1]?.bind(cards)
             }
             SuperType.ENERGY -> {
-                energyCards = cards
-                viewHolders[2]?.bind(energyCards)
+                viewHolders[2]?.bind(cards)
             }
         }
     }

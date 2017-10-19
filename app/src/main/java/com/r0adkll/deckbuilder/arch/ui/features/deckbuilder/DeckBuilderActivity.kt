@@ -11,6 +11,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
@@ -129,17 +130,17 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     }
 
 
-    override fun showPokemonCards(cards: List<PokemonCard>) {
+    override fun showPokemonCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.POKEMON, cards)
     }
 
 
-    override fun showTrainerCards(cards: List<PokemonCard>) {
+    override fun showTrainerCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.TRAINER, cards)
     }
 
 
-    override fun showEnergyCards(cards: List<PokemonCard>) {
+    override fun showEnergyCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.ENERGY, cards)
     }
 

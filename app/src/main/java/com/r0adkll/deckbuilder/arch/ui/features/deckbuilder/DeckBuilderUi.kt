@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -25,9 +26,9 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     interface Actions {
 
-        fun showPokemonCards(cards: List<PokemonCard>)
-        fun showTrainerCards(cards: List<PokemonCard>)
-        fun showEnergyCards(cards: List<PokemonCard>)
+        fun showPokemonCards(cards: List<StackedPokemonCard>)
+        fun showTrainerCards(cards: List<StackedPokemonCard>)
+        fun showEnergyCards(cards: List<StackedPokemonCard>)
         fun showDeckName(name: String)
         fun showDeckDescription(description: String)
     }

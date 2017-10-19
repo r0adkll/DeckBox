@@ -14,39 +14,39 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
     fun last(): Node? = nodes.find { it.next == null }
 
 
-    fun contains(card: PokemonCard): Boolean {
+    fun contains(card: StackedPokemonCard): Boolean {
         return nodes.find { it.cards.contains(card) } != null
     }
 
 
-    fun isChainFor(card: PokemonCard): Boolean {
+    fun isChainFor(card: StackedPokemonCard): Boolean {
         return if (card.isBasic()) {
             nodes.find {
-                it.name == card.name || it.evolvesFrom == card.name
+                it.name == card.card.name || it.evolvesFrom == card.card.name
             } != null
         }
         else {
             nodes.find {
-                it.name == card.evolvesFrom || it.evolvesFrom == card.evolvesFrom
+                it.name == card.card.evolvesFrom || it.evolvesFrom == card.card.evolvesFrom
             } != null
         }
     }
 
 
-    fun addCard(card: PokemonCard) {
+    fun addCard(card: StackedPokemonCard) {
 
         // if card is basic, search for basic node
         if (card.isBasic()) {
-            val node = nodes.find { it.name == card.name }
+            val node = nodes.find { it.name == card.card.name }
             if (node != null) {
                 node.cards.add(card)
             }
             else {
                 // If there isn't an existing node for this card, then attempt to find the evolves from node
-                val evolvedNode = nodes.find { it.evolvesFrom == card.name }
+                val evolvedNode = nodes.find { it.evolvesFrom == card.card.name }
                 if (evolvedNode != null) {
                     // Okay, So create teh base node linking tol this evolved nodle
-                    val baseNode = Node(card.name, null, arrayListOf(card), null, evolvedNode)
+                    val baseNode = Node(card.card.name, null, arrayListOf(card), null, evolvedNode)
                     evolvedNode.previous = baseNode
                     nodes.add(baseNode)
                 }
@@ -54,15 +54,15 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
         }
         else {
             // If card is not basic, search for node with the matching evolves from
-            val node = nodes.find { it.evolvesFrom == card.evolvesFrom }
+            val node = nodes.find { it.evolvesFrom == card.card.evolvesFrom }
             if (node != null) {
                 node.cards.add(card)
             }
             else {
                 // If there is no existing evolved node, then try to find the node from which this card evolves
-                val evolvesFromNode = nodes.find { it.name == card.evolvesFrom }
+                val evolvesFromNode = nodes.find { it.name == card.card.evolvesFrom }
                 if (evolvesFromNode != null) {
-                    val evolvedNode = Node(card.name, card.evolvesFrom, arrayListOf(card), evolvesFromNode, null)
+                    val evolvedNode = Node(card.card.name, card.card.evolvesFrom, arrayListOf(card), evolvesFromNode, null)
                     evolvesFromNode.next = evolvedNode
                     nodes.add(evolvedNode)
                 }
@@ -72,7 +72,7 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
     }
 
 
-    fun removeCard(card: PokemonCard): Boolean {
+    fun removeCard(card: StackedPokemonCard): Boolean {
         val node = nodes.find { it.cards.contains(card) }
         if (node != null) {
             if (node.cards.remove(card) && node.cards.isEmpty()) {
@@ -84,13 +84,13 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
     }
 
 
-    private fun PokemonCard.isBasic(): Boolean = this.evolvesFrom == null
+    private fun StackedPokemonCard.isBasic(): Boolean = this.card.evolvesFrom == null
 
 
     class Node(
             val name: String?,
             val evolvesFrom: String?,
-            val cards: ArrayList<PokemonCard>,
+            val cards: ArrayList<StackedPokemonCard>,
 
             var previous: Node? = null,
             var next: Node? = null
@@ -99,12 +99,12 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
 
     companion object {
 
-        fun create(card: PokemonCard): EvolutionChain {
+        fun create(card: StackedPokemonCard): EvolutionChain {
             val chain = EvolutionChain()
 
             // We don't want to set the name of a node unless it is the base to account for split evolutions i.e. eevee -> espeon, umbreon, etc.
-            val name = if (card.evolvesFrom == null) card.name else null
-            val evolvesFrom = card.evolvesFrom
+            val name = if (card.card.evolvesFrom == null) card.card.name else null
+            val evolvesFrom = card.card.evolvesFrom
             val node = Node(name, evolvesFrom, arrayListOf(card))
             chain.nodes.add(node)
 
@@ -112,10 +112,10 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
         }
 
 
-        fun build(cards: List<PokemonCard>): List<EvolutionChain> {
+        fun build(cards: List<StackedPokemonCard>): List<EvolutionChain> {
             val chains = ArrayList<EvolutionChain>()
 
-            val sortedCards = cards.sortedBy { pokemonCard -> pokemonCard.nationalPokedexNumber }
+            val sortedCards = cards.sortedBy { pokemonCard -> pokemonCard.card.nationalPokedexNumber }
             sortedCards.forEach { card ->
                 val chain = chains.find { it.isChainFor(card) }
                 if (chain == null) {
