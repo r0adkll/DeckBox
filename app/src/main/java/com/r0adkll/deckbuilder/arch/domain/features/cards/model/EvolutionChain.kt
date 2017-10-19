@@ -1,7 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
-
-
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 
 /**
@@ -122,7 +119,7 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
             sortedCards.forEach { card ->
                 val chain = chains.find { it.isChainFor(card) }
                 if (chain == null) {
-                    val newChain = EvolutionChain.create(card)
+                    val newChain = create(card)
                     chains += newChain
                 }
                 else {

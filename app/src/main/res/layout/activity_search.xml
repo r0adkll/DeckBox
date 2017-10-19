@@ -23,8 +23,7 @@
             android:background="@color/transparent"
             android:theme="@style/ThemeOverlay.DeckBuilder.Search"
             android:fitsSystemWindows="true"
-            tools:ignore="UnusedAttribute"
-            app:layout_scrollFlags="scroll|enterAlways|exitUntilCollapsed|snap">
+            tools:ignore="UnusedAttribute">
 
             <android.support.v7.widget.SearchView
                 android:id="@+id/searchView"
@@ -70,7 +69,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorColor="?attr/colorPrimary"
-            app:layout_scrollFlags="exitUntilCollapsed"
             >
 
             <android.support.design.widget.TabItem

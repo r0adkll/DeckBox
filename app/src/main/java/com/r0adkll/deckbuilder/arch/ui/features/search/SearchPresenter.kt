@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 
+import android.text.TextUtils
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
@@ -28,8 +29,12 @@ class SearchPresenter @Inject constructor(
         val switchCategories = intentions.switchCategories()
                 .map { Change.CategorySwitched(it) as Change }
 
+        val clearSelection = intentions.clearSelection()
+                .map { Change.ClearSelectedCards as Change }
+
         val merged = searchCards
                 .mergeWith(selectCard)
+                .mergeWith(clearSelection)
                 .mergeWith(switchCategories)
                 .doOnNext { Timber.d(it.logText) }
 
@@ -40,13 +45,18 @@ class SearchPresenter @Inject constructor(
 
 
     fun getSearchCardsObservable(text: String): Observable<Change> {
-        return repository.search(ui.state.category, text.replace(",", "|"))
-                .map { Change.ResultsLoaded(it) as Change }
-                .startWith(listOf(
-                        Change.QuerySubmitted(text) as Change,
-                        Change.IsLoading as Change
-                ))
-                .onErrorReturn(handleUnknownError)
+        return if (TextUtils.isEmpty(text)) {
+            Observable.just(Change.ClearQuery as Change)
+        }
+        else {
+            repository.search(ui.state.category, text.replace(",", "|"))
+                    .map { Change.ResultsLoaded(it) as Change }
+                    .startWith(listOf(
+                            Change.QuerySubmitted(text) as Change,
+                            Change.IsLoading as Change
+                    ))
+                    .onErrorReturn(handleUnknownError)
+        }
     }
 
 

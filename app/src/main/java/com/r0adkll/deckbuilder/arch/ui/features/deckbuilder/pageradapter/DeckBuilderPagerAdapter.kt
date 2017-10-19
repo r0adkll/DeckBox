@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
+package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter
 
 import android.content.Context
 import android.support.v4.view.PagerAdapter

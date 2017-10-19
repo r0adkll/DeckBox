@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding

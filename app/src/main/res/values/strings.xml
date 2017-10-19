@@ -22,4 +22,5 @@
     <string name="empty_deckbuilder_message">Looks like you haven\'t added any cards yet. Click the add icon to find cards to add.</string>
     <string name="empty_search_category">Enter a term above to begin searching for cards</string>
     <string name="action_save">Save</string>
+    <string name="action_undo">Undo</string>
 </resources>

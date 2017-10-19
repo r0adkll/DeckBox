@@ -7,21 +7,18 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.evernote.android.state.State
-import com.evernote.android.state.StateSaver
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.DeckBuilderPagerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import io.pokemontcg.Pokemon
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
-import timber.log.Timber
 import javax.inject.Inject
 
 

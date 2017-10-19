@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChain
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
 import org.amshove.kluent.*
 import org.junit.Test

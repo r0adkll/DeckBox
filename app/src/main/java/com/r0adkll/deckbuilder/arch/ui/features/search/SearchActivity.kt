@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import com.ftinc.kit.kotlin.extensions.color
+import com.jakewharton.rxbinding2.support.v7.widget.queryTextChangeEvents
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -41,6 +42,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
+    private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
     private lateinit var adapter: ResultsPagerAdapter
     private var selectionSnackBar: Snackbar? = null
 
@@ -115,8 +117,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     override fun searchCards(): Observable<String> {
         return searchView.queryTextChanges()
                 .map { it.toString() }
-                .filter { !it.isEmpty() }
-                .uiDebounce()
+                .uiDebounce(750L)
     }
 
 
@@ -127,6 +128,11 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     override fun selectCard(): Observable<PokemonCard> {
         return pokemonCardClicks
+    }
+
+
+    override fun clearSelection(): Observable<Unit> {
+        return clearSelectionClicks
     }
 
 
@@ -150,7 +156,9 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         val text = resources.getQuantityString(R.plurals.card_selection_count, cards.size, cards.size)
         if (selectionSnackBar == null) {
             selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.action_finish, { supportFinishAfterTransition() })
+                    .setAction(R.string.action_undo, {
+                        clearSelectionClicks.accept(Unit)
+                    })
                     .setActionTextColor(color(R.color.primaryColor))
         }
 

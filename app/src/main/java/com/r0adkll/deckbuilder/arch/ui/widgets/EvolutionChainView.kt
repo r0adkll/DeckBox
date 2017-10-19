@@ -10,7 +10,7 @@ import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChain
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.*
 import timber.log.Timber
 
@@ -95,10 +95,11 @@ class EvolutionChainView @JvmOverloads constructor(
 
             var node = chain.first()
             var nodeIndex = 0
+            var viewIndex = 0
             while(node != null) {
                 node.cards.forEachIndexed { cardIndex, card ->
                     // Attempt to find existing view for index
-                    var view = getChildAt(nodeIndex + cardIndex)?.let { it as PokemonCardView }
+                    var view = getChildAt(viewIndex)?.let { it as PokemonCardView }
                     if (view == null) {
                         view = PokemonCardView(context)
                         addView(view)
@@ -129,9 +130,21 @@ class EvolutionChainView @JvmOverloads constructor(
                     lp.topMargin = chainSpacing
                     lp.bottomMargin = chainSpacing
                     view.layoutParams = lp
+
+                    // Increment the view index
+                    viewIndex++
                 }
                 node = node.next
                 nodeIndex++
+            }
+
+            // If there are more views than views than what was index, remove those views
+            if (childCount > viewIndex) {
+                val count = childCount
+                (viewIndex until count).forEach {
+                    Timber.i("Removing view at $it; (count: $childCount, viewIndex: $viewIndex)")
+                    removeViewAt(it)
+                }
             }
 
         }

@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
+package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter
 
 
 import android.support.v7.widget.GridLayoutManager
@@ -11,6 +11,8 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChainRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 
 abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(

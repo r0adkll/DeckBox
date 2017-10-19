@@ -68,6 +68,11 @@ fun <T : Any> Observable<T>.uiDebounce(): Observable<T> {
 }
 
 
+fun <T : Any> Observable<T>.uiDebounce(delayInMilliseconds: Long): Observable<T> {
+    return this.debounce(delayInMilliseconds, java.util.concurrent.TimeUnit.MILLISECONDS)
+}
+
+
 fun <T : Any> Observable<T>.mapError(throwable: Throwable): Observable<T> {
     return this.onErrorResumeNext { _: Throwable -> Observable.error<T>(throwable) }
 }

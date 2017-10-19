@@ -114,6 +114,7 @@ class ResultsPagerAdapter(
 
             recycler.layoutManager = GridLayoutManager(itemView.context, 3)
             recycler.adapter = adapter
+            recycler.setHasFixedSize(true)
 
             recycler.addOnScrollListener(scrollHideListener)
         }
