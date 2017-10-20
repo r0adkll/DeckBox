@@ -4,9 +4,12 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.view.animation.FastOutLinearInInterpolator
+import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
 import com.evernote.android.state.State
+import com.ftinc.kit.kotlin.extensions.*
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -16,10 +19,12 @@ import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -33,6 +38,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
     private val addPokemon: Relay<List<PokemonCard>> = PublishRelay.create()
+    private val removePokemon: Relay<PokemonCard> = PublishRelay.create()
 
     private lateinit var adapter: DeckBuilderPagerAdapter
 
@@ -60,6 +66,41 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
             }
             val intent = SearchActivity.createIntent(this, superType)
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
+        }
+
+        dropZone.setOnDragListener { v, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    v.animate()
+                            .translationY(0f)
+                            .setDuration(150L)
+                            .setInterpolator(FastOutLinearInInterpolator())
+                            .start()
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    v.setBackgroundColor(color(R.color.dropzone_red_selected))
+                }
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    v.setBackgroundColor(color(R.color.dropzone_red))
+                }
+                DragEvent.ACTION_DROP -> {
+                    val localState = event.localState
+                    if (localState is PokemonCardView) {
+                        localState.card?.let {
+                            removePokemon.accept(it)
+                        }
+                    }
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    v.setBackgroundColor(color(R.color.dropzone_red))
+                    v.animate()
+                            .translationY(-dpToPx(104f))
+                            .setDuration(150L)
+                            .setInterpolator(FastOutLinearInInterpolator())
+                            .start()
+                }
+            }
+            true
         }
 
         renderer.start()
@@ -116,7 +157,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
 
     override fun removeCard(): Observable<PokemonCard> {
-        return Observable.empty()
+        return removePokemon
     }
 
 

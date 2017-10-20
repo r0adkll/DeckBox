@@ -9,4 +9,6 @@
     <color name="secondaryColor">#ffc107</color>
     <color name="secondaryLightColor">#fff350</color>
     <color name="secondaryDarkColor">#c79100</color>
+    <color name="dropzone_red">#dee51c23</color>
+    <color name="dropzone_red_selected">#e51c23</color>
 </resources>

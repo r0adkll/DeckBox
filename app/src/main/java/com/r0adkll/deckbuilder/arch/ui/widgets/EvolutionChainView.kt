@@ -1,6 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
+import android.annotation.SuppressLint
+import android.content.ClipData
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
@@ -8,6 +11,7 @@ import android.widget.LinearLayout
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.util.BuildUtils
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
@@ -56,11 +60,9 @@ class EvolutionChainView @JvmOverloads constructor(
         super.dispatchDraw(canvas)
         (0 until childCount).forEach { index ->
             val child = getChildAt(index) as PokemonCardView
-            Timber.d("Should render child [${child.evolution}]")
             if (child.evolution == END || child.evolution == MIDDLE) {
                 val nextChild = getChildAt(index + 1)?.let { it as PokemonCardView }
                 if (nextChild != null && (nextChild.evolution == START || nextChild.evolution == MIDDLE)) {
-                    Timber.d("Rendering between children [${child.evolution} to ${nextChild.evolution}]")
                     // Render Link
                     val y = child.top + (child.height / 2f)
 
@@ -89,6 +91,7 @@ class EvolutionChainView @JvmOverloads constructor(
     }
 
 
+    @SuppressLint("NewApi")
     private fun configurePokemonCardViews() {
         removeAllViews()
         evolutionChain?.let { chain ->
@@ -133,6 +136,11 @@ class EvolutionChainView @JvmOverloads constructor(
                     lp.bottomMargin = chainSpacing
                     view.layoutParams = lp
 
+                    view.setOnLongClickListener { v ->
+                        (v as PokemonCardView).startDrag()
+                        true
+                    }
+
                     // Increment the view index
                     viewIndex++
                 }
@@ -144,7 +152,6 @@ class EvolutionChainView @JvmOverloads constructor(
             if (childCount > viewIndex) {
                 val count = childCount
                 (viewIndex until count).forEach {
-                    Timber.i("Removing view at $it; (count: $childCount, viewIndex: $viewIndex)")
                     removeViewAt(it)
                 }
             }

@@ -23,4 +23,5 @@
     <string name="empty_search_category">Enter a term above to begin searching for cards</string>
     <string name="action_save">Save</string>
     <string name="action_undo">Undo</string>
+    <string name="dropzone_message">Remove card</string>
 </resources>

@@ -23,7 +23,7 @@ data class PokemonCard(
         val retreatCost: List<Type>?,
         val number: String,
         val artist: String,
-        val rarity: String,
+        val rarity: String?,
         val series: String,
         val expansion: Expansion?,
         val text: List<String>?,

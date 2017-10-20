@@ -22,7 +22,7 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
         val pokemonCardClicks: Relay<PokemonCard>
 ) {
 
-    private val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
+    protected val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
     private val emptyView: EmptyView = itemView.findViewById(R.id.empty_view)
 
     abstract val adapter: A
@@ -56,6 +56,10 @@ class TrainerEnergyViewHolder(
 ) : SuperTypeViewHolder<StackedPokemonRecyclerAdapter>(itemView, pokemonCardClicks) {
     override val adapter: StackedPokemonRecyclerAdapter = StackedPokemonRecyclerAdapter(itemView.context)
     override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, 3)
+
+    init {
+        recycler.setHasFixedSize(true)
+    }
 
     override fun bind(cards: List<StackedPokemonCard>) {
         adapter.setCards(cards)

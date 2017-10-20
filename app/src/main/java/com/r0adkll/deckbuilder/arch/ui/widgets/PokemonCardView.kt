@@ -2,12 +2,16 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 
 import android.annotation.SuppressLint
+import android.content.ClipData
 import android.content.Context
+import android.content.Intent
 import android.graphics.*
+import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewOutlineProvider
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -15,6 +19,7 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.kotlin.extensions.spToPx
+import com.ftinc.kit.util.BuildUtils
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -43,6 +48,9 @@ class PokemonCardView @JvmOverloads constructor(
     private val radius = dpToPx(8f)
     private val punchRadius = dpToPx(10f)
     private val countRadius = dpToPx(16f)
+
+    private var lastTouchX: Float = 0f
+    private var lastTouchY: Float = 1f;
 
 
     var card: PokemonCard? = null
@@ -175,11 +183,32 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        lastTouchX = event?.x ?: 0f
+        lastTouchY = event?.y ?: 0f
+        return super.onTouchEvent(event)
+    }
+
+
     override fun drawableStateChanged() {
         super.drawableStateChanged()
         if (isDuplicateParentStateEnabled) {
             postInvalidateOnAnimation()
         }
+    }
+
+
+    fun startDrag() {
+        val clipData = ClipData.newPlainText(KEY_CARD, KEY_CARD)
+        val shadowBuilder = CardShadowBuilder(this, PointF(lastTouchX, lastTouchY))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            startDragAndDrop(clipData, shadowBuilder, this, 0)
+        }
+        else {
+            startDrag(clipData, shadowBuilder, this, 0)
+        }
+
+        imageAlpha = (255f * 54f).toInt()
     }
 
 
@@ -247,7 +276,46 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
+    class CardShadowBuilder(view: View, val lastTouch: PointF) : DragShadowBuilder(view) {
+
+        private var bitmapCache: Bitmap? = null
+        private var canvasCache: Canvas? = null
+        private val destRect: Rect = Rect()
+
+
+        override fun onProvideShadowMetrics(outShadowSize: Point, outShadowTouchPoint: Point) {
+            view?.let {
+                val width = it.width * SHADOW_SIZE_RATIO
+                val height = it.height * SHADOW_SIZE_RATIO
+                val touchX = lastTouch.x * SHADOW_SIZE_RATIO
+                val touchY = lastTouch.y * SHADOW_SIZE_RATIO
+                outShadowSize.set(width.toInt(), height.toInt())
+                outShadowTouchPoint.set(touchX.toInt(), touchY.toInt())
+            }
+        }
+
+        override fun onDrawShadow(canvas: Canvas) {
+            view?.let {
+                if (bitmapCache == null) {
+                    bitmapCache = Bitmap.createBitmap(it.width, it.height, Bitmap.Config.ARGB_8888)
+                    canvasCache = Canvas(bitmapCache)
+                    it.draw(canvasCache)
+                }
+
+                destRect.set(0, 0, canvas.width, canvas.height)
+                canvas.drawBitmap(bitmapCache, null, destRect, null)
+            }
+        }
+
+
+        companion object {
+            private const val SHADOW_SIZE_RATIO = 1.25f
+        }
+    }
+
+
     companion object {
+        @JvmField val KEY_CARD = "PokemonCardView.Card"
         private const val RATIO = 1.3959183673f
     }
 }
