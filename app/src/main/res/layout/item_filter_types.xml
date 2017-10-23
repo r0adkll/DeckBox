@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_colorless"
+            android:src="@drawable/ic_poketype_colorless"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_fire"
+            android:src="@drawable/ic_poketype_fire"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_grass"
+            android:src="@drawable/ic_poketype_grass"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_water"
+            android:src="@drawable/ic_poketype_water"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_electric"
+            android:src="@drawable/ic_poketype_electric"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_fighting"
+            android:src="@drawable/ic_poketype_fighting"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_psychic"
+            android:src="@drawable/ic_poketype_psychic"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_steel"
+            android:src="@drawable/ic_poketype_steel"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_dragon"
+            android:src="@drawable/ic_poketype_dragon"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_fairy"
+            android:src="@drawable/ic_poketype_fairy"
+            />
+
+        <ImageView
+            style="@style/Widget.Deck.PokeType"
+            android:id="@+id/type_dark"
+            android:src="@drawable/ic_poketype_dark"
+            />
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</LinearLayout>
