@@ -24,4 +24,8 @@
     <string name="action_save">Save</string>
     <string name="action_undo">Undo</string>
     <string name="dropzone_message">Remove card</string>
+    <string name="fragment_filter_title">Filter</string>
+    <string name="filter_attributes_title">Attributes</string>
+    <string name="filter_expansions_title">Expansions</string>
+    <string name="filter_rarity_title">Rarity</string>
 </resources>
