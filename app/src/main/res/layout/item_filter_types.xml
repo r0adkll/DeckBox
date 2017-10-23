@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="8dp">
 
@@ -10,46 +11,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_colorless"
-            android:src="@drawable/ic_poketype_colorless"
+            app:pokeType="colorless"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_fire"
-            android:src="@drawable/ic_poketype_fire"
+            app:pokeType="fire"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_grass"
-            android:src="@drawable/ic_poketype_grass"
+            app:pokeType="grass"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_water"
-            android:src="@drawable/ic_poketype_water"
+            app:pokeType="water"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_electric"
-            android:src="@drawable/ic_poketype_electric"
+            app:pokeType="electric"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_fighting"
-            android:src="@drawable/ic_poketype_fighting"
+            app:pokeType="fighting"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_psychic"
-            android:src="@drawable/ic_poketype_psychic"
+            app:pokeType="psychic"
             />
 
     </LinearLayout>
@@ -59,28 +60,28 @@
         android:layout_height="wrap_content">
 
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_steel"
-            android:src="@drawable/ic_poketype_steel"
+            app:pokeType="steel"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_dragon"
-            android:src="@drawable/ic_poketype_dragon"
+            app:pokeType="dragon"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_fairy"
-            android:src="@drawable/ic_poketype_fairy"
+            app:pokeType="fairy"
             />
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_dark"
-            android:src="@drawable/ic_poketype_dark"
+            app:pokeType="darkness"
             />
 
         <android.support.v4.widget.Space

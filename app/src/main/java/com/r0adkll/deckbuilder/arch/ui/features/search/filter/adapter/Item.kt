@@ -65,8 +65,7 @@ sealed class Item : RecyclerItem {
         }
 
 
-        override val layoutId: Int
-            get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        override val layoutId: Int = R.layout.item_filter_attributes
     }
 
 
@@ -88,8 +87,7 @@ sealed class Item : RecyclerItem {
         }
 
 
-        override val layoutId: Int
-            get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        override val layoutId: Int = R.layout.item_filter_option
 
     }
 
@@ -108,8 +106,7 @@ sealed class Item : RecyclerItem {
         }
 
 
-        override val layoutId: Int
-            get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        override val layoutId: Int = R.layout.item_filter_view_more
     }
 
 
@@ -132,8 +129,7 @@ sealed class Item : RecyclerItem {
         }
 
 
-        override val layoutId: Int
-            get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        override val layoutId: Int = R.layout.item_filter_value_range
 
 
         data class Value(

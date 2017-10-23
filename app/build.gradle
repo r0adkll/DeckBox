@@ -86,6 +86,7 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
     implementation "com.roughike:bottom-bar:$bottombar_version"
     implementation 'com.nex3z:flow-layout:1.0.0'
+    implementation 'org.adw.library:discrete-seekbar:1.0.1'
 }
 
 
