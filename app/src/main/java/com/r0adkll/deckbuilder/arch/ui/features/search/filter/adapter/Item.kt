@@ -3,6 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter
 
 import android.support.annotation.StringRes
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.Rarity
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 import io.pokemontcg.model.SubType
 
@@ -48,19 +50,19 @@ sealed class Item : RecyclerItem {
     }
 
 
-    data class Attributes(
+    data class Attribute(
             val key: String,
             val attributes: List<SubType>,
             val selected: List<SubType>
     ) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
-            is Attributes -> new.key == key
+            is Attribute -> new.key == key
             else -> false
         }
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
-            is Attributes -> new == this
+            is Attribute -> new == this
             else -> false
         }
 
@@ -69,11 +71,13 @@ sealed class Item : RecyclerItem {
     }
 
 
-    data class Option<out T>(
-            val key: String,
-            val option: T,
-            val isSelected: Boolean
+    sealed class Option<out T>(
+            open val key: String,
+            open val option: T,
+            open val isSelected: Boolean
     ) : Item() {
+
+        abstract val text: String
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
             is Option<*> -> new.key == key
@@ -88,6 +92,26 @@ sealed class Item : RecyclerItem {
 
 
         override val layoutId: Int = R.layout.item_filter_option
+
+
+        data class ExpansionOption(
+                override val key: String,
+                override val option: Expansion,
+                override val isSelected: Boolean
+        ) : Option<Expansion>(key, option, isSelected) {
+
+            override val text: String = option.name
+        }
+
+
+        data class RarityOption(
+                override val key: String,
+                override val option: Rarity,
+                override val isSelected: Boolean
+        ) : Option<Rarity>(key, option, isSelected) {
+
+            override val text: String = option.name.toLowerCase().capitalize()
+        }
 
     }
 

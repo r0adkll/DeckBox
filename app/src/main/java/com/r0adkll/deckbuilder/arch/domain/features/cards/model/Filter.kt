@@ -23,5 +23,10 @@ data class Filter(
 ) : PaperParcelable {
     companion object {
         @JvmField val CREATOR = PaperParcelFilter.CREATOR
+
+        val DEFAULT by lazy {
+            Filter(emptyList(), emptyList(), emptyList(), emptyList(), null, null, null, null,
+                    emptyList(), emptyList())
+        }
     }
 }

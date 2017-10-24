@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.components
 
 
 import android.content.Context
+import android.support.v7.util.DiffUtil
 import android.support.v7.util.ListUpdateCallback
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -276,4 +277,11 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         }
     }
 
+
+    companion object {
+        fun <T : RecyclerItem> calculateDiff(new: List<T>, old: List<T>): RecyclerViewBinding<T> {
+            val diff = DiffUtil.calculateDiff(DiffCallback(old, new))
+            return RecyclerViewBinding(new = new, diff = diff)
+        }
+    }
 }
