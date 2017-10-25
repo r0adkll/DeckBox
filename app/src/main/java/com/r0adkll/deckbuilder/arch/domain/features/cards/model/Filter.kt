@@ -12,6 +12,7 @@ import paperparcel.PaperParcelable
 data class Filter(
         val types: List<Type>,
         val subTypes: List<SubType>,
+        val contains: List<String>,
         val expansions: List<Expansion>,
         val rarity: List<Rarity>,
         val retreatCost: String?,
@@ -25,7 +26,7 @@ data class Filter(
         @JvmField val CREATOR = PaperParcelFilter.CREATOR
 
         val DEFAULT by lazy {
-            Filter(emptyList(), emptyList(), emptyList(), emptyList(), null, null, null, null,
+            Filter(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), null, null, null, null,
                     emptyList(), emptyList())
         }
     }
