@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
+import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State
@@ -30,6 +31,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
     @Inject lateinit var renderer: FilterRenderer
     @Inject lateinit var presenter: FilterPresenter
+    @Inject lateinit var drawerInteractor: DrawerInteractor
 
     private lateinit var adapter: FilterRecyclerAdapter
 
@@ -41,6 +43,8 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        toolbar.setNavigationOnClickListener { drawerInteractor.closeDrawer() }
+
         adapter = FilterRecyclerAdapter(activity, filterIntentions)
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.adapter = adapter

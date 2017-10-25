@@ -35,7 +35,8 @@ import kotlinx.android.synthetic.main.activity_search.*
 import javax.inject.Inject
 
 
-class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions, CategoryIntentions, HasComponent<SearchComponent> {
+class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
+        CategoryIntentions, DrawerInteractor, HasComponent<SearchComponent> {
 
     @com.evernote.android.state.State
     override var state: State = State.DEFAULT
@@ -171,6 +172,11 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
      */
     override fun filterUpdates(): Observable<Filter> {
         return filterChanges
+    }
+
+
+    override fun closeDrawer() {
+        drawer.closeDrawer(GravityCompat.END)
     }
 
 

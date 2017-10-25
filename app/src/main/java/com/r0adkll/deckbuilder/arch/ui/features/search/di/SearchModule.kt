@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.di
 
 
+import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi
@@ -13,6 +14,10 @@ import dagger.Provides
 
 @Module
 class SearchModule(val activity: SearchActivity) {
+
+    @Provides @ActivityScope
+    fun provideDrawerInteractor(): DrawerInteractor = activity
+
 
     @Provides @ActivityScope
     fun provideUi(): SearchUi = activity
