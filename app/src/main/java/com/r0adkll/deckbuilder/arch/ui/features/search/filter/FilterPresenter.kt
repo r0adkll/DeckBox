@@ -23,6 +23,7 @@ class FilterPresenter @Inject constructor(
     override fun start() {
 
         val loadExpansions = repository.getExpansions()
+                .map { it.asReversed() }
                 .map { Change.ExpansionsLoaded(it) as Change }
 
         val typeSelected = intentions.typeClicks()

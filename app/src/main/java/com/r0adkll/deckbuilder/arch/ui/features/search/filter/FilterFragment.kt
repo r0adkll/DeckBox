@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.filter
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +44,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         adapter = FilterRecyclerAdapter(activity, filterIntentions)
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.adapter = adapter
+        (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         renderer.start()
         presenter.start()

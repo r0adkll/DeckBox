@@ -37,4 +37,6 @@
     <string name="filter_header_attack_damage">Attack damage</string>
     <string name="filter_header_weaknesses">Weaknesses</string>
     <string name="filter_header_resistances">Resistances</string>
+    <string name="filter_viewmore_expanded">View expanded</string>
+    <string name="filter_viewmore_all">View all</string>
 </resources>

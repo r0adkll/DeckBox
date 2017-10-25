@@ -24,6 +24,11 @@ class FilterRecyclerAdapter(
     }
 
 
+    override fun getItemViewType(position: Int): Int {
+        return items[position].viewType
+    }
+
+
     fun setFilterItems(items: List<Item>) {
         val diff = calculateDiff(items, this.items)
         this.items = ArrayList(diff.new)

@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.jakewharton.rxrelay2.Relay
 import com.nex3z.flowlayout.FlowLayout
 import com.r0adkll.deckbuilder.GlideApp
@@ -114,10 +115,14 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                     is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
                     is FilterAttribute.ContainsAttribute -> attr.attribute
                 }
+                view.setTextColor(color(if (isChecked) R.color.white else R.color.black87))
+                view.elevation = if (isChecked) dpToPx(4f) else 0f
                 view.isChecked = isChecked
                 view.setOnClickListener {
                     attributeClicks.accept(attr)
                 }
+
+                container.addView(view)
             }
         }
     }
@@ -220,7 +225,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 }
 
                 override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {
-                    val modifier = modifiers.first { it.alpha == 1f }.id.modifier()
+                    val modifier = modifiers.firstOrNull { it.alpha == 1f }?.id?.modifier() ?: NONE
                     valueRangeChange.accept(Pair(item.key, Value(seekBar.progress, modifier)))
                 }
             })

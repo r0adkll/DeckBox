@@ -6,16 +6,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.v4.view.GravityCompat
+import android.view.Gravity
 import com.ftinc.kit.kotlin.extensions.color
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChangeEvents
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
+import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.CategoryIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
@@ -24,13 +28,14 @@ import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
 import com.r0adkll.deckbuilder.util.extensions.find
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findEnum
+import gov.scstatehouse.houseofcards.di.HasComponent
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_search.*
 import javax.inject.Inject
 
 
-class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions, CategoryIntentions {
+class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions, CategoryIntentions, HasComponent<SearchComponent> {
 
     @com.evernote.android.state.State
     override var state: State = State.DEFAULT
@@ -44,8 +49,10 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
     private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
-    private lateinit var adapter: ResultsPagerAdapter
+    private val filterChanges: Relay<Filter> = PublishRelay.create()
     private var selectionSnackBar: Snackbar? = null
+    private lateinit var adapter: ResultsPagerAdapter
+    private lateinit var component: SearchComponent
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +66,10 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
         searchback.setOnClickListener {
             supportFinishAfterTransition()
+        }
+
+        actionFilter.setOnClickListener {
+            drawer.openDrawer(GravityCompat.END)
         }
 
         tabs.addOnTabSelectedListener(object : OnTabSelectedAdapter() {
@@ -104,8 +115,13 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     override fun setupComponent(component: AppComponent) {
-        component.plus(SearchModule(this))
-                .inject(this)
+        this.component = component.plus(SearchModule(this))
+        this.component.inject(this)
+    }
+
+
+    override fun getComponent(): SearchComponent {
+        return component
     }
 
 
@@ -139,6 +155,22 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     override fun categoryChange(): Observable<SuperType> {
         return categoryChanges
+    }
+
+
+    /*
+     * This receives changes from the FilterPresenter
+     */
+    override fun filterChanges(): Relay<Filter> {
+        return filterChanges
+    }
+
+
+    /*
+     * This sends changes to the SearchPresenter
+     */
+    override fun filterUpdates(): Observable<Filter> {
+        return filterChanges
     }
 
 

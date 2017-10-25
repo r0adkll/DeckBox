@@ -64,6 +64,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
 
     @PaperParcel
     data class State(
+            val category: SuperType,
             val spec: FilterSpec,
             val filter: Filter,
             val expansions: List<Expansion>,
@@ -71,14 +72,16 @@ interface FilterUi : StateRenderer<FilterUi.State> {
     ) : PaperParcelable {
 
         fun reduce(change: Change): State = when(change) {
-            is ExpansionsLoaded -> this.copy(expansions = change.expansions)
-            is CategoryChanged -> this.copy(spec = FilterSpec.create(change.category, expansions, visibility))
+            is ExpansionsLoaded -> this.copy(expansions = change.expansions, spec = FilterSpec.create(category, change.expansions, visibility))
+            is CategoryChanged -> this.copy(category = change.category, spec = FilterSpec.create(change.category, expansions, visibility))
+
             is TypeSelected -> this.copy(filter = FilterReducer.reduceType(change.key, change.type, filter))
             is AttributeSelected -> this.copy(filter = FilterReducer.reduceAttribute(change.attribute, filter))
             is ExpansionSelected -> this.copy(filter = FilterReducer.reduceExpansion(change.expansion, filter))
             is RaritySelected -> this.copy(filter = FilterReducer.reduceRarity(change.rarity, filter))
             is ValueRangeChanged -> this.copy(filter = FilterReducer.reduceValueRange(change.key, change.value, filter))
-            ViewMoreSelected -> this.copy(visibility = visibility.next())
+
+            ViewMoreSelected -> this.copy(visibility = visibility.next(), spec = FilterSpec.create(category, expansions, visibility.next()))
         }
 
 
@@ -98,7 +101,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             @JvmField val CREATOR = PaperParcelFilterUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(FilterSpec.DEFAULT, Filter.DEFAULT, emptyList(), ExpansionVisibility.STANDARD)
+                State(SuperType.POKEMON, FilterSpec.DEFAULT, Filter.DEFAULT, emptyList(), ExpansionVisibility.STANDARD)
             }
         }
     }

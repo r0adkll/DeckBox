@@ -87,9 +87,18 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                 val visibility: FilterUi.ExpansionVisibility
         ) : Spec() {
 
-            override fun apply(filter: Filter): List<Item> = listOf(
-                    Item.Header(R.string.filter_header_expansions)
-            ).plus(getVisibleExpansions(filter))
+            override fun apply(filter: Filter): List<Item> {
+                val items = ArrayList<Item>()
+                items += Item.Header(R.string.filter_header_expansions)
+                items += getVisibleExpansions(filter)
+                if (visibility != UNLIMITED) {
+                    items += Item.ViewMore(when(visibility){
+                        STANDARD -> R.string.filter_viewmore_expanded
+                        else -> R.string.filter_viewmore_all
+                    })
+                }
+                return items
+            }
 
 
             private fun getVisibleExpansions(filter: Filter): List<Item> {

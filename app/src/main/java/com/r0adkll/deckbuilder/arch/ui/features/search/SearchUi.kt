@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.pokemontcg.model.SuperType
@@ -16,6 +17,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
     interface Intentions {
 
+        fun filterUpdates(): Observable<Filter>
         fun switchCategories(): Observable<SuperType>
         fun searchCards(): Observable<String>
         fun selectCard(): Observable<PokemonCard>
