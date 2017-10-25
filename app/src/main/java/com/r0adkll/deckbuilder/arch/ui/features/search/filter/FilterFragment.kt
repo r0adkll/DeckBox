@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.FilterRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
@@ -22,6 +23,7 @@ import javax.inject.Inject
 
 class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.Actions {
 
+    @com.evernote.android.state.State
     override var state: State = State.DEFAULT
     private val filterIntentions: FilterIntentions = FilterIntentions()
 
@@ -68,7 +70,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
 
     override fun typeClicks(): Observable<Pair<String, Type>> = filterIntentions.typeClicks
-    override fun attributeClicks(): Observable<SubType> = filterIntentions.attributeClicks
+    override fun attributeClicks(): Observable<FilterAttribute> = filterIntentions.attributeClicks
     override fun optionClicks(): Observable<Pair<String, Any>> = filterIntentions.optionClicks
     override fun viewMoreClicks(): Observable<Unit> = filterIntentions.viewMoreClicks
     override fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>> = filterIntentions.valueRangeChanges

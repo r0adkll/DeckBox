@@ -6,12 +6,15 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterSpec.Spec.AttributeSpec
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.ExpansionVisibility.*
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.SubTypeAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.Option.*
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier.*
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Value
-import io.pokemontcg.model.SubType
+import io.pokemontcg.model.SubType.*
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import paperparcel.PaperParcel
@@ -56,12 +59,21 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
 
 
         @PaperParcel
-        class AttributeSpec(val attributes: List<SubType>) : Spec() {
+        class AttributeSpec(val attributes: List<FilterAttribute>) : Spec() {
 
             override fun apply(filter: Filter): List<Item> = listOf(
                     Item.Header(R.string.filter_header_attributes),
-                    Item.Attribute(attributes, filter.subTypes)
+                    Item.Attribute(attributes, getFilteredAttributes(filter))
             )
+
+
+            private fun getFilteredAttributes(filter: Filter): List<FilterAttribute> {
+                val attrs = ArrayList<FilterAttribute>()
+                attrs += filter.subTypes.map { SubTypeAttribute(it) }
+                attrs += filter.contains.map { FilterAttribute.ContainsAttribute(it) }
+                return attrs
+            }
+
 
             companion object {
                 @JvmField val CREATOR = PaperParcelFilterSpec_Spec_AttributeSpec.CREATOR
@@ -190,17 +202,18 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
             return FilterSpec(
                     listOf(
                             Spec.TypeSpec("type", R.string.filter_header_type),
-                            Spec.AttributeSpec(listOf(
-                                    SubType.BASIC,
-                                    SubType.STAGE_1,
-                                    SubType.STAGE_2,
-                                    SubType.MEGA,
-                                    SubType.EX,
-                                    SubType.GX,
-                                    SubType.LEVEL_UP,
-                                    SubType.BREAK,
-                                    SubType.LEGEND,
-                                    SubType.RESTORED
+                            AttributeSpec(listOf(
+                                    SubTypeAttribute(BASIC),
+                                    SubTypeAttribute(STAGE_1),
+                                    SubTypeAttribute(STAGE_2),
+                                    SubTypeAttribute(MEGA),
+                                    SubTypeAttribute(EX),
+                                    SubTypeAttribute(GX),
+                                    SubTypeAttribute(LEVEL_UP),
+                                    SubTypeAttribute(BREAK),
+                                    SubTypeAttribute(LEGEND),
+                                    SubTypeAttribute(RESTORED),
+                                    FilterAttribute.ContainsAttribute("Ability")
                             )),
                             Spec.ExpansionSpec(expansions, visibility),
                             Spec.RaritySpec(Rarity.values().toList()),
@@ -219,14 +232,14 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                           visibility: FilterUi.ExpansionVisibility): FilterSpec {
             return FilterSpec(
                     listOf(
-                            Spec.AttributeSpec(listOf(
-                                    SubType.ITEM,
-                                    SubType.STADIUM,
-                                    SubType.SUPPORTER,
-                                    SubType.STADIUM,
-                                    SubType.TECHNICAL_MACHINE,
-                                    SubType.POKEMON_TOOL,
-                                    SubType.ROCKETS_SECRET_MACHINE
+                            AttributeSpec(listOf(
+                                    SubTypeAttribute(ITEM),
+                                    SubTypeAttribute(STADIUM),
+                                    SubTypeAttribute(SUPPORTER),
+                                    SubTypeAttribute(STADIUM),
+                                    SubTypeAttribute(TECHNICAL_MACHINE),
+                                    SubTypeAttribute(POKEMON_TOOL),
+                                    SubTypeAttribute(ROCKETS_SECRET_MACHINE)
                             )),
                             Spec.ExpansionSpec(expansions, visibility),
                             Spec.RaritySpec(Rarity.values().toList())
@@ -239,9 +252,9 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                          visibility: FilterUi.ExpansionVisibility): FilterSpec {
             return FilterSpec(
                     listOf(
-                            Spec.AttributeSpec(listOf(
-                                    SubType.BASIC,
-                                    SubType.SPECIAL
+                            AttributeSpec(listOf(
+                                    SubTypeAttribute(BASIC),
+                                    SubTypeAttribute(SPECIAL)
                             )),
                             Spec.ExpansionSpec(expansions, visibility),
                             Spec.RaritySpec(Rarity.values().toList())

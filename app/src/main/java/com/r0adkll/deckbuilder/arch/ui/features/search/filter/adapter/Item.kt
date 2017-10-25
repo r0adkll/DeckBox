@@ -6,6 +6,8 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
 import io.pokemontcg.model.SubType
 
 
@@ -51,8 +53,8 @@ sealed class Item : RecyclerItem {
 
 
     data class Attribute(
-            val attributes: List<SubType>,
-            val selected: List<SubType>
+            val attributes: List<FilterAttribute>,
+            val selected: List<FilterAttribute>
     ) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {

@@ -3,6 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.filter
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.SubTypeAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.Type
@@ -20,8 +22,9 @@ object FilterReducer {
     }
 
 
-    fun reduceAttribute(subType: SubType, filter: Filter): Filter {
-        return filter.copy(subTypes = filter.subTypes.toggle(subType))
+    fun reduceAttribute(attribute: FilterAttribute, filter: Filter): Filter = when(attribute) {
+        is SubTypeAttribute -> filter.copy(subTypes = filter.subTypes.toggle(attribute.subType))
+        is FilterAttribute.ContainsAttribute -> filter.copy(contains = filter.contains.toggle(attribute.attribute))
     }
 
 

@@ -19,6 +19,8 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.*
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier.*
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.UiViewHolder.ViewType.*
@@ -96,7 +98,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
      */
     class AttributesViewHolder(
             itemView: View,
-            private val attributeClicks: Relay<SubType>
+            private val attributeClicks: Relay<FilterAttribute>
     ) : UiViewHolder<Item.Attribute>(itemView) {
 
         private val inflater: LayoutInflater = LayoutInflater.from(itemView.context)
@@ -108,7 +110,10 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             item.attributes.forEach { attr ->
                 val isChecked = item.selected.contains(attr)
                 val view = inflater.inflate(R.layout.item_attribute, container, false) as CheckedTextView
-                view.text = attr.displayName
+                view.text = when(attr) {
+                    is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
+                    is FilterAttribute.ContainsAttribute -> attr.attribute
+                }
                 view.isChecked = isChecked
                 view.setOnClickListener {
                     attributeClicks.accept(attr)

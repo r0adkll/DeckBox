@@ -23,7 +23,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
     interface Intentions {
 
         fun typeClicks(): Observable<Pair<String, Type>>
-        fun attributeClicks(): Observable<SubType>
+        fun attributeClicks(): Observable<FilterAttribute>
         fun optionClicks(): Observable<Pair<String, Any>>
         fun viewMoreClicks(): Observable<Unit>
         fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>>
@@ -43,6 +43,25 @@ interface FilterUi : StateRenderer<FilterUi.State> {
     }
 
 
+    sealed class FilterAttribute : PaperParcelable {
+
+        @PaperParcel
+        data class SubTypeAttribute(val subType: SubType) : FilterAttribute() {
+            companion object {
+                @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_SubTypeAttribute.CREATOR
+            }
+        }
+
+
+        @PaperParcel
+        data class ContainsAttribute(val attribute: String) : FilterAttribute() {
+            companion object {
+                @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_ContainsAttribute.CREATOR
+            }
+        }
+    }
+
+
     @PaperParcel
     data class State(
             val spec: FilterSpec,
@@ -55,7 +74,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             is ExpansionsLoaded -> this.copy(expansions = change.expansions)
             is CategoryChanged -> this.copy(spec = FilterSpec.create(change.category, expansions, visibility))
             is TypeSelected -> this.copy(filter = FilterReducer.reduceType(change.key, change.type, filter))
-            is AttributeSelected -> this.copy(filter = FilterReducer.reduceAttribute(change.subType, filter))
+            is AttributeSelected -> this.copy(filter = FilterReducer.reduceAttribute(change.attribute, filter))
             is ExpansionSelected -> this.copy(filter = FilterReducer.reduceExpansion(change.expansion, filter))
             is RaritySelected -> this.copy(filter = FilterReducer.reduceRarity(change.rarity, filter))
             is ValueRangeChanged -> this.copy(filter = FilterReducer.reduceValueRange(change.key, change.value, filter))
@@ -67,7 +86,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
             class CategoryChanged(val category: SuperType) : Change("user -> category changed to $category")
             class TypeSelected(val key: String, val type: Type) : Change("user -> $type was selected")
-            class AttributeSelected(val subType: SubType) : Change("user -> $subType was selected")
+            class AttributeSelected(val attribute: FilterAttribute) : Change("user -> $attribute was selected")
             class ExpansionSelected(val expansion: Expansion) : Change("user -> $expansion was selected")
             class RaritySelected(val rarity: Rarity) : Change("user -> $rarity was selected")
             class ValueRangeChanged(val key: String, val value: String) : Change("user -> $key value was changed to $value")

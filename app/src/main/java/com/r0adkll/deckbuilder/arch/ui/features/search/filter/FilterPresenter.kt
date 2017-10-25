@@ -61,6 +61,7 @@ class FilterPresenter @Inject constructor(
 
         disposables += merged.scan(ui.state, State::reduce)
                 .doOnNext { state -> Timber.v("    --- $state") }
+                .doOnNext { categoryIntentions.filterChanges().accept(it.filter) } // Pipe the reduced filter back to the parent activity
                 .subscribe(ui::render)
 
     }
