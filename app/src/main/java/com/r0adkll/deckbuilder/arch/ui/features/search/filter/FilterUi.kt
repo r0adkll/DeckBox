@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.filter
 
+
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
@@ -7,9 +8,9 @@ import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State.Change.*
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
 import io.pokemontcg.model.SubType
+import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
-import org.w3c.dom.Attr
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
@@ -35,22 +36,36 @@ interface FilterUi : StateRenderer<FilterUi.State> {
     }
 
 
+    enum class ExpansionVisibility(val next: () -> ExpansionVisibility) {
+        STANDARD({ EXPANDED }),
+        EXPANDED({ UNLIMITED }),
+        UNLIMITED({ UNLIMITED })
+    }
+
+
     @PaperParcel
     data class State(
-            val filter: Filter
+            val spec: FilterSpec,
+            val filter: Filter,
+            val expansions: List<Expansion>,
+            val visibility: ExpansionVisibility
     ) : PaperParcelable {
 
         fun reduce(change: Change): State = when(change) {
-            is TypeSelected -> TODO()
-            is AttributeSelected -> TODO()
-            is ExpansionSelected -> TODO()
-            is RaritySelected -> TODO()
-            is ValueRangeChanged -> TODO()
-            ViewMoreSelected -> TODO()
+            is ExpansionsLoaded -> this.copy(expansions = change.expansions)
+            is CategoryChanged -> this.copy(spec = FilterSpec.create(change.category, expansions, visibility))
+            is TypeSelected -> this.copy(filter = FilterReducer.reduceType(change.key, change.type, filter))
+            is AttributeSelected -> this.copy(filter = FilterReducer.reduceAttribute(change.subType, filter))
+            is ExpansionSelected -> this.copy(filter = FilterReducer.reduceExpansion(change.expansion, filter))
+            is RaritySelected -> this.copy(filter = FilterReducer.reduceRarity(change.rarity, filter))
+            is ValueRangeChanged -> this.copy(filter = FilterReducer.reduceValueRange(change.key, change.value, filter))
+            ViewMoreSelected -> this.copy(visibility = visibility.next())
         }
 
 
         sealed class Change(val logText: String) {
+            class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
+            class CategoryChanged(val category: SuperType) : Change("user -> category changed to $category")
             class TypeSelected(val key: String, val type: Type) : Change("user -> $type was selected")
             class AttributeSelected(val subType: SubType) : Change("user -> $subType was selected")
             class ExpansionSelected(val expansion: Expansion) : Change("user -> $expansion was selected")
@@ -64,7 +79,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             @JvmField val CREATOR = PaperParcelFilterUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(Filter.DEFAULT)
+                State(FilterSpec.DEFAULT, Filter.DEFAULT, emptyList(), ExpansionVisibility.STANDARD)
             }
         }
     }

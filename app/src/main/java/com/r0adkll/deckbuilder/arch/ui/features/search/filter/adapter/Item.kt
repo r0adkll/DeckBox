@@ -51,13 +51,12 @@ sealed class Item : RecyclerItem {
 
 
     data class Attribute(
-            val key: String,
             val attributes: List<SubType>,
             val selected: List<SubType>
     ) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
-            is Attribute -> new.key == key
+            is Attribute -> true
             else -> false
         }
 
@@ -159,15 +158,17 @@ sealed class Item : RecyclerItem {
         data class Value(
                 val value: Int,
                 val modifier: Modifier
-        )
+        ) {
+            fun toFilter(): String = "${modifier.value}$value"
+        }
 
 
-        enum class Modifier{
-            NONE,
-            LESS_THAN,
-            LESS_THAN_EQUALS,
-            GREATER_THAN,
-            GREATER_THAN_EQUALS
+        enum class Modifier(val value: String){
+            NONE(""),
+            LESS_THAN("lt"),
+            LESS_THAN_EQUALS("lte"),
+            GREATER_THAN("gt"),
+            GREATER_THAN_EQUALS("gte")
         }
 
     }

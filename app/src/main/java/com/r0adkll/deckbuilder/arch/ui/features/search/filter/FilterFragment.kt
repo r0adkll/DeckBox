@@ -8,13 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
+import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.FilterRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterModule
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_filter.*
+import javax.inject.Inject
 
 
 class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.Actions {
@@ -22,6 +25,8 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
     override var state: State = State.DEFAULT
     private val filterIntentions: FilterIntentions = FilterIntentions()
 
+    @Inject lateinit var renderer: FilterRenderer
+    @Inject lateinit var presenter: FilterPresenter
 
     private lateinit var adapter: FilterRecyclerAdapter
 
@@ -36,12 +41,29 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         adapter = FilterRecyclerAdapter(activity, filterIntentions)
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.adapter = adapter
+
+        renderer.start()
+        presenter.start()
+    }
+
+
+    override fun setupComponent() {
+        getComponent(SearchComponent::class)
+                .plus(FilterModule(this))
+                .inject(this)
+    }
+
+
+    override fun onDestroy() {
+        presenter.stop()
+        renderer.stop()
+        super.onDestroy()
     }
 
 
     override fun render(state: FilterUi.State) {
         this.state = state
-
+        renderer.render(state)
     }
 
 

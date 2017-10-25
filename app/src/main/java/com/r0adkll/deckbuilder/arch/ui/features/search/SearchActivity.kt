@@ -16,6 +16,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.CategoryIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
 import com.r0adkll.deckbuilder.internal.di.AppComponent
@@ -29,7 +30,7 @@ import kotlinx.android.synthetic.main.activity_search.*
 import javax.inject.Inject
 
 
-class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions {
+class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions, CategoryIntentions {
 
     @com.evernote.android.state.State
     override var state: State = State.DEFAULT
@@ -133,6 +134,11 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     override fun clearSelection(): Observable<Unit> {
         return clearSelectionClicks
+    }
+
+
+    override fun categoryChange(): Observable<SuperType> {
+        return categoryChanges
     }
 
 

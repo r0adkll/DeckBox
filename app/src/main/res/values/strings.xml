@@ -28,4 +28,13 @@
     <string name="filter_attributes_title">Attributes</string>
     <string name="filter_expansions_title">Expansions</string>
     <string name="filter_rarity_title">Rarity</string>
+    <string name="filter_header_attributes">Attributes</string>
+    <string name="filter_header_expansions">Expansions</string>
+    <string name="filter_header_rarity">Rarity</string>
+    <string name="filter_header_type">Type</string>
+    <string name="filter_header_retreat_cost">Retreat cost</string>
+    <string name="filter_header_attack_cost">Attack cost</string>
+    <string name="filter_header_attack_damage">Attack damage</string>
+    <string name="filter_header_weaknesses">Weaknesses</string>
+    <string name="filter_header_resistances">Resistances</string>
 </resources>
