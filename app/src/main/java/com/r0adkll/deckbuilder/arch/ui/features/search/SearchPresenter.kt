@@ -54,8 +54,11 @@ class SearchPresenter @Inject constructor(
 
     private fun getReSearchCardsObservable(category: SuperType, filter: Filter): Observable<Change> {
         val result = ui.state.results[category]
-        if (result?.query == null) {
-            val query = result!!.query
+        if (result?.query.isNullOrBlank()) {
+            return Observable.just(Change.FilterChanged(category, filter) as Change)
+        }
+        else {
+            val query = result?.query ?: ""
             return repository.search(category, query.replace(",", "|"), filter)
                     .map { Change.ResultsLoaded(category, it) as Change }
                     .startWith(listOf(
@@ -63,10 +66,6 @@ class SearchPresenter @Inject constructor(
                             Change.IsLoading(category) as Change
                     ))
                     .onErrorReturn(handleUnknownError(category))
-        }
-        else {
-            return Observable.just(Change.FilterChanged(category, filter) as Change)
-
         }
     }
 
