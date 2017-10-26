@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 
 
 fun <P : Parcelable> Fragment.bindParcelable(key: String): ReadOnlyProperty<Fragment, P> = Lazy { fragment, _ ->
-    fragment.arguments.getParcelable(key)
+    fragment.arguments!!.getParcelable(key)
 }
 
 

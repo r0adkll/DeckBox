@@ -25,23 +25,23 @@ class ResultsPagerAdapter(
     private val viewHolders: Array<SearchResultViewHolder?> = Array(3, { _ -> null })
 
 
-    override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
         val vh = SearchResultViewHolder(view, scrollHideListener, pokemonCardClicks)
         view.tag = vh
         viewHolders[position] = vh
 
-        container?.addView(view)
+        container.addView(view)
         return view
     }
 
 
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any?) {
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
     }
 
 
-    override fun isViewFromObject(view: View?, `object`: Any?): Boolean = view == `object`
+    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
 
 
     override fun getCount(): Int = 3

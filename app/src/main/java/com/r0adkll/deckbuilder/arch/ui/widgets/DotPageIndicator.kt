@@ -94,7 +94,7 @@ class DotPageIndicator @JvmOverloads constructor(
 
     fun setupWithViewPager(pager: ViewPager) {
         this.pager = pager
-        max = pager.adapter.count
+        max = pager.adapter?.count ?: 0
         pager.addOnPageChangeListener(this)
     }
 

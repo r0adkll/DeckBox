@@ -37,8 +37,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     private lateinit var adapter: DecksRecyclerAdapter
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_decks, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_decks, container, false)
     }
 
 
@@ -47,7 +47,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         renderer.start()
         presenter.start()
 
-        adapter = DecksRecyclerAdapter(activity, shareClicks, duplicateClicks, deleteClicks)
+        adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks)
         adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Deck> {
             override fun onItemClick(v: View, item: Deck, position: Int) {
 
@@ -59,7 +59,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         recycler.adapter = adapter
 
         fab.setOnClickListener {
-            startActivity(DeckBuilderActivity.createIntent(activity))
+            startActivity(DeckBuilderActivity.createIntent(activity!!))
         }
     }
 

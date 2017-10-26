@@ -20,9 +20,12 @@ data class Filter(
         val attackDamage: String?,
         val hp: String?,
         val weaknesses: List<Type>,
-        val resistances: List<Type>
+        val resistances: List<Type>,
+        val page: Int = 1,
+        val pageSize: Int = DEFAULT_PAGE_SIZE
 ) : PaperParcelable {
     companion object {
+        @JvmField val DEFAULT_PAGE_SIZE = 200
         @JvmField val CREATOR = PaperParcelFilter.CREATOR
 
         val DEFAULT by lazy {

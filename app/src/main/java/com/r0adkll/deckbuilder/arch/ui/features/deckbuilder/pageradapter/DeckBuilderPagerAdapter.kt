@@ -24,23 +24,23 @@ class DeckBuilderPagerAdapter(
     private val viewHolders: Array<SuperTypeViewHolder<*>?> = Array(3, { _ -> null })
 
 
-    override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
         val vh = getViewHolder(position, view, pokemonCardClicks)
         vh.setup()
         viewHolders[position] = vh
         view.tag = vh
-        container?.addView(view)
+        container.addView(view)
         return view
     }
 
 
-    override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
-        container?.removeView(`object` as View)
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as View)
     }
 
 
-    override fun isViewFromObject(view: View?, `object`: Any?): Boolean = view == `object`
+    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
     override fun getCount(): Int = 3
 
     override fun getPageTitle(position: Int): CharSequence = when(position) {

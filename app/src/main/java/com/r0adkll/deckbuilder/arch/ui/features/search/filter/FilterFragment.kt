@@ -36,7 +36,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
     private lateinit var adapter: FilterRecyclerAdapter
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_filter, container, false)
     }
 
@@ -45,7 +45,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { drawerInteractor.closeDrawer() }
 
-        adapter = FilterRecyclerAdapter(activity, filterIntentions)
+        adapter = FilterRecyclerAdapter(activity!!, filterIntentions)
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.adapter = adapter
         (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false

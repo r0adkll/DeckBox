@@ -29,9 +29,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.amshove.kluent:kluent:$kluent_version"
@@ -87,6 +84,7 @@ dependencies {
     implementation "com.roughike:bottom-bar:$bottombar_version"
     implementation 'com.nex3z:flow-layout:1.0.0'
     implementation 'org.adw.library:discrete-seekbar:1.0.1'
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
 }
 
 

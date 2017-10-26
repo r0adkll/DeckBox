@@ -135,7 +135,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     override fun searchCards(): Observable<String> {
         return searchView.queryTextChanges()
                 .map { it.toString() }
-                .uiDebounce(750L)
+                .uiDebounce(500L)
     }
 
 
