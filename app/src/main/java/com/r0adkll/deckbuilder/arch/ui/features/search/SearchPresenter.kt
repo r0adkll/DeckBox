@@ -2,10 +2,12 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 
 
 import android.text.TextUtils
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State.Change
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.CategoryIntentions
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import timber.log.Timber
@@ -32,10 +34,14 @@ class SearchPresenter @Inject constructor(
         val clearSelection = intentions.clearSelection()
                 .map { Change.ClearSelectedCards as Change }
 
+        val filterChanges = intentions.filterUpdates()
+                .flatMap { getSearchCardsObservable(ui.state.current()?.query ?: "", it) }
+
         val merged = searchCards
                 .mergeWith(selectCard)
                 .mergeWith(clearSelection)
                 .mergeWith(switchCategories)
+                .mergeWith(filterChanges)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
@@ -44,17 +50,32 @@ class SearchPresenter @Inject constructor(
     }
 
 
-    fun getSearchCardsObservable(text: String): Observable<Change> {
+    private fun getSearchCardsObservable(text: String, filter: Filter? = null): Observable<Change> {
         return if (TextUtils.isEmpty(text)) {
-            Observable.just(Change.ClearQuery as Change)
+            if (filter == null) {
+                Observable.fromArray(Change.ClearQuery as Change)
+            }
+            else {
+                Observable.fromArray(
+                        Change.FilterChanged(filter) as Change,
+                        Change.ClearQuery as Change
+                )
+            }
         }
         else {
-            repository.search(ui.state.category, text.replace(",", "|"))
+            val ftr = filter ?: ui.state.current()?.filter
+            val start = mutableListOf(
+                    Change.QuerySubmitted(text) as Change,
+                    Change.IsLoading as Change
+            )
+
+            if (filter != null) {
+                start.add(0, Change.FilterChanged(filter))
+            }
+
+            repository.search(ui.state.category, text.replace(",", "|"), ftr)
                     .map { Change.ResultsLoaded(it) as Change }
-                    .startWith(listOf(
-                            Change.QuerySubmitted(text) as Change,
-                            Change.IsLoading as Change
-                    ))
+                    .startWith(start)
                     .onErrorReturn(handleUnknownError)
         }
     }

@@ -40,6 +40,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
     @PaperParcel
     data class Result(
             val query: String,
+            val filter: Filter,
             val isLoading: Boolean,
             val error: String?,
             val category: SuperType,
@@ -49,7 +50,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             @JvmField val CREATOR = PaperParcelSearchUi_Result.CREATOR
 
             fun createDefault(superType: SuperType): Result {
-                return Result("", false, null, superType, emptyList())
+                return Result("", Filter.DEFAULT, false, null, superType, emptyList())
             }
         }
     }
@@ -61,6 +62,8 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             val results: Map<SuperType, Result>,
             val selected: List<PokemonCard>
     ) : PaperParcelable {
+
+        fun current(): Result? = results[category]
 
         fun reduce(change: Change): State = when(change) {
             Change.IsLoading -> {
@@ -78,6 +81,11 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             is Change.QuerySubmitted -> {
                 val newResults = results.toMutableMap()
                 newResults[category] = newResults[category]!!.copy(query = change.query)
+                this.copy(results = newResults.toMap())
+            }
+            is Change.FilterChanged -> {
+                val newResults = results.toMutableMap()
+                newResults[category] = newResults[category]!!.copy(filter = change.filter)
                 this.copy(results = newResults.toMap())
             }
             is Change.ResultsLoaded -> {
@@ -103,6 +111,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             class Error(val description: String) : Change("error -> $description")
             class CategorySwitched(val category: SuperType) : Change("user -> switching category to $category")
             class QuerySubmitted(val query: String) : Change("user -> querying $query")
+            class FilterChanged(val filter: Filter) : Change("user -> filter changed $filter")
             class ResultsLoaded(val results: List<PokemonCard>) : Change("network -> search results loaded (${results.size})")
             class CardSelected(val pokemonCard: PokemonCard) : Change("user -> selected ${pokemonCard.name}")
             object ClearSelectedCards : Change("user -> cleared selected cards")
