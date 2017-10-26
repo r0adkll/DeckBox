@@ -7,7 +7,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.CategoryIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class FilterPresenter @Inject constructor(
         val ui: FilterUi,
         val intentions: FilterUi.Intentions,
         val repository: CardRepository,
-        val categoryIntentions: CategoryIntentions
+        val categoryIntentions: FilterIntentions
 ) : Presenter() {
 
     override fun start() {
@@ -62,7 +62,11 @@ class FilterPresenter @Inject constructor(
 
         disposables += merged.scan(ui.state, State::reduce)
                 .doOnNext { state -> Timber.v("    --- $state") }
-                .doOnNext { categoryIntentions.filterChanges().accept(it.filter) } // Pipe the reduced filter back to the parent activity
+                .doOnNext {
+                    it.filters.forEach {
+                        categoryIntentions.filterChanges().accept(Pair(it.key, it.value.filter))
+                    }
+                }
                 .subscribe(ui::render)
 
     }

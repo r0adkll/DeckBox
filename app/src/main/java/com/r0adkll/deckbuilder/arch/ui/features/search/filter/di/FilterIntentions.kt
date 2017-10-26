@@ -7,8 +7,8 @@ import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 
 
-interface CategoryIntentions {
+interface FilterIntentions {
 
-    fun filterChanges(): Relay<Filter>
+    fun filterChanges(): Relay<Pair<SuperType, Filter>>
     fun categoryChange(): Observable<SuperType>
 }

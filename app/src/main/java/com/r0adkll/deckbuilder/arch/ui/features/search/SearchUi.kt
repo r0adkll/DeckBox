@@ -17,7 +17,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
     interface Intentions {
 
-        fun filterUpdates(): Observable<Filter>
+        fun filterUpdates(): Observable<Pair<SuperType, Filter>>
         fun switchCategories(): Observable<SuperType>
         fun searchCards(): Observable<String>
         fun selectCard(): Observable<PokemonCard>
@@ -66,56 +66,56 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun current(): Result? = results[category]
 
         fun reduce(change: Change): State = when(change) {
-            Change.IsLoading -> {
+            is Change.IsLoading -> {
                 val newResults = results.toMutableMap()
-                newResults[category] = newResults[category]!!
+                newResults[change.category] = newResults[change.category]!!
                         .copy(isLoading = true, error = null)
                 this.copy(results = newResults.toMap())
             }
             is Change.Error -> {
                 val newResults = results.toMutableMap()
-                newResults[category] = newResults[category]!!
+                newResults[change.category] = newResults[change.category]!!
                         .copy(error = change.description, isLoading = false)
                 this.copy(results = newResults.toMap())
             }
             is Change.QuerySubmitted -> {
                 val newResults = results.toMutableMap()
-                newResults[category] = newResults[category]!!.copy(query = change.query)
+                newResults[change.category] = newResults[change.category]!!.copy(query = change.query)
                 this.copy(results = newResults.toMap())
             }
             is Change.FilterChanged -> {
                 val newResults = results.toMutableMap()
-                newResults[category] = newResults[category]!!.copy(filter = change.filter)
+                newResults[change.category] = newResults[change.category]!!.copy(filter = change.filter)
                 this.copy(results = newResults.toMap())
             }
             is Change.ResultsLoaded -> {
                 val newResults = results.toMutableMap()
-                newResults[category] = newResults[category]!!
+                newResults[change.category] = newResults[change.category]!!
                         .copy(results = change.results, isLoading = false, error = null)
+                this.copy(results = newResults.toMap())
+            }
+            is Change.ClearQuery -> {
+                val newResults = results.toMutableMap()
+                newResults[change.category] = newResults[change.category]!!
+                        .copy(results = emptyList(), query = "", isLoading = false, error = null)
                 this.copy(results = newResults.toMap())
             }
             is Change.CardSelected -> this.copy(selected = selected.plus(change.pokemonCard))
             is Change.CategorySwitched -> this.copy(category = change.category)
             Change.ClearSelectedCards -> this.copy(selected = emptyList())
-            Change.ClearQuery -> {
-                val newResults = results.toMutableMap()
-                newResults[category] = newResults[category]!!
-                        .copy(results = emptyList(), query = "", isLoading = false, error = null)
-                this.copy(results = newResults.toMap())
-            }
         }
 
 
         sealed class Change(val logText: String) {
-            object IsLoading : Change("network -> loading search results")
-            class Error(val description: String) : Change("error -> $description")
             class CategorySwitched(val category: SuperType) : Change("user -> switching category to $category")
-            class QuerySubmitted(val query: String) : Change("user -> querying $query")
-            class FilterChanged(val filter: Filter) : Change("user -> filter changed $filter")
-            class ResultsLoaded(val results: List<PokemonCard>) : Change("network -> search results loaded (${results.size})")
+            class IsLoading(val category: SuperType) : Change("network -> loading search results")
+            class Error(val category: SuperType, val description: String) : Change("error -> $description")
+            class QuerySubmitted(val category: SuperType, val query: String) : Change("user -> querying $query")
+            class FilterChanged(val category: SuperType, val filter: Filter) : Change("user -> filter changed $filter for $category")
+            class ResultsLoaded(val category: SuperType, val results: List<PokemonCard>) : Change("network -> search results loaded (${results.size})")
+            class ClearQuery(val category: SuperType) : Change("user -> clearing query and results")
             class CardSelected(val pokemonCard: PokemonCard) : Change("user -> selected ${pokemonCard.name}")
             object ClearSelectedCards : Change("user -> cleared selected cards")
-            object ClearQuery : Change("user -> clearing query and results")
         }
 
 

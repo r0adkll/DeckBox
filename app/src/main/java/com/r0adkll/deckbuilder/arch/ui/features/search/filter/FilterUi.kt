@@ -63,31 +63,101 @@ interface FilterUi : StateRenderer<FilterUi.State> {
 
 
     @PaperParcel
-    data class State(
+    data class FilterState(
             val category: SuperType,
             val spec: FilterSpec,
             val filter: Filter,
-            val expansions: List<Expansion>,
             val visibility: ExpansionVisibility
     ) : PaperParcelable {
 
+        fun applySpecification(): List<Item> = spec.apply(filter)
+
+
+        companion object {
+            @JvmField val CREATOR = PaperParcelFilterUi_FilterState.CREATOR
+
+            fun createDefault(superType: SuperType): FilterState {
+                return FilterState(superType, FilterSpec.create(superType, emptyList(), ExpansionVisibility.STANDARD),
+                        Filter.DEFAULT, ExpansionVisibility.STANDARD)
+            }
+        }
+    }
+
+
+    @PaperParcel
+    data class State(
+            val category: SuperType,
+            val filters: Map<SuperType, FilterState>,
+            val expansions: List<Expansion>
+    ) : PaperParcelable {
+
         fun reduce(change: Change): State = when(change) {
-            is ExpansionsLoaded -> this.copy(expansions = change.expansions, spec = FilterSpec.create(category, change.expansions, visibility))
-            is CategoryChanged -> this.copy(category = change.category, spec = FilterSpec.create(change.category, expansions, visibility))
+            is ExpansionsLoaded -> {
+                val newFilters = filters.toMutableMap()
+                SuperType.values()
+                        .filter { it != SuperType.UNKNOWN }
+                        .forEach {
+                            val filterState = newFilters[it]!!
+                            newFilters[it] = filterState
+                                    .copy(spec = FilterSpec.create(filterState.category, change.expansions, filterState.visibility))
+                        }
+                this.copy(expansions = change.expansions, filters = newFilters.toMap())
+            }
 
-            is TypeSelected -> this.copy(filter = FilterReducer.reduceType(change.key, change.type, filter))
-            is AttributeSelected -> this.copy(filter = FilterReducer.reduceAttribute(change.attribute, filter))
-            is ExpansionSelected -> this.copy(filter = FilterReducer.reduceExpansion(change.expansion, filter))
-            is RaritySelected -> this.copy(filter = FilterReducer.reduceRarity(change.rarity, filter))
-            is ValueRangeChanged -> this.copy(filter = FilterReducer.reduceValueRange(change.key, change.value, filter))
+            is CategoryChanged -> {
+                this.copy(category = change.category)
+            }
 
-            ViewMoreSelected -> this.copy(visibility = visibility.next(), spec = FilterSpec.create(category, expansions, visibility.next()))
+            is TypeSelected -> {
+                val newFilters = filters.toMutableMap()
+                newFilters[category] = newFilters[category]!!
+                        .copy(filter = FilterReducer.reduceType(change.key, change.type, newFilters[category]!!.filter))
+                this.copy(filters = newFilters.toMap())
+            }
+
+            is AttributeSelected -> {
+                val newFilters = filters.toMutableMap()
+                newFilters[category] = newFilters[category]!!
+                        .copy(filter = FilterReducer.reduceAttribute(change.attribute, newFilters[category]!!.filter))
+                this.copy(filters = newFilters.toMap())
+            }
+
+            is ExpansionSelected -> {
+                val newFilters = filters.toMutableMap()
+                newFilters[category] = newFilters[category]!!
+                        .copy(filter = FilterReducer.reduceExpansion(change.expansion, newFilters[category]!!.filter))
+                this.copy(filters = newFilters.toMap())
+            }
+
+            is RaritySelected -> {
+                val newFilters = filters.toMutableMap()
+                newFilters[category] = newFilters[category]!!
+                        .copy(filter = FilterReducer.reduceRarity(change.rarity, newFilters[category]!!.filter))
+                this.copy(filters = newFilters.toMap())
+            }
+
+            is ValueRangeChanged -> {
+                val newFilters = filters.toMutableMap()
+                newFilters[category] = newFilters[category]!!
+                        .copy(filter = FilterReducer.reduceValueRange(change.key, change.value, newFilters[category]!!.filter))
+                this.copy(filters = newFilters.toMap())
+            }
+
+            ViewMoreSelected -> {
+                val newFilters = filters.toMutableMap()
+                val filterState = newFilters[category]!!
+                newFilters[category] = filterState
+                        .copy(visibility = filterState.visibility.next(),
+                                spec = FilterSpec.create(filterState.category, expansions, filterState.visibility.next()))
+                this.copy(filters = newFilters.toMap())
+            }
         }
 
 
         sealed class Change(val logText: String) {
             class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
             class CategoryChanged(val category: SuperType) : Change("user -> category changed to $category")
+
             class TypeSelected(val key: String, val type: Type) : Change("user -> $type was selected")
             class AttributeSelected(val attribute: FilterAttribute) : Change("user -> $attribute was selected")
             class ExpansionSelected(val expansion: Expansion) : Change("user -> $expansion was selected")
@@ -101,7 +171,11 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             @JvmField val CREATOR = PaperParcelFilterUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(SuperType.POKEMON, FilterSpec.DEFAULT, Filter.DEFAULT, emptyList(), ExpansionVisibility.STANDARD)
+                State(SuperType.POKEMON, mapOf(
+                        SuperType.POKEMON to FilterState.createDefault(SuperType.POKEMON),
+                        SuperType.TRAINER to FilterState.createDefault(SuperType.TRAINER),
+                        SuperType.ENERGY to FilterState.createDefault(SuperType.ENERGY)
+                ), emptyList())
             }
         }
     }

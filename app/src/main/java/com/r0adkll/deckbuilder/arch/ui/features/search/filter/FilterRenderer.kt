@@ -15,12 +15,10 @@ class FilterRenderer(
     override fun start() {
 
         disposables += state
-                .map { it.spec.apply(it.filter) }
+                .map { it.filters[it.category]!!.applySpecification() }
                 .subscribeOn(comp)
                 .observeOn(main)
                 .subscribe { actions.setItems(it) }
-
-
 
     }
 }

@@ -7,8 +7,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State.Change
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.CategoryIntentions
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class SearchPresenter @Inject constructor(
     override fun start() {
 
         val searchCards = intentions.searchCards()
-                .flatMap { getSearchCardsObservable(it) }
+                .flatMap { getSearchCardsObservable(ui.state.category, it) }
 
         val selectCard = intentions.selectCard()
                 .map { Change.CardSelected(it) as Change }
@@ -35,7 +35,9 @@ class SearchPresenter @Inject constructor(
                 .map { Change.ClearSelectedCards as Change }
 
         val filterChanges = intentions.filterUpdates()
-                .flatMap { getSearchCardsObservable(ui.state.current()?.query ?: "", it) }
+                .flatMap { (category, filter) ->
+                    getReSearchCardsObservable(category, filter)
+                }
 
         val merged = searchCards
                 .mergeWith(selectCard)
@@ -50,39 +52,45 @@ class SearchPresenter @Inject constructor(
     }
 
 
-    private fun getSearchCardsObservable(text: String, filter: Filter? = null): Observable<Change> {
-        return if (TextUtils.isEmpty(text)) {
-            if (filter == null) {
-                Observable.fromArray(Change.ClearQuery as Change)
-            }
-            else {
-                Observable.fromArray(
-                        Change.FilterChanged(filter) as Change,
-                        Change.ClearQuery as Change
-                )
-            }
+    private fun getReSearchCardsObservable(category: SuperType, filter: Filter): Observable<Change> {
+        val result = ui.state.results[category]
+        if (result?.query == null) {
+            val query = result!!.query
+            return repository.search(category, query.replace(",", "|"), filter)
+                    .map { Change.ResultsLoaded(category, it) as Change }
+                    .startWith(listOf(
+                            Change.FilterChanged(category, filter) as Change,
+                            Change.IsLoading(category) as Change
+                    ))
+                    .onErrorReturn(handleUnknownError(category))
         }
         else {
-            val ftr = filter ?: ui.state.current()?.filter
-            val start = mutableListOf(
-                    Change.QuerySubmitted(text) as Change,
-                    Change.IsLoading as Change
-            )
+            return Observable.just(Change.FilterChanged(category, filter) as Change)
 
-            if (filter != null) {
-                start.add(0, Change.FilterChanged(filter))
-            }
+        }
+    }
 
-            repository.search(ui.state.category, text.replace(",", "|"), ftr)
-                    .map { Change.ResultsLoaded(it) as Change }
-                    .startWith(start)
-                    .onErrorReturn(handleUnknownError)
+
+    private fun getSearchCardsObservable(category: SuperType, text: String): Observable<Change> {
+        return if (TextUtils.isEmpty(text)) {
+            Observable.just(Change.ClearQuery(category) as Change)
+        }
+        else {
+            repository.search(ui.state.category, text.replace(",", "|"), ui.state.current()?.filter)
+                    .map { Change.ResultsLoaded(category, it) as Change }
+                    .startWith(listOf(
+                            Change.QuerySubmitted(category, text) as Change,
+                            Change.IsLoading(category) as Change
+                    ))
+                    .onErrorReturn(handleUnknownError(category))
         }
     }
 
 
     companion object {
 
-        private val handleUnknownError: (Throwable) -> Change = { t -> Change.Error(t.localizedMessage ?: t.message ?: "Unknown error has occured") }
+        private fun handleUnknownError(category: SuperType): (Throwable) -> Change = { t ->
+            Change.Error(category, t.localizedMessage ?: t.message ?: "Unknown error has occured")
+        }
     }
 }
