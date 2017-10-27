@@ -109,6 +109,8 @@ class ResultsPagerAdapter(
         private val adapter: SearchResultsRecyclerAdapter = SearchResultsRecyclerAdapter(itemView.context)
 
         init {
+            emptyView.setIcon(R.drawable.ic_empty_search)
+
             adapter.setEmptyView(emptyView)
             adapter.setOnItemClickListener { pokemonCardClicks.accept(it) }
 
