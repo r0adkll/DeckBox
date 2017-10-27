@@ -47,4 +47,7 @@
     <string name="dialog_action_yes">Yes</string>
     <string name="dialog_action_no">No</string>
     <string name="deckbuilder_infobar_title">Information</string>
+    <string name="empty_deck_pokemon_message">You haven\'t added any Pokémon cards yet! Click the button below to start adding some.</string>
+    <string name="empty_deck_trainer_message">You haven\'t added any Trainer cards yet! Click the button below to start adding some.</string>
+    <string name="empty_deck_energy_message">You haven\'t added any Energy cards yet! Click the button below to start adding some.</string>
 </resources>

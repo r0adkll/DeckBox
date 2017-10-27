@@ -65,9 +65,22 @@ class DeckBuilderPagerAdapter(
     }
 
 
-    private fun getViewHolder(position: Int, itemView: View, pokemonCardClicks: Relay<PokemonCard>): SuperTypeViewHolder<*> = when(position) {
-        0 -> PokemonViewHolder(itemView, pokemonCardClicks)
-        else -> TrainerEnergyViewHolder(itemView, pokemonCardClicks)
+    private fun getViewHolder(position: Int, itemView: View, pokemonCardClicks: Relay<PokemonCard>): SuperTypeViewHolder<*> {
+        val emptyIcon = when(position) {
+            0 -> R.drawable.ic_empty_pokeball
+            1 -> R.drawable.ic_empty_wrench
+            else -> R.drawable.ic_empty_flash
+        }
+        val emptyMessage = when(position) {
+            0 -> R.string.empty_deck_pokemon_message
+            1 -> R.string.empty_deck_trainer_message
+            else -> R.string.empty_deck_energy_message
+        }
+
+        return when(position) {
+            0 -> PokemonViewHolder(itemView, emptyIcon, emptyMessage, pokemonCardClicks)
+            else -> TrainerEnergyViewHolder(itemView, emptyIcon, emptyMessage, pokemonCardClicks)
+        }
     }
 
 }

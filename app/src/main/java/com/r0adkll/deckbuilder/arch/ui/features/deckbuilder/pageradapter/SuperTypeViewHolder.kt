@@ -1,6 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter
 
 
+import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -19,6 +21,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecy
 
 abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
         itemView: View,
+        @DrawableRes val emptyIcon: Int,
+        @StringRes val emptyMessage: Int,
         val pokemonCardClicks: Relay<PokemonCard>
 ) {
 
@@ -31,6 +35,9 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
 
 
     fun setup() {
+        emptyView.setIcon(emptyIcon)
+        emptyView.setEmptyMessage(emptyMessage)
+
         adapter.setEmptyView(emptyView)
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
@@ -40,8 +47,11 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
 
 
 class PokemonViewHolder(
-        itemView: View, pokemonCardClicks: Relay<PokemonCard>
-) : SuperTypeViewHolder<EvolutionChainRecyclerAdapter>(itemView, pokemonCardClicks) {
+        itemView: View,
+        emptyIcon: Int,
+        emptyMessage: Int,
+        pokemonCardClicks: Relay<PokemonCard>
+) : SuperTypeViewHolder<EvolutionChainRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks) {
     override val adapter: EvolutionChainRecyclerAdapter = EvolutionChainRecyclerAdapter(itemView.context, pokemonCardClicks)
     override val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(itemView.context)
 
@@ -52,8 +62,11 @@ class PokemonViewHolder(
 }
 
 class TrainerEnergyViewHolder(
-        itemView: View, pokemonCardClicks: Relay<PokemonCard>
-) : SuperTypeViewHolder<StackedPokemonRecyclerAdapter>(itemView, pokemonCardClicks) {
+        itemView: View,
+        emptyIcon: Int,
+        emptyMessage: Int,
+        pokemonCardClicks: Relay<PokemonCard>
+) : SuperTypeViewHolder<StackedPokemonRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks) {
     override val adapter: StackedPokemonRecyclerAdapter = StackedPokemonRecyclerAdapter(itemView.context)
     override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, 3)
 
