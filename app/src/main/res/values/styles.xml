@@ -36,4 +36,9 @@
         <item name="android:alpha">.26</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
+
+    <style name="TextAppearance.Deck.InputOverflow" parent="TextAppearance.Design.Counter.Overflow">
+        <item name="android:textColor">@color/red_400</item>
+    </style>
+
 </resources>

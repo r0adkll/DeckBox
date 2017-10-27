@@ -26,6 +26,8 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     interface Actions {
 
+        fun showSaveAction(hasChanges: Boolean)
+        fun showCardCount(count: Int)
         fun showPokemonCards(cards: List<StackedPokemonCard>)
         fun showTrainerCards(cards: List<StackedPokemonCard>)
         fun showEnergyCards(cards: List<StackedPokemonCard>)
@@ -42,6 +44,9 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             val name: String?,
             val description: String?
     ) : PaperParcelable {
+
+        val hasChanged: Boolean
+            get() = true
 
         fun reduce(change: Change): State = when(change) {
             is Change.AddCards -> {

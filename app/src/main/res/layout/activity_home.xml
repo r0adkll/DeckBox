@@ -26,9 +26,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomNavigation"
         android:layout_below="@+id/appbar_layout"
-        android:padding="@dimen/padding_small"
-        android:clipToPadding="false"
-
         />
 
     <com.roughike.bottombar.BottomBar

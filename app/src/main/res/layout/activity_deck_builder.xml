@@ -16,6 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         >
 
         <android.support.design.widget.AppBarLayout
@@ -30,7 +32,27 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="@string/activity_deck_builder"
-                />
+                >
+
+                <TextView
+                    android:id="@+id/cardCounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="@color/white"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="16sp"
+                    android:background="@drawable/dr_card_count_background"
+                    android:visibility="gone"
+                    tools:text="60"
+                    tools:visibility="visible"
+                    />
+
+            </android.support.v7.widget.Toolbar>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
@@ -69,7 +91,6 @@
             android:layout_height="104dp"
             android:background="@color/dropzone_red"
             android:translationY="-104dp"
-            tools:translationY="0dp"
             >
 
             <TextView
@@ -110,14 +131,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/infoBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:visibility="invisible"
             app:navigationIcon="@drawable/ic_close_black_24dp"
-            android:visibility="gone"
+            app:title="@string/deckbuilder_infobar_title"
             />
 
         <com.r0adkll.deckbuilder.arch.ui.widgets.CardCountView
@@ -127,6 +151,51 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp"
             />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_deck_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/infoBar"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/inputDeckName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:hint="@string/hint_deck_name_input"
+                android:focusedByDefault="false"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_deck_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_input_deck_name"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            app:counterEnabled="true"
+            app:counterMaxLength="140"
+            app:counterOverflowTextAppearance="@style/TextAppearance.Deck.InputOverflow"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/inputDeckDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textMultiLine|textAutoComplete"
+                android:hint="@string/hint_deck_description_input"
+                android:focusedByDefault="false"
+                />
+
+        </android.support.design.widget.TextInputLayout>
 
     </RelativeLayout>
 

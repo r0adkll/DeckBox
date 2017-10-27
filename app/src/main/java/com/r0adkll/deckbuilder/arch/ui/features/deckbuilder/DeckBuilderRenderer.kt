@@ -43,6 +43,13 @@ class DeckBuilderRenderer(
                 .subscribe { actions.showEnergyCards(it) }
 
         disposables += state
+                .map { it.pokemonCards.size + it.trainerCards.size + it.energyCards.size }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe { actions.showCardCount(it) }
+
+        disposables += state
                 .mapNullable { it.name }
                 .distinctUntilChanged()
                 .subscribeOn(comp)
@@ -54,7 +61,7 @@ class DeckBuilderRenderer(
                 }
 
         disposables += state
-                .mapNullable { it.name }
+                .mapNullable { it.description }
                 .distinctUntilChanged()
                 .subscribeOn(comp)
                 .observeOn(main)

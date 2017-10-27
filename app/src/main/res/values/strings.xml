@@ -39,4 +39,12 @@
     <string name="filter_header_resistances">Resistances</string>
     <string name="filter_viewmore_expanded">View expanded</string>
     <string name="filter_viewmore_all">View all</string>
+    <string name="hint_deck_name_input">Deck name</string>
+    <string name="hint_deck_description_input">Description</string>
+    <string name="deckbuilder_default_title">New deck</string>
+    <string name="deckbuilder_unsaved_changes_title">Unsaved changes</string>
+    <string name="deckbuilder_unsaved_changes_message">Are you sure you want to discard all of your unsaved changes?</string>
+    <string name="dialog_action_yes">Yes</string>
+    <string name="dialog_action_no">No</string>
+    <string name="deckbuilder_infobar_title">Information</string>
 </resources>
