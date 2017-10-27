@@ -18,7 +18,7 @@ object FilterMapper {
         }
 
         if (filter.contains.isNotEmpty()) {
-            builder.contains = filter.contains.joinToString(separator = "|")
+            builder.contains = filter.contains.joinToString(separator = "|") { it.toLowerCase() }
         }
 
         if (filter.expansions.isNotEmpty()) {

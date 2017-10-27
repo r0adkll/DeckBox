@@ -8,6 +8,7 @@ import android.support.v4.view.animation.FastOutLinearInInterpolator
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
 import com.jakewharton.rxrelay2.PublishRelay
@@ -21,6 +22,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
@@ -103,6 +105,17 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
             true
         }
 
+        slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+            override fun onPanelSlide(panel: View?, slideOffset: Float) {
+                Timber.d("onPanelSlide($slideOffset)")
+            }
+
+            override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
+
+            }
+        })
+
+
         renderer.start()
         presenter.start()
     }
@@ -173,16 +186,19 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
     override fun showPokemonCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.POKEMON, cards)
+        cardCount.countStacks(SuperType.POKEMON, cards)
     }
 
 
     override fun showTrainerCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.TRAINER, cards)
+        cardCount.countStacks(SuperType.TRAINER, cards)
     }
 
 
     override fun showEnergyCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.ENERGY, cards)
+        cardCount.countStacks(SuperType.ENERGY, cards)
     }
 
 
