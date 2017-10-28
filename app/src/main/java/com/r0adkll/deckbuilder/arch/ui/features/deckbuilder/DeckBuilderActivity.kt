@@ -49,6 +49,9 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
     private val addPokemon: Relay<List<PokemonCard>> = PublishRelay.create()
     private val removePokemon: Relay<PokemonCard> = PublishRelay.create()
+    private val saveDeck: Relay<Unit> = PublishRelay.create()
+    private val countPadding: Float by lazy { dpToPx(16f) }
+    private val countPaddingTop: Float by lazy { dpToPx(24f) }
 
     private lateinit var adapter: DeckBuilderPagerAdapter
 
@@ -128,9 +131,12 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
         slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View?, slideOffset: Float) {
-                val infoBarOffset = calculateInfoBarAlpha(slideOffset)
+                interpolateCardCounter(slideOffset)
+                val infoBarOffset = calculateInfoBarAlpha(slideOffset, .85f)
                 infoBar.alpha = infoBarOffset
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
+                text_input_deck_name.alpha = infoBarOffset
+                text_input_deck_description.alpha = infoBarOffset
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()
@@ -146,7 +152,20 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 }
             }
 
-            private fun calculateInfoBarAlpha(offset: Float): Float = (offset - .75f).coerceAtLeast(0f) / .25f
+            private fun calculateInfoBarAlpha(offset: Float, ratio: Float): Float = (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
+
+
+            private fun interpolateCardCounter(offset: Float) {
+                val ratio = .35f
+                val cardOffset = offset.coerceAtMost(ratio) / ratio
+                // find distance from counter y to description bottom
+                val distance = ((text_input_deck_description.bottom - cardCount.top) + countPaddingTop)
+                val distanceX = (cardCount.left - countPadding)
+                val translationY = distance * cardOffset
+                val translationX = distanceX * cardOffset
+                cardCount.translationY = translationY
+                cardCount.translationX = -translationX
+            }
         })
 
         infoBar.setNavigationOnClickListener {
@@ -207,7 +226,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {
-                // TODO: Save the built deck, or check if they can save
+                saveDeck.accept(Unit)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -251,14 +270,18 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     }
 
 
+    override fun saveDeck(): Observable<Unit> {
+        return saveDeck
+    }
+
+
     override fun showSaveAction(hasChanges: Boolean) {
         supportInvalidateOptionsMenu()
     }
 
 
     override fun showCardCount(count: Int) {
-        cardCounter.setVisible(count > 0)
-        cardCounter.text = count.toString()
+        cardCount.totalCount(count)
     }
 
 

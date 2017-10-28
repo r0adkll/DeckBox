@@ -8,10 +8,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.spToPx
+import com.ftinc.kit.kotlin.extensions.*
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
@@ -26,6 +23,7 @@ class CardCountView @JvmOverloads constructor(
     private val pokemonCountView: TextView
     private val trainerCountView: TextView
     private val energyCountView: TextView
+    private val allCountView: TextView
 
 
     init {
@@ -35,10 +33,13 @@ class CardCountView @JvmOverloads constructor(
         pokemonCountView = createCountView(R.drawable.ic_pokeball)
         trainerCountView = createCountView(R.drawable.ic_wrench)
         energyCountView = createCountView(R.drawable.ic_flash)
+        allCountView = createCountView(R.drawable.ic_card_total)
+        allCountView.gone()
 
         addView(pokemonCountView)
         addView(trainerCountView)
         addView(energyCountView)
+        addView(allCountView)
     }
 
 
@@ -76,6 +77,12 @@ class CardCountView @JvmOverloads constructor(
             SuperType.TRAINER -> trainerCountView.text = count.toString()
             SuperType.ENERGY -> energyCountView.text = count.toString()
         }
+    }
+
+
+    fun totalCount(count: Int) {
+        allCountView.text = count.toString()
+        allCountView.visible()
     }
 
 

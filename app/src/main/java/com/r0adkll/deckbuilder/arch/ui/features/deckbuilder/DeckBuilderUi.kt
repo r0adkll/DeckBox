@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -17,6 +18,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     interface Intentions {
 
+        fun saveDeck(): Observable<Unit>
         fun addCards(): Observable<List<PokemonCard>>
         fun removeCard(): Observable<PokemonCard>
         fun editDeckName(): Observable<String>
@@ -38,6 +40,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     @PaperParcel
     data class State(
+            val deck: Deck?,
             val pokemonCards: List<PokemonCard>,
             val trainerCards: List<PokemonCard>,
             val energyCards: List<PokemonCard>,
@@ -46,7 +49,20 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
     ) : PaperParcelable {
 
         val hasChanged: Boolean
-            get() = true
+            get() {
+                return if (deck == null) {
+                    pokemonCards.isNotEmpty() ||
+                            trainerCards.isNotEmpty() ||
+                            energyCards.isNotEmpty() ||
+                            !name.isNullOrBlank()
+                } else {
+                    !deck.cards.containsAll(pokemonCards) ||
+                            !deck.cards.containsAll(trainerCards) ||
+                            !deck.cards.containsAll(energyCards) ||
+                            deck.name != name ||
+                            deck.description != description
+                }
+            }
 
         fun reduce(change: Change): State = when(change) {
             is Change.AddCards -> {
@@ -65,6 +81,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             }
             is Change.EditName -> this.copy(name = change.name)
             is Change.EditDescription -> this.copy(description = change.description)
+            is Change.DeckUpdated -> this.copy(deck = change.deck)
         }
 
 
@@ -73,13 +90,14 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             class RemoveCard(val card: PokemonCard) : Change("user -> removing ${card.name}")
             class EditName(val name: String) : Change("user -> name changed $name")
             class EditDescription(val description: String) : Change ("user -> desc changed $description")
+            class DeckUpdated(val deck: Deck) : Change("cache -> Deck changed/updated $deck")
         }
 
         companion object {
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(emptyList(), emptyList(), emptyList(), null, null)
+                State(null, emptyList(), emptyList(), emptyList(), null, null)
             }
         }
     }

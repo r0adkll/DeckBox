@@ -19,6 +19,13 @@ class DeckBuilderRenderer(
     override fun start() {
 
         disposables += state
+                .map { it.hasChanged }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe { actions.showSaveAction(it) }
+
+        disposables += state
                 .map { it.pokemonCards }
                 .distinctUntilChanged()
                 .map(stackCards())
