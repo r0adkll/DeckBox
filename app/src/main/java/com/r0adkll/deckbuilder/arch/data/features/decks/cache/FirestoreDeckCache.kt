@@ -54,7 +54,7 @@ class FirestoreDeckCache @Inject constructor(
             val task = firestore.collection(COLLECTION_DECKS)
                     .document(id)
                     .set(model)
-            return RxFirebase.from(task)
+            return RxFirebase.fromVoid(task)
                     .map { newDeck }
         }
     }

@@ -19,11 +19,32 @@ class DeckBuilderRenderer(
     override fun start() {
 
         disposables += state
+                .map { it.isStandardLegal }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe { actions.showIsStandard(it) }
+
+        disposables += state
+                .map { it.isExpandedLegal }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe { actions.showIsExpanded(it) }
+
+        disposables += state
                 .map { it.hasChanged }
                 .distinctUntilChanged()
                 .subscribeOn(comp)
                 .observeOn(main)
                 .subscribe { actions.showSaveAction(it) }
+
+        disposables += state
+                .map { it.isSaving }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe { actions.showIsSaving(it) }
 
         disposables += state
                 .map { it.pokemonCards }

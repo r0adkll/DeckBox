@@ -144,6 +144,36 @@
             app:title="@string/deckbuilder_infobar_title"
             />
 
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+            android:id="@+id/format_standard"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+
+            android:padding="2dp"
+            app:ringPadding="4dp"
+            app:strokeWidth="2dp"
+            app:format="standard"
+
+            android:visibility="gone"
+            />
+
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+            android:id="@+id/format_expanded"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/format_standard"
+
+            android:padding="2dp"
+            app:ringPadding="4dp"
+            app:strokeWidth="2dp"
+            app:format="expanded"
+
+            android:visibility="gone"
+            />
+
         <com.r0adkll.deckbuilder.arch.ui.widgets.CardCountView
             android:id="@+id/cardCount"
             android:layout_width="wrap_content"

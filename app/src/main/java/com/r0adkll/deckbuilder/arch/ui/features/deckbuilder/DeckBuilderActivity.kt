@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.view.animation.FastOutLinearInInterpolator
 import android.support.v7.app.AlertDialog
 import android.view.DragEvent
@@ -58,7 +59,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     private val countPaddingTop: Float by lazy { dpToPx(24f) }
 
     private lateinit var adapter: DeckBuilderPagerAdapter
-
+    private var savingSnackBar: Snackbar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -141,6 +142,8 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
                 text_input_deck_name.alpha = infoBarOffset
                 text_input_deck_description.alpha = infoBarOffset
+                format_expanded.alpha = 1f - calculateInfoBarAlpha(slideOffset, .5f)
+                format_standard.alpha = 1f - calculateInfoBarAlpha(slideOffset, .5f)
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()
@@ -170,6 +173,9 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 cardCount.translationY = translationY
                 cardCount.translationX = -translationX
             }
+
+
+
         })
 
         infoBar.setNavigationOnClickListener {
@@ -232,7 +238,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val saveItem = menu.findItem(R.id.action_save)
-        saveItem.isVisible = state.hasChanged
+        saveItem.isVisible = state.hasChanged && !state.isSaving
         return true
     }
 
@@ -324,7 +330,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
         else {
             appbar?.title = name
         }
-        if (!inputDeckName.text.equals(name)) {
+        if (inputDeckName.text.isBlank()) {
             inputDeckName.setText(name)
             inputDeckName.setSelection(name.length)
         }
@@ -332,10 +338,49 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
 
     override fun showDeckDescription(description: String) {
-        if (!inputDeckDescription.text.equals(description)) {
+        if (inputDeckDescription.text.isBlank()) {
             inputDeckDescription.setText(description)
             inputDeckDescription.setSelection(description.length)
         }
+    }
+
+
+    override fun showIsSaving(isSaving: Boolean) {
+        supportInvalidateOptionsMenu()
+        if (isSaving) {
+            if (savingSnackBar == null) {
+                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saving_message, Snackbar.LENGTH_INDEFINITE)
+            }
+            else {
+                savingSnackBar?.setText(R.string.deckbuilder_saving_message)
+                savingSnackBar?.duration = Snackbar.LENGTH_INDEFINITE
+            }
+
+            savingSnackBar?.show()
+        }
+        else {
+            if (savingSnackBar == null) {
+                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saved_message, Snackbar.LENGTH_SHORT)
+            }
+            else {
+                savingSnackBar?.setText(R.string.deckbuilder_saved_message)
+                savingSnackBar?.duration = Snackbar.LENGTH_SHORT
+            }
+
+            if (savingSnackBar?.isShown == true) {
+                savingSnackBar?.show()
+            }
+        }
+    }
+
+
+    override fun showIsStandard(isStandard: Boolean) {
+        format_standard.setVisible(isStandard)
+    }
+
+
+    override fun showIsExpanded(isExpanded: Boolean) {
+        format_expanded.setVisible(isExpanded)
     }
 
 

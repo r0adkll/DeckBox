@@ -51,4 +51,6 @@
     <string name="empty_deck_trainer_message">You haven\'t added any Trainer cards yet! Click the button below to start adding some.</string>
     <string name="empty_deck_energy_message">You haven\'t added any Energy cards yet! Click the button below to start adding some.</string>
     <string name="action_settings">Settings</string>
+    <string name="deckbuilder_saving_message">Saving...</string>
+    <string name="deckbuilder_saved_message">Saved!</string>
 </resources>

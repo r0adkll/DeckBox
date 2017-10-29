@@ -51,7 +51,7 @@ class DeckBuilderPresenter @Inject constructor(
         val cards = ui.state.pokemonCards
                 .plus(ui.state.trainerCards)
                 .plus(ui.state.energyCards)
-        return if (ui.state.deck == null) {
+        val persistable =  if (ui.state.deck == null) {
             repository.createDeck(cards, ui.state.name ?: "", ui.state.description)
                     .map { Change.DeckUpdated(it) as Change }
         }
@@ -59,5 +59,7 @@ class DeckBuilderPresenter @Inject constructor(
             repository.updateDeck(ui.state.deck!!.id, cards, ui.state.name ?: "", ui.state.description)
                     .map { Change.DeckUpdated(it) as Change }
         }
+
+        return persistable.startWith(Change.Saving)
     }
 }

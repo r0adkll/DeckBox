@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
+import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import paperparcel.PaperParcel
@@ -28,6 +29,9 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     interface Actions {
 
+        fun showIsStandard(isStandard: Boolean)
+        fun showIsExpanded(isExpanded: Boolean)
+        fun showIsSaving(isSaving: Boolean)
         fun showSaveAction(hasChanges: Boolean)
         fun showCardCount(count: Int)
         fun showPokemonCards(cards: List<StackedPokemonCard>)
@@ -40,6 +44,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     @PaperParcel
     data class State(
+            val isSaving: Boolean,
             val deck: Deck?,
             val pokemonCards: List<PokemonCard>,
             val trainerCards: List<PokemonCard>,
@@ -47,6 +52,24 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             val name: String?,
             val description: String?
     ) : PaperParcelable {
+
+        val isStandardLegal: Boolean
+            get() {
+                val poke = pokemonCards.find { it.expansion?.standardLegal == false } == null
+                val trainer = trainerCards.find { it.expansion?.standardLegal == false } == null
+                val energy = energyCards.filter { it.subtype != SubType.BASIC }
+                        .find { it.expansion?.standardLegal == false } == null
+                return poke && trainer && energy
+            }
+
+        val isExpandedLegal: Boolean
+            get() {
+                val poke = pokemonCards.find { it.expansion?.expandedLegal == false } == null
+                val trainer = trainerCards.find { it.expansion?.expandedLegal == false } == null
+                val energy = energyCards.filter { it.subtype != SubType.BASIC }
+                        .find { it.expansion?.expandedLegal == false } == null
+                return poke && trainer && energy
+            }
 
         val hasChanged: Boolean
             get() {
@@ -65,6 +88,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             }
 
         fun reduce(change: Change): State = when(change) {
+            Change.Saving -> this.copy(isSaving = true)
             is Change.AddCards -> {
                 val pokemons = change.cards.filter { it.supertype == SuperType.POKEMON }
                 val trainers = change.cards.filter { it.supertype == SuperType.TRAINER }
@@ -81,11 +105,12 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             }
             is Change.EditName -> this.copy(name = change.name)
             is Change.EditDescription -> this.copy(description = change.description)
-            is Change.DeckUpdated -> this.copy(deck = change.deck)
+            is Change.DeckUpdated -> this.copy(deck = change.deck, isSaving = false)
         }
 
 
         sealed class Change(val logText: String) {
+            object Saving : Change("user -> is saving deck")
             class AddCards(val cards: List<PokemonCard>) : Change("user -> added ${cards.size} cards")
             class RemoveCard(val card: PokemonCard) : Change("user -> removing ${card.name}")
             class EditName(val name: String) : Change("user -> name changed $name")
@@ -97,7 +122,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(null, emptyList(), emptyList(), emptyList(), null, null)
+                State(false, null, emptyList(), emptyList(), emptyList(), null, null)
             }
         }
     }
