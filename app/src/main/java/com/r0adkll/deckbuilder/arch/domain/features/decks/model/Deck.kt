@@ -9,10 +9,11 @@ import paperparcel.PaperParcelable
 
 @PaperParcel
 data class Deck(
-        val id: Long,
+        val id: String,
         val name: String,
         val description: String,
-        val cards: List<PokemonCard>
+        val cards: List<PokemonCard>,
+        val timestamp: Long
 ) : PaperParcelable {
 
     val standardLegal: Boolean get() = cards.none { !(it.expansion?.standardLegal ?: false) }

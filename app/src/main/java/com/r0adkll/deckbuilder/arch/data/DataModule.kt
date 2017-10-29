@@ -5,14 +5,17 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.google.firebase.firestore.FirebaseFirestore
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.ExpansionCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.InMemoryExpansionCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDecksRepository
+import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
+import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
+import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DecksRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.internal.di.AppScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
@@ -49,12 +52,20 @@ class DataModule {
     fun providePokemonApi(): Pokemon = Pokemon()
 
 
+    @Provides @AppScope
+    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+
     /*
      * Caching
      */
 
     @Provides @AppScope
     fun provideExpansionCache(): ExpansionCache = InMemoryExpansionCache()
+
+
+    @Provides @AppScope
+    fun provideDeckCache(cache: FirestoreDeckCache): DeckCache = cache
 
 
     /*
@@ -70,7 +81,7 @@ class DataModule {
      */
 
     @Provides @AppScope
-    fun provideDecksRepository(repository: DefaultDecksRepository): DecksRepository = repository
+    fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository
 
 
     @Provides @AppScope

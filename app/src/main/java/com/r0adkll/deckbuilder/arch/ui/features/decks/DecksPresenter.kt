@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks
 
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DecksRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State.*
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class DecksPresenter @Inject constructor(
         val ui: DecksUi,
         val intentions: DecksUi.Intentions,
-        val repository: DecksRepository
+        val repository: DeckRepository
 ) : Presenter() {
 
     override fun start() {
@@ -27,7 +27,7 @@ class DecksPresenter @Inject constructor(
         val deleteDecks = intentions.deleteClicks()
                 .flatMap {
                     repository.deleteDeck(it)
-                            .map { Change.DecksLoaded(it) as Change }
+                            .map { Change.DeckDeleted as Change }
                             .onErrorReturn(handleUnknownError)
                 }
 

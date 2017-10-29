@@ -37,6 +37,7 @@ interface DecksUi : StateRenderer<DecksUi.State> {
 
         fun reduce(change: Change): State = when(change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
+            Change.DeckDeleted -> this
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.DecksLoaded -> this.copy(decks = change.decks, isLoading = false, error = null)
         }
@@ -46,6 +47,7 @@ interface DecksUi : StateRenderer<DecksUi.State> {
             object IsLoading : Change("network -> loading decks")
             class Error(val description: String) : Change("error -> $description")
             class DecksLoaded(val decks: List<Deck>) : Change("network -> decks loaded ${decks.size}")
+            object DeckDeleted : Change("user -> deck deleted")
         }
 
 

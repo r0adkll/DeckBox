@@ -50,7 +50,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks)
         adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Deck> {
             override fun onItemClick(v: View, item: Deck, position: Int) {
-
+                startActivity(DeckBuilderActivity.createIntent(activity!!, item))
             }
         })
 

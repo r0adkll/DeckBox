@@ -14,6 +14,10 @@ fun <P : Parcelable> Fragment.bindParcelable(key: String): ReadOnlyProperty<Frag
 }
 
 
+fun <P : Parcelable> Activity.bindParcelable(key: String): ReadOnlyProperty<Activity, P?> = Lazy { activity, _ ->
+    activity.intent.getParcelableExtra(key)
+}
+
 inline fun <reified E : Enum<E>> Activity.bindEnum(key: String): ReadOnlyProperty<Activity, E> = Lazy { activity, _ ->
     val name = activity.intent?.getStringExtra(key)
     java.lang.Enum.valueOf(E::class.java, name)

@@ -19,12 +19,14 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -39,6 +41,8 @@ import javax.inject.Inject
 
 
 class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intentions, DeckBuilderUi.Actions{
+
+    private val deck: Deck? by bindParcelable(EXTRA_DECK)
 
     @State
     override var state: DeckBuilderUi.State = DeckBuilderUi.State.DEFAULT
@@ -172,6 +176,16 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
             slidingLayout.panelState = COLLAPSED
         }
 
+        if (state.deck == null && deck != null) {
+            state = state.copy(
+                    deck = deck,
+                    pokemonCards = deck!!.cards.filter { it.supertype == SuperType.POKEMON },
+                    trainerCards = deck!!.cards.filter { it.supertype == SuperType.TRAINER },
+                    energyCards = deck!!.cards.filter { it.supertype == SuperType.ENERGY },
+                    name = deck?.name,
+                    description = deck?.description
+            )
+        }
 
         renderer.start()
         presenter.start()
@@ -304,24 +318,35 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
 
     override fun showDeckName(name: String) {
-        if(name.isNullOrBlank()) {
+        if(name.isBlank()) {
             appbar?.setTitle(R.string.deckbuilder_default_title)
         }
         else {
             appbar?.title = name
         }
-        inputDeckName.setText(name)
-        inputDeckName.setSelection(name.length)
+        if (!inputDeckName.text.equals(name)) {
+            inputDeckName.setText(name)
+            inputDeckName.setSelection(name.length)
+        }
     }
 
 
     override fun showDeckDescription(description: String) {
-        inputDeckDescription.setText(description)
-        inputDeckDescription.setSelection(description.length)
+        if (!inputDeckDescription.text.equals(description)) {
+            inputDeckDescription.setText(description)
+            inputDeckDescription.setSelection(description.length)
+        }
     }
 
 
     companion object {
+        @JvmField val EXTRA_DECK = "com.r0adkll.deckbuilder.intent.EXTRA_DECK"
+
         fun createIntent(context: Context): Intent = Intent(context, DeckBuilderActivity::class.java)
+        fun createIntent(context: Context, deck: Deck): Intent {
+            val intent = createIntent(context)
+            intent.putExtra(EXTRA_DECK, deck)
+            return intent
+        }
     }
 }

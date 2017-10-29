@@ -1,8 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DecksRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.*
@@ -15,7 +14,7 @@ import javax.inject.Inject
 class DeckBuilderPresenter @Inject constructor(
         val ui: DeckBuilderUi,
         val intentions: DeckBuilderUi.Intentions,
-        val repository: DecksRepository
+        val repository: DeckRepository
 ) : Presenter() {
 
     override fun start() {
