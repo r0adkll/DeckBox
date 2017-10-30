@@ -53,4 +53,6 @@
     <string name="action_settings">Settings</string>
     <string name="deckbuilder_saving_message">Saving...</string>
     <string name="deckbuilder_saved_message">Saved!</string>
+    <string name="format_standard">Standard</string>
+    <string name="format_expanded">Expanded</string>
 </resources>

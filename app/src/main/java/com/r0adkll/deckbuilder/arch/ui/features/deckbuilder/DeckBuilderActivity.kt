@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -36,8 +35,6 @@ import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
-import kotlinx.android.synthetic.main.activity_deck_builder.view.*
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -56,7 +53,9 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     private val removePokemon: Relay<PokemonCard> = PublishRelay.create()
     private val saveDeck: Relay<Unit> = PublishRelay.create()
     private val countPadding: Float by lazy { dpToPx(16f) }
-    private val countPaddingTop: Float by lazy { dpToPx(24f) }
+    private val countPaddingTop: Float by lazy { dpToPx(16f) }
+    private val formatPaddingTop: Float by lazy { dpToPx(8f) }
+    private val panelOffsetTop: Float by lazy { dpToPx(48f) }
 
     private lateinit var adapter: DeckBuilderPagerAdapter
     private var savingSnackBar: Snackbar? = null
@@ -135,15 +134,18 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
         }
 
         slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
-            override fun onPanelSlide(panel: View?, slideOffset: Float) {
-                interpolateCardCounter(slideOffset)
-                val infoBarOffset = calculateInfoBarAlpha(slideOffset, .85f)
+            override fun onPanelSlide(panel: View, slideOffset: Float) {
+                interpolateCardCounter(panel, slideOffset)
+
+                val infoBarOffset = calculateAlpha(slideOffset, .85f)
                 infoBar.alpha = infoBarOffset
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
-                text_input_deck_name.alpha = infoBarOffset
-                text_input_deck_description.alpha = infoBarOffset
-                format_expanded.alpha = 1f - calculateInfoBarAlpha(slideOffset, .5f)
-                format_standard.alpha = 1f - calculateInfoBarAlpha(slideOffset, .5f)
+                text_input_deck_name.alpha = calculateAlpha(slideOffset, .65f)
+                text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
+                format_expanded.alpha = 1f - (slideOffset * 5f).coerceAtMost(1f)
+                format_standard.alpha = 1f - (slideOffset * 5f).coerceAtMost(1f)
+                formatStandardDetail.alpha = calculateAlpha(slideOffset, .35f)
+                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .35f)
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()
@@ -159,21 +161,28 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 }
             }
 
-            private fun calculateInfoBarAlpha(offset: Float, ratio: Float): Float = (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
+            private fun calculateAlpha(offset: Float, ratio: Float): Float = (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
 
 
-            private fun interpolateCardCounter(offset: Float) {
-                val ratio = .35f
-                val cardOffset = offset.coerceAtMost(ratio) / ratio
-                // find distance from counter y to description bottom
-                val distance = ((text_input_deck_description.bottom - cardCount.top) + countPaddingTop)
+            private fun interpolateCardCounter(panel: View, offset: Float) {
+                val bottom = if (formatExpandedDetail.isVisible()){
+                    formatExpandedDetail.bottom
+                } else if (formatStandardDetail.isVisible()) {
+                    formatStandardDetail.bottom
+                } else {
+                    text_input_deck_description.bottom
+                }
+
+                val distance = ((bottom - cardCount.top) + countPaddingTop)
+                val distanceYRatio = distance / (panel.height - panelOffsetTop)
                 val distanceX = (cardCount.left - countPadding)
+
+                val cardOffset = offset.coerceAtMost(distanceYRatio) / distanceYRatio
                 val translationY = distance * cardOffset
                 val translationX = distanceX * cardOffset
                 cardCount.translationY = translationY
                 cardCount.translationX = -translationX
             }
-
 
 
         })
