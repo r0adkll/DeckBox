@@ -141,7 +141,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 infoBar.alpha = infoBarOffset
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
                 text_input_deck_name.alpha = calculateAlpha(slideOffset, .65f)
-                text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
+                text_input_deck_description.alpha = calculateAlpha(slideOffset, .45f)
                 format_expanded.alpha = 1f - (slideOffset * 5f).coerceAtMost(1f)
                 format_standard.alpha = 1f - (slideOffset * 5f).coerceAtMost(1f)
                 formatStandardDetail.alpha = calculateAlpha(slideOffset, .35f)
