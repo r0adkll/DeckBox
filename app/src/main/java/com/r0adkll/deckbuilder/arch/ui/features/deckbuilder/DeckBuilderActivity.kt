@@ -137,15 +137,15 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 interpolateCardCounter(panel, slideOffset)
 
-                val infoBarOffset = calculateAlpha(slideOffset, .85f)
+                val infoBarOffset = calculateAlpha(slideOffset, .95f)
                 infoBar.alpha = infoBarOffset
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
-                text_input_deck_name.alpha = calculateAlpha(slideOffset, .65f)
-                text_input_deck_description.alpha = calculateAlpha(slideOffset, .45f)
-                format_expanded.alpha = 1f - (slideOffset * 5f).coerceAtMost(1f)
-                format_standard.alpha = 1f - (slideOffset * 5f).coerceAtMost(1f)
-                formatStandardDetail.alpha = calculateAlpha(slideOffset, .35f)
-                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .35f)
+                text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
+                text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
+                format_expanded.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
+                format_standard.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
+                formatStandardDetail.alpha = calculateAlpha(slideOffset, .40f)
+                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .40f)
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()
