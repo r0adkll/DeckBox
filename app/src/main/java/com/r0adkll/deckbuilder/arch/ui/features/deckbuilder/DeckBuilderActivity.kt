@@ -144,8 +144,8 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
 //                format_expanded.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
 //                format_standard.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
-//                formatStandardDetail.alpha = calculateAlpha(slideOffset, .40f)
-//                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .40f)
+                formatStandardDetail.alpha = calculateAlpha(slideOffset, .40f)
+                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .40f)
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()

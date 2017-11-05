@@ -74,10 +74,11 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         val hasChanged: Boolean
             get() {
                 return if (deck == null) {
-                    (pokemonCards.isNotEmpty() ||
+                    pokemonCards.isNotEmpty() ||
                             trainerCards.isNotEmpty() ||
-                            energyCards.isNotEmpty()) &&
-                            !name.isNullOrBlank()
+                            energyCards.isNotEmpty() ||
+                            !name.isNullOrBlank() ||
+                            !description.isNullOrBlank()
                 } else {
                     !deck.cards.containsAll(pokemonCards) ||
                             !deck.cards.containsAll(trainerCards) ||
