@@ -14,12 +14,17 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDa
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
+import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckValidator
+import com.r0adkll.deckbuilder.arch.data.features.decks.rules.DuplicateRule
+import com.r0adkll.deckbuilder.arch.data.features.decks.rules.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.internal.di.AppScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.ElementsIntoSet
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -87,4 +92,19 @@ class DataModule {
     @Provides @AppScope
     fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
 
+
+    @Provides @AppScope
+    fun provideDeckValidator(validator: DefaultDeckValidator): DeckValidator = validator
+
+    /*
+     * Deck Validation Rules
+     */
+
+    @Provides @AppScope @ElementsIntoSet
+    fun provideDefaultRuleSet() : Set<DeckValidator.Rule> {
+        return setOf(
+                SizeRule(),
+                DuplicateRule()
+        )
+    }
 }

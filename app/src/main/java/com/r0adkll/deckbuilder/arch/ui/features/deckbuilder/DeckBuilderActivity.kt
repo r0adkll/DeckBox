@@ -95,7 +95,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 2 -> SuperType.ENERGY
                 else -> SuperType.POKEMON
             }
-            val intent = SearchActivity.createIntent(this, superType)
+            val intent = SearchActivity.createIntent(this, superType, state.allCards)
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
 
@@ -142,8 +142,8 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
                 text_input_deck_name.alpha = infoBarOffset
                 text_input_deck_description.alpha = infoBarOffset
-                format_expanded.alpha = 1f - calculateInfoBarAlpha(slideOffset, .5f)
-                format_standard.alpha = 1f - calculateInfoBarAlpha(slideOffset, .5f)
+//                format_expanded.alpha = 1f - calculateInfoBarAlpha(slideOffset, .5f)
+//                format_standard.alpha = 1f - calculateInfoBarAlpha(slideOffset, .5f)
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()
@@ -375,12 +375,12 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
 
     override fun showIsStandard(isStandard: Boolean) {
-        format_standard.setVisible(isStandard)
+//        format_standard.setVisible(isStandard)
     }
 
 
     override fun showIsExpanded(isExpanded: Boolean) {
-        format_expanded.setVisible(isExpanded)
+//        format_expanded.setVisible(isExpanded)
     }
 
 

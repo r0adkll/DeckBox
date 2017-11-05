@@ -9,11 +9,13 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.GravityCompat
 import com.ftinc.kit.kotlin.extensions.color
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
+import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
@@ -23,7 +25,9 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrol
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
+import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
+import com.r0adkll.deckbuilder.util.findArrayList
 import com.r0adkll.deckbuilder.util.findEnum
 import gov.scstatehouse.houseofcards.di.HasComponent
 import io.pokemontcg.model.SuperType
@@ -41,8 +45,13 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     @com.evernote.android.state.State
     var superType: SuperType = SuperType.POKEMON
 
+    @com.evernote.android.state.State
+    var existingCards: ArrayList<PokemonCard> = ArrayList()
+
+
     @Inject lateinit var renderer: SearchRenderer
     @Inject lateinit var presenter: SearchPresenter
+    @Inject lateinit var validator: DeckValidator
 
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
@@ -84,6 +93,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
         superType = findEnum<SuperType>(EXTRA_SUPER_TYPE) ?: SuperType.POKEMON
+        existingCards = findArrayList(EXTRA_CARDS) ?: ArrayList()
 
         // Set default tab
         val i = when(superType) {
@@ -143,6 +153,17 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     override fun selectCard(): Observable<PokemonCard> {
         return pokemonCardClicks
+                .filter { card ->
+                    val result = validator.validate(existingCards.plus(state.selected), card)
+                    if (result != null) {
+                        adapter.wiggleCard(card)
+                        // Display error to user
+                        snackbar(result)
+                        false
+                    } else {
+                        true
+                    }
+                }
     }
 
 
@@ -246,13 +267,17 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     companion object {
         @JvmField val RC_PICK_CARD = 100
-        @JvmField val EXTRA_SELECTED_CARDS = "com.r0adkll.deckbuilder.intent.EXTRA_SELECTED_CARDS"
-        @JvmField val EXTRA_SUPER_TYPE = "SuperType"
+        @JvmField val EXTRA_SELECTED_CARDS = "SearchActivity.SelectedCards"
+        @JvmField val EXTRA_SUPER_TYPE = "SearchActivity.SuperType"
+        @JvmField val EXTRA_CARDS = "SearchActivity.Cards"
 
 
-        fun createIntent(context: Context, superType: SuperType = SuperType.POKEMON): Intent {
+        fun createIntent(context: Context,
+                         superType: SuperType = SuperType.POKEMON,
+                         cards: List<PokemonCard>? = null): Intent {
             val intent = Intent(context, SearchActivity::class.java)
             intent.putExtra(EXTRA_SUPER_TYPE, superType)
+            cards?.let { intent.putParcelableArrayListExtra(EXTRA_CARDS, ArrayList(it)) }
             return intent
         }
 

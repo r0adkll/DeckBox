@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
+import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State
@@ -49,6 +50,11 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.adapter = adapter
         (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+
+        if (activity is SearchActivity) {
+            val type = (activity as SearchActivity).superType
+            state = state.copy(category = type)
+        }
 
         renderer.start()
         presenter.start()

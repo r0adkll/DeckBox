@@ -2,11 +2,15 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
 import android.content.Context
 import android.support.v4.view.PagerAdapter
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.*
+import android.view.animation.Animation.RELATIVE_TO_SELF
+import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -98,6 +102,15 @@ class ResultsPagerAdapter(
     }
 
 
+    fun wiggleCard(card: PokemonCard) {
+        when(card.supertype) {
+            SuperType.POKEMON -> viewHolders[0]?.wiggleCard(card)
+            SuperType.TRAINER -> viewHolders[1]?.wiggleCard(card)
+            SuperType.ENERGY -> viewHolders[2]?.wiggleCard(card)
+        }
+    }
+
+
     private class SearchResultViewHolder(
             itemView: View,
             scrollHideListener: KeyboardScrollHideListener,
@@ -144,6 +157,32 @@ class ResultsPagerAdapter(
 
         fun hideError() {
             emptyView.setEmptyMessage(R.string.empty_search_category)
+        }
+
+
+        fun wiggleCard(card: PokemonCard) {
+            val adapterPosition = adapter.indexOf(card)
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                val child = recycler.layoutManager.getChildAt(adapterPosition)
+                child?.let {
+                    val rotateAnim = RotateAnimation(-5f, 5f, RELATIVE_TO_SELF, .5f, RELATIVE_TO_SELF, .5f)
+                    rotateAnim.repeatCount = 3
+                    rotateAnim.repeatMode = Animation.REVERSE
+                    rotateAnim.duration = 50
+
+                    val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dpToPx(8f))
+                    transAnim.repeatCount = 1
+                    transAnim.repeatMode = Animation.REVERSE
+                    transAnim.duration = 100
+
+                    val set = AnimationSet(true)
+                    set.addAnimation(rotateAnim)
+                    set.addAnimation(transAnim)
+                    set.interpolator = AccelerateDecelerateInterpolator()
+
+                    it.startAnimation(set)
+                }
+            }
         }
     }
 }

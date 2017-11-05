@@ -42,6 +42,11 @@ class SearchResultsRecyclerAdapter(
     }
 
 
+    fun indexOf(card: PokemonCard): Int {
+        return items.indexOf(card)
+    }
+
+
     companion object {
         private fun calculateDiff(old: List<PokemonCard>, new: List<PokemonCard>): RecyclerViewBinding<PokemonCard> {
             val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {

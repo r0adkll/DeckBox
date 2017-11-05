@@ -87,6 +87,10 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                 }
             }
 
+        val allCards: List<PokemonCard>
+            get() = pokemonCards.plus(trainerCards).plus(energyCards)
+
+
         fun reduce(change: Change): State = when(change) {
             Change.Saving -> this.copy(isSaving = true)
             is Change.AddCards -> {
