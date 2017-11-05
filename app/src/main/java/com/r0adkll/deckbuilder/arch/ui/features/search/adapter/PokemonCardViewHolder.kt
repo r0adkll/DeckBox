@@ -32,8 +32,16 @@ class PokemonCardViewHolder(itemView: View, val displayWhenOne: Boolean = false)
 
 
     companion object {
-        fun create(inflater: LayoutInflater, parent: ViewGroup, displayWhenOne: Boolean = false): PokemonCardViewHolder {
-            return PokemonCardViewHolder(inflater.inflate(R.layout.item_pokemon_card, parent, false), displayWhenOne)
+        fun create(inflater: LayoutInflater, parent: ViewGroup,
+                   displayWhenOne: Boolean = false): PokemonCardViewHolder {
+            val view = inflater.inflate(R.layout.item_pokemon_card, parent, false)
+            return PokemonCardViewHolder(view, displayWhenOne)
+        }
+
+        fun createHorizontal(inflater: LayoutInflater, parent: ViewGroup,
+                   displayWhenOne: Boolean = false): PokemonCardViewHolder {
+            val view = inflater.inflate(R.layout.item_pokemon_card_horizontal, parent, false)
+            return PokemonCardViewHolder(view, displayWhenOne)
         }
     }
 }

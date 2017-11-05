@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Deck Builder</string>
+    <string name="app_name">Deck Box</string>
     <string name="app_description">Create and edit Pokémon Trading Card Game decks to share and compare with others in the community.</string>
     <string name="action_continue">or continue here</string>
     <string name="action_skip">Skip</string>
@@ -58,4 +58,6 @@
     <string name="format_standard">Standard</string>
     <string name="format_expanded">Expanded</string>
     <string name="action_export">Export</string>
+    <string name="section_variants">Variants</string>
+    <string name="section_evolves">Evolves from</string>
 </resources>

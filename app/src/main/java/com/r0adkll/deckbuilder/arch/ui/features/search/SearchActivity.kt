@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.GravityCompat
 import com.ftinc.kit.kotlin.extensions.color
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
@@ -17,14 +18,17 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findArrayList
@@ -33,6 +37,7 @@ import gov.scstatehouse.houseofcards.di.HasComponent
 import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_search.*
 import javax.inject.Inject
 
@@ -56,6 +61,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
+    private val pokemonCardLongClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
     private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
     private var selectionSnackBar: Snackbar? = null
@@ -67,7 +73,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardClicks)
+        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardClicks, pokemonCardLongClicks)
         pager.offscreenPageLimit = 3
         pager.adapter = adapter
         tabs.setupWithViewPager(pager)
@@ -91,6 +97,11 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
                 categoryChanges.accept(category)
             }
         })
+
+        disposables += pokemonCardLongClicks
+                .subscribe {
+                    CardDetailActivity.show(this, it)
+                }
 
 
         superType = findEnum<SuperType>(EXTRA_SUPER_TYPE) ?: SuperType.POKEMON

@@ -4,6 +4,8 @@ package com.r0adkll.deckbuilder.internal.di
 import com.r0adkll.deckbuilder.BuildModule
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.DataModule
+import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailComponent
+import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
@@ -26,4 +28,5 @@ interface AppComponent {
     fun plus(module: HomeModule): HomeComponent
     fun plus(module: DeckBuilderModule): DeckBuilderComponent
     fun plus(module: SearchModule): SearchComponent
+    fun plus(module: CardDetailModule): CardDetailComponent
 }

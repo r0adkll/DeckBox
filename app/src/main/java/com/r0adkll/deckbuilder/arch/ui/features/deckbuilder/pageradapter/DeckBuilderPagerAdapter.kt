@@ -9,6 +9,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
 
 
@@ -17,7 +18,7 @@ import io.pokemontcg.model.SuperType
  */
 class DeckBuilderPagerAdapter(
         private val context: Context,
-        private val pokemonCardClicks: Relay<PokemonCard>
+        private val pokemonCardClicks: Relay<PokemonCardView>
 ) : PagerAdapter() {
 
     private var pokemonCards: List<StackedPokemonCard> = emptyList()
@@ -79,7 +80,7 @@ class DeckBuilderPagerAdapter(
     }
 
 
-    private fun getViewHolder(position: Int, itemView: View, pokemonCardClicks: Relay<PokemonCard>): SuperTypeViewHolder<*> {
+    private fun getViewHolder(position: Int, itemView: View, pokemonCardClicks: Relay<PokemonCardView>): SuperTypeViewHolder<*> {
         val emptyIcon = when(position) {
             0 -> R.drawable.ic_empty_pokeball
             1 -> R.drawable.ic_empty_wrench

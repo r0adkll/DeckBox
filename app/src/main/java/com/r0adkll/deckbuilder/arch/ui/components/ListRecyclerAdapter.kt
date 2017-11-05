@@ -24,6 +24,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
     var items: MutableList<M> = ArrayList<M>(15)
 
     private var itemClickListener: OnItemClickListener<M>? = null
+    private var itemLongClickListener: OnItemLongClickListener<M>? = null
     private var emptyView: View? = null
 
     init {
@@ -187,10 +188,33 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
     }
 
 
+    fun setOnItemLongClickListener(itemLongClickListener: OnItemLongClickListener<M>?) {
+        this.itemLongClickListener = itemLongClickListener
+    }
+
+
     fun setOnItemClickListener(listener: (M) -> Unit) {
         this.itemClickListener = object : OnItemClickListener<M> {
             override fun onItemClick(v: View, item: M, position: Int) {
                 listener.invoke(item)
+            }
+        }
+    }
+
+
+    fun setOnViewItemClickListener(listener: (View, M) -> Unit) {
+        this.itemClickListener = object : OnItemClickListener<M> {
+            override fun onItemClick(v: View, item: M, position: Int) {
+                listener.invoke(v, item)
+            }
+        }
+    }
+
+
+    fun setOnItemLongClickListener(listener: (View, M) -> Boolean) {
+        this.itemLongClickListener = object : OnItemLongClickListener<M> {
+            override fun onItemLongClick(v: View, item: M, position: Int): Boolean {
+                return listener.invoke(v, item)
             }
         }
     }
@@ -229,6 +253,14 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
                 itemClickListener!!.onItemClick(v, items[position], position)
             }
         }
+
+
+        if (itemLongClickListener != null) {
+            vh.itemView.setOnLongClickListener { v ->
+                val position = vh.adapterPosition
+                itemLongClickListener!!.onItemLongClick(v, items[position], position)
+            }
+        }
     }
 
     /**
@@ -251,8 +283,13 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
      * The interface for detecting item click events from within the adapter, this listener
      * is triggered by [.onItemClick]
      */
-    interface OnItemClickListener<T> {
+    interface OnItemClickListener<in T> {
         fun onItemClick(v: View, item: T, position: Int)
+    }
+
+
+    interface OnItemLongClickListener<in T> {
+        fun onItemLongClick(v: View, item: T, position: Int): Boolean
     }
 
 

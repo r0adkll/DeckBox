@@ -10,15 +10,19 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 
 
-fun <P : Parcelable> Fragment.bindParcelable(key: String): ReadOnlyProperty<Fragment, P> = Lazy { fragment, _ ->
+fun <P : Parcelable> Fragment.bindOptionalParcelable(key: String): ReadOnlyProperty<Fragment, P> = Lazy { fragment, _ ->
     fragment.arguments!!.getParcelable(key)
 }
 
 
-fun <P : Parcelable> Activity.bindParcelable(key: String): ReadOnlyProperty<Activity, P?> = Lazy { activity, _ ->
+fun <P : Parcelable> Activity.bindOptionalParcelable(key: String): ReadOnlyProperty<Activity, P?> = Lazy { activity, _ ->
     activity.intent.getParcelableExtra(key)
 }
 
+
+fun <P : Parcelable> Activity.bindParcelable(key: String): ReadOnlyProperty<Activity, P> = Lazy { activity, _ ->
+    activity.intent.getParcelableExtra(key)
+}
 
 
 inline fun <reified E : Enum<E>> Activity.bindEnum(key: String): ReadOnlyProperty<Activity, E> = Lazy { activity, _ ->

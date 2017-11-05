@@ -29,6 +29,10 @@
                 android:value="com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity" />
         </activity>
         <activity android:name=".arch.ui.features.search.SearchActivity"/>
+        <activity android:name=".arch.ui.features.carddetail.CardDetailActivity"
+            android:theme="@style/Theme.DeckBuilder.Detail"
+            />
+
     </application>
 
 </manifest>

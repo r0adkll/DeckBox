@@ -21,13 +21,15 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.bindParcelable
+import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.extensions.isVisible
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.*
@@ -40,7 +42,7 @@ import javax.inject.Inject
 
 class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intentions, DeckBuilderUi.Actions{
 
-    private val deck: Deck? by bindParcelable(EXTRA_DECK)
+    private val deck: Deck? by bindOptionalParcelable(EXTRA_DECK)
 
     @State
     override var state: DeckBuilderUi.State = DeckBuilderUi.State.DEFAULT
@@ -48,7 +50,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     @Inject lateinit var renderer: DeckBuilderRenderer
     @Inject lateinit var presenter: DeckBuilderPresenter
 
-    private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
+    private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val addPokemon: Relay<List<PokemonCard>> = PublishRelay.create()
     private val removePokemon: Relay<PokemonCard> = PublishRelay.create()
     private val saveDeck: Relay<Unit> = PublishRelay.create()
@@ -204,6 +206,12 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
         renderer.start()
         presenter.start()
+
+
+        disposables += pokemonCardClicks
+                .subscribe {
+                    CardDetailActivity.show(this, it)
+                }
     }
 
 

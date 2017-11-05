@@ -19,7 +19,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.bindParcelable
+import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.bundle
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding_page.*
@@ -135,7 +135,7 @@ class OnboardingActivity : BaseActivity() {
 
     class PageFragment : Fragment() {
 
-        val page: Page by bindParcelable(KEY_PAGE)
+        val page: Page by bindOptionalParcelable(KEY_PAGE)
 
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

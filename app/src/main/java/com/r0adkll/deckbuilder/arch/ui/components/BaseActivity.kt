@@ -10,11 +10,13 @@ import com.r0adkll.deckbuilder.arch.ui.components.delegates.ActivityDelegate
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.StateSaverActivityDelegate
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalView
+import io.reactivex.disposables.CompositeDisposable
 
 
 abstract class BaseActivity : AppCompatActivity() {
 
     protected val appbar: Toolbar? by bindOptionalView(R.id.appbar)
+    protected val disposables = CompositeDisposable()
     private val delegates: ArrayList<ActivityDelegate> = ArrayList()
 
 
@@ -62,8 +64,9 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        disposables.clear()
         delegates.forEach { it.onDestroy() }
+        super.onDestroy()
     }
 
 

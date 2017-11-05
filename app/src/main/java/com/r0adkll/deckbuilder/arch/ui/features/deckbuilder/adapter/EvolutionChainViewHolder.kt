@@ -10,12 +10,13 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.EvolutionChainView
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.bindView
 
 
 class EvolutionChainViewHolder(
         itemView: View,
-        private val pokemonCardClicks: Relay<PokemonCard>
+        private val pokemonCardClicks: Relay<PokemonCardView>
 ): RecyclerView.ViewHolder(itemView) {
 
     private val evolutionView: EvolutionChainView by bindView(R.id.evolution_view)
@@ -31,7 +32,7 @@ class EvolutionChainViewHolder(
 
         fun create(inflater: LayoutInflater,
                    parent: ViewGroup?,
-                   pokemonCardClicks: Relay<PokemonCard>): EvolutionChainViewHolder {
+                   pokemonCardClicks: Relay<PokemonCardView>): EvolutionChainViewHolder {
             return EvolutionChainViewHolder(inflater.inflate(R.layout.item_evolution_chain, parent, false), pokemonCardClicks)
         }
     }

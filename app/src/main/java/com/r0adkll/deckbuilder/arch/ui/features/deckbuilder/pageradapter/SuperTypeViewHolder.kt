@@ -17,13 +17,14 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChainRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokemonRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 
 abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
         itemView: View,
         @DrawableRes val emptyIcon: Int,
         @StringRes val emptyMessage: Int,
-        val pokemonCardClicks: Relay<PokemonCard>
+        val pokemonCardClicks: Relay<PokemonCardView>
 ) {
 
     protected val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
@@ -50,7 +51,7 @@ class PokemonViewHolder(
         itemView: View,
         emptyIcon: Int,
         emptyMessage: Int,
-        pokemonCardClicks: Relay<PokemonCard>
+        pokemonCardClicks: Relay<PokemonCardView>
 ) : SuperTypeViewHolder<EvolutionChainRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks) {
     override val adapter: EvolutionChainRecyclerAdapter = EvolutionChainRecyclerAdapter(itemView.context, pokemonCardClicks)
     override val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(itemView.context)
@@ -65,7 +66,7 @@ class TrainerEnergyViewHolder(
         itemView: View,
         emptyIcon: Int,
         emptyMessage: Int,
-        pokemonCardClicks: Relay<PokemonCard>
+        pokemonCardClicks: Relay<PokemonCardView>
 ) : SuperTypeViewHolder<StackedPokemonRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks) {
     override val adapter: StackedPokemonRecyclerAdapter = StackedPokemonRecyclerAdapter(itemView.context)
     override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, 3)
@@ -76,5 +77,8 @@ class TrainerEnergyViewHolder(
 
     override fun bind(cards: List<StackedPokemonCard>) {
         adapter.setCards(cards)
+        adapter.setOnViewItemClickListener { view, stackedPokemonCard ->
+            pokemonCardClicks.accept(view as PokemonCardView)
+        }
     }
 }

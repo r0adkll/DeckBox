@@ -82,10 +82,10 @@ class EvolutionChainView @JvmOverloads constructor(
     }
 
 
-    fun setOnPokemonCardClickListener(listener: (PokemonCard) -> Unit) {
+    fun setOnPokemonCardClickListener(listener: (PokemonCardView) -> Unit) {
         pokemonCardClickListener = object : OnPokemonCardClickListener {
-            override fun onPokemonCardClicked(card: PokemonCard) {
-                listener.invoke(card)
+            override fun onPokemonCardClicked(view: PokemonCardView, card: PokemonCard) {
+                listener.invoke(view)
             }
         }
     }
@@ -120,7 +120,7 @@ class EvolutionChainView @JvmOverloads constructor(
 
                     // Set click listener
                     view.setOnClickListener {
-                        pokemonCardClickListener?.onPokemonCardClicked(card.card)
+                        pokemonCardClickListener?.onPokemonCardClicked(view!!, card.card)
                     }
 
 
@@ -189,6 +189,6 @@ class EvolutionChainView @JvmOverloads constructor(
 
     interface OnPokemonCardClickListener {
 
-        fun onPokemonCardClicked(card: PokemonCard)
+        fun onPokemonCardClicked(view: PokemonCardView, card: PokemonCard)
     }
 }

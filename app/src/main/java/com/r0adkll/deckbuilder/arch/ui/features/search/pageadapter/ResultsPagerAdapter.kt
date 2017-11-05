@@ -16,13 +16,15 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
 
 
 class ResultsPagerAdapter(
         val context: Context,
         val scrollHideListener: KeyboardScrollHideListener,
-        private val pokemonCardClicks: Relay<PokemonCard>
+        private val pokemonCardClicks: Relay<PokemonCard>,
+        private val pokemonCardLongClicks: Relay<PokemonCardView>
 ) : PagerAdapter() {
 
     private val inflater = LayoutInflater.from(context)
@@ -31,7 +33,7 @@ class ResultsPagerAdapter(
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
-        val vh = SearchResultViewHolder(view, scrollHideListener, pokemonCardClicks)
+        val vh = SearchResultViewHolder(view, scrollHideListener, pokemonCardClicks, pokemonCardLongClicks)
         view.tag = vh
         viewHolders[position] = vh
 
@@ -114,7 +116,8 @@ class ResultsPagerAdapter(
     private class SearchResultViewHolder(
             itemView: View,
             scrollHideListener: KeyboardScrollHideListener,
-            pokemonCardClicks: Relay<PokemonCard>
+            pokemonCardClicks: Relay<PokemonCard>,
+            pokemonCardLongClicks: Relay<PokemonCardView>
     ) {
 
         private val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
@@ -126,6 +129,10 @@ class ResultsPagerAdapter(
 
             adapter.setEmptyView(emptyView)
             adapter.setOnItemClickListener { pokemonCardClicks.accept(it) }
+            adapter.setOnItemLongClickListener { view, _ ->
+                pokemonCardLongClicks.accept(view as PokemonCardView)
+                true
+            }
 
             recycler.layoutManager = GridLayoutManager(itemView.context, 3)
             recycler.adapter = adapter

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card"
+    android:layout_width="128dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_tiny"
+    android:foreground="@drawable/dr_pokemon_card_ripple"
+    android:stateListAnimator="@animator/elevation_state_anim"
+    />
