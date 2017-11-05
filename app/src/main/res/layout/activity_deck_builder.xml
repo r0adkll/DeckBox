@@ -212,22 +212,88 @@
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
             app:counterEnabled="true"
-            app:counterMaxLength="140"
+            app:counterMaxLength="200"
             app:counterOverflowTextAppearance="@style/TextAppearance.Deck.InputOverflow"
             >
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/inputDeckDescription"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="128dp"
+                android:gravity="start|top"
                 android:inputType="text|textMultiLine|textAutoCorrect"
                 android:hint="@string/hint_deck_description_input"
                 android:focusedByDefault="false"
-                android:maxLines="3"
-                android:maxLength="140"
+                android:maxLength="200"
                 />
 
         </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/formatStandardDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_input_deck_description"
+            android:layout_marginTop="@dimen/margin_tiny"
+            android:layout_marginStart="@dimen/margin_small"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical">
+
+
+            <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+
+                android:padding="2dp"
+                app:ringPadding="4dp"
+                app:strokeWidth="2dp"
+                app:format="standard"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/format_standard"
+                android:textSize="14sp"
+                android:textColor="@color/black54"
+                android:fontFamily="sans-serif-medium"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/formatExpandedDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/formatStandardDetail"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="@dimen/margin_small"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical">
+
+
+            <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+
+                android:padding="2dp"
+                app:ringPadding="4dp"
+                app:strokeWidth="2dp"
+                app:format="expanded"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/format_expanded"
+                android:textSize="14sp"
+                android:textColor="@color/black54"
+                android:fontFamily="sans-serif-medium"
+                />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
