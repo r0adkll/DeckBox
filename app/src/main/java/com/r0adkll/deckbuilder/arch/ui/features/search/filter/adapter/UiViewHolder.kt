@@ -162,6 +162,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                         Rarity.UNCOMMON -> R.drawable.ic_rarity_uncommon
                         Rarity.RARE -> R.drawable.ic_rarity_rare
                         Rarity.HOLO_RARE -> R.drawable.ic_rarity_holo
+                        else -> R.drawable.ic_rarity_holo
                     })
                 }
             }

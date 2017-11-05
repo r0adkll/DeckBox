@@ -27,6 +27,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
     interface Actions {
 
+        fun showFilterEmpty(enabled: Boolean)
         fun setQueryText(text: String)
         fun setCategory(superType: SuperType)
         fun setResults(superType: SuperType, cards: List<PokemonCard>)
@@ -85,7 +86,9 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             }
             is Change.FilterChanged -> {
                 val newResults = results.toMutableMap()
-                newResults[change.category] = newResults[change.category]!!.copy(filter = change.filter)
+                val result = newResults[change.category]!!
+                newResults[change.category] = result
+                        .copy(filter = change.filter, results = if (change.filter.isEmpty && result.query.isBlank()) emptyList() else result.results)
                 this.copy(results = newResults.toMap())
             }
             is Change.ResultsLoaded -> {

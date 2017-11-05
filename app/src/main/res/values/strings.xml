@@ -57,4 +57,5 @@
     <string name="validation_rule_max_size">A deck can only be 60 cards</string>
     <string name="format_standard">Standard</string>
     <string name="format_expanded">Expanded</string>
+    <string name="action_export">Export</string>
 </resources>

@@ -30,6 +30,7 @@ import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findArrayList
 import com.r0adkll.deckbuilder.util.findEnum
 import gov.scstatehouse.houseofcards.di.HasComponent
+import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_search.*
@@ -122,6 +123,12 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     }
 
 
+    override fun onPause() {
+        super.onPause()
+        ImeUtils.hideIme(searchView)
+    }
+
+
     override fun setupComponent(component: AppComponent) {
         this.component = component.plus(SearchModule(this))
         this.component.inject(this)
@@ -200,6 +207,14 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     override fun setQueryText(text: String) {
         searchView.setQuery(text, false)
+    }
+
+
+    override fun showFilterEmpty(enabled: Boolean) {
+        actionFilter.setImageResource(when(enabled) {
+            true -> R.drawable.ic_filter_outline
+            false -> R.drawable.ic_filter_filled
+        })
     }
 
 

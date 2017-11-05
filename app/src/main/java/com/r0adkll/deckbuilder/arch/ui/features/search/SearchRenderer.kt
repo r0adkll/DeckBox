@@ -48,6 +48,19 @@ class SearchRenderer(
 
 
     private fun subscribeToSuperType(superType: SuperType) {
+
+        disposables += state
+                .mapNullable { it.results[superType]?.filter?.isEmpty ?: true }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe {
+                    val value = it.value
+                    if (value != null) {
+                        actions.showFilterEmpty(value)
+                    }
+                }
+
         disposables += state
                 .mapNullable { it.results[superType]?.results }
                 .distinctUntilChanged()
