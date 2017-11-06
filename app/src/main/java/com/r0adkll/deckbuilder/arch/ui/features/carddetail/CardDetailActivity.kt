@@ -113,6 +113,8 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         spannable.setSpan(ForegroundColorSpan(color(R.color.white70)), 0, number.length, 0)
         cardTitle.text = spannable
         cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
+        formatStandard.setVisible(card.expansion?.standardLegal ?: false)
+        formatExpanded.setVisible(card.expansion?.expandedLegal ?: false)
 
         GlideApp.with(this)
                 .load(card.imageUrlHiRes)
