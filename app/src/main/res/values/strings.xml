@@ -60,4 +60,10 @@
     <string name="action_export">Export</string>
     <string name="section_variants">Variants</string>
     <string name="section_evolves">Evolves from</string>
+
+    <string name="deck_list_example" translatable="false">
+
+    </string>
+    <string name="activity_deck_export">Export</string>
+    <string name="action_share">Share</string>
 </resources>

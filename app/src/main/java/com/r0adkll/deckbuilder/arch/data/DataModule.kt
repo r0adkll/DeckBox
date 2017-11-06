@@ -15,11 +15,13 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckValidator
+import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultPTCGOConverter
 import com.r0adkll.deckbuilder.arch.data.features.decks.rules.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.decks.rules.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.internal.di.AppScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
@@ -95,6 +97,10 @@ class DataModule {
 
     @Provides @AppScope
     fun provideDeckValidator(validator: DefaultDeckValidator): DeckValidator = validator
+
+
+    @Provides @AppScope
+    fun providePtcgoConverter(converter: DefaultPTCGOConverter): PTCGOConverter = converter
 
     /*
      * Deck Validation Rules

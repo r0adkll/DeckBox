@@ -32,6 +32,7 @@
         <activity android:name=".arch.ui.features.carddetail.CardDetailActivity"
             android:theme="@style/Theme.DeckBuilder.Detail"
             />
+        <activity android:name=".arch.ui.features.exporter.DeckExportActivity"/>
 
     </application>
 

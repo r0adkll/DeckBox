@@ -16,7 +16,9 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_decks.*
@@ -61,6 +63,12 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         fab.setOnClickListener {
             startActivity(DeckBuilderActivity.createIntent(activity!!))
         }
+
+        disposables += shareClicks
+                .subscribe {
+                    val intent = DeckExportActivity.createIntent(activity!!, it)
+                    startActivity(intent)
+                }
     }
 
 

@@ -5,12 +5,14 @@ import android.support.v4.app.Fragment
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.FragmentDelegate
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.StateSaverFragmentDelegate
 import gov.scstatehouse.houseofcards.di.HasComponent
+import io.reactivex.disposables.CompositeDisposable
 import kotlin.reflect.KClass
 
 
 abstract class BaseFragment : Fragment() {
 
     private val delegates = ArrayList<FragmentDelegate>()
+    protected val disposables = CompositeDisposable()
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -41,8 +43,9 @@ abstract class BaseFragment : Fragment() {
 
 
     override fun onDestroy() {
-        super.onDestroy()
+        disposables.clear()
         delegates.forEach(FragmentDelegate::onDestroy)
+        super.onDestroy()
     }
 
 

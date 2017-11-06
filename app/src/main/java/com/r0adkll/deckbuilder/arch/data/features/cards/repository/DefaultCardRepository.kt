@@ -36,6 +36,23 @@ class DefaultCardRepository @Inject constructor(
     }
 
 
+    override fun searchIds(ids: List<String>): Observable<List<PokemonCard>> {
+        return Observable.zip(getExpansions(), getSearchRequest(ids), BiFunction { expansions, cards ->
+            cards.map { CardMapper.to(it, expansions) }
+        })
+    }
+
+
+    private fun getSearchRequest(ids: List<String>): Observable<List<Card>> {
+        return api.card()
+                .where {
+                    id = ids.joinToString("|")
+                }
+                .observeAll()
+                .subscribeOn(schedulers.network)
+    }
+
+
     private fun getSearchRequest(type: SuperType, query: String, filter: Filter?): Observable<List<Card>> {
         val request = filter?.let {
             FilterMapper.to(it)
