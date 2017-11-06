@@ -37,6 +37,15 @@ class DecksPresenter @Inject constructor(
         disposables += merged.scan(ui.state, State::reduce)
                 .doOnNext { state -> Timber.v("    --- $state") }
                 .subscribe(ui::render)
+
+        disposables += intentions.duplicateClicks()
+                .flatMap {
+                    repository.duplicateDeck(it)
+                            .onErrorReturn { handleUnknownError }
+                }
+                .subscribe {
+                    Timber.i("Deck duplicated!")
+                }
     }
 
 

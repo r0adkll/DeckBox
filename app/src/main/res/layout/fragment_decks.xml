@@ -33,6 +33,7 @@
         app:backgroundTint="@color/primaryColor"
         app:pressedTranslationZ="6dp"
         app:rippleColor="@color/white30"
+        app:layout_behavior="com.r0adkll.deckbuilder.arch.ui.widgets.ScrollAwareFABBehavior"
         />
 
 </android.support.design.widget.CoordinatorLayout>

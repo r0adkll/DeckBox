@@ -28,6 +28,11 @@ class DefaultDeckRepository @Inject constructor(
     }
 
 
+    override fun duplicateDeck(deck: Deck): Observable<Unit> {
+        return cache.duplicateDeck(deck)
+    }
+
+
     override fun deleteDeck(deck: Deck): Observable<Unit> {
         return cache.deleteDeck(deck)
     }

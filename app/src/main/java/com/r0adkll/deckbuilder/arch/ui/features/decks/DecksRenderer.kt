@@ -18,6 +18,7 @@ class DecksRenderer(
         disposables += state
                 .map { it.decks }
                 .distinctUntilChanged()
+                .map { it.sortedBy { deck -> deck.timestamp } }
                 .subscribeOn(comp)
                 .observeOn(main)
                 .subscribe { actions.showDecks(it) }

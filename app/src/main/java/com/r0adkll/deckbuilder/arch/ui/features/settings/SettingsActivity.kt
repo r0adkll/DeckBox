@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v14.preference.PreferenceFragment
 import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
 import com.ftinc.kit.util.IntentUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.r0adkll.deckbuilder.BuildConfig
@@ -54,10 +53,8 @@ class SettingsActivity : BaseActivity() {
                 "pref_help_feedback" -> {
                     val userId = FirebaseAuth.getInstance().currentUser?.uid
                     val text =
-                            "------ DO NOT EDIT ------\n" +
-                            "| Version: ${BuildConfig.VERSION_NAME}" +
-                            "| UserId: $userId \n" +
-                            "-------------------------\n\n"
+                            "Version: ${BuildConfig.VERSION_NAME} \n" +
+                            "UserId: $userId \n\n\n"
                     val emailAddress = getString(R.string.support_email_address)
                     val intent = IntentUtils.sendEmail(emailAddress, "Feedback", text)
                     startActivity(intent)

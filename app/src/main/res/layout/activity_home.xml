@@ -36,6 +36,7 @@
         android:background="@color/white"
         android:elevation="4dp"
         app:bb_tabXmlResource="@xml/bottombar_tabs"
+        android:visibility="gone"
         />
 
 </RelativeLayout>

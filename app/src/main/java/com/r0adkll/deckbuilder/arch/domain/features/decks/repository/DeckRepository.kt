@@ -12,5 +12,6 @@ interface DeckRepository {
     fun getDecks(): Observable<List<Deck>>
     fun createDeck(cards: List<PokemonCard>, name: String, description: String?): Observable<Deck>
     fun updateDeck(id: String, cards: List<PokemonCard>, name: String, description: String?): Observable<Deck>
+    fun duplicateDeck(deck: Deck): Observable<Unit>
     fun deleteDeck(deck: Deck): Observable<Unit>
 }
