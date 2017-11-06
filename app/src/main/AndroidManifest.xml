@@ -33,6 +33,7 @@
             android:theme="@style/Theme.DeckBuilder.Detail"
             />
         <activity android:name=".arch.ui.features.exporter.DeckExportActivity"/>
+        <activity android:name=".arch.ui.features.importer.DeckImportActivity"/>
 
     </application>
 

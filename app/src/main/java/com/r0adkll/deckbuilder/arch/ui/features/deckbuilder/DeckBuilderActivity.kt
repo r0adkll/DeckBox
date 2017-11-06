@@ -25,6 +25,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
+import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.di.AppComponent
@@ -38,6 +39,7 @@ import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -245,6 +247,12 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
         super.onActivityResult(requestCode, resultCode, data)
         val result = SearchActivity.parseResult(requestCode, resultCode, data)
         result?.let { addPokemon.accept(it) }
+
+        val importResult = DeckImportActivity.parseResults(resultCode, requestCode, data)
+        importResult?.let {
+            Timber.v("Importing: $it")
+            addPokemon.accept(it)
+        }
     }
 
 
@@ -263,6 +271,10 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_import -> {
+                DeckImportActivity.show(this)
+                true
+            }
             R.id.action_export -> {
                 val exportDeck = Deck("", "", "", state.allCards, 0L)
                 startActivity(DeckExportActivity.createIntent(this, exportDeck))

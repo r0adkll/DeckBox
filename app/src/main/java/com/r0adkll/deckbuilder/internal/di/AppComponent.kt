@@ -11,6 +11,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeModule
+import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportComponent
+import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import dagger.Component
@@ -31,4 +33,5 @@ interface AppComponent {
     fun plus(module: DeckBuilderModule): DeckBuilderComponent
     fun plus(module: SearchModule): SearchComponent
     fun plus(module: CardDetailModule): CardDetailComponent
+    fun plus(module: DeckImportModule): DeckImportComponent
 }

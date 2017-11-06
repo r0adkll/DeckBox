@@ -66,4 +66,7 @@
     </string>
     <string name="activity_deck_export">Export</string>
     <string name="action_share">Share</string>
+    <string name="action_import">Import</string>
+    <string name="hint_import_field">Paste your decklist from Pokemon Trading Card Game Online here…</string>
+    <string name="invalid_decklist">Your decklist is invalid. Please check and try again.</string>
 </resources>
