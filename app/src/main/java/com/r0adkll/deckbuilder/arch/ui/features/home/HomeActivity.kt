@@ -13,6 +13,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksFragment
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeModule
+import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import gov.scstatehouse.houseofcards.di.HasComponent
 import kotlinx.android.synthetic.main.activity_home.*
@@ -47,7 +48,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_settings -> {
-
+                startActivity(SettingsActivity.createIntent(this))
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/pref_category_help">
+
+        <Preference
+            android:key="pref_help_feedback"
+            android:title="@string/pref_help_feedback_title"
+            android:summary="@string/pref_help_feedback_summary"
+            />
+
+        <Preference
+            android:key="pref_help_suggestions"
+            android:title="@string/pref_help_suggestions_title"
+            android:summary="@string/pref_help_suggestions_summary"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_about">
+
+        <Preference
+            android:key="pref_about_oss"
+            android:title="@string/pref_about_oss_title"
+            />
+
+        <Preference
+            android:key="pref_about_developer"
+            android:title="Developed by"
+            android:summary="r0adkll"
+            />
+
+        <Preference
+            android:key="pref_about_version"
+            android:title="@string/pref_about_version_title"
+            android:summary="1.0.0"
+            android:selectable="false"
+            />
+
+    </PreferenceCategory>
+
+    <Preference
+        android:layout="@layout/layout_disclaimer"
+        />
+
+</PreferenceScreen>

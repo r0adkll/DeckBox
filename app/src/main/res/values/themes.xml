@@ -10,6 +10,7 @@
         <item name="colorAccent">@color/primaryColor</item>
 
         <item name="android:windowBackground">@color/backgroundColor</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
     </style>
 

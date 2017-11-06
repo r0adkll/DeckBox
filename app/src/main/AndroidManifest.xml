@@ -34,6 +34,7 @@
             />
         <activity android:name=".arch.ui.features.exporter.DeckExportActivity"/>
         <activity android:name=".arch.ui.features.importer.DeckImportActivity"/>
+        <activity android:name=".arch.ui.features.settings.SettingsActivity"/>
 
     </application>
 
