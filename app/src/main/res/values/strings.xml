@@ -83,4 +83,7 @@
     <string name="support_email_address">incoming+r0adkll/pokemon-tcg-deckbuilder@gitlab.com</string>
     <string name="developer_website_url">https://deckbox.r0adkll.com</string>
     <string name="dropzone_add_message">Add Card</string>
+    <string name="pref_category_account">Account</string>
+    <string name="pref_account_signout">Sign out</string>
+    <string name="user_anonymous_title">Anonymous</string>
 </resources>

@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory android:title="@string/pref_category_account">
+
+        <Preference
+            android:key="pref_account_profile"
+            tools:title="Drew Heavner"
+            tools:summary="veedubusc@gmail.com"
+            />
+
+        <Preference
+            android:key="pref_account_signout"
+            android:title="@string/pref_account_signout"
+            />
+
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_help">
 

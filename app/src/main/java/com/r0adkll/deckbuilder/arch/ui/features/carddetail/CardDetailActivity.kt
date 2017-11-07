@@ -36,6 +36,7 @@ import com.r0adkll.deckbuilder.util.bindParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_card_detail.*
 import timber.log.Timber
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
 

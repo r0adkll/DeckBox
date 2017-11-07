@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
+import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 
 
@@ -34,6 +36,21 @@ class SettingsActivity : BaseActivity() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.settings_preferences)
 
+            val user = FirebaseAuth.getInstance().currentUser
+            user?.let {
+                val profilePref = findPreference("pref_account_profile")
+                profilePref.title = if (user.isAnonymous) {
+                    getString(R.string.user_anonymous_title)
+                } else {
+                    it.displayName
+                }
+
+                profilePref.summary = if (user.isAnonymous) {
+                    user.uid
+                } else {
+                    user.email
+                }
+            }
 
             val versionPref = findPreference("pref_about_version")
             versionPref.summary = BuildConfig.VERSION_NAME
@@ -64,6 +81,14 @@ class SettingsActivity : BaseActivity() {
                     val emailAddress = getString(R.string.support_email_address)
                     val intent = IntentUtils.sendEmail(emailAddress, "Suggestion", null)
                     startActivity(intent)
+                    true
+                }
+                "pref_account_signout" -> {
+                    FirebaseAuth.getInstance().signOut()
+                    val intent = Intent(activity, SetupActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    activity.finish()
                     true
                 }
                 else -> super.onPreferenceTreeClick(preference)
