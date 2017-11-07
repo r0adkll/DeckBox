@@ -6,12 +6,18 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.app.SharedElementCallback
 import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.ImageView
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.color
@@ -29,6 +35,7 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_card_detail.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -116,9 +123,21 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         formatStandard.setVisible(card.expansion?.standardLegal ?: false)
         formatExpanded.setVisible(card.expansion?.expandedLegal ?: false)
 
+        supportPostponeEnterTransition()
         GlideApp.with(this)
                 .load(card.imageUrlHiRes)
                 .transition(withCrossFade())
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        supportStartPostponedEnterTransition()
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        supportStartPostponedEnterTransition()
+                        return false
+                    }
+                })
                 .into(image)
 
         GlideApp.with(this)
