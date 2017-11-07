@@ -3,16 +3,26 @@ package com.r0adkll.deckbuilder.arch.ui.features.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v14.preference.PreferenceFragment
+import android.support.v4.app.FragmentActivity
 import android.support.v7.preference.Preference
 import com.ftinc.kit.util.IntentUtils
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInResult
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.extensions.snackbar
+import timber.log.Timber
 
 
 class SettingsActivity : BaseActivity() {
@@ -31,29 +41,28 @@ class SettingsActivity : BaseActivity() {
 
 
 
-    class SettingsFragment : PreferenceFragment() {
+    class SettingsFragment : PreferenceFragment(), GoogleApiClient.OnConnectionFailedListener {
+        private val RC_SIGN_IN = 100
+        private var googleClient: GoogleApiClient? = null
+
+        override fun onActivityCreated(savedInstanceState: Bundle?) {
+            super.onActivityCreated(savedInstanceState)
+            setupClient()
+        }
+
+
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
+            if (requestCode == RC_SIGN_IN) {
+                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+                handleSignInResult(result)
+            }
+        }
+
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.settings_preferences)
-
-            val user = FirebaseAuth.getInstance().currentUser
-            user?.let {
-                val profilePref = findPreference("pref_account_profile")
-                profilePref.title = if (user.isAnonymous) {
-                    getString(R.string.user_anonymous_title)
-                } else {
-                    it.displayName
-                }
-
-                profilePref.summary = if (user.isAnonymous) {
-                    user.uid
-                } else {
-                    user.email
-                }
-            }
-
-            val versionPref = findPreference("pref_about_version")
-            versionPref.summary = BuildConfig.VERSION_NAME
+            setupPreferences()
         }
 
 
@@ -83,6 +92,10 @@ class SettingsActivity : BaseActivity() {
                     startActivity(intent)
                     true
                 }
+                "pref_account_link" -> {
+                    signIn()
+                    true
+                }
                 "pref_account_signout" -> {
                     FirebaseAuth.getInstance().signOut()
                     val intent = Intent(activity, SetupActivity::class.java)
@@ -92,6 +105,79 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 else -> super.onPreferenceTreeClick(preference)
+            }
+        }
+
+
+        override fun onConnectionFailed(p0: ConnectionResult) {
+            Timber.e("onConnectionFailed(${p0.errorCode} :: ${p0.errorMessage}")
+        }
+
+
+        private fun setupPreferences() {
+            val user = FirebaseAuth.getInstance().currentUser
+            user?.let {
+                val profilePref = findPreference("pref_account_profile")
+                profilePref.title = if (user.isAnonymous) {
+                    getString(R.string.user_anonymous_title)
+                } else {
+                    it.displayName
+                }
+
+                profilePref.summary = if (user.isAnonymous) {
+                    user.uid
+                } else {
+                    user.email
+                }
+
+                val linkAccount = findPreference("pref_account_link")
+                linkAccount.isVisible = it.isAnonymous
+            }
+
+            val versionPref = findPreference("pref_about_version")
+            versionPref.summary = BuildConfig.VERSION_NAME
+        }
+
+
+        private fun setupClient() {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+
+            googleClient = GoogleApiClient.Builder(activity)
+                    .enableAutoManage(activity as FragmentActivity, this)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build()
+        }
+
+
+        private fun signIn() {
+            val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleClient)
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
+
+
+        private fun handleSignInResult(result: GoogleSignInResult) {
+            if (result.isSuccess) {
+                val acct = result.signInAccount
+                val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
+                val user = FirebaseAuth.getInstance()
+                        .currentUser?.linkWithCredential(credential)
+                        ?.addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                snackbar("${it.result.user.email} linked!")
+                                setupPreferences()
+                            }
+                            else {
+                                Timber.e(it.exception, "Unable to link account")
+                                snackbar(it.exception?.localizedMessage ?: "Unable to link account", Snackbar.LENGTH_LONG)
+                            }
+                        }
+            }
+            else {
+                Timber.e("Unable to link account: ${result.status}")
+                snackbar("Unable to link account.")
             }
         }
     }

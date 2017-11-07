@@ -5,6 +5,13 @@
     <PreferenceCategory android:title="@string/pref_category_account">
 
         <Preference
+            android:key="pref_account_link"
+            android:title="@string/pref_account_link_title"
+            android:summary="@string/pref_account_link_summary"
+            android:icon="@drawable/common_google_signin_btn_icon_light"
+            />
+
+        <Preference
             android:key="pref_account_profile"
             tools:title="Drew Heavner"
             tools:summary="veedubusc@gmail.com"

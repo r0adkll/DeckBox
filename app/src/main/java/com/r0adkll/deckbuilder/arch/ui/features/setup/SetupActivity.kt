@@ -23,7 +23,7 @@ import timber.log.Timber
 
 class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener {
 
-    val RC_SIGN_IN = 100
+    private val RC_SIGN_IN = 100
 
     private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private var googleClient: GoogleApiClient? = null
