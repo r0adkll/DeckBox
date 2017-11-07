@@ -449,12 +449,12 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
 
     override fun showIsStandard(isStandard: Boolean) {
-//        format_standard.setVisible(isStandard)
+//        formatStandardDetail.setVisible(isStandard)
     }
 
 
     override fun showIsExpanded(isExpanded: Boolean) {
-//        format_expanded.setVisible(isExpanded)
+//        formatExpandedDetail.setVisible(isExpanded)
     }
 
 

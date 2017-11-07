@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.*
@@ -14,16 +15,28 @@ import javax.inject.Inject
 class DeckBuilderPresenter @Inject constructor(
         val ui: DeckBuilderUi,
         val intentions: DeckBuilderUi.Intentions,
-        val repository: DeckRepository
+        val repository: DeckRepository,
+        val validator: DeckValidator
 ) : Presenter() {
 
     override fun start() {
 
+        val initialValidation = validator.validate(ui.state.allCards)
+                .map { Change.Validated(it) as Change }
+
         val addCard = intentions.addCards()
-                .map { Change.AddCards(it) as Change }
+                .flatMap { cards ->
+                    validator.validate(ui.state.allCards.plus(cards))
+                            .map { Change.Validated(it) as Change }
+                            .startWith(Change.AddCards(cards) as Change)
+                }
 
         val removeCard = intentions.removeCard()
-                .map { Change.RemoveCard(it) as Change }
+                .flatMap { card ->
+                    validator.validate(ui.state.allCards.minus(card))
+                            .map { Change.Validated(it) as Change }
+                            .startWith(Change.RemoveCard(card) as Change)
+                }
 
         val editName = intentions.editDeckName()
                 .map { Change.EditName(it) as Change }
@@ -34,7 +47,8 @@ class DeckBuilderPresenter @Inject constructor(
         val saveDeck = intentions.saveDeck()
                 .flatMap { saveDeck() }
 
-        val merged = addCard
+        val merged = initialValidation
+                .mergeWith(addCard)
                 .mergeWith(removeCard)
                 .mergeWith(editName)
                 .mergeWith(editDescription)

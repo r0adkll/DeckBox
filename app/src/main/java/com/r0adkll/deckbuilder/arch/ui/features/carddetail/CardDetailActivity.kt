@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -26,6 +27,7 @@ import com.ftinc.kit.kotlin.extensions.setVisible
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
@@ -44,7 +46,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
 
     private val card: PokemonCard by bindParcelable(EXTRA_CARD)
 
-    @State override var state: CardDetailUi.State = CardDetailUi.State(null, emptyList(), emptyList())
+    @State override var state: CardDetailUi.State = CardDetailUi.State(null, emptyList(), emptyList(), Validation(false, false))
 
     @Inject lateinit var renderer: CardDetailRenderer
     @Inject lateinit var presenter: CardDetailPresenter
@@ -100,6 +102,16 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
     }
 
 
+    override fun showStandardValidation(isValid: Boolean) {
+        formatExpanded.setVisible(isValid)
+    }
+
+
+    override fun showExpandedValidation(isValid: Boolean) {
+        formatStandard.setVisible(isValid)
+    }
+
+
     override fun showVariants(cards: List<PokemonCard>) {
         variantsAdapter.setCards(cards)
         variantsHeader.setVisible(cards.isNotEmpty())
@@ -121,8 +133,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         spannable.setSpan(ForegroundColorSpan(color(R.color.white70)), 0, number.length, 0)
         cardTitle.text = spannable
         cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
-        formatStandard.setVisible(card.expansion?.standardLegal ?: false)
-        formatExpanded.setVisible(card.expansion?.expandedLegal ?: false)
 
         supportPostponeEnterTransition()
         GlideApp.with(this)

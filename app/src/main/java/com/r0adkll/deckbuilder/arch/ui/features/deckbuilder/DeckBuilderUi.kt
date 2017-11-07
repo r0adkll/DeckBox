@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
@@ -50,26 +51,9 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             val trainerCards: List<PokemonCard>,
             val energyCards: List<PokemonCard>,
             val name: String?,
-            val description: String?
+            val description: String?,
+            val validation: Validation
     ) : PaperParcelable {
-
-        val isStandardLegal: Boolean
-            get() {
-                val poke = pokemonCards.find { it.expansion?.standardLegal == false } == null
-                val trainer = trainerCards.find { it.expansion?.standardLegal == false } == null
-                val energy = energyCards.filter { it.subtype != SubType.BASIC }
-                        .find { it.expansion?.standardLegal == false } == null
-                return poke && trainer && energy
-            }
-
-        val isExpandedLegal: Boolean
-            get() {
-                val poke = pokemonCards.find { it.expansion?.expandedLegal == false } == null
-                val trainer = trainerCards.find { it.expansion?.expandedLegal == false } == null
-                val energy = energyCards.filter { it.subtype != SubType.BASIC }
-                        .find { it.expansion?.expandedLegal == false } == null
-                return poke && trainer && energy
-            }
 
         val hasChanged: Boolean
             get() {
@@ -110,6 +94,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             is Change.EditName -> this.copy(name = change.name)
             is Change.EditDescription -> this.copy(description = change.description)
             is Change.DeckUpdated -> this.copy(deck = change.deck, isSaving = false)
+            is Change.Validated -> this.copy(validation = change.validation)
         }
 
 
@@ -120,13 +105,14 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             class EditName(val name: String) : Change("user -> name changed $name")
             class EditDescription(val description: String) : Change ("user -> desc changed $description")
             class DeckUpdated(val deck: Deck) : Change("cache -> Deck changed/updated $deck")
+            class Validated(val validation: Validation) : Change("cache -> validated: $validation")
         }
 
         companion object {
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(false, null, emptyList(), emptyList(), emptyList(), null, null)
+                State(false, null, emptyList(), emptyList(), emptyList(), null, null, Validation(false, false))
             }
         }
     }

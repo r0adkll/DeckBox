@@ -19,14 +19,14 @@ class DeckBuilderRenderer(
     override fun start() {
 
         disposables += state
-                .map { it.isStandardLegal }
+                .map { it.validation.standard }
                 .distinctUntilChanged()
                 .subscribeOn(comp)
                 .observeOn(main)
                 .subscribe { actions.showIsStandard(it) }
 
         disposables += state
-                .map { it.isExpandedLegal }
+                .map { it.validation.expanded }
                 .distinctUntilChanged()
                 .subscribeOn(comp)
                 .observeOn(main)

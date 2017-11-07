@@ -15,6 +15,16 @@ class CardDetailRenderer(
     override fun start() {
 
         disposables += state
+                .map { it.validation }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe {
+                    actions.showStandardValidation(it.standard)
+                    actions.showExpandedValidation(it.expanded)
+                }
+
+        disposables += state
                 .map { it.variants }
                 .distinctUntilChanged()
                 .subscribeOn(comp)

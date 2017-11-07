@@ -5,6 +5,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Validation
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import io.pokemontcg.model.SubType
+import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -29,15 +31,19 @@ class DefaultDeckValidator @Inject constructor(
         return repository.getExpansions()
                 .map { expansions ->
                     val standardLegal = cards.all { card ->
-                        expansions.find { expansion ->
-                            expansion.code == card.expansion?.code
-                        }?.standardLegal ?: false
+                        if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
+                            true
+                        } else {
+                            expansions.find { it.code == card.expansion?.code }?.standardLegal ?: false
+                        }
                     }
 
                     val expandedLegal = cards.all { card ->
-                        expansions.find { expansion ->
-                            expansion.code == card.expansion?.code
-                        }?.expandedLegal ?: false
+                        if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
+                            true
+                        } else {
+                            expansions.find { it.code == card.expansion?.code }?.expandedLegal ?: false
+                        }
                     }
 
                     Validation(standardLegal, expandedLegal)
