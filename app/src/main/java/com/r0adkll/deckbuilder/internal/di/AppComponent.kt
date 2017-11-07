@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.internal.di
 import com.r0adkll.deckbuilder.BuildModule
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.DataModule
+import com.r0adkll.deckbuilder.arch.ui.MainActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailComponent
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
@@ -13,6 +14,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeModule
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
+import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import dagger.Component
@@ -28,6 +30,8 @@ interface AppComponent {
 
     fun inject(app: DeckApp)
     fun inject(activity: DeckExportActivity)
+    fun inject(activity: MainActivity)
+    fun inject(activity: OnboardingActivity)
 
     fun plus(module: HomeModule): HomeComponent
     fun plus(module: DeckBuilderModule): DeckBuilderComponent

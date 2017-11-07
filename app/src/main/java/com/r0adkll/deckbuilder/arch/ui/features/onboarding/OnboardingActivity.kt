@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import com.ftinc.kit.kotlin.extensions.gone
 import com.ftinc.kit.kotlin.extensions.visible
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
@@ -25,19 +26,12 @@ import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding_page.*
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
+import javax.inject.Inject
 
 
 class OnboardingActivity : BaseActivity() {
 
-    companion object {
-        val PAGES = listOf(
-                Page(R.string.onboarding_title_search, R.string.onboarding_subtitle_search, R.drawable.dr_onboarding_symbol_1),
-                Page(R.string.onboarding_title_build, R.string.onboarding_subtitle_build, R.drawable.dr_onboarding_symbol_2),
-                Page(R.string.onboarding_title_share, R.string.onboarding_subtitle_share, R.drawable.dr_onboarding_symbol_3)
-        )
-
-        fun createIntent(context: Context): Intent = Intent(context, OnboardingActivity::class.java)
-    }
+    @Inject lateinit var preferences: AppPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,13 +56,14 @@ class OnboardingActivity : BaseActivity() {
 
 
     override fun setupComponent(component: AppComponent) {
+        component.inject(this)
     }
 
 
     fun launchSetup() {
         startActivity(SetupActivity.createIntent(this))
         finish()
-        // TODO: Mark as onboarding seen
+        preferences.onboarding = true
     }
 
 
@@ -162,4 +157,14 @@ class OnboardingActivity : BaseActivity() {
         }
     }
 
+
+    companion object {
+        val PAGES = listOf(
+                Page(R.string.onboarding_title_search, R.string.onboarding_subtitle_search, R.drawable.dr_onboarding_symbol_1),
+                Page(R.string.onboarding_title_build, R.string.onboarding_subtitle_build, R.drawable.dr_onboarding_symbol_2),
+                Page(R.string.onboarding_title_share, R.string.onboarding_subtitle_share, R.drawable.dr_onboarding_symbol_3)
+        )
+
+        fun createIntent(context: Context): Intent = Intent(context, OnboardingActivity::class.java)
+    }
 }
