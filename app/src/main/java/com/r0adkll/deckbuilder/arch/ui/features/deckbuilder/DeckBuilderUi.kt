@@ -80,9 +80,8 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                             !name.isNullOrBlank() ||
                             !description.isNullOrBlank()
                 } else {
-                    !deck.cards.containsAll(pokemonCards) ||
-                            !deck.cards.containsAll(trainerCards) ||
-                            !deck.cards.containsAll(energyCards) ||
+                    !deck.cards.containsAll(allCards) ||
+                            deck.cards.size != allCards.size ||
                             deck.name != name ||
                             deck.description != description
                 }

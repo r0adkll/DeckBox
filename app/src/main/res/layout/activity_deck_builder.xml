@@ -86,26 +86,51 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/dropZone"
             android:layout_width="match_parent"
             android:layout_height="104dp"
-            android:background="@color/dropzone_red"
             android:translationY="-104dp"
+            tools:translationY="0dp"
             >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/dropZoneRemove"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:text="@string/dropzone_message"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 android:textAllCaps="true"
                 android:fontFamily="sans-serif-medium"
+                android:background="@color/dropzone_red"
                 />
 
-        </FrameLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_600"
+                />
+
+            <TextView
+                android:id="@+id/dropZoneAdd"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/dropzone_add_message"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textAllCaps="true"
+                android:fontFamily="sans-serif-medium"
+                android:background="@color/dropzone_green"
+                />
+
+        </LinearLayout>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"

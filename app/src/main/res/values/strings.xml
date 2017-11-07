@@ -82,4 +82,5 @@
     <string name="disclaimer">This application is not produced, endorsed, supported, or affiliated with Nintendo or The Pokémon Company.</string>
     <string name="support_email_address">incoming+r0adkll/pokemon-tcg-deckbuilder@gitlab.com</string>
     <string name="developer_website_url">https://deckbox.r0adkll.com</string>
+    <string name="dropzone_add_message">Add Card</string>
 </resources>

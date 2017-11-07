@@ -11,5 +11,7 @@
     <color name="secondaryDarkColor">#c79100</color>
     <color name="dropzone_red">#dee51c23</color>
     <color name="dropzone_red_selected">#e51c23</color>
+    <color name="dropzone_green">#de64dd17</color>
+    <color name="dropzone_green_selected">#64dd17</color>
     <color name="format_stroke">#6F6F6F</color>
 </resources>

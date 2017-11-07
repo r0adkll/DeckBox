@@ -20,6 +20,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
@@ -52,6 +53,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
     @Inject lateinit var renderer: DeckBuilderRenderer
     @Inject lateinit var presenter: DeckBuilderPresenter
+    @Inject lateinit var validator: DeckValidator
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val addPokemon: Relay<List<PokemonCard>> = PublishRelay.create()
@@ -106,12 +108,32 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
         dropZone.setOnDragListener { v, event ->
             when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> {
+                    val localState = event.localState
+                    if (localState is PokemonCardView) {
+                        localState.card?.let {
+                            dropZoneAdd.setVisible(validator.validate(state.allCards, it) == null)
+                        }
+                    }
+
                     v.animate()
                             .translationY(0f)
                             .setDuration(150L)
                             .setInterpolator(FastOutLinearInInterpolator())
                             .start()
                 }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    v.animate()
+                            .translationY(-dpToPx(104f))
+                            .setDuration(150L)
+                            .setInterpolator(FastOutLinearInInterpolator())
+                            .start()
+                }
+            }
+            true
+        }
+
+        dropZoneRemove.setOnDragListener { v, event ->
+            when(event.action) {
                 DragEvent.ACTION_DRAG_ENTERED -> {
                     v.setBackgroundColor(color(R.color.dropzone_red_selected))
                 }
@@ -128,11 +150,29 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
                     v.setBackgroundColor(color(R.color.dropzone_red))
-                    v.animate()
-                            .translationY(-dpToPx(104f))
-                            .setDuration(150L)
-                            .setInterpolator(FastOutLinearInInterpolator())
-                            .start()
+                }
+            }
+            true
+        }
+
+        dropZoneAdd.setOnDragListener { v, event ->
+            when(event.action) {
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    v.setBackgroundColor(color(R.color.dropzone_green_selected))
+                }
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    v.setBackgroundColor(color(R.color.dropzone_green))
+                }
+                DragEvent.ACTION_DROP -> {
+                    val localState = event.localState
+                    if (localState is PokemonCardView) {
+                        localState.card?.let {
+                            addPokemon.accept(listOf(it.copy()))
+                        }
+                    }
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    v.setBackgroundColor(color(R.color.dropzone_green))
                 }
             }
             true
@@ -209,7 +249,6 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
 
         renderer.start()
         presenter.start()
-
 
         disposables += pokemonCardClicks
                 .subscribe {
