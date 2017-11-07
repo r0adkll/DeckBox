@@ -38,7 +38,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_filter, container, false)
+        return inflater.inflate(R.layout.fragment_filter, container, false)
     }
 
 

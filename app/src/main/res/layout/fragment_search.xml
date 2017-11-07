@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/search_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:outlineProvider="background"
+            android:background="@color/transparent"
+            android:theme="@style/ThemeOverlay.DeckBuilder.Search">
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="?attr/actionBarSize"
+
+                app:queryHint="Search Pokémon cards"
+                app:iconifiedByDefault="false"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:src="@drawable/ic_search_white_24dp"
+                android:tint="@color/black56"
+                />
+
+            <ImageView
+                android:id="@+id/actionFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:padding="@dimen/padding_normal"
+                android:src="@drawable/ic_filter_outline"
+                android:alpha=".54"
+                />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+            <com.ftinc.kit.widget.EmptyView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/padding_giant"
+                android:paddingEnd="@dimen/padding_giant"
+                app:emptyMessage="@string/empty_search_category"
+                app:emptyIcon="@drawable/ic_empty_search"
+                />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/filter_fragment"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:name="com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterFragment"
+        />
+
+</android.support.v4.widget.DrawerLayout>

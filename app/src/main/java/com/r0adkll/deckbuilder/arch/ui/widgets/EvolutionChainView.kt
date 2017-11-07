@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
@@ -45,7 +46,7 @@ class EvolutionChainView @JvmOverloads constructor(
     init {
         orientation = HORIZONTAL
         setWillNotDraw(false)
-        cardWidth = (resources.displayMetrics.widthPixels - (2 * stageSpacing + 2 * linkSpacing)) / 3
+        cardWidth = (dipToPx(382f) - (2 * stageSpacing + 2 * linkSpacing)) / 3
 
         linkPaint.color = color(R.color.secondaryColor)
         linkPaint.style = Paint.Style.FILL
@@ -53,6 +54,21 @@ class EvolutionChainView @JvmOverloads constructor(
         linkBarPaint.color = color(R.color.secondaryColor)
         linkBarPaint.style = Paint.Style.STROKE
         linkBarPaint.strokeWidth = linkRadius
+    }
+
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        cardWidth = ((parent as ViewGroup).measuredWidth - (2 * stageSpacing + 2 * linkSpacing)) / 3
+
+//        configurePokemonCardViews()
+//        (0 until childCount).forEach {
+//            val child = getChildAt(it)
+//            val lp = child.layoutParams as LayoutParams
+//            lp.width = cardWidth
+//            child.layoutParams = lp
+//        }
+
     }
 
 

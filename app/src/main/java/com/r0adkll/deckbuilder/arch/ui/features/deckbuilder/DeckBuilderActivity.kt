@@ -23,6 +23,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
@@ -36,6 +37,7 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.*
+import gov.scstatehouse.houseofcards.di.HasComponent
 import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -44,7 +46,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intentions, DeckBuilderUi.Actions{
+class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, DeckBuilderUi,
+        DeckBuilderUi.Intentions, DeckBuilderUi.Actions {
 
     private val deck: Deck? by bindOptionalParcelable(EXTRA_DECK)
 
@@ -64,6 +67,7 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     private val formatPaddingTop: Float by lazy { dpToPx(8f) }
     private val panelOffsetTop: Float by lazy { dpToPx(48f) }
 
+    private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private var savingSnackBar: Snackbar? = null
 
@@ -328,9 +332,14 @@ class DeckBuilderActivity : BaseActivity(), DeckBuilderUi, DeckBuilderUi.Intenti
     }
 
 
+    override fun getComponent(): DeckBuilderComponent {
+        return component
+    }
+
+
     override fun setupComponent(component: AppComponent) {
-        component.plus(DeckBuilderModule(this))
-                .inject(this)
+        this.component = component.plus(DeckBuilderModule(this))
+        this.component.inject(this)
     }
 
 

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/slidingLayout"
+        android:layout_width="382dp"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        app:umanoPanelHeight="48dp"
+        app:umanoShadowHeight="2dp"
+        app:umanoFadeColor="@color/transparent"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:outlineProvider="background"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            >
+
+            <LinearLayout
+                android:id="@+id/appbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/appbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:title="@string/activity_deck_builder"
+                    >
+
+                </android.support.v7.widget.Toolbar>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabSelectedTextColor="?android:textColorPrimary"
+                    app:tabTextColor="?android:textColorSecondary"
+                    app:tabIndicatorColor="?attr/colorPrimary"
+                    app:tabMode="fixed"
+                    app:tabGravity="fill"
+                    >
+
+                    <android.support.design.widget.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tab_pokemon"
+                        />
+
+                    <android.support.design.widget.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tab_trainer"
+                        />
+
+                    <android.support.design.widget.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tab_energy"
+                        />
+
+                </android.support.design.widget.TabLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black12"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dropZone"
+                android:layout_width="match_parent"
+                android:layout_height="112dp"
+                android:translationY="-112dp"
+                >
+
+                <TextView
+                    android:id="@+id/dropZoneRemove"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/dropzone_message"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:background="@color/dropzone_red"
+                    />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/grey_600"
+                    />
+
+                <TextView
+                    android:id="@+id/dropZoneAdd"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/dropzone_add_message"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:background="@color/dropzone_green"
+                    />
+
+            </LinearLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/appbar_layout"
+                />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/margin_small"
+                android:src="@drawable/ic_add_white_24dp"
+                app:elevation="6dp"
+                app:fabSize="normal"
+                app:rippleColor="@color/white30"
+                app:backgroundTint="?attr/colorPrimary"
+                android:visibility="gone"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/infoBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:visibility="invisible"
+                app:navigationIcon="@drawable/ic_close_black_24dp"
+                app:title="@string/deckbuilder_infobar_title"
+                />
+
+            <!--<com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView-->
+            <!--android:id="@+id/format_standard"-->
+            <!--android:layout_width="32dp"-->
+            <!--android:layout_height="32dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginStart="16dp"-->
+
+            <!--android:padding="2dp"-->
+            <!--app:ringPadding="4dp"-->
+            <!--app:strokeWidth="2dp"-->
+            <!--app:format="standard"-->
+
+            <!--android:visibility="gone"-->
+            <!--/>-->
+
+            <!--<com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView-->
+            <!--android:id="@+id/format_expanded"-->
+            <!--android:layout_width="32dp"-->
+            <!--android:layout_height="32dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_toEndOf="@+id/format_standard"-->
+
+            <!--android:padding="2dp"-->
+            <!--app:ringPadding="4dp"-->
+            <!--app:strokeWidth="2dp"-->
+            <!--app:format="expanded"-->
+
+            <!--android:visibility="gone"-->
+            <!--/>-->
+
+            <com.r0adkll.deckbuilder.arch.ui.widgets.CardCountView
+                android:id="@+id/cardCount"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/text_input_deck_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/infoBar"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/inputDeckName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:hint="@string/hint_deck_name_input"
+                    android:focusedByDefault="false"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/text_input_deck_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_input_deck_name"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                app:counterEnabled="true"
+                app:counterMaxLength="200"
+                app:counterOverflowTextAppearance="@style/TextAppearance.Deck.InputOverflow"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/inputDeckDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="128dp"
+                    android:gravity="start|top"
+                    android:inputType="text|textMultiLine|textAutoCorrect"
+                    android:hint="@string/hint_deck_description_input"
+                    android:focusedByDefault="false"
+                    android:maxLength="200"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/formatStandardDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_input_deck_description"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:layout_marginStart="@dimen/margin_small"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:visibility="gone">
+
+
+                <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+
+                    android:padding="2dp"
+                    app:ringPadding="4dp"
+                    app:strokeWidth="2dp"
+                    app:format="standard"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/format_standard"
+                    android:textSize="14sp"
+                    android:textColor="@color/black54"
+                    android:fontFamily="sans-serif-medium"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/formatExpandedDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/formatStandardDetail"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="@dimen/margin_small"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:visibility="gone">
+
+
+                <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+
+                    android:padding="2dp"
+                    app:ringPadding="4dp"
+                    app:strokeWidth="2dp"
+                    app:format="expanded"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/format_expanded"
+                    android:textSize="14sp"
+                    android:textColor="@color/black54"
+                    android:fontFamily="sans-serif-medium"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
+
+</LinearLayout>
