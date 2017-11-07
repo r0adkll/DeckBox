@@ -103,12 +103,12 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
 
 
     override fun showStandardValidation(isValid: Boolean) {
-        formatExpanded.setVisible(isValid)
+        formatStandard.setVisible(isValid)
     }
 
 
     override fun showExpandedValidation(isValid: Boolean) {
-        formatStandard.setVisible(isValid)
+        formatExpanded.setVisible(isValid)
     }
 
 

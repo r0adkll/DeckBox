@@ -29,10 +29,6 @@ class CardDetailPresenter @Inject constructor(
 
         val loadEvolves = ui.state.card!!.evolvesFrom?.let {
             repository.search(ui.state.card!!.supertype, "\"$it\"")
-//                    .map {
-//                        it.filter { it.id != ui.state.card!!.id }
-//                                .filter { it.name != ui.state.card!!.name}
-//                    }
                     .map { Change.EvolvesFromLoaded(it) as Change }
         } ?: Observable.empty()
 
