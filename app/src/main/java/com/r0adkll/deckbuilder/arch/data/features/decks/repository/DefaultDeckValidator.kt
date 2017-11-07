@@ -2,12 +2,16 @@ package com.r0adkll.deckbuilder.arch.data.features.decks.repository
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Validation
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import io.reactivex.Observable
 import javax.inject.Inject
 
 
 class DefaultDeckValidator @Inject constructor(
-        val rules: Set<@JvmSuppressWildcards DeckValidator.Rule>
+        val rules: Set<@JvmSuppressWildcards DeckValidator.Rule>,
+        val repository: CardRepository
 ) : DeckValidator {
 
     override fun validate(existing: List<PokemonCard>, cardToAdd: PokemonCard): Int? {
@@ -18,5 +22,25 @@ class DefaultDeckValidator @Inject constructor(
             }
         }
         return null
+    }
+
+
+    override fun validate(cards: List<PokemonCard>): Observable<Validation> {
+        return repository.getExpansions()
+                .map { expansions ->
+                    val standardLegal = cards.all { card ->
+                        expansions.find { expansion ->
+                            expansion.code == card.expansion?.code
+                        }?.standardLegal ?: false
+                    }
+
+                    val expandedLegal = cards.all { card ->
+                        expansions.find { expansion ->
+                            expansion.code == card.expansion?.code
+                        }?.expandedLegal ?: false
+                    }
+
+                    Validation(standardLegal, expandedLegal)
+                }
     }
 }
