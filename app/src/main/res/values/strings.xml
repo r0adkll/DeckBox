@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Deck Box</string>
+    <string name="app_name">DeckBox</string>
     <string name="app_description">Create and edit Pokémon Trading Card Game decks to share and compare with others in the community.</string>
     <string name="action_continue">or continue here</string>
     <string name="action_skip">Skip</string>

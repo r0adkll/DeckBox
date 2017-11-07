@@ -14,6 +14,8 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
+import com.r0adkll.deckbuilder.util.RxFirebase
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
@@ -34,6 +36,10 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
         setupClient()
         action_signin.setOnClickListener {
             signIn()
+        }
+
+        action_continue.setOnClickListener {
+            signInAnonymously()
         }
     }
 
@@ -73,6 +79,18 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     private fun signIn() {
         val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleClient)
         startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+
+    private fun signInAnonymously() {
+        disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
+                .subscribe({
+                    startActivity(HomeActivity.createIntent(this@SetupActivity))
+                    finish()
+                }, {
+                    Timber.e(it, "Failed to sign-in anonymously")
+                    snackbar("Unable to sign-in anonymously")
+                })
     }
 
 
