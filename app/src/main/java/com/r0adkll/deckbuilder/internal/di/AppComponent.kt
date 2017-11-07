@@ -17,6 +17,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
+import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import dagger.Component
 
 
@@ -32,6 +33,7 @@ interface AppComponent {
     fun inject(activity: DeckExportActivity)
     fun inject(activity: MainActivity)
     fun inject(activity: OnboardingActivity)
+    fun inject(fragment: SettingsActivity.SettingsFragment)
 
     fun plus(module: HomeModule): HomeComponent
     fun plus(module: DeckBuilderModule): DeckBuilderComponent

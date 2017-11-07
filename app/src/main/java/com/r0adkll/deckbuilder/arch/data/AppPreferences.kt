@@ -17,4 +17,10 @@ class AppPreferences @Inject constructor(
 
     var onboarding by BooleanPreference(KEY_ONBOARDING, false)
 
+
+    fun clear() {
+        sharedPreferences.edit()
+                .clear()
+                .apply()
+    }
 }

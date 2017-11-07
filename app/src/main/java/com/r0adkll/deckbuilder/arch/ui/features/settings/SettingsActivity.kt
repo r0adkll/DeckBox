@@ -16,13 +16,16 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.r0adkll.deckbuilder.BuildConfig
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import timber.log.Timber
+import javax.inject.Inject
 
 
 class SettingsActivity : BaseActivity() {
@@ -42,11 +45,16 @@ class SettingsActivity : BaseActivity() {
 
 
     class SettingsFragment : PreferenceFragment(), GoogleApiClient.OnConnectionFailedListener {
+
         private val RC_SIGN_IN = 100
         private var googleClient: GoogleApiClient? = null
 
+        @Inject lateinit var preferences: AppPreferences
+
+
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
+            DeckApp.component.inject(this)
             setupClient()
         }
 
