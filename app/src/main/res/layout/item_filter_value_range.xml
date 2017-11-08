@@ -7,14 +7,16 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/padding_normal"
     android:paddingEnd="@dimen/padding_normal"
-    android:paddingBottom="@dimen/padding_small">
+    android:paddingBottom="@dimen/padding_small"
+    android:paddingTop="16dp"
+    >
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+
+
+    <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dsb_indicatorColor="?attr/colorPrimary"
-        app:dsb_progressColor="?attr/colorPrimary"
+        android:layout_height="36dp"
         />
 
     <LinearLayout
