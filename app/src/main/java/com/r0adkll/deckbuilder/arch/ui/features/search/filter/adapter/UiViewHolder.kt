@@ -6,10 +6,7 @@ import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.CheckBox
-import android.widget.CheckedTextView
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dpToPx
@@ -26,11 +23,13 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.Value
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier.*
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.UiViewHolder.ViewType.*
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
+import com.r0adkll.deckbuilder.arch.ui.widgets.SeekBarIndicatorView
 import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.bindViews
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.Type
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+import timber.log.Timber
 
 
 sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -194,7 +193,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             private val valueRangeChange: Relay<Pair<String, Item.ValueRange.Value>>
     ) : UiViewHolder<Item.ValueRange>(itemView) {
 
-        private val seekBar: DiscreteSeekBar by bindView(R.id.seekBar)
+        private val seekBar: SeekBar by bindView(R.id.seekBar)
+        private val seekBarIndicator: SeekBarIndicatorView by bindView(R.id.seekBarIndicator)
         private val modifiers: List<ImageView> by bindViews(
                 R.id.modifier_greater_than,
                 R.id.modifier_greater_than_equal,
@@ -204,7 +204,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
 
         override fun bind(item: Item.ValueRange) {
-            seekBar.min = item.min
+            seekBar.setOnSeekBarChangeListener(seekBarIndicator)
+
             seekBar.max = item.max
             seekBar.progress = item.value.value
 
@@ -212,20 +213,29 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 it.select(it.id == item.value.modifier.viewId())
 
                 it.setOnClickListener {
-                    val modifier = it.id.modifier()
+                    var modifier = it.id.modifier()
                     val progress = seekBar.progress
+
+                    // "Uncheck" the modifier if the user clicks it again
+                    if (item.value.modifier == modifier) {
+                        modifier = NONE
+                    }
+
+                    Timber.i("Modifier Clicked(${item.key}, progress: $progress, modifier: ${modifier.name})")
                     valueRangeChange.accept(Pair(item.key, Value(progress, modifier)))
                 }
             }
 
-            seekBar.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
-                override fun onProgressChanged(seekBar: DiscreteSeekBar?, value: Int, fromUser: Boolean) {
+            seekBarIndicator.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 }
 
-                override fun onStartTrackingTouch(seekBar: DiscreteSeekBar?) {
+
+                override fun onStartTrackingTouch(seekBar: SeekBar) {
                 }
 
-                override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {
+
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
                     val modifier = modifiers.firstOrNull { it.alpha == 1f }?.id?.modifier() ?: NONE
                     valueRangeChange.accept(Pair(item.key, Value(seekBar.progress, modifier)))
                 }

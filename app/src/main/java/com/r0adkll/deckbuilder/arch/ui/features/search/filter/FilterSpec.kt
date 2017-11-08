@@ -19,6 +19,7 @@ import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
+import timber.log.Timber
 
 
 @PaperParcel
@@ -156,29 +157,31 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                 "attackCost" -> parseValue(filter.attackCost)
                 "attackDamage" -> parseValue(filter.attackDamage)
                 "retreatCost" -> parseValue(filter.retreatCost)
-                else -> Value(-1, NONE)
+                else -> Value(0, NONE)
             }
 
 
             private fun parseValue(value: String?): Value {
                 return value?.let {
                     val modifier = when {
-                        value.startsWith("gt", true) -> GREATER_THAN
                         value.startsWith("gte", true) -> GREATER_THAN_EQUALS
-                        value.startsWith("lt", true) -> LESS_THAN
                         value.startsWith("lte", true) -> LESS_THAN_EQUALS
+                        value.startsWith("gt", true) -> GREATER_THAN
+                        value.startsWith("lt", true) -> LESS_THAN
                         else -> NONE
                     }
                     val cleanValue = value
-                            .replace("gt", "", true)
                             .replace("gte", "", true)
-                            .replace("lt", "", true)
                             .replace("lte", "", true)
+                            .replace("gt", "", true)
+                            .replace("lt", "", true)
                             .trim()
+
+                    Timber.d("Parsing value for $key: modifier: $modifier, value: $cleanValue")
                     cleanValue.toIntOrNull()?.let {
                         Value(it, modifier)
-                    } ?: Value(-1, NONE)
-                } ?: Value(-1, NONE)
+                    } ?: Value(0, NONE)
+                } ?: Value(0, NONE)
             }
 
             companion object {
@@ -226,10 +229,10 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                             )),
                             Spec.ExpansionSpec(expansions, visibility),
                             Spec.RaritySpec(Rarity.values().toList()),
-                            Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost, -1, 4),
-                            Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost, -1, 5),
-                            Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage, -1, 300),
-                            Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, -1, 250),
+                            Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost, 0, 4),
+                            Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost, 0, 5),
+                            Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage, 0, 300),
+                            Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, 0, 250),
                             Spec.TypeSpec("weaknesses", R.string.filter_header_weaknesses),
                             Spec.TypeSpec("resistances", R.string.filter_header_resistances)
                     )

@@ -11,12 +11,19 @@
     android:paddingTop="16dp"
     >
 
-
+    <com.r0adkll.deckbuilder.arch.ui.widgets.SeekBarIndicatorView
+        android:id="@+id/seekBarIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="2dp"
+        android:paddingEnd="4dp"
+        android:clipToPadding="false"
+        />
 
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="24dp"
         />
 
     <LinearLayout

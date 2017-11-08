@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter
 
 
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterIntentions
@@ -26,6 +27,14 @@ class FilterRecyclerAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return items[position].viewType
+    }
+
+
+    override fun getItemId(position: Int): Long {
+        if (position > -1 && position < itemCount) {
+            return items[position].itemId
+        }
+        return RecyclerView.NO_ID
     }
 
 

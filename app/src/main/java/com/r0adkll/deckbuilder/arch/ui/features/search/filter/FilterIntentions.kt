@@ -16,4 +16,5 @@ class FilterIntentions {
     val optionClicks: Relay<Pair<String, Any>> = PublishRelay.create()
     val viewMoreClicks: Relay<Unit> = PublishRelay.create()
     val valueRangeChanges: Relay<Pair<String, Item.ValueRange.Value>> = PublishRelay.create()
+    val clearFilter: Relay<Unit> = PublishRelay.create()
 }

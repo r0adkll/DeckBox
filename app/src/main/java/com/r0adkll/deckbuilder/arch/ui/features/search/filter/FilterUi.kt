@@ -27,12 +27,14 @@ interface FilterUi : StateRenderer<FilterUi.State> {
         fun optionClicks(): Observable<Pair<String, Any>>
         fun viewMoreClicks(): Observable<Unit>
         fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>>
+        fun clearFilter(): Observable<Unit>
     }
 
 
     interface Actions {
 
         fun setItems(items: List<Item>)
+        fun setIsEmpty(isEmpty: Boolean)
     }
 
 
@@ -151,6 +153,12 @@ interface FilterUi : StateRenderer<FilterUi.State> {
                                 spec = FilterSpec.create(filterState.category, expansions, filterState.visibility.next()))
                 this.copy(filters = newFilters.toMap())
             }
+
+            ClearFilter -> {
+                val newFilters = filters.toMutableMap()
+                newFilters[category] = newFilters[category]!!.copy(filter = Filter.DEFAULT)
+                this.copy(filters = newFilters.toMap())
+            }
         }
 
 
@@ -164,6 +172,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             class RaritySelected(val rarity: Rarity) : Change("user -> $rarity was selected")
             class ValueRangeChanged(val key: String, val value: String) : Change("user -> $key value was changed to $value")
             object ViewMoreSelected : Change("user -> view more expansions selected")
+            object ClearFilter : Change("user -> clear filter")
         }
 
 

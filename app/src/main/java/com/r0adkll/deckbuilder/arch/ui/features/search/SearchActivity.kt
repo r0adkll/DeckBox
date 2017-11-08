@@ -84,6 +84,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
         actionFilter.setOnClickListener {
             drawer.openDrawer(GravityCompat.END)
+            ImeUtils.hideIme(searchView)
         }
 
         tabs.addOnTabSelectedListener(object : OnTabSelectedAdapter() {

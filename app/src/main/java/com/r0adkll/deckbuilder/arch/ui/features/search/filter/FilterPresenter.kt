@@ -48,8 +48,12 @@ class FilterPresenter @Inject constructor(
         val viewMoreSelected = intentions.viewMoreClicks()
                 .map { Change.ViewMoreSelected as Change }
 
+        val clearFilter = intentions.clearFilter()
+                .map { Change.ClearFilter as Change }
+
         val categoryChanges = categoryIntentions.categoryChange()
                 .map { Change.CategoryChanged(it) as Change }
+
 
         val merged = loadExpansions
                 .mergeWith(typeSelected)
@@ -57,6 +61,7 @@ class FilterPresenter @Inject constructor(
                 .mergeWith(optionClicks)
                 .mergeWith(valueRangeChanges)
                 .mergeWith(viewMoreSelected)
+                .mergeWith(clearFilter)
                 .mergeWith(categoryChanges)
                 .doOnNext { Timber.d(it.logText) }
 

@@ -47,12 +47,20 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             val category: SuperType,
             val results: List<PokemonCard>
     ) : PaperParcelable {
+
+
+
         companion object {
             @JvmField val CREATOR = PaperParcelSearchUi_Result.CREATOR
 
             fun createDefault(superType: SuperType): Result {
                 return Result("", Filter.DEFAULT, false, null, superType, emptyList())
             }
+        }
+
+
+        override fun toString(): String {
+            return "Result(query='$query', filter=$filter, isLoading=$isLoading, error=$error, category=$category, results=${results.size})"
         }
     }
 
@@ -108,6 +116,10 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             Change.ClearSelectedCards -> this.copy(selected = emptyList())
         }
 
+        override fun toString(): String {
+            return "State(category=$category, results=$results, selected=${selected.size})"
+        }
+
 
         sealed class Change(val logText: String) {
             class CategorySwitched(val category: SuperType) : Change("user -> switching category to $category")
@@ -120,7 +132,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             class CardSelected(val pokemonCard: PokemonCard) : Change("user -> selected ${pokemonCard.name}")
             object ClearSelectedCards : Change("user -> cleared selected cards")
         }
-
 
         companion object {
             @JvmField val CREATOR = PaperParcelSearchUi_State.CREATOR

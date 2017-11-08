@@ -88,4 +88,5 @@
     <string name="user_anonymous_title">Anonymous</string>
     <string name="pref_account_link_title">Link your Google account</string>
     <string name="pref_account_link_summary">Link your account to save your Decks and share between your devices</string>
+    <string name="action_clear_filter">Clear filter</string>
 </resources>

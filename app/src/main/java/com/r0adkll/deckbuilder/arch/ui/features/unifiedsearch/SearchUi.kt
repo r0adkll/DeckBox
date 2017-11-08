@@ -52,7 +52,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             is Change.ResultsLoaded -> this.copy(results = change.results, error = null, isLoading = false)
         }
 
-
         sealed class Change(val logText: String) {
             object IsLoading : Change("network -> loading search results")
             object ClearQuery : Change("user -> clearing query and results")

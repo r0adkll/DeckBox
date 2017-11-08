@@ -13,6 +13,9 @@ import io.pokemontcg.model.SubType
 
 sealed class Item : RecyclerItem {
 
+    abstract val itemId: Long
+
+
     data class Header(@StringRes val title: Int) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
@@ -26,7 +29,7 @@ sealed class Item : RecyclerItem {
             else -> false
         }
 
-
+        override val itemId: Long = title.toLong()
         override val layoutId: Int = R.layout.item_filter_header
     }
 
@@ -47,7 +50,7 @@ sealed class Item : RecyclerItem {
             else -> false
         }
 
-
+        override val itemId: Long = key.hashCode().toLong()
         override val layoutId: Int = R.layout.item_filter_types
     }
 
@@ -67,7 +70,7 @@ sealed class Item : RecyclerItem {
             else -> false
         }
 
-
+        override val itemId: Long = this.attributes.hashCode().toLong()
         override val layoutId: Int = R.layout.item_filter_attributes
     }
 
@@ -101,6 +104,7 @@ sealed class Item : RecyclerItem {
                 override val isSelected: Boolean
         ) : Option<Expansion>(key, option, isSelected) {
 
+            override val itemId: Long = option.code.hashCode().toLong()
             override val text: String = option.name
         }
 
@@ -111,6 +115,7 @@ sealed class Item : RecyclerItem {
                 override val isSelected: Boolean
         ) : Option<Rarity>(key, option, isSelected) {
 
+            override val itemId: Long = option.hashCode().toLong()
             override val text: String = option.name.toLowerCase().capitalize()
         }
 
@@ -130,7 +135,7 @@ sealed class Item : RecyclerItem {
             else -> false
         }
 
-
+        override val itemId: Long = title.toLong()
         override val layoutId: Int = R.layout.item_filter_view_more
     }
 
@@ -139,7 +144,7 @@ sealed class Item : RecyclerItem {
             val key: String,
             val min: Int,
             val max: Int,
-            val value: Value = Value(-1, Modifier.NONE)
+            val value: Value = Value(0, Modifier.NONE)
     ) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
@@ -154,6 +159,7 @@ sealed class Item : RecyclerItem {
         }
 
 
+        override val itemId: Long = key.hashCode().toLong()
         override val layoutId: Int = R.layout.item_filter_value_range
 
 
@@ -161,7 +167,11 @@ sealed class Item : RecyclerItem {
                 val value: Int,
                 val modifier: Modifier
         ) {
-            fun toFilter(): String = "${modifier.value}$value"
+            fun toFilter(): String = if (value == 0 && modifier == Modifier.NONE) {
+                ""
+            } else {
+                "${modifier.value}$value"
+            }
         }
 
 

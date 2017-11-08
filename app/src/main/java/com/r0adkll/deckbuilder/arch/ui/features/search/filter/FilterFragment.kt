@@ -45,6 +45,16 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         toolbar.setNavigationOnClickListener { drawerInteractor.closeDrawer() }
+        toolbar.inflateMenu(R.menu.fragment_filter)
+        toolbar.setOnMenuItemClickListener {
+            when {
+                it.itemId == R.id.action_clear_filter -> {
+                    filterIntentions.clearFilter.accept(Unit)
+                    true
+                }
+                else -> false
+            }
+        }
 
         adapter = FilterRecyclerAdapter(activity!!, filterIntentions)
         recycler.layoutManager = LinearLayoutManager(activity)
@@ -86,6 +96,12 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
     override fun optionClicks(): Observable<Pair<String, Any>> = filterIntentions.optionClicks
     override fun viewMoreClicks(): Observable<Unit> = filterIntentions.viewMoreClicks
     override fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>> = filterIntentions.valueRangeChanges
+    override fun clearFilter(): Observable<Unit> = filterIntentions.clearFilter
+
+
+    override fun setIsEmpty(isEmpty: Boolean) {
+        toolbar.menu.findItem(R.id.action_clear_filter)?.isVisible = !isEmpty
+    }
 
 
     override fun setItems(items: List<Item>) {

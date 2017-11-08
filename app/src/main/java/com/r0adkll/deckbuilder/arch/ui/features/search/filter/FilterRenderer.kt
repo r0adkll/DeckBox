@@ -20,5 +20,12 @@ class FilterRenderer(
                 .observeOn(main)
                 .subscribe { actions.setItems(it) }
 
+        disposables += state
+                .map { it.filters[it.category]!!.filter.isEmpty }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe { actions.setIsEmpty(it) }
+
     }
 }
