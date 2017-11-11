@@ -21,9 +21,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.evernote.android.state.State
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.kotlin.extensions.*
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -134,18 +132,22 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         cardTitle.text = spannable
         cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
 
-        supportPostponeEnterTransition()
+//        supportPostponeEnterTransition()
+        emptyView.visible()
+        emptyView.setLoading(true)
         GlideApp.with(this)
                 .load(card.imageUrlHiRes)
                 .transition(withCrossFade())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        supportStartPostponedEnterTransition()
+//                        supportStartPostponedEnterTransition()
+                        emptyView.setEmptyMessage(R.string.image_loading_error)
                         return false
                     }
 
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        supportStartPostponedEnterTransition()
+//                        supportStartPostponedEnterTransition()
+                        emptyView.gone()
                         return false
                     }
                 })

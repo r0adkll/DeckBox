@@ -18,6 +18,19 @@
         android:gravity="center"
         >
 
+        <com.ftinc.kit.widget.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            app:emptyMessage="Error loading image"
+            app:emptyMessageColor="@color/white"
+            app:emptyIcon="@drawable/ic_empty_image_rboken"
+            app:emptyIconColor="@color/white70"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/image"
             android:layout_width="match_parent"
