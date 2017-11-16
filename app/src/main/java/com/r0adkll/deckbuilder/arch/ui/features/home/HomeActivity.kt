@@ -10,9 +10,11 @@ import android.view.Menu
 import android.view.MenuItem
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksFragment
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeModule
+import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import gov.scstatehouse.houseofcards.di.HasComponent
@@ -39,6 +41,18 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val cards = DeckImportActivity.parseResults(resultCode, requestCode, data)
+        cards?.let {
+            if (it.isNotEmpty()) {
+                val intent = DeckBuilderActivity.createIntent(this, it)
+                startActivity(intent)
+            }
+        }
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_home, menu)
         return true
@@ -47,6 +61,10 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
+            R.id.action_import -> {
+                DeckImportActivity.show(this)
+                true
+            }
             R.id.action_settings -> {
                 startActivity(SettingsActivity.createIntent(this))
                 true

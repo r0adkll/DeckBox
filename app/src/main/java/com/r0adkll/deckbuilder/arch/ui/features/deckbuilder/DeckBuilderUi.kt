@@ -64,7 +64,12 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                             !name.isNullOrBlank() ||
                             !description.isNullOrBlank()
                 } else {
-                    !deck.cards.containsAll(allCards) ||
+                    fun List<PokemonCard>.equal(cards: List<PokemonCard>): Boolean {
+                        return this.sortedBy { card -> card.nationalPokedexNumber } ==
+                                cards.sortedBy { card -> card.nationalPokedexNumber }
+                    }
+
+                    !deck.cards.equal(allCards) ||
                             deck.cards.size != allCards.size ||
                             deck.name != name ||
                             deck.description != description

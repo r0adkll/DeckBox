@@ -20,6 +20,11 @@ fun <P : Parcelable> Activity.bindOptionalParcelable(key: String): ReadOnlyPrope
 }
 
 
+fun <P : Parcelable> Activity.bindOptionalParcelableList(key: String): ReadOnlyProperty<Activity, ArrayList<P>?> = Lazy { activity, _ ->
+    activity.intent.getParcelableArrayListExtra(key)
+}
+
+
 fun <P : Parcelable> Activity.bindParcelable(key: String): ReadOnlyProperty<Activity, P> = Lazy { activity, _ ->
     activity.intent.getParcelableExtra(key)
 }

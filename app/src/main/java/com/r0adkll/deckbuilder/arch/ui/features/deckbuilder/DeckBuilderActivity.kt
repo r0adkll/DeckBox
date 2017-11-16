@@ -32,6 +32,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
+import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
@@ -50,6 +51,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         DeckBuilderUi.Intentions, DeckBuilderUi.Actions {
 
     private val deck: Deck? by bindOptionalParcelable(EXTRA_DECK)
+    private val imports: ArrayList<PokemonCard>? by bindOptionalParcelableList(EXTRA_IMPORT)
 
     @State
     override var state: DeckBuilderUi.State = DeckBuilderUi.State.DEFAULT
@@ -248,6 +250,14 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     energyCards = deck!!.cards.filter { it.supertype == SuperType.ENERGY },
                     name = deck?.name,
                     description = deck?.description
+            )
+        }
+
+        if (imports != null) {
+            state = state.copy(
+                    pokemonCards = imports!!.filter { it.supertype == SuperType.POKEMON },
+                    trainerCards = imports!!.filter { it.supertype == SuperType.TRAINER },
+                    energyCards = imports!!.filter { it.supertype == SuperType.ENERGY }
             )
         }
 
@@ -469,11 +479,19 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     companion object {
         @JvmField val EXTRA_DECK = "com.r0adkll.deckbuilder.intent.EXTRA_DECK"
+        @JvmField val EXTRA_IMPORT = "com.r0adkll.deckbuilder.intent.EXTRA_IMPORT"
 
         fun createIntent(context: Context): Intent = Intent(context, DeckBuilderActivity::class.java)
+
         fun createIntent(context: Context, deck: Deck): Intent {
             val intent = createIntent(context)
             intent.putExtra(EXTRA_DECK, deck)
+            return intent
+        }
+
+        fun createIntent(context: Context, import: List<PokemonCard>): Intent {
+            val intent = createIntent(context)
+            intent.putExtra(EXTRA_IMPORT, ArrayList(import))
             return intent
         }
     }

@@ -12,7 +12,6 @@
     <item android:id="@+id/action_import"
           android:title="@string/action_import"
           android:icon="@drawable/ic_import"
-          app:showAsAction="ifRoom"
         />
 
     <item android:id="@+id/action_export"
