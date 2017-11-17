@@ -24,12 +24,12 @@ object EntityMapper {
     }
 
 
-    fun to(entity: DeckEntity, id: String): Deck {
+    fun to(expansions: List<Expansion>, entity: DeckEntity, id: String): Deck {
         return Deck(
                 id,
                 entity.name,
                 entity.description,
-                entity.cards.map { to(it) },
+                entity.cards.map { to(it, expansions) },
                 entity.timestamp
         )
     }
@@ -52,7 +52,7 @@ object EntityMapper {
                 card.artist,
                 card.rarity,
                 card.series,
-                card.expansion?.let { to(it) }
+                card.expansion?.let { it.code }
 //                card.text,
 //                card.attacks?.map { to(it) },
 //                card.weaknesses?.map { to(it) },
@@ -61,7 +61,7 @@ object EntityMapper {
     }
 
 
-    fun to(entity: PokemonCardEntity): PokemonCard {
+    fun to(entity: PokemonCardEntity, expansions: List<Expansion>): PokemonCard {
         return PokemonCard(
                 entity.id,
                 entity.name,
@@ -80,7 +80,7 @@ object EntityMapper {
                 entity.artist,
                 entity.rarity,
                 entity.series,
-                entity.expansion?.let { to(it) },
+                entity.expansionCode?.let { code -> expansions.find { it.code == code } },
                 null, null, null, null
 //                entity.text,
 //                entity.attacks?.map { to(it) },

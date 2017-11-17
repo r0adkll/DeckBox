@@ -23,4 +23,9 @@ class InMemoryExpansionCache : ExpansionCache {
     override fun getExpansions(): Observable<List<Expansion>> {
         return Observable.just(expansions)
     }
+
+
+    override fun clear() {
+        expansions.clear()
+    }
 }

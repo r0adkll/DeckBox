@@ -68,10 +68,6 @@ class DataModule {
      */
 
     @Provides @AppScope
-    fun provideExpansionCache(): ExpansionCache = InMemoryExpansionCache()
-
-
-    @Provides @AppScope
     fun provideDeckCache(cache: FirestoreDeckCache): DeckCache = cache
 
 

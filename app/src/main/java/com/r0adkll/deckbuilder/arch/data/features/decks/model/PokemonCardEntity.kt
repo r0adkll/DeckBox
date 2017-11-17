@@ -17,7 +17,8 @@ class PokemonCardEntity(
         val artist: String = "",
         val rarity: String? = null,
         val series: String = "",
-        val expansion: ExpansionEntity? = null
+        val expansionCode: String? = null
+//        val expansion: ExpansionEntity? = null
 //        val text: List<String>? = null,
 //        val attacks: List<AttackEntity>? = null,
 //        val weaknesses: List<EffectEntity>? = null,

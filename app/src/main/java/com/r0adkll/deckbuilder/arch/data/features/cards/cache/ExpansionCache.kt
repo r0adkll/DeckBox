@@ -9,4 +9,5 @@ interface ExpansionCache {
 
     fun putExpansions(expansions: List<Expansion>)
     fun getExpansions(): Observable<List<Expansion>>
+    fun clear()
 }

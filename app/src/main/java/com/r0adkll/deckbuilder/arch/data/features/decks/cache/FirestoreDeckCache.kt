@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.r0adkll.deckbuilder.arch.data.features.decks.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.data.features.decks.model.DeckEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.util.RxFirebase
 import io.reactivex.Observable
@@ -15,34 +16,38 @@ import javax.inject.Inject
 
 
 class FirestoreDeckCache @Inject constructor(
-        val firestore: FirebaseFirestore
+        val firestore: FirebaseFirestore,
+        val cardRepository: CardRepository
 ) : DeckCache {
 
 
     override fun getDecks(): Observable<List<Deck>> {
-        return Observable.create({ emitter ->
-            getUserDeckCollection()?.let { collection ->
-                val registration = collection.addSnapshotListener { snapshot, exception ->
+        return cardRepository.getExpansions()
+                .flatMap { expansions ->
+                    Observable.create<List<Deck>>({ emitter ->
+                        getUserDeckCollection()?.let { collection ->
+                            val registration = collection.addSnapshotListener { snapshot, exception ->
 
-                    if (exception != null) {
-                        emitter.onError(exception)
-                        return@addSnapshotListener
-                    }
+                                if (exception != null) {
+                                    emitter.onError(exception)
+                                    return@addSnapshotListener
+                                }
 
-                    val decks = ArrayList<Deck>()
-                    snapshot.forEach { document ->
-                        val deck = document.toObject(DeckEntity::class.java)
-                        decks.add(EntityMapper.to(deck, document.id))
-                    }
+                                val decks = ArrayList<Deck>()
+                                snapshot.forEach { document ->
+                                    val deck = document.toObject(DeckEntity::class.java)
+                                    decks.add(EntityMapper.to(expansions, deck, document.id))
+                                }
 
-                    emitter.onNext(decks)
+                                emitter.onNext(decks)
+                            }
+
+                            emitter.setCancellable {
+                                registration.remove()
+                            }
+                        } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
+                    })
                 }
-
-                emitter.setCancellable {
-                    registration.remove()
-                }
-            } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
-        })
     }
 
 
