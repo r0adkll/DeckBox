@@ -11,13 +11,14 @@ class PreferenceExpansionCache(
 ) : ExpansionCache {
 
     override fun putExpansions(expansions: List<Expansion>) {
-        preferences.expansions.set(expansions)
+        preferences.expansions.set(ArrayList(expansions))
         preferences.expansionsTimestamp = System.currentTimeMillis()
     }
 
 
     override fun getExpansions(): Observable<List<Expansion>> {
         return preferences.expansions.asObservable()
+                .map { it.toList() }
                 .take(1)
     }
 

@@ -23,7 +23,7 @@ class AppPreferences @Inject constructor(
 
     var onboarding by BooleanPreference(KEY_ONBOARDING, false)
 
-    val expansions by RxPreferences.ReactiveJsonPreference<List<Expansion>>(KEY_EXPANSIONS, emptyList())
+    val expansions by RxPreferences.ReactiveJsonPreference<ArrayList<Expansion>>(KEY_EXPANSIONS, ArrayList())
     var expansionsTimestamp by Preferences.LongPreference(KEY_EXPANSIONS_TIMESTAMP, 0L)
 
 

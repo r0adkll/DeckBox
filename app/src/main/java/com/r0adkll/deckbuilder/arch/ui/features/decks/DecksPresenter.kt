@@ -51,6 +51,9 @@ class DecksPresenter @Inject constructor(
 
     companion object {
 
-        private val handleUnknownError: (Throwable) -> Change = { t -> Change.Error(t.localizedMessage) }
+        private val handleUnknownError: (Throwable) -> Change = { t ->
+            Timber.e(t, "Error getting decks")
+            Change.Error(t.localizedMessage)
+        }
     }
 }
