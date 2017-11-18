@@ -170,7 +170,8 @@ class ResultsPagerAdapter(
         fun wiggleCard(card: PokemonCard) {
             val adapterPosition = adapter.indexOf(card)
             if (adapterPosition != RecyclerView.NO_POSITION) {
-                val child = recycler.layoutManager.getChildAt(adapterPosition)
+                val childIndex = adapterPosition - (recycler.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
+                val child = recycler.layoutManager.getChildAt(childIndex)
                 child?.let {
                     val rotateAnim = RotateAnimation(-5f, 5f, RELATIVE_TO_SELF, .5f, RELATIVE_TO_SELF, .5f)
                     rotateAnim.repeatCount = 3

@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar
 import android.support.v14.preference.PreferenceFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.preference.Preference
+import com.crashlytics.android.Crashlytics
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -76,6 +77,9 @@ class SettingsActivity : BaseActivity() {
 
         override fun onPreferenceTreeClick(preference: Preference): Boolean {
             return when(preference.key) {
+                "pref_account_profile" -> {
+                    true
+                }
                 "pref_about_developer" -> {
                     startActivity(IntentUtils.openLink(getString(R.string.developer_website_url)))
                     true
