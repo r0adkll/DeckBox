@@ -7,7 +7,8 @@ import io.reactivex.Observable
 
 
 class PreferenceExpansionCache(
-        val preferences: AppPreferences
+        val preferences: AppPreferences,
+        val maxLifetime: Long
 ) : ExpansionCache {
 
     override fun putExpansions(expansions: List<Expansion>) {
@@ -17,6 +18,10 @@ class PreferenceExpansionCache(
 
 
     override fun getExpansions(): Observable<List<Expansion>> {
+        val elapsed = System.currentTimeMillis() - preferences.expansionsTimestamp
+        if (elapsed > maxLifetime) {
+            preferences.expansions.delete()
+        }
         return preferences.expansions.asObservable()
                 .map { it.toList() }
                 .take(1)

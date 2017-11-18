@@ -4,6 +4,9 @@ package com.r0adkll.deckbuilder.util.extensions
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import java.lang.reflect.Type
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -51,14 +54,41 @@ interface RxPreferences {
     }
 
 
+    class ReactiveExpansionsPreference(key: String): ReactivePreference<List<Expansion>>(key) {
+        override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<List<Expansion>> {
+            return thisRef.rxSharedPreferences.getObject(key, listOf(), ExpansionConverter())
+        }
+    }
+
+
     class ReactiveJsonPreference<T : Any>(key: String, val default: T) : ReactivePreference<T>(key) {
+
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<T> {
             return thisRef.rxSharedPreferences.getObject(key, default, GsonConverter<T>(default::class))
         }
     }
 
 
-    private class GsonConverter<T : Any>(val clazz: KClass<out T>) : Preference.Converter<T> {
+    private class ExpansionConverter : Preference.Converter<List<Expansion>> {
+
+        private val gson = Gson()
+
+
+        override fun deserialize(serialized: String): List<Expansion> {
+            val type = object : TypeToken<List<@kotlin.jvm.JvmSuppressWildcards Expansion>>() {}.type
+            return gson.fromJson(serialized, type)
+        }
+
+
+        override fun serialize(value: List<Expansion>): String {
+            return gson.toJson(value)
+        }
+    }
+
+
+    private class GsonConverter<T : Any>(
+            val clazz: KClass<out T>
+    ) : Preference.Converter<T> {
 
         private val gson = Gson()
 

@@ -10,6 +10,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.pokemontcg.Pokemon
 import io.reactivex.Observable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -20,7 +21,8 @@ class CachingCardDataSource @Inject constructor(
 ) : CardDataSource {
 
     private val memoryCache: ExpansionCache = InMemoryExpansionCache()
-    private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences)
+    private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences,
+            TimeUnit.DAYS.toMillis(7))
 
 
     override fun getExpansions(): Observable<List<Expansion>> {
