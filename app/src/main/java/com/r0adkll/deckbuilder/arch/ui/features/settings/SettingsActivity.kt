@@ -125,7 +125,9 @@ class SettingsActivity : BaseActivity() {
         private fun setupPreferences() {
             val user = FirebaseAuth.getInstance().currentUser
             user?.let {
-                val profilePref = findPreference("pref_account_profile")
+                val profilePref = findPreference("pref_account_profile") as ProfilePreference
+                profilePref.avatarUrl = user.photoUrl
+
                 profilePref.title = if (user.isAnonymous) {
                     getString(R.string.user_anonymous_title)
                 } else {

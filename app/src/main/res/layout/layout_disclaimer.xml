@@ -5,9 +5,10 @@
     android:layout_height="wrap_content"
     android:paddingStart="@dimen/padding_large"
     android:paddingEnd="@dimen/padding_large"
-    android:paddingTop="@dimen/padding_normal"
-    android:paddingBottom="@dimen/padding_small"
+    android:paddingTop="@dimen/padding_large"
+    android:paddingBottom="@dimen/padding_large"
     android:gravity="center"
     android:text="@string/disclaimer"
+    android:textSize="14sp"
     android:textColor="@color/black26"
     />

@@ -11,10 +11,8 @@
             android:icon="@drawable/common_google_signin_btn_icon_light"
             />
 
-        <Preference
+        <com.r0adkll.deckbuilder.arch.ui.features.settings.ProfilePreference
             android:key="pref_account_profile"
-            tools:title="Drew Heavner"
-            tools:summary="veedubusc@gmail.com"
             />
 
         <Preference
@@ -29,6 +27,7 @@
         <Preference
             android:key="pref_help_feedback"
             android:title="@string/pref_help_feedback_title"
+
             android:summary="@string/pref_help_feedback_summary"
             />
 
