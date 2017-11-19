@@ -1,4 +1,4 @@
----===== Version 1.0.0 : Phase 1 =====---
+---===== Version 0.1.0 : Phase 1 =====---
 
 • Initial Release
 
