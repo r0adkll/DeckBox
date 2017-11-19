@@ -17,18 +17,16 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterIntentions
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.*
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier.*
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Value
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.UiViewHolder.ViewType.*
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
 import com.r0adkll.deckbuilder.arch.ui.widgets.SeekBarIndicatorView
 import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.bindViews
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.Type
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 import timber.log.Timber
 
 
