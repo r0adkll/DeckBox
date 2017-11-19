@@ -35,7 +35,10 @@
         <activity android:name=".arch.ui.features.importer.DeckImportActivity"/>
         <activity android:name=".arch.ui.features.settings.SettingsActivity"/>
 
-        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="7b1875458d267befd0938d565c22df19a3a7c047"
+            />
     </application>
 
 </manifest>

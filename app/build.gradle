@@ -4,6 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
+def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
+def VERSION_CODE = Integer.parseInt('git rev-list --first-parent --count HEAD'.execute([], project.rootDir).text.trim())
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -15,17 +18,47 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionCode 1
-        versionName "1.0"
+        versionCode VERSION_CODE
+        versionName "$VERSION_NAME.$VERSION_CODE"
         multiDexEnabled true
+
+        buildConfigField "String", "GIT_SHA", "\"$GIT_SHA\""
+        buildConfigField "String", "GIT_TAG", "\"$GIT_TAG\""
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("../distribution/tcg-deckbuilder.jks")
+            keyAlias DB_ALIAS
+            storePassword DB_STORE_PASSWORD
+            keyPassword DB_KEY_PASSWORD
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+    }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        alpha {
+            versionNameSuffix '-alpha'
+            ext.betaDistributionReleaseNotesFilePath="distribution/crashlytics/release-notes.txt"
+            ext.betaDistributionGroupAliasesFilePath="distribution/crashlytics/aliases.txt"
+        }
+
+        beta {
+            versionNameSuffix '-beta'
+        }
+
+        prod
     }
 }
 
@@ -96,23 +129,5 @@ dependencies {
     }
 }
 
-
-//task pokePrint {
-//    def poke = new Pokemon()
-//    def cards = poke.card().where(new Function1<CardQueryBuilder, Unit>() {
-//        @Override
-//        Unit invoke(CardQueryBuilder cardQueryBuilder) {
-//            cardQueryBuilder.pageSize = 1000
-//            cardQueryBuilder.setCode = "sm1|sm2|sm3"
-//            return null
-//        }
-//    }).all()
-//
-//    Collections.shuffle(cards)
-//    for (Card card : cards) {
-//        println "\"${card.imageUrl}\","
-//    }
-//}
-
-
 apply plugin: 'com.google.gms.google-services'
+apply from: '../tools/pokken.gradle'

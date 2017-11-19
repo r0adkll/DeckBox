@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.6'
+    }
+}
+
+import io.pokemontcg.Pokemon
+import io.pokemontcg.requests.CardQueryBuilder
+import io.pokemontcg.Pokemon
+import io.pokemontcg.model.Card
+import kotlin.Unit
+import kotlin.jvm.functions.Function1
+
+
+task pokePrint {
+    doLast {
+        def poke = new Pokemon()
+        def cards = poke.card().where(new Function1<CardQueryBuilder, Unit>() {
+            @Override
+            Unit invoke(CardQueryBuilder cardQueryBuilder) {
+                cardQueryBuilder.pageSize = 1000
+                cardQueryBuilder.setCode = "sm1|sm2|sm3|sm35|sm4"
+                return null
+            }
+        }).all()
+
+        Collections.shuffle(cards)
+        for (Card card : cards) {
+            println "\"${card.imageUrl}\","
+        }
+    }
+
+}
