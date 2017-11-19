@@ -35,6 +35,14 @@
         <activity android:name=".arch.ui.features.importer.DeckImportActivity"/>
         <activity android:name=".arch.ui.features.settings.SettingsActivity"/>
 
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.DeckBuilder.OSS"
+            />
+
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/Theme.DeckBuilder.OSS"
+            />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="7b1875458d267befd0938d565c22df19a3a7c047"

@@ -418,7 +418,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun showDeckName(name: String) {
         if(name.isBlank()) {
-            appbar?.setTitle(R.string.deckbuilder_default_title)
+            appbar?.setTitle(if (deck == null) R.string.deckbuilder_default_title else R.string.deckbuilder_edit_title)
         }
         else {
             appbar?.title = name

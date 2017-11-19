@@ -27,6 +27,9 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import timber.log.Timber
 import javax.inject.Inject
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+
+
 
 
 class SettingsActivity : BaseActivity() {
@@ -85,7 +88,10 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 "pref_about_oss" -> {
-
+                    val intent = Intent(activity, OssLicensesMenuActivity::class.java)
+                    val title = getString(R.string.activity_licenses)
+                    intent.putExtra("title", title)
+                    startActivity(intent)
                     true
                 }
                 "pref_help_feedback" -> {
@@ -95,12 +101,6 @@ class SettingsActivity : BaseActivity() {
                             "UserId: $userId \n\n\n"
                     val emailAddress = getString(R.string.support_email_address)
                     val intent = IntentUtils.sendEmail(emailAddress, "Feedback", text)
-                    startActivity(intent)
-                    true
-                }
-                "pref_help_suggestions" -> {
-                    val emailAddress = getString(R.string.support_email_address)
-                    val intent = IntentUtils.sendEmail(emailAddress, "Suggestion", null)
                     startActivity(intent)
                     true
                 }

@@ -39,4 +39,16 @@
         tools:text="@string/onboarding_subtitle_search"
         />
 
+    <TextView
+        android:id="@+id/comingSoon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Coming soon!"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="italic"
+        android:visibility="gone"
+        />
+
 </LinearLayout>

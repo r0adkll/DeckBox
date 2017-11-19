@@ -90,4 +90,6 @@
     <string name="pref_account_link_summary">Link your account to save your Decks and share between your devices</string>
     <string name="action_clear_filter">Clear filter</string>
     <string name="image_loading_error">Error loading image</string>
+    <string name="deckbuilder_edit_title">Edit deck</string>
+    <string name="activity_licenses">Open source licenses</string>
 </resources>

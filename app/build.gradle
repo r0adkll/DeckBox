@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.oss.licenses.plugin'
 
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
@@ -86,6 +87,7 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore:$play_version"
     implementation "com.google.firebase:firebase-auth:$play_version"
     implementation "com.google.android.gms:play-services-auth:$play_version"
+    implementation "com.google.android.gms:play-services-oss-licenses:$play_version"
 
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"

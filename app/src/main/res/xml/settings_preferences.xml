@@ -31,12 +31,6 @@
             android:summary="@string/pref_help_feedback_summary"
             />
 
-        <Preference
-            android:key="pref_help_suggestions"
-            android:title="@string/pref_help_suggestions_title"
-            android:summary="@string/pref_help_suggestions_summary"
-            />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_about">

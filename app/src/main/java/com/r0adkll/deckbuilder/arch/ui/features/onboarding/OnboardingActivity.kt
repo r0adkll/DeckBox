@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ftinc.kit.kotlin.extensions.gone
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.ftinc.kit.kotlin.extensions.visible
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
@@ -120,7 +121,8 @@ class OnboardingActivity : BaseActivity() {
     data class Page(
             @StringRes val title: Int,
             @StringRes val subtitle: Int,
-            @DrawableRes val image: Int
+            @DrawableRes val image: Int,
+            val comingSoon: Boolean = false
     ) : PaperParcelable {
         companion object {
             @JvmField val CREATOR = PaperParcelOnboardingActivity_Page.CREATOR
@@ -143,6 +145,7 @@ class OnboardingActivity : BaseActivity() {
             title.setText(page.title)
             subtitle.setText(page.subtitle)
             image.setImageResource(page.image)
+            comingSoon.setVisible(page.comingSoon)
         }
 
 
@@ -162,7 +165,7 @@ class OnboardingActivity : BaseActivity() {
         val PAGES = listOf(
                 Page(R.string.onboarding_title_search, R.string.onboarding_subtitle_search, R.drawable.dr_onboarding_symbol_1),
                 Page(R.string.onboarding_title_build, R.string.onboarding_subtitle_build, R.drawable.dr_onboarding_symbol_2),
-                Page(R.string.onboarding_title_share, R.string.onboarding_subtitle_share, R.drawable.dr_onboarding_symbol_3)
+                Page(R.string.onboarding_title_share, R.string.onboarding_subtitle_share, R.drawable.dr_onboarding_symbol_3, true)
         )
 
         fun createIntent(context: Context): Intent = Intent(context, OnboardingActivity::class.java)
