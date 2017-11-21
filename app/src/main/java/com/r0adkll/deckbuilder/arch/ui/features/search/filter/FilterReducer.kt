@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAtt
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.SuperTypeAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
 import io.pokemontcg.model.SubType
+import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
 
@@ -24,7 +25,7 @@ object FilterReducer {
 
 
     fun reduceAttribute(attribute: FilterAttribute, filter: Filter): Filter = when(attribute) {
-        is SuperTypeAttribute -> filter.copy(superType = attribute.superType) // FIXME: Implement a supertype toggling field
+        is SuperTypeAttribute -> filter.copy(superType = filter.toggle(attribute.superType))
         is SubTypeAttribute -> filter.copy(subTypes = filter.subTypes.toggle(attribute.subType))
         is FilterAttribute.ContainsAttribute -> filter.copy(contains = filter.contains.toggle(attribute.attribute))
     }
@@ -58,4 +59,8 @@ object FilterReducer {
             this.plus(value)
         }
     }
+
+
+    private fun Filter.toggle(value: SuperType): SuperType? =
+            if (this.superType == value) null else value
 }

@@ -109,6 +109,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 val isChecked = item.selected.contains(attr)
                 val view = inflater.inflate(R.layout.item_attribute, container, false) as CheckedTextView
                 view.text = when(attr) {
+                    is FilterAttribute.SuperTypeAttribute -> attr.superType.displayName
                     is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
                     is FilterAttribute.ContainsAttribute -> attr.attribute
                 }
