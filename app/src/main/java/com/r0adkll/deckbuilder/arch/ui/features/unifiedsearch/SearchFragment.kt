@@ -10,12 +10,15 @@ import android.view.ViewGroup
 import android.view.animation.*
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.pokemontcg.model.SuperType
@@ -23,11 +26,13 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
-class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions{
+class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions, FilterIntentions {
 
     override var state: SearchUi.State = SearchUi.State.DEFAULT
 
+    private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
     private lateinit var adapter: SearchResultsRecyclerAdapter
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,7 +64,17 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     override fun filterUpdates(): Observable<Pair<SuperType, Filter>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return filterChanges
+    }
+
+
+    override fun filterChanges(): Relay<Pair<SuperType, Filter>> {
+        return filterChanges
+    }
+
+
+    override fun categoryChange(): Observable<SuperType> {
+        return Observable.empty()
     }
 
 
