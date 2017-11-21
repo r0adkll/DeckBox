@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/search_toolbar"
+            android:id="@+id/searchToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:outlineProvider="background"
@@ -61,7 +61,7 @@
                 />
 
             <com.ftinc.kit.widget.EmptyView
-                android:id="@+id/empty_view"
+                android:id="@+id/emptyView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="@dimen/padding_giant"
