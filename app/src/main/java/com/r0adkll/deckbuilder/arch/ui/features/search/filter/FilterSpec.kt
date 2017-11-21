@@ -9,6 +9,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterSpec.Spec.AttributeSpec
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.ExpansionVisibility.*
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.ContainsAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.SubTypeAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.Option.*
@@ -71,7 +72,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
             private fun getFilteredAttributes(filter: Filter): List<FilterAttribute> {
                 val attrs = ArrayList<FilterAttribute>()
                 attrs += filter.subTypes.map { SubTypeAttribute(it) }
-                attrs += filter.contains.map { FilterAttribute.ContainsAttribute(it) }
+                attrs += filter.contains.map { ContainsAttribute(it) }
                 return attrs
             }
 
@@ -225,7 +226,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                                     SubTypeAttribute(BREAK),
                                     SubTypeAttribute(LEGEND),
                                     SubTypeAttribute(RESTORED),
-                                    FilterAttribute.ContainsAttribute("Ability")
+                                    ContainsAttribute("Ability")
                             )),
                             Spec.ExpansionSpec(expansions, visibility),
                             Spec.RaritySpec(Rarity.values().toList()),

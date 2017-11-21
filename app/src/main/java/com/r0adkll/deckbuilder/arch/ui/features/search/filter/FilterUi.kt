@@ -48,6 +48,14 @@ interface FilterUi : StateRenderer<FilterUi.State> {
     sealed class FilterAttribute : PaperParcelable {
 
         @PaperParcel
+        data class SuperTypeAttribute(val superType: SuperType) : FilterAttribute() {
+            companion object {
+                @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_SuperTypeAttribute.CREATOR
+            }
+        }
+
+
+        @PaperParcel
         data class SubTypeAttribute(val subType: SubType) : FilterAttribute() {
             companion object {
                 @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_SubTypeAttribute.CREATOR
