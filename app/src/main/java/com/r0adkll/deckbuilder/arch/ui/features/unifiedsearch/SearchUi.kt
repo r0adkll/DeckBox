@@ -26,7 +26,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
         fun showFilterEmpty(enabled: Boolean)
         fun setQueryText(text: String)
-        fun setResults(scards: List<PokemonCard>)
+        fun setResults(cards: List<PokemonCard>)
         fun showLoading(isLoading: Boolean)
         fun showError(description: String)
         fun hideError()
@@ -65,6 +65,10 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
         companion object {
             @JvmField val CREATOR = PaperParcelSearchUi_State.CREATOR
+
+            val DEFAULT by lazy {
+                State("", Filter.DEFAULT, false, null, emptyList())
+            }
         }
     }
 }
