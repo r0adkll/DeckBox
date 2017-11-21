@@ -4,7 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.importer.di
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportUi
-import com.r0adkll.deckbuilder.internal.di.ActivityScope
+import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
 import dagger.Provides

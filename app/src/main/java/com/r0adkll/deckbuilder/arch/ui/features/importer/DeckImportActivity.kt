@@ -40,7 +40,7 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
 
         deckList.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                supportInvalidateOptionsMenu()
+                invalidateOptionsMenu()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

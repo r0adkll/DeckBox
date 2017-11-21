@@ -63,14 +63,14 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         bindCard()
 
         variantsAdapter = PokemonCardsRecyclerAdapter(this)
-        variantsAdapter.setOnViewItemClickListener { view, card ->
+        variantsAdapter.setOnViewItemClickListener { view, _ ->
             CardDetailActivity.show(this, view as PokemonCardView)
         }
         variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
 
         evolvesAdapter = PokemonCardsRecyclerAdapter(this)
-        evolvesAdapter.setOnViewItemClickListener { view, card ->
+        evolvesAdapter.setOnViewItemClickListener { view, _ ->
             CardDetailActivity.show(this, view as PokemonCardView)
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)

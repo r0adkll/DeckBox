@@ -63,6 +63,7 @@ class DeckBuilderPagerAdapter(
     }
 
     fun setCards(type: SuperType, cards: List<StackedPokemonCard>) {
+        @Suppress("NON_EXHAUSTIVE_WHEN")
         when(type) {
             SuperType.POKEMON -> {
                 pokemonCards = cards

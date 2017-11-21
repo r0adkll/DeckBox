@@ -389,7 +389,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun showSaveAction(hasChanges: Boolean) {
-        supportInvalidateOptionsMenu()
+        invalidateOptionsMenu()
     }
 
 
@@ -439,7 +439,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun showIsSaving(isSaving: Boolean) {
-        supportInvalidateOptionsMenu()
+        invalidateOptionsMenu()
         if (isSaving) {
             if (savingSnackBar == null) {
                 savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saving_message, Snackbar.LENGTH_INDEFINITE)

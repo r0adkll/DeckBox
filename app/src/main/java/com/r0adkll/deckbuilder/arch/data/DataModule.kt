@@ -6,8 +6,6 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.firebase.firestore.FirebaseFirestore
-import com.r0adkll.deckbuilder.arch.data.features.cards.cache.ExpansionCache
-import com.r0adkll.deckbuilder.arch.data.features.cards.cache.InMemoryExpansionCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
@@ -22,7 +20,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.PTCGOConverter
-import com.r0adkll.deckbuilder.internal.di.AppScope
+import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
 import dagger.Provides
@@ -102,7 +100,8 @@ class DataModule {
      * Deck Validation Rules
      */
 
-    @Provides @AppScope @ElementsIntoSet
+    @Provides @AppScope
+    @ElementsIntoSet
     fun provideDefaultRuleSet() : Set<DeckValidator.Rule> {
         return setOf(
                 SizeRule(),

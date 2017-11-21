@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.internal.di
+package com.r0adkll.deckbuilder.internal.di.scopes
 
 import javax.inject.Scope
 

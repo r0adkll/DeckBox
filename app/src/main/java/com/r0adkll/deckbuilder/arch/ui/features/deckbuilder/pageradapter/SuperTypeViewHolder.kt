@@ -77,7 +77,7 @@ class TrainerEnergyViewHolder(
 
     override fun bind(cards: List<StackedPokemonCard>) {
         adapter.setCards(cards)
-        adapter.setOnViewItemClickListener { view, stackedPokemonCard ->
+        adapter.setOnViewItemClickListener { view, _ ->
             pokemonCardClicks.accept(view as PokemonCardView)
         }
     }

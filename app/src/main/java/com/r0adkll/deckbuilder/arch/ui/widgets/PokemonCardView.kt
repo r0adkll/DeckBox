@@ -198,6 +198,7 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
+    @Suppress("DEPRECATION")
     fun startDrag() {
         val clipData = ClipData.newPlainText(KEY_CARD, KEY_CARD)
         val shadowBuilder = CardShadowBuilder(this, PointF(lastTouchX, lastTouchY))
@@ -221,6 +222,7 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
+    @Suppress("NON_EXHAUSTIVE_WHEN")
     private fun drawEvolutionNotches(canvas: Canvas) {
         val y = boundsF?.centerY() ?: 0f / 2f
         when(evolution) {

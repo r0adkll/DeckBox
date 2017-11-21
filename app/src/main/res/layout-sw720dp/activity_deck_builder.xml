@@ -326,6 +326,13 @@
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
     <!-- TODO: Add Unified search fragment here -->
+    <fragment
+        android:id="@+id/search_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment"
+        tools:layout="@layout/fragment_search"
+        />
 
 
 </LinearLayout>

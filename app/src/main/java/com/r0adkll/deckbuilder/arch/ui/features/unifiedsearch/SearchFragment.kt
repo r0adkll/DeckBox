@@ -27,6 +27,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchCo
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import gov.scstatehouse.houseofcards.di.HasComponent
+import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -58,9 +59,15 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
             true
         }
 
+        actionFilter.setOnClickListener {
+            drawer.openDrawer(GravityCompat.END)
+            ImeUtils.hideIme(searchView)
+        }
+
         recycler.layoutManager = GridLayoutManager(activity!!, 3)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
+
 
     }
 

@@ -16,9 +16,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
-import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
-import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
+import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import dagger.Component
 
 
