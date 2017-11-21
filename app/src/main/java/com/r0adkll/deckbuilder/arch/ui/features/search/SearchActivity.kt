@@ -23,6 +23,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableComponent
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -43,7 +45,7 @@ import javax.inject.Inject
 
 
 class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
-        FilterIntentions, DrawerInteractor, HasComponent<SearchComponent> {
+        FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
     @com.evernote.android.state.State
     override var state: State = State.DEFAULT
@@ -142,12 +144,16 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(SearchModule(this))
+        this.component = component.searchComponentBuilder()
+                .searchModule(SearchModule(this))
+                .filterableModule(FilterableModule(this, this))
+                .build()
+
         this.component.inject(this)
     }
 
 
-    override fun getComponent(): SearchComponent {
+    override fun getComponent(): FilterableComponent {
         return component
     }
 

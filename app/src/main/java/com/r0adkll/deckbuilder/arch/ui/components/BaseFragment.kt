@@ -57,6 +57,9 @@ abstract class BaseFragment : Fragment() {
         if (activity is HasComponent<*>) {
             return componentType.java.cast((activity as HasComponent<*>).getComponent())!!
         }
+        else if (parentFragment is HasComponent<*>) {
+            return componentType.java.cast((parentFragment as HasComponent<*>).getComponent())
+        }
         return componentType.java.cast((activity as HasComponent<*>).getComponent())!!
     }
 }

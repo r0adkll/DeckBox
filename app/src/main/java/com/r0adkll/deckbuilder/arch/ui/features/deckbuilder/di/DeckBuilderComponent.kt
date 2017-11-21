@@ -14,5 +14,6 @@ import dagger.Subcomponent
 interface DeckBuilderComponent {
 
     fun inject(activity: DeckBuilderActivity)
-    fun plus(module: UnifiedSearchModule): UnifiedSearchComponent
+
+    fun unifiedSearchComponentBuilder(): UnifiedSearchComponent.Builder
 }

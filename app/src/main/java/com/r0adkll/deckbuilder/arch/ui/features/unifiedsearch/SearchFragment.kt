@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 
 import android.os.Bundle
+import android.support.v4.view.GravityCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,21 +18,28 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
+import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableComponent
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
+import gov.scstatehouse.houseofcards.di.HasComponent
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
-class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions, FilterIntentions {
+class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
+        FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
     override var state: SearchUi.State = SearchUi.State.DEFAULT
 
     private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
     private lateinit var adapter: SearchResultsRecyclerAdapter
+    private lateinit var component: UnifiedSearchComponent
 
 
 
@@ -118,6 +126,11 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     }
 
 
+    override fun closeDrawer() {
+        drawer.closeDrawer(GravityCompat.END)
+    }
+
+
     fun wiggleCard(card: PokemonCard) {
         val adapterPosition = adapter.indexOf(card)
         if (adapterPosition != RecyclerView.NO_POSITION) {
@@ -145,9 +158,17 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     }
 
     override fun setupComponent() {
-        getComponent(DeckBuilderComponent::class)
-                .plus(UnifiedSearchModule(this))
-                .inject(this)
+        component = getComponent(DeckBuilderComponent::class)
+                .unifiedSearchComponentBuilder()
+                .unifiedSearchModule(UnifiedSearchModule(this))
+                .filterableModule(FilterableModule(this, this))
+                .build()
+        component.inject(this)
+    }
+
+
+    override fun getComponent(): FilterableComponent {
+        return component
     }
 
 }

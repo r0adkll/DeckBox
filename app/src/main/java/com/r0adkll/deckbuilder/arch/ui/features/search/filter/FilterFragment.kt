@@ -17,6 +17,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.FilterRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterModule
+import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableComponent
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
@@ -72,7 +73,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
 
     override fun setupComponent() {
-        getComponent(SearchComponent::class)
+        getComponent(FilterableComponent::class)
                 .plus(FilterModule(this))
                 .inject(this)
     }
