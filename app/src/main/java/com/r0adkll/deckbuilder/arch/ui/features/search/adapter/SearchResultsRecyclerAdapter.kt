@@ -2,22 +2,28 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.adapter
 
 
 import android.content.Context
+import android.support.design.widget.AppBarLayout
 import android.support.v7.util.DiffUtil
+import android.view.DragEvent
+import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 
 class SearchResultsRecyclerAdapter(
-        context: Context
+        context: Context,
+        val instantDragSupport: Boolean = false
 ) : ListRecyclerAdapter<PokemonCard, PokemonCardViewHolder>(context) {
 
     private var selectedCards: List<PokemonCard> = emptyList()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
-        return PokemonCardViewHolder.create(inflater, parent, true)
+        return PokemonCardViewHolder.create(inflater, parent, true, instantDragSupport)
     }
 
 

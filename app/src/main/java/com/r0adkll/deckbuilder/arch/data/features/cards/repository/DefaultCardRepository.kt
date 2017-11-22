@@ -58,7 +58,9 @@ class DefaultCardRepository @Inject constructor(
             FilterMapper.to(it)
         } ?: CardQueryBuilder()
 
-        request.supertype = type.displayName
+        if (type != SuperType.UNKNOWN) {
+            request.supertype = type.displayName
+        }
         request.name = query
 
         return api.card()

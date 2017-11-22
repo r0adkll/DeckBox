@@ -58,6 +58,9 @@
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingEnd="@dimen/padding_small"
+                android:clipToPadding="false"
                 />
 
             <com.ftinc.kit.widget.EmptyView
