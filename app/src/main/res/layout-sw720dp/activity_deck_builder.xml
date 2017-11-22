@@ -89,6 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="112dp"
                 android:translationY="-112dp"
+                tools:translationY="0dp"
                 >
 
                 <TextView
