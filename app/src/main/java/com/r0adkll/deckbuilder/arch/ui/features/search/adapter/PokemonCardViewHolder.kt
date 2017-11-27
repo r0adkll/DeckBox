@@ -12,7 +12,11 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.bindView
 
 
-class PokemonCardViewHolder(itemView: View, val displayWhenOne: Boolean = false): RecyclerView.ViewHolder(itemView) {
+class PokemonCardViewHolder(
+        itemView: View,
+        val displayWhenOne: Boolean = false,
+        val startDragImmediately: Boolean = false
+): RecyclerView.ViewHolder(itemView) {
 
     private val cardView: PokemonCardView by bindView(R.id.card)
 
@@ -21,6 +25,7 @@ class PokemonCardViewHolder(itemView: View, val displayWhenOne: Boolean = false)
         cardView.displayCountWhenOne = displayWhenOne
         cardView.card = card
         cardView.count = count
+        cardView.startDragImmediately = startDragImmediately
 
         if (displayWhenOne && count > 0) {
             cardView.elevation = dpToPx(8f)
@@ -32,16 +37,20 @@ class PokemonCardViewHolder(itemView: View, val displayWhenOne: Boolean = false)
 
 
     companion object {
-        fun create(inflater: LayoutInflater, parent: ViewGroup,
-                   displayWhenOne: Boolean = false): PokemonCardViewHolder {
+        fun create(inflater: LayoutInflater,
+                   parent: ViewGroup,
+                   displayWhenOne: Boolean = false,
+                   startDragImmediately: Boolean = false): PokemonCardViewHolder {
             val view = inflater.inflate(R.layout.item_pokemon_card, parent, false)
-            return PokemonCardViewHolder(view, displayWhenOne)
+            return PokemonCardViewHolder(view, displayWhenOne, startDragImmediately)
         }
 
-        fun createHorizontal(inflater: LayoutInflater, parent: ViewGroup,
-                   displayWhenOne: Boolean = false): PokemonCardViewHolder {
+        fun createHorizontal(inflater: LayoutInflater,
+                             parent: ViewGroup,
+                             displayWhenOne: Boolean = false,
+                             startDragImmediately: Boolean = false): PokemonCardViewHolder {
             val view = inflater.inflate(R.layout.item_pokemon_card_horizontal, parent, false)
-            return PokemonCardViewHolder(view, displayWhenOne)
+            return PokemonCardViewHolder(view, displayWhenOne, startDragImmediately)
         }
     }
 }

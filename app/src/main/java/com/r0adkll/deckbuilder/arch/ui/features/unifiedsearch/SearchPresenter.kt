@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi.State.Change
+import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -14,6 +15,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
+@FragmentScope
 class SearchPresenter @Inject constructor(
         val ui: SearchUi,
         val intentions: SearchUi.Intentions,
@@ -23,11 +25,11 @@ class SearchPresenter @Inject constructor(
     override fun start() {
 
         val searchCards = intentions.searchCards()
-                .flatMap { getSearchCardsObservable(ui.state.category, it) }
+                .flatMap { getSearchCardsObservable(it) }
 
         val filterChanges = intentions.filterUpdates()
                 .flatMap { (category, filter) ->
-                    getReSearchCardsObservable(category, filter)
+                    getReSearchCardsObservable(filter)
                 }
 
         val merged = searchCards
@@ -46,38 +48,38 @@ class SearchPresenter @Inject constructor(
         }
         else {
             val query = ui.state.query
-            return repository.search(category, query.replace(",", "|"), filter)
-                    .map { Change.ResultsLoaded(category, it) as Change }
+            return repository.search(SuperType.UNKNOWN, query.replace(",", "|"), filter)
+                    .map { Change.ResultsLoaded(it) as Change }
                     .startWith(listOf(
-                            Change.FilterChanged(category, filter) as Change,
-                            Change.IsLoading(category) as Change
+                            Change.FilterChanged(filter) as Change,
+                            Change.IsLoading as Change
                     ))
-                    .onErrorReturn(handleUnknownError(category))
+                    .onErrorReturn(handleUnknownError())
         }
     }
 
 
-    private fun getSearchCardsObservable(category: SuperType, text: String): Observable<Change> {
-        val filter = ui.state.current()?.filter
-        return if (TextUtils.isEmpty(text) && filter?.isEmpty != false) {
-            Observable.just(Change.ClearQuery(category) as Change)
+    private fun getSearchCardsObservable(text: String): Observable<Change> {
+        val filter = ui.state.filter
+        return if (TextUtils.isEmpty(text) && filter.isEmpty) {
+            Observable.just(Change.ClearQuery as Change)
         }
         else {
-            repository.search(ui.state.category, text.replace(",", "|"), filter)
-                    .map { Change.ResultsLoaded(category, it) as Change }
+            repository.search(SuperType.UNKNOWN, text.replace(",", "|"), filter)
+                    .map { Change.ResultsLoaded(it) as Change }
                     .startWith(listOf(
-                            Change.QuerySubmitted(category, text) as Change,
-                            Change.IsLoading(category) as Change
+                            Change.QuerySubmitted(text) as Change,
+                            Change.IsLoading as Change
                     ))
-                    .onErrorReturn(handleUnknownError(category))
+                    .onErrorReturn(handleUnknownError())
         }
     }
 
 
     companion object {
 
-        private fun handleUnknownError(category: SuperType): (Throwable) -> Change = { t ->
-            Change.Error(category, t.localizedMessage ?: t.message ?: "Unknown error has occured")
+        private fun handleUnknownError(): (Throwable) -> Change = { t ->
+            Change.Error(t.localizedMessage ?: t.message ?: "Unknown error has occured")
         }
     }
 }

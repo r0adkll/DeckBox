@@ -84,6 +84,7 @@ class PokemonCardView @JvmOverloads constructor(
             invalidate()
         }
 
+    var startDragImmediately = false
 
     init {
 
@@ -183,9 +184,25 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        lastTouchX = event?.x ?: 0f
-        lastTouchY = event?.y ?: 0f
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        val dX = event.x - lastTouchX
+        val dY = event.y - lastTouchY
+
+        if (startDragImmediately) {
+            when (event.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    if (Math.abs(dX) > Math.abs(dY)) {
+                        // Trigger drag
+                        startDrag()
+                    }
+                }
+            }
+        }
+
+        lastTouchX = event.x
+        lastTouchY = event.y
+
         return super.onTouchEvent(event)
     }
 

@@ -17,6 +17,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
+import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
@@ -25,18 +26,23 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableCompo
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableModule
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import gov.scstatehouse.houseofcards.di.HasComponent
 import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*
+import javax.inject.Inject
 
 
 class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
     override var state: SearchUi.State = SearchUi.State.DEFAULT
+
+    @Inject lateinit var renderer: SearchRenderer
+    @Inject lateinit var presenter: SearchPresenter
 
     private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
     private lateinit var adapter: SearchResultsRecyclerAdapter
@@ -52,10 +58,10 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = SearchResultsRecyclerAdapter(activity!!)
+        adapter = SearchResultsRecyclerAdapter(activity!!, true)
         adapter.setEmptyView(emptyView)
         adapter.setOnItemLongClickListener { v, card ->
-
+            CardDetailActivity.show(activity!!, v as PokemonCardView)
             true
         }
 
@@ -64,17 +70,25 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
             ImeUtils.hideIme(searchView)
         }
 
-        recycler.layoutManager = GridLayoutManager(activity!!, 3)
+        recycler.layoutManager = GridLayoutManager(activity!!, 6)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
 
+        renderer.start()
+        presenter.start()
+    }
 
+
+    override fun onDestroy() {
+        presenter.stop()
+        renderer.stop()
+        super.onDestroy()
     }
 
 
     override fun render(state: SearchUi.State) {
         this.state = state
-
+        renderer.render(state)
     }
 
 
