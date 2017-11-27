@@ -193,8 +193,8 @@ class PokemonCardView @JvmOverloads constructor(
             when (event.action) {
                 MotionEvent.ACTION_MOVE -> {
                     if (Math.abs(dX) > Math.abs(dY)) {
-                        // Trigger drag
-                        startDrag()
+                        // Trigger drag in 'new' mode, i.e. we plan to add this card, new, to a deck
+                        startDrag(false)
                     }
                 }
             }
@@ -216,14 +216,15 @@ class PokemonCardView @JvmOverloads constructor(
 
 
     @Suppress("DEPRECATION")
-    fun startDrag() {
+    fun startDrag(isEdit: Boolean) {
+        val state = DragState(this, isEdit)
         val clipData = ClipData.newPlainText(KEY_CARD, KEY_CARD)
         val shadowBuilder = CardShadowBuilder(this, PointF(lastTouchX, lastTouchY))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            startDragAndDrop(clipData, shadowBuilder, this, 0)
+            startDragAndDrop(clipData, shadowBuilder, state, 0)
         }
         else {
-            startDrag(clipData, shadowBuilder, this, 0)
+            startDrag(clipData, shadowBuilder, state, 0)
         }
 
         imageAlpha = (255f * 54f).toInt()
@@ -331,6 +332,15 @@ class PokemonCardView @JvmOverloads constructor(
             private const val SHADOW_SIZE_RATIO = 1.25f
         }
     }
+
+
+    /**
+     * Represents the state of a pokemon card drag and drop operation
+     */
+    data class DragState(
+            val view: PokemonCardView,
+            val isEdit: Boolean
+    )
 
 
     companion object {

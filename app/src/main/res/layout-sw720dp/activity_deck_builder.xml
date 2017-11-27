@@ -130,15 +130,26 @@
 
             </LinearLayout>
 
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/appbar_layout"
+                />
+
+
+
             <FrameLayout
                 android:id="@+id/tabletDropZone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/appbar_layout"
-                android:background="@color/black26"
+                android:background="@color/black56"
+                android:alpha="0.0"
                 >
 
                 <ImageView
+                    android:id="@+id/dropBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/dr_dropzone_background"
@@ -156,30 +167,24 @@
                         android:id="@+id/dropCard"
                         android:layout_width="75dp"
                         android:layout_height="94dp"
-                        android:src="@drawable/dr_card"/>
+                        android:src="@drawable/ic_pokemon_card"
+                        />
 
                     <TextView
                         android:id="@+id/dropMessage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="24dp"
 
-                        android:text="Drop to Add"
-                        android:textSize="20sp"
-                        android:textColor="@color/black56"
-                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/tablet_dropzone_message"
+                        android:textSize="24sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
                         />
 
                 </LinearLayout>
 
             </FrameLayout>
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/appbar_layout"
-                />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab"

@@ -22,6 +22,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
@@ -111,14 +112,18 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
 
+        tabletDropZone?.let {
+            TabletDragListener.attach(it, pager, { card ->
+                addPokemon.accept(listOf(card))
+            })
+        }
+
         dropZone.setOnDragListener { v, event ->
             when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> {
-                    val localState = event.localState
-                    if (localState is PokemonCardView) {
-                        localState.card?.let {
-                            dropZoneAdd.setVisible(validator.validate(state.allCards, it) == null)
-                        }
+                    val localState = event.localState as PokemonCardView.DragState
+                    localState.view.card?.let {
+                        dropZoneAdd.setVisible(validator.validate(state.allCards, it) == null)
                     }
 
                     v.animate()
@@ -147,11 +152,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     v.setBackgroundColor(color(R.color.dropzone_red))
                 }
                 DragEvent.ACTION_DROP -> {
-                    val localState = event.localState
-                    if (localState is PokemonCardView) {
-                        localState.card?.let {
-                            removePokemon.accept(it)
-                        }
+                    val localState = event.localState as PokemonCardView.DragState
+                    localState.view.card?.let {
+                        removePokemon.accept(it)
                     }
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
@@ -170,11 +173,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     v.setBackgroundColor(color(R.color.dropzone_green))
                 }
                 DragEvent.ACTION_DROP -> {
-                    val localState = event.localState
-                    if (localState is PokemonCardView) {
-                        localState.card?.let {
-                            addPokemon.accept(listOf(it.copy()))
-                        }
+                    val localState = event.localState as PokemonCardView.DragState
+                    localState.view.card?.let {
+                        addPokemon.accept(listOf(it.copy()))
                     }
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {

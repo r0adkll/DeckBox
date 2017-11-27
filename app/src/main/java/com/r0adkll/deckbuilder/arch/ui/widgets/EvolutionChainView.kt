@@ -153,7 +153,7 @@ class EvolutionChainView @JvmOverloads constructor(
                     view.layoutParams = lp
 
                     view.setOnLongClickListener { v ->
-                        (v as PokemonCardView).startDrag()
+                        (v as PokemonCardView).startDrag(true)
                         true
                     }
 
