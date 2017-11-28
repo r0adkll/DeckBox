@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecy
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -60,9 +62,8 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
 
         adapter = SearchResultsRecyclerAdapter(activity!!, true)
         adapter.setEmptyView(emptyView)
-        adapter.setOnItemLongClickListener { v, card ->
+        adapter.setOnViewItemClickListener { v, _ ->
             CardDetailActivity.show(activity!!, v as PokemonCardView)
-            true
         }
 
         actionFilter.setOnClickListener {
@@ -73,6 +74,13 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         recycler.layoutManager = GridLayoutManager(activity!!, 6)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
+        recycler.addOnScrollListener(KeyboardScrollHideListener(searchView))
+        recycler.setOnDragListener { v, event ->
+            when(event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> ImeUtils.hideIme(searchView)
+            }
+            false
+        }
 
         renderer.start()
         presenter.start()
