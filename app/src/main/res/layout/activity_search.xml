@@ -117,7 +117,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="-64dp"
         android:layout_gravity="end"
-        android:name="com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterFragment"
+        android:name="com.r0adkll.deckbuilder.arch.ui.features.filter.FilterFragment"
         />
 
 </android.support.v4.widget.DrawerLayout>

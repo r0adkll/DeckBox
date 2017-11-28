@@ -1,13 +1,11 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter
+package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.SubTypeAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.SuperTypeAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
-import io.pokemontcg.model.SubType
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.SubTypeAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.SuperTypeAttribute
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 

@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter
+package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer

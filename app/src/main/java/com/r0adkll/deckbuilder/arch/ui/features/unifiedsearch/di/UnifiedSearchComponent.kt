@@ -1,8 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di
 
 
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableComponent
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
 import dagger.Subcomponent

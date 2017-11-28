@@ -23,14 +23,13 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableComponent
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import gov.scstatehouse.houseofcards.di.HasComponent
 import gov.scstatehouse.houseofcards.util.ImeUtils

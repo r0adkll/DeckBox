@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter
+package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
 
 import android.content.res.ColorStateList
@@ -16,12 +16,12 @@ import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterIntentions
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Value
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.UiViewHolder.ViewType.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Value
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.*
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
 import com.r0adkll.deckbuilder.arch.ui.widgets.SeekBarIndicatorView
 import com.r0adkll.deckbuilder.util.bindView

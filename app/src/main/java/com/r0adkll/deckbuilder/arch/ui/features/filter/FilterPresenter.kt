@@ -1,13 +1,13 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter
+package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject

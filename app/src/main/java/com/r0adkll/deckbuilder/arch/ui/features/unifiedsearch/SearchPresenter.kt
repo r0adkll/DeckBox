@@ -48,7 +48,7 @@ class SearchPresenter @Inject constructor(
         }
         else {
             val query = ui.state.query
-            return repository.search(SuperType.UNKNOWN, query.replace(",", "|"), filter)
+            return repository.search(filter.superType, query.replace(",", "|"), filter)
                     .map { Change.ResultsLoaded(it) as Change }
                     .startWith(listOf(
                             Change.FilterChanged(filter) as Change,
@@ -65,7 +65,7 @@ class SearchPresenter @Inject constructor(
             Observable.just(Change.ClearQuery as Change)
         }
         else {
-            repository.search(SuperType.UNKNOWN, text.replace(",", "|"), filter)
+            repository.search(filter.superType, text.replace(",", "|"), filter)
                     .map { Change.ResultsLoaded(it) as Change }
                     .startWith(listOf(
                             Change.QuerySubmitted(text) as Change,

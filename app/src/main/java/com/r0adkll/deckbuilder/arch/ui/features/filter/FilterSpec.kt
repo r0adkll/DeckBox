@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter
+package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
 import android.support.annotation.StringRes
@@ -6,14 +6,14 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterSpec.Spec.AttributeSpec
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.ExpansionVisibility.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.Option.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Value
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterSpec.Spec.AttributeSpec
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.ExpansionVisibility.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.Option.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Value
 import io.pokemontcg.model.SubType.*
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
@@ -72,6 +72,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                 val attrs = ArrayList<FilterAttribute>()
                 attrs += filter.subTypes.map { SubTypeAttribute(it) }
                 attrs += filter.contains.map { ContainsAttribute(it) }
+                filter.superType?.let { attrs += SuperTypeAttribute(it) }
                 return attrs
             }
 
