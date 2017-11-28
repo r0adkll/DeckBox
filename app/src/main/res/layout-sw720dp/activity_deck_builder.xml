@@ -28,11 +28,11 @@
             android:focusableInTouchMode="true"
             >
 
-            <LinearLayout
+            <android.support.design.widget.AppBarLayout
                 android:id="@+id/appbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@color/white">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/appbar"
@@ -41,9 +41,7 @@
                     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:title="@string/activity_deck_builder"
-                    >
-
-                </android.support.v7.widget.Toolbar>
+                    />
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/tabs"
@@ -76,20 +74,19 @@
 
                 </android.support.design.widget.TabLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black12"
-                    />
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:background="@color/black12"-->
+                    <!--/>-->
 
-            </LinearLayout>
+            </android.support.design.widget.AppBarLayout>
 
             <LinearLayout
                 android:id="@+id/dropZone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dropzone_height"
                 android:translationY="@dimen/dropzone_height_inverse"
-                tools:translationY="0dp"
                 >
 
                 <TextView
@@ -136,8 +133,6 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/appbar_layout"
                 />
-
-
 
             <FrameLayout
                 android:id="@+id/tabletDropZone"

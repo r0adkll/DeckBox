@@ -75,6 +75,17 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
         recycler.addOnScrollListener(KeyboardScrollHideListener(searchView))
+
+        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            private var scrollY: Float = 0f
+
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                scrollY += dy
+                searchToolbar.elevation = scrollY.coerceIn(0f, activity?.dpToPx(4f))
+            }
+        })
+
         recycler.setOnDragListener { v, event ->
             when(event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> ImeUtils.hideIme(searchView)
