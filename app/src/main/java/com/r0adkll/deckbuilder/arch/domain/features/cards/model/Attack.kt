@@ -8,7 +8,7 @@ import paperparcel.PaperParcelable
 
 @PaperParcel
 data class Attack(
-        val cost: List<Type>,
+        val cost: List<Type>?,
         val name: String,
         val text: String,
         val damage: String,

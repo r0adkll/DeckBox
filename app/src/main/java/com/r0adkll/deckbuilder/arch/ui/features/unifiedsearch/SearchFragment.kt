@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.DragEvent
@@ -29,6 +30,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrol
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import gov.scstatehouse.houseofcards.di.HasComponent
 import gov.scstatehouse.houseofcards.util.ImeUtils
@@ -40,6 +42,8 @@ import javax.inject.Inject
 
 class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
+
+    private val drawer: DrawerLayout by lazy { view as DrawerLayout }
 
     override var state: SearchUi.State = SearchUi.State.DEFAULT
 
@@ -74,6 +78,9 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         recycler.layoutManager = GridLayoutManager(activity!!, 6)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
+        recycler.setItemViewCacheSize(20)
+        recycler.isDrawingCacheEnabled = true
+        recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
         recycler.addOnScrollListener(KeyboardScrollHideListener(searchView))
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -86,7 +93,7 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
             }
         })
 
-        recycler.setOnDragListener { v, event ->
+        recycler.setOnDragListener { _, event ->
             when(event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> ImeUtils.hideIme(searchView)
             }
@@ -122,7 +129,7 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     override fun categoryChange(): Observable<SuperType> {
-        return Observable.empty()
+        return Observable.just(SuperType.UNKNOWN)
     }
 
 

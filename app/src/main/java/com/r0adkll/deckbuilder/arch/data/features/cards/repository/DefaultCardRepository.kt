@@ -61,7 +61,10 @@ class DefaultCardRepository @Inject constructor(
         if (type != SuperType.UNKNOWN) {
             request.supertype = type.displayName
         }
-        request.name = query
+
+        if (query.isNotBlank()) {
+            request.name = query
+        }
 
         return api.card()
                 .where(request)

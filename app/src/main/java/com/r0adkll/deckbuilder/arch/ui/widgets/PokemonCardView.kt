@@ -23,6 +23,7 @@ import com.ftinc.kit.util.BuildUtils
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import timber.log.Timber
 
 
 class PokemonCardView @JvmOverloads constructor(
@@ -232,6 +233,7 @@ class PokemonCardView @JvmOverloads constructor(
 
 
     private fun loadImage() {
+        Timber.v("Loading pokeImage: (w: $width, h: $height), (mW: $measuredWidth, mH: $measuredHeight)")
         GlideApp.with(this)
                 .load(card?.imageUrl)
                 .placeholder(R.drawable.pokemon_card_back)

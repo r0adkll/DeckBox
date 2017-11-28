@@ -87,6 +87,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dropzone_height"
                 android:translationY="@dimen/dropzone_height_inverse"
+                android:elevation="6dp"
+                android:outlineProvider="none"
                 >
 
                 <TextView

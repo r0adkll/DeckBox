@@ -105,7 +105,6 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             is ExpansionsLoaded -> {
                 val newFilters = filters.toMutableMap()
                 SuperType.values()
-                        .filter { it != SuperType.UNKNOWN }
                         .forEach {
                             val filterState = newFilters[it]!!
                             newFilters[it] = filterState
@@ -191,7 +190,8 @@ interface FilterUi : StateRenderer<FilterUi.State> {
                 State(SuperType.POKEMON, mapOf(
                         SuperType.POKEMON to FilterState.createDefault(SuperType.POKEMON),
                         SuperType.TRAINER to FilterState.createDefault(SuperType.TRAINER),
-                        SuperType.ENERGY to FilterState.createDefault(SuperType.ENERGY)
+                        SuperType.ENERGY to FilterState.createDefault(SuperType.ENERGY),
+                        SuperType.UNKNOWN to FilterState.createDefault(SuperType.UNKNOWN)
                 ), emptyList())
             }
         }

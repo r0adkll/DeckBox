@@ -79,6 +79,7 @@ class SearchPresenter @Inject constructor(
     companion object {
 
         private fun handleUnknownError(): (Throwable) -> Change = { t ->
+            Timber.e(t, "Error occurred during my search")
             Change.Error(t.localizedMessage ?: t.message ?: "Unknown error has occured")
         }
     }
