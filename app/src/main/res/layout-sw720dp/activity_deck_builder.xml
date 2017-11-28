@@ -146,6 +146,7 @@
                 android:layout_below="@+id/appbar_layout"
                 android:background="@color/black56"
                 android:alpha="0.0"
+                tools:alpha="1"
                 >
 
                 <ImageView
@@ -163,10 +164,13 @@
                     android:layout_gravity="center"
                     android:gravity="center">
 
+
                     <ImageView
                         android:id="@+id/dropCard"
                         android:layout_width="75dp"
-                        android:layout_height="94dp"
+                        android:layout_height="100dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:src="@drawable/ic_pokemon_card"
                         />
 
@@ -175,6 +179,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
+                        android:layout_marginStart="64dp"
+                        android:layout_marginEnd="64dp"
+                        android:gravity="center"
 
                         android:text="@string/tablet_dropzone_message"
                         android:textSize="24sp"

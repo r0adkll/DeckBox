@@ -1,10 +1,13 @@
 package com.r0adkll.deckbuilder.arch.ui.components.drag
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
 import android.support.v4.view.ViewPager
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.view.DragEvent
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import com.ftinc.kit.kotlin.extensions.color
@@ -22,6 +25,8 @@ class TabletDragListener(
 ) : View.OnDragListener {
 
     private val ANIM_DURATION = 150L
+    private val WIGGLE_DURATION = 500L
+    private val WIGGLE_ROTATION = 10f
     private val SELECTED_COLOR by lazy { dropZone.color(R.color.secondaryColor) }
     private val UNSELECTED_COLOR by lazy { dropZone.color(R.color.white) }
 
@@ -31,6 +36,7 @@ class TabletDragListener(
 
     private var listener: DropListener? = null
     private var lastPage: Int = 0
+    private var wiggleAnimator: ObjectAnimator? = null
 
 
     override fun onDrag(v: View, event: DragEvent): Boolean {
@@ -96,6 +102,8 @@ class TabletDragListener(
         background.setImageResource(R.drawable.dr_dropzone_background)
         card.imageTintList = null
         message.setTextColor(UNSELECTED_COLOR)
+
+        wiggleAnimator?.end()
     }
 
 
@@ -103,6 +111,14 @@ class TabletDragListener(
         background.setImageResource(R.drawable.dr_dropzone_background_selected)
         card.imageTintList = ColorStateList.valueOf(SELECTED_COLOR)
         message.setTextColor(SELECTED_COLOR)
+
+        wiggleAnimator?.end()
+        wiggleAnimator = ObjectAnimator.ofFloat(card, "rotation", 0f, WIGGLE_ROTATION, 0f, -WIGGLE_ROTATION, 0f)
+        wiggleAnimator?.duration = WIGGLE_DURATION
+        wiggleAnimator?.interpolator = LinearInterpolator()
+        wiggleAnimator?.repeatCount = ObjectAnimator.INFINITE
+        wiggleAnimator?.repeatMode = ObjectAnimator.RESTART
+        wiggleAnimator?.start()
     }
 
 

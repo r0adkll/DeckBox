@@ -100,7 +100,7 @@ class EditDragListener(
                         v.setBackgroundColor(UNSELECTED_COLOR)
                         true
                     }
-                    else -> false
+                    else -> true
                 }
             } else {
                 return false
@@ -149,7 +149,7 @@ class EditDragListener(
                         v.setBackgroundColor(UNSELECTED_COLOR)
                         true
                     }
-                    else -> false
+                    else -> true
                 }
             } else {
                 return false
