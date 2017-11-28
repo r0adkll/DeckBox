@@ -87,8 +87,8 @@
             <LinearLayout
                 android:id="@+id/dropZone"
                 android:layout_width="match_parent"
-                android:layout_height="112dp"
-                android:translationY="-112dp"
+                android:layout_height="@dimen/dropzone_height"
+                android:translationY="@dimen/dropzone_height_inverse"
                 tools:translationY="0dp"
                 >
 
@@ -383,6 +383,5 @@
         android:name="com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment"
         tools:layout="@layout/fragment_search"
         />
-
 
 </LinearLayout>
