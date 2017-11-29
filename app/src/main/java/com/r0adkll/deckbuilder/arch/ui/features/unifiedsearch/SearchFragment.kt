@@ -52,6 +52,7 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
     private lateinit var adapter: SearchResultsRecyclerAdapter
     private lateinit var component: UnifiedSearchComponent
+    private lateinit var toolbarScrollListener: ToolbarScrollListener
 
 
 
@@ -80,17 +81,11 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         recycler.setItemViewCacheSize(20)
         recycler.isDrawingCacheEnabled = true
         recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+
         recycler.addOnScrollListener(KeyboardScrollHideListener(searchView))
 
-        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            private var scrollY: Float = 0f
-
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                scrollY += dy
-                searchToolbar.elevation = scrollY.coerceIn(0f, activity?.dpToPx(4f))
-            }
-        })
+        toolbarScrollListener = ToolbarScrollListener(searchToolbar)
+        recycler.addOnScrollListener(toolbarScrollListener)
 
         recycler.setOnDragListener { _, event ->
             when(event.action) {
@@ -136,6 +131,7 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         return searchView.queryTextChanges()
                 .map { it.toString() }
                 .uiDebounce(500L)
+                .doOnNext { if (it.isBlank()) toolbarScrollListener.reset() }
     }
 
 
@@ -176,6 +172,20 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         drawer.closeDrawer(GravityCompat.END)
     }
 
+    override fun setupComponent() {
+        component = getComponent(DeckBuilderComponent::class)
+                .unifiedSearchComponentBuilder()
+                .unifiedSearchModule(UnifiedSearchModule(this))
+                .filterableModule(FilterableModule(this, this))
+                .build()
+        component.inject(this)
+    }
+
+
+    override fun getComponent(): FilterableComponent {
+        return component
+    }
+
 
     fun wiggleCard(card: PokemonCard) {
         val adapterPosition = adapter.indexOf(card)
@@ -203,18 +213,24 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         }
     }
 
-    override fun setupComponent() {
-        component = getComponent(DeckBuilderComponent::class)
-                .unifiedSearchComponentBuilder()
-                .unifiedSearchModule(UnifiedSearchModule(this))
-                .filterableModule(FilterableModule(this, this))
-                .build()
-        component.inject(this)
+
+    class ToolbarScrollListener(
+            val toolBar: View
+    ) : RecyclerView.OnScrollListener() {
+
+        private val ELEVATION: Float by lazy { toolBar.dpToPx(4f) }
+        private var scrollY: Float = 0f
+
+
+        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            scrollY += dy
+            toolBar.elevation = scrollY.coerceIn(0f, ELEVATION)
+        }
+
+
+        fun reset() {
+            scrollY = 0f
+            toolBar.elevation = 0f
+        }
     }
-
-
-    override fun getComponent(): FilterableComponent {
-        return component
-    }
-
 }

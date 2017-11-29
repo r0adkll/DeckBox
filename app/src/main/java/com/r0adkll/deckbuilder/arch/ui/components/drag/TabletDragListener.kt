@@ -24,7 +24,7 @@ class TabletDragListener(
         val pager: ViewPager
 ) : View.OnDragListener {
 
-    private val ANIM_DURATION = 150L
+    private val ANIM_DURATION = 200L
     private val WIGGLE_DURATION = 500L
     private val WIGGLE_ROTATION = 10f
     private val SELECTED_COLOR by lazy { dropZone.color(R.color.secondaryColor) }
