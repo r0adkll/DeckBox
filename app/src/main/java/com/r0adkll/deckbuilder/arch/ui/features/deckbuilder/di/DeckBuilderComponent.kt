@@ -8,7 +8,7 @@ import dagger.Subcomponent
 
 
 @ActivityScope
-@Subcomponent(modules = arrayOf(DeckBuilderModule::class))
+@Subcomponent(modules = [(DeckBuilderModule::class)])
 interface DeckBuilderComponent {
 
     fun inject(activity: DeckBuilderActivity)

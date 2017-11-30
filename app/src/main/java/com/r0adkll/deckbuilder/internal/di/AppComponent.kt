@@ -22,11 +22,7 @@ import dagger.Component
 
 
 @AppScope
-@Component(modules = arrayOf(
-        AppModule::class,
-        BuildModule::class,
-        DataModule::class
-))
+@Component(modules = [(AppModule::class), (BuildModule::class), (DataModule::class)])
 interface AppComponent {
 
     fun inject(app: DeckApp)
