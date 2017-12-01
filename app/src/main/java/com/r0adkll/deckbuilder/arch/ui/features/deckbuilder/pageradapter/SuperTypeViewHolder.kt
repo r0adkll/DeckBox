@@ -18,6 +18,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChainRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokemonRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import io.pokemontcg.model.SubType
 
 
 abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
@@ -58,6 +59,7 @@ class PokemonViewHolder(
 
     override fun bind(cards: List<StackedPokemonCard>) {
         val evolutions = EvolutionChain.build(cards)
+                .sortedByDescending { chain -> chain.nodes.size }
         adapter.setEvolutions(evolutions)
     }
 }
@@ -76,7 +78,17 @@ class TrainerEnergyViewHolder(
     }
 
     override fun bind(cards: List<StackedPokemonCard>) {
-        adapter.setCards(cards)
+        val sorted = cards.sortedBy { c ->
+            when(c.card.subtype) {
+                SubType.SUPPORTER -> 0
+                SubType.ITEM -> 1
+                SubType.POKEMON_TOOL -> 2
+                SubType.STADIUM -> 3
+                SubType.SPECIAL -> 4
+                else -> 10
+            }
+        }
+        adapter.setCards(sorted)
         adapter.setOnViewItemClickListener { view, _ ->
             pokemonCardClicks.accept(view as PokemonCardView)
         }

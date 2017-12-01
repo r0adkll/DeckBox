@@ -140,7 +140,8 @@ interface SearchUi : StateRenderer<SearchUi.State> {
                 State(SuperType.POKEMON, mapOf(
                         SuperType.POKEMON to Result.createDefault(SuperType.POKEMON),
                         SuperType.TRAINER to Result.createDefault(SuperType.TRAINER),
-                        SuperType.ENERGY to Result.createDefault(SuperType.ENERGY)
+                        SuperType.ENERGY to Result.createDefault(SuperType.ENERGY),
+                        SuperType.UNKNOWN to Result.createDefault(SuperType.UNKNOWN)
                 ), emptyList())
             }
         }

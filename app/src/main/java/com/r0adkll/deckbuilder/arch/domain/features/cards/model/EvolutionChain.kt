@@ -103,7 +103,7 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
             val chain = EvolutionChain()
 
             // We don't want to set the name of a node unless it is the base to account for split evolutions i.e. eevee -> espeon, umbreon, etc.
-            val name = if (card.card.evolvesFrom == null) card.card.name else null
+            val name = card.card.name //if (card.card.evolvesFrom == null) card.card.name else null // FIXME: This makes assembly of incomplete stage 2 chains break (i.e. when you add your Stage 1 and Stage 1 and not the basic)
             val evolvesFrom = card.card.evolvesFrom
             val node = Node(name, evolvesFrom, arrayListOf(card))
             chain.nodes.add(node)

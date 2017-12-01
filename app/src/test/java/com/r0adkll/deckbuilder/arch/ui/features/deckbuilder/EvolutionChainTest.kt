@@ -116,5 +116,41 @@ class EvolutionChainTest {
     }
 
 
+    @Test
+    fun testStage2OutOfOrderChainBuilding() {
+        val pokemons = listOf(
+                createPokemonCard().copy(id = "sm3-10", name = "Alolan Golem-GX", evolvesFrom = "Alolan Graveler", nationalPokedexNumber = 10).stack(),
+                createPokemonCard().copy(id = "sm3-9", name = "Alolan Graveler", evolvesFrom = "Alolan Geodude", nationalPokedexNumber = 9).stack(),
+                createPokemonCard().copy(id = "sm3-8", name = "Alolan Geodude", nationalPokedexNumber = 8).stack()
+        )
+
+        val chains = EvolutionChain.build(pokemons)
+
+        chains.size.shouldEqualTo(1)
+        chains[0].nodes.size.shouldEqualTo(3)
+        chains[0].nodes[0].cards.contains(pokemons[2]).shouldBeTrue()
+        chains[0].nodes[1].cards.contains(pokemons[1]).shouldBeTrue()
+        chains[0].nodes[2].cards.contains(pokemons[0]).shouldBeTrue()
+
+    }
+
+
+    @Test
+    fun testShortStage2OutOfOrderChainBuilding() {
+        val pokemons = listOf(
+                createPokemonCard().copy(id = "sm3-10", name = "Alolan Golem-GX", evolvesFrom = "Alolan Graveler", nationalPokedexNumber = 10).stack(),
+                createPokemonCard().copy(id = "sm3-9", name = "Alolan Graveler", evolvesFrom = "Alolan Geodude", nationalPokedexNumber = 9).stack()
+        )
+
+        val chains = EvolutionChain.build(pokemons)
+
+        chains.size.shouldEqualTo(1)
+        chains[0].nodes.size.shouldEqualTo(2)
+        chains[0].nodes[0].cards.contains(pokemons[1]).shouldBeTrue()
+        chains[0].nodes[1].cards.contains(pokemons[0]).shouldBeTrue()
+
+    }
+
+
     fun PokemonCard.stack(count: Int = 1): StackedPokemonCard = StackedPokemonCard(this, count)
 }

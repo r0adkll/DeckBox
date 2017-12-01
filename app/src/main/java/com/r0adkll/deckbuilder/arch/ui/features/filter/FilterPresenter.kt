@@ -72,7 +72,9 @@ class FilterPresenter @Inject constructor(
                         categoryIntentions.filterChanges().accept(Pair(it.key, it.value.filter))
                     }
                 }
-                .subscribe(ui::render)
+                .subscribe(ui::render, { t ->
+                    Timber.e(t, "Error in filter reduction")
+                })
 
     }
 }
