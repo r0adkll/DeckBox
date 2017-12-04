@@ -38,9 +38,18 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
 
         appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }
 
+        actionImport?.setOnClickListener {
+            val text = deckList.text.toString().trim()
+            if (text.isNotBlank()) {
+                importDeck.accept(text)
+            }
+        }
+
         deckList.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 invalidateOptionsMenu()
+                action_layout?.setVisible(deckList.text.isNotBlank())
+                action_divider?.setVisible(deckList.text.isNotBlank())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -70,7 +79,7 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val importItem = menu.findItem(R.id.action_import)
-        importItem.isVisible = deckList.text.isNotBlank()
+        importItem?.isVisible = deckList.text.isNotBlank()
         return true
     }
 
