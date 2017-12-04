@@ -63,6 +63,11 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         }
 
 
+        override fun toString(): String {
+            return "State(query='$query', filter=$filter, isLoading=$isLoading, error=$error, results=${results.size} Cards)"
+        }
+
+
         companion object {
             @JvmField val CREATOR = PaperParcelSearchUi_State.CREATOR
 

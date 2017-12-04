@@ -37,6 +37,11 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
         abstract fun apply(filter: Filter): List<Item>
 
 
+        override fun toString(): String {
+            return javaClass.simpleName
+
+        }
+
         @PaperParcel
         class TypeSpec(val key: String, @StringRes val title: Int) : Spec() {
 

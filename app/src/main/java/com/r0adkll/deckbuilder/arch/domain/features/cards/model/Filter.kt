@@ -34,6 +34,9 @@ data class Filter(
         }
 
 
+
+
+
     companion object {
         @JvmField val CREATOR = PaperParcelFilter.CREATOR
 
@@ -41,5 +44,9 @@ data class Filter(
             Filter(emptyList(), null, emptyList(), emptyList(), emptyList(), emptyList(), null, null, null, null,
                     emptyList(), emptyList())
         }
+    }
+
+    override fun toString(): String {
+        return "Filter(types=$types, superType=$superType, subTypes=$subTypes, contains=$contains, rarity=$rarity, retreatCost=$retreatCost, attackCost=$attackCost, attackDamage=$attackDamage, hp=$hp, weaknesses=$weaknesses, resistances=$resistances)"
     }
 }

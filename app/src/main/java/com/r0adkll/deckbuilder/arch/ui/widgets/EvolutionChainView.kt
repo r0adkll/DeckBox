@@ -27,7 +27,8 @@ class EvolutionChainView @JvmOverloads constructor(
     private val linkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val linkBarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private var cardWidth: Int = dipToPx(120f)
+    private var defaultCardWidth: Int = dipToPx(120f)
+    private var cardWidth: Int = defaultCardWidth
     private val linkSpacing: Int = dipToPx(24f)
     private val stageSpacing: Int = dipToPx(16f)
     private val nodeSpacing: Int = dipToPx(4f)
@@ -46,12 +47,13 @@ class EvolutionChainView @JvmOverloads constructor(
     init {
         orientation = HORIZONTAL
         setWillNotDraw(false)
-        cardWidth = (dipToPx(382f) - (2 * stageSpacing + 2 * linkSpacing)) / 3
+        defaultCardWidth = (dipToPx(382f) - (2 * stageSpacing + 2 * linkSpacing)) / 3
+        cardWidth = defaultCardWidth
 
-        linkPaint.color = color(R.color.secondaryColor)
+        linkPaint.color = color(R.color.primaryColor)
         linkPaint.style = Paint.Style.FILL
 
-        linkBarPaint.color = color(R.color.secondaryColor)
+        linkBarPaint.color = color(R.color.primaryColor)
         linkBarPaint.style = Paint.Style.STROKE
         linkBarPaint.strokeWidth = linkRadius
     }
@@ -60,15 +62,9 @@ class EvolutionChainView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         cardWidth = ((parent as ViewGroup).measuredWidth - (2 * stageSpacing + 2 * linkSpacing)) / 3
-
-//        configurePokemonCardViews()
-//        (0 until childCount).forEach {
-//            val child = getChildAt(it)
-//            val lp = child.layoutParams as LayoutParams
-//            lp.width = cardWidth
-//            child.layoutParams = lp
-//        }
-
+        if (cardWidth == 0) {
+            cardWidth = defaultCardWidth
+        }
     }
 
 

@@ -28,7 +28,8 @@ class SearchPresenter @Inject constructor(
                 .flatMap { getSearchCardsObservable(it) }
 
         val filterChanges = intentions.filterUpdates()
-                .flatMap { (category, filter) ->
+                .filter { it.first == SuperType.UNKNOWN }
+                .flatMap { (_, filter) ->
                     getReSearchCardsObservable(filter)
                 }
 

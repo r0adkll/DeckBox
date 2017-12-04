@@ -83,6 +83,10 @@ interface FilterUi : StateRenderer<FilterUi.State> {
         fun applySpecification(): List<Item> = spec.apply(filter)
 
 
+        override fun toString(): String {
+            return "FilterState(category=$category, spec=$spec, filter=$filter, visibility=$visibility)"
+        }
+
         companion object {
             @JvmField val CREATOR = PaperParcelFilterUi_FilterState.CREATOR
 

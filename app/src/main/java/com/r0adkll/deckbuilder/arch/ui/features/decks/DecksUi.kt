@@ -51,6 +51,11 @@ interface DecksUi : StateRenderer<DecksUi.State> {
         }
 
 
+        override fun toString(): String {
+            return "State(isLoading=$isLoading, error=$error, decks=${decks.size})"
+        }
+
+
         companion object {
             @JvmField val CREATOR = PaperParcelDecksUi_State.CREATOR
 
