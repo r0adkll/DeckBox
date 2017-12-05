@@ -15,7 +15,6 @@
     </style>
 
     <style name="Theme.DeckBuilder" parent="Base.Theme.DeckBuilder">
-
     </style>
 
     <style name="Theme.DeckBuilder.OSS" parent="Theme.AppCompat.DayNight.DarkActionBar" >

@@ -84,6 +84,7 @@ dependencies {
     implementation "com.android.support:preference-v7:$support_version"
     implementation "com.android.support:preference-v14:$support_version"
     implementation "com.android.support:design:$support_version"
+    implementation "com.android.support:palette-v7:$support_version"
 
     implementation "com.google.firebase:firebase-firestore:$play_version"
     implementation "com.google.firebase:firebase-auth:$play_version"

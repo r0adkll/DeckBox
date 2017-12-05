@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder
 
 
 import android.app.Application
+import com.bumptech.glide.request.target.ViewTarget
 import com.r0adkll.deckbuilder.internal.AppDelegate
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.internal.di.AppModule
@@ -28,6 +29,8 @@ class DeckApp : Application() {
         installFabric()
         installDagger().inject(this)
         installDelegates()
+
+        ViewTarget.setTagId(R.id.glide_tag_id)
     }
 
 
