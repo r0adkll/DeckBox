@@ -10,7 +10,7 @@ variables:
 before_script:
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
-  - wget --quiet --output-document=android-sdk-tools.zip https://dl.google.com/android/repository/platform-tools-latest-linux.zip
+  - wget --quiet --output-document=android-sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
   - mkdir -p android-sdk-linux
   - unzip android-sdk-tools.zip -d android-sdk-linux
   - echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter android-${ANDROID_COMPILE_SDK}
