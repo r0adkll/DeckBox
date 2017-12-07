@@ -12,6 +12,7 @@ before_script:
   - wget --quiet --output-document=android-sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
   - mkdir -p android-sdk-linux
   - unzip android-sdk-tools.zip -d android-sdk-linux
+  - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
   - yes | android-sdk-linux/tools/bin/sdkmanager "platform-tools"
   - yes | android-sdk-linux/tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
   - yes | android-sdk-linux/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
