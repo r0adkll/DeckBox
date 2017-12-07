@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.settings
 
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,13 +8,13 @@ import android.support.design.widget.Snackbar
 import android.support.v14.preference.PreferenceFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.preference.Preference
-import com.crashlytics.android.Crashlytics
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.r0adkll.deckbuilder.BuildConfig
@@ -21,15 +22,11 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
-import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import timber.log.Timber
 import javax.inject.Inject
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-
-
 
 
 class SettingsActivity : BaseActivity() {
