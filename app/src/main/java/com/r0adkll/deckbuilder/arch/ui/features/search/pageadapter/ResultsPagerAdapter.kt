@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
+
 import android.content.Context
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.animation.FastOutSlowInInterpolator
@@ -20,6 +21,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
 
 
+@Suppress("NON_EXHAUSTIVE_WHEN")
 class ResultsPagerAdapter(
         val context: Context,
         val scrollHideListener: KeyboardScrollHideListener,

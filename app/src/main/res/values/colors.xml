@@ -14,4 +14,5 @@
     <color name="dropzone_green">#de64dd17</color>
     <color name="dropzone_green_selected">#64dd17</color>
     <color name="format_stroke">#6F6F6F</color>
+    <color name="windowBackground">#EDEDED</color>
 </resources>

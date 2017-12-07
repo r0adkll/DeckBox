@@ -15,7 +15,6 @@
     </style>
 
     <style name="Theme.DeckBuilder" parent="Base.Theme.DeckBuilder">
-
     </style>
 
     <style name="Theme.DeckBuilder.OSS" parent="Theme.AppCompat.DayNight.DarkActionBar" >
@@ -29,6 +28,9 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="Theme.DeckBuilder.Export">
     </style>
 
 </resources>

@@ -28,11 +28,11 @@
             android:focusableInTouchMode="true"
             >
 
-            <LinearLayout
+            <android.support.design.widget.AppBarLayout
                 android:id="@+id/appbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@color/white">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/appbar"
@@ -41,9 +41,7 @@
                     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:title="@string/activity_deck_builder"
-                    >
-
-                </android.support.v7.widget.Toolbar>
+                    />
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/tabs"
@@ -76,19 +74,21 @@
 
                 </android.support.design.widget.TabLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/black12"
-                    />
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:background="@color/black12"-->
+                    <!--/>-->
 
-            </LinearLayout>
+            </android.support.design.widget.AppBarLayout>
 
             <LinearLayout
                 android:id="@+id/dropZone"
                 android:layout_width="match_parent"
-                android:layout_height="112dp"
-                android:translationY="-112dp"
+                android:layout_height="@dimen/dropzone_height"
+                android:translationY="@dimen/dropzone_height_inverse"
+                android:elevation="6dp"
+                android:outlineProvider="none"
                 >
 
                 <TextView
@@ -135,6 +135,60 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/appbar_layout"
                 />
+
+            <FrameLayout
+                android:id="@+id/tabletDropZone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/appbar_layout"
+                android:background="@color/black56"
+                android:alpha="0.0"
+                tools:alpha="1"
+                >
+
+                <ImageView
+                    android:id="@+id/dropBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/dr_dropzone_background"
+                    android:padding="16dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+
+                    <ImageView
+                        android:id="@+id/dropCard"
+                        android:layout_width="75dp"
+                        android:layout_height="100dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:src="@drawable/ic_pokemon_card"
+                        />
+
+                    <TextView
+                        android:id="@+id/dropMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginStart="64dp"
+                        android:layout_marginEnd="64dp"
+                        android:gravity="center"
+
+                        android:text="@string/tablet_dropzone_message"
+                        android:textSize="24sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        />
+
+                </LinearLayout>
+
+            </FrameLayout>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab"
@@ -325,6 +379,13 @@
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-
+    <!-- TODO: Add Unified search fragment here -->
+    <fragment
+        android:id="@+id/search_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment"
+        tools:layout="@layout/fragment_search"
+        />
 
 </LinearLayout>

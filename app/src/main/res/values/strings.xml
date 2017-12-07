@@ -92,4 +92,7 @@
     <string name="image_loading_error">Error loading image</string>
     <string name="deckbuilder_edit_title">Edit deck</string>
     <string name="activity_licenses">Open source licenses</string>
+    <string name="tablet_dropzone_message">Drop here to add Pokémon Card</string>
+    <string name="action_copy">Copy</string>
+    <string name="deck_copied_format">%1$s copied to clipboard!</string>
 </resources>

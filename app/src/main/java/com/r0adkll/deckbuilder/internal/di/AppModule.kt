@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.internal.di
 
 import android.content.Context
 import com.r0adkll.deckbuilder.DeckApp
+import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import dagger.Module
 import dagger.Provides
 

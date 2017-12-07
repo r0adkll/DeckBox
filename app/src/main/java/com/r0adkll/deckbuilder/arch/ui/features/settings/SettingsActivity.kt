@@ -176,7 +176,7 @@ class SettingsActivity : BaseActivity() {
             if (result.isSuccess) {
                 val acct = result.signInAccount
                 val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
-                val user = FirebaseAuth.getInstance()
+                FirebaseAuth.getInstance()
                         .currentUser?.linkWithCredential(credential)
                         ?.addOnCompleteListener {
                             if (it.isSuccessful) {

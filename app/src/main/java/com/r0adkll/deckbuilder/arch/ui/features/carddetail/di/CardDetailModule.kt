@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.carddetail.di
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi
-import com.r0adkll.deckbuilder.internal.di.ActivityScope
+import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
 import dagger.Provides

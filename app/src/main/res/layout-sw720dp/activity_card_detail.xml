@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:orientation="horizontal"
+    >
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonImageView
+            android:id="@+id/tabletImage"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:transitionName="cardImage"
+            android:src="@drawable/pokemon_card_back"
+            android:scaleType="centerCrop"
+            android:elevation="4dp"
+            />
+
+        <com.ftinc.kit.widget.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:emptyMessage="Error loading image"
+            app:emptyMessageColor="@color/white"
+            app:emptyIcon="@drawable/ic_empty_image_rboken"
+            app:emptyIconColor="@color/white70"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:elevation="4dp"
+            />
+
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/appbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:fitsSystemWindows="true"-->
+            <!--android:background="@color/transparent"-->
+            <!--android:elevation="0dp"-->
+            <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+            <!--app:title=" "-->
+            <!--/>-->
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="500dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/cardTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textSize="@dimen/display_1"
+                tools:text="Espeon-GX"
+                />
+
+            <ImageView
+                android:id="@+id/actionClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_close_black_24dp"
+                android:padding="@dimen/padding_normal"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cardSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_normal"
+            android:textSize="20sp"
+            android:textColor="?android:textColorSecondary"
+            android:drawablePadding="8dp"
+            tools:text="Guardians Rising"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/padding_normal">
+
+            <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+                android:id="@+id/formatStandard"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="start|center_vertical"
+                android:padding="4dp"
+                app:format="standard"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/black"
+                app:fillColor="@color/white"
+                />
+
+            <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+                android:id="@+id/formatExpanded"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="start|center_vertical"
+                android:padding="4dp"
+                app:format="expanded"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/black"
+                app:fillColor="@color/white"
+                />
+
+            <ImageView
+                android:id="@+id/expansionSymbol"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:scaleType="fitCenter"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/variantsHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_normal"
+            android:text="@string/section_variants"
+            android:textSize="14sp"
+            android:textColor="?android:textColorPrimary"
+            android:fontFamily="sans-serif-medium"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/variantsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:clipToPadding="false"
+            />
+
+        <TextView
+            android:id="@+id/evolvesHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_normal"
+            android:text="@string/section_evolves"
+            android:textSize="14sp"
+            android:textColor="?android:textColorPrimary"
+            android:fontFamily="sans-serif-medium"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/evolvesRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:clipToPadding="false"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

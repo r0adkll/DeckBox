@@ -2,16 +2,25 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.di
 
 
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterComponent
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterModule
-import com.r0adkll.deckbuilder.internal.di.ActivityScope
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
 import dagger.Subcomponent
 
 
 @ActivityScope
-@Subcomponent(modules = arrayOf(SearchModule::class))
-interface SearchComponent {
+@Subcomponent(modules = arrayOf(
+        SearchModule::class,
+        FilterableModule::class
+))
+interface SearchComponent : FilterableComponent {
 
     fun inject(activity: SearchActivity)
-    fun plus(module: FilterModule): FilterComponent
+
+    @Subcomponent.Builder
+    interface Builder {
+        fun build(): SearchComponent
+        fun filterableModule(module: FilterableModule): Builder
+        fun searchModule(module: SearchModule): Builder
+    }
 }

@@ -3,6 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.setup
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
+import com.ftinc.kit.kotlin.extensions.color
 import com.google.android.gms.auth.api.Auth
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
@@ -40,6 +42,20 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
         action_continue.setOnClickListener {
             signInAnonymously()
+        }
+
+        cardSwitcher?.let {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        }
+        cardSwitcher?.setOnPaletteChangeListener {
+            val primaryColor = it.dominantSwatch
+            val primaryDarkColor = it.darkVibrantSwatch
+
+            setupRoot?.setBackgroundColor(primaryColor?.rgb ?: color(R.color.primaryColor))
+            window.statusBarColor = primaryDarkColor?.rgb ?: color(R.color.primaryDarkColor)
+            setupTitle?.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
+            setupSubtitle?.setTextColor(primaryColor?.bodyTextColor ?: color(R.color.white))
+            action_continue.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
         }
     }
 

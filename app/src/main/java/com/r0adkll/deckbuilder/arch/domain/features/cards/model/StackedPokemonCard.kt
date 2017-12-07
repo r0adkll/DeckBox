@@ -7,6 +7,15 @@ data class StackedPokemonCard(
 ) {
 
     override fun equals(other: Any?): Boolean {
-        return card == other
+        if (this !== other) {
+            if (other is StackedPokemonCard) {
+                val var2 = other as StackedPokemonCard?
+                return this.card == var2!!.card
+            }
+            return false
+        } else {
+            return true
+        }
     }
+
 }

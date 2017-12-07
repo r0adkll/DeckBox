@@ -22,6 +22,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
+import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
@@ -53,8 +55,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     private val deck: Deck? by bindOptionalParcelable(EXTRA_DECK)
     private val imports: ArrayList<PokemonCard>? by bindOptionalParcelableList(EXTRA_IMPORT)
 
-    @State
-    override var state: DeckBuilderUi.State = DeckBuilderUi.State.DEFAULT
+    @State override var state: DeckBuilderUi.State = DeckBuilderUi.State.DEFAULT
 
     @Inject lateinit var renderer: DeckBuilderRenderer
     @Inject lateinit var presenter: DeckBuilderPresenter
@@ -111,78 +112,26 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
 
-        dropZone.setOnDragListener { v, event ->
-            when (event.action) {
-                DragEvent.ACTION_DRAG_STARTED -> {
-                    val localState = event.localState
-                    if (localState is PokemonCardView) {
-                        localState.card?.let {
-                            dropZoneAdd.setVisible(validator.validate(state.allCards, it) == null)
-                        }
-                    }
-
-                    v.animate()
-                            .translationY(0f)
-                            .setDuration(150L)
-                            .setInterpolator(FastOutLinearInInterpolator())
-                            .start()
-                }
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    v.animate()
-                            .translationY(-dpToPx(104f))
-                            .setDuration(150L)
-                            .setInterpolator(FastOutLinearInInterpolator())
-                            .start()
-                }
-            }
-            true
+        tabletDropZone?.let {
+            TabletDragListener.attach(it, pager, { card ->
+                addPokemon.accept(listOf(card))
+            })
         }
 
-        dropZoneRemove.setOnDragListener { v, event ->
-            when(event.action) {
-                DragEvent.ACTION_DRAG_ENTERED -> {
-                    v.setBackgroundColor(color(R.color.dropzone_red_selected))
-                }
-                DragEvent.ACTION_DRAG_EXITED -> {
-                    v.setBackgroundColor(color(R.color.dropzone_red))
-                }
-                DragEvent.ACTION_DROP -> {
-                    val localState = event.localState
-                    if (localState is PokemonCardView) {
-                        localState.card?.let {
-                            removePokemon.accept(it)
-                        }
-                    }
-                }
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    v.setBackgroundColor(color(R.color.dropzone_red))
-                }
-            }
-            true
-        }
+        EditDragListener.attach(dropZone, object : EditDragListener.DropListener {
 
-        dropZoneAdd.setOnDragListener { v, event ->
-            when(event.action) {
-                DragEvent.ACTION_DRAG_ENTERED -> {
-                    v.setBackgroundColor(color(R.color.dropzone_green_selected))
-                }
-                DragEvent.ACTION_DRAG_EXITED -> {
-                    v.setBackgroundColor(color(R.color.dropzone_green))
-                }
-                DragEvent.ACTION_DROP -> {
-                    val localState = event.localState
-                    if (localState is PokemonCardView) {
-                        localState.card?.let {
-                            addPokemon.accept(listOf(it.copy()))
-                        }
-                    }
-                }
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    v.setBackgroundColor(color(R.color.dropzone_green))
-                }
+            override fun onAddCard(card: PokemonCard) {
+                addPokemon.accept(listOf(card))
             }
-            true
-        }
+
+
+            override fun onRemoveCard(card: PokemonCard) {
+                removePokemon.accept(card)
+            }
+
+        }, { card ->
+            validator.validate(state.allCards, card) == null
+        })
 
         slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
@@ -389,7 +338,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun showSaveAction(hasChanges: Boolean) {
-        supportInvalidateOptionsMenu()
+        invalidateOptionsMenu()
     }
 
 
@@ -439,7 +388,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun showIsSaving(isSaving: Boolean) {
-        supportInvalidateOptionsMenu()
+        invalidateOptionsMenu()
         if (isSaving) {
             if (savingSnackBar == null) {
                 savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saving_message, Snackbar.LENGTH_INDEFINITE)

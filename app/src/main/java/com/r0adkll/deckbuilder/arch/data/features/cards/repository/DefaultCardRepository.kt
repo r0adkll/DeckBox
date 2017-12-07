@@ -29,7 +29,7 @@ class DefaultCardRepository @Inject constructor(
     }
 
 
-    override fun search(type: SuperType, text: String, filter: Filter?): Observable<List<PokemonCard>> {
+    override fun search(type: SuperType?, text: String, filter: Filter?): Observable<List<PokemonCard>> {
         return Observable.zip(getExpansions(), getSearchRequest(type, text, filter), BiFunction { expansions, cards ->
             cards.map { CardMapper.to(it, expansions) }
         })
@@ -53,13 +53,18 @@ class DefaultCardRepository @Inject constructor(
     }
 
 
-    private fun getSearchRequest(type: SuperType, query: String, filter: Filter?): Observable<List<Card>> {
+    private fun getSearchRequest(type: SuperType?, query: String, filter: Filter?): Observable<List<Card>> {
         val request = filter?.let {
             FilterMapper.to(it)
         } ?: CardQueryBuilder()
 
-        request.supertype = type.displayName
-        request.name = query
+        if (type != null && type != SuperType.UNKNOWN) {
+            request.supertype = type.displayName
+        }
+
+        if (query.isNotBlank()) {
+            request.name = query
+        }
 
         return api.card()
                 .where(request)

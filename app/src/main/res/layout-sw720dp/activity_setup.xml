@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/setupRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="?attr/colorPrimary">
+
+    <com.r0adkll.deckbuilder.arch.ui.widgets.CardSwitcher
+        android:id="@+id/cardSwitcher"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="start|center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/setupTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textSize="@dimen/display_2"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-medium"
+            />
+
+        <TextView
+            android:id="@+id/setupSubtitle"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="start"
+            android:text="@string/app_description"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="-2dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/action_signin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:buttonSize="wide"
+                />
+
+            <TextView
+                android:id="@+id/action_continue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:padding="@dimen/padding_small"
+                android:text="@string/action_continue"
+                android:textColor="@color/white87"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:background="?attr/selectableItemBackground"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

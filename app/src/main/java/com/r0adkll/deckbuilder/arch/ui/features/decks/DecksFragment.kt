@@ -18,6 +18,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapt
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
@@ -57,7 +58,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         })
 
         adapter.setEmptyView(empty_view)
-        recycler.layoutManager = GridLayoutManager(activity, 2)
+        recycler.layoutManager = GridLayoutManager(activity, if (ScreenUtils.smallestWidth(resources, ScreenUtils.Config.TABLET_10)) 6 else 2)
         recycler.adapter = adapter
 
         fab.setOnClickListener {

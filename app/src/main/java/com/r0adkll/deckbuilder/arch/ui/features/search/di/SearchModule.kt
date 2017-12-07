@@ -1,12 +1,10 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.di
 
 
-import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterIntentions
-import com.r0adkll.deckbuilder.internal.di.ActivityScope
+import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
 import dagger.Provides
@@ -16,19 +14,11 @@ import dagger.Provides
 class SearchModule(val activity: SearchActivity) {
 
     @Provides @ActivityScope
-    fun provideDrawerInteractor(): DrawerInteractor = activity
-
-
-    @Provides @ActivityScope
     fun provideUi(): SearchUi = activity
 
 
     @Provides @ActivityScope
     fun provideIntentions(): SearchUi.Intentions = activity
-
-
-    @Provides @ActivityScope
-    fun provideCategoryIntentions(): FilterIntentions = activity
 
 
     @Provides @ActivityScope
