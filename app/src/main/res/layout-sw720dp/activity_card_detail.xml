@@ -36,6 +36,7 @@
             app:emptyIconColor="@color/white70"
             android:visibility="gone"
             tools:visibility="visible"
+            android:elevation="4dp"
             />
 
         <!--<android.support.v7.widget.Toolbar-->
