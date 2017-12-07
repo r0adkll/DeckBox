@@ -128,30 +128,34 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         val number = "#${card.number}"
         val name = " ${card.name}"
         val spannable = SpannableString("$number$name")
-        spannable.setSpan(ForegroundColorSpan(color(R.color.white70)), 0, number.length, 0)
+        val color = if (slidingLayout == null) color(R.color.black56) else color(R.color.white70)
+        spannable.setSpan(ForegroundColorSpan(color), 0, number.length, 0)
         cardTitle.text = spannable
         cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
 
-//        supportPostponeEnterTransition()
         emptyView.visible()
         emptyView.setLoading(true)
-        GlideApp.with(this)
+        var request = GlideApp.with(this)
                 .load(card.imageUrlHiRes)
                 .transition(withCrossFade())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-//                        supportStartPostponedEnterTransition()
                         emptyView.setEmptyMessage(R.string.image_loading_error)
                         return false
                     }
 
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-//                        supportStartPostponedEnterTransition()
                         emptyView.gone()
                         return false
                     }
                 })
-                .into(image)
+
+        if (slidingLayout == null) {
+            request = request.placeholder(R.drawable.pokemon_card_back)
+        }
+
+        request.into(image ?: tabletImage)
+
 
         GlideApp.with(this)
                 .load(card.expansion?.symbolUrl)
@@ -161,11 +165,13 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }
 
+        actionClose?.setOnClickListener { supportFinishAfterTransition() }
 
-        slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+
+        slidingLayout?.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View?, slideOffset: Float) {
                 val rotation = 180f * slideOffset
-                panelArrow.rotation = rotation
+                panelArrow?.rotation = rotation
             }
 
             override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
