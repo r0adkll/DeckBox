@@ -250,7 +250,9 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         if (itemClickListener != null) {
             vh.itemView.setOnClickListener { v ->
                 val position = vh.adapterPosition
-                itemClickListener!!.onItemClick(v, items[position], position)
+                if (position != RecyclerView.NO_POSITION) {
+                    itemClickListener!!.onItemClick(v, items[position], position)
+                }
             }
         }
 
@@ -258,7 +260,11 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         if (itemLongClickListener != null) {
             vh.itemView.setOnLongClickListener { v ->
                 val position = vh.adapterPosition
-                itemLongClickListener!!.onItemLongClick(v, items[position], position)
+                if (position != RecyclerView.NO_POSITION) {
+                    itemLongClickListener!!.onItemLongClick(v, items[position], position)
+                } else {
+                    false
+                }
             }
         }
     }
