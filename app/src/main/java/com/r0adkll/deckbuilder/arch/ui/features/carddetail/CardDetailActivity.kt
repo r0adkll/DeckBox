@@ -165,7 +165,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }
 
-        actionClose?.setOnClickListener { supportFinishAfterTransition() }
+        actionClose?.setOnClickListener { finish() }
 
 
         slidingLayout?.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
