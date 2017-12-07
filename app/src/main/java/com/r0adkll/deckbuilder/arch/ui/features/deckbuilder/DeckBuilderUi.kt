@@ -33,6 +33,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun showIsStandard(isStandard: Boolean)
         fun showIsExpanded(isExpanded: Boolean)
         fun showIsSaving(isSaving: Boolean)
+        fun showError(description: String)
         fun showSaveAction(hasChanges: Boolean)
         fun showCardCount(count: Int)
         fun showPokemonCards(cards: List<StackedPokemonCard>)
@@ -46,6 +47,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
     @PaperParcel
     data class State(
             val isSaving: Boolean,
+            val error: String?,
             val deck: Deck?,
             val pokemonCards: List<PokemonCard>,
             val trainerCards: List<PokemonCard>,
@@ -81,7 +83,8 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
 
         fun reduce(change: Change): State = when(change) {
-            Change.Saving -> this.copy(isSaving = true)
+            Change.Saving -> this.copy(isSaving = true, error = null)
+            is Change.Error -> this.copy(error = change.description)
             is Change.AddCards -> {
                 val pokemons = change.cards.filter { it.supertype == SuperType.POKEMON }
                 val trainers = change.cards.filter { it.supertype == SuperType.TRAINER }
@@ -98,13 +101,14 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             }
             is Change.EditName -> this.copy(name = change.name)
             is Change.EditDescription -> this.copy(description = change.description)
-            is Change.DeckUpdated -> this.copy(deck = change.deck, isSaving = false)
+            is Change.DeckUpdated -> this.copy(deck = change.deck, isSaving = false, error = null)
             is Change.Validated -> this.copy(validation = change.validation)
         }
 
 
         sealed class Change(val logText: String) {
             object Saving : Change("user -> is saving deck")
+            class Error(val description: String) : Change("error -> $description")
             class AddCards(val cards: List<PokemonCard>) : Change("user -> added ${cards.size} cards")
             class RemoveCard(val card: PokemonCard) : Change("user -> removing ${card.name}")
             class EditName(val name: String) : Change("user -> name changed $name")
@@ -117,7 +121,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(false, null, emptyList(), emptyList(), emptyList(), null, null, Validation(false, false))
+                State(false, null, null, emptyList(), emptyList(), emptyList(), null, null, Validation(false, false))
             }
         }
     }

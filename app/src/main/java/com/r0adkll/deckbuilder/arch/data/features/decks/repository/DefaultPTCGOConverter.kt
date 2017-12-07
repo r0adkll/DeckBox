@@ -18,6 +18,7 @@ class DefaultPTCGOConverter @Inject constructor(
 
     override fun import(deckList: String): Observable<List<PokemonCard>> {
         return repository.getExpansions()
+                .onErrorReturnItem(emptyList())
                 .flatMap {
                     val cards = parsePtcgoDeckList(it, deckList)
                     val ids = cards.map { it.id }

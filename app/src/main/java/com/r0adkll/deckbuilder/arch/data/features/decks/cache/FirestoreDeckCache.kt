@@ -1,5 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.cache
 
+
+import android.annotation.SuppressLint
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.CollectionReference
@@ -11,10 +13,10 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.util.RxFirebase
 import io.reactivex.Observable
-import timber.log.Timber
 import javax.inject.Inject
 
 
+@SuppressLint("CheckResult")
 class FirestoreDeckCache @Inject constructor(
         val firestore: FirebaseFirestore,
         val cardRepository: CardRepository

@@ -1,17 +1,20 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.*
+import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
 
+@SuppressLint("CheckResult")
 class DeckBuilderPresenter @Inject constructor(
         val ui: DeckBuilderUi,
         val intentions: DeckBuilderUi.Intentions,
@@ -29,6 +32,7 @@ class DeckBuilderPresenter @Inject constructor(
                     validator.validate(ui.state.allCards.plus(cards))
                             .map { Change.Validated(it) as Change }
                             .startWith(Change.AddCards(cards) as Change)
+                            .onErrorReturn(handleUnknownError)
                 }
 
         val removeCard = intentions.removeCard()
@@ -36,6 +40,7 @@ class DeckBuilderPresenter @Inject constructor(
                     validator.validate(ui.state.allCards.minus(card))
                             .map { Change.Validated(it) as Change }
                             .startWith(Change.RemoveCard(card) as Change)
+                            .onErrorReturn(handleUnknownError)
                 }
 
         val editName = intentions.editDeckName()
@@ -75,5 +80,15 @@ class DeckBuilderPresenter @Inject constructor(
         }
 
         return persistable.startWith(Change.Saving)
+                .onErrorReturn(handleUnknownError)
+    }
+
+
+    companion object {
+
+        private val handleUnknownError: (Throwable) -> Change = { t ->
+            Timber.e(t, "Error processing deck")
+            Change.Error(t.localizedMessage)
+        }
     }
 }

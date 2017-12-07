@@ -30,11 +30,12 @@ class DeckViewHolder(
 
     fun bind(deck: Deck) {
         title.text = deck.name
-        val firstCard = deck.cards.first()
-        GlideApp.with(itemView)
-                .load(firstCard.imageUrl)
-                .placeholder(R.drawable.pokemon_card_back)
-                .into(image)
+        deck.cards.firstOrNull()?.let {
+            GlideApp.with(itemView)
+                    .load(it.imageUrl)
+                    .placeholder(R.drawable.pokemon_card_back)
+                    .into(image)
+        }
 
         actionShare.setOnClickListener { shareClicks.accept(deck) }
         actionDuplicate.setOnClickListener { duplicateClicks.accept(deck) }

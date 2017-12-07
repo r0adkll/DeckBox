@@ -23,6 +23,7 @@ class FilterPresenter @Inject constructor(
     override fun start() {
 
         val loadExpansions = repository.getExpansions()
+                .onErrorReturnItem(emptyList())
                 .map { it.asReversed() }
                 .map { Change.ExpansionsLoaded(it) as Change }
 

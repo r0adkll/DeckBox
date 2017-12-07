@@ -47,6 +47,18 @@ class DeckBuilderRenderer(
                 .subscribe { actions.showIsSaving(it) }
 
         disposables += state
+                .mapNullable { it.error }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe {
+                    val value = it.value
+                    if (value != null) {
+                        actions.showError(value)
+                    }
+                }
+
+        disposables += state
                 .map { it.pokemonCards }
                 .distinctUntilChanged()
                 .map(stackCards())

@@ -29,6 +29,7 @@ class DefaultDeckValidator @Inject constructor(
 
     override fun validate(cards: List<PokemonCard>): Observable<Validation> {
         return repository.getExpansions()
+                .onErrorReturnItem(emptyList())
                 .map { expansions ->
                     val standardLegal = cards.all { card ->
                         if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {

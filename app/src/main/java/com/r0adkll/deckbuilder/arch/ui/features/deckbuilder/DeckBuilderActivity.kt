@@ -37,6 +37,7 @@ import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.*
@@ -413,6 +414,11 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 savingSnackBar?.show()
             }
         }
+    }
+
+
+    override fun showError(description: String) {
+        snackbar(description)
     }
 
 

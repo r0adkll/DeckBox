@@ -10,8 +10,6 @@ import com.r0adkll.deckbuilder.internal.di.DaggerAppComponent
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import javax.inject.Inject
-import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
 
 
 class DeckApp : Application() {
@@ -26,7 +24,6 @@ class DeckApp : Application() {
     override fun onCreate() {
         super.onCreate()
         installLeakCanary()
-        installFabric()
         installDagger().inject(this)
         installDelegates()
 
@@ -41,15 +38,6 @@ class DeckApp : Application() {
 
     fun installLeakCanary() {
         refWatcher = LeakCanary.install(this)
-    }
-
-
-    fun installFabric() {
-        val fabric = Fabric.Builder(this)
-                .kits(Crashlytics())
-//                .debuggable(BuildConfig.DEBUG)
-                .build()
-        Fabric.with(fabric)
     }
 
 

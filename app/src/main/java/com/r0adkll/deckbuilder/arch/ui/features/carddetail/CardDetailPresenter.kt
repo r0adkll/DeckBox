@@ -24,11 +24,15 @@ class CardDetailPresenter @Inject constructor(
                 .map { Change.Validated(it) as Change }
 
         val loadVariants = repository.search(ui.state.card!!.supertype, "\"${ui.state.card!!.name}\"")
+                // FIXME: Replace with actual error implementation
+                .onErrorReturnItem(emptyList())
                 .map { it.filter { it.id != ui.state.card!!.id } }
                 .map { Change.VariantsLoaded(it) as Change }
 
         val loadEvolves = ui.state.card!!.evolvesFrom?.let {
+            // FIXME: Replace with actual error implementation
             repository.search(ui.state.card!!.supertype, "\"$it\"")
+                    .onErrorReturnItem(emptyList())
                     .map { Change.EvolvesFromLoaded(it) as Change }
         } ?: Observable.empty()
 
