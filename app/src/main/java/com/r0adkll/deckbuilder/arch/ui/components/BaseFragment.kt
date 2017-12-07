@@ -54,7 +54,9 @@ abstract class BaseFragment : Fragment() {
 
 
     protected fun <C : Any> getComponent(componentType: KClass<C>): C {
-        if (activity is HasComponent<*>) {
+        if (parentFragment is HasComponent<*>) {
+            return componentType.java.cast((parentFragment as HasComponent<*>).getComponent())
+        } else if (activity is HasComponent<*>) {
             return componentType.java.cast((activity as HasComponent<*>).getComponent())!!
         }
         return componentType.java.cast((activity as HasComponent<*>).getComponent())!!

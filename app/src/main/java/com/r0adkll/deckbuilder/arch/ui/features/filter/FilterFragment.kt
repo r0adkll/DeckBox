@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter
+package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
 import android.os.Bundle
@@ -11,13 +11,12 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
-import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.State
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.FilterRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.di.FilterModule
-import io.pokemontcg.model.SubType
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.FilterRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterModule
+import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_filter.*
@@ -72,7 +71,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
 
     override fun setupComponent() {
-        getComponent(SearchComponent::class)
+        getComponent(FilterableComponent::class)
                 .plus(FilterModule(this))
                 .inject(this)
     }

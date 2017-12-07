@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter.di
+package com.r0adkll.deckbuilder.arch.ui.features.filter.di
 
 
 import com.jakewharton.rxrelay2.Relay

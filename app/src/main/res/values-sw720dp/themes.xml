@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.DeckBuilder.Detail" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/primaryColor</item>
+        <item name="windowNoTitle">true</item>
+        <!--<item name="android:windowContentTransitions">true</item>-->
+    </style>
+
+    <style name="Theme.DeckBuilder.Export" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/primaryColor</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+</resources>

@@ -13,6 +13,10 @@ object FilterMapper {
             builder.types = filter.types.joinToString(separator = "|")
         }
 
+        if (filter.superType != null) {
+
+        }
+
         if (filter.subTypes.isNotEmpty()) {
             builder.subtype = filter.subTypes.joinToString(separator = "|")
         }

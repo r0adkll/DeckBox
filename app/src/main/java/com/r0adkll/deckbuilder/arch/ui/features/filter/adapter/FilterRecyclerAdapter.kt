@@ -1,11 +1,11 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter
+package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterIntentions
 
 
 class FilterRecyclerAdapter(

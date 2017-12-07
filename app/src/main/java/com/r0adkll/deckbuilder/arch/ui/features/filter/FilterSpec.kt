@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter
+package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
 import android.support.annotation.StringRes
@@ -6,14 +6,14 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterSpec.Spec.AttributeSpec
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.ExpansionVisibility.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.SubTypeAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.Option.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Modifier.*
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item.ValueRange.Value
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterSpec.Spec.AttributeSpec
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.ExpansionVisibility.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.Option.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Value
 import io.pokemontcg.model.SubType.*
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
@@ -36,6 +36,11 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
          */
         abstract fun apply(filter: Filter): List<Item>
 
+
+        override fun toString(): String {
+            return javaClass.simpleName
+
+        }
 
         @PaperParcel
         class TypeSpec(val key: String, @StringRes val title: Int) : Spec() {
@@ -71,7 +76,8 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
             private fun getFilteredAttributes(filter: Filter): List<FilterAttribute> {
                 val attrs = ArrayList<FilterAttribute>()
                 attrs += filter.subTypes.map { SubTypeAttribute(it) }
-                attrs += filter.contains.map { FilterAttribute.ContainsAttribute(it) }
+                attrs += filter.contains.map { ContainsAttribute(it) }
+                filter.superType?.let { attrs += SuperTypeAttribute(it) }
                 return attrs
             }
 
@@ -205,7 +211,49 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
             SuperType.POKEMON -> createPokemon(expansions, visibility)
             SuperType.TRAINER -> createTrainer(expansions, visibility)
             SuperType.ENERGY -> createEnergy(expansions, visibility)
-            else -> createPokemon(expansions, visibility)
+            SuperType.UNKNOWN -> createAll(expansions, visibility)
+        }
+
+
+        fun createAll(expansions: List<Expansion>,
+                      visibility: FilterUi.ExpansionVisibility): FilterSpec {
+            return FilterSpec(
+                    listOf(
+                            Spec.TypeSpec("type", R.string.filter_header_type),
+                            AttributeSpec(listOf(
+                                    SuperTypeAttribute(SuperType.POKEMON),
+                                    SuperTypeAttribute(SuperType.TRAINER),
+                                    SuperTypeAttribute(SuperType.ENERGY),
+                                    SubTypeAttribute(BASIC),
+                                    SubTypeAttribute(SPECIAL),
+                                    SubTypeAttribute(STAGE_1),
+                                    SubTypeAttribute(STAGE_2),
+                                    SubTypeAttribute(MEGA),
+                                    SubTypeAttribute(EX),
+                                    SubTypeAttribute(GX),
+                                    SubTypeAttribute(LEVEL_UP),
+                                    SubTypeAttribute(BREAK),
+                                    SubTypeAttribute(LEGEND),
+                                    SubTypeAttribute(RESTORED),
+                                    SubTypeAttribute(ITEM),
+                                    SubTypeAttribute(STADIUM),
+                                    SubTypeAttribute(SUPPORTER),
+                                    SubTypeAttribute(STADIUM),
+                                    SubTypeAttribute(TECHNICAL_MACHINE),
+                                    SubTypeAttribute(POKEMON_TOOL),
+                                    SubTypeAttribute(ROCKETS_SECRET_MACHINE),
+                                    ContainsAttribute("Ability")
+                            )),
+                            Spec.ExpansionSpec(expansions, visibility),
+                            Spec.RaritySpec(Rarity.values().toList()),
+                            Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost, 0, 4),
+                            Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost, 0, 5),
+                            Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage, 0, 300),
+                            Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, 0, 250),
+                            Spec.TypeSpec("weaknesses", R.string.filter_header_weaknesses),
+                            Spec.TypeSpec("resistances", R.string.filter_header_resistances)
+                    )
+            )
         }
 
 
@@ -225,7 +273,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                                     SubTypeAttribute(BREAK),
                                     SubTypeAttribute(LEGEND),
                                     SubTypeAttribute(RESTORED),
-                                    FilterAttribute.ContainsAttribute("Ability")
+                                    ContainsAttribute("Ability")
                             )),
                             Spec.ExpansionSpec(expansions, visibility),
                             Spec.RaritySpec(Rarity.values().toList()),

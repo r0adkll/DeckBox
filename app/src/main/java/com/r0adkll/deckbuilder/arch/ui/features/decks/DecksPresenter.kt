@@ -4,7 +4,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckReposit
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State.*
-import com.r0adkll.deckbuilder.internal.di.FragmentScope
+import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject

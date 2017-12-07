@@ -57,6 +57,7 @@ class CardCountView @JvmOverloads constructor(
     }
 
 
+    @Suppress("NON_EXHAUSTIVE_WHEN")
     fun count(superType: SuperType, cards: List<PokemonCard>) {
         val count = cards.count { it.supertype == superType }.toString()
         when(superType) {
@@ -67,11 +68,11 @@ class CardCountView @JvmOverloads constructor(
     }
 
 
+    @Suppress("NON_EXHAUSTIVE_WHEN")
     fun countStacks(superType: SuperType, cards: List<StackedPokemonCard>) {
         var count = 0
         cards.filter { it.card.supertype == superType }
                 .forEach { count += it.count }
-
         when(superType) {
             SuperType.POKEMON -> pokemonCountView.text = count.toString()
             SuperType.TRAINER -> trainerCountView.text = count.toString()

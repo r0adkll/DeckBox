@@ -60,7 +60,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
         disposable = Observable.interval(25L, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    cards.forEachIndexed { index, card ->
+                    cards.forEachIndexed { _, card ->
                         card.translationX -= dipToPx(0.75f)
                     }
 

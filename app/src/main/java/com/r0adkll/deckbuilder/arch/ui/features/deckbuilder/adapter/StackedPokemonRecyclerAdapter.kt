@@ -27,7 +27,7 @@ class StackedPokemonRecyclerAdapter(
         val card = items[i]
         vh.bind(card.card, card.count)
         vh.itemView.setOnLongClickListener { v ->
-            (v as PokemonCardView).startDrag()
+            (v as PokemonCardView).startDrag(true)
             true
         }
     }

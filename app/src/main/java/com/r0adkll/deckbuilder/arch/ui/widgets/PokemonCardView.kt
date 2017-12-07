@@ -23,6 +23,7 @@ import com.ftinc.kit.util.BuildUtils
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import timber.log.Timber
 
 
 class PokemonCardView @JvmOverloads constructor(
@@ -84,6 +85,7 @@ class PokemonCardView @JvmOverloads constructor(
             invalidate()
         }
 
+    var startDragImmediately = false
 
     init {
 
@@ -183,9 +185,25 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        lastTouchX = event?.x ?: 0f
-        lastTouchY = event?.y ?: 0f
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        val dX = event.x - lastTouchX
+        val dY = event.y - lastTouchY
+
+        if (startDragImmediately) {
+            when (event.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    if (Math.abs(dX) > Math.abs(dY)) {
+                        // Trigger drag in 'new' mode, i.e. we plan to add this card, new, to a deck
+                        startDrag(false)
+                    }
+                }
+            }
+        }
+
+        lastTouchX = event.x
+        lastTouchY = event.y
+
         return super.onTouchEvent(event)
     }
 
@@ -198,14 +216,16 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
-    fun startDrag() {
+    @Suppress("DEPRECATION")
+    fun startDrag(isEdit: Boolean) {
+        val state = DragState(this, isEdit)
         val clipData = ClipData.newPlainText(KEY_CARD, KEY_CARD)
         val shadowBuilder = CardShadowBuilder(this, PointF(lastTouchX, lastTouchY))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            startDragAndDrop(clipData, shadowBuilder, this, 0)
+            startDragAndDrop(clipData, shadowBuilder, state, 0)
         }
         else {
-            startDrag(clipData, shadowBuilder, this, 0)
+            startDrag(clipData, shadowBuilder, state, 0)
         }
 
         imageAlpha = (255f * 54f).toInt()
@@ -213,6 +233,7 @@ class PokemonCardView @JvmOverloads constructor(
 
 
     private fun loadImage() {
+        Timber.v("Loading pokeImage: (w: $width, h: $height), (mW: $measuredWidth, mH: $measuredHeight)")
         GlideApp.with(this)
                 .load(card?.imageUrl)
                 .placeholder(R.drawable.pokemon_card_back)
@@ -221,6 +242,7 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
+    @Suppress("NON_EXHAUSTIVE_WHEN")
     private fun drawEvolutionNotches(canvas: Canvas) {
         val y = boundsF?.centerY() ?: 0f / 2f
         when(evolution) {
@@ -314,8 +336,17 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
+    /**
+     * Represents the state of a pokemon card drag and drop operation
+     */
+    data class DragState(
+            val view: PokemonCardView,
+            val isEdit: Boolean
+    )
+
+
     companion object {
         @JvmField val KEY_CARD = "PokemonCardView.Card"
-        private const val RATIO = 1.3959183673f
+        const val RATIO = 1.3959183673f
     }
 }

@@ -1,6 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter
 
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +17,7 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.Schedulers
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.activity_deck_exporter.*
 import javax.inject.Inject
 
@@ -22,6 +25,10 @@ import javax.inject.Inject
 class DeckExportActivity : BaseActivity() {
 
     private val deck: Deck by bindParcelable(EXTRA_DECK)
+
+    private val clipboard: ClipboardManager by lazy {
+        getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    }
 
     @Inject lateinit var schedulers: Schedulers
     @Inject lateinit var converter: PTCGOConverter
@@ -32,6 +39,19 @@ class DeckExportActivity : BaseActivity() {
         setContentView(R.layout.activity_deck_exporter)
 
         appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }
+
+        actionCopy?.setOnClickListener {
+            val text = deckList.text.toString()
+            val clip = ClipData.newPlainText(deck.name, text)
+            clipboard.primaryClip = clip
+            toast(getString(R.string.deck_copied_format, deck.name))
+        }
+
+        actionShare?.setOnClickListener {
+            val text = deckList.text.toString()
+            val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")
+            startActivity(intent)
+        }
 
         disposables += converter.export(deck)
                 .subscribeOn(schedulers.comp)

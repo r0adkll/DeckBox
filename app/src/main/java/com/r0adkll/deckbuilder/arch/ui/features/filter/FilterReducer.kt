@@ -1,12 +1,12 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.filter
+package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.FilterUi.FilterAttribute.SubTypeAttribute
-import com.r0adkll.deckbuilder.arch.ui.features.search.filter.adapter.Item
-import io.pokemontcg.model.SubType
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.SubTypeAttribute
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.SuperTypeAttribute
+import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
 
@@ -23,6 +23,7 @@ object FilterReducer {
 
 
     fun reduceAttribute(attribute: FilterAttribute, filter: Filter): Filter = when(attribute) {
+        is SuperTypeAttribute -> filter.copy(superType = filter.toggle(attribute.superType))
         is SubTypeAttribute -> filter.copy(subTypes = filter.subTypes.toggle(attribute.subType))
         is FilterAttribute.ContainsAttribute -> filter.copy(contains = filter.contains.toggle(attribute.attribute))
     }
@@ -56,4 +57,8 @@ object FilterReducer {
             this.plus(value)
         }
     }
+
+
+    private fun Filter.toggle(value: SuperType): SuperType? =
+            if (this.superType == value) null else value
 }

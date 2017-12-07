@@ -16,17 +16,13 @@ import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
-import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
+import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import dagger.Component
 
 
 @AppScope
-@Component(modules = arrayOf(
-        AppModule::class,
-        BuildModule::class,
-        DataModule::class
-))
+@Component(modules = [(AppModule::class), (BuildModule::class), (DataModule::class)])
 interface AppComponent {
 
     fun inject(app: DeckApp)
@@ -37,7 +33,8 @@ interface AppComponent {
 
     fun plus(module: HomeModule): HomeComponent
     fun plus(module: DeckBuilderModule): DeckBuilderComponent
-    fun plus(module: SearchModule): SearchComponent
     fun plus(module: CardDetailModule): CardDetailComponent
     fun plus(module: DeckImportModule): DeckImportComponent
+
+    fun searchComponentBuilder(): SearchComponent.Builder
 }
