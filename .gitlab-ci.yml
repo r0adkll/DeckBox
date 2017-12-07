@@ -13,12 +13,9 @@ before_script:
   - wget --quiet --output-document=android-sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
   - mkdir -p android-sdk-linux
   - unzip android-sdk-tools.zip -d android-sdk-linux
-  - echo y | android-sdk-linux/tools/android update sdk --no-ui --all --filter android-${ANDROID_COMPILE_SDK}
-  - echo y | android-sdk-linux/tools/android update sdk --no-ui --all --filter platform-tools
-  - echo y | android-sdk-linux/tools/android update sdk --no-ui --all --filter build-tools-${ANDROID_BUILD_TOOLS}
-  - echo y | android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-android-m2repository
-  - echo y | android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-google-google_play_services
-  - echo y | android-sdk-linux/tools/android update sdk --no-ui --all --filter extra-google-m2repository
+  - echo y | android-sdk-linux/tools/bin/sdkmanager --update
+  - echo y | android-sdk-linux/tools/bin/sdkmanager "platforms:android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" "extras;google;m2repository" "extras;android;m2repository"
+  - echo y | android-sdk-linux/tools/bin/sdkmanager --licenses
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/
   - chmod +x ./gradlew
