@@ -347,6 +347,6 @@ class PokemonCardView @JvmOverloads constructor(
 
     companion object {
         @JvmField val KEY_CARD = "PokemonCardView.Card"
-        private const val RATIO = 1.3959183673f
+        const val RATIO = 1.3959183673f
     }
 }
