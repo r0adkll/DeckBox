@@ -18,6 +18,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapt
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -53,6 +55,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks)
         adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Deck> {
             override fun onItemClick(v: View, item: Deck, position: Int) {
+                Analytics.event(Event.SelectContent.Deck(item.id))
                 startActivity(DeckBuilderActivity.createIntent(activity!!, item))
             }
         })
@@ -62,11 +65,13 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         recycler.adapter = adapter
 
         fab.setOnClickListener {
+            Analytics.event(Event.SelectContent.Action("new_deck"))
             startActivity(DeckBuilderActivity.createIntent(activity!!))
         }
 
         disposables += shareClicks
                 .subscribe {
+                    Analytics.event(Event.SelectContent.Action("export_decklist"))
                     val intent = DeckExportActivity.createIntent(activity!!, it)
                     startActivity(intent)
                 }

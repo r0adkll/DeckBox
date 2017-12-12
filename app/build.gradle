@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.oss.licenses.plugin'
+apply plugin: 'com.github.triplet.play'
 
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
@@ -12,6 +13,12 @@ def VERSION_CODE = Integer.parseInt('git rev-list --first-parent --count HEAD'.e
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+
+    playAccountConfigs {
+        defaultAccountConfig {
+            jsonFile = file('../distribution/google-play-developer.json')
+        }
+    }
 
     defaultConfig {
         applicationId "com.r0adkll.deckbuilder"
@@ -27,6 +34,7 @@ android {
         buildConfigField "String", "GIT_TAG", "\"$GIT_TAG\""
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        playAccountConfig = playAccountConfigs.defaultAccountConfig
     }
 
     signingConfigs {
@@ -69,6 +77,11 @@ android {
             }
         }
     }
+}
+
+play {
+    track = System.getenv("PUBLISHER_TRACK") ?: 'alpha'
+    untrackOld = true
 }
 
 dependencies {
@@ -135,7 +148,7 @@ dependencies {
     debugImplementation "com.facebook.stetho:stetho:$stetho_version"
 
     implementation "com.google.firebase:firebase-core:$play_version"
-    releaseImplementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    releaseImplementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
 }

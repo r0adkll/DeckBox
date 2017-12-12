@@ -26,6 +26,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -82,6 +84,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         }
 
         actionFilter.setOnClickListener {
+            Analytics.event(Event.SelectContent.MenuAction("show_filter"))
             drawer.openDrawer(GravityCompat.END)
             ImeUtils.hideIme(searchView)
         }
@@ -100,6 +103,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
         disposables += pokemonCardLongClicks
                 .subscribe {
+                    Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it)
                 }
 
@@ -165,6 +169,9 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         return searchView.queryTextChanges()
                 .map { it.toString() }
                 .uiDebounce(500L)
+                .doOnNext {
+                    Analytics.event(Event.Search(it))
+                }
     }
 
 
@@ -176,6 +183,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     override fun selectCard(): Observable<PokemonCard> {
         return pokemonCardClicks
                 .filter { card ->
+                    Analytics.event(Event.SelectContent.PokemonCard(card.id))
                     val result = validator.validate(existingCards.plus(state.selected), card)
                     if (result != null) {
                         adapter.wiggleCard(card)

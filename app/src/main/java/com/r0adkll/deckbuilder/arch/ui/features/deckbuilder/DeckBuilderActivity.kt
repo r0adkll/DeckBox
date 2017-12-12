@@ -32,6 +32,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
@@ -83,14 +85,19 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appbar?.setNavigationOnClickListener {
             if (state.hasChanged) {
+                Analytics.event(Event.SelectContent.Action("close_deck_editor"))
                 AlertDialog.Builder(this)
                         .setTitle(R.string.deckbuilder_unsaved_changes_title)
                         .setMessage(R.string.deckbuilder_unsaved_changes_message)
                         .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
+                            Analytics.event(Event.SelectContent.Action("discarded_changes"))
                             dialog.dismiss()
                             supportFinishAfterTransition()
                         })
-                        .setNegativeButton(R.string.dialog_action_no, { dialog, _ -> dialog.dismiss() })
+                        .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
+                            Analytics.event(Event.SelectContent.Action("kept_changes"))
+                            dialog.dismiss()
+                        })
                         .show()
             }
             else {
@@ -109,6 +116,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 2 -> SuperType.ENERGY
                 else -> SuperType.POKEMON
             }
+            Analytics.event(Event.SelectContent.Action("add_new_card"))
             val intent = SearchActivity.createIntent(this, superType, state.allCards)
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
@@ -216,6 +224,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
         disposables += pokemonCardClicks
                 .subscribe {
+                    Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it)
                 }
     }
@@ -230,14 +239,19 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun onBackPressed() {
         if (state.hasChanged) {
+            Analytics.event(Event.SelectContent.Action("close_deck_editor"))
             AlertDialog.Builder(this)
                     .setTitle(R.string.deckbuilder_unsaved_changes_title)
                     .setMessage(R.string.deckbuilder_unsaved_changes_message)
                     .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
+                        Analytics.event(Event.SelectContent.Action("discarded_changes"))
                         dialog.dismiss()
                         super.onBackPressed()
                     })
-                    .setNegativeButton(R.string.dialog_action_no, { dialog, _ -> dialog.dismiss() })
+                    .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
+                        Analytics.event(Event.SelectContent.Action("kept_changes"))
+                        dialog.dismiss()
+                    })
                     .show()
         }
         else {
@@ -253,7 +267,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
         val importResult = DeckImportActivity.parseResults(resultCode, requestCode, data)
         importResult?.let {
-            Timber.v("Importing: $it")
+            Analytics.event(Event.SelectContent.Action("import_cards"))
             addPokemon.accept(it)
         }
     }
@@ -275,15 +289,18 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_import -> {
+                Analytics.event(Event.SelectContent.MenuAction("import_decklist"))
                 DeckImportActivity.show(this)
                 true
             }
             R.id.action_export -> {
+                Analytics.event(Event.SelectContent.MenuAction("export_decklist"))
                 val exportDeck = Deck("", "", "", state.allCards, 0L)
                 startActivity(DeckExportActivity.createIntent(this, exportDeck))
                 true
             }
             R.id.action_save -> {
+                Analytics.event(Event.SelectContent.MenuAction("save_deck"))
                 saveDeck.accept(Unit)
                 true
             }

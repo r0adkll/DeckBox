@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.6'
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.7'
     }
 }
 

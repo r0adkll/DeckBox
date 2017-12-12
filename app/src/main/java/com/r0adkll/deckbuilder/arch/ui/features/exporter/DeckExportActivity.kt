@@ -13,6 +13,8 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.Schedulers
 import com.r0adkll.deckbuilder.util.bindParcelable
@@ -41,6 +43,7 @@ class DeckExportActivity : BaseActivity() {
         appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }
 
         actionCopy?.setOnClickListener {
+            Analytics.event(Event.SelectContent.Action("copy_decklist"))
             val text = deckList.text.toString()
             val clip = ClipData.newPlainText(deck.name, text)
             clipboard.primaryClip = clip
@@ -48,6 +51,7 @@ class DeckExportActivity : BaseActivity() {
         }
 
         actionShare?.setOnClickListener {
+            Analytics.event(Event.Share("deck"))
             val text = deckList.text.toString()
             val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")
             startActivity(intent)
@@ -69,6 +73,7 @@ class DeckExportActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_share -> {
+                Analytics.event(Event.Share("deck"))
                 val text = deckList.text.toString()
                 val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")
                 startActivity(intent)
