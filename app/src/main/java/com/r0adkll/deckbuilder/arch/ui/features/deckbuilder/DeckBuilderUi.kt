@@ -105,6 +105,10 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             is Change.Validated -> this.copy(validation = change.validation)
         }
 
+        override fun toString(): String {
+            return "State(isSaving=$isSaving, error=$error, deck=$deck, pokemonCards=${pokemonCards.size}, trainerCards=${trainerCards.size}, energyCards=${energyCards.size}, name=$name, description=$description, validation=$validation)"
+        }
+
 
         sealed class Change(val logText: String) {
             object Saving : Change("user -> is saving deck")

@@ -23,6 +23,11 @@ data class Deck(
     val energyCount: Int get() = cards.count { it.supertype == SuperType.ENERGY }
 
 
+    override fun toString(): String {
+        return "Deck(id='$id', name='$name', description='$description', cards=${cards.size}, timestamp=$timestamp)"
+    }
+
+
     companion object {
         @JvmField val CREATOR = PaperParcelDeck.CREATOR
     }
