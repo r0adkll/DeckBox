@@ -23,7 +23,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
 
     var items: MutableList<M> = ArrayList<M>(15)
 
-    private var itemClickListener: OnItemClickListener<M>? = null
+    protected var itemClickListener: OnItemClickListener<M>? = null
     private var itemLongClickListener: OnItemLongClickListener<M>? = null
     private var emptyView: View? = null
 

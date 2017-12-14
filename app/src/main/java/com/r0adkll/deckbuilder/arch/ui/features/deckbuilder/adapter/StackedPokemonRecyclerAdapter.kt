@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.view.ViewGroup
+import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
@@ -27,7 +28,8 @@ class StackedPokemonRecyclerAdapter(
         val card = items[i]
         vh.bind(card.card, card.count)
         vh.itemView.setOnLongClickListener { v ->
-            (v as PokemonCardView).startDrag(true)
+            val c = v.findViewById<PokemonCardView>(R.id.card)
+            c.startDrag(true)
             true
         }
     }

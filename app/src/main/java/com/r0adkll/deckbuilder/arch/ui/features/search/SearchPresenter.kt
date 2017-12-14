@@ -28,6 +28,9 @@ class SearchPresenter @Inject constructor(
         val selectCard = intentions.selectCard()
                 .map { Change.CardSelected(it) as Change }
 
+        val removeCard = intentions.removeCard()
+                .map { Change.CardRemoved(it) as Change }
+
         val switchCategories = intentions.switchCategories()
                 .map { Change.CategorySwitched(it) as Change }
 
@@ -41,6 +44,7 @@ class SearchPresenter @Inject constructor(
 
         val merged = searchCards
                 .mergeWith(selectCard)
+                .mergeWith(removeCard)
                 .mergeWith(clearSelection)
                 .mergeWith(switchCategories)
                 .mergeWith(filterChanges)

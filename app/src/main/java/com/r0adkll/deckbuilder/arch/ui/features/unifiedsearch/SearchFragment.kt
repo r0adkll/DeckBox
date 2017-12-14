@@ -68,8 +68,10 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         adapter = SearchResultsRecyclerAdapter(activity!!, true)
         adapter.setEmptyView(emptyView)
         adapter.setOnViewItemClickListener { v, _ ->
-            Analytics.event(Event.SelectContent.PokemonCard((v as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(activity!!, v)
+            // FIXME: Do something about this god-awful mess
+            val card = v.findViewById<PokemonCardView>(R.id.card)
+            Analytics.event(Event.SelectContent.PokemonCard(card.card?.id ?: "unknown"))
+            CardDetailActivity.show(activity!!, card)
         }
 
         actionFilter.setOnClickListener {

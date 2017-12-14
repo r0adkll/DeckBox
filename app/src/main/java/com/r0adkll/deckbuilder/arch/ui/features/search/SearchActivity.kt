@@ -63,6 +63,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
     private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
     private val pokemonCardLongClicks: Relay<PokemonCardView> = PublishRelay.create()
+    private val removeCardClicks: Relay<PokemonCard> = PublishRelay.create()
     private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
     private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
     private var selectionSnackBar: Snackbar? = null
@@ -74,7 +75,8 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardClicks, pokemonCardLongClicks)
+        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardClicks,
+                pokemonCardLongClicks, removeCardClicks, pokemonCardClicks)
         pager.offscreenPageLimit = 3
         pager.adapter = adapter
         tabs.setupWithViewPager(pager)
@@ -188,12 +190,17 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
                     if (result != null) {
                         adapter.wiggleCard(card)
                         // Display error to user
-                        snackbar(result)
+                        validationSnackbar(result)
                         false
                     } else {
                         true
                     }
                 }
+    }
+
+
+    override fun removeCard(): Observable<PokemonCard> {
+        return removeCardClicks
     }
 
 
@@ -253,26 +260,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
         adapter.setSelectedCards(cards)
 
-        val text = resources.getQuantityString(R.plurals.card_selection_count, cards.size, cards.size)
-        if (selectionSnackBar == null) {
-            selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.action_undo, {
-                        clearSelectionClicks.accept(Unit)
-                    })
-                    .setActionTextColor(color(R.color.primaryColor))
-        }
-
-        if (cards.isNotEmpty()) {
-            selectionSnackBar?.setText(text)
-            if (selectionSnackBar?.isShown != true) {
-                selectionSnackBar?.show()
-            }
-        }
-        else {
-            if (selectionSnackBar?.isShown == true) {
-                selectionSnackBar?.dismiss()
-            }
-        }
+        showSelectionSnackbar(cards.size)
     }
 
 
@@ -300,6 +288,45 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
             else -> 0
         }
         tabs.getTabAt(position)?.select()
+    }
+
+
+    private fun showSelectionSnackbar(count: Int) {
+        val text = resources.getQuantityString(R.plurals.card_selection_count, count, count)
+        if (selectionSnackBar == null) {
+            selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.action_undo, {
+                        clearSelectionClicks.accept(Unit)
+                    })
+                    .setActionTextColor(color(R.color.primaryColor))
+        }
+
+        if (count > 0) {
+            selectionSnackBar?.setText(text)
+            if (selectionSnackBar?.isShown != true) {
+                selectionSnackBar?.show()
+            }
+        }
+        else {
+            if (selectionSnackBar?.isShown == true) {
+                selectionSnackBar?.dismiss()
+            }
+        }
+    }
+
+
+    private fun validationSnackbar(result: Int) {
+        val wasShown = selectionSnackBar?.isShownOrQueued ?: false
+
+        val snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT)
+        snackbar.addCallback(object : Snackbar.Callback() {
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                if (wasShown) {
+                    showSelectionSnackbar(state.selected.size)
+                }
+            }
+        })
+        snackbar.show()
     }
 
 
