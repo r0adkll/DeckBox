@@ -22,7 +22,7 @@ class EvolutionChainViewHolder(
     private val evolutionView: EvolutionChainView by bindView(R.id.evolution_view)
 
 
-    fun bind(evolutionChain: EvolutionChain) {
+    fun bind(evolutionChain: EvolutionChain, isEditing: Boolean) {
         evolutionView.evolutionChain = evolutionChain
         evolutionView.setOnPokemonCardClickListener { pokemonCardClicks.accept(it) }
     }

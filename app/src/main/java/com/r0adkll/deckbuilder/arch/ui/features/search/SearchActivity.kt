@@ -17,6 +17,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
@@ -61,9 +62,8 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     @Inject lateinit var validator: DeckValidator
 
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
-    private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
+    private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val pokemonCardLongClicks: Relay<PokemonCardView> = PublishRelay.create()
-    private val removeCardClicks: Relay<PokemonCard> = PublishRelay.create()
     private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
     private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
     private var selectionSnackBar: Snackbar? = null
@@ -75,8 +75,8 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardClicks,
-                pokemonCardLongClicks, removeCardClicks, pokemonCardClicks)
+        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardLongClicks,
+                editCardIntentions)
         pager.offscreenPageLimit = 3
         pager.adapter = adapter
         tabs.setupWithViewPager(pager)
@@ -183,7 +183,8 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     override fun selectCard(): Observable<PokemonCard> {
-        return pokemonCardClicks
+        return editCardIntentions.addCardClicks
+                .map { it.first() }
                 .filter { card ->
                     Analytics.event(Event.SelectContent.PokemonCard(card.id))
                     val result = validator.validate(existingCards.plus(state.selected), card)
@@ -200,7 +201,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     override fun removeCard(): Observable<PokemonCard> {
-        return removeCardClicks
+        return editCardIntentions.removeCardClicks
     }
 
 

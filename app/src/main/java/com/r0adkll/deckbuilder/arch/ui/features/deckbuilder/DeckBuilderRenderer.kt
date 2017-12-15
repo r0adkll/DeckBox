@@ -47,6 +47,13 @@ class DeckBuilderRenderer(
                 .subscribe { actions.showIsSaving(it) }
 
         disposables += state
+                .map { it.isEditing }
+                .distinctUntilChanged()
+                .subscribeOn(comp)
+                .observeOn(main)
+                .subscribe { actions.showIsEditing(it) }
+
+        disposables += state
                 .mapNullable { it.error }
                 .distinctUntilChanged()
                 .subscribeOn(comp)

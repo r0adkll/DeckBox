@@ -9,20 +9,21 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
 
 
 class SearchResultsRecyclerAdapter(
         context: Context,
         val instantDragSupport: Boolean = false,
-        val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
-        val addCardClicks: Relay<PokemonCard> = PublishRelay.create()
+        val editCardIntentions: EditCardIntentions = EditCardIntentions()
 ) : ListRecyclerAdapter<PokemonCard, PokemonCardViewHolder>(context) {
 
     private var selectedCards: List<PokemonCard> = emptyList()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
-        return PokemonCardViewHolder.create(inflater, parent, true, instantDragSupport, removeCardClicks, addCardClicks)
+        return PokemonCardViewHolder.create(inflater, parent, true, instantDragSupport,
+                editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
     }
 
 

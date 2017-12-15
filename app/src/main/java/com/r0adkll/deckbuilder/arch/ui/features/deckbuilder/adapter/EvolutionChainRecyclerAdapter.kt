@@ -17,13 +17,20 @@ class EvolutionChainRecyclerAdapter(
         private val pokemonCardClicks: Relay<PokemonCardView>
 ) : ListRecyclerAdapter<EvolutionChain, EvolutionChainViewHolder>(context) {
 
+    var isEditing: Boolean = false
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): EvolutionChainViewHolder {
         return EvolutionChainViewHolder.create(inflater, parent, pokemonCardClicks)
     }
 
 
     override fun onBindViewHolder(vh: EvolutionChainViewHolder, i: Int) {
-        vh.bind(items[i])
+        vh.bind(items[i], isEditing)
     }
 
 

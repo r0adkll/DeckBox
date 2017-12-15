@@ -8,13 +8,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SimpleItemAnimator
 import android.view.View
+import android.view.animation.*
+import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChainRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokemonRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -25,7 +28,8 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
         itemView: View,
         @DrawableRes val emptyIcon: Int,
         @StringRes val emptyMessage: Int,
-        val pokemonCardClicks: Relay<PokemonCardView>
+        val pokemonCardClicks: Relay<PokemonCardView>,
+        val editCardIntentions: EditCardIntentions
 ) {
 
     protected val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
@@ -34,6 +38,8 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
     abstract val adapter: A
     abstract val layoutManager: RecyclerView.LayoutManager
     abstract fun bind(cards: List<StackedPokemonCard>)
+    abstract fun wiggleCard(card: PokemonCard)
+    abstract fun setEditMode(isEditing: Boolean)
 
 
     fun setup() {
@@ -52,8 +58,10 @@ class PokemonViewHolder(
         itemView: View,
         emptyIcon: Int,
         emptyMessage: Int,
-        pokemonCardClicks: Relay<PokemonCardView>
-) : SuperTypeViewHolder<EvolutionChainRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks) {
+        pokemonCardClicks: Relay<PokemonCardView>,
+        editCardIntentions: EditCardIntentions
+) : SuperTypeViewHolder<EvolutionChainRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
+
     override val adapter: EvolutionChainRecyclerAdapter = EvolutionChainRecyclerAdapter(itemView.context, pokemonCardClicks)
     override val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(itemView.context)
 
@@ -62,15 +70,29 @@ class PokemonViewHolder(
                 .sortedByDescending { chain -> chain.nodes.size }
         adapter.setEvolutions(evolutions)
     }
+
+
+    override fun wiggleCard(card: PokemonCard) {
+
+    }
+
+
+    override fun setEditMode(isEditing: Boolean) {
+        adapter.isEditing = isEditing
+    }
 }
+
 
 class TrainerEnergyViewHolder(
         itemView: View,
         emptyIcon: Int,
         emptyMessage: Int,
-        pokemonCardClicks: Relay<PokemonCardView>
-) : SuperTypeViewHolder<StackedPokemonRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks) {
-    override val adapter: StackedPokemonRecyclerAdapter = StackedPokemonRecyclerAdapter(itemView.context)
+        pokemonCardClicks: Relay<PokemonCardView>,
+        editCardIntentions: EditCardIntentions
+) : SuperTypeViewHolder<StackedPokemonRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
+
+    override val adapter: StackedPokemonRecyclerAdapter = StackedPokemonRecyclerAdapter(itemView.context,
+            editCardIntentions.addCardClicks, editCardIntentions.removeCardClicks)
     override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, 3)
 
     init {
@@ -90,7 +112,41 @@ class TrainerEnergyViewHolder(
         }
         adapter.setCards(sorted)
         adapter.setOnViewItemClickListener { view, _ ->
-            pokemonCardClicks.accept(view as PokemonCardView)
+            // FIXME: Do something about this atrocity
+            val card = view.findViewById<PokemonCardView>(R.id.card)
+            pokemonCardClicks.accept(card)
         }
+    }
+
+
+    override fun wiggleCard(card: PokemonCard) {
+        val adapterPosition = adapter.items.indexOfFirst { it.card.id == card.id }
+        if (adapterPosition != RecyclerView.NO_POSITION) {
+            val childIndex = adapterPosition - (recycler.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
+            val child = recycler.layoutManager.getChildAt(childIndex)
+            child?.let {
+                val rotateAnim = RotateAnimation(-5f, 5f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f)
+                rotateAnim.repeatCount = 3
+                rotateAnim.repeatMode = Animation.REVERSE
+                rotateAnim.duration = 50
+
+                val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dpToPx(8f))
+                transAnim.repeatCount = 1
+                transAnim.repeatMode = Animation.REVERSE
+                transAnim.duration = 100
+
+                val set = AnimationSet(true)
+                set.addAnimation(rotateAnim)
+                set.addAnimation(transAnim)
+                set.interpolator = AccelerateDecelerateInterpolator()
+
+                it.startAnimation(set)
+            }
+        }
+    }
+
+
+    override fun setEditMode(isEditing: Boolean) {
+        adapter.isEditing = isEditing
     }
 }
