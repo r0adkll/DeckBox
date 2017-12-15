@@ -9,9 +9,9 @@ import io.reactivex.Scheduler
 
 class SearchRenderer(
         val actions: SearchUi.Actions,
-        val main: Scheduler,
-        val comp: Scheduler
-) : DisposableStateRenderer<SearchUi.State>() {
+        main: Scheduler,
+        comp: Scheduler
+) : DisposableStateRenderer<SearchUi.State>(main, comp) {
 
     override fun start() {
 
@@ -23,8 +23,7 @@ class SearchRenderer(
         disposables += state
                 .map { Pair(it.category, it.results[it.category]?.query ?: "") }
                 .distinctUntilChanged { t -> t.first }
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     actions.setQueryText(it.second)
                 }
@@ -33,16 +32,14 @@ class SearchRenderer(
         disposables += state
                 .map { it.category }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.setCategory(it) }
 
 
         disposables += state
                 .map { it.selected }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.setSelectedCards(it) }
     }
 
@@ -52,8 +49,7 @@ class SearchRenderer(
         disposables += state
                 .mapNullable { it.results[superType]?.filter?.isEmpty ?: true }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     val value = it.value
                     if (value != null) {
@@ -64,8 +60,7 @@ class SearchRenderer(
         disposables += state
                 .mapNullable { it.results[superType]?.results }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     val value = it.value
                     if (value != null) {
@@ -76,8 +71,7 @@ class SearchRenderer(
         disposables += state
                 .mapNullable { it.results[superType]?.isLoading }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     val value = it.value
                     if (value != null) {
@@ -88,8 +82,7 @@ class SearchRenderer(
         disposables += state
                 .mapNullable { it.results[superType]?.error }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     val value = it.value
                     if (value != null) {

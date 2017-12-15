@@ -50,6 +50,7 @@ class DeckApp : Application() {
     }
 
 
+    @Suppress("NON_FINAL_MEMBER_IN_FINAL_CLASS")
     open fun installDagger(): AppComponent {
         component = DaggerAppComponent.builder()
                 .appModule(AppModule(this))

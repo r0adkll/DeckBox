@@ -9,38 +9,34 @@ import io.reactivex.Scheduler
 
 class SearchRenderer(
         val actions: SearchUi.Actions,
-        val main: Scheduler,
-        val comp: Scheduler
-) : DisposableStateRenderer<SearchUi.State>() {
+        main: Scheduler,
+        comp: Scheduler
+) : DisposableStateRenderer<SearchUi.State>(main, comp) {
 
     override fun start() {
 
         disposables += state
                 .map { it.filter.isEmpty }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showFilterEmpty(it) }
 
         disposables += state
                 .map { it.results }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.setResults(it) }
 
         disposables += state
                 .map { it.isLoading }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showLoading(it) }
 
         disposables += state
                 .mapNullable { it.error }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     val value = it.value
                     if (value != null) {
@@ -54,8 +50,7 @@ class SearchRenderer(
         disposables += state
                 .map { it.query }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.setQueryText(it) }
     }
 }

@@ -9,24 +9,22 @@ import io.reactivex.Scheduler
 
 class DeckImportRenderer(
         val actions: DeckImportUi.Actions,
-        val comp: Scheduler,
-        val main: Scheduler
-) : DisposableStateRenderer<DeckImportUi.State>() {
+        comp: Scheduler,
+        main: Scheduler
+) : DisposableStateRenderer<DeckImportUi.State>(main, comp) {
 
     override fun start() {
 
         disposables += state
                 .map { it.isLoading }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showLoading(it) }
 
         disposables += state
                 .mapNullable { it.error }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     val value = it.value
                     if (value != null) {
@@ -39,8 +37,7 @@ class DeckImportRenderer(
         disposables += state
                 .map { it.cards }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.setResults(it) }
     }
 }

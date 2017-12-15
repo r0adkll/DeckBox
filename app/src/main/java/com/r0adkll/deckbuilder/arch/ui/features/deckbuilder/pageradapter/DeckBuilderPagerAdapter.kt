@@ -89,6 +89,7 @@ class DeckBuilderPagerAdapter(
     }
 
 
+    @Suppress("NON_EXHAUSTIVE_WHEN")
     fun wiggleCard(card: PokemonCard) {
         when(card.supertype) {
             SuperType.POKEMON -> viewHolders[0]?.wiggleCard(card)

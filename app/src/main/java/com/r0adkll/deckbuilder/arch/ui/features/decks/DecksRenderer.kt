@@ -9,9 +9,9 @@ import io.reactivex.Scheduler
 
 class DecksRenderer(
         val actions: DecksUi.Actions,
-        val main: Scheduler,
-        val comp: Scheduler
-) : DisposableStateRenderer<DecksUi.State>() {
+        main: Scheduler,
+        comp: Scheduler
+) : DisposableStateRenderer<DecksUi.State>(main, comp) {
 
     override fun start() {
 
@@ -19,22 +19,19 @@ class DecksRenderer(
                 .map { it.decks }
                 .distinctUntilChanged()
                 .map { it.sortedBy { deck -> deck.timestamp } }
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showDecks(it) }
 
         disposables += state
                 .map { it.isLoading }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showLoading(it) }
 
         disposables += state
                 .mapNullable { it.error }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     val error = it.value
                     if (error != null) {

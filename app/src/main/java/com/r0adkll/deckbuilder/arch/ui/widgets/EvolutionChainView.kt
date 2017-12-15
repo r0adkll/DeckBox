@@ -132,7 +132,7 @@ class EvolutionChainView @JvmOverloads constructor(
 
                     // Set click listener
                     view.setOnClickListener {
-                        pokemonCardClickListener?.onPokemonCardClicked(view!!, card.card)
+                        pokemonCardClickListener?.onPokemonCardClicked(view, card.card)
                     }
 
 

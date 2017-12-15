@@ -80,7 +80,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
 
     override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(HomeModule(this))
+        this.component = component.plus(HomeModule())
         this.component.inject(this)
     }
 
