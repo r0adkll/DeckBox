@@ -19,12 +19,15 @@ class EvolutionChainViewHolder(
         private val pokemonCardClicks: Relay<PokemonCardView>
 ): RecyclerView.ViewHolder(itemView) {
 
-    private val evolutionView: EvolutionChainView by bindView(R.id.evolution_view)
+    private val recyclerView: RecyclerView by bindView(R.id.recycler)
 
 
     fun bind(evolutionChain: EvolutionChain, isEditing: Boolean) {
-        evolutionView.evolutionChain = evolutionChain
-        evolutionView.setOnPokemonCardClickListener { pokemonCardClicks.accept(it) }
+
+        if (recyclerView.adapter == null) {
+            val adapter =
+        }
+
     }
 
 
@@ -32,7 +35,8 @@ class EvolutionChainViewHolder(
 
         fun create(inflater: LayoutInflater,
                    parent: ViewGroup?,
-                   pokemonCardClicks: Relay<PokemonCardView>): EvolutionChainViewHolder {
+                   pokemonCardClicks: Relay<PokemonCardView>
+        ): EvolutionChainViewHolder {
             return EvolutionChainViewHolder(inflater.inflate(R.layout.item_evolution_chain, parent, false), pokemonCardClicks)
         }
     }

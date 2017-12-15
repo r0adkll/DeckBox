@@ -9,6 +9,9 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
     val id: String
         get() = nodes.find { it.name != null }?.name ?: nodes.hashCode().toString()
 
+    val size: Int
+        get() = nodes.map { it.cards.size }.sum()
+
 
     fun first(): Node? = nodes.find { it.previous == null }
     fun last(): Node? = nodes.find { it.next == null }
