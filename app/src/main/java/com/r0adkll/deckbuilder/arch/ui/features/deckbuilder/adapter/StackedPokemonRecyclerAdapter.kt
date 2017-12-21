@@ -4,7 +4,12 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.util.DiffUtil
+import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
@@ -13,11 +18,21 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 
 class StackedPokemonRecyclerAdapter(
-        context: Context
+        context: Context,
+        val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create(),
+        val removeCardClicks: Relay<PokemonCard> = PublishRelay.create()
 ) : ListRecyclerAdapter<StackedPokemonCard, PokemonCardViewHolder>(context) {
 
+    var isEditing: Boolean = false
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
-        return PokemonCardViewHolder.create(inflater, parent, false)
+        return PokemonCardViewHolder.create(inflater, parent, false,
+                addCardClicks = addCardClicks, removeCardClicks = removeCardClicks)
     }
 
 
@@ -25,11 +40,21 @@ class StackedPokemonRecyclerAdapter(
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         super.onBindViewHolder(vh, i)
         val card = items[i]
-        vh.bind(card.card, card.count)
+        vh.bind(card.card, card.count, isEditing)
         vh.itemView.setOnLongClickListener { v ->
-            (v as PokemonCardView).startDrag(true)
+            val c = v.findViewById<PokemonCardView>(R.id.card)
+            c.startDrag(true)
             true
         }
+    }
+
+
+    override fun getItemId(position: Int): Long {
+        if (position != RecyclerView.NO_POSITION) {
+            val item = items[position]
+            return item.card.hashCode().toLong()
+        }
+        return super.getItemId(position)
     }
 
 

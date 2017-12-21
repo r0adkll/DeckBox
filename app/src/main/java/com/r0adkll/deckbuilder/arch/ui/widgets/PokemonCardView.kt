@@ -233,7 +233,6 @@ class PokemonCardView @JvmOverloads constructor(
 
 
     private fun loadImage() {
-        Timber.v("Loading pokeImage: (w: $width, h: $height), (mW: $measuredWidth, mH: $measuredHeight)")
         GlideApp.with(this)
                 .load(card?.imageUrl)
                 .placeholder(R.drawable.pokemon_card_back)

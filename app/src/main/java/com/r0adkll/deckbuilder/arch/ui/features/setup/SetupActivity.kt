@@ -16,6 +16,8 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.RxFirebase
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -101,6 +103,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     private fun signInAnonymously() {
         disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
                 .subscribe({
+                    Analytics.event(Event.Login.Anonymous)
                     startActivity(HomeActivity.createIntent(this@SetupActivity))
                     finish()
                 }, {
@@ -117,6 +120,8 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             firebaseAuth.signInWithCredential(credential)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
+                            Analytics.userId(it.result.user.uid)
+                            Analytics.event(Event.Login.Google)
                             startActivity(HomeActivity.createIntent(this@SetupActivity))
                             finish()
                         }

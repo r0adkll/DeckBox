@@ -173,6 +173,11 @@ interface FilterUi : StateRenderer<FilterUi.State> {
         }
 
 
+        override fun toString(): String {
+            return "State(category=$category, filters=$filters, expansions=${expansions.size})"
+        }
+
+
         sealed class Change(val logText: String) {
             class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
             class CategoryChanged(val category: SuperType) : Change("user -> category changed to $category")

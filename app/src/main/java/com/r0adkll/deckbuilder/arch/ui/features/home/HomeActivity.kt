@@ -16,6 +16,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeModule
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import gov.scstatehouse.houseofcards.di.HasComponent
 import kotlinx.android.synthetic.main.activity_home.*
@@ -46,6 +48,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
         val cards = DeckImportActivity.parseResults(resultCode, requestCode, data)
         cards?.let {
             if (it.isNotEmpty()) {
+                Analytics.event(Event.SelectContent.Action("import_cards"))
                 val intent = DeckBuilderActivity.createIntent(this, it)
                 startActivity(intent)
             }
@@ -62,10 +65,12 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_import -> {
+                Analytics.event(Event.SelectContent.MenuAction("import_decklist"))
                 DeckImportActivity.show(this)
                 true
             }
             R.id.action_settings -> {
+                Analytics.event(Event.SelectContent.MenuAction("settings"))
                 startActivity(SettingsActivity.createIntent(this))
                 true
             }
@@ -75,7 +80,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
 
     override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(HomeModule(this))
+        this.component = component.plus(HomeModule())
         this.component.inject(this)
     }
 

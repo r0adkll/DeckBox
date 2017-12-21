@@ -17,6 +17,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
@@ -26,6 +27,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -59,7 +62,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     @Inject lateinit var validator: DeckValidator
 
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
-    private val pokemonCardClicks: Relay<PokemonCard> = PublishRelay.create()
+    private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val pokemonCardLongClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
     private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
@@ -72,7 +75,8 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardClicks, pokemonCardLongClicks)
+        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardLongClicks,
+                editCardIntentions)
         pager.offscreenPageLimit = 3
         pager.adapter = adapter
         tabs.setupWithViewPager(pager)
@@ -82,6 +86,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         }
 
         actionFilter.setOnClickListener {
+            Analytics.event(Event.SelectContent.MenuAction("show_filter"))
             drawer.openDrawer(GravityCompat.END)
             ImeUtils.hideIme(searchView)
         }
@@ -100,6 +105,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
         disposables += pokemonCardLongClicks
                 .subscribe {
+                    Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it)
                 }
 
@@ -165,6 +171,9 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         return searchView.queryTextChanges()
                 .map { it.toString() }
                 .uiDebounce(500L)
+                .doOnNext {
+                    Analytics.event(Event.Search(it))
+                }
     }
 
 
@@ -174,18 +183,25 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     override fun selectCard(): Observable<PokemonCard> {
-        return pokemonCardClicks
+        return editCardIntentions.addCardClicks
+                .map { it.first() }
                 .filter { card ->
+                    Analytics.event(Event.SelectContent.PokemonCard(card.id))
                     val result = validator.validate(existingCards.plus(state.selected), card)
                     if (result != null) {
                         adapter.wiggleCard(card)
                         // Display error to user
-                        snackbar(result)
+                        validationSnackbar(result)
                         false
                     } else {
                         true
                     }
                 }
+    }
+
+
+    override fun removeCard(): Observable<PokemonCard> {
+        return editCardIntentions.removeCardClicks
     }
 
 
@@ -245,26 +261,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
         adapter.setSelectedCards(cards)
 
-        val text = resources.getQuantityString(R.plurals.card_selection_count, cards.size, cards.size)
-        if (selectionSnackBar == null) {
-            selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.action_undo, {
-                        clearSelectionClicks.accept(Unit)
-                    })
-                    .setActionTextColor(color(R.color.primaryColor))
-        }
-
-        if (cards.isNotEmpty()) {
-            selectionSnackBar?.setText(text)
-            if (selectionSnackBar?.isShown != true) {
-                selectionSnackBar?.show()
-            }
-        }
-        else {
-            if (selectionSnackBar?.isShown == true) {
-                selectionSnackBar?.dismiss()
-            }
-        }
+        showSelectionSnackbar(cards.size)
     }
 
 
@@ -292,6 +289,45 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
             else -> 0
         }
         tabs.getTabAt(position)?.select()
+    }
+
+
+    private fun showSelectionSnackbar(count: Int) {
+        val text = resources.getQuantityString(R.plurals.card_selection_count, count, count)
+        if (selectionSnackBar == null) {
+            selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.action_undo, {
+                        clearSelectionClicks.accept(Unit)
+                    })
+                    .setActionTextColor(color(R.color.primaryColor))
+        }
+
+        if (count > 0) {
+            selectionSnackBar?.setText(text)
+            if (selectionSnackBar?.isShown != true) {
+                selectionSnackBar?.show()
+            }
+        }
+        else {
+            if (selectionSnackBar?.isShown == true) {
+                selectionSnackBar?.dismiss()
+            }
+        }
+    }
+
+
+    private fun validationSnackbar(result: Int) {
+        val wasShown = selectionSnackBar?.isShownOrQueued ?: false
+
+        val snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT)
+        snackbar.addCallback(object : Snackbar.Callback() {
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                if (wasShown) {
+                    showSelectionSnackbar(state.selected.size)
+                }
+            }
+        })
+        snackbar.show()
     }
 
 

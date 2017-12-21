@@ -182,9 +182,9 @@ class EditDragListener(
          * operation for editing cards in the deck building interface
          */
         fun attach(target: View, listener: DropListener, validator: (PokemonCard) -> Boolean): EditDragListener {
-            val listener = EditDragListener(target, listener, validator)
-            target.setOnDragListener(listener)
-            return listener
+            val dragListener = EditDragListener(target, listener, validator)
+            target.setOnDragListener(dragListener)
+            return dragListener
         }
     }
 }

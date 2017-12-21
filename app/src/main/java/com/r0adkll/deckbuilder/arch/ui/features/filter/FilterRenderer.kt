@@ -8,23 +8,21 @@ import io.reactivex.Scheduler
 
 class FilterRenderer(
         val actions: FilterUi.Actions,
-        val main: Scheduler,
-        val comp: Scheduler
-) : DisposableStateRenderer<FilterUi.State>() {
+        main: Scheduler,
+        comp: Scheduler
+) : DisposableStateRenderer<FilterUi.State>(main, comp) {
 
     override fun start() {
 
         disposables += state
                 .map { it.filters[it.category]!!.applySpecification() }
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.setItems(it) }
 
         disposables += state
                 .map { it.filters[it.category]!!.filter.isEmpty }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.setIsEmpty(it) }
 
     }

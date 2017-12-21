@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import javax.inject.Inject
 
 
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         DeckApp.component.inject(this)
 
         if (firebase.currentUser != null) {
+            Analytics.userId(firebase.currentUser!!.uid)
             startActivity(HomeActivity.createIntent(this))
         }
         else {

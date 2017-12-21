@@ -19,6 +19,13 @@ class Bundler {
     fun <E: Enum<E>> serial(key: String, value: E) = bundle.putSerializable(key, value)
     fun <E: Enum<E>> parcel(key: String, value: E) = bundle.putString(key, value.name)
 
+    infix fun String.to(value: String) = string(this, value)
+    infix fun String.to(value: Int) = int(this, value)
+    infix fun String.to(value: Boolean) = bool(this, value)
+    infix fun String.to(value: Long) = long(this, value)
+    infix fun String.to(value: Float) = float(this, value)
+    infix fun String.to(value: Double) = double(this, value)
+
     internal fun build(): Bundle = bundle
 }
 

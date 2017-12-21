@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.firebase.firestore.FirebaseFirestore
+import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
@@ -25,8 +26,11 @@ import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.ElementsIntoSet
+import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.*
 
 
 @Module
@@ -54,7 +58,14 @@ class DataModule {
 
 
     @Provides @AppScope
-    fun providePokemonApi(): Pokemon = Pokemon()
+    fun providePokemonApiConfig(): Config {
+        val level = if (BuildConfig.DEBUG) HEADERS else NONE
+        return Config(logLevel = level)
+    }
+
+
+    @Provides @AppScope
+    fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
 
     @Provides @AppScope

@@ -16,6 +16,7 @@ import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
@@ -25,8 +26,8 @@ import io.pokemontcg.model.SuperType
 class ResultsPagerAdapter(
         val context: Context,
         val scrollHideListener: KeyboardScrollHideListener,
-        private val pokemonCardClicks: Relay<PokemonCard>,
-        private val pokemonCardLongClicks: Relay<PokemonCardView>
+        private val pokemonCardLongClicks: Relay<PokemonCardView>,
+        private val editCardIntentions: EditCardIntentions
 ) : PagerAdapter() {
 
     private val inflater = LayoutInflater.from(context)
@@ -35,7 +36,7 @@ class ResultsPagerAdapter(
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
-        val vh = SearchResultViewHolder(view, scrollHideListener, pokemonCardClicks, pokemonCardLongClicks)
+        val vh = SearchResultViewHolder(view, scrollHideListener, pokemonCardLongClicks, editCardIntentions)
         view.tag = vh
         viewHolders[position] = vh
 
@@ -118,21 +119,24 @@ class ResultsPagerAdapter(
     private class SearchResultViewHolder(
             itemView: View,
             scrollHideListener: KeyboardScrollHideListener,
-            pokemonCardClicks: Relay<PokemonCard>,
-            pokemonCardLongClicks: Relay<PokemonCardView>
+            pokemonCardLongClicks: Relay<PokemonCardView>,
+            editCardIntentions: EditCardIntentions
     ) {
 
         private val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
         private val emptyView: EmptyView = itemView.findViewById(R.id.empty_view)
-        private val adapter: SearchResultsRecyclerAdapter = SearchResultsRecyclerAdapter(itemView.context)
+        private val adapter: SearchResultsRecyclerAdapter = SearchResultsRecyclerAdapter(itemView.context,
+                editCardIntentions = editCardIntentions)
 
         init {
             emptyView.setIcon(R.drawable.ic_empty_search)
 
             adapter.setEmptyView(emptyView)
-            adapter.setOnItemClickListener { pokemonCardClicks.accept(it) }
+            adapter.setOnItemClickListener { editCardIntentions.addCardClicks.accept(listOf(it)) }
             adapter.setOnItemLongClickListener { view, _ ->
-                pokemonCardLongClicks.accept(view as PokemonCardView)
+                // TODO: Fix this atrocity
+                val card = view.findViewById<PokemonCardView>(R.id.card)
+                pokemonCardLongClicks.accept(card)
                 true
             }
 

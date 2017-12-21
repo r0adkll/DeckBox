@@ -30,6 +30,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrol
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import gov.scstatehouse.houseofcards.di.HasComponent
 import gov.scstatehouse.houseofcards.util.ImeUtils
@@ -66,10 +68,14 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         adapter = SearchResultsRecyclerAdapter(activity!!, true)
         adapter.setEmptyView(emptyView)
         adapter.setOnViewItemClickListener { v, _ ->
-            CardDetailActivity.show(activity!!, v as PokemonCardView)
+            // FIXME: Do something about this god-awful mess
+            val card = v.findViewById<PokemonCardView>(R.id.card)
+            Analytics.event(Event.SelectContent.PokemonCard(card.card?.id ?: "unknown"))
+            CardDetailActivity.show(activity!!, card)
         }
 
         actionFilter.setOnClickListener {
+            Analytics.event(Event.SelectContent.MenuAction("show_filter"))
             drawer.openDrawer(GravityCompat.END)
             ImeUtils.hideIme(searchView)
         }
@@ -130,7 +136,10 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         return searchView.queryTextChanges()
                 .map { it.toString() }
                 .uiDebounce(500L)
-                .doOnNext { if (it.isBlank()) toolbarScrollListener.reset() }
+                .doOnNext {
+                    Analytics.event(Event.Search(it))
+                    if (it.isBlank()) toolbarScrollListener.reset()
+                }
     }
 
 

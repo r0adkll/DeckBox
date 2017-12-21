@@ -21,6 +21,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun switchCategories(): Observable<SuperType>
         fun searchCards(): Observable<String>
         fun selectCard(): Observable<PokemonCard>
+        fun removeCard(): Observable<PokemonCard>
         fun clearSelection(): Observable<Unit>
     }
 
@@ -112,6 +113,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
                 this.copy(results = newResults.toMap())
             }
             is Change.CardSelected -> this.copy(selected = selected.plus(change.pokemonCard))
+            is Change.CardRemoved -> this.copy(selected =  selected.minus(change.pokemonCard))
             is Change.CategorySwitched -> this.copy(category = change.category)
             Change.ClearSelectedCards -> this.copy(selected = emptyList())
         }
@@ -130,6 +132,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             class ResultsLoaded(val category: SuperType, val results: List<PokemonCard>) : Change("network -> search results loaded (${results.size})")
             class ClearQuery(val category: SuperType) : Change("user -> clearing query and results")
             class CardSelected(val pokemonCard: PokemonCard) : Change("user -> selected ${pokemonCard.name}")
+            class CardRemoved(val pokemonCard: PokemonCard) : Change("user -> unselected ${pokemonCard.name}")
             object ClearSelectedCards : Change("user -> cleared selected cards")
         }
 

@@ -8,17 +8,16 @@ import io.reactivex.Scheduler
 
 class CardDetailRenderer(
         val actions: CardDetailUi.Actions,
-        val comp: Scheduler,
-        val main: Scheduler
-) : DisposableStateRenderer<CardDetailUi.State>() {
+        comp: Scheduler,
+        main: Scheduler
+) : DisposableStateRenderer<CardDetailUi.State>(main, comp) {
 
     override fun start() {
 
         disposables += state
                 .map { it.validation }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     actions.showStandardValidation(it.standard)
                     actions.showExpandedValidation(it.expanded)
@@ -27,15 +26,13 @@ class CardDetailRenderer(
         disposables += state
                 .map { it.variants }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showVariants(it) }
 
         disposables += state
                 .map { it.evolvesFrom }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showEvolvesFrom(it) }
     }
 }

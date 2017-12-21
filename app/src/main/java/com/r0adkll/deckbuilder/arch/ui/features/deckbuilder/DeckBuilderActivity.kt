@@ -32,6 +32,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
@@ -63,9 +65,10 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     @Inject lateinit var validator: DeckValidator
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
-    private val addPokemon: Relay<List<PokemonCard>> = PublishRelay.create()
-    private val removePokemon: Relay<PokemonCard> = PublishRelay.create()
+    private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val saveDeck: Relay<Unit> = PublishRelay.create()
+    private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
+
     private val countPadding: Float by lazy { dpToPx(16f) }
     private val countPaddingTop: Float by lazy { dpToPx(16f) }
     private val formatPaddingTop: Float by lazy { dpToPx(8f) }
@@ -83,14 +86,19 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appbar?.setNavigationOnClickListener {
             if (state.hasChanged) {
+                Analytics.event(Event.SelectContent.Action("close_deck_editor"))
                 AlertDialog.Builder(this)
                         .setTitle(R.string.deckbuilder_unsaved_changes_title)
                         .setMessage(R.string.deckbuilder_unsaved_changes_message)
                         .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
+                            Analytics.event(Event.SelectContent.Action("discarded_changes"))
                             dialog.dismiss()
                             supportFinishAfterTransition()
                         })
-                        .setNegativeButton(R.string.dialog_action_no, { dialog, _ -> dialog.dismiss() })
+                        .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
+                            Analytics.event(Event.SelectContent.Action("kept_changes"))
+                            dialog.dismiss()
+                        })
                         .show()
             }
             else {
@@ -98,7 +106,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             }
         }
 
-        adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks)
+        adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
         pager.adapter = adapter
         pager.offscreenPageLimit = 3
         tabs.setupWithViewPager(pager)
@@ -109,25 +117,26 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 2 -> SuperType.ENERGY
                 else -> SuperType.POKEMON
             }
+            Analytics.event(Event.SelectContent.Action("add_new_card"))
             val intent = SearchActivity.createIntent(this, superType, state.allCards)
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
 
         tabletDropZone?.let {
             TabletDragListener.attach(it, pager, { card ->
-                addPokemon.accept(listOf(card))
+                editCardIntentions.addCardClicks.accept(listOf(card))
             })
         }
 
         EditDragListener.attach(dropZone, object : EditDragListener.DropListener {
 
             override fun onAddCard(card: PokemonCard) {
-                addPokemon.accept(listOf(card))
+                editCardIntentions.addCardClicks.accept(listOf(card))
             }
 
 
             override fun onRemoveCard(card: PokemonCard) {
-                removePokemon.accept(card)
+                editCardIntentions.removeCardClicks.accept(card)
             }
 
         }, { card ->
@@ -216,6 +225,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
         disposables += pokemonCardClicks
                 .subscribe {
+                    Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it)
                 }
     }
@@ -230,14 +240,19 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun onBackPressed() {
         if (state.hasChanged) {
+            Analytics.event(Event.SelectContent.Action("close_deck_editor"))
             AlertDialog.Builder(this)
                     .setTitle(R.string.deckbuilder_unsaved_changes_title)
                     .setMessage(R.string.deckbuilder_unsaved_changes_message)
                     .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
+                        Analytics.event(Event.SelectContent.Action("discarded_changes"))
                         dialog.dismiss()
                         super.onBackPressed()
                     })
-                    .setNegativeButton(R.string.dialog_action_no, { dialog, _ -> dialog.dismiss() })
+                    .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
+                        Analytics.event(Event.SelectContent.Action("kept_changes"))
+                        dialog.dismiss()
+                    })
                     .show()
         }
         else {
@@ -249,12 +264,12 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val result = SearchActivity.parseResult(requestCode, resultCode, data)
-        result?.let { addPokemon.accept(it) }
+        result?.let { editCardIntentions.addCardClicks.accept(it) }
 
         val importResult = DeckImportActivity.parseResults(resultCode, requestCode, data)
         importResult?.let {
-            Timber.v("Importing: $it")
-            addPokemon.accept(it)
+            Analytics.event(Event.SelectContent.Action("import_cards"))
+            editCardIntentions.addCardClicks.accept(it)
         }
     }
 
@@ -268,22 +283,38 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val saveItem = menu.findItem(R.id.action_save)
         saveItem.isVisible = state.hasChanged && !state.isSaving
+
+        val editItem = menu.findItem(R.id.action_edit)
+        val finishEditItem = menu.findItem(R.id.action_finish_edit)
+        editItem.isVisible = !state.isEditing
+        finishEditItem.isVisible = state.isEditing
         return true
     }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_edit -> {
+                editDeckClicks.accept(true)
+                true
+            }
+            R.id.action_finish_edit -> {
+                editDeckClicks.accept(false)
+                true
+            }
             R.id.action_import -> {
+                Analytics.event(Event.SelectContent.MenuAction("import_decklist"))
                 DeckImportActivity.show(this)
                 true
             }
             R.id.action_export -> {
+                Analytics.event(Event.SelectContent.MenuAction("export_decklist"))
                 val exportDeck = Deck("", "", "", state.allCards, 0L)
                 startActivity(DeckExportActivity.createIntent(this, exportDeck))
                 true
             }
             R.id.action_save -> {
+                Analytics.event(Event.SelectContent.MenuAction("save_deck"))
                 saveDeck.accept(Unit)
                 true
             }
@@ -310,12 +341,33 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun addCards(): Observable<List<PokemonCard>> {
-        return addPokemon
+        return editCardIntentions.addCardClicks
+                .flatMap {
+                    Observable.fromIterable(it)
+                            .filter { card ->
+                                val result = validator.validate(state.allCards, card)
+                                if (result != null) {
+                                    adapter.wiggleCard(card)
+                                    // Display error to user
+                                    snackbar(result)
+                                    false
+                                } else {
+                                    true
+                                }
+                            }
+                            .toList()
+                            .toObservable()
+                }
     }
 
 
     override fun removeCard(): Observable<PokemonCard> {
-        return removePokemon
+        return editCardIntentions.removeCardClicks
+    }
+
+
+    override fun editDeckClicks(): Observable<Boolean> {
+        return editDeckClicks
     }
 
 
@@ -414,6 +466,12 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 savingSnackBar?.show()
             }
         }
+    }
+
+
+    override fun showIsEditing(isEditing: Boolean) {
+        invalidateOptionsMenu()
+        adapter.isEditing = isEditing
     }
 
 

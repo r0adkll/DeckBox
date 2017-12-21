@@ -12,45 +12,46 @@ import io.reactivex.Scheduler
 
 class DeckBuilderRenderer(
         val actions: DeckBuilderUi.Actions,
-        val main: Scheduler,
-        val comp: Scheduler
-) : DisposableStateRenderer<DeckBuilderUi.State>() {
+        main: Scheduler,
+        comp: Scheduler
+) : DisposableStateRenderer<DeckBuilderUi.State>(main, comp) {
 
     override fun start() {
 
         disposables += state
                 .map { it.validation.standard }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showIsStandard(it) }
 
         disposables += state
                 .map { it.validation.expanded }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showIsExpanded(it) }
 
         disposables += state
                 .map { it.hasChanged }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showSaveAction(it) }
 
         disposables += state
                 .map { it.isSaving }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showIsSaving(it) }
+
+        disposables += state
+                .map { it.isEditing }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.showIsEditing(it) }
 
         disposables += state
                 .mapNullable { it.error }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     val value = it.value
                     if (value != null) {
@@ -62,24 +63,21 @@ class DeckBuilderRenderer(
                 .map { it.pokemonCards }
                 .distinctUntilChanged()
                 .map(stackCards())
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showPokemonCards(it) }
 
         disposables += state
                 .map { it.trainerCards }
                 .distinctUntilChanged()
                 .map(stackCards())
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showTrainerCards(it) }
 
         disposables += state
                 .map { it.energyCards }
                 .distinctUntilChanged()
                 .map(stackCards())
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe { actions.showEnergyCards(it) }
 
         disposables += state
@@ -92,8 +90,7 @@ class DeckBuilderRenderer(
         disposables += state
                 .mapNullable { it.name }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     it.value?.let {
                         actions.showDeckName(it)
@@ -103,8 +100,7 @@ class DeckBuilderRenderer(
         disposables += state
                 .mapNullable { it.description }
                 .distinctUntilChanged()
-                .subscribeOn(comp)
-                .observeOn(main)
+                .addToLifecycle()
                 .subscribe {
                     it.value?.let {
                         actions.showDeckDescription(it)

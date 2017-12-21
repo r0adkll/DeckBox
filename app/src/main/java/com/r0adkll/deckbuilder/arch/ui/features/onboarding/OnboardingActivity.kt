@@ -20,6 +20,8 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.bundle
@@ -53,6 +55,8 @@ class OnboardingActivity : BaseActivity() {
                 launchSetup()
             }
         }
+
+        Analytics.event(Event.TutorialBegin)
     }
 
 
@@ -61,7 +65,8 @@ class OnboardingActivity : BaseActivity() {
     }
 
 
-    fun launchSetup() {
+    private fun launchSetup() {
+        Analytics.event(Event.TutorialComplete)
         startActivity(SetupActivity.createIntent(this))
         finish()
         preferences.onboarding = true

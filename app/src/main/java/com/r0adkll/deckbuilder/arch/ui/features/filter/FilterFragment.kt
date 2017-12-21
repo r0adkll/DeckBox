@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.Rarity
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
@@ -17,6 +19,9 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.FilterRecyclerAda
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterModule
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_filter.*
@@ -90,12 +95,40 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
     }
 
 
-    override fun typeClicks(): Observable<Pair<String, Type>> = filterIntentions.typeClicks
-    override fun attributeClicks(): Observable<FilterAttribute> = filterIntentions.attributeClicks
-    override fun optionClicks(): Observable<Pair<String, Any>> = filterIntentions.optionClicks
+    override fun typeClicks(): Observable<Pair<String, Type>> = filterIntentions.typeClicks.doOnNext {
+        Analytics.event(Event.SelectContent.FilterOption(it.first, it.second.displayName))
+    }
+
+
+    override fun attributeClicks(): Observable<FilterAttribute> = filterIntentions.attributeClicks.doOnNext { attr ->
+        Analytics.event(Event.SelectContent.FilterOption("attribute", when(attr) {
+            is FilterAttribute.SuperTypeAttribute -> attr.superType.displayName
+            is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
+            is FilterAttribute.ContainsAttribute -> attr.attribute
+        }))
+    }
+
+
+    override fun optionClicks(): Observable<Pair<String, Any>> = filterIntentions.optionClicks.doOnNext { opt ->
+        val option = opt.second
+        Analytics.event(Event.SelectContent.FilterOption("option", when(option) {
+            is Expansion -> option.code
+            is Rarity -> option.key
+            else -> option.toString()
+        }))
+    }
+
+
     override fun viewMoreClicks(): Observable<Unit> = filterIntentions.viewMoreClicks
-    override fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>> = filterIntentions.valueRangeChanges
-    override fun clearFilter(): Observable<Unit> = filterIntentions.clearFilter
+
+
+    override fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>> = filterIntentions.valueRangeChanges.doOnNext {
+        Analytics.event(Event.SelectContent.FilterOption(it.first, it.second.modifier.name, it.second.value.toLong()))
+    }
+
+    override fun clearFilter(): Observable<Unit> = filterIntentions.clearFilter.doOnNext {
+        Analytics.event(Event.SelectContent.MenuAction("clear_filter"))
+    }
 
 
     override fun setIsEmpty(isEmpty: Boolean) {

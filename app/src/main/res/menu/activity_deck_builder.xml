@@ -2,12 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <item android:id="@+id/action_save"
           android:title="@string/action_save"
           android:icon="@drawable/ic_save_white_24dp"
           app:showAsAction="always"
         />
+
+
+    <item android:id="@+id/action_edit"
+          android:title="@string/action_edit"
+          android:icon="@drawable/ic_edit_white_24dp"
+          app:showAsAction="always"/>
+
+
+    <item android:id="@+id/action_finish_edit"
+          android:title="@string/action_finish_edit"
+          android:icon="@drawable/ic_check_white_24dp"
+          android:visible="false"
+          app:showAsAction="always"
+          />
 
     <item android:id="@+id/action_import"
           android:title="@string/action_import"
