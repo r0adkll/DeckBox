@@ -47,6 +47,10 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        quickTip.post {
+            quickTip.show(fab)
+        }
+
         renderer.start()
         presenter.start()
 

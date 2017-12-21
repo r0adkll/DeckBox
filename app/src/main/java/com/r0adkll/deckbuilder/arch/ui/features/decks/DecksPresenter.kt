@@ -21,7 +21,7 @@ class DecksPresenter @Inject constructor(
 
         val loadDecks = repository.getDecks()
                 .map { Change.DecksLoaded(it) as Change }
-                .startWith(Change.IsLoading as Change)
+//                .startWith(Change.IsLoading as Change)
                 .onErrorReturn(handleUnknownError)
 
         val deleteDecks = intentions.deleteClicks()
