@@ -26,7 +26,7 @@ class PokemonCardViewHolder(
         val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
 ): RecyclerView.ViewHolder(itemView) {
 
-    private val cardView: PokemonCardView by bindView(R.id.card)
+    val cardView: PokemonCardView by bindView(R.id.card)
     private val actionLayout: LinearLayout? by bindOptionalView(R.id.action_layout)
     private val actionRemove: ImageView? by bindOptionalView(R.id.action_remove)
     private val actionAdd: ImageView? by bindOptionalView(R.id.action_add)

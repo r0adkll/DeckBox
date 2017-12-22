@@ -24,6 +24,10 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SubType
 
 
+/**
+ * A ViewHolder interface for each [io.pokemontcg.model.SuperType] in the main deckbuilding interface
+ * that dictates how that list of [io.pokemontcg.model.SuperType]'s cards are displayed
+ */
 abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
         itemView: View,
         @DrawableRes val emptyIcon: Int,
@@ -54,6 +58,9 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
 }
 
 
+/**
+ * The [SuperTypeViewHolder] implementation for Pokémon cards in the deck building interface
+ */
 class PokemonViewHolder(
         itemView: View,
         emptyIcon: Int,
@@ -62,7 +69,8 @@ class PokemonViewHolder(
         editCardIntentions: EditCardIntentions
 ) : SuperTypeViewHolder<EvolutionChainRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
 
-    override val adapter: EvolutionChainRecyclerAdapter = EvolutionChainRecyclerAdapter(itemView.context, pokemonCardClicks)
+    override val adapter: EvolutionChainRecyclerAdapter = EvolutionChainRecyclerAdapter(itemView.context,
+            editCardIntentions, pokemonCardClicks)
     override val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(itemView.context)
 
     override fun bind(cards: List<StackedPokemonCard>) {
@@ -83,6 +91,10 @@ class PokemonViewHolder(
 }
 
 
+/**
+ * The [SuperTypeViewHolder] implementation for both Energy and Supporter cards in the deckbuilding
+ * interface
+ */
 class TrainerEnergyViewHolder(
         itemView: View,
         emptyIcon: Int,

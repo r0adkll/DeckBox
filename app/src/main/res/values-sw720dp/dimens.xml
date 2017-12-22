@@ -2,4 +2,5 @@
 <resources>
     <dimen name="dropzone_height">112dp</dimen>
     <dimen name="dropzone_height_inverse">-112dp</dimen>
+    <dimen name="deck_building_width">382dp</dimen>
 </resources>

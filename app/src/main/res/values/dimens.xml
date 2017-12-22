@@ -3,4 +3,5 @@
     <dimen name="marquee_card_height">300dp</dimen>
     <dimen name="dropzone_height">112dp</dimen>
     <dimen name="dropzone_height_inverse">-112dp</dimen>
+    <dimen name="deck_building_width">-1dp</dimen>
 </resources>

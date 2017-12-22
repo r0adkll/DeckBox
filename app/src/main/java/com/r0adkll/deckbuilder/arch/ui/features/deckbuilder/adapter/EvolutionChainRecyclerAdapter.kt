@@ -9,11 +9,13 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 
 class EvolutionChainRecyclerAdapter(
         context: Context,
+        private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
 ) : ListRecyclerAdapter<EvolutionChain, EvolutionChainViewHolder>(context) {
 
@@ -25,7 +27,7 @@ class EvolutionChainRecyclerAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): EvolutionChainViewHolder {
-        return EvolutionChainViewHolder.create(inflater, parent, pokemonCardClicks)
+        return EvolutionChainViewHolder.create(inflater, parent, editCardIntentions, pokemonCardClicks)
     }
 
 
