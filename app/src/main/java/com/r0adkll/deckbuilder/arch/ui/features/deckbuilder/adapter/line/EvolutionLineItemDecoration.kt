@@ -1,50 +1,83 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
+
+import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
+import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 
 class EvolutionLineItemDecoration(
-
+        val context: Context,
+        val adapter: EvolutionLineAdapter
 ) : RecyclerView.ItemDecoration() {
 
+    private val linkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val linkBarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private val nodeSpacing: Int = context.dipToPx(4f)
+    private val linkSpacing: Int = context.dipToPx(24f)
+    private val linkRadius: Float = context.dpToPx(8f)
+
+
+    init {
+        linkPaint.color = context.color(R.color.primaryColor)
+        linkPaint.style = Paint.Style.FILL
+
+        linkBarPaint.color = context.color(R.color.primaryColor)
+        linkBarPaint.style = Paint.Style.STROKE
+        linkBarPaint.strokeWidth = linkRadius
+    }
+
+
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        super.getItemOffsets(outRect, view, parent, state)
+        val adapterPosition = parent.getChildAdapterPosition(view)
+        val evolutionState = adapter.getEvolutionState(adapterPosition)
+
+        val spacing = if (evolutionState.cardIndex == 0 && evolutionState.nodeIndex == 0) {
+            0
+        } else if (evolutionState.cardIndex == 0) {
+            linkSpacing
+        } else {
+            nodeSpacing
+        }
+
+        outRect.set(spacing, 0, 0, 0)
     }
 
 
-    override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        super.onDrawOver(c, parent, state)
-    }
+    override fun onDrawOver(c: Canvas, parent: RecyclerView, s: RecyclerView.State) {
+        val adapter = parent.adapter
+        adapter?.let {
+            (0 until it.itemCount).forEach { index ->
+                val state = this.adapter.getEvolutionState(index)
+                if (state.evolution == PokemonCardView.Evolution.END || state.evolution == PokemonCardView.Evolution.MIDDLE) {
+                    val child = parent.getChildAt(index)
+                    val nextChild = parent.getChildAt(index + 1)?.let { it.findViewById<PokemonCardView>(R.id.card) }
+                    if (nextChild != null && (nextChild.evolution == PokemonCardView.Evolution.START || nextChild.evolution == PokemonCardView.Evolution.MIDDLE)) {
+                        // Render Link
+                        val y = child.top + (child.height / 2f)
 
+                        // Start node
+                        val x1 = child.right.toFloat()
+                        c.drawCircle(x1, y, linkRadius, linkPaint)
 
-    private fun getEvolutionState(chain: EvolutionChain, nodeIndex: Int, cardIndex: Int): PokemonCardView.Evolution {
-        val node = chain.nodes[nodeIndex]
-        val isFirstNode = nodeIndex == 0
-        val isFirstCard = cardIndex == 0
-        val isLastCard = cardIndex == node.cards.size - 1
-        val hasNextNode = nodeIndex < chain.nodes.size - 1
-        if (isFirstNode) {
-            if (hasNextNode && isLastCard) {
-                return PokemonCardView.Evolution.END
+                        // End node
+                        val x2 = nextChild.left.toFloat()
+                        c.drawCircle(x2, y, linkRadius, linkPaint)
+
+                        // Render connecting bar
+                        c.drawLine(x1, y, x2, y, linkBarPaint)
+                    }
+                }
             }
         }
-        else {
-            if (isFirstCard && isLastCard && hasNextNode) {
-                return PokemonCardView.Evolution.MIDDLE
-            }
-            else if (isFirstCard) {
-                return PokemonCardView.Evolution.START
-            }
-            else if (isLastCard && hasNextNode) {
-                return PokemonCardView.Evolution.END
-            }
-        }
-
-        return PokemonCardView.Evolution.NONE
     }
 }

@@ -10,6 +10,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line.EvolutionLineItemDecoration
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line.EvolutionLineRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.bindView
@@ -31,6 +32,8 @@ class EvolutionChainViewHolder(
             adapter.setOnPokemonCardViewClickListener { pokemonCardClicks.accept(it) }
             recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = adapter
+            (0 until recyclerView.itemDecorationCount).forEach { recyclerView.removeItemDecorationAt(it) }
+            recyclerView.addItemDecoration(EvolutionLineItemDecoration(itemView.context, adapter))
         }
 
         val adapter = recyclerView.adapter as EvolutionLineRecyclerAdapter

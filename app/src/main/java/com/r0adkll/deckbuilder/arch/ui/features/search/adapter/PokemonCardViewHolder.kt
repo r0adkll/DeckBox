@@ -32,11 +32,15 @@ class PokemonCardViewHolder(
     private val actionAdd: ImageView? by bindOptionalView(R.id.action_add)
 
 
-    fun bind(card: PokemonCard, count: Int, isEditMode: Boolean = false) {
+    fun bind(card: PokemonCard,
+             count: Int,
+             evolution: PokemonCardView.Evolution = PokemonCardView.Evolution.NONE,
+             isEditMode: Boolean = false) {
         cardView.displayCountWhenOne = displayWhenOne
         cardView.card = card
         cardView.count = count
         cardView.startDragImmediately = startDragImmediately
+        cardView.evolution = evolution
 
         actionLayout?.setVisible((isEditMode && !displayWhenOne) || isEditMode && ((displayWhenOne && count > 0) || count > 1))
         actionRemove?.setOnClickListener { removeCardClicks.accept(card) }

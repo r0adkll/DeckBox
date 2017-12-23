@@ -40,7 +40,7 @@ class StackedPokemonRecyclerAdapter(
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         super.onBindViewHolder(vh, i)
         val card = items[i]
-        vh.bind(card.card, card.count, isEditing)
+        vh.bind(card.card, card.count, isEditMode = isEditing)
         vh.itemView.setOnLongClickListener { v ->
             val c = v.findViewById<PokemonCardView>(R.id.card)
             c.startDrag(true)
