@@ -70,7 +70,7 @@ class EvolutionLineItemDecoration(
                         c.drawCircle(x1, y, linkRadius, linkPaint)
 
                         // End node
-                        val x2 = nextChild.left.toFloat()
+                        val x2 = x1 + linkSpacing //nextChild.left.toFloat()
                         c.drawCircle(x2, y, linkRadius, linkPaint)
 
                         // Render connecting bar
