@@ -97,7 +97,15 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
 
             var previous: Node? = null,
             var next: Node? = null
-    )
+    ) {
+
+
+        override fun hashCode(): Int {
+            return ((this.name?.hashCode() ?: 0 * 31) +
+                    (this.evolvesFrom?.hashCode() ?: 0 * 31) +
+                    this.cards.hashCode() * 31)
+        }
+    }
 
 
     companion object {

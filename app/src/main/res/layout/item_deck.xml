@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_tiny">
+    android:layout_margin="@dimen/margin_tiny"
+    android:foreground="?attr/selectableItemBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"

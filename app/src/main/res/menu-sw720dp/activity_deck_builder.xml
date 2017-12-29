@@ -8,6 +8,20 @@
           android:icon="@drawable/ic_save_black_24dp"
           app:showAsAction="always" />
 
+
+    <item android:id="@+id/action_edit"
+        android:title="@string/action_edit"
+        android:icon="@drawable/ic_edit_black_24dp"
+        app:showAsAction="always"/>
+
+
+    <item android:id="@+id/action_finish_edit"
+        android:title="@string/action_finish_edit"
+        android:icon="@drawable/ic_check_black_24dp"
+        android:visible="false"
+        app:showAsAction="always"
+        />
+
     <item android:id="@+id/action_import"
           android:title="@string/action_import"
           android:icon="@drawable/ic_import_black" />

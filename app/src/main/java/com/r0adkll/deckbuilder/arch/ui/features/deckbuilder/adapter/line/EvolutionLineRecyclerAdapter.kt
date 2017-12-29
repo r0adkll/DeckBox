@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
 
 import android.content.Context
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -62,13 +64,19 @@ class EvolutionLineRecyclerAdapter(
 
 
     override fun onBindViewHolder(holder: PokemonCardViewHolder, position: Int) {
-        getItem(position)?.let { card ->
+        evolution.getItem(position)?.let { card ->
             val evolution = getEvolutionState(position)
             holder.bind(card.card, card.count, evolution.evolution, isEditing)
 
             // Bind click listener
             holder.itemView.setOnClickListener {
                 cardViewClickListener?.onClick(holder.cardView)
+            }
+
+            holder.itemView.setOnLongClickListener { v ->
+                val c = v.findViewById<PokemonCardView>(R.id.card)
+                c.startDrag(true)
+                true
             }
         }
     }
@@ -80,7 +88,7 @@ class EvolutionLineRecyclerAdapter(
 
 
     override fun getItemId(position: Int): Long {
-        return getItem(position)?.card?.hashCode()?.toLong() ?: RecyclerView.NO_ID
+        return evolution.getItem(position)?.card?.hashCode()?.toLong() ?: RecyclerView.NO_ID
     }
 
 
@@ -96,7 +104,6 @@ class EvolutionLineRecyclerAdapter(
                     nodeIndex = index
                     cardIndex = i
 
-                    Timber.i("$this::getEvolutionState(position: $position, nodeIndex: $nodeIndex, cardIndex: $cardIndex)")
                     val state = getEvolutionState(evolution!!, nodeIndex, cardIndex)
                     return EvolutionLineAdapter.State(nodeIndex, cardIndex, state)
                 } else {
@@ -111,17 +118,19 @@ class EvolutionLineRecyclerAdapter(
     }
 
 
+    fun setEvolutionChain(chain: EvolutionChain) {
+        val diff = calculateDiff(evolution, chain)
+        evolution = diff.new.first()
+        diff.diff.dispatchUpdatesTo(this)
+    }
+
+
     fun setOnPokemonCardViewClickListener(listener: (PokemonCardView) -> Unit) {
         cardViewClickListener = object : OnPokemonCardViewClickListener {
             override fun onClick(view: PokemonCardView) {
                 listener.invoke(view)
             }
         }
-    }
-
-
-    private fun getItem(position: Int): StackedPokemonCard? {
-        return evolution?.nodes?.flatMap { it.cards }?.getOrNull(position)
     }
 
 
@@ -155,5 +164,38 @@ class EvolutionLineRecyclerAdapter(
     interface OnPokemonCardViewClickListener {
 
         fun onClick(view: PokemonCardView)
+    }
+
+
+    companion object {
+
+        fun EvolutionChain?.getItem(position: Int): StackedPokemonCard? {
+            return this?.nodes?.flatMap { it.cards }?.getOrNull(position)
+        }
+
+        fun calculateDiff(old: EvolutionChain?, new: EvolutionChain): RecyclerViewBinding<EvolutionChain> {
+            val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    return old?.let { oldChain ->
+                        val oldItem = oldChain.getItem(oldItemPosition)!!
+                        val newItem = new.getItem(newItemPosition)!!
+                        oldItem.card.id == newItem.card.id
+                    } ?: false
+                }
+
+                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    return old?.let { oldChain ->
+                        val oldItem = oldChain.getItem(oldItemPosition)!!
+                        val newItem = new.getItem(newItemPosition)!!
+                        oldItem == newItem && oldItem.count == newItem.count
+                    } ?: false
+                }
+
+                override fun getOldListSize(): Int = old?.size ?: 0
+                override fun getNewListSize(): Int = new.size
+            })
+
+            return RecyclerViewBinding(new = listOf(new), diff = diff)
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,14 +33,20 @@ class EvolutionChainViewHolder(
             adapter.setOnPokemonCardViewClickListener { pokemonCardClicks.accept(it) }
             recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = adapter
+            (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
             (0 until recyclerView.itemDecorationCount).forEach { recyclerView.removeItemDecorationAt(it) }
             recyclerView.addItemDecoration(EvolutionLineItemDecoration(itemView.context, adapter))
         }
 
         val adapter = recyclerView.adapter as EvolutionLineRecyclerAdapter
-        adapter.evolution = evolutionChain
-        adapter.isEditing = isEditing
-        adapter.notifyDataSetChanged()
+        val forceChange = adapter.isEditing != isEditing
+        if (forceChange) {
+            adapter.evolution = evolutionChain
+            adapter.isEditing = isEditing
+            adapter.notifyDataSetChanged()
+        } else {
+            adapter.setEvolutionChain(evolutionChain)
+        }
     }
 
 
