@@ -12,6 +12,7 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -114,24 +115,27 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     private fun handleSignInResult(result: GoogleSignInResult) {
-        if (result.isSuccess) {
-            val acct = result.signInAccount
-            val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
-            firebaseAuth.signInWithCredential(credential)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Analytics.userId(it.result.user.uid)
-                            Analytics.event(Event.Login.Google)
-                            startActivity(HomeActivity.createIntent(this@SetupActivity))
-                            finish()
+        try {
+            if (result.isSuccess) {
+                val acct = result.signInAccount
+                val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
+                firebaseAuth.signInWithCredential(credential)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                Analytics.userId(it.result.user.uid)
+                                Analytics.event(Event.Login.Google)
+                                startActivity(HomeActivity.createIntent(this@SetupActivity))
+                                finish()
+                            } else {
+                                snackbar("Authentication failed")
+                            }
                         }
-                        else {
-                            snackbar("Authentication failed")
-                        }
-                    }
-        }
-        else {
-            snackbar("Authenticated failed")
+            } else {
+                snackbar("Authenticated failed")
+            }
+        } catch (e: Exception) {
+            Timber.e(e)
+            snackbar("Unable to sign in with your Google account")
         }
     }
 
