@@ -107,6 +107,7 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_account_signout" -> {
                     FirebaseAuth.getInstance().signOut()
+                    googleClient?.clearDefaultAccountAndReconnect()
                     val intent = Intent(activity, SetupActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
