@@ -306,8 +306,8 @@ class PokemonCardView @JvmOverloads constructor(
 
         override fun onProvideShadowMetrics(outShadowSize: Point, outShadowTouchPoint: Point) {
             view?.let {
-                val width = it.width * SHADOW_SIZE_RATIO
-                val height = it.height * SHADOW_SIZE_RATIO
+                val width = it.width.coerceAtLeast(0) * SHADOW_SIZE_RATIO
+                val height = it.height.coerceAtLeast(0) * SHADOW_SIZE_RATIO
                 val touchX = lastTouch.x * SHADOW_SIZE_RATIO
                 val touchY = lastTouch.y * SHADOW_SIZE_RATIO
                 outShadowSize.set(width.toInt(), height.toInt())
