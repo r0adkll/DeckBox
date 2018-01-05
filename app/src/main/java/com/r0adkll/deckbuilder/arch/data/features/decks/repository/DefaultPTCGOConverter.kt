@@ -1,11 +1,14 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.repository
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.PTCGOConverter
 import io.pokemontcg.model.SuperType
+import io.pokemontcg.model.Type
+import io.pokemontcg.model.Type.*
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.StringReader
@@ -16,6 +19,7 @@ class DefaultPTCGOConverter @Inject constructor(
         val repository: CardRepository
 ) : PTCGOConverter {
 
+    @SuppressLint("CheckResult")
     override fun import(deckList: String): Observable<List<PokemonCard>> {
         return repository.getExpansions()
                 .onErrorReturnItem(emptyList())
@@ -32,6 +36,46 @@ class DefaultPTCGOConverter @Inject constructor(
                                     }
                                 }
                                 allCards
+                            }
+                            .flatMap { allCards ->
+                                val expectedCount = cards.sumBy { it.count }
+                                if (expectedCount != allCards.size) {
+                                    Timber.w("Uh-oh! It looks like we haven't imported all of the cards!")
+
+                                    // Find missing cards
+                                    val missing = cards.filter { spec ->
+                                        allCards.find { it.id == spec.id } == null
+                                    }
+
+                                    // Determine if any are energy cards
+                                    val missingEnergy = missing.filter(filterEnergy())
+                                    if (missingEnergy.isNotEmpty()) {
+                                        val missingEnergyCards = missingEnergy.map(mapEnergy())
+                                                .filter { it != null }
+                                                .map { it!! }
+
+                                        val energyIds = missingEnergyCards.map { it.second }
+
+                                        Timber.d("Searching for default energy: $missingEnergy")
+
+                                        // Now search for these missing default energy cards
+                                        repository.searchIds(energyIds)
+                                                .map { pokes ->
+                                                    pokes.forEach { poke ->
+                                                        val count = missingEnergyCards.find { it.second == poke.id }?.first?.count ?: 0
+                                                        Timber.d("* $count Energy($poke)")
+                                                        (0 until count).forEach {
+                                                            allCards.add(poke.copy())
+                                                        }
+                                                    }
+                                                    allCards
+                                                }
+                                    } else {
+                                        Observable.just(allCards)
+                                    }
+                                } else {
+                                    Observable.just(allCards)
+                                }
                             }
                             .doOnNext { Timber.d("Pokemon Found: $it") }
                 }
@@ -137,6 +181,39 @@ class DefaultPTCGOConverter @Inject constructor(
         val parts = clean.split(" ").toMutableList()
         val nameParts = parts.dropLast(2)
         return nameParts.joinToString(" ")
+    }
+
+
+    private fun filterEnergy(): (CardSpec) -> Boolean {
+        return { spec ->
+            Type.VALUES.filter { it != COLORLESS && it != UNKNOWN && it != DRAGON}
+                    .find { spec.name.contains("${it.name} Energy", true) } != null
+        }
+    }
+
+
+    private fun mapEnergy(): (CardSpec) -> Pair<CardSpec, String>? {
+        return { spec ->
+            val type = Type.VALUES.filter { it != COLORLESS && it != UNKNOWN && it != DRAGON }
+                    .find { spec.name.contains("${it.name} Energy", true) }
+            type?.let {
+                defaultEnergy(it)?.let { Pair(spec, it) }
+            }
+        }
+    }
+
+
+    private fun defaultEnergy(type: Type): String? = when(type) {
+        GRASS -> "xy1-132"
+        FIRE -> "xy1-133"
+        WATER -> "xy1-134"
+        LIGHTNING -> "xy1-135"
+        PSYCHIC -> "xy1-136"
+        FIGHTING -> "xy1-137"
+        DARKNESS -> "xy1-138"
+        METAL -> "xy1-139"
+        FAIRY -> "xy1-140"
+        else -> null
     }
 
 
