@@ -7,6 +7,7 @@ import com.ftinc.kit.kotlin.extensions.Preferences.BooleanPreference
 import com.ftinc.kit.kotlin.extensions.Preferences.LongPreference
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveBasicEnergySetPreference
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveExpansionsPreference
 import javax.inject.Inject
 
@@ -20,6 +21,7 @@ class AppPreferences @Inject constructor(
         const val KEY_ONBOARDING = "pref_onboarding"
         const val KEY_EXPANSIONS = "pref_expansions"
         const val KEY_EXPANSIONS_TIMESTAMP = "pref_expansions_timestamp"
+        const val KEY_DEFAULT_ENERGY_SET = "pref_default_energy_set"
     }
 
 
@@ -27,6 +29,8 @@ class AppPreferences @Inject constructor(
 
     val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
     var expansionsTimestamp by LongPreference(KEY_EXPANSIONS_TIMESTAMP, 0L)
+
+    val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)
 
 
     fun clear() {

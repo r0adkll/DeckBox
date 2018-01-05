@@ -1,11 +1,13 @@
-package com.r0adkll.deckbuilder.arch.data.features.decks.repository
+package com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository
 
 import android.annotation.SuppressLint
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.model.BasicEnergySet
+import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import io.pokemontcg.model.Type.*
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 
 class DefaultPTCGOConverter @Inject constructor(
-        val repository: CardRepository
+        val repository: CardRepository,
+        val preferences: AppPreferences
 ) : PTCGOConverter {
 
     @SuppressLint("CheckResult")
@@ -197,23 +200,10 @@ class DefaultPTCGOConverter @Inject constructor(
             val type = Type.VALUES.filter { it != COLORLESS && it != UNKNOWN && it != DRAGON }
                     .find { spec.name.contains("${it.name} Energy", true) }
             type?.let {
-                defaultEnergy(it)?.let { Pair(spec, it) }
+                val defaultEnergySet = preferences.basicEnergySet.get()
+                defaultEnergySet.convert(it)?.let { Pair(spec, it) }
             }
         }
-    }
-
-
-    private fun defaultEnergy(type: Type): String? = when(type) {
-        GRASS -> "xy1-132"
-        FIRE -> "xy1-133"
-        WATER -> "xy1-134"
-        LIGHTNING -> "xy1-135"
-        PSYCHIC -> "xy1-136"
-        FIGHTING -> "xy1-137"
-        DARKNESS -> "xy1-138"
-        METAL -> "xy1-139"
-        FAIRY -> "xy1-140"
-        else -> null
     }
 
 
