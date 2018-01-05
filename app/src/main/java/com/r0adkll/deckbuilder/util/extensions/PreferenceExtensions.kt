@@ -6,6 +6,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.model.BasicEnergySet
 import java.lang.reflect.Type
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
@@ -61,10 +62,30 @@ interface RxPreferences {
     }
 
 
+    class ReactiveBasicEnergySetPreference(key: String): ReactivePreference<BasicEnergySet>(key) {
+        override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<BasicEnergySet> {
+            return thisRef.rxSharedPreferences.getObject(key, BasicEnergySet.XY, BasicEnergySetConverter())
+        }
+    }
+
+
     class ReactiveJsonPreference<T : Any>(key: String, val default: T) : ReactivePreference<T>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<T> {
             return thisRef.rxSharedPreferences.getObject(key, default, GsonConverter<T>(default::class))
+        }
+    }
+
+
+    private class BasicEnergySetConverter : Preference.Converter<BasicEnergySet> {
+
+        override fun deserialize(serialized: String): BasicEnergySet {
+            return BasicEnergySet::class.nestedClasses
+                    .find { it.qualifiedName == serialized }?.objectInstance as? BasicEnergySet ?: BasicEnergySet.XY
+        }
+
+        override fun serialize(value: BasicEnergySet): String {
+            return value::class.qualifiedName!!
         }
     }
 

@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.domain.features.decks.repository
+package com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard

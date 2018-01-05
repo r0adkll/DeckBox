@@ -11,7 +11,7 @@ import android.view.MenuItem
 import com.ftinc.kit.util.IntentUtils
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event

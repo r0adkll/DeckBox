@@ -1,6 +1,8 @@
----===== Version 0.1.0 : Phase 1 =====---
+---===== Version 0.2.2 : Phase 1 =====---
 
-• Initial Release
+• Added improved UI for adding/removing cards from your deck/builder interface
+• Improved the pokemon evolution chain view to clean up bugs
+• Bugfixes and Improvements
 
 ---===== ROADMAP =====---
 

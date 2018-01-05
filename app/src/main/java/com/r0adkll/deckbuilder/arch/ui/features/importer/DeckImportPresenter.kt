@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.importer
 
 
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportUi.State.Change
