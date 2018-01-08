@@ -70,6 +70,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             startActivity(DeckBuilderActivity.createIntent(activity!!))
         }
 
+        fab.post { quickTip.show(fab) }
+
         disposables += shareClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.Action("export_decklist"))

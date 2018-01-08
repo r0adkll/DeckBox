@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.support.graphics.drawable.AnimationUtilsCompat
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.widget.FrameLayout
@@ -38,7 +39,12 @@ class QuickTipView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
 
         eraser.color = Color.BLACK
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        eraser.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+    }
+
+
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        return false
     }
 
 
@@ -67,7 +73,7 @@ class QuickTipView @JvmOverloads constructor(
             val offsetX = (bitmapCache?.width?.toFloat() ?: 0f) / 2f
             val offsetY = (bitmapCache?.height?.toFloat() ?: 0f) / 2f
             val radius = getRadius()
-            canvasCache?.drawColor(color(R.color.primaryColor))
+//            canvasCache?.drawColor(color(R.color.primaryColor))
             canvasCache?.drawCircle(offsetX, offsetY, radius, paint)
             canvasCache?.drawCircle(offsetX, offsetY, holeRadius, eraser)
 
