@@ -12,7 +12,10 @@
     app:umanoFadeColor="@color/transparent"
     >
 
+
+    <!-- Main content panel -->
     <RelativeLayout
+        android:id="@+id/mainContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -32,8 +35,15 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="@string/activity_deck_builder"
                 >
+
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:id="@+id/appbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_deck_builder"
+                    />
 
                 <!--<TextView-->
                     <!--android:id="@+id/cardCounter"-->
@@ -91,7 +101,6 @@
             android:layout_width="match_parent"
             android:layout_height="104dp"
             android:translationY="-104dp"
-            tools:translationY="0dp"
             >
 
             <TextView
@@ -153,8 +162,20 @@
             app:backgroundTint="?attr/colorPrimary"
             />
 
+        <ImageView
+            android:id="@+id/panelIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_arrow_drop_up_black_24dp"
+            android:alpha=".56"
+            />
+
     </RelativeLayout>
 
+
+    <!-- Drawer Panel -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

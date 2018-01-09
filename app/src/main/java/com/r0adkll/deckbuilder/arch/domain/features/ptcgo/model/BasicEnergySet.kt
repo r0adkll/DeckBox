@@ -27,15 +27,15 @@ sealed class BasicEnergySet {
 
     object Generations : BasicEnergySet() {
         override fun convert(type: Type): String? = when(type) {
-            GRASS -> "gl-75"
-            FIRE -> "gl-76"
-            WATER -> "gl-77"
-            LIGHTNING -> "gl-78"
-            PSYCHIC -> "gl-79"
-            FIGHTING -> "gl-80"
-            DARKNESS -> "gl-81"
-            METAL -> "gl-82"
-            FAIRY -> "gl-83"
+            GRASS -> "g1-75"
+            FIRE -> "g1-76"
+            WATER -> "g1-77"
+            LIGHTNING -> "g1-78"
+            PSYCHIC -> "g1-79"
+            FIGHTING -> "g1-80"
+            DARKNESS -> "g1-81"
+            METAL -> "g1-82"
+            FAIRY -> "g1-83"
             else -> null
         }
     }
