@@ -237,6 +237,7 @@
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
+            android:hint="@string/hint_deck_name_input"
             >
 
             <android.support.design.widget.TextInputEditText
@@ -244,7 +245,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="@string/hint_deck_name_input"
                 android:focusedByDefault="false"
                 />
 
@@ -258,6 +258,7 @@
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
+            android:hint="@string/hint_deck_description_input"
             app:counterEnabled="true"
             app:counterMaxLength="200"
             app:counterOverflowTextAppearance="@style/TextAppearance.Deck.InputOverflow"
@@ -269,7 +270,6 @@
                 android:layout_height="128dp"
                 android:gravity="start|top"
                 android:inputType="text|textMultiLine|textAutoCorrect"
-                android:hint="@string/hint_deck_description_input"
                 android:focusedByDefault="false"
                 android:maxLength="200"
                 />

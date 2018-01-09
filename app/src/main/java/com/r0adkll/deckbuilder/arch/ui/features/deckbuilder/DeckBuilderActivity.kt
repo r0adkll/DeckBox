@@ -210,11 +210,13 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             private fun interpolatePanelIndicator(offset: Float) {
                 val transY = mainContent.height * offset
                 panelIndicator.translationY = -transY
-                panelIndicator.alpha = 1f - (offset * 5f).coerceAtMost(1f)
+                panelIndicator.alpha = (1f - (offset * 5f).coerceAtMost(1f)) * .54f
             }
         })
 
         infoBar.setNavigationOnClickListener {
+            imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
+            imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
             slidingLayout.panelState = COLLAPSED
         }
 

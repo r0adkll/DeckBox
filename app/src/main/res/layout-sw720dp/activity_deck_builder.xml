@@ -222,7 +222,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 android:src="@drawable/ic_arrow_drop_up_black_24dp"
-                android:alpha=".56"
+                android:alpha=".54"
                 />
 
         </RelativeLayout>
