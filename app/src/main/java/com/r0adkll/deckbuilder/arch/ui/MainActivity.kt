@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         DeckApp.component.inject(this)
 
+        compatibilityCheck()
+
         if (firebase.currentUser != null) {
             Analytics.userId(firebase.currentUser!!.uid)
             startActivity(HomeActivity.createIntent(this))
@@ -35,5 +38,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         finish()
+    }
+
+
+    private fun compatibilityCheck() {
+        if (preferences.lastVersion == -1 && preferences.onboarding) {
+            // We want to disable the quickstart if the user has already passed the onboarding phase
+            preferences.quickStart = false
+        }
+
+        // Set the last version that was installed for future compat checks
+        preferences.lastVersion = BuildConfig.VERSION_CODE
     }
 }

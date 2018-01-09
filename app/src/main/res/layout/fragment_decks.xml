@@ -30,7 +30,6 @@
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_white_24dp"
         app:fabSize="normal"
-        app:backgroundTint="@color/primaryColor"
         app:pressedTranslationZ="6dp"
         app:rippleColor="@color/white30"
         app:layout_behavior="com.r0adkll.deckbuilder.arch.ui.widgets.ScrollAwareFABBehavior"
