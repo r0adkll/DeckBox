@@ -135,6 +135,9 @@ dependencies {
     implementation("com.52inc:52Kit-core:$ftkit_version") {
         exclude group: 'io.reactivex'
     }
+    implementation("com.52inc:52Kit-winds:$ftkit_version") {
+        exclude group: 'io.reactivex'
+    }
     implementation("com.52inc:52Kit-kotlin:$ftkit_version") {
         exclude group: 'io.reactivex'
     }
