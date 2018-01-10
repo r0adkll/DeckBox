@@ -30,10 +30,15 @@
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_white_24dp"
         app:fabSize="normal"
-        app:backgroundTint="@color/primaryColor"
         app:pressedTranslationZ="6dp"
         app:rippleColor="@color/white30"
         app:layout_behavior="com.r0adkll.deckbuilder.arch.ui.widgets.ScrollAwareFABBehavior"
+        />
+
+    <com.r0adkll.deckbuilder.arch.ui.widgets.QuickTipView
+        android:id="@+id/quickTip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         />
 
 </android.support.design.widget.CoordinatorLayout>

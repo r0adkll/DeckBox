@@ -63,7 +63,13 @@ class DefaultCardRepository @Inject constructor(
         }
 
         if (query.isNotBlank()) {
-            request.name = query
+
+            // Special case to account for 'N' cards
+            if (query.trim().equals("N", true)) {
+                request.name = "\"${query.trim()}\""
+            } else {
+                request.name = query
+            }
         }
 
         return api.card()

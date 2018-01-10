@@ -31,7 +31,7 @@ class SearchResultsRecyclerAdapter(
         super.onBindViewHolder(vh, i)
         val card = items[i]
         val count = selectedCards.count { it.id == card.id }
-        vh.bind(card, count)
+        vh.bind(card, count, isEditMode = true)
     }
 
 

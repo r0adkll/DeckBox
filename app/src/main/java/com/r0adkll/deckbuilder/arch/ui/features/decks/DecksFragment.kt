@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
@@ -21,6 +22,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils
+import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
@@ -34,6 +36,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
     @Inject lateinit var renderer: DecksRenderer
     @Inject lateinit var presenter: DecksPresenter
+    @Inject lateinit var preferences: AppPreferences
 
     private val shareClicks: Relay<Deck> = PublishRelay.create()
     private val duplicateClicks: Relay<Deck> = PublishRelay.create()
@@ -66,8 +69,17 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         recycler.adapter = adapter
 
         fab.setOnClickListener {
+            if (quickTip.isVisible()) {
+                quickTip.hide(fab)
+            }
+
             Analytics.event(Event.SelectContent.Action("new_deck"))
             startActivity(DeckBuilderActivity.createIntent(activity!!))
+        }
+
+        if (preferences.quickStart) {
+            fab.postDelayed({ quickTip.show(fab, R.string.deck_quickstart_message) }, 300L)
+            preferences.quickStart = false
         }
 
         disposables += shareClicks

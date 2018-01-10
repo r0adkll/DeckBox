@@ -11,6 +11,7 @@ import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
 import com.jakewharton.rxbinding2.widget.textChanges
@@ -57,6 +58,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     private val deck: Deck? by bindOptionalParcelable(EXTRA_DECK)
     private val imports: ArrayList<PokemonCard>? by bindOptionalParcelableList(EXTRA_IMPORT)
+    private val imm: InputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
     @State override var state: DeckBuilderUi.State = DeckBuilderUi.State.DEFAULT
 
@@ -84,6 +86,12 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         setContentView(R.layout.activity_deck_builder)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = null
+        appbarTitle.setOnClickListener {
+            slidingLayout.panelState = EXPANDED
+            inputDeckName.requestFocus()
+            imm.showSoftInput(inputDeckName, 0)
+        }
         appbar?.setNavigationOnClickListener {
             if (state.hasChanged) {
                 Analytics.event(Event.SelectContent.Action("close_deck_editor"))
@@ -105,6 +113,8 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 supportFinishAfterTransition()
             }
         }
+
+
 
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
         pager.adapter = adapter
@@ -146,6 +156,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 interpolateCardCounter(panel, slideOffset)
+                interpolatePanelIndicator(slideOffset)
 
                 val infoBarOffset = calculateAlpha(slideOffset, .95f)
                 infoBar.alpha = infoBarOffset
@@ -167,7 +178,8 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
             override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
                 if (previousState != COLLAPSED && newState == COLLAPSED) {
-                    ImeUtils.hideIme(panel)
+                    imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
+                    imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
                 }
             }
 
@@ -195,9 +207,16 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             }
 
 
+            private fun interpolatePanelIndicator(offset: Float) {
+                val transY = mainContent.height * offset
+                panelIndicator.translationY = -transY
+                panelIndicator.alpha = (1f - (offset * 5f).coerceAtMost(1f)) * .54f
+            }
         })
 
         infoBar.setNavigationOnClickListener {
+            imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
+            imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
             slidingLayout.panelState = COLLAPSED
         }
 
@@ -420,10 +439,10 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun showDeckName(name: String) {
         if(name.isBlank()) {
-            appbar?.setTitle(if (deck == null) R.string.deckbuilder_default_title else R.string.deckbuilder_edit_title)
+            appbarTitle?.setText(if (deck == null) R.string.deckbuilder_default_title else R.string.deckbuilder_edit_title)
         }
         else {
-            appbar?.title = name
+            appbarTitle?.text = name
         }
         if (inputDeckName.text.isBlank()) {
             inputDeckName.setText(name)

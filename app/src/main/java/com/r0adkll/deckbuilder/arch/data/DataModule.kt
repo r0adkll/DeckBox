@@ -14,13 +14,14 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckValidator
-import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultPTCGOConverter
+import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
 import com.r0adkll.deckbuilder.arch.data.features.decks.rules.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.decks.rules.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.model.BasicEnergySet
+import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
@@ -29,7 +30,6 @@ import dagger.multibindings.ElementsIntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
-import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level.*
 
 
@@ -119,4 +119,5 @@ class DataModule {
                 DuplicateRule()
         )
     }
+
 }

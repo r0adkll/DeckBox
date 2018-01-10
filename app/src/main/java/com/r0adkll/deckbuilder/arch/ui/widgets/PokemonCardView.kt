@@ -51,7 +51,7 @@ class PokemonCardView @JvmOverloads constructor(
     private val countRadius = dpToPx(16f)
 
     private var lastTouchX: Float = 0f
-    private var lastTouchY: Float = 1f;
+    private var lastTouchY: Float = 1f
 
 
     var card: PokemonCard? = null
@@ -297,7 +297,7 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
 
-    class CardShadowBuilder(view: View, val lastTouch: PointF) : DragShadowBuilder(view) {
+    class CardShadowBuilder(view: View, private val lastTouch: PointF) : DragShadowBuilder(view) {
 
         private var bitmapCache: Bitmap? = null
         private var canvasCache: Canvas? = null
@@ -308,8 +308,8 @@ class PokemonCardView @JvmOverloads constructor(
             view?.let {
                 val width = it.width.coerceAtLeast(0) * SHADOW_SIZE_RATIO
                 val height = it.height.coerceAtLeast(0) * SHADOW_SIZE_RATIO
-                val touchX = lastTouch.x * SHADOW_SIZE_RATIO
-                val touchY = lastTouch.y * SHADOW_SIZE_RATIO
+                val touchX = lastTouch.x.coerceAtLeast(0f) * SHADOW_SIZE_RATIO
+                val touchY = lastTouch.y.coerceAtLeast(0f) * SHADOW_SIZE_RATIO
                 outShadowSize.set(width.toInt(), height.toInt())
                 outShadowTouchPoint.set(touchX.toInt(), touchY.toInt())
             }

@@ -2,14 +2,14 @@ apply from: 'tools/dependencies.gradle'
 
 
 buildscript {
-    ext.kotlin_version = '1.2.0'
+    ext.kotlin_version = '1.2.10'
     repositories {
         google()
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0-alpha06'
+        classpath 'com.android.tools.build:gradle:3.1.0-alpha07'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:3.1.1'
         classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.7'
