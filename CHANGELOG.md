@@ -1,3 +1,9 @@
+# 1.0.0-RC
+* Fixed Quickstart view on tablets
+* Fixed search when just typing 'n' or 'N' to wrap in quotes
+* Fixed issue where '-' and '+' buttons weren't showing in search results
+* Misc. Bugs and copy changes
+
 # 0.2.3
 * Fixed decklist importer to find missing basic energy
 * Fixed keyboard behavior on the deck builder screen

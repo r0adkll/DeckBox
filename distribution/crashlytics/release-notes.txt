@@ -3,22 +3,3 @@
 • Added improved UI for adding/removing cards from your deck/builder interface
 • Improved the pokemon evolution chain view to clean up bugs
 • Bugfixes and Improvements
-
----===== ROADMAP =====---
-
-== Phase 2 ==
-
-• Community
-  • Share your decks online and view others. Comment, Discuss, or clone and edit into your own collection
-• Deck tech
-  • Add optional techs for your decks
-
-== Phase 3 ==
-
-• Collection
-  • Keep track of your cards in your collection
-  • Track your progress with each set
-• Pricing data
-  • View the price of cards and the total costs of a deck
-• Trade calculator
-  • Compare the pricing data of cards for trades
