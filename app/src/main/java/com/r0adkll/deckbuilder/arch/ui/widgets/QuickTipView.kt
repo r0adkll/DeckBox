@@ -9,10 +9,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPropertyAnimatorListener
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewAnimationUtils
+import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.ftinc.kit.kotlin.extensions.*
@@ -20,6 +17,8 @@ import com.ftinc.kit.util.UIUtils
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.util.ScreenUtils
+import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
+import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import timber.log.Timber
 
 
@@ -28,6 +27,7 @@ class QuickTipView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val ANIM_DURATION = 300L
+    private val TABLET_WIDTH = 400f
 
     private val title: TextView
 
@@ -53,8 +53,16 @@ class QuickTipView @JvmOverloads constructor(
         title.setTextColor(color(R.color.white))
         title.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
 
-        val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        lp.gravity = Gravity.BOTTOM
+        val lp: LayoutParams
+        if (smallestWidth(TABLET_10)) {
+            val w = (dipToPx(TABLET_WIDTH) + dipToPx(44f)) - (dipToPx(48f) + dipToPx(88f))
+            lp = LayoutParams(w, LayoutParams.WRAP_CONTENT)
+            lp.gravity = Gravity.BOTTOM or Gravity.END
+        } else {
+            lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            lp.gravity = Gravity.BOTTOM
+        }
+
         lp.marginStart = dipToPx(48f)
         lp.marginEnd = dipToPx(88f)
         lp.bottomMargin = dipToPx(104f)
@@ -187,8 +195,8 @@ class QuickTipView @JvmOverloads constructor(
 
 
     private fun getRadius(): Float {
-        return if (ScreenUtils.smallestWidth(resources, ScreenUtils.Config.TABLET_10)) {
-            dpToPx(300f)
+        return if (smallestWidth(TABLET_10)) {
+            dpToPx(TABLET_WIDTH)
         } else {
             Math.max(measuredWidth / 2f, measuredHeight / 2f) + dpToPx(56f) + dpToPx(32f)
         }

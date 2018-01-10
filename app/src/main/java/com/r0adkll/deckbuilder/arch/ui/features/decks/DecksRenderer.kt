@@ -18,7 +18,7 @@ class DecksRenderer(
         disposables += state
                 .map { it.decks }
                 .distinctUntilChanged()
-                .map { it.sortedBy { deck -> deck.timestamp } }
+                .map { it.sortedByDescending { deck -> deck.timestamp } }
                 .addToLifecycle()
                 .subscribe { actions.showDecks(it) }
 

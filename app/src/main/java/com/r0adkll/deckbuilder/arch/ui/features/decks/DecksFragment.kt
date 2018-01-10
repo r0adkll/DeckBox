@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
@@ -77,7 +78,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             startActivity(DeckBuilderActivity.createIntent(activity!!))
         }
 
-        if (preferences.quickStart) {
+        if (preferences.quickStart || BuildConfig.DEBUG) {
             fab.postDelayed({ quickTip.show(fab, R.string.deck_quickstart_message) }, 300L)
             preferences.quickStart = false
         }
