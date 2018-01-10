@@ -1,7 +1,9 @@
 package com.r0adkll.deckbuilder.util
 
 
+import android.content.Context
 import android.content.res.Resources
+import android.view.View
 
 
 object ScreenUtils {
@@ -12,6 +14,10 @@ object ScreenUtils {
 
 
     fun smallestWidth(resources: Resources, config: Config): Boolean = smallestWidth(resources, config.widthInDp)
+
+
+    fun View.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
+    fun Context.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
 
 
     enum class Config(val widthInDp: Int) {
