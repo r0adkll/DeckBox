@@ -4,7 +4,6 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SimpleItemAnimator
 import android.view.View
@@ -13,12 +12,13 @@ import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.EvolutionChainRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.Item
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokemonRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SubType
@@ -29,7 +29,7 @@ import io.pokemontcg.model.SubType
  * that dictates how that list of [io.pokemontcg.model.SuperType]'s cards are displayed
  */
 abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
-        itemView: View,
+        val itemView: View,
         @DrawableRes val emptyIcon: Int,
         @StringRes val emptyMessage: Int,
         val pokemonCardClicks: Relay<PokemonCardView>,
@@ -46,7 +46,7 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
     abstract fun setEditMode(isEditing: Boolean)
 
 
-    fun setup() {
+    open fun setup() {
         emptyView.setIcon(emptyIcon)
         emptyView.setEmptyMessage(emptyMessage)
 
@@ -67,16 +67,43 @@ class PokemonViewHolder(
         emptyMessage: Int,
         pokemonCardClicks: Relay<PokemonCardView>,
         editCardIntentions: EditCardIntentions
-) : SuperTypeViewHolder<EvolutionChainRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
+) : SuperTypeViewHolder<PokemonBuilderRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
 
-    override val adapter: EvolutionChainRecyclerAdapter = EvolutionChainRecyclerAdapter(itemView.context,
-            editCardIntentions, pokemonCardClicks)
-    override val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(itemView.context)
+    override val adapter: PokemonBuilderRecyclerAdapter = PokemonBuilderRecyclerAdapter(itemView.context, editCardIntentions, pokemonCardClicks)
+    override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, 3)
+
+
+    override fun setup() {
+        super.setup()
+
+        (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                val item = adapter.items[position]
+                return when(item) {
+                    is Item.Evolution -> 3
+                    else -> 1
+                }
+            }
+        }
+    }
 
     override fun bind(cards: List<StackedPokemonCard>) {
         val evolutions = EvolutionChain.build(cards)
                 .sortedByDescending { chain -> chain.nodes.size }
-        adapter.setEvolutions(evolutions)
+
+        val items = evolutions.flatMap { chain ->
+            if (chain.nodes.size > 1) {
+                listOf(Item.Evolution(chain))
+            } else {
+                chain.nodes.flatMap { node ->
+                    node.cards.map {
+                        Item.Single(it)
+                    }
+                }
+            }
+        }
+
+        adapter.setPokemon(items)
     }
 
 
