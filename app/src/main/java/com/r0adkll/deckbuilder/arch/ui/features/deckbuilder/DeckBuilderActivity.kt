@@ -67,6 +67,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     @Inject lateinit var validator: DeckValidator
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
+    private val editCardChanges: Relay<List<PokemonCard>> = PublishRelay.create()
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val saveDeck: Relay<Unit> = PublishRelay.create()
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
@@ -245,7 +246,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         disposables += pokemonCardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it, true)
+                    CardDetailActivity.show(this, it, state.allCards)
                 }
     }
 
@@ -294,7 +295,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         val detailResult = CardDetailActivity.parseResult(resultCode, requestCode, data)
         detailResult?.let {
             Analytics.event(Event.SelectContent.Action("add_from_detail"))
-            editCardIntentions.addCardClicks.accept(listOf(detailResult))
+            editCardChanges.accept(detailResult)
         }
     }
 
@@ -388,6 +389,11 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
+    }
+
+
+    override fun editCards(): Observable<List<PokemonCard>> {
+        return editCardChanges
     }
 
 

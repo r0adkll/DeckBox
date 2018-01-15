@@ -43,6 +43,9 @@ class DeckBuilderPresenter @Inject constructor(
                             .onErrorReturn(handleUnknownError)
                 }
 
+        val editCards = intentions.editCards()
+                .map { Change.EditCards(it) as Change }
+
         val editDeck = intentions.editDeckClicks()
                 .map { Change.Editing(it) as Change }
 
@@ -58,6 +61,7 @@ class DeckBuilderPresenter @Inject constructor(
         val merged = initialValidation
                 .mergeWith(addCard)
                 .mergeWith(removeCard)
+                .mergeWith(editCards)
                 .mergeWith(editDeck)
                 .mergeWith(editName)
                 .mergeWith(editDescription)

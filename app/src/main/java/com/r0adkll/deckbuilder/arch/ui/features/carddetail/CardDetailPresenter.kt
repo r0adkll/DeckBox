@@ -43,7 +43,10 @@ class CardDetailPresenter @Inject constructor(
                 .map { Change.AddCard }
 
         val removeCard = intentions.removeCardClicks()
-                .map { Change.AddCard }
+                .map { Change.RemoveCard }
+
+        val updateDeck = intentions.updateDeck()
+                .map { Change.DeckUpdated(it) }
 
 
         val merged = loadVariants
@@ -51,6 +54,7 @@ class CardDetailPresenter @Inject constructor(
                 .mergeWith(loadEvolves)
                 .mergeWith(addCard)
                 .mergeWith(removeCard)
+                .mergeWith(updateDeck)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)

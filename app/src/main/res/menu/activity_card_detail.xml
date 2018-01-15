@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_add"
-        android:title="@string/action_add"
+    <item
+        android:id="@+id/action_remove"
+        android:title="@string/action_remove"
         app:showAsAction="withText|ifRoom"
         />
 
-    <item android:id="@+id/action_remove"
-        android:title="@string/action_remove"
+    <item
+        android:id="@+id/action_add"
+        android:title="@string/action_add"
         app:showAsAction="withText|ifRoom"
         />
 
