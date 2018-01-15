@@ -245,7 +245,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         disposables += pokemonCardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it)
+                    CardDetailActivity.show(this, it, true)
                 }
     }
 
@@ -289,6 +289,12 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         importResult?.let {
             Analytics.event(Event.SelectContent.Action("import_cards"))
             editCardIntentions.addCardClicks.accept(it)
+        }
+
+        val detailResult = CardDetailActivity.parseResult(resultCode, requestCode, data)
+        detailResult?.let {
+            Analytics.event(Event.SelectContent.Action("add_from_detail"))
+            editCardIntentions.addCardClicks.accept(listOf(detailResult))
         }
     }
 

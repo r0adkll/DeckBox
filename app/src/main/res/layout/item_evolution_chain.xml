@@ -4,8 +4,10 @@
     android:id="@+id/recycler"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/padding_small"
-    android:paddingEnd="@dimen/padding_small"
+    android:paddingStart="@dimen/padding_normal"
+    android:paddingEnd="@dimen/padding_normal"
+    android:layout_marginStart="-8dp"
+    android:layout_marginEnd="-8dp"
     android:clipToPadding="false"
     android:scrollbars="none"
     />

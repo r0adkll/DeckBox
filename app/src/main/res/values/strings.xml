@@ -99,4 +99,6 @@
     <string name="action_finish_edit">Finish editing</string>
     <string name="welcome_text">View and manage your collection of Pokémon Trading Card Game decks from here. No longer do you need to sort and display your cards to get or show your full deck list</string>
     <string name="deck_quickstart_message">Add a new deck to begin building.</string>
+    <string name="action_add">Add</string>
+    <string name="action_remove">Remove</string>
 </resources>
