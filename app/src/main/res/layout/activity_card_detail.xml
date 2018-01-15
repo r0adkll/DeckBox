@@ -43,10 +43,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            android:background="@color/transparent"
+            android:background="@color/black26"
             android:elevation="0dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title=" "
+            app:title="4 Copies"
             />
 
     </FrameLayout>

@@ -6,4 +6,9 @@
         <item quantity="other">%d cards added</item>
     </plurals>
 
+    <plurals name="card_detail_copies">
+        <item quantity="one">%d Copy</item>
+        <item quantity="other">%d Copies</item>
+    </plurals>
+
 </resources>

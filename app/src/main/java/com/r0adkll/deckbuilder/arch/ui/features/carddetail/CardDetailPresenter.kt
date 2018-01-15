@@ -14,11 +14,13 @@ import javax.inject.Inject
 
 class CardDetailPresenter @Inject constructor(
         val ui: CardDetailUi,
+        val intentions: CardDetailUi.Intentions,
         val repository: CardRepository,
         val validator: DeckValidator
 ) : Presenter() {
 
     override fun start() {
+
 
         val loadValidation = validator.validate(listOf(ui.state.card!!))
                 .map { Change.Validated(it) as Change }
@@ -37,9 +39,18 @@ class CardDetailPresenter @Inject constructor(
         } ?: Observable.empty()
 
 
+        val addCard = intentions.addCardClicks()
+                .map { Change.AddCard }
+
+        val removeCard = intentions.removeCardClicks()
+                .map { Change.AddCard }
+
+
         val merged = loadVariants
                 .mergeWith(loadValidation)
                 .mergeWith(loadEvolves)
+                .mergeWith(addCard)
+                .mergeWith(removeCard)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)

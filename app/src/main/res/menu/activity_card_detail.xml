@@ -7,4 +7,9 @@
         app:showAsAction="withText|ifRoom"
         />
 
+    <item android:id="@+id/action_remove"
+        android:title="@string/action_remove"
+        app:showAsAction="withText|ifRoom"
+        />
+
 </menu>
