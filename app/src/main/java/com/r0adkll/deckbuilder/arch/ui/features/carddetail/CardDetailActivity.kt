@@ -11,6 +11,8 @@ import android.support.v4.app.SharedElementCallback
 import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.load.DataSource
@@ -34,6 +36,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.bindBoolean
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_card_detail.*
@@ -45,6 +48,8 @@ import javax.inject.Inject
 class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
 
     private val card: PokemonCard by bindParcelable(EXTRA_CARD)
+    private val editMode: Boolean by bindBoolean(EXTRA_EDIT_MODE)
+
 
     @State override var state: CardDetailUi.State = CardDetailUi.State(null, emptyList(), emptyList(), Validation(false, false))
 
@@ -67,7 +72,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         variantsAdapter = PokemonCardsRecyclerAdapter(this)
         variantsAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view)
+            CardDetailActivity.show(this, view, editMode)
         }
         variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
@@ -75,7 +80,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         evolvesAdapter = PokemonCardsRecyclerAdapter(this)
         evolvesAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view)
+            CardDetailActivity.show(this, view, editMode)
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesRecycler.adapter = evolvesAdapter
@@ -85,10 +90,42 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val editModeResult = parseResult(resultCode, requestCode, data)
+        if (editModeResult != null) {
+            setEditResult(editModeResult)
+            supportFinishAfterTransition()
+        }
+    }
+
+
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
         super.onDestroy()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return if (slidingLayout != null) {
+            menuInflater.inflate(R.menu.activity_card_detail, menu)
+            true
+        } else {
+            false
+        }
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_add -> {
+                setEditResult(card)
+                supportFinishAfterTransition()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 
@@ -125,6 +162,13 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         evolvesAdapter.setCards(cards)
         evolvesHeader.setVisible(cards.isNotEmpty())
         evolvesRecycler.setVisible(cards.isNotEmpty())
+    }
+
+
+    private fun setEditResult(card: PokemonCard) {
+        val data = Intent()
+        data.putExtra(EXTRA_CARD, card)
+        setResult(RESULT_OK, data)
     }
 
 
@@ -186,17 +230,35 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
 
     companion object {
         @JvmField val EXTRA_CARD = "CardDetailActivity.Card"
+        @JvmField val EXTRA_EDIT_MODE = "CardDetailActivity.EditMode"
+        @JvmField val RC_EDIT_CARD = 1
 
-        fun createIntent(context: Context, card: PokemonCard): Intent {
+
+        fun createIntent(context: Context, card: PokemonCard, editMode: Boolean = false): Intent {
             val intent = Intent(context, CardDetailActivity::class.java)
             intent.putExtra(EXTRA_CARD, card)
+            intent.putExtra(EXTRA_EDIT_MODE, editMode)
             return intent
         }
 
 
-        fun show(context: Activity, view: PokemonCardView) {
+        fun show(context: Activity, view: PokemonCardView, editMode: Boolean = false) {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
-            context.startActivity(CardDetailActivity.createIntent(context, view.card!!), options.toBundle())
+            val intent = CardDetailActivity.createIntent(context, view.card!!, editMode)
+            if (editMode) {
+                context.startActivityForResult(intent, RC_EDIT_CARD, options.toBundle())
+            } else {
+                context.startActivity(intent, options.toBundle())
+            }
+        }
+
+
+        fun parseResult(resultCode: Int, requestCode: Int, data: Intent?): PokemonCard? {
+            return if (resultCode == RESULT_OK && requestCode == RC_EDIT_CARD) {
+                data?.getParcelableExtra(EXTRA_CARD)
+            } else {
+                null
+            }
         }
     }
 }

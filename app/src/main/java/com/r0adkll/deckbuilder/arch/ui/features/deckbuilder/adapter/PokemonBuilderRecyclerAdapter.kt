@@ -49,6 +49,10 @@ class PokemonBuilderRecyclerAdapter(
             is PokemonCardViewHolder -> {
                 val single = (item as Item.Single).card
                 vh.bind(single.card, single.count, isEditMode = isEditing)
+                vh.itemView.setOnClickListener {
+                    val card = it.findViewById<PokemonCardView>(R.id.card)
+                    pokemonCardClicks.accept(card)
+                }
                 vh.itemView.setOnLongClickListener { v ->
                     val c = v.findViewById<PokemonCardView>(R.id.card)
                     c.startDrag(true)
