@@ -16,13 +16,13 @@ class CardDetailRenderer(
     override fun start() {
 
         disposables += state
-                .map { s ->
+                .mapNullable { s ->
                     s.deck?.filter { it.id == s.card?.id }
                 }
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { cards ->
-                    actions.showCopies(cards?.size)
+                    actions.showCopies(cards.value?.size)
                 }
 
         disposables += state
