@@ -1,4 +1,8 @@
-# 1.0.0-RC
+# 1.1.0
+* Improved the builder interface to show the non-evolution line Pokémons in a grid pattern similar to trainer and energy cards
+* Improved UI in the card detail screen to allow you to add more copies of that card, or of variants and evolved forms
+
+# 1.0.0
 * Fixed Quickstart view on tablets
 * Fixed search when just typing 'n' or 'N' to wrap in quotes
 * Fixed issue where '-' and '+' buttons weren't showing in search results
