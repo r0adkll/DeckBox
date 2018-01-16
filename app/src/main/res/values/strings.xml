@@ -46,7 +46,7 @@
     <string name="deckbuilder_unsaved_changes_message">Are you sure you want to discard all of your unsaved changes?</string>
     <string name="dialog_action_yes">Yes</string>
     <string name="dialog_action_no">No</string>
-    <string name="deckbuilder_infobar_title">Information</string>
+    <string name="deckbuilder_infobar_title">Details</string>
     <string name="empty_deck_pokemon_message">You haven\'t added any Pokémon cards yet!</string>
     <string name="empty_deck_trainer_message">You haven\'t added any Trainer cards yet!</string>
     <string name="empty_deck_energy_message">You haven\'t added any Energy cards yet!</string>
@@ -55,7 +55,7 @@
     <string name="deckbuilder_saved_message">Saved!</string>
     <string name="validation_rule_four_of_a_kind">You can only have 4 cards of the same name</string>
     <string name="validation_rule_max_size">A deck can only be 60 cards</string>
-    <string name="validation_rule_basic">A deck must have at least one Basic card</string>
+    <string name="validation_rule_basic">A deck must contain at least one Basic Pokémon card</string>
     <string name="format_standard">Standard</string>
     <string name="format_expanded">Expanded</string>
     <string name="action_export">Export</string>

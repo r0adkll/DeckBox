@@ -16,7 +16,7 @@ class PokemonBuilderRecyclerAdapter(
         context: Context,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
-) : ListRecyclerAdapter<Item, RecyclerView.ViewHolder>(context) {
+) : ListRecyclerAdapter<PokemonItem, RecyclerView.ViewHolder>(context) {
 
     var isEditing: Boolean = false
         set(value) {
@@ -43,11 +43,11 @@ class PokemonBuilderRecyclerAdapter(
         val item = items[i]
         when(vh) {
             is EvolutionChainViewHolder -> {
-                val evolutionChain = item as Item.Evolution
+                val evolutionChain = item as PokemonItem.Evolution
                 vh.bind(evolutionChain.evolutionChain, isEditing)
             }
             is PokemonCardViewHolder -> {
-                val single = (item as Item.Single).card
+                val single = (item as PokemonItem.Single).card
                 vh.bind(single.card, single.count, isEditMode = isEditing)
                 vh.itemView.setOnClickListener {
                     val card = it.findViewById<PokemonCardView>(R.id.card)
@@ -67,8 +67,8 @@ class PokemonBuilderRecyclerAdapter(
         if (position != RecyclerView.NO_POSITION) {
             val item = items[position]
             return when(item) {
-                is Item.Evolution -> item.evolutionChain.hashCode().toLong()
-                is Item.Single -> item.card.card.hashCode().toLong()
+                is PokemonItem.Evolution -> item.evolutionChain.hashCode().toLong()
+                is PokemonItem.Single -> item.card.card.hashCode().toLong()
             }
         }
         return super.getItemId(position)
@@ -80,7 +80,7 @@ class PokemonBuilderRecyclerAdapter(
     }
 
 
-    fun setPokemon(pokemon: List<Item>) {
+    fun setPokemon(pokemon: List<PokemonItem>) {
         val diff = calculateDiff(pokemon, items)
         items = ArrayList(pokemon)
         diff.diff.dispatchUpdatesTo(getListUpdateCallback())

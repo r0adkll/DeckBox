@@ -6,10 +6,10 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 
 
-sealed class Item : RecyclerItem {
+sealed class PokemonItem : RecyclerItem {
 
 
-    data class Evolution(val evolutionChain: EvolutionChain) : Item() {
+    data class Evolution(val evolutionChain: EvolutionChain) : PokemonItem() {
 
         override val layoutId: Int get() = R.layout.item_evolution_chain
 
@@ -27,7 +27,7 @@ sealed class Item : RecyclerItem {
     }
 
 
-    data class Single(val card: StackedPokemonCard) : Item() {
+    data class Single(val card: StackedPokemonCard) : PokemonItem() {
 
         override val layoutId: Int get() = R.layout.item_pokemon_card_editable
 

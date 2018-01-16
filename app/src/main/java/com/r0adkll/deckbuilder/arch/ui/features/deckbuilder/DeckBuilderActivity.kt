@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -27,6 +28,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
@@ -48,6 +50,7 @@ import gov.scstatehouse.houseofcards.di.HasComponent
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
+import kotlinx.android.synthetic.main.layout_detail_panel.*
 import javax.inject.Inject
 
 
@@ -70,13 +73,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     private val saveDeck: Relay<Unit> = PublishRelay.create()
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
 
-    private val countPadding: Float by lazy { dpToPx(16f) }
-    private val countPaddingTop: Float by lazy { dpToPx(16f) }
-    private val formatPaddingTop: Float by lazy { dpToPx(8f) }
-    private val panelOffsetTop: Float by lazy { dpToPx(48f) }
-
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
+    private lateinit var ruleAdapter: RuleRecyclerAdapter
     private var savingSnackBar: Snackbar? = null
 
 
@@ -113,6 +112,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             }
         }
 
+        ruleAdapter = RuleRecyclerAdapter(this)
+        ruleRecycler.layoutManager = LinearLayoutManager(this)
+        ruleRecycler.adapter = ruleAdapter
 
 
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
@@ -151,6 +153,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 interpolateCardCounter(panel, slideOffset)
+                interpolateFormats(panel, slideOffset)
                 interpolatePanelIndicator(slideOffset)
 
                 val infoBarOffset = calculateAlpha(slideOffset, .95f)
@@ -158,10 +161,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
                 text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
                 text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
-                format_expanded.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
-                format_standard.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
-                formatStandardDetail.alpha = calculateAlpha(slideOffset, .40f)
-                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .40f)
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()
@@ -182,23 +181,12 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
             private fun interpolateCardCounter(panel: View, offset: Float) {
-                val bottom = if (formatExpandedDetail.isVisible()){
-                    formatExpandedDetail.bottom
-                } else if (formatStandardDetail.isVisible()) {
-                    formatStandardDetail.bottom
-                } else {
-                    text_input_deck_description.bottom
-                }
+                cardCount.translationY = offset * (panel.height - cardCount.height)
+            }
 
-                val distance = ((bottom - cardCount.top) + countPaddingTop)
-                val distanceYRatio = distance / (panel.height - panelOffsetTop)
-                val distanceX = (cardCount.left - countPadding)
 
-                val cardOffset = offset.coerceAtMost(distanceYRatio) / distanceYRatio
-                val translationY = distance * cardOffset
-                val translationX = distanceX * cardOffset
-                cardCount.translationY = translationY
-                cardCount.translationX = -translationX
+            private fun interpolateFormats(panel: View, offset: Float) {
+                formats.translationY = offset * (panel.height - formats.height)
             }
 
 
@@ -490,23 +478,18 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun showIsStandard(isStandard: Boolean) {
-        formatStandardDetail.setVisible(isStandard)
         format_standard.setVisible(isStandard)
-
-        val lp = format_expanded.layoutParams as ViewGroup.MarginLayoutParams
-        lp.marginStart = if (isStandard) 0 else dipToPx(16f)
-        format_expanded.layoutParams = lp
     }
 
 
     override fun showIsExpanded(isExpanded: Boolean) {
-        formatExpandedDetail.setVisible(isExpanded)
         format_expanded.setVisible(isExpanded)
     }
 
 
     override fun showBrokenRules(errors: List<Int>) {
-
+        deckError.setVisible(errors.isNotEmpty())
+        ruleAdapter.setRuleErrors(errors)
     }
 
 

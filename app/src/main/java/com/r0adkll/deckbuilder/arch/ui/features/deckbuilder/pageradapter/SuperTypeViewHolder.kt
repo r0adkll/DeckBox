@@ -17,7 +17,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.Item
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokemonRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -80,7 +80,7 @@ class PokemonViewHolder(
             override fun getSpanSize(position: Int): Int {
                 val item = adapter.items[position]
                 return when(item) {
-                    is Item.Evolution -> 3
+                    is PokemonItem.Evolution -> 3
                     else -> 1
                 }
             }
@@ -93,11 +93,11 @@ class PokemonViewHolder(
 
         val items = evolutions.flatMap { chain ->
             if (chain.nodes.size > 1) {
-                listOf(Item.Evolution(chain))
+                listOf(PokemonItem.Evolution(chain))
             } else {
                 chain.nodes.flatMap { node ->
                     node.cards.map {
-                        Item.Single(it)
+                        PokemonItem.Single(it)
                     }
                 }
             }

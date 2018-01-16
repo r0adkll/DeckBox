@@ -43,7 +43,12 @@ class DeckBuilderPresenter @Inject constructor(
                 }
 
         val editCards = intentions.editCards()
-                .map { Change.EditCards(it) as Change }
+                .flatMap { cards ->
+                    validator.validate(cards)
+                            .map { Change.Validated(it) as Change }
+                            .startWith(Change.EditCards(cards) as Change)
+                            .onErrorReturn(handleUnknownError)
+                }
 
         val editDeck = intentions.editDeckClicks()
                 .map { Change.Editing(it) as Change }
