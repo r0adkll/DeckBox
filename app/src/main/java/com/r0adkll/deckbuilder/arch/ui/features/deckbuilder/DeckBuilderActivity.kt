@@ -143,13 +143,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 editCardIntentions.addCardClicks.accept(listOf(card))
             }
 
-
             override fun onRemoveCard(card: PokemonCard) {
                 editCardIntentions.removeCardClicks.accept(card)
             }
-
-        }, { card ->
-            validator.validate(state.allCards, card) == null
         })
 
         slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
@@ -366,22 +362,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
-                .flatMap {
-                    Observable.fromIterable(it)
-                            .filter { card ->
-                                val result = validator.validate(state.allCards, card)
-                                if (result != null) {
-                                    adapter.wiggleCard(card)
-                                    // Display error to user
-                                    snackbar(result)
-                                    false
-                                } else {
-                                    true
-                                }
-                            }
-                            .toList()
-                            .toObservable()
-                }
     }
 
 

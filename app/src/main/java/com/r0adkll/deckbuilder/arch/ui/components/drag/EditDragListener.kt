@@ -13,8 +13,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class EditDragListener(
         val dropZone: View,
-        val dropListener: DropListener,
-        val validator: (PokemonCard) -> Boolean
+        val dropListener: DropListener
 ) : View.OnDragListener {
 
     private val ANIM_DURATION = 150L
@@ -37,7 +36,6 @@ class EditDragListener(
             return when(event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> {
                     showDropZone()
-                    actionAdd.setVisible(validator.invoke(card))
                     true
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
@@ -181,8 +179,8 @@ class EditDragListener(
          * Attach a new [EditDragListener] to the target view to handle Drag n Drop
          * operation for editing cards in the deck building interface
          */
-        fun attach(target: View, listener: DropListener, validator: (PokemonCard) -> Boolean): EditDragListener {
-            val dragListener = EditDragListener(target, listener, validator)
+        fun attach(target: View, listener: DropListener): EditDragListener {
+            val dragListener = EditDragListener(target, listener)
             target.setOnDragListener(dragListener)
             return dragListener
         }
