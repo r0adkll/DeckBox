@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckVa
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State.Change
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State
+import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import timber.log.Timber
@@ -57,7 +58,7 @@ class CardDetailPresenter @Inject constructor(
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
-                .doOnNext { state -> Timber.v("    --- $state") }
+                .logState()
                 .subscribe { ui.render(it) }
     }
 }

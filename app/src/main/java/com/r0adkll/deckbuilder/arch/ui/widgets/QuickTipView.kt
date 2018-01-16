@@ -108,10 +108,8 @@ class QuickTipView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (w != oldw || h != oldh) {
-            val radius = getRadius().toInt() * 2
             bitmapCache?.recycle()
-            bitmapCache = Bitmap.createBitmap(radius, radius, Bitmap.Config.ARGB_8888)
-            canvasCache = Canvas(bitmapCache)
+            bitmapCache = null
         }
     }
 
