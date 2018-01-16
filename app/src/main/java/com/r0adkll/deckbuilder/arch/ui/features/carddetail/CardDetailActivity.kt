@@ -7,46 +7,49 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.SharedElementCallback
 import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.Transition
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
-import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
-import timber.log.Timber
-import java.util.concurrent.Executors
 import javax.inject.Inject
 
 
-class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
+class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions, CardDetailUi.Actions {
 
     private val card: PokemonCard by bindParcelable(EXTRA_CARD)
+    private val deck: List<PokemonCard>? by bindOptionalParcelableList(EXTRA_CARDS)
 
-    @State override var state: CardDetailUi.State = CardDetailUi.State(null, emptyList(), emptyList(), Validation(false, false))
+    private val addCardClicks: Relay<Unit> = PublishRelay.create()
+    private val removeCardClicks: Relay<Unit> = PublishRelay.create()
+    private val deckUpdated: Relay<List<PokemonCard>> = PublishRelay.create()
+
+    @State override var state: CardDetailUi.State = CardDetailUi.State.DEFAULT
 
     @Inject lateinit var renderer: CardDetailRenderer
     @Inject lateinit var presenter: CardDetailPresenter
@@ -62,12 +65,17 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         // Odd state hack to pass in passed values
         state = state.copy(card = card)
 
+        // Only set the deck if it hasn't been set yet
+        if (state.deck == null) {
+            state = state.copy(deck = deck)
+        }
+
         bindCard()
 
         variantsAdapter = PokemonCardsRecyclerAdapter(this)
         variantsAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view)
+            CardDetailActivity.show(this, view, state.deck)
         }
         variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
@@ -75,7 +83,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         evolvesAdapter = PokemonCardsRecyclerAdapter(this)
         evolvesAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view)
+            CardDetailActivity.show(this, view, state.deck)
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesRecycler.adapter = evolvesAdapter
@@ -85,10 +93,63 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val editModeResult = parseResult(resultCode, requestCode, data)
+        if (editModeResult != null) {
+            deckUpdated.accept(editModeResult)
+        }
+    }
+
+
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
         super.onDestroy()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return if (slidingLayout != null) {
+            menuInflater.inflate(R.menu.activity_card_detail, menu)
+            true
+        } else {
+            false
+        }
+    }
+
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        if (slidingLayout != null) {
+            val actionAdd = menu.findItem(R.id.action_add)
+            val actionRemove = menu.findItem(R.id.action_remove)
+
+            if (state.deck != null) {
+                actionAdd.isVisible = true
+                actionRemove.isVisible = state.hasCopies
+            } else {
+                actionAdd.isVisible = false
+                actionRemove.isVisible = false
+            }
+
+            return true
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_add -> {
+                addCardClicks.accept(Unit)
+                true
+            }
+            R.id.action_remove -> {
+                removeCardClicks.accept(Unit)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 
@@ -101,6 +162,29 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
     override fun render(state: CardDetailUi.State) {
         this.state = state
         renderer.render(state)
+    }
+
+
+    override fun addCardClicks(): Observable<Unit> {
+        return addCardClicks
+    }
+
+
+    override fun removeCardClicks(): Observable<Unit> {
+        return removeCardClicks
+    }
+
+
+    override fun updateDeck(): Observable<List<PokemonCard>> {
+        return deckUpdated
+    }
+
+
+    override fun showCopies(count: Int?) {
+        supportActionBar?.title = count?.let {
+            resources.getQuantityString(R.plurals.card_detail_copies, count, count)
+        } ?: " "
+        invalidateOptionsMenu()
     }
 
 
@@ -125,6 +209,17 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
         evolvesAdapter.setCards(cards)
         evolvesHeader.setVisible(cards.isNotEmpty())
         evolvesRecycler.setVisible(cards.isNotEmpty())
+    }
+
+
+    override fun setEditResults(cards: List<PokemonCard>?) {
+        if (cards != null) {
+            val data = Intent()
+            data.putParcelableArrayListExtra(EXTRA_CARDS, ArrayList(cards))
+            setResult(RESULT_OK, data)
+        } else {
+            setResult(Activity.RESULT_CANCELED)
+        }
     }
 
 
@@ -186,17 +281,35 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Actions {
 
     companion object {
         @JvmField val EXTRA_CARD = "CardDetailActivity.Card"
+        @JvmField val EXTRA_CARDS = "CardDetailActivity.Cards"
+        @JvmField val RC_EDIT_CARD = 1
 
-        fun createIntent(context: Context, card: PokemonCard): Intent {
+
+        fun createIntent(context: Context, card: PokemonCard, cards: List<PokemonCard>? = null): Intent {
             val intent = Intent(context, CardDetailActivity::class.java)
             intent.putExtra(EXTRA_CARD, card)
+            cards?.let { intent.putParcelableArrayListExtra(EXTRA_CARDS, ArrayList(cards)) }
             return intent
         }
 
 
-        fun show(context: Activity, view: PokemonCardView) {
+        fun show(context: Activity, view: PokemonCardView, cards: List<PokemonCard>? = null) {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
-            context.startActivity(CardDetailActivity.createIntent(context, view.card!!), options.toBundle())
+            val intent = CardDetailActivity.createIntent(context, view.card!!, cards)
+            if (cards != null) {
+                context.startActivityForResult(intent, RC_EDIT_CARD, options.toBundle())
+            } else {
+                context.startActivity(intent, options.toBundle())
+            }
+        }
+
+
+        fun parseResult(resultCode: Int, requestCode: Int, data: Intent?): List<PokemonCard>? {
+            return if (resultCode == RESULT_OK && requestCode == RC_EDIT_CARD) {
+                data?.getParcelableArrayListExtra(EXTRA_CARDS)
+            } else {
+                null
+            }
         }
     }
 }

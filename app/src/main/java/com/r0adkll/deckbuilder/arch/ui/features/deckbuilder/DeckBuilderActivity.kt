@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.view.animation.FastOutLinearInInterpolator
 import android.support.v7.app.AlertDialog
-import android.view.DragEvent
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
@@ -21,14 +21,15 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
 import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
@@ -43,13 +44,13 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.*
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
 import gov.scstatehouse.houseofcards.di.HasComponent
-import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
-import timber.log.Timber
+import kotlinx.android.synthetic.main.layout_detail_panel.*
 import javax.inject.Inject
 
 
@@ -67,17 +68,14 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     @Inject lateinit var validator: DeckValidator
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
+    private val editCardChanges: Relay<List<PokemonCard>> = PublishRelay.create()
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val saveDeck: Relay<Unit> = PublishRelay.create()
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
 
-    private val countPadding: Float by lazy { dpToPx(16f) }
-    private val countPaddingTop: Float by lazy { dpToPx(16f) }
-    private val formatPaddingTop: Float by lazy { dpToPx(8f) }
-    private val panelOffsetTop: Float by lazy { dpToPx(48f) }
-
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
+    private lateinit var ruleAdapter: RuleRecyclerAdapter
     private var savingSnackBar: Snackbar? = null
 
 
@@ -114,6 +112,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             }
         }
 
+        ruleAdapter = RuleRecyclerAdapter(this)
+        ruleRecycler.layoutManager = LinearLayoutManager(this)
+        ruleRecycler.adapter = ruleAdapter
 
 
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
@@ -144,18 +145,15 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 editCardIntentions.addCardClicks.accept(listOf(card))
             }
 
-
             override fun onRemoveCard(card: PokemonCard) {
                 editCardIntentions.removeCardClicks.accept(card)
             }
-
-        }, { card ->
-            validator.validate(state.allCards, card) == null
         })
 
         slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 interpolateCardCounter(panel, slideOffset)
+                interpolateFormats(panel, slideOffset)
                 interpolatePanelIndicator(slideOffset)
 
                 val infoBarOffset = calculateAlpha(slideOffset, .95f)
@@ -163,10 +161,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
                 text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
                 text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
-//                format_expanded.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
-//                format_standard.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
-//                formatStandardDetail.alpha = calculateAlpha(slideOffset, .40f)
-//                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .40f)
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()
@@ -187,23 +181,12 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
             private fun interpolateCardCounter(panel: View, offset: Float) {
-                val bottom = if (formatExpandedDetail.isVisible()){
-                    formatExpandedDetail.bottom
-                } else if (formatStandardDetail.isVisible()) {
-                    formatStandardDetail.bottom
-                } else {
-                    text_input_deck_description.bottom
-                }
+                cardCount.translationY = offset * (panel.height - cardCount.height)
+            }
 
-                val distance = ((bottom - cardCount.top) + countPaddingTop)
-                val distanceYRatio = distance / (panel.height - panelOffsetTop)
-                val distanceX = (cardCount.left - countPadding)
 
-                val cardOffset = offset.coerceAtMost(distanceYRatio) / distanceYRatio
-                val translationY = distance * cardOffset
-                val translationX = distanceX * cardOffset
-                cardCount.translationY = translationY
-                cardCount.translationX = -translationX
+            private fun interpolateFormats(panel: View, offset: Float) {
+                formats.translationY = offset * (panel.height - formats.height)
             }
 
 
@@ -245,7 +228,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         disposables += pokemonCardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it)
+                    CardDetailActivity.show(this, it, state.allCards)
                 }
     }
 
@@ -289,6 +272,12 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         importResult?.let {
             Analytics.event(Event.SelectContent.Action("import_cards"))
             editCardIntentions.addCardClicks.accept(it)
+        }
+
+        val detailResult = CardDetailActivity.parseResult(resultCode, requestCode, data)
+        detailResult?.let {
+            Analytics.event(Event.SelectContent.Action("add_from_detail"))
+            editCardChanges.accept(detailResult)
         }
     }
 
@@ -361,27 +350,16 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
-                .flatMap {
-                    Observable.fromIterable(it)
-                            .filter { card ->
-                                val result = validator.validate(state.allCards, card)
-                                if (result != null) {
-                                    adapter.wiggleCard(card)
-                                    // Display error to user
-                                    snackbar(result)
-                                    false
-                                } else {
-                                    true
-                                }
-                            }
-                            .toList()
-                            .toObservable()
-                }
     }
 
 
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
+    }
+
+
+    override fun editCards(): Observable<List<PokemonCard>> {
+        return editCardChanges
     }
 
 
@@ -500,12 +478,18 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun showIsStandard(isStandard: Boolean) {
-//        formatStandardDetail.setVisible(isStandard)
+        format_standard.setVisible(isStandard)
     }
 
 
     override fun showIsExpanded(isExpanded: Boolean) {
-//        formatExpandedDetail.setVisible(isExpanded)
+        format_expanded.setVisible(isExpanded)
+    }
+
+
+    override fun showBrokenRules(errors: List<Int>) {
+        deckError.setVisible(errors.isNotEmpty())
+        ruleAdapter.setRuleErrors(errors)
     }
 
 

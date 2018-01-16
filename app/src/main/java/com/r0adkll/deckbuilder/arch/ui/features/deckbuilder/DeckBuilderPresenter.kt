@@ -3,11 +3,11 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.*
-import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi
+import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import timber.log.Timber
@@ -43,6 +43,14 @@ class DeckBuilderPresenter @Inject constructor(
                             .onErrorReturn(handleUnknownError)
                 }
 
+        val editCards = intentions.editCards()
+                .flatMap { cards ->
+                    validator.validate(cards)
+                            .map { Change.Validated(it) as Change }
+                            .startWith(Change.EditCards(cards) as Change)
+                            .onErrorReturn(handleUnknownError)
+                }
+
         val editDeck = intentions.editDeckClicks()
                 .map { Change.Editing(it) as Change }
 
@@ -58,6 +66,7 @@ class DeckBuilderPresenter @Inject constructor(
         val merged = initialValidation
                 .mergeWith(addCard)
                 .mergeWith(removeCard)
+                .mergeWith(editCards)
                 .mergeWith(editDeck)
                 .mergeWith(editName)
                 .mergeWith(editDescription)
@@ -65,7 +74,7 @@ class DeckBuilderPresenter @Inject constructor(
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
-                .doOnNext { state -> Timber.v("    --- $state") }
+                .logState()
                 .subscribe(ui::render)
     }
 

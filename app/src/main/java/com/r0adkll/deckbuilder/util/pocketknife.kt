@@ -30,6 +30,11 @@ fun <P : Parcelable> Activity.bindParcelable(key: String): ReadOnlyProperty<Acti
 }
 
 
+fun Activity.bindBoolean(key: String, defaultValue: Boolean = false): ReadOnlyProperty<Activity, Boolean> = Lazy { activity, _ ->
+    activity.intent.getBooleanExtra(key, defaultValue)
+}
+
+
 inline fun <reified E : Enum<E>> Activity.bindEnum(key: String): ReadOnlyProperty<Activity, E> = Lazy { activity, _ ->
     val name = activity.intent?.getStringExtra(key)
     java.lang.Enum.valueOf(E::class.java, name)

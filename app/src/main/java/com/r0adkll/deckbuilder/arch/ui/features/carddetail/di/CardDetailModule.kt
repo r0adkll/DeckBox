@@ -17,6 +17,10 @@ class CardDetailModule(val activity: CardDetailActivity) {
 
 
     @Provides @ActivityScope
+    fun provideIntentions(): CardDetailUi.Intentions = activity
+
+
+    @Provides @ActivityScope
     fun provideActions(): CardDetailUi.Actions = activity
 
 
