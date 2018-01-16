@@ -1,6 +1,8 @@
 # 1.1.0
 * Improved the builder interface to show the non-evolution line Pokémons in a grid pattern similar to trainer and energy cards
 * Improved UI in the card detail screen to allow you to add more copies of that card, or of variants and evolved forms
+* Removed hard limits on deck rules in favor of soft warnings.
+* Added basic Standard/Expanded format indicators in deck builder interface
 
 # 1.0.0
 * Fixed Quickstart view on tablets
