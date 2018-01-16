@@ -1,12 +1,11 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State.Change
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject

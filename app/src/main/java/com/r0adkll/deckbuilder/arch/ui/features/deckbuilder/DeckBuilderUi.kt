@@ -4,10 +4,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Validation
+import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
-import io.pokemontcg.model.SubType
-import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.SuperType.*
 import io.reactivex.Observable
 import paperparcel.PaperParcel
@@ -33,6 +31,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     interface Actions {
 
+        fun showBrokenRules(errors: List<Int>)
         fun showIsStandard(isStandard: Boolean)
         fun showIsExpanded(isExpanded: Boolean)
         fun showIsSaving(isSaving: Boolean)
@@ -137,7 +136,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(false, false, null, null, emptyList(), emptyList(), emptyList(), null, null, Validation(false, false))
+                State(false, false, null, null, emptyList(), emptyList(), emptyList(), null, null, Validation(false, false, emptyList()))
             }
         }
     }

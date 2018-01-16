@@ -9,10 +9,14 @@ import io.pokemontcg.model.SuperType
 
 object ModelUtils {
 
-    fun createPokemonCard(): PokemonCard {
-        return PokemonCard("", "", null, "", "", null, SuperType.POKEMON, SubType.BASIC, null, null,
+    fun createPokemonCard(name: String = ""): PokemonCard {
+        return PokemonCard("", name, null, "", "", null, SuperType.POKEMON, SubType.BASIC, null, null,
                 null, ",", "", "", "", Expansion("", "", "", "", 0, false, false, "", ""), null, null,
                 null, null)
+    }
+
+    fun createEnergyCard(name: String = ""): PokemonCard {
+        return createPokemonCard(name).copy(supertype = SuperType.ENERGY, subtype = SubType.BASIC)
     }
 
     fun createStackedPokemonCard(count: Int = 1): StackedPokemonCard {

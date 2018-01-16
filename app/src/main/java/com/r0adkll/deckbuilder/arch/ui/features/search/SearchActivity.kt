@@ -14,7 +14,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
@@ -32,7 +32,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findArrayList
 import com.r0adkll.deckbuilder.util.findEnum
@@ -185,18 +184,18 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     override fun selectCard(): Observable<PokemonCard> {
         return editCardIntentions.addCardClicks
                 .map { it.first() }
-                .filter { card ->
-                    Analytics.event(Event.SelectContent.PokemonCard(card.id))
-                    val result = validator.validate(existingCards.plus(state.selected), card)
-                    if (result != null) {
-                        adapter.wiggleCard(card)
-                        // Display error to user
-                        validationSnackbar(result)
-                        false
-                    } else {
-                        true
-                    }
-                }
+                .doOnNext { Analytics.event(Event.SelectContent.PokemonCard(it.id)) }
+//                .filter { card ->
+//                    val result = validator.validate(existingCards.plus(state.selected), card)
+//                    if (result != null) {
+//                        adapter.wiggleCard(card)
+//                        // Display error to user
+//                        validationSnackbar(result)
+//                        false
+//                    } else {
+//                        true
+//                    }
+//                }
     }
 
 

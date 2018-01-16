@@ -20,7 +20,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
 import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
@@ -502,6 +502,11 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     override fun showIsExpanded(isExpanded: Boolean) {
         formatExpandedDetail.setVisible(isExpanded)
         format_expanded.setVisible(isExpanded)
+    }
+
+
+    override fun showBrokenRules(errors: List<Int>) {
+
     }
 
 

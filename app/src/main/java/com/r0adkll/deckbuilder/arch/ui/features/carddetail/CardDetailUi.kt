@@ -1,8 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Validation
+import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
 import paperparcel.PaperParcel
@@ -81,7 +80,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             @JvmField val CREATOR = PaperParcelCardDetailUi_State.CREATOR
 
             val DEFAULT by lazy {
-                CardDetailUi.State(null, null, emptyList(), emptyList(), Validation(false, false))
+                CardDetailUi.State(null, null, emptyList(), emptyList(), Validation(false, false, emptyList()))
             }
         }
     }

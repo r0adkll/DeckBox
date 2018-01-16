@@ -3,11 +3,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.*
-import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import timber.log.Timber

@@ -13,15 +13,16 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDa
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
-import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckValidator
+import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
-import com.r0adkll.deckbuilder.arch.data.features.decks.rules.DuplicateRule
-import com.r0adkll.deckbuilder.arch.data.features.decks.rules.SizeRule
+import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
+import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
+import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckValidator
-import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.model.BasicEnergySet
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
@@ -113,10 +114,11 @@ class DataModule {
 
     @Provides @AppScope
     @ElementsIntoSet
-    fun provideDefaultRuleSet() : Set<DeckValidator.Rule> {
+    fun provideDefaultRuleSet() : Set<Rule> {
         return setOf(
                 SizeRule(),
-                DuplicateRule()
+                DuplicateRule(),
+                BasicRule()
         )
     }
 
