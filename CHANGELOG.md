@@ -3,6 +3,7 @@
 * Improved UI in the card detail screen to allow you to add more copies of that card, or of variants and evolved forms
 * Removed hard limits on deck rules in favor of soft warnings.
 * Added basic Standard/Expanded format indicators in deck builder interface
+* Minor bug fixes
 
 # 1.0.0
 * Fixed Quickstart view on tablets
