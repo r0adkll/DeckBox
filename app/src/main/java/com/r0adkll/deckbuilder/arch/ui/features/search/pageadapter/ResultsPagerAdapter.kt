@@ -36,7 +36,7 @@ class ResultsPagerAdapter(
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
-        val vh = SearchResultViewHolder(view, scrollHideListener, pokemonCardLongClicks, editCardIntentions)
+        val vh = SearchResultViewHolder(view, position, scrollHideListener, pokemonCardLongClicks, editCardIntentions)
         view.tag = vh
         viewHolders[position] = vh
 
@@ -118,6 +118,7 @@ class ResultsPagerAdapter(
 
     private class SearchResultViewHolder(
             itemView: View,
+            val position: Int,
             scrollHideListener: KeyboardScrollHideListener,
             pokemonCardLongClicks: Relay<PokemonCardView>,
             editCardIntentions: EditCardIntentions
@@ -130,6 +131,11 @@ class ResultsPagerAdapter(
 
         init {
             emptyView.setIcon(R.drawable.ic_empty_search)
+            emptyView.setEmptyMessage(when(position) {
+                0 -> R.string.empty_search_pokemon_message
+                1 -> R.string.empty_search_trainer_message
+                else -> R.string.empty_search_energy_message
+            })
 
             adapter.setEmptyView(emptyView)
             adapter.setOnItemClickListener { editCardIntentions.addCardClicks.accept(listOf(it)) }
@@ -169,7 +175,11 @@ class ResultsPagerAdapter(
 
 
         fun hideError() {
-            emptyView.setEmptyMessage(R.string.empty_search_category)
+            emptyView.setEmptyMessage(when(position) {
+                0 -> R.string.empty_search_pokemon_message
+                1 -> R.string.empty_search_trainer_message
+                else -> R.string.empty_search_energy_message
+            })
         }
 
 

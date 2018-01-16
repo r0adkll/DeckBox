@@ -31,7 +31,7 @@ class DefaultDeckValidator @Inject constructor(
         return repository.getExpansions()
                 .onErrorReturnItem(emptyList())
                 .map { expansions ->
-                    val standardLegal = cards.all { card ->
+                    val standardLegal = cards.isNotEmpty() && cards.all { card ->
                         if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
                             true
                         } else {
@@ -39,7 +39,7 @@ class DefaultDeckValidator @Inject constructor(
                         }
                     }
 
-                    val expandedLegal = cards.all { card ->
+                    val expandedLegal = cards.isNotEmpty() && cards.all { card ->
                         if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
                             true
                         } else {

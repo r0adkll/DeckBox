@@ -47,9 +47,9 @@
     <string name="dialog_action_yes">Yes</string>
     <string name="dialog_action_no">No</string>
     <string name="deckbuilder_infobar_title">Information</string>
-    <string name="empty_deck_pokemon_message">You haven\'t added any Pokémon cards yet! Click the button below to start adding some.</string>
-    <string name="empty_deck_trainer_message">You haven\'t added any Trainer cards yet! Click the button below to start adding some.</string>
-    <string name="empty_deck_energy_message">You haven\'t added any Energy cards yet! Click the button below to start adding some.</string>
+    <string name="empty_deck_pokemon_message">You haven\'t added any Pokémon cards yet!</string>
+    <string name="empty_deck_trainer_message">You haven\'t added any Trainer cards yet!</string>
+    <string name="empty_deck_energy_message">You haven\'t added any Energy cards yet!</string>
     <string name="action_settings">Settings</string>
     <string name="deckbuilder_saving_message">Saving…</string>
     <string name="deckbuilder_saved_message">Saved!</string>
@@ -101,4 +101,7 @@
     <string name="deck_quickstart_message">Add a new deck to begin building.</string>
     <string name="action_add">Add</string>
     <string name="action_remove">Remove</string>
+    <string name="empty_search_pokemon_message">Enter a term to begin searching for Pokémon cards</string>
+    <string name="empty_search_trainer_message">Enter a term to begin searching for Trainer cards</string>
+    <string name="empty_search_energy_message">Enter a term to begin searching for Energy cards</string>
 </resources>

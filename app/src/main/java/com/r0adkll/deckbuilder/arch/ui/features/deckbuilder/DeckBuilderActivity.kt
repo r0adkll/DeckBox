@@ -5,12 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.view.animation.FastOutLinearInInterpolator
 import android.support.v7.app.AlertDialog
-import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
@@ -27,8 +26,8 @@ import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
 import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
@@ -43,13 +42,12 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.*
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
 import gov.scstatehouse.houseofcards.di.HasComponent
-import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -164,10 +162,10 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
                 text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
                 text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
-//                format_expanded.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
-//                format_standard.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
-//                formatStandardDetail.alpha = calculateAlpha(slideOffset, .40f)
-//                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .40f)
+                format_expanded.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
+                format_standard.alpha = 1f - (slideOffset * 9f).coerceAtMost(1f)
+                formatStandardDetail.alpha = calculateAlpha(slideOffset, .40f)
+                formatExpandedDetail.alpha = calculateAlpha(slideOffset, .40f)
 
                 if (slideOffset > 0f && !infoBar.isVisible()) {
                     infoBar.visible()
@@ -512,12 +510,18 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun showIsStandard(isStandard: Boolean) {
-//        formatStandardDetail.setVisible(isStandard)
+        formatStandardDetail.setVisible(isStandard)
+        format_standard.setVisible(isStandard)
+
+        val lp = format_expanded.layoutParams as ViewGroup.MarginLayoutParams
+        lp.marginStart = if (isStandard) 0 else dipToPx(16f)
+        format_expanded.layoutParams = lp
     }
 
 
     override fun showIsExpanded(isExpanded: Boolean) {
-//        formatExpandedDetail.setVisible(isExpanded)
+        formatExpandedDetail.setVisible(isExpanded)
+        format_expanded.setVisible(isExpanded)
     }
 
 
