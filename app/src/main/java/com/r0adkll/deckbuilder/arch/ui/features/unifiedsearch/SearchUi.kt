@@ -48,7 +48,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.QuerySubmitted -> this.copy(query = change.query)
             is Change.FilterChanged -> this.copy(filter = change.filter,
-                    results = if (change.filter.isEmpty && query.isBlank()) emptyList() else results)
+                    results = if (change.filter.isEmptyWithoutField && query.isBlank()) emptyList() else results)
             is Change.ResultsLoaded -> this.copy(results = change.results, error = null, isLoading = false)
         }
 

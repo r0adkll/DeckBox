@@ -6,6 +6,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterSpec.Spec.AttributeSpec
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.ExpansionVisibility.*
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
@@ -41,6 +42,21 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
             return javaClass.simpleName
 
         }
+
+
+        @PaperParcel
+        class FieldSpec : Spec() {
+
+            override fun apply(filter: Filter): List<Item> = listOf(
+                    Item.Header(R.string.filter_header_search_field),
+                    Item.Field(filter.field)
+            )
+
+            companion object {
+                @JvmField val CREATOR = PaperParcelFilterSpec_Spec_FieldSpec.CREATOR
+            }
+        }
+
 
         @PaperParcel
         class TypeSpec(val key: String, @StringRes val title: Int) : Spec() {
@@ -219,6 +235,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                       visibility: FilterUi.ExpansionVisibility): FilterSpec {
             return FilterSpec(
                     listOf(
+                            Spec.FieldSpec(),
                             Spec.TypeSpec("type", R.string.filter_header_type),
                             AttributeSpec(listOf(
                                     SuperTypeAttribute(SuperType.POKEMON),
@@ -261,6 +278,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                           visibility: FilterUi.ExpansionVisibility): FilterSpec {
             return FilterSpec(
                     listOf(
+                            Spec.FieldSpec(),
                             Spec.TypeSpec("type", R.string.filter_header_type),
                             AttributeSpec(listOf(
                                     SubTypeAttribute(BASIC),
@@ -292,6 +310,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                           visibility: FilterUi.ExpansionVisibility): FilterSpec {
             return FilterSpec(
                     listOf(
+                            Spec.FieldSpec(),
                             AttributeSpec(listOf(
                                     SubTypeAttribute(ITEM),
                                     SubTypeAttribute(STADIUM),

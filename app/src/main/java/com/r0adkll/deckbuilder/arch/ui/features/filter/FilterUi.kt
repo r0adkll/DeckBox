@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.filter
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.*
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
@@ -22,6 +23,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
 
     interface Intentions {
 
+        fun fieldChanges(): Observable<SearchField>
         fun typeClicks(): Observable<Pair<String, Type>>
         fun attributeClicks(): Observable<FilterAttribute>
         fun optionClicks(): Observable<Pair<String, Any>>
@@ -121,6 +123,12 @@ interface FilterUi : StateRenderer<FilterUi.State> {
                 this.copy(category = change.category)
             }
 
+            is FieldChanged -> {
+                val newFilters = filters.toMutableMap()
+                newFilters[category] = newFilters[category]!!
+                        .copy(filter = FilterReducer.reduceField(change.field, newFilters[category]!!.filter))
+                this.copy(filters = newFilters.toMap())
+            }
             is TypeSelected -> {
                 val newFilters = filters.toMutableMap()
                 newFilters[category] = newFilters[category]!!
@@ -182,6 +190,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
             class CategoryChanged(val category: SuperType) : Change("user -> category changed to $category")
 
+            class FieldChanged(val field: SearchField) : Change("user -> $field was selected")
             class TypeSelected(val key: String, val type: Type) : Change("user -> $type was selected")
             class AttributeSelected(val attribute: FilterAttribute) : Change("user -> $attribute was selected")
             class ExpansionSelected(val expansion: Expansion) : Change("user -> $expansion was selected")

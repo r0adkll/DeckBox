@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.filter
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.SubTypeAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.SuperTypeAttribute
@@ -11,6 +12,11 @@ import io.pokemontcg.model.Type
 
 
 object FilterReducer {
+
+    fun reduceField(field: SearchField, filter: Filter): Filter {
+        return filter.copy(field = field)
+    }
+
 
     fun reduceType(key: String, type: Type, filter: Filter): Filter {
         return when(key) {

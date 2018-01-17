@@ -11,6 +11,7 @@ import paperparcel.PaperParcelable
 
 @PaperParcel
 data class Filter(
+        val field: SearchField,
         val types: List<Type>,
         val superType: SuperType?,
         val subTypes: List<SubType>,
@@ -25,7 +26,7 @@ data class Filter(
         val resistances: List<Type>
 ) : PaperParcelable {
 
-    val isEmpty: Boolean
+    val isEmptyWithoutField: Boolean
         get() {
             return (types.isEmpty() && subTypes.isEmpty() && contains.isEmpty() && expansions.isEmpty()
                     && rarity.isEmpty() && retreatCost.isNullOrBlank() && attackCost.isNullOrBlank()
@@ -33,20 +34,23 @@ data class Filter(
                     && resistances.isEmpty() && superType == null)
         }
 
-
-
+    val isEmpty: Boolean
+        get() = isEmptyWithoutField && this.field == SearchField.NAME
 
 
     companion object {
         @JvmField val CREATOR = PaperParcelFilter.CREATOR
 
         val DEFAULT by lazy {
-            Filter(emptyList(), null, emptyList(), emptyList(), emptyList(), emptyList(), null, null, null, null,
+            Filter(SearchField.NAME, emptyList(), null, emptyList(), emptyList(),
+                    emptyList(), emptyList(), null, null, null, null,
                     emptyList(), emptyList())
         }
     }
 
     override fun toString(): String {
-        return "Filter(types=$types, superType=$superType, subTypes=$subTypes, contains=$contains, rarity=$rarity, retreatCost=$retreatCost, attackCost=$attackCost, attackDamage=$attackDamage, hp=$hp, weaknesses=$weaknesses, resistances=$resistances)"
+        return "Filter(field=$field, types=$types, superType=$superType, subTypes=$subTypes, " +
+                "contains=$contains, rarity=$rarity, retreatCost=$retreatCost, attackCost=$attackCost, " +
+                "attackDamage=$attackDamage, hp=$hp, weaknesses=$weaknesses, resistances=$resistances)"
     }
 }

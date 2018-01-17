@@ -45,7 +45,7 @@ class SearchPresenter @Inject constructor(
 
 
     private fun getReSearchCardsObservable(filter: Filter): Observable<Change> {
-        if (ui.state.query.isBlank() && filter.isEmpty) {
+        if (ui.state.query.isBlank() && filter.isEmptyWithoutField) {
             return Observable.just(Change.FilterChanged(filter) as Change)
         }
         else {
@@ -63,7 +63,7 @@ class SearchPresenter @Inject constructor(
 
     private fun getSearchCardsObservable(text: String): Observable<Change> {
         val filter = ui.state.filter
-        return if (TextUtils.isEmpty(text) && filter.isEmpty) {
+        return if (TextUtils.isEmpty(text) && filter.isEmptyWithoutField) {
             Observable.just(Change.ClearQuery as Change)
         }
         else {

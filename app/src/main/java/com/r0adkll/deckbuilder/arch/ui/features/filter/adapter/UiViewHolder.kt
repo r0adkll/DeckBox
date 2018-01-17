@@ -16,6 +16,7 @@ import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier
@@ -45,6 +46,30 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
         override fun bind(item: Item.Header) {
             title.setText(item.title)
+        }
+    }
+
+
+    /**
+     * Recycler UI Item for [Item.Field]
+     */
+    class FieldViewHolder(
+            itemView: View,
+            private val fieldChanges: Relay<SearchField>
+    ) : UiViewHolder<Item.Field>(itemView) {
+
+        val spinner: Spinner by bindView(R.id.search_field)
+
+
+        override fun bind(item: Item.Field) {
+            spinner.setSelection(item.searchField.ordinal)
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val field = SearchField.VALUES[position]
+                    fieldChanges.accept(field)
+                }
+            }
         }
     }
 
@@ -272,6 +297,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         HEADER(R.layout.item_filter_header),
         TYPE(R.layout.item_filter_types),
+        FIELD(R.layout.item_filter_field),
         ATTRIBUTES(R.layout.item_filter_attributes),
         OPTION(R.layout.item_filter_option),
         VIEW_MORE(R.layout.item_filter_view_more),
@@ -299,6 +325,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             val viewType = ViewType.of(layoutId)
             return when(viewType) {
                 HEADER -> HeaderViewHolder(itemView) as UiViewHolder<Item>
+                FIELD -> FieldViewHolder(itemView, intentions.fieldChanges) as UiViewHolder<Item>
                 TYPE -> TypeViewHolder(itemView, intentions.typeClicks) as UiViewHolder<Item>
                 ATTRIBUTES -> AttributesViewHolder(itemView, intentions.attributeClicks) as UiViewHolder<Item>
                 OPTION -> OptionViewHolder(itemView, intentions.optionClicks) as UiViewHolder<Item>
