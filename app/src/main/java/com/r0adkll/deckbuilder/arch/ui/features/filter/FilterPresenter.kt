@@ -28,6 +28,9 @@ class FilterPresenter @Inject constructor(
                 .map { it.asReversed() }
                 .map { Change.ExpansionsLoaded(it) as Change }
 
+        val fieldChanged = intentions.fieldChanges()
+                .map { Change.FieldChanged(it) as Change }
+
         val typeSelected = intentions.typeClicks()
                 .map { Change.TypeSelected(it.first, it.second) as Change }
 
@@ -58,6 +61,7 @@ class FilterPresenter @Inject constructor(
 
 
         val merged = loadExpansions
+                .mergeWith(fieldChanged)
                 .mergeWith(typeSelected)
                 .mergeWith(attributeSelected)
                 .mergeWith(optionClicks)

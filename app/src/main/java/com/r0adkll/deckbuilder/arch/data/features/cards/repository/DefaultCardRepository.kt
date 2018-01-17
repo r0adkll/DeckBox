@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.pokemontcg.Pokemon
@@ -65,10 +66,20 @@ class DefaultCardRepository @Inject constructor(
         if (query.isNotBlank()) {
 
             // Special case to account for 'N' cards
-            if (query.trim().equals("N", true)) {
-                request.name = "\"${query.trim()}\""
+            val adjustedQuery = if (query.trim().equals("N", true)) {
+                "\"${query.trim()}\""
             } else {
-                request.name = query
+                query
+            }
+
+            // Set search field accordingly
+            when(filter?.field ?: SearchField.NAME) {
+                SearchField.NAME -> request.name = adjustedQuery
+                SearchField.TEXT -> request.text = adjustedQuery
+                SearchField.ABILITY_NAME -> request.abilityName = adjustedQuery
+                SearchField.ABILITY_TEXT -> request.abilityText = adjustedQuery
+                SearchField.ATTACK_NAME -> request.attackName = adjustedQuery
+                SearchField.ATTACK_TEXT -> request.attackText = adjustedQuery
             }
         }
 

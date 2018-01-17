@@ -97,7 +97,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
                 val newResults = results.toMutableMap()
                 val result = newResults[change.category]!!
                 newResults[change.category] = result
-                        .copy(filter = change.filter, results = if (change.filter.isEmpty && result.query.isBlank()) emptyList() else result.results)
+                        .copy(filter = change.filter, results = if (change.filter.isEmptyWithoutField && result.query.isBlank()) emptyList() else result.results)
                 this.copy(results = newResults.toMap())
             }
             is Change.ResultsLoaded -> {

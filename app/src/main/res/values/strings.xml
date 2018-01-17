@@ -105,4 +105,5 @@
     <string name="empty_search_pokemon_message">Enter a term to begin searching for Pokémon cards</string>
     <string name="empty_search_trainer_message">Enter a term to begin searching for Trainer cards</string>
     <string name="empty_search_energy_message">Enter a term to begin searching for Energy cards</string>
+    <string name="filter_header_search_field">Search field</string>
 </resources>

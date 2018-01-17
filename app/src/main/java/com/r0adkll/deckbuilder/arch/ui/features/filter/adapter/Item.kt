@@ -5,6 +5,7 @@ import android.support.annotation.StringRes
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 
@@ -29,6 +30,24 @@ sealed class Item : RecyclerItem {
 
         override val itemId: Long = title.toLong()
         override val layoutId: Int = R.layout.item_filter_header
+    }
+
+
+    data class Field(val searchField: SearchField) : Item() {
+
+        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+            is Field -> true
+            else -> false
+        }
+
+
+        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+            is Field -> new.searchField == searchField
+            else -> false
+        }
+
+        override val itemId: Long get() = searchField.hashCode().toLong()
+        override val layoutId: Int get() = R.layout.item_filter_field
     }
 
 

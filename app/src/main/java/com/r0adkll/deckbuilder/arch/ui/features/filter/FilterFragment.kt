@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
@@ -92,6 +93,11 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
     override fun render(state: FilterUi.State) {
         this.state = state
         renderer.render(state)
+    }
+
+
+    override fun fieldChanges(): Observable<SearchField> = filterIntentions.fieldChanges.doOnNext {
+        Analytics.event(Event.SelectContent.FilterOption("search_field", it.name))
     }
 
 

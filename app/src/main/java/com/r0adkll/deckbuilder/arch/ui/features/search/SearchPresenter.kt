@@ -61,7 +61,7 @@ class SearchPresenter @Inject constructor(
 
     private fun getReSearchCardsObservable(category: SuperType, filter: Filter): Observable<Change> {
         val result = ui.state.results[category]
-        if (result?.query.isNullOrBlank() && filter.isEmpty) {
+        if (result?.query.isNullOrBlank() && filter.isEmptyWithoutField) {
             return Observable.just(Change.FilterChanged(category, filter) as Change)
         }
         else {
@@ -79,7 +79,7 @@ class SearchPresenter @Inject constructor(
 
     private fun getSearchCardsObservable(category: SuperType, text: String): Observable<Change> {
         val filter = ui.state.current()?.filter
-        return if (TextUtils.isEmpty(text) && filter?.isEmpty != false) {
+        return if (TextUtils.isEmpty(text) && filter?.isEmptyWithoutField != false) {
             Observable.just(Change.ClearQuery(category) as Change)
         }
         else {
