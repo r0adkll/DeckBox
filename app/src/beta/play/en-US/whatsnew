@@ -1,8 +1,3 @@
 • Fixed bug with quickstart menu rendering incorrectly
 • Added improved search functionality to allow the user to search other fields of the card (i.e. text, ability name, attack text, etc)
 • Minor UI improvements
-• Improved the builder interface to show the non-evolution line Pokémons in a grid pattern similar to trainer and energy cards
-• Improved UI in the card detail screen to allow you to add more copies of that card, or of variants and evolved forms
-• Removed hard limits on deck rules in favor of soft warnings.
-• Added basic Standard/Expanded format indicators in deck builder interface
-• Bug Fixes
