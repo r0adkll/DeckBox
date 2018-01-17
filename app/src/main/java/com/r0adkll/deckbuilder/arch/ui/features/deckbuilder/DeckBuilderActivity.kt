@@ -73,6 +73,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     private val saveDeck: Relay<Unit> = PublishRelay.create()
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
 
+    private val iconOffset: Float by lazy { dpToPx(12f) }
+    private val defaultOffset: Float by lazy { dpToPx(22f) }
+
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
@@ -155,6 +158,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 interpolateCardCounter(panel, slideOffset)
                 interpolateFormats(panel, slideOffset)
                 interpolatePanelIndicator(slideOffset)
+                interpolateErrorMarker(panel, slideOffset)
 
                 val infoBarOffset = calculateAlpha(slideOffset, .95f)
                 infoBar.alpha = infoBarOffset
@@ -179,6 +183,13 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
             private fun calculateAlpha(offset: Float, ratio: Float): Float = (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
 
+            private fun interpolateErrorMarker(panel: View, offset: Float) {
+                val iconOffset = ruleRecycler.getChildAt(0)?.let {
+                    (it.height.toFloat() / 2f) //- iconOffset
+                } ?: defaultOffset
+                val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
+                deckError.setVisible(offset < recyclerOffset)
+            }
 
             private fun interpolateCardCounter(panel: View, offset: Float) {
                 cardCount.translationY = offset * (panel.height - cardCount.height)
