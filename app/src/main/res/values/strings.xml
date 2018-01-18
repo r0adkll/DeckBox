@@ -77,7 +77,7 @@
     <string name="pref_about_oss_summary">View the open source licenses used by DeckBox</string>
     <string name="pref_category_help">Help</string>
     <string name="pref_help_feedback_title">Feedback</string>
-    <string name="pref_help_feedback_summary">Provided feedback on issues, missing cards, etc.</string>
+    <string name="pref_help_feedback_summary">Provided feedback on issues, features, etc.</string>
     <string name="pref_help_suggestions_title">Suggestions</string>
     <string name="pref_help_suggestions_summary">Submit any suggestions or improvements you might have</string>
     <string name="disclaimer">This application is not produced, endorsed, supported, or affiliated with Nintendo or The Pokémon Company.</string>
@@ -106,4 +106,12 @@
     <string name="empty_search_trainer_message">Enter a term to begin searching for Trainer cards</string>
     <string name="empty_search_energy_message">Enter a term to begin searching for Energy cards</string>
     <string name="filter_header_search_field">Search field</string>
+    <string name="activity_missing_cards">Report Missing Card</string>
+    <string name="hint_missing_card_name">Pokémon card name</string>
+    <string name="hint_missing_card_description">Description</string>
+    <string name="hint_missing_card_set_number">Set #</string>
+    <string name="action_send">Send</string>
+    <string name="missing_card_report_submitted">Missing card report submitted! Thanks!</string>
+    <string name="pref_help_missing_card_title">Missing card?</string>
+    <string name="pref_help_missing_card_summary">Report a missing card in the collection</string>
 </resources>
