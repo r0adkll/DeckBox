@@ -188,7 +188,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     (it.height.toFloat() / 2f) //- iconOffset
                 } ?: defaultOffset
                 val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
-                deckError.setVisible(offset < recyclerOffset)
+                deckError.setVisibleWeak(offset < recyclerOffset)
             }
 
             private fun interpolateCardCounter(panel: View, offset: Float) {

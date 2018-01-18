@@ -22,6 +22,7 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
@@ -101,6 +102,10 @@ class DataModule {
 
     @Provides @AppScope
     fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
+
+
+    @Provides @AppScope
+    fun provideMissingCardRepository(repository: MissingCardRepository): MissingCardRepository = repository
 
 
     @Provides @AppScope
