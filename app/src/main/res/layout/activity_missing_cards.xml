@@ -37,7 +37,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_normal">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
@@ -45,7 +46,6 @@
                     android:layout_weight="8"
                     android:layout_marginStart="@dimen/margin_small"
                     android:layout_marginEnd="@dimen/margin_tiny"
-                    android:layout_marginTop="@dimen/margin_tiny"
                     android:hint="@string/hint_missing_card_name">
 
                     <android.support.design.widget.TextInputEditText
@@ -54,6 +54,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text|textCapWords"
                         android:focusedByDefault="false"
+                        tools:text="Leafeon-GX"
                         />
 
                 </android.support.design.widget.TextInputLayout>
@@ -63,7 +64,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:layout_marginEnd="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_tiny"
                     android:hint="@string/hint_missing_card_set_number">
 
                     <android.support.design.widget.TextInputEditText
@@ -102,21 +102,33 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black12"
+                android:layout_marginTop="8dp"
+                />
+
             <Spinner
                 android:id="@+id/expansionSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="@dimen/margin_small"
                 android:layout_marginEnd="@dimen/margin_small"
                 tools:entries="@array/temp_exp"
+                />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black12"
                 />
 
             <Spinner
                 android:id="@+id/printSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="@dimen/margin_small"
                 android:layout_marginEnd="@dimen/margin_small"
                 android:entries="@array/print_varieties"
