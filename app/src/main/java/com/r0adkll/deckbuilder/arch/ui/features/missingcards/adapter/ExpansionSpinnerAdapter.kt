@@ -18,6 +18,16 @@ class ExpansionSpinnerAdapter(context: Context) : ArrayAdapter<Expansion>(contex
 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        return getViewForPosition(position, convertView, parent)
+    }
+
+
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        return getViewForPosition(position, convertView, parent)
+    }
+
+
+    private fun getViewForPosition(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(R.layout.item_expansion, parent, false)
         val expansion = getItem(position)
 

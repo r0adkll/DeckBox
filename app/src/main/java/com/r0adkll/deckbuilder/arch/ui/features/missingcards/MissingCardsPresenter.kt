@@ -23,6 +23,7 @@ class MissingCardsPresenter @Inject constructor(
     override fun start() {
 
         val loadExpansions = repository.getExpansions()
+                .map { it.reversed() }
                 .map { Change.ExpansionsLoaded(it) as Change }
                 .onErrorReturn(handleUnknownError)
 

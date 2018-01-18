@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.AdapterView
 import com.ftinc.kit.kotlin.extensions.setVisible
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.itemSelections
@@ -94,6 +95,7 @@ class MissingCardsActivity : BaseActivity(),
 
     override fun selectExpansion(): Observable<Expansion> {
         return expansionSpinner.itemSelections()
+                .filter { it != AdapterView.INVALID_POSITION }
                 .map {
                     expansionAdapter.getItem(it)
                 }
@@ -102,6 +104,7 @@ class MissingCardsActivity : BaseActivity(),
 
     override fun selectPrint(): Observable<String> {
         return printSpinner.itemSelections()
+                .filter { it != AdapterView.INVALID_POSITION }
                 .map {
                     val values = resources.getStringArray(R.array.print_varieties)
                     values[it]

@@ -15,6 +15,7 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDa
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
+import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
@@ -105,7 +106,7 @@ class DataModule {
 
 
     @Provides @AppScope
-    fun provideMissingCardRepository(repository: MissingCardRepository): MissingCardRepository = repository
+    fun provideMissingCardRepository(repository: DefaultMissingCardRepository): MissingCardRepository = repository
 
 
     @Provides @AppScope
