@@ -1,7 +1,9 @@
 package com.r0adkll.deckbuilder.internal.analytics.firebase
 
+
 import android.content.Context
 import android.os.Bundle
+import android.provider.Settings
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.FirebaseAnalytics.Param.*
 import com.r0adkll.deckbuilder.internal.analytics.AnalyticInterface
@@ -14,6 +16,14 @@ class FirebaseAnalyticInterface(
 ) : AnalyticInterface {
 
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+
+    init {
+        // Disable analytic collection if in the test lab
+        val testLabSetting = Settings.System.getString(context.contentResolver, "firebase.test.lab")
+        if ("true" == testLabSetting) {
+            firebaseAnalytics.setAnalyticsCollectionEnabled(false)
+        }
+    }
 
 
     override fun setUserId(id: String) {
