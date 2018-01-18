@@ -8,7 +8,7 @@ class MissingCardEntity(
         val name: String = "",
         val number: Int? = null,
         val description: String? = null,
-        val setCode: String? = null,
+        val setName: String? = null,
         val print: String = "Regular Art",
 
         var userId: String = "",

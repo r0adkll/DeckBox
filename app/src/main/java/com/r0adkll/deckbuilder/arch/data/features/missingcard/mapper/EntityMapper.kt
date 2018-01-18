@@ -11,7 +11,7 @@ object EntityMapper {
                 model.name,
                 model.number,
                 model.description,
-                model.setCode,
+                model.setName,
                 model.print
         )
     }

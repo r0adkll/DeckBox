@@ -47,7 +47,7 @@ class MissingCardsPresenter @Inject constructor(
                     val missingCard = MissingCard(ui.state.name!!,
                             ui.state.setNumber,
                             ui.state.description,
-                            ui.state.expansion?.code,
+                            ui.state.expansion?.name,
                             ui.state.print)
                     missingCardRepository.reportMissingCard(missingCard)
                             .map { Change.ReportSubmitted }

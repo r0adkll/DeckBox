@@ -5,6 +5,6 @@ data class MissingCard(
         val name: String,
         val number: Int?,
         val description: String?,
-        val setCode: String?,
+        val setName: String?,
         val print: String
 )
