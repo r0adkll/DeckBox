@@ -7,6 +7,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.Missi
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsUi.State.*
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
@@ -44,6 +46,7 @@ class MissingCardsPresenter @Inject constructor(
 
         val submitReport = intentions.submitReport()
                 .flatMap {
+                    Analytics.event(Event.SelectContent.MissingCard(ui.state.name!!))
                     val missingCard = MissingCard(ui.state.name!!,
                             ui.state.setNumber,
                             ui.state.description,

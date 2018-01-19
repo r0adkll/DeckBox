@@ -21,6 +21,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import io.pokemontcg.model.SuperType
 
 
@@ -198,6 +200,7 @@ class ResultsPagerAdapter(
             emptyView.setActionLabelRes(R.string.empty_search_missing_card)
             emptyView.actionColor = emptyView.color(R.color.red_500)
             emptyView.setOnActionClickListener {
+                Analytics.event(Event.SelectContent.Action("search_missing_card", position.toString()))
                 MissingCardsActivity.show(itemView.context)
             }
         }
