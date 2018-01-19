@@ -105,6 +105,9 @@
     <string name="empty_search_pokemon_message">Enter a term to begin searching for Pokémon cards</string>
     <string name="empty_search_trainer_message">Enter a term to begin searching for Trainer cards</string>
     <string name="empty_search_energy_message">Enter a term to begin searching for Energy cards</string>
+    <string name="empty_search_results_pokemon_message">Couldn\'t find any Pokémon cards for that term</string>
+    <string name="empty_search_results_trainer_message">Couldn\'t find any Trainer cards for that term</string>
+    <string name="empty_search_results_energy_message">Couldn\'t find any Energy cards for that term</string>
     <string name="filter_header_search_field">Search field</string>
     <string name="activity_missing_cards">Report Missing Card</string>
     <string name="hint_missing_card_name">Pokémon card name</string>
@@ -114,4 +117,5 @@
     <string name="missing_card_report_submitted">Missing card report submitted! Thanks!</string>
     <string name="pref_help_missing_card_title">Missing card?</string>
     <string name="pref_help_missing_card_summary">Report a missing card in the collection</string>
+    <string name="empty_search_missing_card">Missing card?</string>
 </resources>
