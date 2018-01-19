@@ -209,6 +209,7 @@ class ResultsPagerAdapter(
                 1 -> R.string.empty_search_trainer_message
                 else -> R.string.empty_search_energy_message
             })
+            emptyView.actionLabel = null
         }
 
 
