@@ -1,3 +1,7 @@
+# 1.2.0
+* Added missing card feedback form to better facilitate user feedback
+*
+
 # 1.1.1
 * Fixed bug with quickstart menu rendering incorrectly
 * Added improved search functionality to allow the user to search other fields of the card (i.e. text, ability name, attack text, etc)
