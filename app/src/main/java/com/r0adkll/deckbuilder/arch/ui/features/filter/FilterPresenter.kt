@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.*
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
+import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,6 +27,9 @@ class FilterPresenter @Inject constructor(
                 .onErrorReturnItem(emptyList())
                 .map { it.asReversed() }
                 .map { Change.ExpansionsLoaded(it) as Change }
+
+        val fieldChanged = intentions.fieldChanges()
+                .map { Change.FieldChanged(it) as Change }
 
         val typeSelected = intentions.typeClicks()
                 .map { Change.TypeSelected(it.first, it.second) as Change }
@@ -57,6 +61,7 @@ class FilterPresenter @Inject constructor(
 
 
         val merged = loadExpansions
+                .mergeWith(fieldChanged)
                 .mergeWith(typeSelected)
                 .mergeWith(attributeSelected)
                 .mergeWith(optionClicks)
@@ -67,7 +72,7 @@ class FilterPresenter @Inject constructor(
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
-                .doOnNext { state -> Timber.v("    --- $state") }
+                .logState()
                 .doOnNext {
                     it.filters.forEach {
                         categoryIntentions.filterChanges().accept(Pair(it.key, it.value.filter))

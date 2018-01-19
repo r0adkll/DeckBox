@@ -157,9 +157,15 @@ class PokemonCardView @JvmOverloads constructor(
                 // Allocate a new bitmap with the correct dimensions.
                 cacheBitmap!!.recycle()
 
-                cacheBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                cachedWidth = width
-                cachedHeight = height
+                Timber.d("Attempting to allocation a new cache (w: $width, h: $height)")
+                try {
+                    cacheBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                    cachedWidth = width
+                    cachedHeight = height
+                } catch (e: OutOfMemoryError) {
+                    Timber.w(e) // FIXME: Critical error report
+                    return
+                }
             }
 
             val cacheCanvas = Canvas(cacheBitmap!!)

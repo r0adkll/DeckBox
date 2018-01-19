@@ -1,9 +1,11 @@
 package com.r0adkll.deckbuilder.util.extensions
 
 
+import com.r0adkll.deckbuilder.BuildConfig
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import timber.log.Timber
 
 
 operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
@@ -75,4 +77,13 @@ fun <T : Any> Observable<T>.uiDebounce(delayInMilliseconds: Long): Observable<T>
 
 fun <T : Any> Observable<T>.mapError(throwable: Throwable): Observable<T> {
     return this.onErrorResumeNext { _: Throwable -> Observable.error<T>(throwable) }
+}
+
+
+fun <T : Any> Observable<T>.logState(): Observable<T> {
+    return this.doOnNext { state ->
+        if (BuildConfig.DEBUG) {
+            Timber.v("    --- $state")
+        }
+    }
 }

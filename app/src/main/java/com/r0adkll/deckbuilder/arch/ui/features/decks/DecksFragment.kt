@@ -78,7 +78,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             startActivity(DeckBuilderActivity.createIntent(activity!!))
         }
 
-        if (preferences.quickStart || BuildConfig.DEBUG) {
+        if (preferences.quickStart) {
             fab.postDelayed({ quickTip.show(fab, R.string.deck_quickstart_message) }, 300L)
             preferences.quickStart = false
         }

@@ -22,6 +22,7 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -99,6 +100,10 @@ class SettingsActivity : BaseActivity() {
                     val emailAddress = getString(R.string.support_email_address)
                     val intent = IntentUtils.sendEmail(emailAddress, "Feedback", text)
                     startActivity(intent)
+                    true
+                }
+                "pref_missing_card" -> {
+                    MissingCardsActivity.show(activity)
                     true
                 }
                 "pref_account_link" -> {

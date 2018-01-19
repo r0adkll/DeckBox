@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State.Change
+import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -51,7 +52,7 @@ class SearchPresenter @Inject constructor(
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
-                .doOnNext { state -> Timber.v("    --- $state") }
+                .logState()
                 .subscribe(ui::render, {
                     Timber.e(it, "Error reducing search state")
                 })
@@ -60,7 +61,7 @@ class SearchPresenter @Inject constructor(
 
     private fun getReSearchCardsObservable(category: SuperType, filter: Filter): Observable<Change> {
         val result = ui.state.results[category]
-        if (result?.query.isNullOrBlank() && filter.isEmpty) {
+        if (result?.query.isNullOrBlank() && filter.isEmptyWithoutField) {
             return Observable.just(Change.FilterChanged(category, filter) as Change)
         }
         else {
@@ -78,7 +79,7 @@ class SearchPresenter @Inject constructor(
 
     private fun getSearchCardsObservable(category: SuperType, text: String): Observable<Change> {
         val filter = ui.state.current()?.filter
-        return if (TextUtils.isEmpty(text) && filter?.isEmpty != false) {
+        return if (TextUtils.isEmpty(text) && filter?.isEmptyWithoutField != false) {
             Observable.just(Change.ClearQuery(category) as Change)
         }
         else {

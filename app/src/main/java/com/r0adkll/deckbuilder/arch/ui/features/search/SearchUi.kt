@@ -34,6 +34,8 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun setResults(superType: SuperType, cards: List<PokemonCard>)
         fun setSelectedCards(cards: List<PokemonCard>)
         fun showLoading(superType: SuperType, isLoading: Boolean)
+        fun showEmptyResults(superType: SuperType)
+        fun showEmptyDefault(superType: SuperType)
         fun showError(superType: SuperType, description: String)
         fun hideError(superType: SuperType)
     }
@@ -48,8 +50,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             val category: SuperType,
             val results: List<PokemonCard>
     ) : PaperParcelable {
-
-
 
         companion object {
             @JvmField val CREATOR = PaperParcelSearchUi_Result.CREATOR
@@ -97,7 +97,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
                 val newResults = results.toMutableMap()
                 val result = newResults[change.category]!!
                 newResults[change.category] = result
-                        .copy(filter = change.filter, results = if (change.filter.isEmpty && result.query.isBlank()) emptyList() else result.results)
+                        .copy(filter = change.filter, results = if (change.filter.isEmptyWithoutField && result.query.isBlank()) emptyList() else result.results)
                 this.copy(results = newResults.toMap())
             }
             is Change.ResultsLoaded -> {

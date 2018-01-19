@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi.State.Change
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
+import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -38,13 +39,13 @@ class SearchPresenter @Inject constructor(
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
-                .doOnNext { state -> Timber.v("    --- $state") }
+                .logState()
                 .subscribe(ui::render)
     }
 
 
     private fun getReSearchCardsObservable(filter: Filter): Observable<Change> {
-        if (ui.state.query.isBlank() && filter.isEmpty) {
+        if (ui.state.query.isBlank() && filter.isEmptyWithoutField) {
             return Observable.just(Change.FilterChanged(filter) as Change)
         }
         else {
@@ -62,7 +63,7 @@ class SearchPresenter @Inject constructor(
 
     private fun getSearchCardsObservable(text: String): Observable<Change> {
         val filter = ui.state.filter
-        return if (TextUtils.isEmpty(text) && filter.isEmpty) {
+        return if (TextUtils.isEmpty(text) && filter.isEmptyWithoutField) {
             Observable.just(Change.ClearQuery as Change)
         }
         else {

@@ -26,6 +26,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecy
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
@@ -161,6 +162,22 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     }
 
 
+    override fun showEmptyResults() {
+        emptyView.setEmptyMessage(R.string.empty_search_results_category)
+        emptyView.setActionLabelRes(R.string.empty_search_missing_card)
+        emptyView.setActionColorRes(R.color.red_500)
+        emptyView.setOnActionClickListener {
+            MissingCardsActivity.show(activity!!)
+        }
+    }
+
+
+    override fun showEmptyDefault() {
+        emptyView.setEmptyMessage(R.string.empty_search_category)
+        emptyView.actionLabel = null
+    }
+
+
     override fun showLoading(isLoading: Boolean) {
         emptyView.setLoading(isLoading)
     }
@@ -179,6 +196,7 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     override fun closeDrawer() {
         drawer.closeDrawer(GravityCompat.END)
     }
+
 
     override fun setupComponent() {
         component = getComponent(DeckBuilderComponent::class)

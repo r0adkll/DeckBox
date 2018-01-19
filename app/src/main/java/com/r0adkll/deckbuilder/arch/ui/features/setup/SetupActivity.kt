@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.setup
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.WindowManager
 import com.ftinc.kit.kotlin.extensions.color
 import com.google.android.gms.auth.api.Auth
@@ -59,6 +60,12 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             setupTitle?.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
             setupSubtitle?.setTextColor(primaryColor?.bodyTextColor ?: color(R.color.white))
             action_continue.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
+        }
+
+        val testLabSetting = Settings.System.getString(contentResolver, "firebase.test.lab")
+        if ("true" == testLabSetting) {
+            action_continue.text = "Go away bots!!"
+            action_continue.isEnabled = false
         }
     }
 

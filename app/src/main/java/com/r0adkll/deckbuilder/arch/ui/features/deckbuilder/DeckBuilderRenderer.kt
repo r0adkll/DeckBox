@@ -31,6 +31,12 @@ class DeckBuilderRenderer(
                 .subscribe { actions.showIsExpanded(it) }
 
         disposables += state
+                .map { it.validation.rules }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.showBrokenRules(it) }
+
+        disposables += state
                 .map { it.hasChanged }
                 .distinctUntilChanged()
                 .addToLifecycle()
