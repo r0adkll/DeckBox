@@ -23,7 +23,7 @@ ext {
     ftkit_version =          '0.5.2-SNAPSHOT'
     glide_version =          '4.0.0'
     leakcanary_version =     '1.5.1'
-    paperparcel_version =    '2.0.2'
+    paperparcel_version =    '2.0.4'
     play_version =           '11.8.0'
     poketcg_version =        '1.0.7'
     rxjava_version =         '2.1.3'
