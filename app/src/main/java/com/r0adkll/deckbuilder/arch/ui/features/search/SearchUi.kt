@@ -34,6 +34,8 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun setResults(superType: SuperType, cards: List<PokemonCard>)
         fun setSelectedCards(cards: List<PokemonCard>)
         fun showLoading(superType: SuperType, isLoading: Boolean)
+        fun showEmptyResults(superType: SuperType)
+        fun showEmptyDefault(superType: SuperType)
         fun showError(superType: SuperType, description: String)
         fun hideError(superType: SuperType)
     }
@@ -48,8 +50,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             val category: SuperType,
             val results: List<PokemonCard>
     ) : PaperParcelable {
-
-
 
         companion object {
             @JvmField val CREATOR = PaperParcelSearchUi_Result.CREATOR

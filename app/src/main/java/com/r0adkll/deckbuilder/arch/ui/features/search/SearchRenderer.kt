@@ -91,5 +91,20 @@ class SearchRenderer(
                         actions.hideError(superType)
                     }
                 }
+
+        disposables += state
+                .map {
+                    val results = it.results[superType]!!
+                    results.results.isEmpty() && !results.isLoading && results.query.isNotBlank()
+                }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    if (it) {
+                        actions.showEmptyResults(superType)
+                    } else {
+                        actions.showEmptyDefault(superType)
+                    }
+                }
     }
 }

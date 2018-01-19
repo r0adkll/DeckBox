@@ -1,3 +1,8 @@
+# 1.2.0
+* Missing card feedback form
+* Disabled analytics during robo-tests
+* Added missing card prompt when search returns no results
+
 # 1.1.1
 * Fixed bug with quickstart menu rendering incorrectly
 * Added improved search functionality to allow the user to search other fields of the card (i.e. text, ability name, attack text, etc)

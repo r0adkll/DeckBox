@@ -269,6 +269,16 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     }
 
 
+    override fun showEmptyResults(superType: SuperType) {
+        adapter.showEmptyResults(superType)
+    }
+
+
+    override fun showEmptyDefault(superType: SuperType) {
+        adapter.showEmptyDefault(superType)
+    }
+
+
     override fun showError(superType: SuperType, description: String) {
         adapter.showError(superType, description)
     }

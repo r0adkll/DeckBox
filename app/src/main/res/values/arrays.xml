@@ -10,4 +10,14 @@
         <item>Attack Text</item>
     </string-array>
 
+    <string-array name="print_varieties">
+        <item>Regular Art</item>
+        <item>Full Art</item>
+        <item>Secret Rare</item>
+    </string-array>
+
+    <string-array name="temp_exp">
+        <item>Crimson Invasion</item>
+    </string-array>
+
 </resources>

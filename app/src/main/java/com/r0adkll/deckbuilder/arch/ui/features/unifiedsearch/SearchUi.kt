@@ -27,6 +27,8 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun showFilterEmpty(enabled: Boolean)
         fun setQueryText(text: String)
         fun setResults(cards: List<PokemonCard>)
+        fun showEmptyResults()
+        fun showEmptyDefault()
         fun showLoading(isLoading: Boolean)
         fun showError(description: String)
         fun hideError()

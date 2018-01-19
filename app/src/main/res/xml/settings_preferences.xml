@@ -31,6 +31,12 @@
             android:summary="@string/pref_help_feedback_summary"
             />
 
+        <Preference
+            android:key="pref_missing_card"
+            android:title="@string/pref_help_missing_card_title"
+            android:summary="@string/pref_help_missing_card_summary"
+            />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_about">

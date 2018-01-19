@@ -58,6 +58,8 @@
             android:theme="@style/Theme.DeckBuilder.OSS"
             />
 
+        <activity android:name=".arch.ui.features.missingcards.MissingCardsActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="7b1875458d267befd0938d565c22df19a3a7c047"

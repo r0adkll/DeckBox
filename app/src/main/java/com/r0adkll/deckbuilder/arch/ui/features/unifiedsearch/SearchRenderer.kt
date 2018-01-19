@@ -28,6 +28,18 @@ class SearchRenderer(
                 .subscribe { actions.setResults(it) }
 
         disposables += state
+                .map { it.results.isEmpty() && !it.isLoading && it.query.isNotBlank() }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    if (it) {
+                        actions.showEmptyResults()
+                    } else {
+                        actions.showEmptyDefault()
+                    }
+                }
+
+        disposables += state
                 .map { it.isLoading }
                 .distinctUntilChanged()
                 .addToLifecycle()

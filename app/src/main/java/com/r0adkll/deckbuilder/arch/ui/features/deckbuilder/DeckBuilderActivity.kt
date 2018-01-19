@@ -184,11 +184,13 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             private fun calculateAlpha(offset: Float, ratio: Float): Float = (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
 
             private fun interpolateErrorMarker(panel: View, offset: Float) {
-                val iconOffset = ruleRecycler.getChildAt(0)?.let {
-                    (it.height.toFloat() / 2f) //- iconOffset
-                } ?: defaultOffset
-                val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
-                deckError.setVisible(offset < recyclerOffset)
+                if (ruleAdapter.itemCount > 0) {
+                    val iconOffset = ruleRecycler.getChildAt(0)?.let {
+                        (it.height.toFloat() / 2f) //- iconOffset
+                    } ?: defaultOffset
+                    val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
+                    deckError.setVisibleWeak(offset < recyclerOffset)
+                }
             }
 
             private fun interpolateCardCounter(panel: View, offset: Float) {

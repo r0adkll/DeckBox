@@ -15,6 +15,7 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDa
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
+import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
@@ -22,6 +23,7 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
@@ -101,6 +103,10 @@ class DataModule {
 
     @Provides @AppScope
     fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
+
+
+    @Provides @AppScope
+    fun provideMissingCardRepository(repository: DefaultMissingCardRepository): MissingCardRepository = repository
 
 
     @Provides @AppScope
