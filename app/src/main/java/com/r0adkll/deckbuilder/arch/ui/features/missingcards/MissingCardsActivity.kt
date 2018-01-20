@@ -1,7 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.missingcards
 
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -201,8 +200,8 @@ class MissingCardsActivity : BaseActivity(),
         fun createIntent(context: Context): Intent = Intent(context, MissingCardsActivity::class.java)
 
 
-        fun show(activity: Activity) {
-            activity.startActivity(createIntent(activity))
+        fun show(context: Context) {
+            context.startActivity(createIntent(context))
         }
     }
 }

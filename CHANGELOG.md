@@ -1,6 +1,7 @@
 # 1.2.0
-* Added missing card feedback form to better facilitate user feedback
-*
+* Missing card feedback form
+* Disabled analytics during robo-tests
+* Added missing card prompt when search returns no results
 
 # 1.1.1
 * Fixed bug with quickstart menu rendering incorrectly
@@ -12,6 +13,7 @@
 * Improved UI in the card detail screen to allow you to add more copies of that card, or of variants and evolved forms
 * Removed hard limits on deck rules in favor of soft warnings.
 * Added basic Standard/Expanded format indicators in deck builder interface
+* Minor bug fixes
 
 # 1.0.0
 * Fixed Quickstart view on tablets
