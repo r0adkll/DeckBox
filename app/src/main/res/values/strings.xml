@@ -119,4 +119,5 @@
     <string name="pref_help_missing_card_title">Missing card?</string>
     <string name="pref_help_missing_card_summary">Report a missing card in the collection</string>
     <string name="empty_search_missing_card">Missing card?</string>
+    <string name="error_anonymous_signin">Uknown error when trying to sign-in anonymously. Please try again later.</string>
 </resources>
