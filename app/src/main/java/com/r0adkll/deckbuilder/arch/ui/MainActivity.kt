@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         compatibilityCheck()
 
-        if (firebase.currentUser != null) {
-            Analytics.userId(firebase.currentUser!!.uid)
+        if (firebase.currentUser != null || preferences.deviceId != null) {
+            firebase.currentUser?.uid?.let { Analytics.userId(it) }
             startActivity(HomeActivity.createIntent(this))
         }
         else {

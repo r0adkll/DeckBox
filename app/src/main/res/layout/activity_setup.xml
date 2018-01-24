@@ -57,4 +57,16 @@
         android:background="?attr/selectableItemBackground"
         />
 
+    <TextView
+        android:id="@+id/action_offline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:padding="@dimen/padding_small"
+        android:text="or offline"
+        android:textColor="@color/white87"
+        android:background="?attr/selectableItemBackground"
+        />
+
 </LinearLayout>

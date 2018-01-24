@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar
 import android.support.v14.preference.PreferenceFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.preference.Preference
+import com.ftinc.kit.kotlin.extensions.clear
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -56,7 +57,6 @@ class SettingsActivity : BaseActivity() {
 
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
-            DeckApp.component.inject(this)
             setupClient()
         }
 
@@ -71,6 +71,7 @@ class SettingsActivity : BaseActivity() {
 
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            DeckApp.component.inject(this)
             addPreferencesFromResource(R.xml.settings_preferences)
             setupPreferences()
         }
@@ -111,10 +112,10 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 "pref_account_signout" -> {
+                    preferences.deviceId = null
                     FirebaseAuth.getInstance().signOut()
                     googleClient?.clearDefaultAccountAndReconnect()
-                    val intent = Intent(activity, SetupActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    val intent = SetupActivity.createIntent(activity).clear()
                     startActivity(intent)
                     activity.finish()
                     true
@@ -130,15 +131,15 @@ class SettingsActivity : BaseActivity() {
 
 
         private fun setupPreferences() {
+            val profilePref = findPreference("pref_account_profile") as ProfilePreference
             val user = FirebaseAuth.getInstance().currentUser
-            user?.let {
-                val profilePref = findPreference("pref_account_profile") as ProfilePreference
+            if (user != null) {
                 profilePref.avatarUrl = user.photoUrl
 
                 profilePref.title = if (user.isAnonymous) {
                     getString(R.string.user_anonymous_title)
                 } else {
-                    it.displayName
+                    user.displayName
                 }
 
                 profilePref.summary = if (user.isAnonymous) {
@@ -148,7 +149,13 @@ class SettingsActivity : BaseActivity() {
                 }
 
                 val linkAccount = findPreference("pref_account_link")
-                linkAccount.isVisible = it.isAnonymous
+                linkAccount.isVisible = user.isAnonymous
+            } else {
+                profilePref.title = "Offline"
+                profilePref.summary = preferences.deviceId
+
+                val linkAccount = findPreference("pref_account_link")
+                linkAccount.isVisible = false
             }
 
             val versionPref = findPreference("pref_about_version")

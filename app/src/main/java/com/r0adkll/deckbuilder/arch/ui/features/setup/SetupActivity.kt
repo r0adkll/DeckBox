@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -27,16 +28,16 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
+import java.util.*
+import javax.inject.Inject
 
 
 class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener {
 
-    private val RC_SIGN_IN = 100
+    @Inject lateinit var preferences: AppPreferences
 
     private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private var googleClient: GoogleApiClient? = null
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,10 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
         action_continue.setOnClickListener {
             signInAnonymously()
+        }
+
+        action_offline.setOnClickListener {
+            signInOffline()
         }
 
         cardSwitcher?.let {
@@ -87,6 +92,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     override fun setupComponent(component: AppComponent) {
+        component.inject(this)
     }
 
 
@@ -138,6 +144,13 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     }
 
 
+    private fun signInOffline() {
+        preferences.deviceId = UUID.randomUUID().toString()
+        startActivity(HomeActivity.createIntent(this@SetupActivity))
+        finish()
+    }
+
+
     private fun handleSignInResult(result: GoogleSignInResult) {
         try {
             if (result.isSuccess) {
@@ -165,6 +178,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     companion object {
+        const val RC_SIGN_IN = 100
         const val RC_PLAY_SERVICES_ERROR = 10
 
         fun createIntent(context: Context): Intent = Intent(context, SetupActivity::class.java)
