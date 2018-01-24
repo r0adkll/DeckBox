@@ -6,6 +6,7 @@ sealed class Event {
     sealed class Login : Event() {
         object Google : Login()
         object Anonymous : Login()
+        object Offline : Login()
     }
 
     sealed class SignUp : Event() {

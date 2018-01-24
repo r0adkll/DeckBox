@@ -51,10 +51,6 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             signInAnonymously()
         }
 
-        action_offline.setOnClickListener {
-            signInOffline()
-        }
-
         cardSwitcher?.let {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         }
@@ -134,18 +130,21 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
                         startActivity(HomeActivity.createIntent(this@SetupActivity))
                         finish()
                     }, {
-                        Timber.e(it, "Failed to sign-in anonymously")
-                        snackbar("Unable to sign-in anonymously")
+                        Timber.e(it)
+                        Timber.i("Anonymous signin failed, generate an offline device id")
+                        signInOffline()
                     })
-        } catch (e: NullPointerException) {
+        } catch (e: Exception) {
             Timber.e(e)
-            snackbar(R.string.error_anonymous_signin)
+            Timber.i("Anonymous signin failed, generate an offline device id")
+            signInOffline()
         }
     }
 
 
     private fun signInOffline() {
         preferences.deviceId = UUID.randomUUID().toString()
+        Analytics.event(Event.Login.Offline)
         startActivity(HomeActivity.createIntent(this@SetupActivity))
         finish()
     }
