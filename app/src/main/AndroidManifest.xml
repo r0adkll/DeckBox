@@ -59,6 +59,7 @@
             />
 
         <activity android:name=".arch.ui.features.missingcards.MissingCardsActivity" />
+        <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

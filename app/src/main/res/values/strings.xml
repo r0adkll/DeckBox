@@ -120,4 +120,15 @@
     <string name="pref_help_missing_card_summary">Report a missing card in the collection</string>
     <string name="empty_search_missing_card">Missing card?</string>
     <string name="error_anonymous_signin">Uknown error when trying to sign-in anonymously. Please try again later.</string>
+    <string name="activity_multi_export">Export</string>
+    <string name="tab_export_tournament">Tournament</string>
+    <string name="tab_export_ptcgo">PTCGO</string>
+    <string name="hint_player_name">Player name</string>
+    <string name="hint_player_id">Player ID</string>
+    <string name="hint_date_of_birth">Date of birth</string>
+    <string name="subheader_age_division">Age division</string>
+    <string name="age_division_junior">Junior (born in 2007 or later)</string>
+    <string name="age_division_senior">Senior (born in 2003 - 2006)</string>
+    <string name="age_division_masters">Masters (born in 2002 or earlier)</string>
+    <string name="subheader_format">Format</string>
 </resources>

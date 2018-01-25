@@ -10,6 +10,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeModule
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportComponent
@@ -38,6 +40,7 @@ interface AppComponent {
     fun plus(module: CardDetailModule): CardDetailComponent
     fun plus(module: DeckImportModule): DeckImportComponent
     fun plus(module: MissingCardsModule): MissingCardsComponent
+    fun plus(module: MultiExportModule): MultiExportComponent
 
     fun searchComponentBuilder(): SearchComponent.Builder
 }
