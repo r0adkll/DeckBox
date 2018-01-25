@@ -37,6 +37,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        parent.requestFocus()
 
         renderer.start()
         presenter.start()

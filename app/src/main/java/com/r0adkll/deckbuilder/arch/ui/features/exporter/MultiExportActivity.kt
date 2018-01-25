@@ -9,18 +9,21 @@ import android.support.v4.app.FragmentPagerAdapter
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo.PtcgoExportFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportFragment
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindParcelable
+import gov.scstatehouse.houseofcards.di.HasComponent
 import kotlinx.android.synthetic.main.activity_multi_export.*
 
 
-class MultiExportActivity : BaseActivity() {
+class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
 
     private val deck: Deck by bindParcelable(EXTRA_DECK)
 
+    private lateinit var component: MultiExportComponent
     private lateinit var adapter: ExportPagerAdapter
 
 
@@ -37,9 +40,12 @@ class MultiExportActivity : BaseActivity() {
 
 
     override fun setupComponent(component: AppComponent) {
-        component.plus(MultiExportModule(deck))
-                .inject(this)
+        this.component = component.plus(MultiExportModule(deck))
+        this.component.inject(this)
     }
+
+
+    override fun getComponent(): MultiExportComponent = component
 
 
     class ExportPagerAdapter(
