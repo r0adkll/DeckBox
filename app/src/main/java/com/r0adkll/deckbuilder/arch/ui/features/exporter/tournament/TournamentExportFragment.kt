@@ -1,9 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
@@ -26,6 +24,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     override var state: State = State.DEFAULT
 
     @Inject lateinit var renderer: TournamentExportRenderer
+    @Inject lateinit var presenter: TournamentExportPresenter
 
     private val dateOfBirthChanges: Relay<Date> = PublishRelay.create()
 
@@ -37,13 +36,31 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        setHasOptionsMenu(true)
 
         renderer.start()
+        presenter.start()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.activity_export_tournament, menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_export -> {
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 
     override fun onDestroy() {
+        presenter.stop()
         renderer.stop()
         super.onDestroy()
     }
@@ -100,38 +117,40 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     }
 
 
-    override fun setPlayerName(name: String) {
+    override fun setPlayerName(name: String?) {
         if (inputPlayerName.text.toString() != name) {
             inputPlayerName.setText(name)
         }
     }
 
 
-    override fun setPlayerId(id: String) {
+    override fun setPlayerId(id: String?) {
         if (inputPlayerId.text.toString() != id) {
             inputPlayerId.setText(id)
         }
     }
 
 
-    override fun setDateOfBirth(dob: String) {
+    override fun setDateOfBirth(dob: String?) {
         inputDateOfBirth.setText(dob)
     }
 
 
-    override fun setAgeDivision(ageDivision: TournamentExportUi.AgeDivision) {
+    override fun setAgeDivision(ageDivision: TournamentExportUi.AgeDivision?) {
         optionsAgeDivision.check(when(ageDivision) {
             AgeDivision.JUNIOR -> R.id.optionAgeDivisionJunior
             AgeDivision.SENIOR -> R.id.optionAgeDivisionSenior
             AgeDivision.MASTERS -> R.id.optionAgeDivisionMasters
+            null -> -1
         })
     }
 
 
-    override fun setFormat(format: TournamentExportUi.Format) {
+    override fun setFormat(format: TournamentExportUi.Format?) {
         optionsFormat.check(when(format) {
             Format.STANDARD -> R.id.optionFormatStandard
             Format.EXPANDED -> R.id.optionFormatExpanded
+            null -> -1
         })
     }
 

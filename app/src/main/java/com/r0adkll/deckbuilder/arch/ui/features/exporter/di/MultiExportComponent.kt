@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.exporter.di
 
 
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo.PtcgoExportFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.TournamentExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.TournamentExportModule
 import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
@@ -13,5 +14,6 @@ import dagger.Subcomponent
 interface MultiExportComponent {
 
     fun inject(activity: MultiExportActivity)
+    fun inject(fragment: PtcgoExportFragment)
     fun plus(module: TournamentExportModule): TournamentExportComponent
 }

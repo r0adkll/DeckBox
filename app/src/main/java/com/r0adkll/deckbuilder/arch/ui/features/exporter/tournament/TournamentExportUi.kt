@@ -24,11 +24,11 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
 
     interface Actions {
 
-        fun setPlayerName(name: String)
-        fun setPlayerId(id: String)
-        fun setDateOfBirth(dob: String)
-        fun setAgeDivision(ageDivision: AgeDivision)
-        fun setFormat(format: Format)
+        fun setPlayerName(name: String?)
+        fun setPlayerId(id: String?)
+        fun setDateOfBirth(dob: String?)
+        fun setAgeDivision(ageDivision: AgeDivision?)
+        fun setFormat(format: Format?)
     }
 
 
@@ -48,7 +48,7 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
     @PaperParcel
     data class State(
             val playerName: String?,
-            val playerID: String?,
+            val playerId: String?,
             val dob: Date?,
             val ageDivision: AgeDivision?,
             val format: Format?
@@ -56,7 +56,7 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
 
         fun reduce(change: Change): State = when(change) {
             is Change.PlayerName -> this.copy(playerName = change.name)
-            is Change.PlayerId -> this.copy(playerID = change.id)
+            is Change.PlayerId -> this.copy(playerId = change.id)
             is Change.DateOfBirth -> this.copy(dob = change.dob)
             is Change.AgeDivisionChange -> this.copy(ageDivision = change.ageDivision)
             is Change.FormatChange -> this.copy(format = change.format)

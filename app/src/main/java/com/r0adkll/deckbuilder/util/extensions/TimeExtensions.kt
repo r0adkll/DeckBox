@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.util.extensions
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 fun Long.toCalendar(): Calendar {
@@ -38,4 +39,10 @@ fun Calendar.isThisWeek(): Boolean {
 fun Calendar.isThisYear(): Boolean {
     val current = Calendar.getInstance()
     return current.get(Calendar.YEAR) == this.get(Calendar.YEAR)
+}
+
+
+fun Date.dateOfBirth(): String {
+    val f = SimpleDateFormat("M/d/yyyy", Locale.getDefault())
+    return f.format(this)
 }

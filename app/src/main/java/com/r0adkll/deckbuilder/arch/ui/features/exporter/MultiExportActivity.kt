@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -9,6 +10,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportModule
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo.PtcgoExportFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportFragment
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindParcelable
@@ -47,7 +49,7 @@ class MultiExportActivity : BaseActivity() {
 
         override fun getItem(position: Int): Fragment = when(position) {
             0 -> TournamentExportFragment.newInstance()
-            else -> null
+            else -> PtcgoExportFragment.newInstance()
         }
 
 
@@ -62,5 +64,11 @@ class MultiExportActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_DECK = "MultiExportActivity.Deck"
+
+        fun createIntent(context: Context, deck: Deck): Intent {
+            val intent = Intent(context, MultiExportActivity::class.java)
+            intent.putExtra(EXTRA_DECK, deck)
+            return intent
+        }
     }
 }

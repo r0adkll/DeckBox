@@ -19,6 +19,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -86,7 +87,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         disposables += shareClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.Action("export_decklist"))
-                    val intent = DeckExportActivity.createIntent(activity!!, it)
+                    val intent = MultiExportActivity.createIntent(activity!!, it)
                     startActivity(intent)
                 }
     }
