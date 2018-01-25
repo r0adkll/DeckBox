@@ -13,6 +13,8 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
@@ -72,15 +74,19 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN) {
-            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-            handleSignInResult(result)
+        when(requestCode) {
+            RC_SIGN_IN -> {
+                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+                handleSignInResult(result)
+            }
+            RC_PLAY_SERVICES_ERROR -> {
+                setupClient()
+            }
         }
     }
 
 
     override fun setupComponent(component: AppComponent) {
-
     }
 
 
@@ -90,15 +96,21 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     private fun setupClient() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
+        val result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+        if (result == ConnectionResult.SUCCESS) {
 
-        googleClient = GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build()
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+
+            googleClient = GoogleApiClient.Builder(this)
+                    .enableAutoManage(this, this)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build()
+        } else {
+            GoogleApiAvailability.getInstance().showErrorDialogFragment(this, result, RC_PLAY_SERVICES_ERROR)
+        }
     }
 
 
@@ -109,15 +121,20 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     private fun signInAnonymously() {
-        disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
-                .subscribe({
-                    Analytics.event(Event.Login.Anonymous)
-                    startActivity(HomeActivity.createIntent(this@SetupActivity))
-                    finish()
-                }, {
-                    Timber.e(it, "Failed to sign-in anonymously")
-                    snackbar("Unable to sign-in anonymously")
-                })
+        try {
+            disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
+                    .subscribe({
+                        Analytics.event(Event.Login.Anonymous)
+                        startActivity(HomeActivity.createIntent(this@SetupActivity))
+                        finish()
+                    }, {
+                        Timber.e(it, "Failed to sign-in anonymously")
+                        snackbar("Unable to sign-in anonymously")
+                    })
+        } catch (e: NullPointerException) {
+            Timber.e(e)
+            snackbar(R.string.error_anonymous_signin)
+        }
     }
 
 
@@ -148,6 +165,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     companion object {
+        const val RC_PLAY_SERVICES_ERROR = 10
 
         fun createIntent(context: Context): Intent = Intent(context, SetupActivity::class.java)
     }
