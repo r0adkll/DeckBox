@@ -131,4 +131,15 @@
     <string name="age_division_senior">Senior (born in 2003 - 2006)</string>
     <string name="age_division_masters">Masters (born in 2002 or earlier)</string>
     <string name="subheader_format">Format</string>
+    <string name="tournament_pdf_title"><![CDATA[2018 Pokémon TCG Tournament Season through Sun & Moon—Crimson Invasion]]></string>
+    <string name="tournament_pdf_format_title">Format: </string>
+    <string name="tournament_pdf_format_standard">Standard</string>
+    <string name="tournament_pdf_format_expanded">Expanded</string>
+    <string name="tournament_pdf_player_name">Player Name:</string>
+    <string name="tournament_pdf_player_id">Player ID:</string>
+    <string name="tournament_pdf_player_dob">Date of Birth (MM/DD/YYYY): </string>
+    <string name="tournament_pdf_player_age_division">Age Division:</string>
+    <string name="tournament_pdf_table_pokemon">Pokémon</string>
+    <string name="tournament_pdf_table_trainer">Trainer</string>
+    <string name="tournament_pdf_table_energy">Energy</string>
 </resources>

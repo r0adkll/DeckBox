@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:padding="16dp"
+    >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tournament_pdf_title"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tournament_pdf_format_title"
+            android:textSize="18sp"
+            android:textColor="@color/black87"
+            android:textStyle="italic|bold"
+            />
+
+        <CheckBox
+            android:id="@+id/formatStandard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:text="@string/tournament_pdf_format_standard"
+            android:textSize="18sp"
+            android:textColor="@color/black87"
+            android:textStyle="italic|bold"
+            android:buttonTint="@color/black"
+            tools:checked="true"
+            />
+
+        <CheckBox
+            android:id="@+id/formatExpanded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:text="@string/tournament_pdf_format_expanded"
+            android:textSize="18sp"
+            android:textColor="@color/black87"
+            android:textStyle="italic|bold"
+            android:buttonTint="@color/black"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/black12"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tournament_pdf_player_name"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                />
+
+            <EditText
+                android:id="@+id/playerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                tools:text="Drew Heavner"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/tournament_pdf_player_id"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                />
+
+            <EditText
+                android:id="@+id/playerID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                tools:text="123456789"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/tournament_pdf_player_dob"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                />
+
+            <EditText
+                android:id="@+id/dateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                tools:text="05/11/1990"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/tournament_pdf_player_age_division"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                />
+
+            <RadioGroup
+                android:id="@+id/optionsAgeDivision"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:layout_marginStart="-5dp">
+
+                <RadioButton
+                    android:id="@+id/optionAgeDivisionJunior"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:paddingStart="@dimen/padding_small"
+                    android:paddingEnd="@dimen/padding_small"
+                    android:text="@string/age_division_junior"
+                    android:buttonTint="@color/black"
+                    />
+
+                <RadioButton
+                    android:id="@+id/optionAgeDivisionSenior"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:paddingStart="@dimen/padding_small"
+                    android:paddingEnd="@dimen/padding_small"
+                    android:text="@string/age_division_senior"
+                    android:buttonTint="@color/black"
+                    />
+
+                <RadioButton
+                    android:id="@+id/optionAgeDivisionMasters"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:paddingStart="@dimen/padding_small"
+                    android:paddingEnd="@dimen/padding_small"
+                    android:text="@string/age_division_masters"
+                    android:buttonTint="@color/black"
+                    tools:checked="true"
+                    />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:id="@+id/tablePokemon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:stretchColumns="1">
+
+                <TableRow android:background="#CCC">
+
+                    <TextView
+                        android:text="@string/tournament_pdf_table_pokemon"
+                        android:textColor="@color/black"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:fontFamily="sans-serif-medium"
+                        />
+
+                </TableRow>
+
+                <TableRow android:background="@color/black">
+
+                    <TextView
+                        android:text="QTY:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        android:layout_column="0"
+                        android:layout_span="1"
+                        />
+
+                    <TextView
+                        android:text="NAME:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        android:layout_column="1"
+                        />
+
+                    <TextView
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="SET:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        />
+
+                    <TextView
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="COLL. #:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        />
+
+                </TableRow>
+
+                <!--<include layout="@layout/layout_tournament_card_row" />-->
+
+            </TableLayout>
+
+            <TableLayout
+                android:id="@+id/tableTrainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:stretchColumns="1">
+
+                <TableRow android:background="#CCC">
+
+                    <TextView
+                        android:text="@string/tournament_pdf_table_trainer"
+                        android:textColor="@color/black"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:fontFamily="sans-serif-medium"
+                        />
+
+                </TableRow>
+
+                <TableRow android:background="@color/black">
+
+                    <TextView
+                        android:text="QTY:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        android:layout_column="0"
+                        android:layout_span="1"
+                        />
+
+                    <TextView
+                        android:text="NAME:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        android:layout_column="1"
+                        />
+
+                    <TextView
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="SET:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        />
+
+                    <TextView
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="COLL. #:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        />
+
+                </TableRow>
+
+                <!--<include layout="@layout/layout_tournament_card_row" />-->
+
+            </TableLayout>
+
+            <TableLayout
+                android:id="@+id/tableEnergy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:stretchColumns="1">
+
+                <TableRow android:background="#CCC">
+
+                    <TextView
+                        android:text="@string/tournament_pdf_table_energy"
+                        android:textColor="@color/black"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:fontFamily="sans-serif-medium"
+                        />
+
+                </TableRow>
+
+                <TableRow android:background="@color/black">
+
+                    <TextView
+                        android:text="QTY:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        android:layout_column="0"
+                        android:layout_span="1"
+                        />
+
+                    <TextView
+                        android:text="NAME:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        android:layout_column="1"
+                        />
+
+                    <TextView
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="SET:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        />
+
+                    <TextView
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="COLL. #:"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        />
+
+                </TableRow>
+
+                <!--<include layout="@layout/layout_tournament_card_row" />-->
+
+            </TableLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

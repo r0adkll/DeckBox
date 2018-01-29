@@ -1,5 +1,9 @@
 package com.r0adkll.deckbuilder.util
 
+import android.util.ArrayMap
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+
 
 object CardUtils {
     val CARDS: Array<String> = arrayOf(
@@ -634,4 +638,18 @@ object CardUtils {
             "https://images.pokemontcg.io/sm3/37.png",
             "https://images.pokemontcg.io/sm35/78.png"
     )
+
+
+    fun stackCards(): (List<PokemonCard>) -> List<StackedPokemonCard> {
+        return {
+            val map = ArrayMap<PokemonCard, Int>(it.size)
+            it.forEach { card ->
+                val count = map[card] ?: 0
+                map[card] = count + 1
+            }
+            map.map { StackedPokemonCard(it.key, it.value) }
+                    .sortedBy { card -> card.card.nationalPokedexNumber }
+        }
+    }
 }
+
