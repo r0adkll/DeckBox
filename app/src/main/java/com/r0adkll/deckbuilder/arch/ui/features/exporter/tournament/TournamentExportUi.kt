@@ -1,5 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
+import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
+import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
+import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
 import paperparcel.PaperParcel
@@ -32,19 +35,6 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
     }
 
 
-    enum class AgeDivision {
-        JUNIOR,
-        SENIOR,
-        MASTERS
-    }
-
-
-    enum class Format {
-        STANDARD,
-        EXPANDED
-    }
-
-
     @PaperParcel
     data class State(
             val playerName: String?,
@@ -61,6 +51,15 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
             is Change.AgeDivisionChange -> this.copy(ageDivision = change.ageDivision)
             is Change.FormatChange -> this.copy(format = change.format)
         }
+
+
+        fun toPlayerInfo(): PlayerInfo = PlayerInfo(
+                playerId ?: "",
+                playerName ?: "",
+                dob ?: Date(),
+                ageDivision ?: AgeDivision.MASTERS,
+                format ?: Format.STANDARD
+        )
 
 
         sealed class Change(val logText: String) {

@@ -1,16 +1,26 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.FileProvider
 import android.view.*
+import com.ftinc.kit.util.IntentUtils
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
+import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
+import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
+import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.*
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.TournamentExportModule
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tournament_export.*
@@ -23,8 +33,10 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
 
     override var state: State = State.DEFAULT
 
+    @Inject lateinit var deck: Deck
     @Inject lateinit var renderer: TournamentExportRenderer
     @Inject lateinit var presenter: TournamentExportPresenter
+    @Inject lateinit var exporter: TournamentExporter
 
     private val dateOfBirthChanges: Relay<Date> = PublishRelay.create()
 
@@ -52,7 +64,14 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_export -> {
-
+                val playerInfo = state.toPlayerInfo()
+                disposables += exporter.export(activity!!, deck, playerInfo)
+                        .subscribe {
+                            val uri = FileProvider.getUriForFile(activity!!, BuildConfig.APPLICATION_ID, it)
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.setDataAndType(uri, "application/pdf")
+                            startActivity(intent)
+                        }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -99,7 +118,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     }
 
 
-    override fun ageDivisionChanged(): Observable<TournamentExportUi.AgeDivision> {
+    override fun ageDivisionChanged(): Observable<AgeDivision> {
         return optionsAgeDivision.checkedChanges()
                 .map { when(it) {
                     R.id.optionAgeDivisionJunior -> AgeDivision.JUNIOR
@@ -109,7 +128,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     }
 
 
-    override fun formatChanged(): Observable<TournamentExportUi.Format> {
+    override fun formatChanged(): Observable<Format> {
         return optionsFormat.checkedChanges()
                 .map { when(it) {
                     R.id.optionFormatStandard -> Format.STANDARD
@@ -137,7 +156,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     }
 
 
-    override fun setAgeDivision(ageDivision: TournamentExportUi.AgeDivision?) {
+    override fun setAgeDivision(ageDivision: AgeDivision?) {
         optionsAgeDivision.check(when(ageDivision) {
             AgeDivision.JUNIOR -> R.id.optionAgeDivisionJunior
             AgeDivision.SENIOR -> R.id.optionAgeDivisionSenior
@@ -147,7 +166,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     }
 
 
-    override fun setFormat(format: TournamentExportUi.Format?) {
+    override fun setFormat(format: Format?) {
         optionsFormat.check(when(format) {
             Format.STANDARD -> R.id.optionFormatStandard
             Format.EXPANDED -> R.id.optionFormatExpanded

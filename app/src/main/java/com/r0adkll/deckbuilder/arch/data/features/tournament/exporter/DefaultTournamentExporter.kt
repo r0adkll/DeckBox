@@ -98,13 +98,14 @@ class DefaultTournamentExporter @Inject constructor(
             try {
                 val outputDir = File(activityContext.filesDir, "exports")
                 outputDir.mkdir()
-                val outputFile = File(outputDir, "${deck.name} Tournament DeckList.pdf")
+                val outputFile = File(outputDir, "${deck.name}_DeckList.pdf")
                 if (outputFile.exists()) {
                     outputFile.delete()
                 }
 
                 outputFile.createNewFile()
                 document.writeTo(FileOutputStream(outputFile))
+                document.close()
 
                 s.onNext(outputFile)
                 s.onComplete()
