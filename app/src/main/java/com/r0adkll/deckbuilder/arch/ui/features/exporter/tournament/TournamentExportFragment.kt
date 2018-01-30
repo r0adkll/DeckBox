@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.FileProvider
 import android.view.*
@@ -67,7 +68,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                 val playerInfo = state.toPlayerInfo()
                 disposables += exporter.export(activity!!, deck, playerInfo)
                         .subscribe {
-                            val uri = FileProvider.getUriForFile(activity!!, BuildConfig.APPLICATION_ID, it)
+                            val uri = FileProvider.getUriForFile(activity!!, BuildConfig.APPLICATION_ID + ".provider", it)
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.setDataAndType(uri, "application/pdf")
                             startActivity(intent)

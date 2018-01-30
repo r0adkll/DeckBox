@@ -3,6 +3,7 @@
     package="com.r0adkll.deckbuilder">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".DeckApp"
@@ -63,7 +64,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.r0adkll.deckbuilder"
+            android:authorities="com.r0adkll.deckbuilder.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
