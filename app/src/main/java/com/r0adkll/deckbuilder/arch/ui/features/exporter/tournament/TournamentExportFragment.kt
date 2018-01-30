@@ -15,6 +15,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
@@ -41,6 +42,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     @Inject lateinit var renderer: TournamentExportRenderer
     @Inject lateinit var presenter: TournamentExportPresenter
     @Inject lateinit var exporter: TournamentExporter
+    @Inject lateinit var preferences: AppPreferences
 
     private val dateOfBirthChanges: Relay<Date> = PublishRelay.create()
 
@@ -54,6 +56,14 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         parent.requestFocus()
+
+        // Prepopulate state
+        state = state.copy(
+                playerName = preferences.playerName.get(),
+                playerId = preferences.playerId.get(),
+                dob = preferences.playerDOB.get(),
+                ageDivision = preferences.playerAgeDivision.get()
+        )
 
         disposables += inputDateOfBirthLayout.clicks()
                 .subscribe {
