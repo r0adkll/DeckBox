@@ -55,7 +55,7 @@
     <string name="deckbuilder_saving_message">Saving…</string>
     <string name="deckbuilder_saved_message">Saved!</string>
     <string name="validation_rule_four_of_a_kind">You can only have 4 cards of the same name</string>
-    <string name="validation_rule_max_size">A deck can only be 60 cards</string>
+    <string name="validation_rule_max_size">A deck must contain exactly 60 cards</string>
     <string name="validation_rule_basic">A deck must contain at least one Basic Pokémon card</string>
     <string name="format_standard">Standard</string>
     <string name="format_expanded">Expanded</string>
