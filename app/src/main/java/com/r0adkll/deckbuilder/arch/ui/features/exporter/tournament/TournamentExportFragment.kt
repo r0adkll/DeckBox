@@ -22,9 +22,11 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.*
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.TournamentExportModule
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tournament_export.*
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -67,12 +69,16 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
             R.id.action_export -> {
                 val playerInfo = state.toPlayerInfo()
                 disposables += exporter.export(activity!!, deck, playerInfo)
-                        .subscribe {
+                        .subscribe({
                             val uri = FileProvider.getUriForFile(activity!!, BuildConfig.APPLICATION_ID + ".provider", it)
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.setDataAndType(uri, "application/pdf")
-                            startActivity(intent)
-                        }
+                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            startActivity(Intent.createChooser(intent, "Open DeckList..."))
+                        }, { t ->
+                            Timber.e(t, "Error exporting deck")
+                            snackbar(t.localizedMessage)
+                        })
                 true
             }
             else -> super.onOptionsItemSelected(item)

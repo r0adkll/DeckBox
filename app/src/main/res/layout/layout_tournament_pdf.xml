@@ -7,6 +7,7 @@
     tools:padding="16dp"
     >
 
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -21,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,37 +33,61 @@
             android:textStyle="italic|bold"
             />
 
-        <TextView
-            android:id="@+id/formatStandard"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:text="@string/tournament_pdf_format_standard"
-            android:textSize="18sp"
-            android:textColor="@color/black87"
-            android:textStyle="italic|bold"
-            android:drawableStart="@drawable/checkbox_blank_outline"
-            android:drawablePadding="4dp"
-            />
+            android:layout_marginStart="24dp">
 
-        <TextView
-            android:id="@+id/formatExpanded"
+            <ImageView
+                android:id="@+id/formatStandard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_checkbox_blank_outline_black_24dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@string/tournament_pdf_format_standard"
+                android:textSize="18sp"
+                android:textColor="@color/black87"
+                android:textStyle="italic|bold"
+                />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:text="@string/tournament_pdf_format_expanded"
-            android:textSize="18sp"
-            android:textColor="@color/black87"
-            android:textStyle="italic|bold"
-            android:drawableStart="@drawable/checkbox_blank_outline"
-            android:drawablePadding="4dp"
-            />
+            android:layout_marginStart="8dp">
+
+            <ImageView
+                android:id="@+id/formatExpanded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_checkbox_blank_outline_black_24dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@string/tournament_pdf_format_expanded"
+                android:textSize="18sp"
+                android:textColor="@color/black87"
+                android:textStyle="italic|bold"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -99,13 +124,14 @@
                 android:id="@+id/playerName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="-4dp"
                 tools:text="Drew Heavner"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/tournament_pdf_player_id"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -116,13 +142,14 @@
                 android:id="@+id/playerID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="-4dp"
                 tools:text="123456789"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/tournament_pdf_player_dob"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -133,13 +160,14 @@
                 android:id="@+id/dateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="-4dp"
                 tools:text="05/11/1990"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="32dp"
                 android:text="@string/tournament_pdf_player_age_division"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -153,23 +181,68 @@
                 android:orientation="vertical"
                 android:paddingTop="8dp">
 
-                <TextView
-                    android:id="@+id/optionAgeDivisionJunior"
-                    android:text="@string/age_division_junior"
-                    style="@style/TextAppearance.Deck.Pdf.RadioOption"
-                    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/optionAgeDivisionSenior"
-                    android:text="@string/age_division_senior"
-                    style="@style/TextAppearance.Deck.Pdf.RadioOption"
-                    />
+                    <ImageView
+                        android:id="@+id/optionAgeDivisionJunior"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_checkbox_blank_circle_outline_black_24dp"
+                        />
 
-                <TextView
-                    android:id="@+id/optionAgeDivisionMasters"
-                    android:text="@string/age_division_masters"
-                    style="@style/TextAppearance.Deck.Pdf.RadioOption"
-                    />
+                    <TextView
+                        android:text="@string/age_division_junior"
+                        style="@style/TextAppearance.Deck.Pdf.RadioOption"
+                        android:layout_marginStart="8dp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/optionAgeDivisionSenior"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_checkbox_blank_circle_outline_black_24dp"
+                        />
+
+                    <TextView
+                        android:text="@string/age_division_senior"
+                        style="@style/TextAppearance.Deck.Pdf.RadioOption"
+                        android:layout_marginStart="8dp"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/optionAgeDivisionMasters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_checkbox_blank_circle_outline_black_24dp"
+                        />
+
+                    <TextView
+                        android:text="@string/age_division_masters"
+                        style="@style/TextAppearance.Deck.Pdf.RadioOption"
+                        android:layout_marginStart="8dp"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -186,7 +259,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:stretchColumns="1">
 
                 <TableRow android:background="#CCC">
@@ -252,7 +324,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:stretchColumns="1">
 
@@ -319,7 +390,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:stretchColumns="1">
 

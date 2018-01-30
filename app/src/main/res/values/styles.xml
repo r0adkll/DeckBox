@@ -70,8 +70,6 @@
         <item name="android:layout_height">36dp</item>
         <item name="android:gravity">start|center_vertical</item>
         <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:drawableStart">@drawable/checkbox_blank_circle_outline</item>
-        <item name="android:drawablePadding">8dp</item>
     </style>
 
 </resources>

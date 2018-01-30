@@ -17,12 +17,14 @@ import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.util.CardUtils
+import com.r0adkll.deckbuilder.util.extensions.drawableStart
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.net.URLEncoder
 import javax.inject.Inject
 
 
@@ -35,7 +37,7 @@ class DefaultTournamentExporter @Inject constructor(
             val margin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, MARGIN.toFloat(), activityContext.resources.displayMetrics).toInt()
             val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, WIDTH.toFloat() * 0.75f, activityContext.resources.displayMetrics).toInt()
             val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, HEIGHT.toFloat() * 0.75f, activityContext.resources.displayMetrics).toInt()
-            val content = Rect(margin, margin, width - (2 * margin), height - (2 * margin))
+            val content = Rect(margin, margin, width - margin, height - margin)
 
             val document = PdfDocument()
             val pageInfo = PdfDocument.PageInfo.Builder(width, height, 0)
@@ -50,14 +52,11 @@ class DefaultTournamentExporter @Inject constructor(
             document.finishPage(page)
 
             try {
-                val outputDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                val outputFile = File(outputDir, "${deck.name.replace(" ", "_")}_Tournament_DeckList.pdf")
-                if (outputFile.exists()) {
-                    outputFile.delete()
-                }
-
-                outputFile.createNewFile()
+                val outputDir = File(activityContext.filesDir, "exports")
+                outputDir.mkdir()
+                val outputFile = File.createTempFile("${URLEncoder.encode(deck.name, "UTF-8")}-decklist-", ".pdf", outputDir)
                 val fos = FileOutputStream(outputFile)
+
                 document.writeTo(fos)
                 fos.flush()
                 fos.close()
@@ -76,29 +75,28 @@ class DefaultTournamentExporter @Inject constructor(
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.layout_tournament_pdf, null, false) as LinearLayout
 
-        val formatStandard = view.findViewById<CheckBox>(R.id.formatStandard)
-        val formatExpanded = view.findViewById<CheckBox>(R.id.formatExpanded)
+        val formatStandard = view.findViewById<ImageView>(R.id.formatStandard)
+        val formatExpanded = view.findViewById<ImageView>(R.id.formatExpanded)
         val playerName = view.findViewById<EditText>(R.id.playerName)
         val playerId = view.findViewById<EditText>(R.id.playerID)
         val dateOfBirth = view.findViewById<EditText>(R.id.dateOfBirth)
-        val ageDivisions = view.findViewById<RadioGroup>(R.id.optionsAgeDivision)
+        val ageJunior = view.findViewById<ImageView>(R.id.optionAgeDivisionJunior)
+        val ageSenior = view.findViewById<ImageView>(R.id.optionAgeDivisionSenior)
+        val ageMaster = view.findViewById<ImageView>(R.id.optionAgeDivisionMasters)
         val tablePokemon = view.findViewById<TableLayout>(R.id.tablePokemon)
         val tableTrainer= view.findViewById<TableLayout>(R.id.tableTrainer)
         val tableEnergy = view.findViewById<TableLayout>(R.id.tableEnergy)
 
         when(playerInfo.format) {
-            Format.STANDARD -> formatStandard.isChecked = true
-            Format.EXPANDED -> formatExpanded.isChecked = true
+            Format.STANDARD -> formatStandard.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
+            Format.EXPANDED -> formatExpanded.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
         }
-        formatStandard.invalidate()
-        formatExpanded.invalidate()
 
-        ageDivisions.check(when(playerInfo.ageDivision) {
-            AgeDivision.JUNIOR -> R.id.optionAgeDivisionJunior
-            AgeDivision.SENIOR -> R.id.optionAgeDivisionSenior
-            AgeDivision.MASTERS -> R.id.optionAgeDivisionMasters
-        })
-        ageDivisions.invalidate()
+        when(playerInfo.ageDivision) {
+            AgeDivision.JUNIOR -> ageJunior.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
+            AgeDivision.SENIOR -> ageSenior.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
+            AgeDivision.MASTERS -> ageMaster.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
+        }
 
         playerName.setText(playerInfo.name)
         playerId.setText(playerInfo.id)
@@ -133,7 +131,6 @@ class DefaultTournamentExporter @Inject constructor(
 
         view.measure(measureWidth, measuredHeight)
         view.layout(0, 0, width, height)
-
         view.draw(canvas)
     }
 

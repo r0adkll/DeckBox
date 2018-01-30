@@ -131,7 +131,7 @@
     <string name="age_division_senior">Senior (born in 2003 - 2006)</string>
     <string name="age_division_masters">Masters (born in 2002 or earlier)</string>
     <string name="subheader_format">Format</string>
-    <string name="tournament_pdf_title"><![CDATA[2018 Pokémon TCG Tournament Season Deck List]]></string>
+    <string name="tournament_pdf_title"><![CDATA[Pokémon TCG Tournament Deck List]]></string>
     <string name="tournament_pdf_format_title">Format: </string>
     <string name="tournament_pdf_format_standard">Standard</string>
     <string name="tournament_pdf_format_expanded">Expanded</string>
