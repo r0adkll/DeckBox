@@ -142,4 +142,5 @@
     <string name="tournament_pdf_table_pokemon">Pokémon</string>
     <string name="tournament_pdf_table_trainer">Trainer</string>
     <string name="tournament_pdf_table_energy">Energy</string>
+    <string name="hint_dob_default">1/11/2018</string>
 </resources>

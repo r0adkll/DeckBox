@@ -1,11 +1,14 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.FileProvider
 import android.view.*
 import com.ftinc.kit.util.IntentUtils
+import com.google.firebase.auth.FirebaseAuth
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
@@ -21,9 +24,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.*
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.TournamentExportModule
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
+import com.r0adkll.deckbuilder.util.extensions.*
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tournament_export.*
 import timber.log.Timber
@@ -53,6 +54,17 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         parent.requestFocus()
+
+        disposables += inputDateOfBirthLayout.clicks()
+                .subscribe {
+                    val currentDob = state.dob ?: Date()
+                    val cal = currentDob.toCalendar()
+
+                    DatePickerDialog(activity!!, { _, year, month, dayOfMonth ->
+                        val pickedDate = Calendar.getInstance().setDate(year, month, dayOfMonth)
+                        dateOfBirthChanges.accept(pickedDate.time)
+                    }, cal[Calendar.YEAR], cal[Calendar.MONTH], cal[Calendar.DAY_OF_MONTH]).show()
+                }
 
         renderer.start()
         presenter.start()

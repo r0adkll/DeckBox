@@ -21,6 +21,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsModu
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
+import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import dagger.Component
 
@@ -30,6 +31,7 @@ import dagger.Component
 interface AppComponent {
 
     fun inject(app: DeckApp)
+    fun inject(activity: SetupActivity)
     fun inject(activity: DeckExportActivity)
     fun inject(activity: MainActivity)
     fun inject(activity: OnboardingActivity)
