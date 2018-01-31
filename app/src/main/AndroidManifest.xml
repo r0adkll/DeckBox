@@ -61,6 +61,7 @@
 
         <activity android:name=".arch.ui.features.missingcards.MissingCardsActivity" />
         <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
+        <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

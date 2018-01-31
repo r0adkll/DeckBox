@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import com.ftinc.kit.util.IntentUtils
+import com.jakewharton.rxbinding2.view.clicks
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
@@ -17,7 +18,7 @@ import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.Schedulers
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.toast
-import kotlinx.android.synthetic.main.activity_deck_exporter.*
+import kotlinx.android.synthetic.main.fragment_ptcgo_export.*
 import javax.inject.Inject
 
 
@@ -46,6 +47,15 @@ class PtcgoExportFragment : BaseFragment() {
                 .subscribeOn(schedulers.comp)
                 .observeOn(schedulers.main)
                 .subscribe { deckList.text = it }
+
+        disposables += actionCopy.clicks()
+                .subscribe {
+                    Analytics.event(Event.SelectContent.Action("copy_decklist"))
+                    val text = deckList.text.toString()
+                    val clip = ClipData.newPlainText(deck.name, text)
+                    clipboard.primaryClip = clip
+                    toast(getString(R.string.deck_copied_format, deck.name))
+                }
     }
 
 
@@ -56,15 +66,7 @@ class PtcgoExportFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
-            R.id.action_copy -> {
-                Analytics.event(Event.SelectContent.Action("copy_decklist"))
-                val text = deckList.text.toString()
-                val clip = ClipData.newPlainText(deck.name, text)
-                clipboard.primaryClip = clip
-                toast(getString(R.string.deck_copied_format, deck.name))
-                true
-            }
-            R.id.action_export -> {
+            R.id.action_share -> {
                 Analytics.event(Event.Share("deck"))
                 val text = deckList.text.toString()
                 val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")

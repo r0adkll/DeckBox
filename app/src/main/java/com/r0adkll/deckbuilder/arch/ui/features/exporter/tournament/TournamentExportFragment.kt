@@ -23,8 +23,11 @@ import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.preview.PdfPreviewActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.*
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.TournamentExportModule
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.*
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tournament_export.*
@@ -54,7 +57,6 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(true)
         parent.requestFocus()
 
         // Prepopulate state
@@ -76,35 +78,22 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                     }, cal[Calendar.YEAR], cal[Calendar.MONTH], cal[Calendar.DAY_OF_MONTH]).show()
                 }
 
+        disposables += actionExport.clicks()
+                .subscribe {
+                    Analytics.event(Event.SelectContent.Action("tournament_export"))
+                    val playerInfo = state.toPlayerInfo()
+                    disposables += exporter.export(activity!!, deck, playerInfo)
+                            .subscribe({
+                                val intent = PdfPreviewActivity.createIntent(activity!!, it)
+                                startActivity(intent)
+                            }, { t ->
+                                Timber.e(t, "Error exporting deck")
+                                snackbar(t.localizedMessage)
+                            })
+                }
+
         renderer.start()
         presenter.start()
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.activity_export_tournament, menu)
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.action_export -> {
-                val playerInfo = state.toPlayerInfo()
-                disposables += exporter.export(activity!!, deck, playerInfo)
-                        .subscribe({
-                            val uri = FileProvider.getUriForFile(activity!!, BuildConfig.APPLICATION_ID + ".provider", it)
-                            val intent = Intent(Intent.ACTION_VIEW)
-                            intent.setDataAndType(uri, "application/pdf")
-                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            startActivity(Intent.createChooser(intent, "Open DeckList..."))
-                        }, { t ->
-                            Timber.e(t, "Error exporting deck")
-                            snackbar(t.localizedMessage)
-                        })
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
 

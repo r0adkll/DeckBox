@@ -52,7 +52,7 @@ class DefaultTournamentExporter @Inject constructor(
             document.finishPage(page)
 
             try {
-                val outputDir = File(activityContext.filesDir, "exports")
+                val outputDir = File(activityContext.cacheDir, "exports")
                 outputDir.mkdir()
                 val outputFile = File.createTempFile("${URLEncoder.encode(deck.name, "UTF-8")}-decklist-", ".pdf", outputDir)
                 val fos = FileOutputStream(outputFile)

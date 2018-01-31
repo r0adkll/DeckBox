@@ -128,7 +128,7 @@
     <string name="hint_date_of_birth">Date of birth</string>
     <string name="subheader_age_division">Age division</string>
     <string name="age_division_junior">Junior (born in 2007 or later)</string>
-    <string name="age_division_senior">Senior (born in 2003 - 2006)</string>
+    <string name="age_division_senior">Senior (born in 2003 – 2006)</string>
     <string name="age_division_masters">Masters (born in 2002 or earlier)</string>
     <string name="subheader_format">Format</string>
     <string name="tournament_pdf_title"><![CDATA[Pokémon TCG Tournament Deck List]]></string>
