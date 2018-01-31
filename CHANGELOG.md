@@ -1,3 +1,6 @@
+# 1.3.0
+* Tournament Exporter - Export PDF decklists to submit to tournaments
+
 # 1.2.0
 * Missing card feedback form
 * Disabled analytics during robo-tests

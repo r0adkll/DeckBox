@@ -141,10 +141,12 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_add -> {
+                Analytics.event(Event.SelectContent.Action("detail_add_card", card.name))
                 addCardClicks.accept(Unit)
                 true
             }
             R.id.action_remove -> {
+                Analytics.event(Event.SelectContent.Action("detail_remove_card", card.name))
                 removeCardClicks.accept(Unit)
                 true
             }

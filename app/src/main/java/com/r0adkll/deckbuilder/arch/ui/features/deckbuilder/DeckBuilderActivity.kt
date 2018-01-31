@@ -31,6 +31,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -331,7 +332,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             R.id.action_export -> {
                 Analytics.event(Event.SelectContent.MenuAction("export_decklist"))
                 val exportDeck = Deck("", "", "", state.allCards, 0L)
-                startActivity(DeckExportActivity.createIntent(this, exportDeck))
+                startActivity(MultiExportActivity.createIntent(this, exportDeck))
                 true
             }
             R.id.action_save -> {

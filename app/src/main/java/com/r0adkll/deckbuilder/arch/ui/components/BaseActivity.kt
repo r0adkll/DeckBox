@@ -4,6 +4,9 @@ package com.r0adkll.deckbuilder.arch.ui.components
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.api.GoogleApi
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.ActivityDelegate
@@ -72,4 +75,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected fun addDelegate(delegate: ActivityDelegate) = delegates.add(delegate)
     protected fun removeDelegate(delegate: ActivityDelegate) = delegates.remove(delegate)
+
+    protected fun isPlayServicesAvailable(): Boolean {
+        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS
+    }
 }

@@ -2,40 +2,31 @@ package com.r0adkll.deckbuilder.util.extensions
 
 import java.util.*
 
-fun Long.toCalendar(): Calendar {
-    val cal = Calendar.getInstance()
-    cal.clear()
-    cal.timeInMillis = this
-    return cal
+
+fun Date.toCalendar(): Calendar {
+    val c = Calendar.getInstance()
+    c.time = this
+    return c
 }
 
-
-fun Long.get(field: Int): Int = this.toCalendar().get(field)
-
-
-fun Calendar.isToday(): Boolean {
+fun Calendar.clearTime(): Calendar {
     val current = Calendar.getInstance()
-    return current.get(Calendar.YEAR) == this.get(Calendar.YEAR) &&
-            current.get(Calendar.DAY_OF_YEAR) == this.get(Calendar.DAY_OF_YEAR)
+    val year = current[Calendar.YEAR]
+    val month = current[Calendar.MONTH]
+    val day = current[Calendar.DAY_OF_MONTH]
+
+    current.clear()
+    current[Calendar.YEAR] = year
+    current[Calendar.MONTH] = month
+    current[Calendar.DAY_OF_MONTH] = day
+
+    return current
 }
 
-
-fun Calendar.isYesterday(): Boolean {
-    val current = Calendar.getInstance()
-    current.add(Calendar.DAY_OF_YEAR, -1)
-    return current.get(Calendar.YEAR) == this.get(Calendar.YEAR) &&
-            current.get(Calendar.DAY_OF_YEAR) == this.get(Calendar.DAY_OF_YEAR)
-}
-
-
-fun Calendar.isThisWeek(): Boolean {
-    val current = Calendar.getInstance()
-    return current.get(Calendar.YEAR) == this.get(Calendar.YEAR) &&
-            current.get(Calendar.WEEK_OF_YEAR) == this.get(Calendar.WEEK_OF_YEAR)
-}
-
-
-fun Calendar.isThisYear(): Boolean {
-    val current = Calendar.getInstance()
-    return current.get(Calendar.YEAR) == this.get(Calendar.YEAR)
+fun Calendar.setDate(year: Int, month: Int, dayOfMonth: Int): Calendar {
+    this.clearTime()
+    this[Calendar.YEAR] = year
+    this[Calendar.MONTH] = month
+    this[Calendar.DAY_OF_MONTH] = dayOfMonth
+    return this
 }

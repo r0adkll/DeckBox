@@ -27,12 +27,14 @@ sealed class Event {
         class PokemonCard(override val id: String) : SelectContent("pokemon_card", id)
         class Deck(override val id: String) : SelectContent("deck", id)
 
-        class Action(override val id: String) : SelectContent("action", id)
+        class Action(override val id: String, override val name: String? = null) : SelectContent("action", id, name)
         class MenuAction(override val id: String) : SelectContent("menu_action", id)
         class FilterOption(
                 override val id: String,
                 override val name: String?,
                 override val value: Long? = null
         ) : SelectContent("filter_option", id, name, value)
+
+        class MissingCard(override val id: String) : SelectContent("missing_card", id)
     }
 }

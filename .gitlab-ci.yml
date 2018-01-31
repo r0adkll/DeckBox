@@ -3,10 +3,11 @@
 image: openjdk:8-jdk
 
 variables:
-  ANDROID_COMPILE_SDK: "26"
-  ANDROID_BUILD_TOOLS: "27.0.2"
+  ANDROID_COMPILE_SDK: "27"
+  ANDROID_BUILD_TOOLS: "27.0.3"
 
 before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
   - wget --quiet --output-document=android-sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
@@ -26,6 +27,10 @@ before_script:
   - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 
+cache:
+  paths:
+     - .gradle/wrapper
+     - .gradle/caches
 
 stages:
   - build

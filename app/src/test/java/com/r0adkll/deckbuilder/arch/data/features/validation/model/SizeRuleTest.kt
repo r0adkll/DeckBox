@@ -10,7 +10,7 @@ class SizeRuleTest {
 
     @Test
     fun shouldPassSizeRule() {
-        val cards = (0..20).map { ModelUtils.createPokemonCard() }
+        val cards = (0 until 60).map { ModelUtils.createPokemonCard() }
         val rule = SizeRule()
 
         val result = rule.check(cards)
@@ -18,9 +18,19 @@ class SizeRuleTest {
         result.shouldBeNull()
     }
 
+    @Test
+    fun shouldFailTooLittleSizeRule() {
+        val cards = (0..20).map { ModelUtils.createPokemonCard() }
+        val rule = SizeRule()
+
+        val result = rule.check(cards)
+
+        result.shouldNotBeNull()
+    }
+
 
     @Test
-    fun shouldFailSizeRule() {
+    fun shouldFailTooManySizeRule() {
         val cards = (0..100).map { ModelUtils.createPokemonCard() }
         val rule = SizeRule()
 

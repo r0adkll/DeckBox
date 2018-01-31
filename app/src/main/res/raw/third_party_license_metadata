@@ -141,3 +141,5 @@
 73799:121 kxml2
 73921:46 kotlin-compiler
 74109:46 j2objc-annotations
+74156:55 stax-ex
+74212:102 jaxb-api
