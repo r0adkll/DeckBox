@@ -3,8 +3,8 @@
 image: openjdk:8-jdk
 
 variables:
-  ANDROID_COMPILE_SDK: "26"
-  ANDROID_BUILD_TOOLS: "27.0.2"
+  ANDROID_COMPILE_SDK: "27"
+  ANDROID_BUILD_TOOLS: "27.0.3"
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
