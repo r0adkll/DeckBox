@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcel
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -52,6 +53,7 @@ import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
 import kotlinx.android.synthetic.main.layout_detail_panel.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -133,7 +135,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 else -> SuperType.POKEMON
             }
             Analytics.event(Event.SelectContent.Action("add_new_card"))
-            val intent = SearchActivity.createIntent(this, superType, state.allCards)
+            val intent = SearchActivity.createIntent(this, superType)
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
 
