@@ -1,3 +1,8 @@
+# 1.3.1
+* Added Info card on home screen to explain status of UltraPrism
+* Cleaned up missing card report UI and added message/advisement
+* Misc. Crashlytics Fixes
+
 # 1.3.0
 * Tournament Exporter - Export PDF decklists to submit to tournaments
 
