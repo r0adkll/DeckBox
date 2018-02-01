@@ -75,10 +75,6 @@ class DataModule {
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
 
-    @Provides @AppScope
-    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
-
-
     /*
      * Caching
      */

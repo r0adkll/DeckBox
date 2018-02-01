@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 @SuppressLint("CheckResult")
 class FirestoreDeckCache @Inject constructor(
-        val firestore: FirebaseFirestore,
         val cardRepository: CardRepository
 ) : DeckCache {
 
@@ -112,7 +111,8 @@ class FirestoreDeckCache @Inject constructor(
     private fun getUserDeckCollection(): CollectionReference? {
         val user = FirebaseAuth.getInstance().currentUser
         return user?.let { u ->
-            firestore.collection(COLLECTION_USERS)
+            val db = FirebaseFirestore.getInstance()
+            db.collection(COLLECTION_USERS)
                     .document(u.uid)
                     .collection(COLLECTION_DECKS)
         }
