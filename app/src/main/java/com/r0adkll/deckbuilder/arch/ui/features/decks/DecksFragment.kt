@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
-import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
@@ -17,8 +16,8 @@ import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
-import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
@@ -40,6 +39,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var presenter: DecksPresenter
     @Inject lateinit var preferences: AppPreferences
 
+    private val dismissPreview: Relay<Unit> = PublishRelay.create()
     private val shareClicks: Relay<Deck> = PublishRelay.create()
     private val duplicateClicks: Relay<Deck> = PublishRelay.create()
     private val deleteClicks: Relay<Deck> = PublishRelay.create()
@@ -55,19 +55,29 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        renderer.start()
-        presenter.start()
-
-        adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks)
-        adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Deck> {
-            override fun onItemClick(v: View, item: Deck, position: Int) {
-                Analytics.event(Event.SelectContent.Deck(item.id))
-                startActivity(DeckBuilderActivity.createIntent(activity!!, item))
+        adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks, dismissPreview)
+        adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Item> {
+            override fun onItemClick(v: View, item: Item, position: Int) {
+                if (item is Item.DeckItem) {
+                    Analytics.event(Event.SelectContent.Deck(item.deck.id))
+                    startActivity(DeckBuilderActivity.createIntent(activity!!, item.deck))
+                }
             }
         })
 
         adapter.setEmptyView(empty_view)
-        recycler.layoutManager = GridLayoutManager(activity, if (ScreenUtils.smallestWidth(resources, ScreenUtils.Config.TABLET_10)) 6 else 2)
+
+        val layoutManager = GridLayoutManager(activity, if (ScreenUtils.smallestWidth(resources, ScreenUtils.Config.TABLET_10)) 6 else 2)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                val item = adapter.items[position]
+                return when(item) {
+                    Item.Preview -> 2
+                    else -> 1
+                }
+            }
+        }
+        recycler.layoutManager = layoutManager
         recycler.adapter = adapter
 
         fab.setOnClickListener {
@@ -90,6 +100,11 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     val intent = MultiExportActivity.createIntent(activity!!, it)
                     startActivity(intent)
                 }
+
+
+
+        renderer.start()
+        presenter.start()
     }
 
 
@@ -113,6 +128,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
 
+    override fun dismissPreview(): Observable<Unit> = dismissPreview
     override fun shareClicks(): Observable<Deck> = shareClicks
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
     override fun deleteClicks(): Observable<Deck> = deleteClicks
@@ -132,8 +148,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
 
-    override fun showDecks(decks: List<Deck>) {
-        adapter.showDecks(decks)
+    override fun showItems(items: List<Item>) {
+        adapter.showItems(items)
     }
 
 

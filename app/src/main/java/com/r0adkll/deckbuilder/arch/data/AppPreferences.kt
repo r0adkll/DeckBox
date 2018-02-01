@@ -28,12 +28,14 @@ class AppPreferences @Inject constructor(
         const val KEY_PLAYER_DOB = "pref_player_dob"
 
         const val KEY_LAST_VERSION = "pref_last_version"
+        const val KEY_SET_ULTRAPRISM = "pref_set_ultraprism"
     }
 
 
     var onboarding by BooleanPreference(KEY_ONBOARDING, false)
     var quickStart by BooleanPreference(KEY_QUICKSTART, true)
     var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
+    val previewUltraPrism by ReactiveBooleanPreference(KEY_SET_ULTRAPRISM, true)
 
     val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
     var expansionsTimestamp by LongPreference(KEY_EXPANSIONS_TIMESTAMP, 0L)

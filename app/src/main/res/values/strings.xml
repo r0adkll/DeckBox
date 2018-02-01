@@ -143,4 +143,7 @@
     <string name="tournament_pdf_table_trainer">Trainer</string>
     <string name="tournament_pdf_table_energy">Energy</string>
     <string name="hint_dob_default">1/11/2018</string>
+    <string name="set_preview_title_ultra_prism">When is it coming?</string>
+    <string name="set_preview_message_ultra_prism">Ultra Prism is officially released on Febuary 2nd, and then we have to wait for Pokémon to post the official card data for us to add to the service. Thanks for your patience!</string>
+    <string name="action_okay">Okay</string>
 </resources>
