@@ -146,4 +146,7 @@
     <string name="set_preview_title_ultra_prism">When is it coming?</string>
     <string name="set_preview_message_ultra_prism">Ultra Prism is officially released on Febuary 2nd, and then we have to wait for Pokémon to post the official card data for us to add to the service. Thanks for your patience!</string>
     <string name="action_okay">Okay</string>
+    <string name="missing_card_header_expansion">Expansion set</string>
+    <string name="missing_card_header_print">Print</string>
+    <string name="missing_card_warning">Please be as descriptive as possible about the card, the set it is from, or the exact version of it as possible. If you submit requests with just the name, then I will be unable to find and subsequently add it to the app.</string>
 </resources>
