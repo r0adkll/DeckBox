@@ -52,9 +52,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     @com.evernote.android.state.State
     var superType: SuperType = SuperType.POKEMON
 
-    @com.evernote.android.state.State
-    var existingCards: ArrayList<PokemonCard> = ArrayList()
-
 
     @Inject lateinit var renderer: SearchRenderer
     @Inject lateinit var presenter: SearchPresenter
@@ -110,7 +107,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
         superType = findEnum<SuperType>(EXTRA_SUPER_TYPE) ?: SuperType.POKEMON
-        existingCards = findArrayList(EXTRA_CARDS) ?: ArrayList()
 
         // Set default tab
         val i = when(superType) {
@@ -185,17 +181,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         return editCardIntentions.addCardClicks
                 .map { it.first() }
                 .doOnNext { Analytics.event(Event.SelectContent.PokemonCard(it.id)) }
-//                .filter { card ->
-//                    val result = validator.validate(existingCards.plus(state.selected), card)
-//                    if (result != null) {
-//                        adapter.wiggleCard(card)
-//                        // Display error to user
-//                        validationSnackbar(result)
-//                        false
-//                    } else {
-//                        true
-//                    }
-//                }
     }
 
 
@@ -344,15 +329,12 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         @JvmField val RC_PICK_CARD = 100
         @JvmField val EXTRA_SELECTED_CARDS = "SearchActivity.SelectedCards"
         @JvmField val EXTRA_SUPER_TYPE = "SearchActivity.SuperType"
-        @JvmField val EXTRA_CARDS = "SearchActivity.Cards"
 
 
         fun createIntent(context: Context,
-                         superType: SuperType = SuperType.POKEMON,
-                         cards: List<PokemonCard>? = null): Intent {
+                         superType: SuperType = SuperType.POKEMON): Intent {
             val intent = Intent(context, SearchActivity::class.java)
             intent.putExtra(EXTRA_SUPER_TYPE, superType)
-            cards?.let { intent.putParcelableArrayListExtra(EXTRA_CARDS, ArrayList(it)) }
             return intent
         }
 

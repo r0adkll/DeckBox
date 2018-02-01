@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class DecksPresenter @Inject constructor(
         val ui: DecksUi,
         val intentions: DecksUi.Intentions,
-        val repository: DeckRepository
+        val repository: DeckRepository,
+        val preferences: AppPreferences
 ) : Presenter() {
 
     @SuppressLint("CheckResult")
@@ -37,7 +39,12 @@ class DecksPresenter @Inject constructor(
                             .onErrorReturn(handleUnknownError)
                 }
 
+        val showPreview = preferences.previewUltraPrism
+                .asObservable()
+                .map { Change.ShowPreview(it) as Change }
+
         val merged = loadDecks.mergeWith(deleteDecks)
+                .mergeWith(showPreview)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
@@ -52,6 +59,11 @@ class DecksPresenter @Inject constructor(
                 }
                 .subscribe {
                     Timber.i("Deck duplicated!")
+                }
+
+        disposables += intentions.dismissPreview()
+                .subscribe {
+                    preferences.previewUltraPrism.set(false)
                 }
     }
 

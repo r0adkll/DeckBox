@@ -12,15 +12,15 @@ import javax.inject.Inject
 
 
 class DefaultMissingCardRepository @Inject constructor(
-    val firestore: FirebaseFirestore
 ) : MissingCardRepository {
 
     override fun reportMissingCard(missingCard: MissingCard): Observable<Unit> {
         val user = FirebaseAuth.getInstance().currentUser
         return user?.let { u ->
+            val db = FirebaseFirestore.getInstance()
             val entity = EntityMapper.to(missingCard)
             entity.userId = u.uid
-            val collection = firestore.collection(COLLECTION_MISSING_CARDS)
+            val collection = db.collection(COLLECTION_MISSING_CARDS)
             val task = collection.add(entity)
             RxFirebase.from(task).map { Unit }
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))

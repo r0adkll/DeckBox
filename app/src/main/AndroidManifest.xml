@@ -3,6 +3,7 @@
     package="com.r0adkll.deckbuilder">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".DeckApp"
@@ -59,6 +60,19 @@
             />
 
         <activity android:name=".arch.ui.features.missingcards.MissingCardsActivity" />
+        <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
+        <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.r0adkll.deckbuilder.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files"
+                />
+        </provider>
 
         <meta-data
             android:name="io.fabric.ApiKey"

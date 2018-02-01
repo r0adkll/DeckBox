@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcel
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -31,6 +32,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -51,6 +53,7 @@ import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
 import kotlinx.android.synthetic.main.layout_detail_panel.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -132,7 +135,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 else -> SuperType.POKEMON
             }
             Analytics.event(Event.SelectContent.Action("add_new_card"))
-            val intent = SearchActivity.createIntent(this, superType, state.allCards)
+            val intent = SearchActivity.createIntent(this, superType)
             startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
         }
 
@@ -331,7 +334,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             R.id.action_export -> {
                 Analytics.event(Event.SelectContent.MenuAction("export_decklist"))
                 val exportDeck = Deck("", "", "", state.allCards, 0L)
-                startActivity(DeckExportActivity.createIntent(this, exportDeck))
+                startActivity(MultiExportActivity.createIntent(this, exportDeck))
                 true
             }
             R.id.action_save -> {

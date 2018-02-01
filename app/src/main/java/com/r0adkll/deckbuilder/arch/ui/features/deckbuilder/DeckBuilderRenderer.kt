@@ -5,6 +5,7 @@ import android.util.ArrayMap
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
+import com.r0adkll.deckbuilder.util.CardUtils.stackCards
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
@@ -112,20 +113,5 @@ class DeckBuilderRenderer(
                         actions.showDeckDescription(it)
                     }
                 }
-    }
-
-    companion object {
-
-        private fun stackCards(): (List<PokemonCard>) -> List<StackedPokemonCard> {
-            return {
-                val map = ArrayMap<PokemonCard, Int>(it.size)
-                it.forEach { card ->
-                    val count = map[card] ?: 0
-                    map[card] = count + 1
-                }
-                map.map { StackedPokemonCard(it.key, it.value) }
-                        .sortedBy { card -> card.card.nationalPokedexNumber }
-            }
-        }
     }
 }

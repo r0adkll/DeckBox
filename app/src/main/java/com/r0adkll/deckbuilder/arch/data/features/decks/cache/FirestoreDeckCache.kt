@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 @SuppressLint("CheckResult")
 class FirestoreDeckCache @Inject constructor(
-        val firestore: FirebaseFirestore,
         val cardRepository: CardRepository
 ) : DeckCache {
 
@@ -112,7 +111,8 @@ class FirestoreDeckCache @Inject constructor(
     private fun getUserDeckCollection(): CollectionReference? {
         val user = FirebaseAuth.getInstance().currentUser
         return user?.let { u ->
-            firestore.collection(COLLECTION_DECKS)
+            val db = FirebaseFirestore.getInstance()
+            db.collection(COLLECTION_USERS)
                     .document(u.uid)
                     .collection(COLLECTION_DECKS)
         }
@@ -121,6 +121,7 @@ class FirestoreDeckCache @Inject constructor(
 
     companion object {
         @JvmField val DUPLICATE_REGEX = "\\(\\d+\\)"
+        @JvmField val COLLECTION_USERS = "decks" // Do to an error on my side, this is now stuck as 'decks', but it is users
         @JvmField val COLLECTION_DECKS = "decks"
     }
 }

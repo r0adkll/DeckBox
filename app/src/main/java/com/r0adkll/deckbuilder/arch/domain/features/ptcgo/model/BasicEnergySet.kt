@@ -8,6 +8,20 @@ sealed class BasicEnergySet {
 
     abstract fun convert(type: Type): String?
 
+    object SunMoon : BasicEnergySet() {
+        override fun convert(type: Type): String? = when(type) {
+            GRASS -> "sm1-164"
+            FIRE -> "sm1-165"
+            WATER -> "sm1-166"
+            LIGHTNING -> "sm1-167"
+            PSYCHIC -> "sm1-168"
+            FIGHTING -> "sm1-169"
+            DARKNESS -> "sm1-170"
+            METAL -> "sm1-171"
+            FAIRY -> "sm1-172"
+            else -> null
+        }
+    }
 
     object XY : BasicEnergySet() {
         override fun convert(type: Type): String? = when(type) {

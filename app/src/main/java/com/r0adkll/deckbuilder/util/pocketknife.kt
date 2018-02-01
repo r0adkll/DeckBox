@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
+import java.io.Serializable
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 
@@ -27,6 +28,12 @@ fun <P : Parcelable> Activity.bindOptionalParcelableList(key: String): ReadOnlyP
 
 fun <P : Parcelable> Activity.bindParcelable(key: String): ReadOnlyProperty<Activity, P> = Lazy { activity, _ ->
     activity.intent.getParcelableExtra(key)
+}
+
+
+@Suppress("UNCHECKED_CAST")
+fun <P : Serializable> Activity.bindSerializable(key: String): ReadOnlyProperty<Activity, P> = Lazy { activity, _ ->
+    activity.intent.getSerializableExtra(key) as P
 }
 
 

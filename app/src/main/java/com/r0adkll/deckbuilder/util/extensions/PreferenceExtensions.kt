@@ -4,10 +4,14 @@ package com.r0adkll.deckbuilder.util.extensions
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.gson.Gson
+import com.google.gson.internal.bind.util.ISO8601Utils
 import com.google.gson.reflect.TypeToken
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.model.BasicEnergySet
 import java.lang.reflect.Type
+import java.text.ParsePosition
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -64,7 +68,22 @@ interface RxPreferences {
 
     class ReactiveBasicEnergySetPreference(key: String): ReactivePreference<BasicEnergySet>(key) {
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<BasicEnergySet> {
-            return thisRef.rxSharedPreferences.getObject(key, BasicEnergySet.XY, BasicEnergySetConverter())
+            return thisRef.rxSharedPreferences.getObject(key, BasicEnergySet.SunMoon, BasicEnergySetConverter())
+        }
+    }
+
+
+    class ReactiveDatePreference(key: String, val default: Date? = null) : ReactivePreference<Date>(key) {
+        override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<Date> {
+            return thisRef.rxSharedPreferences.getObject(key, default ?: Date(), DateConverter())
+        }
+    }
+
+
+    class ReactiveEnumPreference<T : Enum<T>>(key: String, val default: T) : ReactivePreference<T>(key) {
+
+        override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<T> {
+            return thisRef.rxSharedPreferences.getEnum(key, default, default::class.java as Class<T>)
         }
     }
 
@@ -77,11 +96,23 @@ interface RxPreferences {
     }
 
 
+    private class DateConverter : Preference.Converter<Date> {
+
+        override fun deserialize(serialized: String): Date {
+            return ISO8601Utils.parse(serialized, ParsePosition(0))
+        }
+
+        override fun serialize(value: Date): String {
+            return ISO8601Utils.format(value)
+        }
+    }
+
+
     private class BasicEnergySetConverter : Preference.Converter<BasicEnergySet> {
 
         override fun deserialize(serialized: String): BasicEnergySet {
             return BasicEnergySet::class.nestedClasses
-                    .find { it.qualifiedName == serialized }?.objectInstance as? BasicEnergySet ?: BasicEnergySet.XY
+                    .find { it.qualifiedName == serialized }?.objectInstance as? BasicEnergySet ?: BasicEnergySet.SunMoon
         }
 
         override fun serialize(value: BasicEnergySet): String {
