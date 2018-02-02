@@ -7,7 +7,6 @@
         {
             "regex": "\b(electric)\b(?=( +energy))",
             "replacement": "Lightning"
-        },
-
+        }
     ]
 }

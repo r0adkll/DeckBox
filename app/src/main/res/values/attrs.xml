@@ -37,4 +37,8 @@
         <attr name="nodeSize" format="dimension|reference" />
     </declare-styleable>
 
+    <declare-styleable name="MarqueeCardContainer">
+        <attr name="cardWidth" format="dimension|reference" />
+    </declare-styleable>
+
 </resources>

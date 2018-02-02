@@ -9,7 +9,8 @@
     <com.r0adkll.deckbuilder.arch.ui.widgets.MarqueeCardContainer
         android:id="@+id/marquee_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/marquee_card_height">
+        android:layout_height="@dimen/marquee_card_height"
+        app:cardWidth="@dimen/marquee_card_width">
 
 
     </com.r0adkll.deckbuilder.arch.ui.widgets.MarqueeCardContainer>
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textSize="@dimen/display_1"
+        android:textSize="@dimen/setup_title_textsize"
         android:textColor="@color/white"
         android:fontFamily="sans-serif-medium"
         />
@@ -32,7 +33,7 @@
         android:paddingStart="34dp"
         android:paddingEnd="34dp"
         android:text="@string/app_description"
-        android:textSize="16sp"
+        android:textSize="@dimen/setup_body_textsize"
         android:textColor="@color/white"
         />
 
