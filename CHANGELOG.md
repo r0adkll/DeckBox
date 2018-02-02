@@ -1,3 +1,7 @@
+# 1.3.2
+* Hotfix for lower density displays
+* Misc. Bug fixes
+
 # 1.3.1
 * Added Info card on home screen to explain status of UltraPrism
 * Cleaned up missing card report UI and added message/advisement
