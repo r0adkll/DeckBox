@@ -82,10 +82,6 @@ android {
             ext.betaDistributionGroupAliasesFilePath="distribution/crashlytics/aliases.txt"
         }
 
-        beta {
-            versionNameSuffix '-beta'
-        }
-
         prod
     }
 

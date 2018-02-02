@@ -1,0 +1,12 @@
+{
+    "proxies": [
+        {
+            "regex": "\bn\n",
+            "replacement": "\"N\""
+        },
+        {
+            "regex": "\b(electric)\b(?=( +energy))",
+            "replacement": "Lightning"
+        }
+    ]
+}
