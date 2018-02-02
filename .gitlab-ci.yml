@@ -57,7 +57,7 @@ deployBeta:
   only:
     - master
   script:
-    - ./gradlew publishApkBetaRelease
+    - ./gradlew publishApkProdRelease
 
 deployProduction:
   stage: deploy
