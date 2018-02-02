@@ -8,6 +8,21 @@
             "regex": "\b(electric)\b(?=( +energy))",
             "replacement": "Lightning"
         },
-
+        {
+            "regex": "\b(dark)\b(?=( +energy))",
+            "replacement": "Darkness"
+        },
+        {
+            "regex": "\b(steel)\b(?=( +energy))",
+            "replacement": "Metal"
+        },
+        {
+            "regex": "\b( GX)\b",
+            "replacement": "-GX"
+        },
+        {
+            "regex": "\b( EX)\b",
+            "replacement": "-EX"
+        }
     ]
 }
