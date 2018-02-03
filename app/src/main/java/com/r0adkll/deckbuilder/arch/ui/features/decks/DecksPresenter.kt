@@ -41,7 +41,7 @@ class DecksPresenter @Inject constructor(
 
         val showPreview = preferences.previewUltraPrism
                 .asObservable()
-                .map { Change.ShowPreview(it) as Change }
+                .map { Change.ShowPreview(true) as Change }
 
         val merged = loadDecks.mergeWith(deleteDecks)
                 .mergeWith(showPreview)

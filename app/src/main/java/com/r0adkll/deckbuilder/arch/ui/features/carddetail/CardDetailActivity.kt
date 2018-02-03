@@ -32,6 +32,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.bindBoolean
 import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -44,6 +45,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     private val card: PokemonCard by bindParcelable(EXTRA_CARD)
     private val deck: List<PokemonCard>? by bindOptionalParcelableList(EXTRA_CARDS)
+    private val useLowRes: Boolean by bindBoolean(EXTRA_LOW_RES, false)
 
     private val addCardClicks: Relay<Unit> = PublishRelay.create()
     private val removeCardClicks: Relay<Unit> = PublishRelay.create()
@@ -237,7 +239,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         emptyView.visible()
         emptyView.setLoading(true)
         var request = GlideApp.with(this)
-                .load(card.imageUrlHiRes)
+                .load(if (useLowRes) card.imageUrl else card.imageUrlHiRes)
                 .transition(withCrossFade())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
@@ -284,6 +286,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     companion object {
         @JvmField val EXTRA_CARD = "CardDetailActivity.Card"
         @JvmField val EXTRA_CARDS = "CardDetailActivity.Cards"
+        @JvmField val EXTRA_LOW_RES = "CardDetailActivity.LowRes"
         @JvmField val RC_EDIT_CARD = 1
 
 
@@ -295,9 +298,10 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         }
 
 
-        fun show(context: Activity, view: PokemonCardView, cards: List<PokemonCard>? = null) {
+        fun show(context: Activity, view: PokemonCardView, cards: List<PokemonCard>? = null, useLowRes: Boolean = false) {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
             val intent = CardDetailActivity.createIntent(context, view.card!!, cards)
+            intent.putExtra(EXTRA_LOW_RES, useLowRes)
             if (cards != null) {
                 context.startActivityForResult(intent, RC_EDIT_CARD, options.toBundle())
             } else {
