@@ -2,13 +2,14 @@ package com.r0adkll.deckbuilder.arch.data.features.cards.cache
 
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import io.reactivex.Observable
 
 
 class PreferenceExpansionCache(
         val preferences: AppPreferences,
-        val maxLifetime: Long
+        val remote: Remote
 ) : ExpansionCache {
 
     override fun putExpansions(expansions: List<Expansion>) {
@@ -18,10 +19,11 @@ class PreferenceExpansionCache(
 
 
     override fun getExpansions(): Observable<List<Expansion>> {
-        val elapsed = System.currentTimeMillis() - preferences.expansionsTimestamp
-        if (elapsed > maxLifetime) {
+        // Check to see if we have the latest expansion as per the remote config
+        if (preferences.expansions.get().none { it.code == remote.latestExpansion }) {
             preferences.expansions.delete()
         }
+
         return preferences.expansions.asObservable()
                 .map { it.toList() }
                 .take(1)

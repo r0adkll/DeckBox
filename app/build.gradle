@@ -122,6 +122,7 @@ dependencies {
 
     implementation "com.google.firebase:firebase-firestore:$play_version"
     implementation "com.google.firebase:firebase-auth:$play_version"
+    implementation "com.google.firebase:firebase-config:$play_version"
     implementation "com.google.android.gms:play-services-auth:$play_version"
     implementation "com.google.android.gms:play-services-oss-licenses:$play_version"
 

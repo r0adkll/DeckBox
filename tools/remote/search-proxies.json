@@ -1,27 +1,27 @@
 {
     "proxies": [
         {
-            "regex": "\bn\n",
+            "regex": "\\bn\\b",
             "replacement": "\"N\""
         },
         {
-            "regex": "\b(electric)\b(?=( +energy))",
+            "regex": "\\b(electric)\\b(?=( +energy))",
             "replacement": "Lightning"
         },
         {
-            "regex": "\b(dark)\b(?=( +energy))",
+            "regex": "\\b(dark)\\b(?=( +energy))",
             "replacement": "Darkness"
         },
         {
-            "regex": "\b(steel)\b(?=( +energy))",
+            "regex": "\\b(steel)\\b(?=( +energy))",
             "replacement": "Metal"
         },
         {
-            "regex": "\b( GX)\b",
+            "regex": "\\b( GX)\\b",
             "replacement": "-GX"
         },
         {
-            "regex": "\b( EX)\b",
+            "regex": "\\b( EX)\\b",
             "replacement": "-EX"
         }
     ]

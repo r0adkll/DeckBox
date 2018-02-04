@@ -13,10 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DeckBuilder">
 
-        <activity android:name=".arch.ui.MainActivity">
+        <activity android:name=".arch.ui.RouteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
