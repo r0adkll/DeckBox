@@ -105,9 +105,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         disposables += viewPreview
                 .subscribe {
-                    // We want to dismiss this view as well
-                    dismissPreview.accept(Unit)
-
                     // Open the user to the set browser
                     startActivity(SetBrowserActivity.createIntent(activity!!, "sm5", "Ultra Prism"))
                 }

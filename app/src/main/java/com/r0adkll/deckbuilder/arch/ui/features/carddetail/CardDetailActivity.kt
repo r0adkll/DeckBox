@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -233,6 +234,13 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         val spannable = SpannableString("$number$name")
         val color = if (slidingLayout == null) color(R.color.black56) else color(R.color.white70)
         spannable.setSpan(ForegroundColorSpan(color), 0, number.length, 0)
+
+        val prismIndex = name.indexOf("◇")
+        if (prismIndex != -1) {
+            val startIndex = number.length + prismIndex
+            spannable.setSpan(ImageSpan(this@CardDetailActivity, R.drawable.ic_prism_star), startIndex, startIndex + 1, 0)
+        }
+
         cardTitle.text = spannable
         cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
 
