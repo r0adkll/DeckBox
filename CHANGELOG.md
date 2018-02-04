@@ -1,3 +1,9 @@
+# 1.3.3
+* Official support for Ultra Prism
+* Improved search functionality
+* Fixed some bugs with export feature
+* Misc. Fixes and Improvements
+
 # 1.3.2
 * Hotfix for lower density displays
 * Misc. Bug fixes
