@@ -8,7 +8,13 @@ import org.junit.Test
 
 class SearchProxiesTest {
 
-    val proxyConfig = "{\"proxies\":[{\"regex\":\"\\\\bn\\\\b\",\"replacement\":\"\\\"N\\\"\"},{\"regex\":\"\\\\b(electric)\\\\b(?=( +energy))\",\"replacement\":\"Lightning\"},{\"regex\":\"\\\\b(dark)\\\\b(?=( +energy))\",\"replacement\":\"Darkness\"},{\"regex\":\"\\\\b(steel)\\\\b(?=( +energy))\",\"replacement\":\"Metal\"},{\"regex\":\"\\\\b( GX)\\\\b\",\"replacement\":\"-GX\"},{\"regex\":\"\\\\b( EX)\\\\b\",\"replacement\":\"-EX\"}]}"
+    val proxyConfig = "{\"proxies\":[{\"regex\":\"\\\\bn\\\\b\",\"replacement\":\"\\\"N\\\"\"}," +
+            "{\"regex\":\"\\\\b(electric)\\\\b(?=( +energy))\",\"replacement\":\"Lightning\"}," +
+            "{\"regex\":\"\\\\b(dark)\\\\b(?=( +energy))\",\"replacement\":\"Darkness\"}," +
+            "{\"regex\":\"\\\\b(steel)\\\\b(?=( +energy))\",\"replacement\":\"Metal\"}," +
+            "{\"regex\":\"\\\\b( GX)\\\\b\",\"replacement\":\"-GX\"}," +
+            "{\"regex\":\"\\\\b( EX)\\\\b\",\"replacement\":\"-EX\"}," +
+            "{\"regex\":\"(Mega)(?= \\\\w)\",\"replacement\":\"M\"}]}"
     val gson = Gson()
 
     lateinit var proxies: SearchProxies
@@ -103,5 +109,18 @@ class SearchProxiesTest {
 
         result.shouldEqualTo("Espeon-GX")
         result2.shouldEqualTo("Alolan Execuggtor-GX")
+    }
+
+
+    @Test
+    fun shouldFixMegaQuery() {
+        val input = "Mega Mewtwo-GX"
+        val input2 = "Mega"
+
+        val result = proxies.apply(input)
+        val result2 = proxies.apply(input2)
+
+        result.shouldEqualTo("M Mewtwo-GX")
+        result2.shouldEqualTo("Mega")
     }
 }
