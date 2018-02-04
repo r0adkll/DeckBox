@@ -143,10 +143,14 @@
     <string name="tournament_pdf_table_trainer">Trainer</string>
     <string name="tournament_pdf_table_energy">Energy</string>
     <string name="hint_dob_default">1/11/2018</string>
-    <string name="set_preview_title_ultra_prism">When is it coming?</string>
-    <string name="set_preview_message_ultra_prism">Ultra Prism is officially released on Febuary 2nd, and then we have to wait for Pokémon to post the official card data for us to add to the service. Thanks for your patience!</string>
+    <string name="set_preview_title_ultra_prism">Ultra Prism is finally here!</string>
+    <string name="set_preview_message_ultra_prism">Over 150 cards. \n6 Prism Star cards featuring a new game mechanic. \n10 Pokémon GX, including 5 Ultra Beasts. \n18 Trainer cards and 3 Special Energy cards</string>
     <string name="action_okay">Okay</string>
     <string name="missing_card_header_expansion">Expansion set</string>
     <string name="missing_card_header_print">Print</string>
     <string name="missing_card_warning">Please be as descriptive as possible about the card, the set it is from, or the exact version of it as possible. If you submit requests with just the name, then I will be unable to find and subsequently add it to the app.</string>
+    <string name="action_dismiss">Dismiss</string>
+    <string name="action_view">Browse</string>
+    <string name="tab_all">All</string>
+    <string name="empty_set_browse_message">No cards found for this set.</string>
 </resources>

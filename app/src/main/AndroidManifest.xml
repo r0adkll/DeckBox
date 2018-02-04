@@ -62,6 +62,9 @@
         <activity android:name=".arch.ui.features.missingcards.MissingCardsActivity" />
         <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
         <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
+        <activity android:name=".arch.ui.features.browse.SetBrowserActivity"
+            android:theme="@style/Theme.DeckBuilder.Translucent"
+            />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

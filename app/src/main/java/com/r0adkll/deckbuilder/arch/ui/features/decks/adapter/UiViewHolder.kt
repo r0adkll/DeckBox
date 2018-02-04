@@ -22,14 +22,17 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
     class PreviewViewHolder(
             itemView: View,
-            private val dismissPreview: Relay<Unit>
+            private val dismissPreview: Relay<Unit>,
+            private val viewPreview: Relay<Unit>
     ) : UiViewHolder<Item.Preview>(itemView) {
 
-        private val actionPositive: Button by bindView(R.id.actionPositive)
+        private val actionDismiss: Button by bindView(R.id.actionDismiss)
+        private val actionView: Button by bindView(R.id.actionView)
 
 
         override fun bind(item: Item.Preview) {
-            actionPositive.setOnClickListener { dismissPreview.accept(Unit) }
+            actionDismiss.setOnClickListener { dismissPreview.accept(Unit) }
+            actionView.setOnClickListener { viewPreview.accept(Unit) }
         }
     }
 
@@ -90,10 +93,11 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                    shareClicks: Relay<Deck>,
                    duplicateClicks: Relay<Deck>,
                    deleteClicks: Relay<Deck>,
-                   dismissPreview: Relay<Unit>): UiViewHolder<Item> {
+                   dismissPreview: Relay<Unit>,
+                   viewPreview: Relay<Unit>): UiViewHolder<Item> {
             val viewType = ViewType.of(layoutId)
             return when(viewType) {
-                PREVIEW -> PreviewViewHolder(itemView, dismissPreview) as UiViewHolder<Item>
+                PREVIEW -> PreviewViewHolder(itemView, dismissPreview, viewPreview) as UiViewHolder<Item>
                 DECK -> DeckViewHolder(itemView, shareClicks, duplicateClicks, deleteClicks) as UiViewHolder<Item>
             }
         }
