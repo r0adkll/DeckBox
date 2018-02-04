@@ -75,6 +75,7 @@ android {
     flavorDimensions "default"
 
     productFlavors {
+
         alpha {
             versionNameSuffix '-alpha'
             ext.betaDistributionReleaseNotesFilePath="distribution/crashlytics/release-notes.txt"
