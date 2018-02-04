@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.Remote
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.ExpansionCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.InMemoryExpansionCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.PreferenceExpansionCache
@@ -17,12 +18,12 @@ import javax.inject.Inject
 class CachingCardDataSource @Inject constructor(
         val api: Pokemon,
         val preferences: AppPreferences,
-        val schedulers: Schedulers
+        val schedulers: Schedulers,
+        remote: Remote
 ) : CardDataSource {
 
     private val memoryCache: ExpansionCache = InMemoryExpansionCache()
-    private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences,
-            TimeUnit.DAYS.toMillis(7))
+    private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences, remote)
 
 
     override fun getExpansions(): Observable<List<Expansion>> {

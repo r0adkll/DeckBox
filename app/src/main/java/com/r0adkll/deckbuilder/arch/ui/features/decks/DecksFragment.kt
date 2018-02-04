@@ -13,6 +13,7 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapter
@@ -39,6 +40,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var presenter: DecksPresenter
     @Inject lateinit var preferences: AppPreferences
 
+    private val viewPreview: Relay<Unit> = PublishRelay.create()
     private val dismissPreview: Relay<Unit> = PublishRelay.create()
     private val shareClicks: Relay<Deck> = PublishRelay.create()
     private val duplicateClicks: Relay<Deck> = PublishRelay.create()
@@ -55,7 +57,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks, dismissPreview)
+        adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks, dismissPreview, viewPreview)
         adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Item> {
             override fun onItemClick(v: View, item: Item, position: Int) {
                 if (item is Item.DeckItem) {
@@ -101,7 +103,11 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     startActivity(intent)
                 }
 
-
+        disposables += viewPreview
+                .subscribe {
+                    // Open the user to the set browser
+                    startActivity(SetBrowserActivity.createIntent(activity!!, "sm5", "Ultra Prism"))
+                }
 
         renderer.start()
         presenter.start()

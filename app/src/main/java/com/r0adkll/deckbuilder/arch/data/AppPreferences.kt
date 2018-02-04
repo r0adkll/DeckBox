@@ -28,7 +28,7 @@ class AppPreferences @Inject constructor(
         const val KEY_PLAYER_DOB = "pref_player_dob"
 
         const val KEY_LAST_VERSION = "pref_last_version"
-        const val KEY_SET_ULTRAPRISM = "pref_set_ultraprism"
+        const val KEY_SET_ULTRAPRISM = "pref_set_ultraprism_new"
     }
 
 

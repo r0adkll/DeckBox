@@ -125,7 +125,7 @@ object EntityMapper {
         return AttackEntity(
 //                attack.cost.map { it.displayName },
                 attack.name,
-                attack.text,
+                attack.text ?: "",
                 attack.damage,
                 attack.convertedEnergyCost
         )

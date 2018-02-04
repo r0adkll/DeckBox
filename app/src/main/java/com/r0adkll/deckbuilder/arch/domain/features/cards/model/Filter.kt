@@ -23,7 +23,8 @@ data class Filter(
         val attackDamage: String?,
         val hp: String?,
         val weaknesses: List<Type>,
-        val resistances: List<Type>
+        val resistances: List<Type>,
+        val pageSize: Int = 1000
 ) : PaperParcelable {
 
     val isEmptyWithoutField: Boolean

@@ -6,6 +6,8 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.pdf.PdfDocument
 import android.os.Environment
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View

@@ -33,4 +33,8 @@
     <style name="Theme.DeckBuilder.Export">
     </style>
 
+    <style name="Theme.DeckBuilder.Translucent">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
 </resources>

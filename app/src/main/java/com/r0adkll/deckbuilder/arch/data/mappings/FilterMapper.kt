@@ -53,6 +53,8 @@ object FilterMapper {
             builder.resistances = filter.resistances.joinToString("|") { it.displayName }
         }
 
+        builder.pageSize = filter.pageSize
+
         return builder
     }
 

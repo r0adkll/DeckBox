@@ -4,7 +4,9 @@ package com.r0adkll.deckbuilder.internal.di
 import com.r0adkll.deckbuilder.BuildModule
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.DataModule
-import com.r0adkll.deckbuilder.arch.ui.MainActivity
+import com.r0adkll.deckbuilder.arch.ui.RouteActivity
+import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserComponent
+import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailComponent
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
@@ -33,7 +35,7 @@ interface AppComponent {
     fun inject(app: DeckApp)
     fun inject(activity: SetupActivity)
     fun inject(activity: DeckExportActivity)
-    fun inject(activity: MainActivity)
+    fun inject(activity: RouteActivity)
     fun inject(activity: OnboardingActivity)
     fun inject(fragment: SettingsActivity.SettingsFragment)
 
@@ -43,6 +45,7 @@ interface AppComponent {
     fun plus(module: DeckImportModule): DeckImportComponent
     fun plus(module: MissingCardsModule): MissingCardsComponent
     fun plus(module: MultiExportModule): MultiExportComponent
+    fun plus(module: SetBrowserModule): SetBrowserComponent
 
     fun searchComponentBuilder(): SearchComponent.Builder
 }

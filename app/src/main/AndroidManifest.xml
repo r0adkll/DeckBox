@@ -13,10 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DeckBuilder">
 
-        <activity android:name=".arch.ui.MainActivity">
+        <activity android:name=".arch.ui.RouteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -62,6 +61,9 @@
         <activity android:name=".arch.ui.features.missingcards.MissingCardsActivity" />
         <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
         <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
+        <activity android:name=".arch.ui.features.browse.SetBrowserActivity"
+            android:theme="@style/Theme.DeckBuilder.Translucent"
+            />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
