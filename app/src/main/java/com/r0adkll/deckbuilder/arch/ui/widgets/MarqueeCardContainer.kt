@@ -46,6 +46,14 @@ class MarqueeCardContainer @JvmOverloads constructor(
     }
 
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        val cardHeight = measuredHeight - (2 * dipToPx(64f))
+        cardWidth = (cardHeight / PokemonCardView.RATIO).toInt()
+    }
+
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         setupAnimator()
