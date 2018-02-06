@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="marquee_card_height">156dp</dimen>
+    <dimen name="marquee_card_width">100dp</dimen>
+    <dimen name="setup_title_textsize">@dimen/display_1</dimen>
+    <dimen name="setup_body_textsize">14sp</dimen>
+</resources>

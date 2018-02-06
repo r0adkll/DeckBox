@@ -1,7 +1,4 @@
-• Missing card feedback form
-• Added improved search functionality to allow the user to search other fields of the card (i.e. text, ability name, attack text, etc)
-• Builder interface now shows non-evolution Pokémon in a grid
-• Added ability to add/remove cards on the detail screen
-• Removed hard limits on deck rules in favor of soft warnings.
-• Added basic Standard/Expanded format indicators
-• Bug Fixes and Improvements
+• Official support for Ultra Prism
+• Improved search functionality
+• Fixed some bugs with export feature
+• Misc. Fixes and Improvements

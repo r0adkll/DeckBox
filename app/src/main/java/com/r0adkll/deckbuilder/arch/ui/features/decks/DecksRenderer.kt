@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
@@ -16,11 +17,22 @@ class DecksRenderer(
     override fun start() {
 
         disposables += state
-                .map { it.decks }
+                .map {
+                    val items = ArrayList<Item>()
+
+                    if (it.showPreview) {
+                        items += Item.Preview
+                    }
+
+                    items += it.decks
+                            .sortedByDescending { it.timestamp }
+                            .map { Item.DeckItem(it) }
+
+                    items
+                }
                 .distinctUntilChanged()
-                .map { it.sortedByDescending { deck -> deck.timestamp } }
                 .addToLifecycle()
-                .subscribe { actions.showDecks(it) }
+                .subscribe { actions.showItems(it) }
 
         disposables += state
                 .map { it.isLoading }

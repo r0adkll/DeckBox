@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 
 class DefaultMissingCardRepository @Inject constructor(
-    val firestore: FirebaseFirestore,
     val preferences: AppPreferences
 ) : MissingCardRepository {
 
@@ -27,7 +26,8 @@ class DefaultMissingCardRepository @Inject constructor(
             entity.userId = it
         }
 
-        val collection = firestore.collection(COLLECTION_MISSING_CARDS)
+        val db = FirebaseFirestore.getInstance()
+        val collection = db.collection(COLLECTION_MISSING_CARDS)
         val task = collection.add(entity)
         return RxFirebase.from(task).map { Unit }
     }

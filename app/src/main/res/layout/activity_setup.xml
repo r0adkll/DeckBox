@@ -9,52 +9,62 @@
     <com.r0adkll.deckbuilder.arch.ui.widgets.MarqueeCardContainer
         android:id="@+id/marquee_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/marquee_card_height">
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        app:cardWidth="@dimen/marquee_card_width">
 
 
     </com.r0adkll.deckbuilder.arch.ui.widgets.MarqueeCardContainer>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textSize="@dimen/display_1"
-        android:textColor="@color/white"
-        android:fontFamily="sans-serif-medium"
-        />
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:paddingStart="34dp"
-        android:paddingEnd="34dp"
-        android:text="@string/app_description"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textSize="@dimen/setup_title_textsize"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-medium"
+            />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/action_signin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_gravity="center"
-        app:buttonSize="wide"
-        />
-    
-    <TextView
-        android:id="@+id/action_continue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:padding="@dimen/padding_small"
-        android:text="@string/action_continue"
-        android:textColor="@color/white87"
-        android:background="?attr/selectableItemBackground"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:paddingStart="34dp"
+            android:paddingEnd="34dp"
+            android:text="@string/app_description"
+            android:textSize="@dimen/setup_body_textsize"
+            android:textColor="@color/white"
+            />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/action_signin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="center"
+            app:buttonSize="wide"
+            />
+
+        <TextView
+            android:id="@+id/action_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:padding="@dimen/padding_small"
+            android:text="@string/action_continue"
+            android:textColor="@color/white87"
+            android:background="?attr/selectableItemBackground"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>

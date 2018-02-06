@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.repository
 
 
+import com.r0adkll.deckbuilder.arch.data.Remote
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
 import com.r0adkll.deckbuilder.arch.data.mappings.CardMapper
 import com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper
@@ -21,6 +22,7 @@ import javax.inject.Inject
 
 class DefaultCardRepository @Inject constructor(
         val api: Pokemon,
+        val remote: Remote,
         val dataSource: CardDataSource,
         val schedulers: Schedulers
 ) : CardRepository {
@@ -65,12 +67,9 @@ class DefaultCardRepository @Inject constructor(
 
         if (query.isNotBlank()) {
 
-            // Special case to account for 'N' cards
-            val adjustedQuery = if (query.trim().equals("N", true)) {
-                "\"${query.trim()}\""
-            } else {
-                query
-            }
+            // Apply the search proxies, if exists, to the query
+            val proxies = remote.searchProxies
+            val adjustedQuery = proxies?.apply(query) ?: query
 
             // Set search field accordingly
             when(filter?.field ?: SearchField.NAME) {

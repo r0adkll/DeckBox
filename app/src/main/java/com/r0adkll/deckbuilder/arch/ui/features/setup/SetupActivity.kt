@@ -32,17 +32,20 @@ import java.util.*
 import javax.inject.Inject
 
 
-class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener {
-
-    @Inject lateinit var preferences: AppPreferences
+class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private var googleClient: GoogleApiClient? = null
+
+    @Inject lateinit var preferences: AppPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setup)
         setupClient()
+
+        action_signin.isEnabled = false
         action_signin.setOnClickListener {
             signIn()
         }
@@ -94,6 +97,18 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         Timber.e("onConnectionFailed(${p0.errorCode} :: ${p0.errorMessage}")
+        p0.startResolutionForResult(this, RC_PLAY_SERVICES_ERROR)
+    }
+
+
+    override fun onConnected(p0: Bundle?) {
+        Timber.i("onConnected($p0)")
+        action_signin.isEnabled = true
+    }
+
+
+    override fun onConnectionSuspended(p0: Int) {
+        Timber.i("onConnectionSuspended($p0)")
     }
 
 
@@ -108,6 +123,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
             googleClient = GoogleApiClient.Builder(this)
                     .enableAutoManage(this, this)
+                    .addConnectionCallbacks(this)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build()
         } else {
@@ -117,8 +133,13 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     private fun signIn() {
-        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleClient)
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        if (googleClient?.isConnected == true) {
+            val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleClient)
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        } else if (googleClient != null && googleClient?.isConnecting != true) {
+            // We should probably attempt to re-setup the client here
+            setupClient()
+        }
     }
 
 
@@ -158,6 +179,10 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
                 firebaseAuth.signInWithCredential(credential)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
+                                // Auto-grab the user's name from their account
+                                it.result?.user?.displayName?.let {
+                                    preferences.playerName.set(it)
+                                }
                                 Analytics.userId(it.result.user.uid)
                                 Analytics.event(Event.Login.Google)
                                 startActivity(HomeActivity.createIntent(this@SetupActivity))

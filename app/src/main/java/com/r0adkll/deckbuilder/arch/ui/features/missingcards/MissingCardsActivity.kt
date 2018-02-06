@@ -39,6 +39,7 @@ class MissingCardsActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_missing_cards)
+        root.requestFocus()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }

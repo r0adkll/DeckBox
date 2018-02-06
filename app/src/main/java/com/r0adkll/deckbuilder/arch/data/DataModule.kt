@@ -18,6 +18,7 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRe
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
+import com.r0adkll.deckbuilder.arch.data.features.tournament.exporter.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
@@ -26,6 +27,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckReposit
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.Schedulers
@@ -73,10 +75,6 @@ class DataModule {
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
 
-    @Provides @AppScope
-    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
-
-
     /*
      * Caching
      */
@@ -115,6 +113,10 @@ class DataModule {
 
     @Provides @AppScope
     fun providePtcgoConverter(converter: DefaultPTCGOConverter): PTCGOConverter = converter
+
+
+    @Provides @AppScope
+    fun provideTournamentExporter(exporter: DefaultTournamentExporter): TournamentExporter = exporter
 
     /*
      * Deck Validation Rules

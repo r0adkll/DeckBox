@@ -23,7 +23,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val cardWidth: Int = dipToPx(CARD_WIDTH)
+    private var cardWidth: Int = dipToPx(CARD_WIDTH)
     private val cardSpacing: Int = dipToPx(CARD_SPACING)
 
     private val cardPool: Pools.Pool<PokemonCardView> = Pools.SimplePool(NUMBER_CARDS)
@@ -37,6 +37,20 @@ class MarqueeCardContainer @JvmOverloads constructor(
         (0..NUMBER_CARDS).forEach {
             addNewCard()
         }
+
+        val a = context.obtainStyledAttributes(attrs, R.styleable.MarqueeCardContainer, defStyleAttr, 0)
+        a?.let {
+            cardWidth = it.getDimensionPixelSize(R.styleable.MarqueeCardContainer_cardWidth, dipToPx(CARD_WIDTH))
+            a.recycle()
+        }
+    }
+
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        val cardHeight = measuredHeight - (2 * dipToPx(64f))
+        cardWidth = (cardHeight / PokemonCardView.RATIO).toInt()
     }
 
 

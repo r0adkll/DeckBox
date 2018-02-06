@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 
+import android.annotation.SuppressLint
 import android.text.TextUtils
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
@@ -56,11 +57,12 @@ class SearchPresenter @Inject constructor(
                             Change.FilterChanged(filter) as Change,
                             Change.IsLoading as Change
                     ))
-                    .onErrorReturn(handleUnknownError())
+                    .onErrorReturn(handleUnknownError)
         }
     }
 
 
+    @SuppressLint("CheckResult")
     private fun getSearchCardsObservable(text: String): Observable<Change> {
         val filter = ui.state.filter
         return if (TextUtils.isEmpty(text) && filter.isEmptyWithoutField) {
@@ -73,15 +75,16 @@ class SearchPresenter @Inject constructor(
                             Change.QuerySubmitted(text) as Change,
                             Change.IsLoading as Change
                     ))
-                    .onErrorReturn(handleUnknownError())
+                    .onErrorReturn(handleUnknownError)
         }
     }
 
 
     companion object {
 
-        private fun handleUnknownError(): (Throwable) -> Change = { t ->
+        private val handleUnknownError: (Throwable) -> Change = { t ->
             Timber.e(t, "Error occurred during my search")
+            t.printStackTrace()
             Change.Error(t.localizedMessage ?: t.message ?: "Unknown error has occured")
         }
     }
