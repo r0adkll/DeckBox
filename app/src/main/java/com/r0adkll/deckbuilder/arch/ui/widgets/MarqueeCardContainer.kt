@@ -119,7 +119,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
 
         val SHUFFLED_CARDS by lazy {
             val cards = mutableListOf(*CardUtils.CARDS)
-            Collections.shuffle(cards)
+            cards.shuffle()
             cards
         }
     }

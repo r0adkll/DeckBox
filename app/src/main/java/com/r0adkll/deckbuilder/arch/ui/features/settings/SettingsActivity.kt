@@ -22,6 +22,7 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
@@ -109,6 +110,10 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_account_link" -> {
                     signIn()
+                    true
+                }
+                "pref_cache_cards" -> {
+                    CacheService.start(activity!!)
                     true
                 }
                 "pref_account_signout" -> {
