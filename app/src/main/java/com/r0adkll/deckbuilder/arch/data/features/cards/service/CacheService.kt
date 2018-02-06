@@ -28,8 +28,9 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         var page = 1
         var count = 0
 
-        var cardModels = getPage()
-        while (cardModels.size == PAGE_SIZE) {
+
+        do {
+            val cardModels = getPage(page)
 
             // Map to DB entities
             val (cards, attacks) = EntityMapper.to(cardModels)
@@ -39,11 +40,10 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             count += cards.size
 
             Timber.i("Page of cards inserted into database: ${cards.size} cards")
-
             // Get next page
             page++
-            cardModels = getPage(page)
-        }
+
+        } while (cardModels.size == PAGE_SIZE)
 
         Timber.i("$count cards over $page pages inserted into database")
     }
