@@ -28,6 +28,7 @@ class AppPreferences @Inject constructor(
         const val KEY_PLAYER_DOB = "pref_player_dob"
 
         const val KEY_LAST_VERSION = "pref_last_version"
+        const val KEY_DEVICE_ID = "pref_local_offline_device_id"
         const val KEY_SET_ULTRAPRISM = "pref_set_ultraprism_new"
     }
 
@@ -35,6 +36,7 @@ class AppPreferences @Inject constructor(
     var onboarding by BooleanPreference(KEY_ONBOARDING, false)
     var quickStart by BooleanPreference(KEY_QUICKSTART, true)
     var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
+    var deviceId by StringPreference(KEY_DEVICE_ID)
     val previewUltraPrism by ReactiveBooleanPreference(KEY_SET_ULTRAPRISM, true)
 
     val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)

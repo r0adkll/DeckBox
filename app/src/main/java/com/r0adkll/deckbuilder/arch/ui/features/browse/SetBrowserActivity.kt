@@ -73,7 +73,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         disposables += cardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it, useLowRes = true)
+                    CardDetailActivity.show(this, it)
                 }
 
         adapter = PokemonBuilderRecyclerAdapter(this, EditCardIntentions(), cardClicks)

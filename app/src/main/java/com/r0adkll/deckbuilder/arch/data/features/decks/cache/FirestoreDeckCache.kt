@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.decks.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.data.features.decks.model.DeckEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -18,6 +19,7 @@ import javax.inject.Inject
 
 @SuppressLint("CheckResult")
 class FirestoreDeckCache @Inject constructor(
+        val preferences: AppPreferences,
         val cardRepository: CardRepository
 ) : DeckCache {
 
@@ -110,10 +112,14 @@ class FirestoreDeckCache @Inject constructor(
 
     private fun getUserDeckCollection(): CollectionReference? {
         val user = FirebaseAuth.getInstance().currentUser
+        val db = FirebaseFirestore.getInstance()
         return user?.let { u ->
-            val db = FirebaseFirestore.getInstance()
             db.collection(COLLECTION_USERS)
                     .document(u.uid)
+                    .collection(COLLECTION_DECKS)
+        } ?: preferences.deviceId?.let { dId ->
+            db.collection(COLLECTION_OFFLINE_USERS)
+                    .document(dId)
                     .collection(COLLECTION_DECKS)
         }
     }
@@ -122,6 +128,7 @@ class FirestoreDeckCache @Inject constructor(
     companion object {
         @JvmField val DUPLICATE_REGEX = "\\(\\d+\\)"
         @JvmField val COLLECTION_USERS = "decks" // Do to an error on my side, this is now stuck as 'decks', but it is users
+        @JvmField val COLLECTION_OFFLINE_USERS = "offline_users" // Do to an error on my side, this is now stuck as 'decks', but it is users
         @JvmField val COLLECTION_DECKS = "decks"
     }
 }
