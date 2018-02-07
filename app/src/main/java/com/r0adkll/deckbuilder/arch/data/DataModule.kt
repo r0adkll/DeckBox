@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
+import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
@@ -21,6 +22,7 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.room.CardDatabase
+import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
@@ -75,6 +77,11 @@ class DataModule {
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
 
+    /*
+     * Caching
+     */
+
+
     @Provides @AppScope
     fun provideCardDatabase(context: Context): CardDatabase {
         return Room.databaseBuilder(context, CardDatabase::class.java, BuildConfig.DATABASE_NAME)
@@ -82,12 +89,12 @@ class DataModule {
     }
 
 
-    /*
-     * Caching
-     */
-
     @Provides @AppScope
     fun provideDeckCache(cache: FirestoreDeckCache): DeckCache = cache
+
+
+    @Provides @AppScope
+    fun provideCacheManager(manager: DefaultCacheManager): CacheManager = manager
 
 
     /*

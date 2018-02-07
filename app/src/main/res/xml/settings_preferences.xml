@@ -26,8 +26,8 @@
 
         <Preference
             android:key="pref_cache_cards"
-            android:title="Download All Card Data"
-            android:summary="Cache all the card data to make available for offline use"
+            android:title="@string/pref_offline_cache_download_title"
+            android:summary="@string/pref_offline_cache_download_summary"
             />
 
     </PreferenceCategory>

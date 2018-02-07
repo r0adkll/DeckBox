@@ -1,9 +1,14 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.service
 
+import android.annotation.TargetApi
 import android.app.IntentService
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import com.ftinc.kit.kotlin.extensions.color
@@ -12,6 +17,8 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.room.CardDatabase
 import com.r0adkll.deckbuilder.arch.data.room.mapping.EntityMapper
+import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.util.extensions.retryWithBackoff
 import io.pokemontcg.Pokemon
@@ -25,6 +32,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     @Inject lateinit var api: Pokemon
     @Inject lateinit var db: CardDatabase
     @Inject lateinit var preferences: AppPreferences
+    @Inject lateinit var cacheManager: CacheManager
 
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
 
@@ -36,11 +44,30 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
 
     override fun onHandleIntent(intent: Intent?) {
+        Timber.i("onHandleIntent(${preferences.offlineEnabled})")
+        if (preferences.offlineEnabled) {
+            deleteCardData()
+        } else {
+            cacheCardData()
+        }
+    }
+
+
+    private fun deleteCardData() {
+        cacheManager.updateCacheStatus(CacheStatus.Deleting)
+        db.cards().deleteAll()
+        preferences.offlineEnabled = false
+        cacheManager.updateCacheStatus(CacheStatus.Empty)
+    }
+
+
+    private fun cacheCardData() {
         try {
             var page = 1
             var count = 0
 
             showNotification(0, false, false)
+            cacheManager.updateCacheStatus(CacheStatus.Downloading(0))
 
             do {
                 val cardModels = getPage(page)
@@ -57,17 +84,20 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                 page++
 
                 showNotification(count, true, false)
+                cacheManager.updateCacheStatus(CacheStatus.Downloading(count))
 
             } while (cardModels.size == PAGE_SIZE)
 
             Timber.i("$count cards over $page pages inserted into database")
 
             preferences.offlineEnabled = true
+            cacheManager.updateCacheStatus(CacheStatus.Cached)
             showNotification(count, false, true)
 
         } catch(e: Exception) {
             Timber.e(e, "Something went terribly wrong when caching card data")
             showNotification(-1, false, true)
+            cacheManager.updateCacheStatus(CacheStatus.Empty)
         }
     }
 
@@ -84,7 +114,24 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
+    @TargetApi(Build.VERSION_CODES.O)
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.notification_channel_name)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance)
+            channel.description = getString(R.string.notification_channel_description)
+            channel.enableLights(true)
+            channel.lightColor = Color.BLUE
+
+            val notifMan = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notifMan.createNotificationChannel(channel)
+        }
+    }
+
+
     private fun showNotification(count: Int, isDownloading: Boolean, isFinished: Boolean) {
+        createChannel()
 
         val title = when {
             count >= 0 && !isDownloading && !isFinished -> getString(R.string.notification_caching_title_start)
