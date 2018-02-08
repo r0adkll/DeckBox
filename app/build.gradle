@@ -141,8 +141,10 @@ dependencies {
     implementation "com.evernote:android-state:$state_version"
     kapt "com.evernote:android-state-processor:$state_version"
 
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    kapt "android.arch.persistence.room:compiler:$room_version"
+    implementation "io.requery:requery:$requery_version"
+    implementation "io.requery:requery-android:$requery_version"
+    implementation "io.requery:requery-kotlin:$requery_version"
+    kapt "io.requery:requery-processor:$requery_version"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"

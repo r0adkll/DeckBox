@@ -1,12 +1,12 @@
 package com.r0adkll.deckbuilder.arch.data
 
 
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
+import com.r0adkll.deckbuilder.arch.data.database.entities.Models
 import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
@@ -21,7 +21,6 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
-import com.r0adkll.deckbuilder.arch.data.room.CardDatabase
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
@@ -38,6 +37,11 @@ import dagger.multibindings.ElementsIntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.requery.Persistable
+import io.requery.android.sqlite.DatabaseSource
+import io.requery.reactivex.KotlinReactiveEntityStore
+import io.requery.sql.KotlinConfiguration
+import io.requery.sql.KotlinEntityDataStore
 import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 
@@ -83,9 +87,10 @@ class DataModule {
 
 
     @Provides @AppScope
-    fun provideCardDatabase(context: Context): CardDatabase {
-        return Room.databaseBuilder(context, CardDatabase::class.java, BuildConfig.DATABASE_NAME)
-                .build()
+    fun provideDatabase(context: Context): KotlinReactiveEntityStore<Persistable> {
+        val source = DatabaseSource(context, Models.DEFAULT, 1)
+        val entityStore = KotlinEntityDataStore<Persistable>(source.configuration)
+        return KotlinReactiveEntityStore(entityStore)
     }
 
 
