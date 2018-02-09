@@ -15,7 +15,7 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.database.mapping.EntityMapper
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
@@ -31,6 +31,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     @Inject lateinit var api: Pokemon
     @Inject lateinit var preferences: AppPreferences
     @Inject lateinit var cacheManager: CacheManager
+    @Inject lateinit var cardCache: CardCache
 
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
 
@@ -53,7 +54,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
     private fun deleteCardData() {
         cacheManager.updateCacheStatus(CacheStatus.Deleting)
-        //db.cards().deleteAll()
+        cardCache.clear()
         preferences.offlineEnabled = false
         cacheManager.updateCacheStatus(CacheStatus.Empty)
     }
@@ -71,13 +72,10 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                 val cardModels = getPage(page)
 
                 // Map to DB entities
-                val (cards, attacks) = EntityMapper.to(cardModels)
+                cardCache.putCards(cardModels)
+                count += cardModels.size
 
-                // Store into database
-                // db.cards().insertCards(cards, attacks)
-                count += cards.size
-
-                Timber.i("Page of cards inserted into database: ${cards.size} cards")
+                Timber.i("Page of cards inserted into database: ${cardModels.size} cards")
                 // Get next page
                 page++
 

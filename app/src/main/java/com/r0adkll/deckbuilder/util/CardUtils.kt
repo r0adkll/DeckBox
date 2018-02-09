@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.util
 import android.util.ArrayMap
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import io.pokemontcg.model.Type
 
 
 object CardUtils {
@@ -651,5 +652,50 @@ object CardUtils {
                     .sortedBy { card -> card.card.nationalPokedexNumber }
         }
     }
+}
+
+
+/**
+    [C] olorless (Normal, Flying, older cards also Dragon)
+    [F] ighting (Fighting, Rock, Ground)
+    [L] ightning (Electric)
+    [G] rass (Grass, Bug, older cards also Poison)
+    [P] sychic (Psychic, Ghost, Poison)
+    [M] etal (Steel)
+    [W] ater (Water, Ice)
+    [D] arkness (Dark)
+    Fi[R] e (Fire)
+    Drago[N] (Dragon)
+    Fair[Y] (Fairy)
+ */
+fun Type.compact(): String = when(this) {
+    Type.COLORLESS -> "C"
+    Type.DARKNESS -> "D"
+    Type.DRAGON -> "N"
+    Type.FAIRY -> "Y"
+    Type.FIGHTING -> "F"
+    Type.FIRE -> "R"
+    Type.GRASS -> "G"
+    Type.LIGHTNING -> "L"
+    Type.METAL -> "M"
+    Type.PSYCHIC -> "P"
+    Type.WATER -> "W"
+    Type.UNKNOWN -> ""
+}
+
+
+fun String.type(): Type = when(this.toUpperCase()) {
+    "C" -> Type.COLORLESS
+    "D" -> Type.DARKNESS
+    "N" -> Type.DRAGON
+    "Y" -> Type.FAIRY
+    "F" -> Type.FIGHTING
+    "R" -> Type.FIRE
+    "G" -> Type.GRASS
+    "L" -> Type.LIGHTNING
+    "M" -> Type.METAL
+    "P" -> Type.PSYCHIC
+    "W" -> Type.WATER
+    else -> Type.UNKNOWN
 }
 

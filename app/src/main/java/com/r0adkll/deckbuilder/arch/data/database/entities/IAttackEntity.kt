@@ -16,7 +16,9 @@ interface IAttackEntity : Persistable {
     var card: ICardEntity
 
     var cost: String?
+    var convertedEnergyCost: Int
     var name: String
     var text: String?
     var damage: String?
+    var convertedDamageAmount: Int
 }

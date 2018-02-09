@@ -8,6 +8,8 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.arch.data.database.entities.Models
 import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
@@ -81,17 +83,20 @@ class DataModule {
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
 
-    /*
-     * Caching
-     */
-
-
     @Provides @AppScope
     fun provideDatabase(context: Context): KotlinReactiveEntityStore<Persistable> {
         val source = DatabaseSource(context, Models.DEFAULT, 1)
         val entityStore = KotlinEntityDataStore<Persistable>(source.configuration)
         return KotlinReactiveEntityStore(entityStore)
     }
+
+
+    /*
+     * Caching
+     */
+
+    @Provides @AppScope
+    fun provideCardCache(cache: RequeryCardCache): CardCache = cache
 
 
     @Provides @AppScope

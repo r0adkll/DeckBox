@@ -34,7 +34,7 @@ interface ICardEntity : Persistable {
      * Type Serialization
      * "CC" -> ["Colorless", "Colorless"]
      */
-    var retreatCost: String?
+    var retreatCost: Int
     var number: String
     var artist: String
     var rarity: String?
