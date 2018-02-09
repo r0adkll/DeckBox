@@ -39,7 +39,7 @@ interface ICardEntity : Persistable {
     var artist: String
     var rarity: String?
     var series: String
-    var set: String
+    var expansionSet: String
     var setCode: String
     var text: String?
 

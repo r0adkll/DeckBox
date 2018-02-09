@@ -13,6 +13,8 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.CombinedSearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.SearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
@@ -85,7 +87,7 @@ class DataModule {
 
     @Provides @AppScope
     fun provideDatabase(context: Context): KotlinReactiveEntityStore<Persistable> {
-        val source = DatabaseSource(context, Models.DEFAULT, 1)
+        val source = DatabaseSource(context, Models.DEFAULT, BuildConfig.DATABASE_NAME, 1)
         val entityStore = KotlinEntityDataStore<Persistable>(source.configuration)
         return KotlinReactiveEntityStore(entityStore)
     }
@@ -113,6 +115,10 @@ class DataModule {
 
     @Provides @AppScope
     fun provideCardDataSource(dataSource: CachingCardDataSource): CardDataSource = dataSource
+
+
+    @Provides @AppScope
+    fun provideSearchDataSource(dataSource: CombinedSearchDataSource): SearchDataSource = dataSource
 
 
     /*

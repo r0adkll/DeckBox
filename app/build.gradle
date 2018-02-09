@@ -178,7 +178,7 @@ dependencies {
     debugImplementation "com.facebook.stetho:stetho:$stetho_version"
 
     implementation "com.google.firebase:firebase-core:$play_version"
-    releaseImplementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    releaseImplementation('com.crashlytics.sdk.android:crashlytics:2.9.0@aar') {
         transitive = true
     }
 }

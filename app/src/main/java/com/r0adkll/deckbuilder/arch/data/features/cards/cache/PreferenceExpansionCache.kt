@@ -24,7 +24,6 @@ class PreferenceExpansionCache(
         }
 
         return preferences.expansions.asObservable()
-                .map { it.toList() }
                 .take(1)
     }
 

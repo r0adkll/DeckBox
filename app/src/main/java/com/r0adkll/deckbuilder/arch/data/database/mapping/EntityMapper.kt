@@ -33,14 +33,14 @@ object EntityMapper {
             entity.artist = model.artist
             entity.rarity = model.rarity
             entity.series = model.series
-            entity.set = model.set
+            entity.expansionSet = model.set
             entity.setCode = model.setCode
             entity.text = model.text?.joinToString("\n")
             entity.abilityName = model.ability?.name
             entity.abilityText = model.ability?.text
             entity.weaknesses = model.weaknesses?.compactEffects()
             entity.resistances = model.resistances?.compactEffects()
-            entity.attacks = model.attacks?.map { to(entity, it) }
+            entity.attacks = model.attacks?.map { to(entity, it) } ?: emptyList()
 
             entity
         }
