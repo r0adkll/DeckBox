@@ -14,7 +14,6 @@ class PreferenceExpansionCache(
 
     override fun putExpansions(expansions: List<Expansion>) {
         preferences.expansions.set(ArrayList(expansions))
-        preferences.expansionsTimestamp = System.currentTimeMillis()
     }
 
 
@@ -25,7 +24,6 @@ class PreferenceExpansionCache(
         }
 
         return preferences.expansions.asObservable()
-                .map { it.toList() }
                 .take(1)
     }
 

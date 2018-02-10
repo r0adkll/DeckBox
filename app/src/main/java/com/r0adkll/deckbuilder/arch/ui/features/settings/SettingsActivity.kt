@@ -22,11 +22,17 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
+import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -53,11 +59,19 @@ class SettingsActivity : BaseActivity() {
         private var googleClient: GoogleApiClient? = null
 
         @Inject lateinit var preferences: AppPreferences
+        @Inject lateinit var cacheManager: CacheManager
+        private val disposables = CompositeDisposable()
 
 
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
             setupClient()
+        }
+
+
+        override fun onDestroy() {
+            super.onDestroy()
+            disposables.clear()
         }
 
 
@@ -111,6 +125,10 @@ class SettingsActivity : BaseActivity() {
                     signIn()
                     true
                 }
+                "pref_cache_cards" -> {
+                    CacheService.start(activity!!)
+                    true
+                }
                 "pref_account_signout" -> {
                     preferences.deviceId = null
                     FirebaseAuth.getInstance().signOut()
@@ -160,6 +178,27 @@ class SettingsActivity : BaseActivity() {
 
             val versionPref = findPreference("pref_about_version")
             versionPref.summary = BuildConfig.VERSION_NAME
+
+
+            disposables += cacheManager.observeCacheStatus()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { status ->
+                        Timber.i("Cache Status: $status")
+                        val cachePref = findPreference("pref_cache_cards")
+                        cachePref.isEnabled = status !is CacheStatus.Downloading && status != CacheStatus.Deleting
+                        cachePref.setTitle(when(status) {
+                            CacheStatus.Empty -> R.string.pref_offline_cache_download_title
+                            CacheStatus.Cached -> R.string.pref_offline_cache_delete_title
+                            is CacheStatus.Downloading -> R.string.pref_offline_cache_downloading_title
+                            CacheStatus.Deleting -> R.string.pref_offline_cache_deleting_title
+                        })
+                        cachePref.summary = when(status) {
+                            CacheStatus.Empty -> getString(R.string.pref_offline_cache_download_summary)
+                            CacheStatus.Cached -> getString(R.string.pref_offline_cache_delete_summary)
+                            is CacheStatus.Downloading -> getString(R.string.pref_offline_cache_downloading_summary, status.count)
+                            CacheStatus.Deleting -> getString(R.string.pref_offline_cache_deleting_summary)
+                        }
+                    }
         }
 
 

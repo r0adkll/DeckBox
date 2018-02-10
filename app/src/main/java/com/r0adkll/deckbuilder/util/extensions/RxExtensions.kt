@@ -5,7 +5,9 @@ import com.r0adkll.deckbuilder.BuildConfig
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 
 operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
@@ -85,5 +87,15 @@ fun <T : Any> Observable<T>.logState(): Observable<T> {
         if (BuildConfig.DEBUG) {
             Timber.v("    --- $state")
         }
+    }
+}
+
+
+fun <T: Any> Observable<T>.retryWithBackoff(numRetries: Int = 3, delayInSeconds: Int = 5): Observable<T> {
+    return this.retryWhen { t ->
+        t.zipWith(Observable.range(1, numRetries), BiFunction<Throwable, Int, Int> { _, i -> i} )
+                .flatMap { retryCount ->
+                    Observable.timer(Math.pow(delayInSeconds.toDouble(), retryCount.toDouble()).toLong(), TimeUnit.SECONDS)
+                }
     }
 }

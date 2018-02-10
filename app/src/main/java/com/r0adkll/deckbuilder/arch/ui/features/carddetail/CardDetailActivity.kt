@@ -217,10 +217,10 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
 
-    override fun setEditResults(cards: List<PokemonCard>?) {
-        if (cards != null) {
+    override fun setEditResults(deck: List<PokemonCard>?) {
+        if (deck != null) {
             val data = Intent()
-            data.putParcelableArrayListExtra(EXTRA_CARDS, ArrayList(cards))
+            data.putParcelableArrayListExtra(EXTRA_CARDS, ArrayList(deck))
             setResult(RESULT_OK, data)
         } else {
             setResult(Activity.RESULT_CANCELED)

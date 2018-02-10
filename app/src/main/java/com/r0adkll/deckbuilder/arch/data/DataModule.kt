@@ -5,30 +5,34 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.r0adkll.deckbuilder.BuildConfig
+import com.r0adkll.deckbuilder.arch.data.database.entities.Models
+import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.CombinedSearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.SearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
 import com.r0adkll.deckbuilder.arch.data.features.tournament.exporter.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
+import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
+import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
-import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
@@ -37,7 +41,13 @@ import dagger.multibindings.ElementsIntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
-import okhttp3.logging.HttpLoggingInterceptor.Level.*
+import io.requery.Persistable
+import io.requery.android.sqlite.DatabaseSource
+import io.requery.reactivex.KotlinReactiveEntityStore
+import io.requery.sql.KotlinConfiguration
+import io.requery.sql.KotlinEntityDataStore
+import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
+import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 
 
 @Module
@@ -75,12 +85,28 @@ class DataModule {
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
 
+    @Provides @AppScope
+    fun provideDatabase(context: Context): KotlinReactiveEntityStore<Persistable> {
+        val source = DatabaseSource(context, Models.DEFAULT, BuildConfig.DATABASE_NAME, 1)
+        val entityStore = KotlinEntityDataStore<Persistable>(source.configuration)
+        return KotlinReactiveEntityStore(entityStore)
+    }
+
+
     /*
      * Caching
      */
 
     @Provides @AppScope
+    fun provideCardCache(cache: RequeryCardCache): CardCache = cache
+
+
+    @Provides @AppScope
     fun provideDeckCache(cache: FirestoreDeckCache): DeckCache = cache
+
+
+    @Provides @AppScope
+    fun provideCacheManager(manager: DefaultCacheManager): CacheManager = manager
 
 
     /*
@@ -89,6 +115,10 @@ class DataModule {
 
     @Provides @AppScope
     fun provideCardDataSource(dataSource: CachingCardDataSource): CardDataSource = dataSource
+
+
+    @Provides @AppScope
+    fun provideSearchDataSource(dataSource: CombinedSearchDataSource): SearchDataSource = dataSource
 
 
     /*

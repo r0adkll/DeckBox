@@ -95,8 +95,8 @@ class EvolutionLineRecyclerAdapter(
     override fun getEvolutionState(position: Int): EvolutionLineAdapter.State {
         return if (evolution != null) {
             var currentIndex = 0
-            var nodeIndex = -1
-            var cardIndex = -1
+            var nodeIndex: Int
+            var cardIndex: Int
 
             evolution!!.nodes.forEachIndexed { index, node ->
                 val i = position - currentIndex
