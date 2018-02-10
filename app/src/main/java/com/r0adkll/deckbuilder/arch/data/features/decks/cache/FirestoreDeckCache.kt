@@ -23,6 +23,18 @@ class FirestoreDeckCache @Inject constructor(
         val cardRepository: CardRepository
 ) : DeckCache {
 
+    override fun getDeck(id: String): Observable<Deck> {
+        return cardRepository.getExpansions()
+                .flatMap { expansions ->
+                    getUserDeckCollection()?.let { collection ->
+                        val task = collection.document(id).get()
+                        RxFirebase.from(task)
+                                .map { it.toObject(DeckEntity::class.java) }
+                                .map { EntityMapper.to(expansions, it, id) }
+                    } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
+                }
+    }
+
 
     override fun getDecks(): Observable<List<Deck>> {
         return cardRepository.getExpansions()

@@ -24,6 +24,17 @@ class DeckBuilderPresenter @Inject constructor(
 
     override fun start() {
 
+        val loadDeck = intentions.loadDeck()
+                .flatMap {
+                    repository.getDeck(it)
+                            .flatMap {
+                                validator.validate(it.cards)
+                                        .map { Change.Validated(it) as Change }
+                                        .startWith(Change.DeckLoaded(it) as Change)
+                            }
+                }
+
+
         val initialValidation = validator.validate(ui.state.allCards)
                 .map { Change.Validated(it) as Change }
 
@@ -64,6 +75,7 @@ class DeckBuilderPresenter @Inject constructor(
                 .flatMap { saveDeck() }
 
         val merged = initialValidation
+                .mergeWith(loadDeck)
                 .mergeWith(addCard)
                 .mergeWith(removeCard)
                 .mergeWith(editCards)

@@ -15,6 +15,18 @@ class DefaultDeckRepository @Inject constructor(
         val schedulers: Schedulers
 ) : DeckRepository {
 
+    override fun getDeck(id: String): Observable<Deck> {
+        return cache.getDeck(id)
+                .subscribeOn(schedulers.disk)
+    }
+
+
+    override fun getDecks(): Observable<List<Deck>> {
+        return cache.getDecks()
+                .subscribeOn(schedulers.disk)
+    }
+
+
     override fun createDeck(cards: List<PokemonCard>, name: String, description: String?): Observable<Deck> {
         return cache.putDeck(null, cards, name, description)
                 .subscribeOn(schedulers.disk)
@@ -23,12 +35,6 @@ class DefaultDeckRepository @Inject constructor(
 
     override fun updateDeck(id: String, cards: List<PokemonCard>, name: String, description: String?): Observable<Deck> {
         return cache.putDeck(id, cards, name, description)
-                .subscribeOn(schedulers.disk)
-    }
-
-
-    override fun getDecks(): Observable<List<Deck>> {
-        return cache.getDecks()
                 .subscribeOn(schedulers.disk)
     }
 

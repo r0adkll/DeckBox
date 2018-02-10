@@ -41,6 +41,8 @@ import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
+import com.r0adkll.deckbuilder.util.bindOptionalString
+import com.r0adkll.deckbuilder.util.bindString
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -60,7 +62,7 @@ import javax.inject.Inject
 class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, DeckBuilderUi,
         DeckBuilderUi.Intentions, DeckBuilderUi.Actions {
 
-    private val deck: Deck? by bindOptionalParcelable(EXTRA_DECK)
+    private val deckId: String? by bindOptionalString(EXTRA_DECK)
     private val imports: ArrayList<PokemonCard>? by bindOptionalParcelableList(EXTRA_IMPORT)
     private val imm: InputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
@@ -68,7 +70,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     @Inject lateinit var renderer: DeckBuilderRenderer
     @Inject lateinit var presenter: DeckBuilderPresenter
-    @Inject lateinit var validator: DeckValidator
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val editCardChanges: Relay<List<PokemonCard>> = PublishRelay.create()
@@ -121,7 +122,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         ruleAdapter = RuleRecyclerAdapter(this)
         ruleRecycler.layoutManager = LinearLayoutManager(this)
         ruleRecycler.adapter = ruleAdapter
-
 
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
         pager.adapter = adapter
@@ -217,17 +217,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
             imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
             slidingLayout.panelState = COLLAPSED
-        }
-
-        if (state.deck == null && deck != null) {
-            state = state.copy(
-                    deck = deck,
-                    pokemonCards = deck!!.cards.filter { it.supertype == SuperType.POKEMON },
-                    trainerCards = deck!!.cards.filter { it.supertype == SuperType.TRAINER },
-                    energyCards = deck!!.cards.filter { it.supertype == SuperType.ENERGY },
-                    name = deck?.name,
-                    description = deck?.description
-            )
         }
 
         if (imports != null) {
@@ -364,6 +353,11 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     }
 
 
+    override fun loadDeck(): Observable<String> {
+        return deckId?.let { Observable.just(it) } ?: Observable.empty<String>()
+    }
+
+
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
     }
@@ -433,7 +427,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun showDeckName(name: String) {
         if(name.isBlank()) {
-            appbarTitle?.setText(if (deck == null) R.string.deckbuilder_default_title else R.string.deckbuilder_edit_title)
+            appbarTitle?.setText(if (deckId == null) R.string.deckbuilder_default_title else R.string.deckbuilder_edit_title)
         }
         else {
             appbarTitle?.text = name
@@ -517,7 +511,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
         fun createIntent(context: Context, deck: Deck): Intent {
             val intent = createIntent(context)
-            intent.putExtra(EXTRA_DECK, deck)
+            intent.putExtra(EXTRA_DECK, deck.id)
             return intent
         }
 

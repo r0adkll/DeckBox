@@ -6,6 +6,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
+import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.SuperType.*
 import io.reactivex.Observable
 import paperparcel.PaperParcel
@@ -19,6 +20,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     interface Intentions {
 
+        fun loadDeck(): Observable<String>
         fun saveDeck(): Observable<Unit>
         fun addCards(): Observable<List<PokemonCard>>
         fun removeCard(): Observable<PokemonCard>
@@ -88,6 +90,14 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
         fun reduce(change: Change): State = when(change) {
             Change.Saving -> this.copy(isSaving = true, error = null)
+            is Change.DeckLoaded -> this.copy(
+                    deck = change.deck,
+                    pokemonCards = change.deck.cards.filter { it.supertype == SuperType.POKEMON },
+                    trainerCards = change.deck.cards.filter { it.supertype == SuperType.TRAINER },
+                    energyCards = change.deck.cards.filter { it.supertype == SuperType.ENERGY },
+                    name = change.deck.name,
+                    description = change.deck.description
+            )
             is Change.Editing -> this.copy(isEditing = change.isEditing)
             is Change.Error -> this.copy(error = change.description)
             is Change.AddCards -> {
@@ -121,6 +131,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
         sealed class Change(val logText: String) {
             object Saving : Change("user -> is saving deck")
+            class DeckLoaded(val deck: Deck) : Change("user -> deck loaded ${deck.name}")
             class Editing(val isEditing: Boolean) : Change("user -> is editing: $isEditing")
             class Error(val description: String) : Change("error -> $description")
             class AddCards(val cards: List<PokemonCard>) : Change("user -> added ${cards.size} cards")
