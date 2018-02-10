@@ -50,6 +50,7 @@ android {
 
         buildConfigField "String", "GIT_SHA", "\"$GIT_SHA\""
         buildConfigField "String", "GIT_TAG", "\"$GIT_TAG\""
+        buildConfigField "String", "DATABASE_NAME", "\"cards.db\""
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         playAccountConfig = playAccountConfigs.defaultAccountConfig
@@ -140,6 +141,11 @@ dependencies {
     implementation "com.evernote:android-state:$state_version"
     kapt "com.evernote:android-state-processor:$state_version"
 
+    implementation "io.requery:requery:$requery_version"
+    implementation "io.requery:requery-android:$requery_version"
+    implementation "io.requery:requery-kotlin:$requery_version"
+    kapt "io.requery:requery-processor:$requery_version"
+
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:$rxbinding_version"
@@ -147,6 +153,12 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rxbinding_version"
     implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
     implementation "com.f2prateek.rx.preferences2:rx-preferences:$rxpref_version"
+
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     implementation("com.52inc:52Kit-core:$ftkit_version") {
         exclude group: 'io.reactivex'
@@ -157,7 +169,6 @@ dependencies {
     implementation("com.52inc:52Kit-kotlin:$ftkit_version") {
         exclude group: 'io.reactivex'
     }
-    implementation "com.52inc:canvasscript:$canvas_version"
 
     implementation "com.jakewharton.timber:timber:$timber_version"
     implementation "com.roughike:bottom-bar:$bottombar_version"
@@ -167,7 +178,7 @@ dependencies {
     debugImplementation "com.facebook.stetho:stetho:$stetho_version"
 
     implementation "com.google.firebase:firebase-core:$play_version"
-    releaseImplementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    releaseImplementation('com.crashlytics.sdk.android:crashlytics:2.9.0@aar') {
         transitive = true
     }
 }

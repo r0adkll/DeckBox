@@ -121,6 +121,7 @@ class DefaultTournamentExporter @Inject constructor(
                 SuperType.POKEMON -> tablePokemon.addView(row)
                 SuperType.TRAINER -> tableTrainer.addView(row)
                 SuperType.ENERGY -> tableEnergy.addView(row)
+                else -> Unit // Do Nothing
             }
         }
 

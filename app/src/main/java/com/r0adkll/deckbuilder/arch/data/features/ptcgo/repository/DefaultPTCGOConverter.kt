@@ -6,7 +6,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.model.BasicEnergySet
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
@@ -29,7 +28,7 @@ class DefaultPTCGOConverter @Inject constructor(
                 .flatMap {
                     val cards = parsePtcgoDeckList(it, deckList)
                     val ids = cards.map { it.id }
-                    repository.searchIds(ids)
+                    repository.find(ids)
                             .map { pokes ->
                                 val allCards = ArrayList<PokemonCard>()
                                 pokes.forEach { poke ->
@@ -62,7 +61,7 @@ class DefaultPTCGOConverter @Inject constructor(
                                         Timber.d("Searching for default energy: $missingEnergy")
 
                                         // Now search for these missing default energy cards
-                                        repository.searchIds(energyIds)
+                                        repository.find(energyIds)
                                                 .map { pokes ->
                                                     pokes.forEach { poke ->
                                                         val count = missingEnergyCards.find { it.second == poke.id }?.first?.count ?: 0

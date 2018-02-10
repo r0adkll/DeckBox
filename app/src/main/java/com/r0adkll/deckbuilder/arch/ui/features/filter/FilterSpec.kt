@@ -183,31 +183,30 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
             }
 
 
-            private fun parseValue(value: String?): Value {
-                return value?.let {
-                    val modifier = when {
-                        value.startsWith("gte", true) -> GREATER_THAN_EQUALS
-                        value.startsWith("lte", true) -> LESS_THAN_EQUALS
-                        value.startsWith("gt", true) -> GREATER_THAN
-                        value.startsWith("lt", true) -> LESS_THAN
-                        else -> NONE
-                    }
-                    val cleanValue = value
-                            .replace("gte", "", true)
-                            .replace("lte", "", true)
-                            .replace("gt", "", true)
-                            .replace("lt", "", true)
-                            .trim()
-
-                    Timber.d("Parsing value for $key: modifier: $modifier, value: $cleanValue")
-                    cleanValue.toIntOrNull()?.let {
-                        Value(it, modifier)
-                    } ?: Value(0, NONE)
-                } ?: Value(0, NONE)
-            }
-
             companion object {
                 @JvmField val CREATOR = PaperParcelFilterSpec_Spec_ValueRangeSpec.CREATOR
+
+                fun parseValue(value: String?): Value {
+                    return value?.let {
+                        val modifier = when {
+                            value.startsWith("gte", true) -> GREATER_THAN_EQUALS
+                            value.startsWith("lte", true) -> LESS_THAN_EQUALS
+                            value.startsWith("gt", true) -> GREATER_THAN
+                            value.startsWith("lt", true) -> LESS_THAN
+                            else -> NONE
+                        }
+                        val cleanValue = value
+                                .replace("gte", "", true)
+                                .replace("lte", "", true)
+                                .replace("gt", "", true)
+                                .replace("lt", "", true)
+                                .trim()
+
+                        cleanValue.toIntOrNull()?.let {
+                            Value(it, modifier)
+                        } ?: Value(0, NONE)
+                    } ?: Value(0, NONE)
+                }
             }
         }
     }

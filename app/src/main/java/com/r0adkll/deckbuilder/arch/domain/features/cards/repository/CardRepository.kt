@@ -11,7 +11,6 @@ import io.reactivex.Observable
 interface CardRepository {
 
     fun getExpansions(): Observable<List<Expansion>>
-
     fun search(type: SuperType?, text: String, filter: Filter? = null): Observable<List<PokemonCard>>
-    fun searchIds(ids: List<String>): Observable<List<PokemonCard>>
+    fun find(ids: List<String>): Observable<List<PokemonCard>>
 }

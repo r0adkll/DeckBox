@@ -6,7 +6,7 @@ import android.support.annotation.LayoutRes
 
 interface RecyclerItem {
 
-    val layoutId: @param:LayoutRes Int
+    val layoutId: Int
     val viewType get() = layoutId
 
     fun isItemSame(new: RecyclerItem): Boolean

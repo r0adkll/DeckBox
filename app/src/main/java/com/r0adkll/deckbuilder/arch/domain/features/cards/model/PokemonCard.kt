@@ -29,7 +29,8 @@ data class PokemonCard(
         val text: List<String>?,
         val attacks: List<Attack>?,
         val weaknesses: List<Effect>?,
-        val resistances: List<Effect>?
+        val resistances: List<Effect>?,
+        val ability: Ability?
 ) : PaperParcelable {
     companion object {
         @JvmField val CREATOR = PaperParcelPokemonCard.CREATOR
