@@ -54,12 +54,14 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             val isSaving: Boolean,
             val isEditing: Boolean,
             val error: String?,
+
             val deck: Deck?,
             val pokemonCards: List<PokemonCard>,
             val trainerCards: List<PokemonCard>,
             val energyCards: List<PokemonCard>,
             val name: String?,
             val description: String?,
+
             val validation: Validation
     ) : PaperParcelable {
 
@@ -124,8 +126,18 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             is Change.Validated -> this.copy(validation = change.validation)
         }
 
+
         override fun toString(): String {
-            return "State(isSaving=$isSaving, isEditing=$isEditing, error=$error, deck=$deck, pokemonCards=${pokemonCards.size}, trainerCards=${trainerCards.size}, energyCards=${energyCards.size}, name=$name, description=$description, validation=$validation)"
+            return "State(isSaving=$isSaving, " +
+                    "isEditing=$isEditing, " +
+                    "error=$error, " +
+                    "deck=$deck, " +
+                    "pokemonCards=${pokemonCards.size}, " +
+                    "trainerCards=${trainerCards.size}, " +
+                    "energyCards=${energyCards.size}, " +
+                    "name=$name, " +
+                    "description=$description, " +
+                    "validation=$validation)"
         }
 
 
