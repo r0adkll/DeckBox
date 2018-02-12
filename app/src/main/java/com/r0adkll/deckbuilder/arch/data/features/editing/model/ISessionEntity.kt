@@ -12,9 +12,16 @@ interface ISessionEntity : Persistable {
     var id: Long
 
     var deckId: String?
+
+    var originalName: String
+    var originalDescription: String
+
     var name: String?
     var description: String?
 
     @get:OneToMany
     var cards: List<ISessionCardEntity>
+
+    @get:OneToMany
+    var changes: List<IChangeEntity>
 }

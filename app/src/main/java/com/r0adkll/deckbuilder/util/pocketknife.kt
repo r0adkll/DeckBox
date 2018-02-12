@@ -47,6 +47,11 @@ fun Activity.bindString(key: String, defaultValue: String? = null): ReadOnlyProp
 }
 
 
+fun Activity.bindLong(key: String, defaultValue: Long = -1L): ReadOnlyProperty<Activity, Long> = Lazy { activity, _ ->
+    activity.intent.getLongExtra(key, defaultValue)
+}
+
+
 fun Activity.bindOptionalString(key: String, defaultValue: String? = null): ReadOnlyProperty<Activity, String?> = Lazy { activity, _ ->
     activity.intent.getStringExtra(key) ?: defaultValue
 }

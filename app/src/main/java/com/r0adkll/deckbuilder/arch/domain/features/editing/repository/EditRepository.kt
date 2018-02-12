@@ -17,7 +17,7 @@ interface EditRepository {
      *
      * @return the session id to refer too later
      */
-    fun createSession(deck: Deck? = null): Observable<Long>
+    fun createSession(deck: Deck? = null, imports: List<PokemonCard>? = null): Observable<Long>
 
 
     /**
@@ -27,15 +27,21 @@ interface EditRepository {
 
 
     /**
-     * Delete a session
+     * Observe the a session and all of it's changes
      */
-    fun deleteSession(sessionId: Long): Observable<Int>
+    fun observeSession(sessionId: Long): Observable<Session>
 
 
     /**
-     * Observe the cards in a given session as they are updated
+     * Save the changes made during this session
      */
-    fun observeSessionCards(sessionId: Long): Observable<List<PokemonCard>>
+    fun persistSession(sessionId: Long): Observable<Unit>
+
+
+    /**
+     * Delete a session
+     */
+    fun deleteSession(sessionId: Long): Observable<Int>
 
 
     /**

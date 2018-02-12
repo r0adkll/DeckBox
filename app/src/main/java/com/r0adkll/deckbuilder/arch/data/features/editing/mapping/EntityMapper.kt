@@ -1,9 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.mapping
 
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.ISessionCardEntity
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.ISessionEntity
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.SessionCardEntity
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.SessionEntity
+import com.r0adkll.deckbuilder.arch.data.features.editing.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Ability
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
@@ -18,17 +15,37 @@ import io.pokemontcg.model.Type
 
 object EntityMapper {
 
-    fun to(entity: SessionEntity): Session {
+    fun createAddChange(card: PokemonCard, session: SessionEntity): ChangeEntity {
+        val e = ChangeEntity()
+        e.session = session
+        e.cardId = card.id
+        e.change = 1
+        return e
+    }
+
+
+    fun createRemoveChange(card: PokemonCard, session: SessionEntity): ChangeEntity {
+        val e = ChangeEntity()
+        e.session = session
+        e.cardId = card.id
+        e.change = -1
+        return e
+    }
+
+
+    fun to(entity: SessionEntity, expansions: List<Expansion>): Session {
         return Session(
                 entity.id,
                 entity.deckId,
-                entity.name,
-                entity.description
+                entity.name ?: "",
+                entity.description ?: "",
+                from(expansions, entity.cards),
+                calculateChanges(entity)
         )
     }
 
 
-    fun to(session: ISessionEntity, card: PokemonCard): ISessionCardEntity {
+    fun to(session: ISessionEntity, card: PokemonCard): SessionCardEntity {
         val entity = SessionCardEntity()
         entity.session = session
         entity.cardId = card.id
@@ -55,6 +72,7 @@ object EntityMapper {
         entity.resistances = card.resistances?.compactEffects()
         return entity
     }
+
 
     fun from(expansions: List<Expansion>, entities: List<ISessionCardEntity>): List<PokemonCard> {
         return entities.map { e ->
@@ -118,5 +136,15 @@ object EntityMapper {
                 new
             }
         })
+    }
+
+
+    private fun calculateChanges(entity: SessionEntity): Boolean {
+        var count = 0
+        val groups = entity.changes.groupBy { it.cardId }
+        groups.forEach { card, changes ->
+            count += changes.sumBy { it.change }
+        }
+        return count != 0 || entity.originalName != entity.name || entity.originalDescription != entity.description
     }
 }

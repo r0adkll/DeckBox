@@ -2,6 +2,8 @@ package com.r0adkll.deckbuilder.arch.data.features.editing.cache
 
 
 import com.r0adkll.deckbuilder.arch.data.features.editing.mapping.EntityMapper
+import com.r0adkll.deckbuilder.arch.data.features.editing.model.ChangeEntity
+import com.r0adkll.deckbuilder.arch.data.features.editing.model.ISessionCardEntity
 import com.r0adkll.deckbuilder.arch.data.features.editing.model.SessionCardEntity
 import com.r0adkll.deckbuilder.arch.data.features.editing.model.SessionEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
@@ -21,15 +23,23 @@ class RequerySessionCache @Inject constructor(
         val cardRepository: CardRepository
 ) : SessionCache {
 
-    override fun createSession(deck: Deck?): Observable<Long> {
+    override fun createSession(deck: Deck?, imports: List<PokemonCard>?): Observable<Long> {
         val session = SessionEntity()
         session.deckId = deck?.id
-        session.name = deck?.name
-        session.description = deck?.description
+        session.originalName = deck?.name ?: ""
+        session.originalDescription = deck?.description ?: ""
+        session.name = deck?.name ?: ""
+        session.description = deck?.description ?: ""
 
-        val cards = deck?.cards?.map {
+        val cards = ArrayList<ISessionCardEntity>()
+
+        cards += deck?.cards?.map {
             EntityMapper.to(session, it)
-        }
+        } ?: emptyList()
+
+        cards += imports?.map {
+            EntityMapper.to(session, it)
+        } ?: emptyList()
 
         session.cards = cards
 
@@ -40,11 +50,30 @@ class RequerySessionCache @Inject constructor(
 
 
     override fun getSession(sessionId: Long): Observable<Session> {
-        return db.select(SessionEntity::class)
+        val disk = db.select(SessionEntity::class)
                 .where(SessionEntity.ID.eq(sessionId))
                 .get()
                 .observable()
-                .map { EntityMapper.to(it) }
+
+        return Observable.combineLatest(disk, cardRepository.getExpansions(),
+                BiFunction<SessionEntity, List<Expansion>, Session> { session, expansions ->
+                    EntityMapper.to(session, expansions)
+                })
+    }
+
+
+    override fun observeSession(sessionId: Long): Observable<Session> {
+        return db.select(SessionEntity::class)
+                .where(SessionEntity.ID.eq(sessionId))
+                .limit(1)
+                .get()
+                .observableResult()
+                .flatMap {
+                    Observable.combineLatest(it.observable(), cardRepository.getExpansions(),
+                            BiFunction<SessionEntity, List<Expansion>, Session> { session, expansions ->
+                                EntityMapper.to(session, expansions)
+                            })
+                }
     }
 
 
@@ -56,17 +85,16 @@ class RequerySessionCache @Inject constructor(
     }
 
 
-    override fun observeSessionCards(sessionId: Long): Observable<List<PokemonCard>> {
-        return db.select(SessionCardEntity::class)
-                .join(SessionEntity::class).on(SessionEntity.ID.eq(SessionCardEntity.SESSION_ID))
+    override fun resetSession(sessionId: Long): Observable<Unit> {
+        return db.select(SessionEntity::class)
                 .where(SessionEntity.ID.eq(sessionId))
                 .get()
-                .observableResult()
-                .flatMap {
-                    Observable.combineLatest(it.observable().toList().toObservable(), cardRepository.getExpansions(),
-                            BiFunction<List<SessionCardEntity>, List<Expansion>, List<PokemonCard>> { cards, expansions ->
-                                EntityMapper.from(expansions, cards)
-                            })
+                .observable()
+                .flatMap { session ->
+                    session.originalName = session.name
+                    session.originalDescription = session.description
+                    session.changes = emptyList()
+                    db.update(session).toObservable().map { Unit }
                 }
     }
 
@@ -97,23 +125,35 @@ class RequerySessionCache @Inject constructor(
                 .get()
                 .observable()
                 .flatMap { session ->
-                    val sessionCards = cards.map {
-                        EntityMapper.to(session, it)
+                    val sessionCards = ArrayList<SessionCardEntity>()
+                    val changes = ArrayList<ChangeEntity>()
+                    cards.forEach {
+                        changes += EntityMapper.createAddChange(it, session)
+                        sessionCards += EntityMapper.to(session, it)
                     }
-                    db.insert(sessionCards).toObservable().map { Unit }
+
+                    session.cards = session.cards.plus(sessionCards)
+                    session.changes = session.changes.plus(changes)
+
+                    db.update(session).toObservable().map { Unit }
                 }
     }
 
 
     override fun removeCard(sessionId: Long, card: PokemonCard): Observable<Unit> {
-        return db.delete(SessionCardEntity::class)
-                .join(SessionEntity::class).on(SessionEntity.ID.eq(SessionCardEntity.SESSION_ID))
+        return db.select(SessionEntity::class)
                 .where(SessionEntity.ID.eq(sessionId))
-                .and(SessionCardEntity.CARD_ID.eq(card.id))
-                .limit(1)
                 .get()
-                .single()
-                .toObservable()
-                .map { Unit }
+                .observable()
+                .flatMap { session ->
+                    val cards = session.cards.toMutableList()
+                    cards.remove(cards.first { it.cardId == card.id })
+                    session.cards = cards
+
+                    val change = EntityMapper.createRemoveChange(card, session)
+                    session.changes = session.changes.plus(change)
+
+                    db.update(session).toObservable().map { Unit }
+                }
     }
 }

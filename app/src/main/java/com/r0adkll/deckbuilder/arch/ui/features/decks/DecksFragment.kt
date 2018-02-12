@@ -11,6 +11,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
@@ -28,6 +29,7 @@ import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_decks.*
 import javax.inject.Inject
 
@@ -39,6 +41,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var renderer: DecksRenderer
     @Inject lateinit var presenter: DecksPresenter
     @Inject lateinit var preferences: AppPreferences
+    @Inject lateinit var editor: EditRepository
 
     private val viewPreview: Relay<Unit> = PublishRelay.create()
     private val dismissPreview: Relay<Unit> = PublishRelay.create()
@@ -62,7 +65,13 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             override fun onItemClick(v: View, item: Item, position: Int) {
                 if (item is Item.DeckItem) {
                     Analytics.event(Event.SelectContent.Deck(item.deck.id))
-                    startActivity(DeckBuilderActivity.createIntent(activity!!, item.deck))
+
+                    // Generate a new session and pass to builder activity
+                    disposables += editor.createSession(item.deck)
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .subscribe {
+                                startActivity(DeckBuilderActivity.createIntent(activity!!, it))
+                            }
                 }
             }
         })
@@ -88,7 +97,13 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             }
 
             Analytics.event(Event.SelectContent.Action("new_deck"))
-            startActivity(DeckBuilderActivity.createIntent(activity!!))
+
+            // Generate a new session and pass to builder activity
+            disposables += editor.createSession()
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        startActivity(DeckBuilderActivity.createIntent(activity!!, it, true))
+                    }
         }
 
         if (preferences.quickStart) {

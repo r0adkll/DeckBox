@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.data.features.editing.repository
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.util.Schedulers
@@ -13,11 +14,12 @@ import javax.inject.Inject
 
 class DefaultEditRepository @Inject constructor(
         val cache: SessionCache,
+        val decks: DeckRepository,
         val schedulers: Schedulers
 ) : EditRepository {
 
-    override fun createSession(deck: Deck?): Observable<Long> {
-        return cache.createSession(deck)
+    override fun createSession(deck: Deck?, imports: List<PokemonCard>?): Observable<Long> {
+        return cache.createSession(deck, imports)
                 .subscribeOn(schedulers.disk)
     }
 
@@ -28,14 +30,24 @@ class DefaultEditRepository @Inject constructor(
     }
 
 
+    override fun persistSession(sessionId: Long): Observable<Unit> {
+        return cache.getSession(sessionId)
+                .flatMap {
+                    decks.persistDeck(it.deckId, it.cards, it.name, it.description)
+                            .flatMap { cache.resetSession(sessionId) }
+                }
+                .subscribeOn(schedulers.disk)
+    }
+
+
     override fun deleteSession(sessionId: Long): Observable<Int> {
         return cache.deleteSession(sessionId)
                 .subscribeOn(schedulers.disk)
     }
 
 
-    override fun observeSessionCards(sessionId: Long): Observable<List<PokemonCard>> {
-        return cache.observeSessionCards(sessionId)
+    override fun observeSession(sessionId: Long): Observable<Session> {
+        return cache.observeSession(sessionId)
                 .subscribeOn(schedulers.disk)
     }
 

@@ -23,7 +23,7 @@ object RxFirebase {
 //
 //                override fun onDataChange(dataSnapshot: DataSnapshot?) {
 //                    dataSnapshot?.let {
-//                        val value = it.getValue(clazz.java)
+//                        val change = it.getChange(clazz.java)
 //                        if(value != null) {
 //                            emitter.onNext(value)
 //                        }
@@ -53,7 +53,7 @@ object RxFirebase {
 //
 //                override fun onDataChange(dataSnapshot: DataSnapshot?) {
 //                    dataSnapshot?.let {
-//                        val value = it.getValue(clazz.java)
+//                        val change = it.getChange(clazz.java)
 //                        if(value != null) {
 //                            emitter.onNext(value)
 //                        }
@@ -126,7 +126,7 @@ object RxFirebase {
 //        return Observable.create { emitter ->
 //            reference.runTransaction(object : Transaction.Handler {
 //                override fun doTransaction(mutableData: MutableData): Transaction.Result {
-//                    val existingValue = mutableData.getValue(clazz.java)
+//                    val existingValue = mutableData.getChange(clazz.java)
 //                    val outputValue = runnable.runTransaction(existingValue)
 //                    if(outputValue != null) {
 //                        mutableData.value = outputValue
@@ -139,7 +139,7 @@ object RxFirebase {
 //                        if (error != null) {
 //                            emitter.onError(error.toException())
 //                        } else {
-//                            val value = dataSnapshot?.getValue(clazz.java)
+//                            val change = dataSnapshot?.getChange(clazz.java)
 //                            if (value != null) {
 //                                emitter.onNext(value)
 //                            }

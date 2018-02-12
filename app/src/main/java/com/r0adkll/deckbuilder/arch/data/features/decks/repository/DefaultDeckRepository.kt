@@ -27,13 +27,7 @@ class DefaultDeckRepository @Inject constructor(
     }
 
 
-    override fun createDeck(cards: List<PokemonCard>, name: String, description: String?): Observable<Deck> {
-        return cache.putDeck(null, cards, name, description)
-                .subscribeOn(schedulers.disk)
-    }
-
-
-    override fun updateDeck(id: String, cards: List<PokemonCard>, name: String, description: String?): Observable<Deck> {
+    override fun persistDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?): Observable<Deck> {
         return cache.putDeck(id, cards, name, description)
                 .subscribeOn(schedulers.disk)
     }

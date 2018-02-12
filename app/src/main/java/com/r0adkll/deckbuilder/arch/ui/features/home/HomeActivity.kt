@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.view.Menu
 import android.view.MenuItem
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksFragment
@@ -19,8 +20,11 @@ import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import gov.scstatehouse.houseofcards.di.HasComponent
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
+import javax.inject.Inject
 
 
 class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
@@ -29,6 +33,8 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
         fun createIntent(context: Context): Intent = Intent(context, HomeActivity::class.java)
     }
+
+    @Inject lateinit var editor: EditRepository
 
     private lateinit var component: HomeComponent
     private lateinit var adapter: HomePagerAdapter
@@ -49,8 +55,11 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
         cards?.let {
             if (it.isNotEmpty()) {
                 Analytics.event(Event.SelectContent.Action("import_cards"))
-                val intent = DeckBuilderActivity.createIntent(this, it)
-                startActivity(intent)
+                disposables += editor.createSession()
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            startActivity(DeckBuilderActivity.createIntent(this, it, true))
+                        }
             }
         }
     }
