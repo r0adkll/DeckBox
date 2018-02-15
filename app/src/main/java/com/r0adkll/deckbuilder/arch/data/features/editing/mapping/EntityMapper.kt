@@ -17,7 +17,7 @@ object EntityMapper {
 
     fun createAddChange(card: PokemonCard, session: SessionEntity): ChangeEntity {
         val e = ChangeEntity()
-        e.session = session
+//        e.session = session
         e.cardId = card.id
         e.change = 1
         return e
@@ -26,7 +26,7 @@ object EntityMapper {
 
     fun createRemoveChange(card: PokemonCard, session: SessionEntity): ChangeEntity {
         val e = ChangeEntity()
-        e.session = session
+//        e.session = session
         e.cardId = card.id
         e.change = -1
         return e
@@ -47,7 +47,7 @@ object EntityMapper {
 
     fun to(session: ISessionEntity, card: PokemonCard): SessionCardEntity {
         val entity = SessionCardEntity()
-        entity.session = session
+//        entity.session = session
         entity.cardId = card.id
         entity.name = card.name
         entity.nationalPokedexNumber = card.nationalPokedexNumber

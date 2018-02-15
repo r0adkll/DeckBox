@@ -2,10 +2,7 @@ package com.r0adkll.deckbuilder.arch.data.features.editing.cache
 
 
 import com.r0adkll.deckbuilder.arch.data.features.editing.mapping.EntityMapper
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.ChangeEntity
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.ISessionCardEntity
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.SessionCardEntity
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.SessionEntity
+import com.r0adkll.deckbuilder.arch.data.features.editing.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
@@ -15,6 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.requery.Persistable
 import io.requery.reactivex.KotlinReactiveEntityStore
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -132,8 +130,10 @@ class RequerySessionCache @Inject constructor(
                         sessionCards += EntityMapper.to(session, it)
                     }
 
-                    session.cards = session.cards.plus(sessionCards)
-                    session.changes = session.changes.plus(changes)
+                    Timber.i("Adding $sessionCards and $changes to $sessionId Session")
+
+                    (session.cards as java.util.List<ISessionCardEntity>).addAll(sessionCards)
+                    (session.changes as java.util.List<IChangeEntity>).addAll(changes)
 
                     db.update(session).toObservable().map { Unit }
                 }
@@ -146,12 +146,11 @@ class RequerySessionCache @Inject constructor(
                 .get()
                 .observable()
                 .flatMap { session ->
-                    val cards = session.cards.toMutableList()
-                    cards.remove(cards.first { it.cardId == card.id })
-                    session.cards = cards
+                    val cardToRemove = session.cards.first { it.cardId == card.id }
+                    (session.cards as java.util.List<ISessionCardEntity>).remove(cardToRemove)
 
                     val change = EntityMapper.createRemoveChange(card, session)
-                    session.changes = session.changes.plus(change)
+                    (session.changes as java.util.List<IChangeEntity>).add(change)
 
                     db.update(session).toObservable().map { Unit }
                 }
