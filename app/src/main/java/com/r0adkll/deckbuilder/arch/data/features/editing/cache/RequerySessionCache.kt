@@ -91,7 +91,7 @@ class RequerySessionCache @Inject constructor(
                 .flatMap { session ->
                     session.originalName = session.name
                     session.originalDescription = session.description
-                    session.changes = emptyList()
+                    (session.changes as java.util.List<IChangeEntity>).clear()
                     db.update(session).toObservable().map { Unit }
                 }
     }

@@ -73,6 +73,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
         fun reduce(change: Change): State = when(change) {
             Change.Saving -> this.copy(isSaving = true, error = null)
+            Change.Saved -> this.copy(isSaving = false)
             is Change.SessionUpdated -> this.copy(
                     pokemonCards = change.session.cards.filter { it.supertype == SuperType.POKEMON },
                     trainerCards = change.session.cards.filter { it.supertype == SuperType.TRAINER },
@@ -126,6 +127,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
         sealed class Change(val logText: String) {
             object Saving : Change("user -> is saving deck")
+            object Saved : Change("network -> deck saved!")
             class SessionUpdated(val session: Session) : Change("cache -> Session changed/updated $session")
             class Editing(val isEditing: Boolean) : Change("user -> is editing: $isEditing")
             class Error(val description: String) : Change("error -> $description")

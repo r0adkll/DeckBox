@@ -58,15 +58,16 @@ class DeckBuilderPresenter @Inject constructor(
         val editDeck = intentions.editDeckClicks()
                 .map { Change.Editing(it) as Change }
 
-
-        disposables += intentions.saveDeck()
-                .flatMap { repository.persistSession(ui.state.sessionId) }
-                .subscribe({
-                    Timber.d("Session persisted!")
-                }, { t -> Timber.e(t, "Error persisting deck")})
+        val saveDeck = intentions.saveDeck()
+                .flatMap {
+                    repository.persistSession(ui.state.sessionId)
+                            .map { Change.Saved as Change }
+                            .startWith(Change.Saving as Change)
+                }
 
         val merged = observeSession
                 .mergeWith(editDeck)
+                .mergeWith(saveDeck)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
