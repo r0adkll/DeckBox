@@ -106,7 +106,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                         .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
                             Analytics.event(Event.SelectContent.Action("discarded_changes"))
                             dialog.dismiss()
-                            destroySession()
                             supportFinishAfterTransition()
                         })
                         .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
@@ -116,7 +115,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                         .show()
             }
             else {
-                destroySession()
                 supportFinishAfterTransition()
             }
         }
@@ -229,7 +227,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         disposables += pokemonCardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it, state.allCards)
+                    CardDetailActivity.show(this, it, sessionId)
                 }
     }
 
@@ -237,6 +235,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
+        destroySession()
         super.onDestroy()
     }
 
@@ -250,7 +249,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
                         Analytics.event(Event.SelectContent.Action("discarded_changes"))
                         dialog.dismiss()
-                        destroySession()
                         super.onBackPressed()
                     })
                     .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
@@ -260,7 +258,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     .show()
         }
         else {
-            destroySession()
             super.onBackPressed()
         }
     }
