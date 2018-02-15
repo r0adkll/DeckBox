@@ -127,6 +127,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         pager.adapter = adapter
         pager.offscreenPageLimit = 3
         tabs.setupWithViewPager(pager)
+
         fab.setOnClickListener {
             val superType = when(tabs.selectedTabPosition) {
                 0 -> SuperType.POKEMON
