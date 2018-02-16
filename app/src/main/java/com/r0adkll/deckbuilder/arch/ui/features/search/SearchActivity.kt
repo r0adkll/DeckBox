@@ -40,6 +40,7 @@ import gov.scstatehouse.houseofcards.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_search.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -117,6 +118,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         tabs.getTabAt(i)?.select()
 
         state = state.copy(
+                id = UUID.randomUUID().toString(),
                 sessionId = sessionId,
                 category = superType
         )

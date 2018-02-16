@@ -16,17 +16,19 @@ import io.pokemontcg.model.Type
 
 object EntityMapper {
 
-    fun createAddChange(card: PokemonCard, session: SessionEntity): ChangeEntity {
+    fun createAddChange(card: PokemonCard, searchSessionId: String?): ChangeEntity {
         val e = ChangeEntity()
         e.cardId = card.id
+        e.searchSessionId = searchSessionId
         e.change = 1
         return e
     }
 
 
-    fun createRemoveChange(card: PokemonCard, session: SessionEntity): ChangeEntity {
+    fun createRemoveChange(card: PokemonCard, searchSessionId: String?): ChangeEntity {
         val e = ChangeEntity()
         e.cardId = card.id
+        e.searchSessionId = searchSessionId
         e.change = -1
         return e
     }

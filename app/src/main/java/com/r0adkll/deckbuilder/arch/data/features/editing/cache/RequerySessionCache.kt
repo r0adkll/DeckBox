@@ -117,7 +117,7 @@ class RequerySessionCache @Inject constructor(
     }
 
 
-    override fun addCards(sessionId: Long, cards: List<PokemonCard>): Observable<Unit> {
+    override fun addCards(sessionId: Long, cards: List<PokemonCard>, searchSessionId: String?): Observable<Unit> {
         return db.select(SessionEntity::class)
                 .where(SessionEntity.ID.eq(sessionId))
                 .get()
@@ -126,7 +126,7 @@ class RequerySessionCache @Inject constructor(
                     val sessionCards = ArrayList<SessionCardEntity>()
                     val changes = ArrayList<ChangeEntity>()
                     cards.forEach {
-                        changes += EntityMapper.createAddChange(it, session)
+                        changes += EntityMapper.createAddChange(it, searchSessionId)
                         sessionCards += EntityMapper.to(session, it)
                     }
 
@@ -140,7 +140,7 @@ class RequerySessionCache @Inject constructor(
     }
 
 
-    override fun removeCard(sessionId: Long, card: PokemonCard): Observable<Unit> {
+    override fun removeCard(sessionId: Long, card: PokemonCard, searchSessionId: String?): Observable<Unit> {
         return db.select(SessionEntity::class)
                 .where(SessionEntity.ID.eq(sessionId))
                 .get()
@@ -149,7 +149,7 @@ class RequerySessionCache @Inject constructor(
                     val cardToRemove = session.cards.first { it.cardId == card.id }
                     (session.cards as java.util.List<ISessionCardEntity>).remove(cardToRemove)
 
-                    val change = EntityMapper.createRemoveChange(card, session)
+                    val change = EntityMapper.createRemoveChange(card, searchSessionId)
                     (session.changes as java.util.List<IChangeEntity>).add(change)
 
                     db.update(session).toObservable().map { Unit }

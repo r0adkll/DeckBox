@@ -26,13 +26,13 @@ class SearchPresenter @Inject constructor(
     override fun start() {
 
         disposables += intentions.selectCard()
-                .flatMap { editor.addCards(ui.state.sessionId, listOf(it)) }
+                .flatMap { editor.addCards(ui.state.sessionId, listOf(it), ui.state.id) }
                 .subscribe({
                     Timber.d("Card added to search session")
                 }, { Timber.e(it, "Error adding card to search session")})
 
         disposables += intentions.removeCard()
-                .flatMap { editor.removeCard(ui.state.sessionId, it) }
+                .flatMap { editor.removeCard(ui.state.sessionId, it, ui.state.id) }
                 .subscribe({
                     Timber.d("Card removed from search session")
                 }, { Timber.e(it, "Error removing card from search session") })

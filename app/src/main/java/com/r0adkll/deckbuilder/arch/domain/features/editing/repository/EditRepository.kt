@@ -59,13 +59,13 @@ interface EditRepository {
     /**
      * Add cards to session
      */
-    fun addCards(sessionId: Long, cards: List<PokemonCard>): Observable<Unit>
+    fun addCards(sessionId: Long, cards: List<PokemonCard>, searchSessionId: String? = null): Observable<Unit>
 
 
     /**
      * Remove card from a session
      */
-    fun removeCard(sessionId: Long, card: PokemonCard): Observable<Unit>
+    fun removeCard(sessionId: Long, card: PokemonCard, searchSessionId: String? = null): Observable<Unit>
 
 
     /**

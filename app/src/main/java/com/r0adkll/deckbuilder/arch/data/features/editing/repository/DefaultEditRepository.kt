@@ -64,14 +64,14 @@ class DefaultEditRepository @Inject constructor(
     }
 
 
-    override fun addCards(sessionId: Long, cards: List<PokemonCard>): Observable<Unit> {
-        return cache.addCards(sessionId, cards)
+    override fun addCards(sessionId: Long, cards: List<PokemonCard>, searchSessionId: String?): Observable<Unit> {
+        return cache.addCards(sessionId, cards, searchSessionId)
                 .subscribeOn(schedulers.disk)
     }
 
 
-    override fun removeCard(sessionId: Long, card: PokemonCard): Observable<Unit> {
-        return cache.removeCard(sessionId, card)
+    override fun removeCard(sessionId: Long, card: PokemonCard, searchSessionId: String?): Observable<Unit> {
+        return cache.removeCard(sessionId, card, searchSessionId)
                 .subscribeOn(schedulers.disk)
     }
 

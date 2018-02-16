@@ -1,7 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 
-import com.r0adkll.deckbuilder.arch.data.features.editing.model.ISessionCardEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
@@ -137,6 +136,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
                 this.copy(selected = cards)
             }
         }
+
 
         override fun toString(): String {
             return "State(category=$category, results=$results, selected=${selected.size})"
