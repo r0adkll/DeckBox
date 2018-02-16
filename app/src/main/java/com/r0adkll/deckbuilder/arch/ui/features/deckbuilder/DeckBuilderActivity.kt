@@ -136,8 +136,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 else -> SuperType.POKEMON
             }
             Analytics.event(Event.SelectContent.Action("add_new_card"))
-            val intent = SearchActivity.createIntent(this, superType)
-            startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
+            startActivity(SearchActivity.createIntent(this, sessionId, superType))
         }
 
         tabletDropZone?.let {
@@ -266,8 +265,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val result = SearchActivity.parseResult(requestCode, resultCode, data)
-        result?.let { editCardIntentions.addCardClicks.accept(it) }
 
         val importResult = DeckImportActivity.parseResults(resultCode, requestCode, data)
         importResult?.let {

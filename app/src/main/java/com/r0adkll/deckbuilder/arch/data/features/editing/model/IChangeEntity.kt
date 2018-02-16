@@ -17,4 +17,5 @@ interface IChangeEntity : Persistable{
     var cardId: String
     var change: Int // 1 - Add, -1 - Remove
 
+    var searchSessionId: String?
 }

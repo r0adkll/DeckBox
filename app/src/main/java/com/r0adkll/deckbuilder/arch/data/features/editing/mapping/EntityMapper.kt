@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Ability
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Change
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.util.compact
 import com.r0adkll.deckbuilder.util.type
@@ -17,7 +18,6 @@ object EntityMapper {
 
     fun createAddChange(card: PokemonCard, session: SessionEntity): ChangeEntity {
         val e = ChangeEntity()
-//        e.session = session
         e.cardId = card.id
         e.change = 1
         return e
@@ -26,7 +26,6 @@ object EntityMapper {
 
     fun createRemoveChange(card: PokemonCard, session: SessionEntity): ChangeEntity {
         val e = ChangeEntity()
-//        e.session = session
         e.cardId = card.id
         e.change = -1
         return e
@@ -40,7 +39,18 @@ object EntityMapper {
                 entity.name ?: "",
                 entity.description ?: "",
                 from(expansions, entity.cards),
-                calculateChanges(entity)
+                calculateChanges(entity),
+                entity.changes.map { to(it) }
+        )
+    }
+
+
+    fun to(entity: IChangeEntity): Change {
+        return Change(
+                entity.id,
+                entity.cardId,
+                entity.change,
+                entity.searchSessionId
         )
     }
 

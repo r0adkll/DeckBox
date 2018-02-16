@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.view.GravityCompat
+import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.color
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
@@ -18,12 +19,11 @@ import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckVa
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
-import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
-import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
+import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -31,9 +31,9 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
+import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
-import com.r0adkll.deckbuilder.util.findArrayList
 import com.r0adkll.deckbuilder.util.findEnum
 import gov.scstatehouse.houseofcards.di.HasComponent
 import gov.scstatehouse.houseofcards.util.ImeUtils
@@ -46,12 +46,11 @@ import javax.inject.Inject
 class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
-    @com.evernote.android.state.State
-    override var state: State = State.DEFAULT
+    @State override var state: SearchUi.State = SearchUi.State.DEFAULT
 
-    @com.evernote.android.state.State
-    var superType: SuperType = SuperType.POKEMON
+    @State var superType: SuperType = SuperType.POKEMON
 
+    val sessionId: Long by bindLong(EXTRA_SESSION_ID)
 
     @Inject lateinit var renderer: SearchRenderer
     @Inject lateinit var presenter: SearchPresenter
@@ -102,7 +101,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         disposables += pokemonCardLongClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it)
+                    CardDetailActivity.show(this, it, sessionId)
                 }
 
 
@@ -117,7 +116,10 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         }
         tabs.getTabAt(i)?.select()
 
-        state = state.copy(category = superType)
+        state = state.copy(
+                sessionId = sessionId,
+                category = superType
+        )
     }
 
 
@@ -156,7 +158,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     }
 
 
-    override fun render(state: State) {
+    override fun render(state: SearchUi.State) {
         this.state = state
         renderer.render(state)
     }
@@ -239,12 +241,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     override fun setSelectedCards(cards: List<PokemonCard>) {
-        val data = Intent()
-        data.putParcelableArrayListExtra(EXTRA_SELECTED_CARDS, ArrayList(cards))
-        setResult(RESULT_OK, data)
-
         adapter.setSelectedCards(cards)
-
         showSelectionSnackbar(cards.size)
     }
 
@@ -326,25 +323,17 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     companion object {
-        @JvmField val RC_PICK_CARD = 100
-        @JvmField val EXTRA_SELECTED_CARDS = "SearchActivity.SelectedCards"
-        @JvmField val EXTRA_SUPER_TYPE = "SearchActivity.SuperType"
+        const val EXTRA_SESSION_ID = "SearchActivity.SessionId"
+        const val EXTRA_SUPER_TYPE = "SearchActivity.SuperType"
 
 
         fun createIntent(context: Context,
+                         sessionId: Long,
                          superType: SuperType = SuperType.POKEMON): Intent {
             val intent = Intent(context, SearchActivity::class.java)
+            intent.putExtra(EXTRA_SESSION_ID, sessionId)
             intent.putExtra(EXTRA_SUPER_TYPE, superType)
             return intent
-        }
-
-
-        fun parseResult(requestCode: Int, resultCode: Int, data: Intent?): List<PokemonCard>? {
-            return if (requestCode == RC_PICK_CARD && resultCode == RESULT_OK) {
-                data?.getParcelableArrayListExtra(EXTRA_SELECTED_CARDS)
-            } else {
-                null
-            }
         }
     }
 }

@@ -74,4 +74,10 @@ class DefaultEditRepository @Inject constructor(
         return cache.removeCard(sessionId, card)
                 .subscribeOn(schedulers.disk)
     }
+
+
+    override fun clearSearchSession(sessionId: Long, searchSessionId: String): Observable<Unit> {
+        return cache.clearSearchSession(sessionId, searchSessionId)
+                .subscribeOn(schedulers.disk)
+    }
 }

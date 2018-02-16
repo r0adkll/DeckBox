@@ -13,7 +13,8 @@ data class Session(
         val name: String,
         val description: String,
         val cards: List<PokemonCard>,
-        val hasChanges: Boolean
+        val hasChanges: Boolean,
+        val changes: List<Change>
 ) : PaperParcelable {
     companion object {
         @JvmField val CREATOR = PaperParcelSession.CREATOR

@@ -1,13 +1,17 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 
+import com.r0adkll.deckbuilder.arch.data.features.editing.model.ISessionCardEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 interface SearchUi : StateRenderer<SearchUi.State> {
@@ -67,10 +71,12 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
 
     @PaperParcel
-    data class State(
+    data class State @JvmOverloads constructor(
+            val id: String,
+            val sessionId: Long,
             val category: SuperType,
             val results: Map<SuperType, Result>,
-            val selected: List<PokemonCard>
+            @Transient val selected: List<PokemonCard> = emptyList()
     ) : PaperParcelable {
 
         fun current(): Result? = results[category]
@@ -112,10 +118,24 @@ interface SearchUi : StateRenderer<SearchUi.State> {
                         .copy(results = emptyList(), query = "", isLoading = false, error = null)
                 this.copy(results = newResults.toMap())
             }
-            is Change.CardSelected -> this.copy(selected = selected.plus(change.pokemonCard))
-            is Change.CardRemoved -> this.copy(selected =  selected.minus(change.pokemonCard))
             is Change.CategorySwitched -> this.copy(category = change.category)
-            Change.ClearSelectedCards -> this.copy(selected = emptyList())
+            is Change.SessionUpdated -> {
+                // Determine the 'selected' cards from list of changes based on this search session id
+                val changes = change.session.changes.filter { it.searchSessionId == id }
+                        .groupBy { it.cardId }
+                        .mapValues { it.value.sumBy { it.change } }
+                        .filter { it.value > 0 }
+
+                val cards = ArrayList<PokemonCard>()
+                changes.forEach { cardId, count ->
+                    (0 until count).forEach {
+                        val card = change.session.cards.find { it.id == cardId }
+                        card?.let { cards += it }
+                    }
+                }
+
+                this.copy(selected = cards)
+            }
         }
 
         override fun toString(): String {
@@ -131,21 +151,23 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             class FilterChanged(val category: SuperType, val filter: Filter) : Change("user -> filter changed $filter for $category")
             class ResultsLoaded(val category: SuperType, val results: List<PokemonCard>) : Change("network -> search results loaded (${results.size})")
             class ClearQuery(val category: SuperType) : Change("user -> clearing query and results")
-            class CardSelected(val pokemonCard: PokemonCard) : Change("user -> selected ${pokemonCard.name}")
-            class CardRemoved(val pokemonCard: PokemonCard) : Change("user -> unselected ${pokemonCard.name}")
-            object ClearSelectedCards : Change("user -> cleared selected cards")
+            class SessionUpdated(val session: Session) : Change("disk -> session updated!")
         }
 
         companion object {
             @JvmField val CREATOR = PaperParcelSearchUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(SuperType.POKEMON, mapOf(
-                        SuperType.POKEMON to Result.createDefault(SuperType.POKEMON),
-                        SuperType.TRAINER to Result.createDefault(SuperType.TRAINER),
-                        SuperType.ENERGY to Result.createDefault(SuperType.ENERGY),
-                        SuperType.UNKNOWN to Result.createDefault(SuperType.UNKNOWN)
-                ), emptyList())
+                State(UUID.randomUUID().toString(),
+                        -1L,
+                        SuperType.POKEMON,
+                        mapOf(
+                                SuperType.POKEMON to Result.createDefault(SuperType.POKEMON),
+                                SuperType.TRAINER to Result.createDefault(SuperType.TRAINER),
+                                SuperType.ENERGY to Result.createDefault(SuperType.ENERGY),
+                                SuperType.UNKNOWN to Result.createDefault(SuperType.UNKNOWN)
+                        )
+                )
             }
         }
     }

@@ -66,4 +66,10 @@ interface EditRepository {
      * Remove card from a session
      */
     fun removeCard(sessionId: Long, card: PokemonCard): Observable<Unit>
+
+
+    /**
+     * Remove all the cards added in the search session for [searchSessionId]
+     */
+    fun clearSearchSession(sessionId: Long, searchSessionId: String): Observable<Unit>
 }
