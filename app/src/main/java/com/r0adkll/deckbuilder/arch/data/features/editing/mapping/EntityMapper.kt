@@ -152,11 +152,12 @@ object EntityMapper {
 
 
     private fun calculateChanges(entity: SessionEntity): Boolean {
-        var count = 0
-        val groups = entity.changes.groupBy { it.cardId }
-        groups.forEach { card, changes ->
-            count += changes.sumBy { it.change }
+        var anyCardChange = false
+        entity.changes.groupBy { it.cardId }.forEach { _, changes ->
+            if (changes.sumBy { it.change } != 0) {
+                anyCardChange = true
+            }
         }
-        return count != 0 || entity.originalName != entity.name || entity.originalDescription != entity.description
+        return anyCardChange || entity.originalName != entity.name || entity.originalDescription != entity.description
     }
 }
