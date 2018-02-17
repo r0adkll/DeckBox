@@ -309,10 +309,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             }
             R.id.action_export -> {
                 Analytics.event(Event.SelectContent.MenuAction("export_decklist"))
-
-                // TODO: Fix this so we aren't passing unlimited* cards via intent parcelizing
-                val exportDeck = Deck("", "", "", state.allCards, 0L)
-                startActivity(MultiExportActivity.createIntent(this, exportDeck))
+                startActivity(MultiExportActivity.createIntent(this, sessionId))
                 true
             }
             R.id.action_save -> {
