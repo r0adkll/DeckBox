@@ -35,7 +35,7 @@ import javax.inject.Inject
 class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentExportUi.Intentions,
         TournamentExportUi.Actions {
 
-    override var state: State = State.DEFAULT
+    @com.evernote.android.state.State override var state: State = State.DEFAULT
 
     @Inject lateinit var exportTask: ExportTask
     @Inject lateinit var renderer: TournamentExportRenderer
