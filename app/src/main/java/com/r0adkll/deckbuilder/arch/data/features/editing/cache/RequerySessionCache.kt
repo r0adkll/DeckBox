@@ -22,6 +22,31 @@ class RequerySessionCache @Inject constructor(
 ) : SessionCache {
 
     override fun createSession(deck: Deck?, imports: List<PokemonCard>?): Observable<Long> {
+        val newSession = createNewSession(deck, imports)
+        val newSessionObservable = db.insert(newSession)
+                .map { it.id }
+                .toObservable()
+        if (deck != null) {
+            return db.select(SessionEntity::class)
+                    .where(SessionEntity.DECK_ID.eq(deck.id))
+                    .get()
+                    .observable()
+                    .flatMap { existingSession ->
+                        existingSession.originalName = deck.name
+                        existingSession.originalDescription = deck.description
+
+                        db.update(existingSession)
+                                .map { it.id }
+                                .toObservable()
+                    }
+                    .switchIfEmpty(newSessionObservable)
+        } else {
+            return newSessionObservable
+        }
+    }
+
+
+    private fun createNewSession(deck: Deck?, imports: List<PokemonCard>?): SessionEntity {
         val session = SessionEntity()
         session.deckId = deck?.id
         session.originalName = deck?.name ?: ""
@@ -40,10 +65,7 @@ class RequerySessionCache @Inject constructor(
         } ?: emptyList()
 
         session.cards = cards
-
-        return db.upsert(session)
-                .map { it.id }
-                .toObservable()
+        return session
     }
 
 

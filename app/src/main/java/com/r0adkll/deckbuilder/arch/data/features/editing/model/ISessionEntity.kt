@@ -11,6 +11,7 @@ interface ISessionEntity : Persistable {
     @get:Generated
     var id: Long
 
+    @get:Column(unique = true)
     var deckId: String?
 
     var originalName: String
