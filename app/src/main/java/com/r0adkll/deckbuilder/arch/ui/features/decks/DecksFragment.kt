@@ -120,7 +120,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         disposables += viewPreview
                 .subscribe {
-                    // Open the user to the set browser
+                    Analytics.event(Event.SelectContent.Action("view_preview", "Ultra Prism"))
                     startActivity(SetBrowserActivity.createIntent(activity!!, "sm5", "Ultra Prism"))
                 }
 
@@ -149,7 +149,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
 
-    override fun dismissPreview(): Observable<Unit> = dismissPreview
+    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview", "Ultra Prism")) }
     override fun shareClicks(): Observable<Deck> = shareClicks
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
     override fun deleteClicks(): Observable<Deck> = deleteClicks

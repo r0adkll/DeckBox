@@ -17,30 +17,30 @@ class DefaultDeckRepository @Inject constructor(
 
     override fun getDeck(id: String): Observable<Deck> {
         return cache.getDeck(id)
-                .subscribeOn(schedulers.disk)
+                .subscribeOn(schedulers.firebase)
     }
 
 
     override fun getDecks(): Observable<List<Deck>> {
         return cache.getDecks()
-                .subscribeOn(schedulers.disk)
+                .subscribeOn(schedulers.firebase)
     }
 
 
     override fun persistDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?): Observable<Deck> {
         return cache.putDeck(id, cards, name, description)
-                .subscribeOn(schedulers.disk)
+                .subscribeOn(schedulers.firebase)
     }
 
 
     override fun duplicateDeck(deck: Deck): Observable<Unit> {
         return cache.duplicateDeck(deck)
-                .subscribeOn(schedulers.disk)
+                .subscribeOn(schedulers.firebase)
     }
 
 
     override fun deleteDeck(deck: Deck): Observable<Unit> {
         return cache.deleteDeck(deck)
-                .subscribeOn(schedulers.disk)
+                .subscribeOn(schedulers.firebase)
     }
 }

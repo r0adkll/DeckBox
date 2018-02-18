@@ -52,6 +52,7 @@ import io.requery.sql.KotlinConfiguration
 import io.requery.sql.KotlinEntityDataStore
 import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
+import java.util.concurrent.Executors
 
 
 @Module
@@ -74,7 +75,8 @@ class DataModule {
             AndroidSchedulers.mainThread(),
             io.reactivex.schedulers.Schedulers.io(),
             io.reactivex.schedulers.Schedulers.computation(),
-            io.reactivex.schedulers.Schedulers.io()
+            io.reactivex.schedulers.Schedulers.io(),
+            Executors.newSingleThreadExecutor()
     )
 
 

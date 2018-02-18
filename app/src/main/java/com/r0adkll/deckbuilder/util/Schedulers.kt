@@ -3,21 +3,27 @@ package com.r0adkll.deckbuilder.util
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.Executor
 
 
 class Schedulers(
         val main: Scheduler,
         val disk: Scheduler,
         val comp: Scheduler,
-        val network: Scheduler
+        val network: Scheduler,
+        val firebaseExecutor: Executor
 ) {
+
+    val firebase: Scheduler = io.reactivex.schedulers.Schedulers.from(firebaseExecutor)
+
     companion object {
         fun createTrampoline(useMain: Boolean = false): Schedulers {
             return Schedulers(
                     main = if (useMain) AndroidSchedulers.mainThread() else io.reactivex.schedulers.Schedulers.trampoline(),
                     disk = io.reactivex.schedulers.Schedulers.trampoline(),
                     comp = io.reactivex.schedulers.Schedulers.trampoline(),
-                    network = io.reactivex.schedulers.Schedulers.trampoline()
+                    network = io.reactivex.schedulers.Schedulers.trampoline(),
+                    firebaseExecutor = MainThreadExecutor()
             )
         }
     }

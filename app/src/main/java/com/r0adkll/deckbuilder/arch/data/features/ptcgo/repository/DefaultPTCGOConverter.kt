@@ -99,7 +99,7 @@ class DefaultPTCGOConverter @Inject constructor(
         groupedPokemon.entries.forEach {
             val count = it.value.size
             val poke = it.value.first()
-            listBuilder.appendln("* $count ${poke.name} ${poke.expansion!!.ptcgoCode} ${poke.number}")
+            listBuilder.appendln("* $count ${poke.name} ${poke.expansion?.ptcgoCode ?: ""} ${poke.number}")
         }
 
         listBuilder
@@ -111,7 +111,7 @@ class DefaultPTCGOConverter @Inject constructor(
         groupedTrainers.entries.forEach {
             val count = it.value.size
             val trainer = it.value.first()
-            listBuilder.appendln("* $count ${trainer.name} ${trainer.expansion!!.ptcgoCode} ${trainer.number}")
+            listBuilder.appendln("* $count ${trainer.name} ${trainer.expansion?.ptcgoCode ?: ""} ${trainer.number}")
         }
 
         listBuilder
@@ -123,7 +123,7 @@ class DefaultPTCGOConverter @Inject constructor(
         groupedEnergy.forEach {
             val count = it.value.count()
             val ener = it.value.first()
-            listBuilder.appendln("* $count ${ener.name} ${ener.expansion!!.ptcgoCode} ${ener.number}")
+            listBuilder.appendln("* $count ${ener.name} ${ener.expansion?.ptcgoCode ?: ""} ${ener.number}")
         }
 
         listBuilder
