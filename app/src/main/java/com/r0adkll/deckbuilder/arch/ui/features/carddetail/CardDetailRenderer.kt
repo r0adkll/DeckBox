@@ -16,10 +16,10 @@ class CardDetailRenderer(
     override fun start() {
 
         disposables += state
-                .map { it.count }
+                .mapNullable { it.count }
                 .distinctUntilChanged()
                 .addToLifecycle()
-                .subscribe { actions.showCopies(it) }
+                .subscribe { actions.showCopies(it.value) }
 
         disposables += state
                 .map { it.validation }

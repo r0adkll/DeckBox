@@ -34,14 +34,14 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
     data class State(
             val sessionId: Long?,
             val card: PokemonCard?,
-            val count: Int,
+            val count: Int?,
             val variants: List<PokemonCard>,
             val evolvesFrom: List<PokemonCard>,
             val validation: Validation
     ) : PaperParcelable {
 
         val hasCopies: Boolean
-            get() = count > 0
+            get() = count?.let { it > 0 } == true
 
 
         fun reduce(change: Change): State = when(change) {
@@ -59,11 +59,17 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             class Validated(val validation: Validation) : Change("network -> card validated: $validation")
         }
 
+
+        override fun toString(): String {
+            return "State(sessionId=$sessionId, card=${card?.id}, count=$count, variants=${variants.size}, evolvesFrom=${evolvesFrom.size}, validation=$validation"
+        }
+
+
         companion object {
             @JvmField val CREATOR = PaperParcelCardDetailUi_State.CREATOR
 
             val DEFAULT by lazy {
-                CardDetailUi.State(null, null, 0, emptyList(), emptyList(), Validation(false, false, emptyList()))
+                CardDetailUi.State(null, null, null, emptyList(), emptyList(), Validation(false, false, emptyList()))
             }
         }
     }

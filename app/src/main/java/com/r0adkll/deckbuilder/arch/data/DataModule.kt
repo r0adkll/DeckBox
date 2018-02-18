@@ -25,6 +25,7 @@ import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOC
 import com.r0adkll.deckbuilder.arch.data.features.tournament.exporter.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
+import com.r0adkll.deckbuilder.arch.data.features.validation.model.PrismStarRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
@@ -169,7 +170,8 @@ class DataModule {
         return setOf(
                 SizeRule(),
                 DuplicateRule(),
-                BasicRule()
+                BasicRule(),
+                PrismStarRule()
         )
     }
 
