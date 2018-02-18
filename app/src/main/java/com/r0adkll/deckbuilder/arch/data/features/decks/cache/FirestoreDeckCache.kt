@@ -5,21 +5,38 @@ import android.annotation.SuppressLint
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.decks.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.data.features.decks.model.DeckEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.util.RxFirebase
+import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
 import javax.inject.Inject
 
 
 @SuppressLint("CheckResult")
 class FirestoreDeckCache @Inject constructor(
-        val cardRepository: CardRepository
+        val preferences: AppPreferences,
+        val cardRepository: CardRepository,
+        val schedulers: Schedulers
 ) : DeckCache {
+
+    override fun getDeck(id: String): Observable<Deck> {
+        return cardRepository.getExpansions()
+                .flatMap { expansions ->
+                    getUserDeckCollection()?.let { collection ->
+                        val task = collection.document(id).get()
+                        RxFirebase.from(task)
+                                .map { it.toObject(DeckEntity::class.java) }
+                                .map { EntityMapper.to(expansions, it, id) }
+                    } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
+                }
+    }
 
 
     override fun getDecks(): Observable<List<Deck>> {
@@ -27,11 +44,10 @@ class FirestoreDeckCache @Inject constructor(
                 .flatMap { expansions ->
                     Observable.create<List<Deck>>({ emitter ->
                         getUserDeckCollection()?.let { collection ->
-                            val registration = collection.addSnapshotListener { snapshot, exception ->
-
+                            val registration = collection.addSnapshotListener(schedulers.firebaseExecutor, EventListener { snapshot, exception ->
                                 if (exception != null) {
                                     emitter.onError(exception)
-                                    return@addSnapshotListener
+                                    return@EventListener
                                 }
 
                                 val decks = ArrayList<Deck>()
@@ -41,7 +57,7 @@ class FirestoreDeckCache @Inject constructor(
                                 }
 
                                 emitter.onNext(decks)
-                            }
+                            })
 
                             emitter.setCancellable {
                                 registration.remove()
@@ -110,10 +126,14 @@ class FirestoreDeckCache @Inject constructor(
 
     private fun getUserDeckCollection(): CollectionReference? {
         val user = FirebaseAuth.getInstance().currentUser
+        val db = FirebaseFirestore.getInstance()
         return user?.let { u ->
-            val db = FirebaseFirestore.getInstance()
             db.collection(COLLECTION_USERS)
                     .document(u.uid)
+                    .collection(COLLECTION_DECKS)
+        } ?: preferences.deviceId?.let { dId ->
+            db.collection(COLLECTION_OFFLINE_USERS)
+                    .document(dId)
                     .collection(COLLECTION_DECKS)
         }
     }
@@ -122,6 +142,7 @@ class FirestoreDeckCache @Inject constructor(
     companion object {
         @JvmField val DUPLICATE_REGEX = "\\(\\d+\\)"
         @JvmField val COLLECTION_USERS = "decks" // Do to an error on my side, this is now stuck as 'decks', but it is users
+        @JvmField val COLLECTION_OFFLINE_USERS = "offline_users" // Do to an error on my side, this is now stuck as 'decks', but it is users
         @JvmField val COLLECTION_DECKS = "decks"
     }
 }

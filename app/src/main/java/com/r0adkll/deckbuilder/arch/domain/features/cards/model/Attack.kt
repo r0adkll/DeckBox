@@ -11,7 +11,7 @@ data class Attack(
         val cost: List<Type>?,
         val name: String,
         val text: String?,
-        val damage: String,
+        val damage: String?,
         val convertedEnergyCost: Int
 ) : PaperParcelable {
     companion object {

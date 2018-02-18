@@ -47,6 +47,16 @@ fun Activity.bindString(key: String, defaultValue: String? = null): ReadOnlyProp
 }
 
 
+fun Activity.bindLong(key: String, defaultValue: Long = -1L): ReadOnlyProperty<Activity, Long> = Lazy { activity, _ ->
+    activity.intent.getLongExtra(key, defaultValue)
+}
+
+
+fun Activity.bindOptionalString(key: String, defaultValue: String? = null): ReadOnlyProperty<Activity, String?> = Lazy { activity, _ ->
+    activity.intent.getStringExtra(key) ?: defaultValue
+}
+
+
 inline fun <reified E : Enum<E>> Activity.bindEnum(key: String): ReadOnlyProperty<Activity, E> = Lazy { activity, _ ->
     val name = activity.intent?.getStringExtra(key)
     java.lang.Enum.valueOf(E::class.java, name)

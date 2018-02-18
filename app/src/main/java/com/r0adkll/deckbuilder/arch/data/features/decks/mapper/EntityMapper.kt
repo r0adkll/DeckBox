@@ -81,7 +81,7 @@ object EntityMapper {
                 entity.rarity,
                 entity.series,
                 entity.expansionCode?.let { code -> expansions.find { it.code == code } },
-                null, null, null, null
+                null, null, null, null, null
 //                entity.text,
 //                entity.attacks?.map { to(it) },
 //                entity.weaknesses?.map { to(it) },

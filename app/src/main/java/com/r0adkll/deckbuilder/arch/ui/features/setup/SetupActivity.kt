@@ -28,12 +28,11 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 
 class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
-
-    private val RC_SIGN_IN = 100
 
     private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private var googleClient: GoogleApiClient? = null
@@ -152,13 +151,23 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
                         startActivity(HomeActivity.createIntent(this@SetupActivity))
                         finish()
                     }, {
-                        Timber.e(it, "Failed to sign-in anonymously")
-                        snackbar("Unable to sign-in anonymously")
+                        Timber.e(it)
+                        Timber.i("Anonymous signin failed, generate an offline device id")
+                        signInOffline()
                     })
-        } catch (e: NullPointerException) {
+        } catch (e: Exception) {
             Timber.e(e)
-            snackbar(R.string.error_anonymous_signin)
+            Timber.i("Anonymous signin failed, generate an offline device id")
+            signInOffline()
         }
+    }
+
+
+    private fun signInOffline() {
+        preferences.deviceId = UUID.randomUUID().toString()
+        Analytics.event(Event.Login.Offline)
+        startActivity(HomeActivity.createIntent(this@SetupActivity))
+        finish()
     }
 
 
@@ -193,6 +202,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     companion object {
+        const val RC_SIGN_IN = 100
         const val RC_PLAY_SERVICES_ERROR = 10
 
         fun createIntent(context: Context): Intent = Intent(context, SetupActivity::class.java)

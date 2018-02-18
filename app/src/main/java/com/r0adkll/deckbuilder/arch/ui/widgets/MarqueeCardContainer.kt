@@ -46,6 +46,14 @@ class MarqueeCardContainer @JvmOverloads constructor(
     }
 
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        val cardHeight = measuredHeight - (2 * dipToPx(64f))
+        cardWidth = (cardHeight / PokemonCardView.RATIO).toInt()
+    }
+
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         setupAnimator()
@@ -111,7 +119,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
 
         val SHUFFLED_CARDS by lazy {
             val cards = mutableListOf(*CardUtils.CARDS)
-            Collections.shuffle(cards)
+            cards.shuffle()
             cards
         }
     }

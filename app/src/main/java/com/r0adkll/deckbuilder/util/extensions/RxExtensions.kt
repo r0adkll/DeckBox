@@ -5,7 +5,9 @@ import com.r0adkll.deckbuilder.BuildConfig
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 
 operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
@@ -14,7 +16,7 @@ operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
 
 
 fun <T, R> Observable<T>.scanMap(func2: (T?, T) -> R): Observable<R> {
-    return this.startWith(null as T?) //emit a null value first, otherwise the .buffer() below won't emit at first (needs 2 emissions to emit)
+    return this.startWith(null as T?) //emit a null change first, otherwise the .buffer() below won't emit at first (needs 2 emissions to emit)
             .buffer(2, 1) //buffer the previous and current emission
             .filter { it.size >= 2 } //when the buffer terminates (onCompleted/onError), the remaining buffer is emitted. When don't want those!
             .map { func2.invoke(it[0], it[1]) }
@@ -85,5 +87,15 @@ fun <T : Any> Observable<T>.logState(): Observable<T> {
         if (BuildConfig.DEBUG) {
             Timber.v("    --- $state")
         }
+    }
+}
+
+
+fun <T: Any> Observable<T>.retryWithBackoff(numRetries: Int = 3, delayInSeconds: Int = 5): Observable<T> {
+    return this.retryWhen { t ->
+        t.zipWith(Observable.range(1, numRetries), BiFunction<Throwable, Int, Int> { _, i -> i} )
+                .flatMap { retryCount ->
+                    Observable.timer(Math.pow(delayInSeconds.toDouble(), retryCount.toDouble()).toLong(), TimeUnit.SECONDS)
+                }
     }
 }

@@ -57,7 +57,7 @@ class DeckExportActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        disposables += converter.export(deck)
+        disposables += converter.export(deck.cards, deck.name)
                 .subscribeOn(schedulers.comp)
                 .observeOn(schedulers.main)
                 .subscribe { deckList.text = it }

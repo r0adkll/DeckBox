@@ -20,7 +20,10 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.evernote.android.state.State
-import com.ftinc.kit.kotlin.extensions.*
+import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.gone
+import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.kotlin.extensions.visible
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -33,8 +36,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.bindBoolean
-import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
+import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import io.reactivex.Observable
@@ -45,12 +47,10 @@ import javax.inject.Inject
 class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions, CardDetailUi.Actions {
 
     private val card: PokemonCard by bindParcelable(EXTRA_CARD)
-    private val deck: List<PokemonCard>? by bindOptionalParcelableList(EXTRA_CARDS)
-    private val useLowRes: Boolean by bindBoolean(EXTRA_LOW_RES, false)
+    private val sessionId: Long by bindLong(EXTRA_SESSION_ID)
 
     private val addCardClicks: Relay<Unit> = PublishRelay.create()
     private val removeCardClicks: Relay<Unit> = PublishRelay.create()
-    private val deckUpdated: Relay<List<PokemonCard>> = PublishRelay.create()
 
     @State override var state: CardDetailUi.State = CardDetailUi.State.DEFAULT
 
@@ -69,8 +69,8 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         state = state.copy(card = card)
 
         // Only set the deck if it hasn't been set yet
-        if (state.deck == null) {
-            state = state.copy(deck = deck)
+        if (sessionId != -1L) {
+            state = state.copy(sessionId = sessionId)
         }
 
         bindCard()
@@ -78,7 +78,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         variantsAdapter = PokemonCardsRecyclerAdapter(this)
         variantsAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view, state.deck)
+            CardDetailActivity.show(this, view, sessionId)
         }
         variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
@@ -86,22 +86,13 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         evolvesAdapter = PokemonCardsRecyclerAdapter(this)
         evolvesAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view, state.deck)
+            CardDetailActivity.show(this, view, sessionId)
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesRecycler.adapter = evolvesAdapter
 
         renderer.start()
         presenter.start()
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val editModeResult = parseResult(resultCode, requestCode, data)
-        if (editModeResult != null) {
-            deckUpdated.accept(editModeResult)
-        }
     }
 
 
@@ -127,7 +118,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             val actionAdd = menu.findItem(R.id.action_add)
             val actionRemove = menu.findItem(R.id.action_remove)
 
-            if (state.deck != null) {
+            if (state.sessionId != null) {
                 actionAdd.isVisible = true
                 actionRemove.isVisible = state.hasCopies
             } else {
@@ -180,11 +171,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
 
-    override fun updateDeck(): Observable<List<PokemonCard>> {
-        return deckUpdated
-    }
-
-
     override fun showCopies(count: Int?) {
         supportActionBar?.title = count?.let {
             resources.getQuantityString(R.plurals.card_detail_copies, count, count)
@@ -217,17 +203,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
 
-    override fun setEditResults(cards: List<PokemonCard>?) {
-        if (cards != null) {
-            val data = Intent()
-            data.putParcelableArrayListExtra(EXTRA_CARDS, ArrayList(cards))
-            setResult(RESULT_OK, data)
-        } else {
-            setResult(Activity.RESULT_CANCELED)
-        }
-    }
-
-
     private fun bindCard() {
         val number = "#${card.number}"
         val name = " ${card.name}"
@@ -247,7 +222,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         emptyView.visible()
         emptyView.setLoading(true)
         var request = GlideApp.with(this)
-                .load(if (useLowRes) card.imageUrl else card.imageUrlHiRes)
+                .load(card.imageUrlHiRes)
                 .transition(withCrossFade())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
@@ -292,38 +267,26 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
 
     companion object {
-        @JvmField val EXTRA_CARD = "CardDetailActivity.Card"
-        @JvmField val EXTRA_CARDS = "CardDetailActivity.Cards"
-        @JvmField val EXTRA_LOW_RES = "CardDetailActivity.LowRes"
-        @JvmField val RC_EDIT_CARD = 1
+        const val EXTRA_CARD = "CardDetailActivity.Card"
+        const val EXTRA_SESSION_ID = "CardDetailActivity.SessionId"
 
 
-        fun createIntent(context: Context, card: PokemonCard, cards: List<PokemonCard>? = null): Intent {
+        fun createIntent(context: Context,
+                         card: PokemonCard,
+                         sessionId: Long? = null): Intent {
             val intent = Intent(context, CardDetailActivity::class.java)
             intent.putExtra(EXTRA_CARD, card)
-            cards?.let { intent.putParcelableArrayListExtra(EXTRA_CARDS, ArrayList(cards)) }
+            sessionId?.let { intent.putExtra(EXTRA_SESSION_ID, it) }
             return intent
         }
 
 
-        fun show(context: Activity, view: PokemonCardView, cards: List<PokemonCard>? = null, useLowRes: Boolean = false) {
+        fun show(context: Activity,
+                 view: PokemonCardView,
+                 sessionId: Long? = null) {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
-            val intent = CardDetailActivity.createIntent(context, view.card!!, cards)
-            intent.putExtra(EXTRA_LOW_RES, useLowRes)
-            if (cards != null) {
-                context.startActivityForResult(intent, RC_EDIT_CARD, options.toBundle())
-            } else {
-                context.startActivity(intent, options.toBundle())
-            }
-        }
-
-
-        fun parseResult(resultCode: Int, requestCode: Int, data: Intent?): List<PokemonCard>? {
-            return if (resultCode == RESULT_OK && requestCode == RC_EDIT_CARD) {
-                data?.getParcelableArrayListExtra(EXTRA_CARDS)
-            } else {
-                null
-            }
+            val intent = createIntent(context, view.card!!, sessionId)
+            context.startActivity(intent, options.toBundle())
         }
     }
 }

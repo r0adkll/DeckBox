@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.internal.di
 import com.r0adkll.deckbuilder.BuildModule
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.DataModule
+import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserComponent
 import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserModule
@@ -38,6 +39,7 @@ interface AppComponent {
     fun inject(activity: RouteActivity)
     fun inject(activity: OnboardingActivity)
     fun inject(fragment: SettingsActivity.SettingsFragment)
+    fun inject(service: CacheService)
 
     fun plus(module: HomeModule): HomeComponent
     fun plus(module: DeckBuilderModule): DeckBuilderComponent

@@ -38,7 +38,7 @@ class DeckBuilderRenderer(
                 .subscribe { actions.showBrokenRules(it) }
 
         disposables += state
-                .map { it.hasChanged }
+                .map { it.isChanged }
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showSaveAction(it) }
