@@ -14,8 +14,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.util.RxFirebase
+import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class FirestoreDeckCache @Inject constructor(
         val preferences: AppPreferences,
         val cardRepository: CardRepository,
-        val schedulers: com.r0adkll.deckbuilder.util.Schedulers
+        val schedulers: Schedulers
 ) : DeckCache {
 
     override fun getDeck(id: String): Observable<Deck> {
