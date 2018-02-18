@@ -1,3 +1,9 @@
+# 1.4.0
+* Added Prism Star deck validation
+* Large improvements to how the app handles editing decks
+* Ability to pick up editing sessions if app dies
+* Many bug fixes
+
 # 1.3.3
 * Official support for Ultra Prism
 * Improved search functionality
