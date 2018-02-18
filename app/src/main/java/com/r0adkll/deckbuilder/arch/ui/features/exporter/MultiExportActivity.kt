@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
@@ -15,13 +16,14 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo.PtcgoExportFragme
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportFragment
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindParcelable
+import com.r0adkll.deckbuilder.util.bindString
 import gov.scstatehouse.houseofcards.di.HasComponent
 import kotlinx.android.synthetic.main.activity_multi_export.*
 
 
 class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
 
-    private val deck: Deck by bindParcelable(EXTRA_DECK)
+    private val task: ExportTask by bindParcelable(EXTRA_TASK)
 
     private lateinit var component: MultiExportComponent
     private lateinit var adapter: ExportPagerAdapter
@@ -40,7 +42,7 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
 
 
     override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(MultiExportModule(deck))
+        this.component = component.plus(MultiExportModule(task))
         this.component.inject(this)
     }
 
@@ -69,11 +71,18 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
 
 
     companion object {
-        const val EXTRA_DECK = "MultiExportActivity.Deck"
+        const val EXTRA_TASK = "MultiExportActivity.ExportTask"
 
         fun createIntent(context: Context, deck: Deck): Intent {
             val intent = Intent(context, MultiExportActivity::class.java)
-            intent.putExtra(EXTRA_DECK, deck)
+            intent.putExtra(EXTRA_TASK, ExportTask(deck.id, null))
+            return intent
+        }
+
+
+        fun createIntent(context: Context, sessionId: Long): Intent {
+            val intent = Intent(context, MultiExportActivity::class.java)
+            intent.putExtra(EXTRA_TASK, ExportTask(null, sessionId))
             return intent
         }
     }

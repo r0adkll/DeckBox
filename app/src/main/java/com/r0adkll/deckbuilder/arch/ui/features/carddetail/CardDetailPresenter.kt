@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State.Change
@@ -16,11 +17,19 @@ class CardDetailPresenter @Inject constructor(
         val ui: CardDetailUi,
         val intentions: CardDetailUi.Intentions,
         val repository: CardRepository,
+        val editor: EditRepository,
         val validator: DeckValidator
 ) : Presenter() {
 
     override fun start() {
 
+        val observeSession = ui.state.sessionId?.let {
+            editor.observeSession(it)
+                    .map {
+                        it.cards.filter { it.id == ui.state.card?.id }.count()
+                    }
+                    .map { Change.CountChanged(it) as Change }
+        } ?: Observable.empty<Change>()
 
         val loadValidation = validator.validate(listOf(ui.state.card!!))
                 .map { Change.Validated(it) as Change }
@@ -38,23 +47,22 @@ class CardDetailPresenter @Inject constructor(
                     .map { Change.EvolvesFromLoaded(it) as Change }
         } ?: Observable.empty()
 
+        disposables += intentions.addCardClicks()
+                .flatMap { editor.addCards(ui.state.sessionId!!, listOf(ui.state.card!!)) }
+                .subscribe({
+                    Timber.d("Card(s) added to session")
+                }, { t -> Timber.e(t, "Error adding card to session")})
 
-        val addCard = intentions.addCardClicks()
-                .map { Change.AddCard }
+        disposables += intentions.removeCardClicks()
+                .flatMap { editor.removeCard(ui.state.sessionId!!, ui.state.card!!) }
+                .subscribe({
+                    Timber.d("Card removed from session")
+                }, { t -> Timber.e(t, "Error removing card from session")})
 
-        val removeCard = intentions.removeCardClicks()
-                .map { Change.RemoveCard }
-
-        val updateDeck = intentions.updateDeck()
-                .map { Change.DeckUpdated(it) }
-
-
-        val merged = loadVariants
+        val merged = observeSession
+                .mergeWith(loadVariants)
                 .mergeWith(loadValidation)
                 .mergeWith(loadEvolves)
-                .mergeWith(addCard)
-                .mergeWith(removeCard)
-                .mergeWith(updateDeck)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)

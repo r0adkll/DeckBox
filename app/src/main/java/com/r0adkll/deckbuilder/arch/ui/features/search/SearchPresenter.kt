@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 import android.text.TextUtils
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State.Change
@@ -18,35 +19,46 @@ import javax.inject.Inject
 class SearchPresenter @Inject constructor(
         val ui: SearchUi,
         val intentions: SearchUi.Intentions,
-        val repository: CardRepository
+        val repository: CardRepository,
+        val editor: EditRepository
 ) : Presenter() {
 
     override fun start() {
 
+        disposables += intentions.selectCard()
+                .flatMap { editor.addCards(ui.state.sessionId, listOf(it), ui.state.id) }
+                .subscribe({
+                    Timber.d("Card added to search session")
+                }, { Timber.e(it, "Error adding card to search session")})
+
+        disposables += intentions.removeCard()
+                .flatMap { editor.removeCard(ui.state.sessionId, it, ui.state.id) }
+                .subscribe({
+                    Timber.d("Card removed from search session")
+                }, { Timber.e(it, "Error removing card from search session") })
+
+        disposables += intentions.clearSelection()
+                .flatMap { editor.clearSearchSession(ui.state.sessionId, ui.state.id) }
+                .subscribe({
+                    Timber.d("Search session cleared.")
+                }, { Timber.e(it, "Error clearing search session") })
+
+        val observeSession = editor.observeSession(ui.state.sessionId)
+                .map { Change.SessionUpdated(it) as Change }
+
         val searchCards = intentions.searchCards()
                 .flatMap { getSearchCardsObservable(ui.state.category, it) }
 
-        val selectCard = intentions.selectCard()
-                .map { Change.CardSelected(it) as Change }
-
-        val removeCard = intentions.removeCard()
-                .map { Change.CardRemoved(it) as Change }
-
         val switchCategories = intentions.switchCategories()
                 .map { Change.CategorySwitched(it) as Change }
-
-        val clearSelection = intentions.clearSelection()
-                .map { Change.ClearSelectedCards as Change }
 
         val filterChanges = intentions.filterUpdates()
                 .flatMap { (category, filter) ->
                     getReSearchCardsObservable(category, filter)
                 }
 
-        val merged = searchCards
-                .mergeWith(selectCard)
-                .mergeWith(removeCard)
-                .mergeWith(clearSelection)
+        val merged = observeSession
+                .mergeWith(searchCards)
                 .mergeWith(switchCategories)
                 .mergeWith(filterChanges)
                 .doOnNext { Timber.d(it.logText) }

@@ -16,7 +16,7 @@ operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
 
 
 fun <T, R> Observable<T>.scanMap(func2: (T?, T) -> R): Observable<R> {
-    return this.startWith(null as T?) //emit a null value first, otherwise the .buffer() below won't emit at first (needs 2 emissions to emit)
+    return this.startWith(null as T?) //emit a null change first, otherwise the .buffer() below won't emit at first (needs 2 emissions to emit)
             .buffer(2, 1) //buffer the previous and current emission
             .filter { it.size >= 2 } //when the buffer terminates (onCompleted/onError), the remaining buffer is emitted. When don't want those!
             .map { func2.invoke(it[0], it[1]) }

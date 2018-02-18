@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
-import com.r0adkll.deckbuilder.arch.data.database.entities.Models
 import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
@@ -18,16 +17,21 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
+import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RequerySessionCache
+import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
+import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
 import com.r0adkll.deckbuilder.arch.data.features.tournament.exporter.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
+import com.r0adkll.deckbuilder.arch.data.features.validation.model.PrismStarRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
@@ -48,6 +52,7 @@ import io.requery.sql.KotlinConfiguration
 import io.requery.sql.KotlinEntityDataStore
 import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
+import java.util.concurrent.Executors
 
 
 @Module
@@ -70,7 +75,8 @@ class DataModule {
             AndroidSchedulers.mainThread(),
             io.reactivex.schedulers.Schedulers.io(),
             io.reactivex.schedulers.Schedulers.computation(),
-            io.reactivex.schedulers.Schedulers.io()
+            io.reactivex.schedulers.Schedulers.io(),
+            Executors.newSingleThreadExecutor()
     )
 
 
@@ -106,6 +112,10 @@ class DataModule {
 
 
     @Provides @AppScope
+    fun provideSessionCache(cache: RequerySessionCache): SessionCache = cache
+
+
+    @Provides @AppScope
     fun provideCacheManager(manager: DefaultCacheManager): CacheManager = manager
 
 
@@ -127,6 +137,10 @@ class DataModule {
 
     @Provides @AppScope
     fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository
+
+
+    @Provides @AppScope
+    fun provideEditRepository(repository: DefaultEditRepository): EditRepository = repository
 
 
     @Provides @AppScope
@@ -158,7 +172,8 @@ class DataModule {
         return setOf(
                 SizeRule(),
                 DuplicateRule(),
-                BasicRule()
+                BasicRule(),
+                PrismStarRule()
         )
     }
 

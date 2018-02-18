@@ -17,13 +17,11 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
         fun addCardClicks(): Observable<Unit>
         fun removeCardClicks(): Observable<Unit>
-        fun updateDeck(): Observable<List<PokemonCard>>
     }
 
 
     interface Actions {
 
-        fun setEditResults(deck: List<PokemonCard>?)
         fun showCopies(count: Int?)
         fun showVariants(cards: List<PokemonCard>)
         fun showEvolvesFrom(cards: List<PokemonCard>)
@@ -34,33 +32,20 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
     @PaperParcel
     data class State(
+            val sessionId: Long?,
             val card: PokemonCard?,
-            val deck: List<PokemonCard>?,
+            val count: Int?,
             val variants: List<PokemonCard>,
             val evolvesFrom: List<PokemonCard>,
             val validation: Validation
     ) : PaperParcelable {
 
         val hasCopies: Boolean
-            get() = deck?.filter { it.id == card?.id }.orEmpty().isNotEmpty()
+            get() = count?.let { it > 0 } == true
 
 
         fun reduce(change: Change): State = when(change) {
-            Change.AddCard -> {
-                if (deck != null && card != null) {
-                    this.copy(deck = deck.plus(card))
-                } else {
-                    this
-                }
-            }
-            Change.RemoveCard -> {
-                if (deck != null && card != null) {
-                    this.copy(deck = deck.minus(card))
-                } else {
-                    this
-                }
-            }
-            is Change.DeckUpdated -> this.copy(deck = change.updated)
+            is Change.CountChanged -> this.copy(count = change.count)
             is Change.Validated -> this.copy(validation = change.validation)
             is Change.VariantsLoaded -> this.copy(variants = change.cards)
             is Change.EvolvesFromLoaded -> this.copy(evolvesFrom = change.cards)
@@ -68,19 +53,23 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
 
         sealed class Change(val logText: String) {
-            object AddCard : Change("user -> adding another copy")
-            object RemoveCard : Change("user -> removing copy")
-            class DeckUpdated(val updated: List<PokemonCard>) : Change("user -> updated deck: $updated")
+            class CountChanged(val count: Int) : Change("user -> number of copies changed $count")
             class VariantsLoaded(val cards: List<PokemonCard>) : Change("network -> variants loaded")
             class EvolvesFromLoaded(val cards: List<PokemonCard>) : Change("network -> evolves loaded")
             class Validated(val validation: Validation) : Change("network -> card validated: $validation")
         }
 
+
+        override fun toString(): String {
+            return "State(sessionId=$sessionId, card=${card?.id}, count=$count, variants=${variants.size}, evolvesFrom=${evolvesFrom.size}, validation=$validation"
+        }
+
+
         companion object {
             @JvmField val CREATOR = PaperParcelCardDetailUi_State.CREATOR
 
             val DEFAULT by lazy {
-                CardDetailUi.State(null, null, emptyList(), emptyList(), Validation(false, false, emptyList()))
+                CardDetailUi.State(null, null, null, emptyList(), emptyList(), Validation(false, false, emptyList()))
             }
         }
     }

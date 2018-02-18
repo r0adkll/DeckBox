@@ -1,30 +1,26 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 import android.app.DatePickerDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.support.v4.content.FileProvider
-import android.view.*
-import com.ftinc.kit.util.IntentUtils
-import com.google.firebase.auth.FirebaseAuth
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
-import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.preview.PdfPreviewActivity
-import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.*
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.TournamentExportModule
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -39,9 +35,9 @@ import javax.inject.Inject
 class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentExportUi.Intentions,
         TournamentExportUi.Actions {
 
-    override var state: State = State.DEFAULT
+    @com.evernote.android.state.State override var state: State = State.DEFAULT
 
-    @Inject lateinit var deck: Deck
+    @Inject lateinit var exportTask: ExportTask
     @Inject lateinit var renderer: TournamentExportRenderer
     @Inject lateinit var presenter: TournamentExportPresenter
     @Inject lateinit var exporter: TournamentExporter
@@ -82,7 +78,8 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                 .subscribe {
                     Analytics.event(Event.SelectContent.Action("tournament_export"))
                     val playerInfo = state.toPlayerInfo()
-                    disposables += exporter.export(activity!!, deck, playerInfo)
+
+                    disposables += exporter.export(activity!!, exportTask, playerInfo)
                             .subscribe({
                                 val intent = PdfPreviewActivity.createIntent(activity!!, it)
                                 startActivity(intent)
