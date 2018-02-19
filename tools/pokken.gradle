@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.7'
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.8'
     }
 }
 
@@ -22,7 +22,7 @@ task pokePrint {
             @Override
             Unit invoke(CardQueryBuilder cardQueryBuilder) {
                 cardQueryBuilder.pageSize = 1000
-                cardQueryBuilder.setCode = "sm1|sm2|sm3|sm35|sm4"
+                cardQueryBuilder.setCode = "sm2|sm3|sm35|sm4|sm5"
                 return null
             }
         }).all()

@@ -195,7 +195,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             class AttributeSelected(val attribute: FilterAttribute) : Change("user -> $attribute was selected")
             class ExpansionSelected(val expansion: Expansion) : Change("user -> $expansion was selected")
             class RaritySelected(val rarity: Rarity) : Change("user -> $rarity was selected")
-            class ValueRangeChanged(val key: String, val value: String) : Change("user -> $key value was changed to $value")
+            class ValueRangeChanged(val key: String, val value: String) : Change("user -> $key change was changed to $value")
             object ViewMoreSelected : Change("user -> view more expansions selected")
             object ClearFilter : Change("user -> clear filter")
         }

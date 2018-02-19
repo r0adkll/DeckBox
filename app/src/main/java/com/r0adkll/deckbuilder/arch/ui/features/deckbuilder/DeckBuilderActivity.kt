@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
@@ -39,8 +41,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.bindOptionalParcelable
-import com.r0adkll.deckbuilder.util.bindOptionalParcelableList
+import com.r0adkll.deckbuilder.util.*
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -60,18 +61,18 @@ import javax.inject.Inject
 class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, DeckBuilderUi,
         DeckBuilderUi.Intentions, DeckBuilderUi.Actions {
 
-    private val deck: Deck? by bindOptionalParcelable(EXTRA_DECK)
-    private val imports: ArrayList<PokemonCard>? by bindOptionalParcelableList(EXTRA_IMPORT)
+    private val sessionId: Long by bindLong(EXTRA_SESSION_ID)
+    private val isNewDeck: Boolean by bindBoolean(EXTRA_IS_NEW)
+
     private val imm: InputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
     @State override var state: DeckBuilderUi.State = DeckBuilderUi.State.DEFAULT
 
     @Inject lateinit var renderer: DeckBuilderRenderer
     @Inject lateinit var presenter: DeckBuilderPresenter
-    @Inject lateinit var validator: DeckValidator
+    @Inject lateinit var editRepository: EditRepository
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
-    private val editCardChanges: Relay<List<PokemonCard>> = PublishRelay.create()
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val saveDeck: Relay<Unit> = PublishRelay.create()
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
@@ -97,7 +98,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             imm.showSoftInput(inputDeckName, 0)
         }
         appbar?.setNavigationOnClickListener {
-            if (state.hasChanged) {
+            if (state.isChanged) {
                 Analytics.event(Event.SelectContent.Action("close_deck_editor"))
                 AlertDialog.Builder(this)
                         .setTitle(R.string.deckbuilder_unsaved_changes_title)
@@ -122,11 +123,11 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         ruleRecycler.layoutManager = LinearLayoutManager(this)
         ruleRecycler.adapter = ruleAdapter
 
-
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
         pager.adapter = adapter
         pager.offscreenPageLimit = 3
         tabs.setupWithViewPager(pager)
+
         fab.setOnClickListener {
             val superType = when(tabs.selectedTabPosition) {
                 0 -> SuperType.POKEMON
@@ -135,8 +136,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 else -> SuperType.POKEMON
             }
             Analytics.event(Event.SelectContent.Action("add_new_card"))
-            val intent = SearchActivity.createIntent(this, superType)
-            startActivityForResult(intent, SearchActivity.RC_PICK_CARD)
+            startActivity(SearchActivity.createIntent(this, sessionId, superType))
         }
 
         tabletDropZone?.let {
@@ -219,24 +219,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             slidingLayout.panelState = COLLAPSED
         }
 
-        if (state.deck == null && deck != null) {
-            state = state.copy(
-                    deck = deck,
-                    pokemonCards = deck!!.cards.filter { it.supertype == SuperType.POKEMON },
-                    trainerCards = deck!!.cards.filter { it.supertype == SuperType.TRAINER },
-                    energyCards = deck!!.cards.filter { it.supertype == SuperType.ENERGY },
-                    name = deck?.name,
-                    description = deck?.description
-            )
-        }
-
-        if (imports != null) {
-            state = state.copy(
-                    pokemonCards = imports!!.filter { it.supertype == SuperType.POKEMON },
-                    trainerCards = imports!!.filter { it.supertype == SuperType.TRAINER },
-                    energyCards = imports!!.filter { it.supertype == SuperType.ENERGY }
-            )
-        }
+        state = state.copy(sessionId = sessionId)
 
         renderer.start()
         presenter.start()
@@ -244,7 +227,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         disposables += pokemonCardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it, state.allCards)
+                    CardDetailActivity.show(this, it, sessionId)
                 }
     }
 
@@ -252,12 +235,13 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
+        destroySession()
         super.onDestroy()
     }
 
 
     override fun onBackPressed() {
-        if (state.hasChanged) {
+        if (state.isChanged) {
             Analytics.event(Event.SelectContent.Action("close_deck_editor"))
             AlertDialog.Builder(this)
                     .setTitle(R.string.deckbuilder_unsaved_changes_title)
@@ -281,19 +265,11 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val result = SearchActivity.parseResult(requestCode, resultCode, data)
-        result?.let { editCardIntentions.addCardClicks.accept(it) }
 
         val importResult = DeckImportActivity.parseResults(resultCode, requestCode, data)
         importResult?.let {
             Analytics.event(Event.SelectContent.Action("import_cards"))
             editCardIntentions.addCardClicks.accept(it)
-        }
-
-        val detailResult = CardDetailActivity.parseResult(resultCode, requestCode, data)
-        detailResult?.let {
-            Analytics.event(Event.SelectContent.Action("add_from_detail"))
-            editCardChanges.accept(detailResult)
         }
     }
 
@@ -306,7 +282,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val saveItem = menu.findItem(R.id.action_save)
-        saveItem.isVisible = state.hasChanged && !state.isSaving
+        saveItem.isVisible = state.isChanged && !state.isSaving
 
         val editItem = menu.findItem(R.id.action_edit)
         val finishEditItem = menu.findItem(R.id.action_finish_edit)
@@ -333,8 +309,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             }
             R.id.action_export -> {
                 Analytics.event(Event.SelectContent.MenuAction("export_decklist"))
-                val exportDeck = Deck("", "", "", state.allCards, 0L)
-                startActivity(MultiExportActivity.createIntent(this, exportDeck))
+                startActivity(MultiExportActivity.createIntent(this, sessionId))
                 true
             }
             R.id.action_save -> {
@@ -371,11 +346,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
-    }
-
-
-    override fun editCards(): Observable<List<PokemonCard>> {
-        return editCardChanges
     }
 
 
@@ -433,7 +403,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
     override fun showDeckName(name: String) {
         if(name.isBlank()) {
-            appbarTitle?.setText(if (deck == null) R.string.deckbuilder_default_title else R.string.deckbuilder_edit_title)
+            appbarTitle?.setText(if (isNewDeck) R.string.deckbuilder_default_title else R.string.deckbuilder_edit_title)
         }
         else {
             appbarTitle?.text = name
@@ -509,21 +479,27 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     }
 
 
+    @SuppressLint("CheckResult")
+    private fun destroySession() {
+        editRepository.deleteSession(sessionId)
+                .subscribe({
+                    Timber.i("Session[$sessionId] Deleted!")
+                }, { t -> Timber.e(t, "Error deleting Session[$sessionId]")})
+    }
+
+
     companion object {
-        @JvmField val EXTRA_DECK = "com.r0adkll.deckbuilder.intent.EXTRA_DECK"
-        @JvmField val EXTRA_IMPORT = "com.r0adkll.deckbuilder.intent.EXTRA_IMPORT"
+        private const val EXTRA_IS_NEW = "DeckBuilderActivity.IsNew"
+        private const val EXTRA_SESSION_ID = "DeckBuilderActivity.SessionId"
+
 
         fun createIntent(context: Context): Intent = Intent(context, DeckBuilderActivity::class.java)
 
-        fun createIntent(context: Context, deck: Deck): Intent {
-            val intent = createIntent(context)
-            intent.putExtra(EXTRA_DECK, deck)
-            return intent
-        }
 
-        fun createIntent(context: Context, import: List<PokemonCard>): Intent {
+        fun createIntent(context: Context, sessionId: Long, isNew: Boolean = false): Intent {
             val intent = createIntent(context)
-            intent.putExtra(EXTRA_IMPORT, ArrayList(import))
+            intent.putExtra(EXTRA_SESSION_ID, sessionId)
+            intent.putExtra(EXTRA_IS_NEW, isNew)
             return intent
         }
     }

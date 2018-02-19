@@ -14,7 +14,7 @@
         android:layout_margin="@dimen/margin_small"
         android:scaleType="centerCrop"
 
-        android:src="@color/grey_400"
+        android:src="@drawable/dr_avatar_offline"
         app:maskDrawable="@drawable/dr_mask_circle"
         app:borderDrawable="@drawable/dr_mask_circle_border"
         />

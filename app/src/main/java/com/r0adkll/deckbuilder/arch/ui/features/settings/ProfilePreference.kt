@@ -33,11 +33,10 @@ class ProfilePreference : Preference {
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         val avatar = holder.findViewById(R.id.avatar) as ImageView
-        avatarUrl?.let {
-            GlideApp.with(avatar)
-                    .load(it)
-                    .transition(withCrossFade())
-                    .into(avatar)
-        }
+        GlideApp.with(avatar)
+                .load(avatarUrl)
+                .placeholder(R.drawable.dr_avatar_offline)
+                .transition(withCrossFade())
+                .into(avatar)
     }
 }

@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State.*
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State
@@ -13,7 +12,6 @@ import javax.inject.Inject
 
 
 class TournamentExportPresenter @Inject constructor(
-        val deck: Deck,
         val ui: TournamentExportUi,
         val intentions: TournamentExportUi.Intentions,
         val preferences: AppPreferences

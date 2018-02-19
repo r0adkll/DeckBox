@@ -62,8 +62,10 @@
         <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
         <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
         <activity android:name=".arch.ui.features.browse.SetBrowserActivity"
-            android:theme="@style/Theme.DeckBuilder.Translucent"
-            />
+            android:theme="@style/Theme.DeckBuilder.Translucent" />
+
+        <service android:name=".arch.data.features.cards.service.CacheService"
+                 android:exported="false" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -72,14 +74,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/files"
-                />
+                android:resource="@xml/files" />
         </provider>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="7b1875458d267befd0938d565c22df19a3a7c047"
-            />
+            android:value="7b1875458d267befd0938d565c22df19a3a7c047" />
+
     </application>
 
 </manifest>

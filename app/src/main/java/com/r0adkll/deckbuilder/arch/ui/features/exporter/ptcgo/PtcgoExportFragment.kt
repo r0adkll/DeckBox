@@ -1,5 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo
 
+
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -9,7 +11,9 @@ import android.view.*
 import com.ftinc.kit.util.IntentUtils
 import com.jakewharton.rxbinding2.view.clicks
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.ExportTask
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
@@ -29,9 +33,10 @@ class PtcgoExportFragment : BaseFragment() {
     }
 
     @Inject lateinit var schedulers: Schedulers
+    @Inject lateinit var deckRepository: DeckRepository
+    @Inject lateinit var editRepository: EditRepository
     @Inject lateinit var converter: PTCGOConverter
-    @Inject lateinit var deck: Deck
-
+    @Inject lateinit var exportTask: ExportTask
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,18 +48,27 @@ class PtcgoExportFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
 
-        disposables += converter.export(deck)
-                .subscribeOn(schedulers.comp)
-                .observeOn(schedulers.main)
-                .subscribe { deckList.text = it }
+        if (exportTask.deckId != null) {
+            disposables += deckRepository.getDeck(exportTask.deckId!!)
+                    .flatMap { converter.export(it.cards, it.name) }
+                    .subscribeOn(schedulers.comp)
+                    .observeOn(schedulers.main)
+                    .subscribe { deckList.text = it }
+        } else {
+            disposables += editRepository.getSession(exportTask.sessionId!!)
+                    .flatMap { converter.export(it.cards, it.name) }
+                    .subscribeOn(schedulers.comp)
+                    .observeOn(schedulers.main)
+                    .subscribe { deckList.text = it }
+        }
 
         disposables += actionCopy.clicks()
                 .subscribe {
                     Analytics.event(Event.SelectContent.Action("copy_decklist"))
                     val text = deckList.text.toString()
-                    val clip = ClipData.newPlainText(deck.name, text)
+                    val clip = ClipData.newPlainText("Deckbox Deck", text)
                     clipboard.primaryClip = clip
-                    toast(getString(R.string.deck_copied_format, deck.name))
+                    toast(getString(R.string.deck_copied_format, "Deck"))
                 }
     }
 

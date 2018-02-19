@@ -9,5 +9,5 @@ import io.reactivex.Observable
 interface PTCGOConverter {
 
     fun import(deckList: String): Observable<List<PokemonCard>>
-    fun export(deck: Deck): Observable<String>
+    fun export(cards: List<PokemonCard>, name: String): Observable<String>
 }

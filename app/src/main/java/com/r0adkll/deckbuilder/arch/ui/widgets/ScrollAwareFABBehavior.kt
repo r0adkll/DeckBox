@@ -17,7 +17,6 @@ class ScrollAwareFABBehavior(
     private val maxTransY = context.dpToPx(56f + 16f)
 
 
-
     override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout,
                                      child: FloatingActionButton,
                                      directTargetChild: View,

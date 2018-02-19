@@ -1,5 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -29,8 +31,8 @@ class RouteActivity : AppCompatActivity() {
         compatibilityCheck()
         remote.check()
 
-        if (firebase.currentUser != null) {
-            Analytics.userId(firebase.currentUser!!.uid)
+        if (firebase.currentUser != null || preferences.deviceId != null) {
+            firebase.currentUser?.uid?.let { Analytics.userId(it) }
             startActivity(HomeActivity.createIntent(this))
         }
         else {
@@ -53,5 +55,13 @@ class RouteActivity : AppCompatActivity() {
 
         // Set the last version that was installed for future compat checks
         preferences.lastVersion = BuildConfig.VERSION_CODE
+    }
+
+
+    companion object {
+
+        fun createIntent(context: Context): Intent {
+            return Intent(context, RouteActivity::class.java)
+        }
     }
 }

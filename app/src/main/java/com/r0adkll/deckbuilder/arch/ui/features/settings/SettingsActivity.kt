@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar
 import android.support.v14.preference.PreferenceFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.preference.Preference
+import com.ftinc.kit.kotlin.extensions.clear
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -21,11 +22,17 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
+import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -52,12 +59,19 @@ class SettingsActivity : BaseActivity() {
         private var googleClient: GoogleApiClient? = null
 
         @Inject lateinit var preferences: AppPreferences
+        @Inject lateinit var cacheManager: CacheManager
+        private val disposables = CompositeDisposable()
 
 
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
-            DeckApp.component.inject(this)
             setupClient()
+        }
+
+
+        override fun onDestroy() {
+            super.onDestroy()
+            disposables.clear()
         }
 
 
@@ -71,6 +85,7 @@ class SettingsActivity : BaseActivity() {
 
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            DeckApp.component.inject(this)
             addPreferencesFromResource(R.xml.settings_preferences)
             setupPreferences()
         }
@@ -110,11 +125,15 @@ class SettingsActivity : BaseActivity() {
                     signIn()
                     true
                 }
+                "pref_cache_cards" -> {
+                    CacheService.start(activity!!)
+                    true
+                }
                 "pref_account_signout" -> {
+                    preferences.deviceId = null
                     FirebaseAuth.getInstance().signOut()
                     googleClient?.clearDefaultAccountAndReconnect()
-                    val intent = Intent(activity, SetupActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    val intent = SetupActivity.createIntent(activity).clear()
                     startActivity(intent)
                     activity.finish()
                     true
@@ -130,15 +149,15 @@ class SettingsActivity : BaseActivity() {
 
 
         private fun setupPreferences() {
+            val profilePref = findPreference("pref_account_profile") as ProfilePreference
             val user = FirebaseAuth.getInstance().currentUser
-            user?.let {
-                val profilePref = findPreference("pref_account_profile") as ProfilePreference
+            if (user != null) {
                 profilePref.avatarUrl = user.photoUrl
 
                 profilePref.title = if (user.isAnonymous) {
                     getString(R.string.user_anonymous_title)
                 } else {
-                    it.displayName
+                    user.displayName
                 }
 
                 profilePref.summary = if (user.isAnonymous) {
@@ -148,11 +167,38 @@ class SettingsActivity : BaseActivity() {
                 }
 
                 val linkAccount = findPreference("pref_account_link")
-                linkAccount.isVisible = it.isAnonymous
+                linkAccount.isVisible = user.isAnonymous
+            } else {
+                profilePref.title = "Offline"
+                profilePref.summary = preferences.deviceId
+
+                val linkAccount = findPreference("pref_account_link")
+                linkAccount.isVisible = false
             }
 
             val versionPref = findPreference("pref_about_version")
             versionPref.summary = BuildConfig.VERSION_NAME
+
+
+//            disposables += cacheManager.observeCacheStatus()
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe { status ->
+//                        Timber.i("Cache Status: $status")
+//                        val cachePref = findPreference("pref_cache_cards")
+//                        cachePref.isEnabled = status !is CacheStatus.Downloading && status != CacheStatus.Deleting
+//                        cachePref.setTitle(when(status) {
+//                            CacheStatus.Empty -> R.string.pref_offline_cache_download_title
+//                            CacheStatus.Cached -> R.string.pref_offline_cache_delete_title
+//                            is CacheStatus.Downloading -> R.string.pref_offline_cache_downloading_title
+//                            CacheStatus.Deleting -> R.string.pref_offline_cache_deleting_title
+//                        })
+//                        cachePref.summary = when(status) {
+//                            CacheStatus.Empty -> getString(R.string.pref_offline_cache_download_summary)
+//                            CacheStatus.Cached -> getString(R.string.pref_offline_cache_delete_summary)
+//                            is CacheStatus.Downloading -> getString(R.string.pref_offline_cache_downloading_summary, status.count)
+//                            CacheStatus.Deleting -> getString(R.string.pref_offline_cache_deleting_summary)
+//                        }
+//                    }
         }
 
 
