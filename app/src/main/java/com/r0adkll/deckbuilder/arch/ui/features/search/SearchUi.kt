@@ -126,7 +126,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
                         .filter { it.value > 0 }
 
                 val cards = ArrayList<PokemonCard>()
-                changes.forEach { cardId, count ->
+                changes.forEach { (cardId, count) ->
                     (0 until count).forEach {
                         val card = change.session.cards.find { it.id == cardId }
                         card?.let { cards += it }
