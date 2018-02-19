@@ -180,25 +180,25 @@ class SettingsActivity : BaseActivity() {
             versionPref.summary = BuildConfig.VERSION_NAME
 
 
-            disposables += cacheManager.observeCacheStatus()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { status ->
-                        Timber.i("Cache Status: $status")
-                        val cachePref = findPreference("pref_cache_cards")
-                        cachePref.isEnabled = status !is CacheStatus.Downloading && status != CacheStatus.Deleting
-                        cachePref.setTitle(when(status) {
-                            CacheStatus.Empty -> R.string.pref_offline_cache_download_title
-                            CacheStatus.Cached -> R.string.pref_offline_cache_delete_title
-                            is CacheStatus.Downloading -> R.string.pref_offline_cache_downloading_title
-                            CacheStatus.Deleting -> R.string.pref_offline_cache_deleting_title
-                        })
-                        cachePref.summary = when(status) {
-                            CacheStatus.Empty -> getString(R.string.pref_offline_cache_download_summary)
-                            CacheStatus.Cached -> getString(R.string.pref_offline_cache_delete_summary)
-                            is CacheStatus.Downloading -> getString(R.string.pref_offline_cache_downloading_summary, status.count)
-                            CacheStatus.Deleting -> getString(R.string.pref_offline_cache_deleting_summary)
-                        }
-                    }
+//            disposables += cacheManager.observeCacheStatus()
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe { status ->
+//                        Timber.i("Cache Status: $status")
+//                        val cachePref = findPreference("pref_cache_cards")
+//                        cachePref.isEnabled = status !is CacheStatus.Downloading && status != CacheStatus.Deleting
+//                        cachePref.setTitle(when(status) {
+//                            CacheStatus.Empty -> R.string.pref_offline_cache_download_title
+//                            CacheStatus.Cached -> R.string.pref_offline_cache_delete_title
+//                            is CacheStatus.Downloading -> R.string.pref_offline_cache_downloading_title
+//                            CacheStatus.Deleting -> R.string.pref_offline_cache_deleting_title
+//                        })
+//                        cachePref.summary = when(status) {
+//                            CacheStatus.Empty -> getString(R.string.pref_offline_cache_download_summary)
+//                            CacheStatus.Cached -> getString(R.string.pref_offline_cache_delete_summary)
+//                            is CacheStatus.Downloading -> getString(R.string.pref_offline_cache_downloading_summary, status.count)
+//                            CacheStatus.Deleting -> getString(R.string.pref_offline_cache_deleting_summary)
+//                        }
+//                    }
         }
 
 

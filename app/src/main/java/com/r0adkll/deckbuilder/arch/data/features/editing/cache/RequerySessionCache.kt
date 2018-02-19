@@ -57,11 +57,11 @@ class RequerySessionCache @Inject constructor(
         val cards = ArrayList<ISessionCardEntity>()
 
         cards += deck?.cards?.map {
-            EntityMapper.to(session, it)
+            EntityMapper.to(it)
         } ?: emptyList()
 
         cards += imports?.map {
-            EntityMapper.to(session, it)
+            EntityMapper.to(it)
         } ?: emptyList()
 
         session.cards = cards
@@ -149,7 +149,7 @@ class RequerySessionCache @Inject constructor(
                     val changes = ArrayList<ChangeEntity>()
                     cards.forEach {
                         changes += EntityMapper.createAddChange(it, searchSessionId)
-                        sessionCards += EntityMapper.to(session, it)
+                        sessionCards += EntityMapper.to(it)
                     }
 
                     Timber.i("Adding $sessionCards and $changes to $sessionId Session")

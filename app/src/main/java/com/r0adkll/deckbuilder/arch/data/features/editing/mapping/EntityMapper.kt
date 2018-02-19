@@ -57,9 +57,8 @@ object EntityMapper {
     }
 
 
-    fun to(session: ISessionEntity, card: PokemonCard): SessionCardEntity {
+    fun to(card: PokemonCard): SessionCardEntity {
         val entity = SessionCardEntity()
-//        entity.session = session
         entity.cardId = card.id
         entity.name = card.name
         entity.nationalPokedexNumber = card.nationalPokedexNumber
@@ -153,7 +152,7 @@ object EntityMapper {
 
     private fun calculateChanges(entity: SessionEntity): Boolean {
         var anyCardChange = false
-        entity.changes.groupBy { it.cardId }.forEach { _, changes ->
+        entity.changes.groupBy { it.cardId }.forEach { (_, changes) ->
             if (changes.sumBy { it.change } != 0) {
                 anyCardChange = true
             }
