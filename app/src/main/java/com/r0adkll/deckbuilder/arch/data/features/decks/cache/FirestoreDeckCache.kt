@@ -17,6 +17,9 @@ import com.r0adkll.deckbuilder.util.RxFirebase
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
 import javax.inject.Inject
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+
+
 
 
 @SuppressLint("CheckResult")
@@ -127,6 +130,14 @@ class FirestoreDeckCache @Inject constructor(
     private fun getUserDeckCollection(): CollectionReference? {
         val user = FirebaseAuth.getInstance().currentUser
         val db = FirebaseFirestore.getInstance()
+
+        // Attempt to fix Crashlytics Issue #17 where the underlying SQLite database is getting deadlocked by
+        // demanding offline persistence each time we try and access the Firestore database
+        val settings = FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build()
+        db.firestoreSettings = settings
+
         return user?.let { u ->
             db.collection(COLLECTION_USERS)
                     .document(u.uid)
