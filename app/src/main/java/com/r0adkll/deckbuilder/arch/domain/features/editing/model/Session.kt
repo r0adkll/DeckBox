@@ -16,6 +16,14 @@ data class Session(
         val hasChanges: Boolean,
         val changes: List<Change>
 ) : PaperParcelable {
+
+
+    override fun toString(): String {
+        return "Session(id=$id, deckId=$deckId, name='$name', description='$description', " +
+                "cards=${cards.size}, hasChanges=$hasChanges, changes=${changes.size})"
+    }
+
+
     companion object {
         @JvmField val CREATOR = PaperParcelSession.CREATOR
     }

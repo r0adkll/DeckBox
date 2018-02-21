@@ -12,6 +12,7 @@ import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,18 +28,21 @@ class SearchPresenter @Inject constructor(
 
         disposables += intentions.selectCard()
                 .flatMap { editor.addCards(ui.state.sessionId, listOf(it), ui.state.id) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Card added to search session")
                 }, { Timber.e(it, "Error adding card to search session")})
 
         disposables += intentions.removeCard()
                 .flatMap { editor.removeCard(ui.state.sessionId, it, ui.state.id) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Card removed from search session")
                 }, { Timber.e(it, "Error removing card from search session") })
 
         disposables += intentions.clearSelection()
                 .flatMap { editor.clearSearchSession(ui.state.sessionId, ui.state.id) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Search session cleared.")
                 }, { Timber.e(it, "Error clearing search session") })
