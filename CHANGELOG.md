@@ -1,3 +1,9 @@
+# 1.4.2
+* Many bugfixes from the previous release and large change around editing mechanism
+
+# 1.4.1
+* Hotfix for previous release
+
 # 1.4.0
 * Added Prism Star deck validation
 * Large improvements to how the app handles editing decks
