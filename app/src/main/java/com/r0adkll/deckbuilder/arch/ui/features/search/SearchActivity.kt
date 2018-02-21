@@ -15,7 +15,6 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
@@ -55,7 +54,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     @Inject lateinit var renderer: SearchRenderer
     @Inject lateinit var presenter: SearchPresenter
-    @Inject lateinit var validator: DeckValidator
 
     private val categoryChanges: Relay<SuperType> = PublishRelay.create()
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()

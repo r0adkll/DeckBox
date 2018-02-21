@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 
+import android.annotation.SuppressLint
 import android.text.TextUtils
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
@@ -93,6 +94,7 @@ class SearchPresenter @Inject constructor(
     }
 
 
+    @SuppressLint("CheckResult")
     private fun getSearchCardsObservable(category: SuperType, text: String): Observable<Change> {
         val filter = ui.state.current()?.filter
         return if (TextUtils.isEmpty(text) && filter?.isEmptyWithoutField != false) {
