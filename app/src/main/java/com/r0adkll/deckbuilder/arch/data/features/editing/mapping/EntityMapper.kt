@@ -40,9 +40,9 @@ object EntityMapper {
                 entity.deckId,
                 entity.name ?: "",
                 entity.description ?: "",
-                from(expansions, entity.cards),
+                from(expansions, entity.cards.toList()),
                 calculateChanges(entity),
-                entity.changes.map { to(it) }
+                entity.changes.toList().map { to(it) }
         )
     }
 
@@ -152,7 +152,7 @@ object EntityMapper {
 
     private fun calculateChanges(entity: SessionEntity): Boolean {
         var anyCardChange = false
-        entity.changes.groupBy { it.cardId }.forEach { (_, changes) ->
+        entity.changes.toList().groupBy { it.cardId }.forEach { (_, changes) ->
             if (changes.sumBy { it.change } != 0) {
                 anyCardChange = true
             }

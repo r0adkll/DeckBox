@@ -168,13 +168,12 @@ class RequerySessionCache @Inject constructor(
                 .get()
                 .observable()
                 .flatMap { session ->
-                    val cardToRemove = session.cards.first { it.cardId == card.id }
-                    (session.cards as java.util.List<ISessionCardEntity>).remove(cardToRemove)
-
-                    val change = EntityMapper.createRemoveChange(card, searchSessionId)
-                    (session.changes as java.util.List<IChangeEntity>).add(change)
-
-                    db.update(session).toObservable().map { Unit }
+                    session.cards.firstOrNull { it.cardId == card.id }?.let {
+                        (session.cards as java.util.List<ISessionCardEntity>).remove(it)
+                        val change = EntityMapper.createRemoveChange(card, searchSessionId)
+                        (session.changes as java.util.List<IChangeEntity>).add(change)
+                        db.update(session).toObservable().map { Unit }
+                    } ?: Observable.just(Unit)
                 }
     }
 
@@ -192,8 +191,9 @@ class RequerySessionCache @Inject constructor(
 
                     changes.forEach { cardId, count ->
                         (0 until count).forEach {
-                            val card = session.cards.find { it.cardId == cardId }
-                            (session.cards as java.util.List<ISessionCardEntity>).remove(card)
+                            session.cards.find { it.cardId == cardId }?.let {
+                                (session.cards as java.util.List<ISessionCardEntity>).remove(it)
+                            }
                         }
                     }
                     (session.changes as java.util.List<IChangeEntity>).removeAll { it.searchSessionId == searchSessionId }

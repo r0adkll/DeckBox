@@ -9,6 +9,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,12 +50,14 @@ class CardDetailPresenter @Inject constructor(
 
         disposables += intentions.addCardClicks()
                 .flatMap { editor.addCards(ui.state.sessionId!!, listOf(ui.state.card!!)) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Card(s) added to session")
                 }, { t -> Timber.e(t, "Error adding card to session")})
 
         disposables += intentions.removeCardClicks()
                 .flatMap { editor.removeCard(ui.state.sessionId!!, ui.state.card!!) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Card removed from session")
                 }, { t -> Timber.e(t, "Error removing card from session")})

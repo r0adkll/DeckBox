@@ -157,7 +157,6 @@ class PokemonCardView @JvmOverloads constructor(
                 // Allocate a new bitmap with the correct dimensions.
                 cacheBitmap!!.recycle()
 
-                Timber.d("Attempting to allocation a new cache (w: $width, h: $height)")
                 try {
                     cacheBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                     cachedWidth = width
