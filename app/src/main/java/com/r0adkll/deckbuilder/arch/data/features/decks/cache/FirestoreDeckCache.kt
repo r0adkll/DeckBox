@@ -107,7 +107,7 @@ class FirestoreDeckCache @Inject constructor(
                             } ?: 1
 
                             val cleanName = deck.name.replace(regex, "").trim()
-                            val newName = "${cleanName} ($count)"
+                            val newName = "$cleanName ($count)"
                             duplicateDeck(Deck("", newName, deck.description, deck.cards, deck.timestamp))
                         }
                     }
