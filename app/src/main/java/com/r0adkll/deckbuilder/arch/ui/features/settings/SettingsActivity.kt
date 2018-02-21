@@ -132,7 +132,9 @@ class SettingsActivity : BaseActivity() {
                 "pref_account_signout" -> {
                     preferences.deviceId = null
                     FirebaseAuth.getInstance().signOut()
-                    googleClient?.clearDefaultAccountAndReconnect()
+                    if (googleClient != null && googleClient?.isConnected == true) {
+                        googleClient?.clearDefaultAccountAndReconnect()
+                    }
                     val intent = SetupActivity.createIntent(activity).clear()
                     startActivity(intent)
                     activity.finish()
