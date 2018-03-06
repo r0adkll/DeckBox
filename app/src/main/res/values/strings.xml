@@ -171,4 +171,7 @@
     <string name="notification_channel_description">All notifications for DeckBox</string>
     <string name="pref_offline_cache_downloading_title">Downloading card data...</string>
     <string name="pref_offline_cache_downloading_summary">%1$d cards downloaded</string>
+    <string name="deck_image_picker_title">Pick deck image</string>
+    <string name="action_select">Select</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

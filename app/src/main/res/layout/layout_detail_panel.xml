@@ -73,12 +73,40 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
         />
+    
+    <FrameLayout
+        android:id="@+id/actionDeckImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_alignTop="@+id/text_input_deck_name"
+        android:layout_alignBottom="@+id/text_input_deck_name"
+        android:foreground="?attr/selectableItemBackground"
+        >
+
+        <com.ftinc.kit.widget.BezelImageView
+            android:id="@+id/deckImage"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@color/grey_300"
+            app:maskDrawable="@drawable/dr_mask_round_rect"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_image_black_24dp"
+            android:layout_gravity="center"
+            />
+
+    </FrameLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_deck_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/infoBar"
+        android:layout_toEndOf="@+id/actionDeckImage"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
