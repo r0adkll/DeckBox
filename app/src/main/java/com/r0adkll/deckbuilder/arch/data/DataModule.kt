@@ -91,9 +91,13 @@ class DataModule {
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
 
+    /**
+     * - 1: Initial Version
+     * - 2: Added deck image to SessionEntity;
+     */
     @Provides @AppScope
     fun provideDatabase(context: Context): KotlinReactiveEntityStore<Persistable> {
-        val source = DatabaseSource(context, Models.DEFAULT, BuildConfig.DATABASE_NAME, 1)
+        val source = DatabaseSource(context, Models.DEFAULT, BuildConfig.DATABASE_NAME, 2)
         val entityStore = KotlinEntityDataStore<Persistable>(source.configuration)
         return KotlinReactiveEntityStore(entityStore)
     }

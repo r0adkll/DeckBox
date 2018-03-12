@@ -174,4 +174,5 @@
     <string name="deck_image_picker_title">Pick deck image</string>
     <string name="action_select">Select</string>
     <string name="action_cancel">Cancel</string>
+    <string name="empty_deck_image_message">No cards found for this deck. Go back and add some before picking your deck image.</string>
 </resources>

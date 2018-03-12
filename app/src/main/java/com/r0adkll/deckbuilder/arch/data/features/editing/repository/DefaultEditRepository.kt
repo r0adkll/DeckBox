@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -33,7 +34,7 @@ class DefaultEditRepository @Inject constructor(
     override fun persistSession(sessionId: Long): Observable<Unit> {
         return cache.getSession(sessionId)
                 .flatMap {
-                    decks.persistDeck(it.deckId, it.cards, it.name, it.description)
+                    decks.persistDeck(it.deckId, it.cards, it.name, it.description, it.image)
                             .flatMap { cache.resetSession(sessionId) }
                 }
                 .subscribeOn(schedulers.disk)
@@ -60,6 +61,12 @@ class DefaultEditRepository @Inject constructor(
 
     override fun changeDescription(sessionId: Long, description: String): Observable<String> {
         return cache.changeDescription(sessionId, description)
+                .subscribeOn(schedulers.disk)
+    }
+
+
+    override fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit> {
+        return cache.changeDeckImage(sessionId, image)
                 .subscribeOn(schedulers.disk)
     }
 

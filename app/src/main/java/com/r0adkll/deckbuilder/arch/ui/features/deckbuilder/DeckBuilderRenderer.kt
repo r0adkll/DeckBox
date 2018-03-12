@@ -113,5 +113,11 @@ class DeckBuilderRenderer(
                         actions.showDeckDescription(it)
                     }
                 }
+
+        disposables += state
+                .mapNullable { it.image }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.showDeckImage(it.value) }
     }
 }

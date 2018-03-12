@@ -14,12 +14,15 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
@@ -30,6 +33,8 @@ import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
 import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImagePickerFragment
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRecyclerAdapter
@@ -104,6 +109,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                         .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
                             Analytics.event(Event.SelectContent.Action("discarded_changes"))
                             dialog.dismiss()
+                            destroySession()
                             supportFinishAfterTransition()
                         })
                         .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
@@ -113,6 +119,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                         .show()
             }
             else {
+                destroySession()
                 supportFinishAfterTransition()
             }
         }
@@ -164,6 +171,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 val infoBarOffset = calculateAlpha(slideOffset, .95f)
                 infoBar.alpha = infoBarOffset
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
+                deckImage.alpha = calculateAlpha(slideOffset, .80f)
                 text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
                 text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
 
@@ -230,8 +238,8 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
         disposables += actionDeckImage.clicks()
                 .subscribe {
-                    toast("Change deck image!")
-
+                    DeckImagePickerFragment.newInstance(sessionId, state.image)
+                            .show(supportFragmentManager, DeckImagePickerFragment.TAG)
                 }
     }
 
@@ -239,7 +247,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
-        destroySession()
         super.onDestroy()
     }
 
@@ -253,6 +260,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
                         Analytics.event(Event.SelectContent.Action("discarded_changes"))
                         dialog.dismiss()
+                        destroySession()
                         super.onBackPressed()
                     })
                     .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
@@ -262,6 +270,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     .show()
         }
         else {
+            destroySession()
             super.onBackPressed()
         }
     }
@@ -423,6 +432,27 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         if (inputDeckDescription.text.isBlank()) {
             inputDeckDescription.setText(description)
             inputDeckDescription.setSelection(description.length)
+        }
+    }
+
+
+    override fun showDeckImage(image: DeckImage?) {
+        when(image) {
+            null -> {
+                deckImage.clear()
+                deckImage.setImageResource(R.color.grey_300)
+            }
+            is DeckImage.Pokemon -> {
+                GlideApp.with(this)
+                        .load(image.imageUrl)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(deckImage)
+            }
+            is DeckImage.Type -> {
+                deckImage.primaryType = image.type1
+                deckImage.secondaryType = image.type2
+                deckImage.invalidate()
+            }
         }
     }
 

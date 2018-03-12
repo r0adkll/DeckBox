@@ -21,6 +21,41 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="DeckImageView">
+        <attr name="maskDrawable" format="reference" />
+        <attr name="borderDrawable" format="reference" />
+        <attr name="desaturateOnPress" format="boolean" />
+        <attr name="forceAspectRatio" format="boolean" />
+
+        <attr name="primaryType" format="enum">
+            <enum name="colorless" value="0" />
+            <enum name="fire" value="1" />
+            <enum name="grass" value="2" />
+            <enum name="water" value="3" />
+            <enum name="electric" value="4" />
+            <enum name="fighting" value="5" />
+            <enum name="psychic" value="6" />
+            <enum name="steel" value="7" />
+            <enum name="dragon" value="8" />
+            <enum name="fairy" value="9" />
+            <enum name="darkness" value="10" />
+        </attr>
+
+        <attr name="secondaryType" format="enum">
+            <enum name="colorless" value="0" />
+            <enum name="fire" value="1" />
+            <enum name="grass" value="2" />
+            <enum name="water" value="3" />
+            <enum name="electric" value="4" />
+            <enum name="fighting" value="5" />
+            <enum name="psychic" value="6" />
+            <enum name="steel" value="7" />
+            <enum name="dragon" value="8" />
+            <enum name="fairy" value="9" />
+            <enum name="darkness" value="10" />
+        </attr>
+    </declare-styleable>
+
 
     <declare-styleable name="PokemonFormatView">
         <attr name="format" format="enum">

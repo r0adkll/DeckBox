@@ -20,6 +20,9 @@ fun Fragment.bindLong(key: String, default: Long = 0L): ReadOnlyProperty<Fragmen
     fragment.arguments!!.getLong(key, default)
 }
 
+fun Fragment.bindString(key: String): ReadOnlyProperty<Fragment, String?> = Lazy { fragment, _ ->
+    fragment.arguments?.getString(key)
+}
 
 fun <P : Parcelable> Activity.bindOptionalParcelable(key: String): ReadOnlyProperty<Activity, P?> = Lazy { activity, _ ->
     activity.intent.getParcelableExtra(key)

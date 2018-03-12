@@ -84,12 +84,13 @@
         android:foreground="?attr/selectableItemBackground"
         >
 
-        <com.ftinc.kit.widget.BezelImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
             android:id="@+id/deckImage"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:src="@color/grey_300"
             app:maskDrawable="@drawable/dr_mask_round_rect"
+            android:scaleType="centerCrop"
             />
 
         <ImageView
