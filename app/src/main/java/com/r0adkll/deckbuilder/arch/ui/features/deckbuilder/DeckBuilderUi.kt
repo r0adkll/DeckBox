@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.SuperType.*
 import io.reactivex.Observable
@@ -45,6 +46,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun showEnergyCards(cards: List<StackedPokemonCard>)
         fun showDeckName(name: String)
         fun showDeckDescription(description: String)
+        fun showDeckImage(image: DeckImage?)
     }
 
 
@@ -59,6 +61,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
             val name: String?,
             val description: String?,
+            val image: DeckImage?,
 
             val validation: Validation,
 
@@ -80,6 +83,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     energyCards = change.session.cards.filter { it.supertype == SuperType.ENERGY },
                     name = change.session.name,
                     description = change.session.description,
+                    image = change.session.image,
                     isChanged = change.session.hasChanges,
                     isSaving = false,
                     error = null
@@ -121,6 +125,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     "energyCards=${energyCards.size}, " +
                     "name=$name, " +
                     "description=$description, " +
+                    "image=$image, " +
                     "validation=$validation)"
         }
 
@@ -144,7 +149,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(-1L, false, false, false, null, null, null,
+                State(-1L, false, false, false, null, null, null, null,
                         Validation(false, false, emptyList()), emptyList(), emptyList(), emptyList())
             }
         }

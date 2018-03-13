@@ -241,7 +241,7 @@ class PokemonCardView @JvmOverloads constructor(
         GlideApp.with(this)
                 .load(card?.imageUrl)
                 .placeholder(R.drawable.pokemon_card_back)
-                .transition(withCrossFade())
+//                .transition(withCrossFade())
                 .into(this)
     }
 

@@ -55,7 +55,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
         cards?.let {
             if (it.isNotEmpty()) {
                 Analytics.event(Event.SelectContent.Action("import_cards"))
-                disposables += editor.createSession()
+                disposables += editor.createSession(imports = it)
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                             startActivity(DeckBuilderActivity.createIntent(this, it, true))

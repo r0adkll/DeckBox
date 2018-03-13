@@ -9,6 +9,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -29,5 +30,6 @@ class DefaultCardRepository @Inject constructor(
 
     override fun find(ids: List<String>): Observable<List<PokemonCard>> {
         return searchDataSource.find(ids)
+                .switchIfEmpty(Observable.error(IOException("Unable to find cards")))
     }
 }

@@ -110,7 +110,7 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
 
     companion object {
 
-        fun create(card: StackedPokemonCard): EvolutionChain {
+        internal fun create(card: StackedPokemonCard): EvolutionChain {
             val chain = EvolutionChain()
 
             // We don't want to set the name of a node unless it is the base to account for split evolutions i.e. eevee -> espeon, umbreon, etc.

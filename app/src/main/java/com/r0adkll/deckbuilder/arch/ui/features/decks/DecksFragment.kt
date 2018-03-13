@@ -24,6 +24,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
+import com.r0adkll.deckbuilder.util.DialogUtils
+import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.*
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -152,7 +154,14 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview", "Ultra Prism")) }
     override fun shareClicks(): Observable<Deck> = shareClicks
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
-    override fun deleteClicks(): Observable<Deck> = deleteClicks
+    override fun deleteClicks(): Observable<Deck> = deleteClicks.flatMap { deck ->
+        DialogUtils.confirmDialog(activity!!,
+                Resource(R.string.dialog_delete_deck_title),
+                Resource(R.string.dialog_delete_deck_message, deck.name),
+                R.string.action_delete,
+                R.string.action_cancel)
+                .flatMap { if (it) Observable.just(deck) else Observable.empty() }
+    }
 
 
     override fun showLoading(isLoading: Boolean) {

@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.domain.features.editing.model
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
@@ -12,6 +13,7 @@ data class Session(
         val deckId: String?,
         val name: String,
         val description: String,
+        val image: DeckImage?,
         val cards: List<PokemonCard>,
         val hasChanges: Boolean,
         val changes: List<Change>

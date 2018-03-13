@@ -4,6 +4,7 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -27,8 +28,8 @@ class DefaultDeckRepository @Inject constructor(
     }
 
 
-    override fun persistDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?): Observable<Deck> {
-        return cache.putDeck(id, cards, name, description)
+    override fun persistDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> {
+        return cache.putDeck(id, cards, name, description, image)
                 .subscribeOn(schedulers.firebase)
     }
 

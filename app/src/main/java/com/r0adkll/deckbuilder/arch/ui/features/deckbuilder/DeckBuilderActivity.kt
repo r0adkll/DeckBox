@@ -14,11 +14,15 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
@@ -29,6 +33,8 @@ import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
 import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImagePickerFragment
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRecyclerAdapter
@@ -42,10 +48,7 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.*
-import com.r0adkll.deckbuilder.util.extensions.isVisible
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
+import com.r0adkll.deckbuilder.util.extensions.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
@@ -106,6 +109,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                         .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
                             Analytics.event(Event.SelectContent.Action("discarded_changes"))
                             dialog.dismiss()
+                            destroySession()
                             supportFinishAfterTransition()
                         })
                         .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
@@ -115,6 +119,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                         .show()
             }
             else {
+                destroySession()
                 supportFinishAfterTransition()
             }
         }
@@ -166,6 +171,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 val infoBarOffset = calculateAlpha(slideOffset, .95f)
                 infoBar.alpha = infoBarOffset
                 infoBar.elevation = infoBarOffset * dpToPx(4f)
+                deckImage.alpha = calculateAlpha(slideOffset, .80f)
                 text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
                 text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
 
@@ -229,13 +235,18 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it, sessionId)
                 }
+
+        disposables += actionDeckImage.clicks()
+                .subscribe {
+                    DeckImagePickerFragment.newInstance(sessionId, state.image)
+                            .show(supportFragmentManager, DeckImagePickerFragment.TAG)
+                }
     }
 
 
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
-        destroySession()
         super.onDestroy()
     }
 
@@ -249,6 +260,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
                         Analytics.event(Event.SelectContent.Action("discarded_changes"))
                         dialog.dismiss()
+                        destroySession()
                         super.onBackPressed()
                     })
                     .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
@@ -258,6 +270,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     .show()
         }
         else {
+            destroySession()
             super.onBackPressed()
         }
     }
@@ -419,6 +432,29 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         if (inputDeckDescription.text.isBlank()) {
             inputDeckDescription.setText(description)
             inputDeckDescription.setSelection(description.length)
+        }
+    }
+
+
+    override fun showDeckImage(image: DeckImage?) {
+        when(image) {
+            null -> {
+                deckImage.clear()
+                deckImage.setImageResource(R.color.grey_300)
+            }
+            is DeckImage.Pokemon -> {
+                deckImage.primaryType = null
+                deckImage.secondaryType = null
+                GlideApp.with(this)
+                        .load(image.imageUrl)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(deckImage)
+            }
+            is DeckImage.Type -> {
+                deckImage.primaryType = image.type1
+                deckImage.secondaryType = image.type2
+                deckImage.invalidate()
+            }
         }
     }
 

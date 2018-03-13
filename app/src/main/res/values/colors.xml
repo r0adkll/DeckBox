@@ -16,4 +16,16 @@
     <color name="dropzone_green_selected">#64dd17</color>
     <color name="format_stroke">#6F6F6F</color>
     <color name="windowBackground">#EDEDED</color>
+
+    <color name="poketype_colorless">#E7E3D4</color>
+    <color name="poketype_fire">#E11119</color>
+    <color name="poketype_grass">#1D8520</color>
+    <color name="poketype_water">#0F61C0</color>
+    <color name="poketype_electric">#F6DD0A</color>
+    <color name="poketype_fighting">#CD2C13</color>
+    <color name="poketype_psychic">#67267C</color>
+    <color name="poketype_steel">#767D86</color>
+    <color name="poketype_dragon">#947718</color>
+    <color name="poketype_fairy">#FC5897</color>
+    <color name="poketype_dark">#122640</color>
 </resources>
