@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import gov.scstatehouse.houseofcards.util.ImeUtils
+import com.r0adkll.deckbuilder.util.ImeUtils
 
 
 class KeyboardScrollHideListener(val view: View) : RecyclerView.OnScrollListener() {

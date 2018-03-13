@@ -11,13 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="186dp"
             android:scaleType="centerCrop"
             android:background="@color/grey_300"
-            tools:src="@drawable/pokemon_card_back"
             />
 
         <TextView

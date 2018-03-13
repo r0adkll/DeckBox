@@ -1,3 +1,10 @@
+# 1.5.0
+* [#11](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/11) - Add ability to choose the image for your decks
+* Fixed issue where you could no longer edit decks after rotating screen
+* Fixed issue with importing decks from the home screen
+* Added confirmation dialog to deleting decks
+* Misc bug fixes around editing decks
+
 # 1.4.2
 * Many bugfixes from the previous release and large change around editing mechanism
 

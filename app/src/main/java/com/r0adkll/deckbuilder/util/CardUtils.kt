@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.util
 
 import android.util.ArrayMap
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import io.pokemontcg.model.Type
@@ -764,5 +765,39 @@ fun String.type(): Type = when(this.toUpperCase()) {
     "P" -> Type.PSYCHIC
     "W" -> Type.WATER
     else -> Type.UNKNOWN
+}
+
+
+fun String.deserializeTypes(): List<Type> {
+    return this.map {
+        it.toString().type()
+    }
+}
+
+
+fun List<Type>.compactTypes(): String {
+    return this.fold("", { acc, type ->
+        acc.plus(type.compact())
+    })
+}
+
+
+fun String.deserializeEffects(): List<com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect> {
+    return this.split(",").map {
+        val parts = it.replace("[", "").replace("]", "").split("|")
+        com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect(parts[0].type(), parts[1])
+    }
+}
+
+
+fun List<Effect>.compactEffects(): String {
+    return this.foldIndexed("", { index, acc, effect ->
+        val new = acc.plus("[${effect.type.displayName[0].toUpperCase()}|${effect.value}]")
+        if (index != this.size - 1) {
+            new.plus(",")
+        } else {
+            new
+        }
+    })
 }
 

@@ -18,8 +18,7 @@ import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
 import javax.inject.Inject
 import com.google.firebase.firestore.FirebaseFirestoreSettings
-
-
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 
 
 @SuppressLint("CheckResult")
@@ -71,9 +70,9 @@ class FirestoreDeckCache @Inject constructor(
     }
 
 
-    override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?): Observable<Deck> {
+    override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> {
         return getUserDeckCollection()?.let { collection ->
-            val newDeck = Deck(id ?: "", name, description ?: "", cards, System.currentTimeMillis())
+            val newDeck = Deck(id ?: "", name, description ?: "", image, cards, System.currentTimeMillis())
             val model = EntityMapper.to(newDeck)
             if (id == null) {
                 val task = collection.add(model)
@@ -97,7 +96,7 @@ class FirestoreDeckCache @Inject constructor(
                     .map { it.isEmpty }
                     .flatMap {
                         if (it) {
-                            putDeck(null, deck.cards, deck.name, deck.description)
+                            putDeck(null, deck.cards, deck.name, deck.description, deck.image)
                         }
                         else {
                             val regex = DUPLICATE_REGEX.toRegex()
@@ -108,7 +107,7 @@ class FirestoreDeckCache @Inject constructor(
 
                             val cleanName = deck.name.replace(regex, "").trim()
                             val newName = "$cleanName ($count)"
-                            duplicateDeck(Deck("", newName, deck.description, deck.cards, deck.timestamp))
+                            duplicateDeck(Deck("", newName, deck.description, deck.image, deck.cards, deck.timestamp))
                         }
                     }
                     .map { Unit }
@@ -133,10 +132,10 @@ class FirestoreDeckCache @Inject constructor(
 
         // Attempt to fix Crashlytics Issue #17 where the underlying SQLite database is getting deadlocked by
         // demanding offline persistence each time we try and access the Firestore database
-        val settings = FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build()
-        db.firestoreSettings = settings
+//        val settings = FirebaseFirestoreSettings.Builder()
+//                .setPersistenceEnabled(true)
+//                .build()
+//        db.firestoreSettings = settings
 
         return user?.let { u ->
             db.collection(COLLECTION_USERS)

@@ -1,12 +1,10 @@
-package gov.scstatehouse.houseofcards.util
+package com.r0adkll.deckbuilder.util
 
 
 import android.content.Context
 import android.os.ResultReceiver
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-
-import java.lang.reflect.Method
 
 /**
  * Utility methods for working with the keyboard

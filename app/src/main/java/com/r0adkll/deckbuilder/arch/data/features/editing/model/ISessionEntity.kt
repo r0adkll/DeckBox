@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.model
 
+import android.net.Uri
 import io.requery.*
 
 
@@ -16,9 +17,11 @@ interface ISessionEntity : Persistable {
 
     var originalName: String
     var originalDescription: String
+    var originalImage: Uri?
 
     var name: String?
     var description: String?
+    var image: Uri?
 
     @get:OneToMany
     var cards: List<ISessionCardEntity>
