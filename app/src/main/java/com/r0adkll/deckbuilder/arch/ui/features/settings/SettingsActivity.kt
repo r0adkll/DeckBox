@@ -154,23 +154,19 @@ class SettingsActivity : BaseActivity() {
             val profilePref = findPreference("pref_account_profile") as ProfilePreference
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
-                profilePref.avatarUrl = user.photoUrl
-
-                profilePref.title = if (user.isAnonymous) {
-                    getString(R.string.user_anonymous_title)
+                if (user.isAnonymous) {
+                    profilePref.isVisible = false
                 } else {
-                    user.displayName
-                }
-
-                profilePref.summary = if (user.isAnonymous) {
-                    user.uid
-                } else {
-                    user.email
+                    profilePref.isVisible = true
+                    profilePref.avatarUrl = user.photoUrl
+                    profilePref.title = user.displayName
+                    profilePref.summary = user.email
                 }
 
                 val linkAccount = findPreference("pref_account_link")
                 linkAccount.isVisible = user.isAnonymous
             } else {
+                profilePref.avatarUrl = null
                 profilePref.title = "Offline"
                 profilePref.summary = preferences.deviceId
 
