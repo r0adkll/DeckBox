@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.domain.features.decks.model
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.pokemontcg.model.SuperType
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
@@ -12,6 +13,7 @@ data class Deck(
         val id: String,
         val name: String,
         val description: String,
+        val image: DeckImage?,
         val cards: List<PokemonCard>,
         val timestamp: Long
 ) : PaperParcelable {

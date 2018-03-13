@@ -53,9 +53,9 @@ class FirebaseAnalyticInterface(
 
 
     private fun getBundle(event: Event): Bundle = when(event) {
-        is Event.Login.Google -> bundle { SIGN_UP_METHOD to "google" }
-        is Event.Login.Anonymous -> bundle { SIGN_UP_METHOD to "anonymous" }
-        is Event.SignUp.Google -> bundle { SIGN_UP_METHOD to "google" }
+        Event.Login.Google -> bundle { SIGN_UP_METHOD to "google" }
+        Event.Login.Anonymous -> bundle { SIGN_UP_METHOD to "anonymous" }
+        Event.SignUp.Google -> bundle { SIGN_UP_METHOD to "google" }
         is Event.Search -> bundle { SEARCH_TERM to event.term }
         is Event.Share -> bundle {
             CONTENT_TYPE to event.type

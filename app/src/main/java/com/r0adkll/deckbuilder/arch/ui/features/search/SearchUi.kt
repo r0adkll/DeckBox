@@ -45,13 +45,13 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
 
     @PaperParcel
-    data class Result(
+    data class Result @JvmOverloads constructor(
             val query: String,
             val filter: Filter,
             val isLoading: Boolean,
             val error: String?,
             val category: SuperType,
-            val results: List<PokemonCard>
+            @Transient val results: List<PokemonCard> = emptyList()
     ) : PaperParcelable {
 
         companion object {

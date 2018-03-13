@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.settings
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceViewHolder
@@ -8,6 +9,7 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.*
+import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 
@@ -33,10 +35,14 @@ class ProfilePreference : Preference {
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         val avatar = holder.findViewById(R.id.avatar) as ImageView
-        GlideApp.with(avatar)
-                .load(avatarUrl)
-                .placeholder(R.drawable.dr_avatar_offline)
-                .transition(withCrossFade())
-                .into(avatar)
+        if (avatarUrl != null) {
+            GlideApp.with(avatar)
+                    .load(avatarUrl)
+                    .placeholder(ColorDrawable(context.color(R.color.grey_400)))
+                    .transition(withCrossFade())
+                    .into(avatar)
+        } else {
+            avatar.setImageResource(R.drawable.dr_avatar_offline)
+        }
     }
 }

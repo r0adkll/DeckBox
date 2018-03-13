@@ -1,5 +1,5 @@
-• Hotfix for bug in previous build
-• Added Prism Star deck validation
-• Large improvements to how the app handles editing decks
-• Ability to pick up editing sessions if app dies
-• Many bug fixes
+• Add ability to choose the image for your decks
+• Fixed issue where you could no longer edit decks after rotating screen
+• Fixed issue with importing decks from the home screen
+• Added confirmation dialog to deleting decks
+• Misc bug fixes around editing decks

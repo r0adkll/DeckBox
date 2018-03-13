@@ -7,8 +7,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Change
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
-import com.r0adkll.deckbuilder.util.compact
-import com.r0adkll.deckbuilder.util.type
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
+import com.r0adkll.deckbuilder.util.*
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
@@ -40,9 +40,10 @@ object EntityMapper {
                 entity.deckId,
                 entity.name ?: "",
                 entity.description ?: "",
-                from(expansions, entity.cards),
+                entity.image?.let { DeckImage.from(it) },
+                from(expansions, entity.cards.toList()),
                 calculateChanges(entity),
-                entity.changes.map { to(it) }
+                entity.changes.toList().map { to(it) }
         )
     }
 
@@ -116,47 +117,16 @@ object EntityMapper {
     }
 
 
-    private fun String.deserializeTypes(): List<Type> {
-        return this.map {
-            it.toString().type()
-        }
-    }
-
-
-    private fun List<Type>.compactTypes(): String {
-        return this.fold("", { acc, type ->
-            acc.plus(type.compact())
-        })
-    }
-
-
-    private fun String.deserializeEffects(): List<com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect> {
-        return this.split(",").map {
-            val parts = it.replace("[", "").replace("]", "").split("|")
-            com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect(parts[0].type(), parts[1])
-        }
-    }
-
-
-    private fun List<Effect>.compactEffects(): String {
-        return this.foldIndexed("", { index, acc, effect ->
-            val new = acc.plus("[${effect.type.displayName[0].toUpperCase()}|${effect.value}]")
-            if (index != this.size - 1) {
-                new.plus(",")
-            } else {
-                new
-            }
-        })
-    }
-
-
     private fun calculateChanges(entity: SessionEntity): Boolean {
         var anyCardChange = false
-        entity.changes.groupBy { it.cardId }.forEach { (_, changes) ->
+        entity.changes.toList().groupBy { it.cardId }.forEach { (_, changes) ->
             if (changes.sumBy { it.change } != 0) {
                 anyCardChange = true
             }
         }
-        return anyCardChange || entity.originalName != entity.name || entity.originalDescription != entity.description
+        return anyCardChange
+                || entity.originalName != entity.name
+                || entity.originalDescription != entity.description
+                || entity.originalImage != entity.image
     }
 }

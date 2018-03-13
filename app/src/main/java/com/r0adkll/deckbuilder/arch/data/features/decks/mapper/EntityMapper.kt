@@ -1,12 +1,15 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.mapper
 
 
+import android.net.Uri
 import com.r0adkll.deckbuilder.arch.data.features.decks.model.*
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Attack
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
+import com.r0adkll.deckbuilder.util.compactEffects
+import com.r0adkll.deckbuilder.util.compactTypes
+import com.r0adkll.deckbuilder.util.deserializeEffects
+import com.r0adkll.deckbuilder.util.deserializeTypes
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
@@ -18,6 +21,7 @@ object EntityMapper {
         return DeckEntity(
                 deck.name,
                 deck.description,
+                deck.image?.uri?.toString(),
                 deck.cards.map { to(it) },
                 System.currentTimeMillis()
         )
@@ -29,6 +33,7 @@ object EntityMapper {
                 id,
                 entity.name,
                 entity.description,
+                entity.image?.let { DeckImage.from(Uri.parse(it)) },
                 entity.cards.map { to(it, expansions) },
                 entity.timestamp
         )
@@ -42,21 +47,23 @@ object EntityMapper {
                 card.nationalPokedexNumber,
                 card.imageUrl,
                 card.imageUrlHiRes,
-//                card.types?.map { it.displayName },
+                card.types?.compactTypes(),
                 card.supertype.displayName,
                 card.subtype.displayName,
                 card.evolvesFrom,
                 card.hp,
-//                card.retreatCost?.map { it.displayName },
+                card.retreatCost?.size,
                 card.number,
                 card.artist,
                 card.rarity,
                 card.series,
-                card.expansion?.let { it.code }
-//                card.text,
+                card.expansion?.let { it.code },
+                card.text?.joinToString("\n"),
 //                card.attacks?.map { to(it) },
-//                card.weaknesses?.map { to(it) },
-//                card.resistances?.map { to(it) }
+                card.weaknesses?.compactEffects(),
+                card.resistances?.compactEffects(),
+                card.ability?.name,
+                card.ability?.text
         )
     }
 
@@ -68,24 +75,23 @@ object EntityMapper {
                 entity.nationalPokedexNumber,
                 entity.imageUrl,
                 entity.imageUrlHiRes,
-//                entity.types?.map { Type.find(it) },
-                null,
+                entity.types?.deserializeTypes(),
                 SuperType.find(entity.supertype),
                 SubType.find(entity.subtype),
                 entity.evolvesFrom,
                 entity.hp,
-                null,
-//                entity.retreatCost?.map { Type.find(it) },
+                entity.retreatCost?.let { (0 until it).map { Type.COLORLESS } },
                 entity.number,
                 entity.artist,
                 entity.rarity,
                 entity.series,
                 entity.expansionCode?.let { code -> expansions.find { it.code == code } },
-                null, null, null, null, null
-//                entity.text,
+                entity.text?.split("\n"),
+                null,
+                entity.weaknesses?.deserializeEffects(),
+                entity.resistances?.deserializeEffects(),
+                entity.abilityName?.let { Ability(it, entity.abilityText ?: "") }
 //                entity.attacks?.map { to(it) },
-//                entity.weaknesses?.map { to(it) },
-//                entity.resistances?.map { to(it) }
         )
     }
 

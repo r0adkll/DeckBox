@@ -11,10 +11,12 @@ class Schedulers(
         val disk: Scheduler,
         val comp: Scheduler,
         val network: Scheduler,
-        val firebaseExecutor: Executor
+        val firebaseExecutor: Executor,
+        val databaseExecutor: Executor
 ) {
 
     val firebase: Scheduler = io.reactivex.schedulers.Schedulers.from(firebaseExecutor)
+    val database: Scheduler = io.reactivex.schedulers.Schedulers.from(databaseExecutor)
 
     companion object {
         fun createTrampoline(useMain: Boolean = false): Schedulers {
@@ -23,7 +25,8 @@ class Schedulers(
                     disk = io.reactivex.schedulers.Schedulers.trampoline(),
                     comp = io.reactivex.schedulers.Schedulers.trampoline(),
                     network = io.reactivex.schedulers.Schedulers.trampoline(),
-                    firebaseExecutor = MainThreadExecutor()
+                    firebaseExecutor = MainThreadExecutor(),
+                    databaseExecutor = MainThreadExecutor()
             )
         }
     }

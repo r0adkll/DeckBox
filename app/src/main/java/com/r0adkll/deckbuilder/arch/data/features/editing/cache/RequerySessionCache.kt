@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.requery.Persistable
@@ -34,6 +35,7 @@ class RequerySessionCache @Inject constructor(
                     .flatMap { existingSession ->
                         existingSession.originalName = deck.name
                         existingSession.originalDescription = deck.description
+                        existingSession.originalImage = deck.image?.uri
 
                         db.update(existingSession)
                                 .map { it.id }
@@ -51,8 +53,10 @@ class RequerySessionCache @Inject constructor(
         session.deckId = deck?.id
         session.originalName = deck?.name ?: ""
         session.originalDescription = deck?.description ?: ""
+        session.originalImage = deck?.image?.uri
         session.name = deck?.name ?: ""
         session.description = deck?.description ?: ""
+        session.image = deck?.image?.uri
 
         val cards = ArrayList<ISessionCardEntity>()
 
@@ -113,6 +117,7 @@ class RequerySessionCache @Inject constructor(
                 .flatMap { session ->
                     session.originalName = session.name
                     session.originalDescription = session.description
+                    session.originalImage = session.image
                     (session.changes as java.util.List<IChangeEntity>).clear()
                     db.update(session).toObservable().map { Unit }
                 }
@@ -122,6 +127,7 @@ class RequerySessionCache @Inject constructor(
     override fun changeName(sessionId: Long, name: String): Observable<String> {
         return db.update(SessionEntity::class)
                 .set(SessionEntity.NAME, name)
+                .where(SessionEntity.ID.eq(sessionId))
                 .get()
                 .single()
                 .toObservable()
@@ -132,10 +138,22 @@ class RequerySessionCache @Inject constructor(
     override fun changeDescription(sessionId: Long, description: String): Observable<String> {
         return db.update(SessionEntity::class)
                 .set(SessionEntity.DESCRIPTION, description)
+                .where(SessionEntity.ID.eq(sessionId))
                 .get()
                 .single()
                 .toObservable()
                 .map { description }
+    }
+
+
+    override fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit> {
+        return db.update(SessionEntity::class)
+                .set(SessionEntity.IMAGE, image.uri)
+                .where(SessionEntity.ID.eq(sessionId))
+                .get()
+                .single()
+                .toObservable()
+                .map { Unit }
     }
 
 
@@ -168,13 +186,12 @@ class RequerySessionCache @Inject constructor(
                 .get()
                 .observable()
                 .flatMap { session ->
-                    val cardToRemove = session.cards.first { it.cardId == card.id }
-                    (session.cards as java.util.List<ISessionCardEntity>).remove(cardToRemove)
-
-                    val change = EntityMapper.createRemoveChange(card, searchSessionId)
-                    (session.changes as java.util.List<IChangeEntity>).add(change)
-
-                    db.update(session).toObservable().map { Unit }
+                    session.cards.firstOrNull { it.cardId == card.id }?.let {
+                        (session.cards as java.util.List<ISessionCardEntity>).remove(it)
+                        val change = EntityMapper.createRemoveChange(card, searchSessionId)
+                        (session.changes as java.util.List<IChangeEntity>).add(change)
+                        db.update(session).toObservable().map { Unit }
+                    } ?: Observable.just(Unit)
                 }
     }
 
@@ -192,8 +209,9 @@ class RequerySessionCache @Inject constructor(
 
                     changes.forEach { cardId, count ->
                         (0 until count).forEach {
-                            val card = session.cards.find { it.cardId == cardId }
-                            (session.cards as java.util.List<ISessionCardEntity>).remove(card)
+                            session.cards.find { it.cardId == cardId }?.let {
+                                (session.cards as java.util.List<ISessionCardEntity>).remove(it)
+                            }
                         }
                     }
                     (session.changes as java.util.List<IChangeEntity>).removeAll { it.searchSessionId == searchSessionId }

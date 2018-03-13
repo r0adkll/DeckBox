@@ -11,7 +11,9 @@ import dagger.Provides
 
 
 @Module
-class DeckBuilderModule(val activity: DeckBuilderActivity) {
+class DeckBuilderModule(
+        val activity: DeckBuilderActivity
+) {
 
     @Provides @ActivityScope
     fun provideUi(): DeckBuilderUi = activity

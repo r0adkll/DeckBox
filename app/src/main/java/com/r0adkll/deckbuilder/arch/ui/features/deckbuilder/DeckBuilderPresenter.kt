@@ -9,6 +9,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.*
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -33,24 +34,28 @@ class DeckBuilderPresenter @Inject constructor(
 
         disposables += intentions.addCards()
                 .flatMap { repository.addCards(ui.state.sessionId, it) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Card(s) added to session")
                 }, { t -> Timber.e(t, "Error adding card to session")})
 
         disposables += intentions.removeCard()
                 .flatMap { repository.removeCard(ui.state.sessionId, it) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Card removed from session")
                 }, { t -> Timber.e(t, "Error removing card from session")})
 
         disposables += intentions.editDeckName()
                 .flatMap { repository.changeName(ui.state.sessionId, it) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Name changed!")
                 }, { t -> Timber.e(t, "Error changing deck name")})
 
         disposables += intentions.editDeckDescription()
                 .flatMap { repository.changeDescription(ui.state.sessionId, it) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Timber.d("Description changed!")
                 }, { t -> Timber.e(t, "Error changing description name")})
