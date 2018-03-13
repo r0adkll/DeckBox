@@ -127,6 +127,7 @@ class RequerySessionCache @Inject constructor(
     override fun changeName(sessionId: Long, name: String): Observable<String> {
         return db.update(SessionEntity::class)
                 .set(SessionEntity.NAME, name)
+                .where(SessionEntity.ID.eq(sessionId))
                 .get()
                 .single()
                 .toObservable()
@@ -137,6 +138,7 @@ class RequerySessionCache @Inject constructor(
     override fun changeDescription(sessionId: Long, description: String): Observable<String> {
         return db.update(SessionEntity::class)
                 .set(SessionEntity.DESCRIPTION, description)
+                .where(SessionEntity.ID.eq(sessionId))
                 .get()
                 .single()
                 .toObservable()
@@ -147,6 +149,7 @@ class RequerySessionCache @Inject constructor(
     override fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit> {
         return db.update(SessionEntity::class)
                 .set(SessionEntity.IMAGE, image.uri)
+                .where(SessionEntity.ID.eq(sessionId))
                 .get()
                 .single()
                 .toObservable()

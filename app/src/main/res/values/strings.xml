@@ -175,4 +175,7 @@
     <string name="action_select">Select</string>
     <string name="action_cancel">Cancel</string>
     <string name="empty_deck_image_message">No cards found for this deck. Go back and add some before picking your deck image.</string>
+    <string name="dialog_delete_deck_title">Delete deck?</string>
+    <string name="action_delete">Delete</string>
+    <string name="dialog_delete_deck_message">Are you sure that you want to delete %1$s? You will not be able to revert this change.</string>
 </resources>

@@ -35,7 +35,7 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findEnum
 import gov.scstatehouse.houseofcards.di.HasComponent
-import gov.scstatehouse.houseofcards.util.ImeUtils
+import com.r0adkll.deckbuilder.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_search.*

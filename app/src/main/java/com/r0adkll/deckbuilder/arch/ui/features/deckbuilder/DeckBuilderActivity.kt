@@ -443,6 +443,8 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 deckImage.setImageResource(R.color.grey_300)
             }
             is DeckImage.Pokemon -> {
+                deckImage.primaryType = null
+                deckImage.secondaryType = null
                 GlideApp.with(this)
                         .load(image.imageUrl)
                         .transition(DrawableTransitionOptions.withCrossFade())

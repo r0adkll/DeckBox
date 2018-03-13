@@ -76,6 +76,7 @@ class DataModule {
             io.reactivex.schedulers.Schedulers.io(),
             io.reactivex.schedulers.Schedulers.computation(),
             io.reactivex.schedulers.Schedulers.io(),
+            Executors.newSingleThreadExecutor(),
             Executors.newSingleThreadExecutor()
     )
 

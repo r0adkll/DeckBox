@@ -35,7 +35,7 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import gov.scstatehouse.houseofcards.di.HasComponent
-import gov.scstatehouse.houseofcards.util.ImeUtils
+import com.r0adkll.deckbuilder.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*

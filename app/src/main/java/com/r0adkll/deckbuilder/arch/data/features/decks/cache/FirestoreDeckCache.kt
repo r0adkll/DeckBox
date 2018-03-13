@@ -132,10 +132,10 @@ class FirestoreDeckCache @Inject constructor(
 
         // Attempt to fix Crashlytics Issue #17 where the underlying SQLite database is getting deadlocked by
         // demanding offline persistence each time we try and access the Firestore database
-        val settings = FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build()
-        db.firestoreSettings = settings
+//        val settings = FirebaseFirestoreSettings.Builder()
+//                .setPersistenceEnabled(true)
+//                .build()
+//        db.firestoreSettings = settings
 
         return user?.let { u ->
             db.collection(COLLECTION_USERS)
