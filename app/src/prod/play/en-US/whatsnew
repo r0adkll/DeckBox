@@ -1,1 +1,5 @@
-• Hotfix for bugs
+• Add ability to choose the image for your decks
+• Fixed issue where you could no longer edit decks after rotating screen
+• Fixed issue with importing decks from the home screen
+• Added confirmation dialog to deleting decks
+• Misc bug fixes around editing decks
