@@ -24,6 +24,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.FlagPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
@@ -74,6 +75,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     @Inject lateinit var renderer: DeckBuilderRenderer
     @Inject lateinit var presenter: DeckBuilderPresenter
     @Inject lateinit var editRepository: EditRepository
+    @Inject lateinit var flags: FlagPreferences
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
@@ -92,6 +94,11 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
+
+        // Set Flags
+        newFeatureDeckImage.setVisible(flags.newFeatureDeckImage)
+
+        // Setup AppBar
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = null
@@ -124,6 +131,8 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             }
         }
 
+        // Setup pager
+
         ruleAdapter = RuleRecyclerAdapter(this)
         ruleRecycler.layoutManager = LinearLayoutManager(this)
         ruleRecycler.adapter = ruleAdapter
@@ -132,6 +141,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         pager.adapter = adapter
         pager.offscreenPageLimit = 3
         tabs.setupWithViewPager(pager)
+
+
+        // Setup Listeners
 
         fab.setOnClickListener {
             val superType = when(tabs.selectedTabPosition) {
@@ -238,6 +250,8 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
         disposables += actionDeckImage.clicks()
                 .subscribe {
+                    flags.newFeatureDeckImage = false
+                    newFeatureDeckImage.gone()
                     DeckImagePickerFragment.newInstance(sessionId, state.image)
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
                 }

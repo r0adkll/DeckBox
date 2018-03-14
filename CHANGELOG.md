@@ -1,3 +1,7 @@
+# 1.5.1
+* Hotfix for Firestore threading issue
+* Added 'new' feature indicator for deck images
+
 # 1.5.0
 * [#11](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/11) - Add ability to choose the image for your decks
 * Fixed issue where you could no longer edit decks after rotating screen

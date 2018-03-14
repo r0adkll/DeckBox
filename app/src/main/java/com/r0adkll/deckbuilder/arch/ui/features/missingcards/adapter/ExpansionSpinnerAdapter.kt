@@ -12,7 +12,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 
 
-class ExpansionSpinnerAdapter(context: Context) : ArrayAdapter<Expansion>(context, R.layout.item_expansion) {
+class ExpansionSpinnerAdapter(context: Context) : ArrayAdapter<Expansion>(context, R.layout.item_expansion_small) {
 
     private val inflater = LayoutInflater.from(context)
 
@@ -28,7 +28,7 @@ class ExpansionSpinnerAdapter(context: Context) : ArrayAdapter<Expansion>(contex
 
 
     private fun getViewForPosition(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: inflater.inflate(R.layout.item_expansion, parent, false)
+        val view = convertView ?: inflater.inflate(R.layout.item_expansion_small, parent, false)
         val expansion = getItem(position)
 
         val icon = view.findViewById<ImageView>(R.id.icon)

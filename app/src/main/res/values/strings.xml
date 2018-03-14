@@ -14,6 +14,7 @@
     <string name="tab_decks">Decks</string>
     <string name="tab_community">Community</string>
     <string name="tab_collection">Collection</string>
+    <string name="tab_browse">Browse</string>
     <string name="empty_decks_message">You don\'t have any decks</string>
     <string name="activity_deck_builder">New deck</string>
     <string name="tab_pokemon">Pokémon</string>
@@ -178,4 +179,6 @@
     <string name="dialog_delete_deck_title">Delete deck?</string>
     <string name="action_delete">Delete</string>
     <string name="dialog_delete_deck_message">Are you sure that you want to delete %1$s? You will not be able to revert this change.</string>
+    <string name="empty_browse_message">No set\'s to browse.</string>
+    <string name="action_cache">download</string>
 </resources>

@@ -102,6 +102,19 @@
 
     </FrameLayout>
 
+    <ImageView
+        android:id="@+id/newFeatureDeckImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="-9dp"
+        android:layout_marginTop="-9dp"
+        android:layout_alignTop="@+id/actionDeckImage"
+        android:layout_alignEnd="@+id/actionDeckImage"
+        android:src="@drawable/ic_new_releases_red_24dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_deck_name"
         android:layout_width="match_parent"

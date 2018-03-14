@@ -48,7 +48,7 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
     ) : PaperParcelable {
 
         val searchFilter: Filter
-            get() = Filter.DEFAULT.copy(expansions = listOf(Expansion(setCode, null, "", "", 0, false, false, "", "")))
+            get() = Filter.DEFAULT.copy(expansions = listOf(Expansion(setCode, null, "", "", 0, false, false, "", "", "")))
 
 
         fun reduce(change: Change): State = when(change) {

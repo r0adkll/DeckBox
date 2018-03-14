@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksFragment
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
@@ -46,6 +48,33 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
         adapter = HomePagerAdapter(supportFragmentManager)
         pager.adapter = adapter
+
+        bottomNavigation.setOnTabSelectListener({
+            when(it) {
+                R.id.tab_decks -> {
+                    if (pager.currentItem != 0) {
+                        pager.setCurrentItem(0, true)
+                    }
+                }
+                R.id.tab_browser -> {
+                    if (pager.currentItem != 1) {
+                        pager.setCurrentItem(1, true)
+                    }
+                }
+            }
+        }, false)
+
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                bottomNavigation.selectTabAtPosition(position, false)
+            }
+        })
     }
 
 
@@ -103,10 +132,11 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
         override fun getItem(position: Int): Fragment? = when(position) {
             0 -> DecksFragment.newInstance()
+            1 -> BrowseFragment.newInstance()
             else -> null
         }
 
 
-        override fun getCount(): Int = 1 // TODO: Increase when we add more screens
+        override fun getCount(): Int = 2 // TODO: Increase when we add more screens
     }
 }

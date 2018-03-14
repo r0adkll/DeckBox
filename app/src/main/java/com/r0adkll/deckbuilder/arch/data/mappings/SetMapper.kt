@@ -8,7 +8,7 @@ object SetMapper {
 
     fun to(set: CardSet): Expansion {
         return Expansion(set.code, set.ptcgoCode, set.name, set.series, set.totalCards, set.standardLegal,
-                set.expandedLegal, set.releaseDate, set.symbolUrl)
+                set.expandedLegal, set.releaseDate, set.symbolUrl, set.logoUrl)
     }
 
 }

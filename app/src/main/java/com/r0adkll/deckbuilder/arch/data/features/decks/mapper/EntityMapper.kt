@@ -122,7 +122,8 @@ object EntityMapper {
                 entity.standardLegal,
                 entity.expandedLegal,
                 entity.releaseDate,
-                entity.symbolUrl
+                entity.symbolUrl,
+                entity.logoUrl
         )
     }
 

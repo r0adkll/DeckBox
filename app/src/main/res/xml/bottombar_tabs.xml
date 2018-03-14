@@ -5,14 +5,19 @@
         icon="@drawable/ic_cards_variant"
         title="@string/tab_decks"
         />
+    <!--<tab-->
+        <!--id="@+id/tab_community"-->
+        <!--icon="@drawable/ic_forum_black_24dp"-->
+        <!--title="@string/tab_community"-->
+        <!--/>-->
+    <!--<tab-->
+        <!--id="@+id/tab_collection"-->
+        <!--icon="@drawable/ic_cards"-->
+        <!--title="@string/tab_collection"-->
+        <!--/>-->
     <tab
-        id="@+id/tab_community"
-        icon="@drawable/ic_forum_black_24dp"
-        title="@string/tab_community"
-        />
-    <tab
-        id="@+id/tab_collection"
-        icon="@drawable/ic_cards"
-        title="@string/tab_collection"
+        id="@+id/tab_browser"
+        icon="@drawable/ic_search_black_24dp"
+        title="@string/tab_browse"
         />
 </tabs>

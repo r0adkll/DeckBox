@@ -15,7 +15,8 @@ data class Expansion(
         val standardLegal: Boolean,
         val expandedLegal: Boolean,
         val releaseDate: String,
-        val symbolUrl: String
+        val symbolUrl: String,
+        val logoUrl: String
 ) : PaperParcelable {
     companion object {
         @JvmField val CREATOR = PaperParcelExpansion.CREATOR
