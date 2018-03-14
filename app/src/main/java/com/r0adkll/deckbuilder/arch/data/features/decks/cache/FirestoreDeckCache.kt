@@ -17,8 +17,8 @@ import com.r0adkll.deckbuilder.util.RxFirebase
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
 import javax.inject.Inject
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
+import timber.log.Timber
 
 
 @SuppressLint("CheckResult")
@@ -36,6 +36,8 @@ class FirestoreDeckCache @Inject constructor(
                         RxFirebase.from(task)
                                 .map { it.toObject(DeckEntity::class.java) }
                                 .map { EntityMapper.to(expansions, it, id) }
+                                .subscribeOn(schedulers.firebase)
+                                .doOnNext { Timber.d("Firebase::getDeck($id) - Thread(${Thread.currentThread()?.name})") }
                     } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
                 }
     }
@@ -44,28 +46,32 @@ class FirestoreDeckCache @Inject constructor(
     override fun getDecks(): Observable<List<Deck>> {
         return cardRepository.getExpansions()
                 .flatMap { expansions ->
-                    Observable.create<List<Deck>>({ emitter ->
-                        getUserDeckCollection()?.let { collection ->
-                            val registration = collection.addSnapshotListener(schedulers.firebaseExecutor, EventListener { snapshot, exception ->
-                                if (exception != null) {
-                                    emitter.onError(exception)
-                                    return@EventListener
-                                }
+                            Observable.create<List<Deck>>({ emitter ->
+                                getUserDeckCollection()?.let { collection ->
+                                    val registration = collection.addSnapshotListener(schedulers.firebaseExecutor, EventListener { snapshot, exception ->
+                                        if (exception != null) {
+                                            emitter.onError(exception)
+                                            return@EventListener
+                                        }
 
-                                val decks = ArrayList<Deck>()
-                                snapshot.forEach { document ->
-                                    val deck = document.toObject(DeckEntity::class.java)
-                                    decks.add(EntityMapper.to(expansions, deck, document.id))
-                                }
+                                        val decks = ArrayList<Deck>()
+                                        snapshot.forEach { document ->
+                                            val deck = document.toObject(DeckEntity::class.java)
+                                            decks.add(EntityMapper.to(expansions, deck, document.id))
+                                        }
 
-                                emitter.onNext(decks)
+
+                                        Timber.d("Firebase::getDecks()::onNext() - Thread(${Thread.currentThread()?.name})")
+                                        emitter.onNext(decks)
+                                    })
+
+                                    emitter.setCancellable {
+                                        registration.remove()
+                                    }
+                                } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
                             })
-
-                            emitter.setCancellable {
-                                registration.remove()
-                            }
-                        } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
-                    })
+                            .subscribeOn(schedulers.firebase)
+                            .doOnNext { Timber.d("Firebase::getDecks() - Thread(${Thread.currentThread()?.name})") }
                 }
     }
 
@@ -78,12 +84,14 @@ class FirestoreDeckCache @Inject constructor(
                 val task = collection.add(model)
                 RxFirebase.from(task)
                         .map { newDeck.copy(id = it.id) }
+                        .subscribeOn(schedulers.firebase)
             }
             else {
                 val task = collection.document(id)
                         .set(model)
                 RxFirebase.fromVoid(task)
                         .map { newDeck }
+                        .subscribeOn(schedulers.firebase)
             }
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
@@ -111,6 +119,7 @@ class FirestoreDeckCache @Inject constructor(
                         }
                     }
                     .map { Unit }
+                    .subscribeOn(schedulers.firebase)
 
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
@@ -122,6 +131,7 @@ class FirestoreDeckCache @Inject constructor(
                     .document(deck.id)
                     .delete()
             RxFirebase.fromVoid(task)
+                    .subscribeOn(schedulers.firebase)
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
 
@@ -129,13 +139,6 @@ class FirestoreDeckCache @Inject constructor(
     private fun getUserDeckCollection(): CollectionReference? {
         val user = FirebaseAuth.getInstance().currentUser
         val db = FirebaseFirestore.getInstance()
-
-        // Attempt to fix Crashlytics Issue #17 where the underlying SQLite database is getting deadlocked by
-        // demanding offline persistence each time we try and access the Firestore database
-//        val settings = FirebaseFirestoreSettings.Builder()
-//                .setPersistenceEnabled(true)
-//                .build()
-//        db.firestoreSettings = settings
 
         return user?.let { u ->
             db.collection(COLLECTION_USERS)

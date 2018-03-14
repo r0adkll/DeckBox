@@ -11,6 +11,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.pokemontcg.Pokemon
 import io.reactivex.Observable
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -40,6 +41,7 @@ class CachingCardDataSource @Inject constructor(
                 .doOnNext { diskCache.putExpansions(it) }
                 .doOnNext { memoryCache.putExpansions(it) }
                 .subscribeOn(schedulers.network)
+                .doOnNext { Timber.d("Expansion::Network::getDecks():Thread(${Thread.currentThread()?.name})") }
     }
 
 

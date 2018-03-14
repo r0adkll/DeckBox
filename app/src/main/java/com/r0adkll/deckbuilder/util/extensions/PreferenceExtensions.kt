@@ -126,7 +126,7 @@ interface RxPreferences {
 
         override fun deserialize(serialized: String): List<Expansion> {
             val type = object : TypeToken<List<@kotlin.jvm.JvmSuppressWildcards Expansion>>() {}.type
-            return gson.fromJson(serialized, type)
+            return gson.fromJson(serialized, type) ?: emptyList()
         }
 
 

@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -19,12 +20,14 @@ class DefaultDeckRepository @Inject constructor(
     override fun getDeck(id: String): Observable<Deck> {
         return cache.getDeck(id)
                 .subscribeOn(schedulers.firebase)
+                .doOnNext { Timber.d("Repository::getDeck($id) - Thread(${Thread.currentThread()?.name})") }
     }
 
 
     override fun getDecks(): Observable<List<Deck>> {
         return cache.getDecks()
                 .subscribeOn(schedulers.firebase)
+                .doOnNext { Timber.d("Repository::getDecks() - Thread(${Thread.currentThread()?.name})") }
     }
 
 
