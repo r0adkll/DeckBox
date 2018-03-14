@@ -9,9 +9,14 @@ import android.widget.TextView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.DECK
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.PREVIEW
+import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
+import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
 
 
@@ -44,7 +49,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             private val deleteClicks: Relay<Deck>
     ) : UiViewHolder<Item.DeckItem>(itemView) {
 
-        private val image: ImageView by bindView(R.id.image)
+        private val image: DeckImageView by bindView(R.id.image)
         private val title: TextView by bindView(R.id.title)
         private val actionShare: ImageView by bindView(R.id.action_share)
         private val actionDuplicate: ImageView by bindView(R.id.action_duplicate)
@@ -54,7 +59,21 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
         override fun bind(item: Item.DeckItem) {
             val deck = item.deck
             title.text = deck.name
-            deck.cards.firstOrNull()?.let {
+
+            deck.image?.let {
+                when(it) {
+                    is DeckImage.Pokemon -> {
+                        GlideApp.with(itemView)
+                                .load(it.imageUrl)
+                                .placeholder(R.drawable.pokemon_card_back)
+                                .into(image)
+                    }
+                    is DeckImage.Type -> {
+                        image.primaryType = it.type1
+                        image.secondaryType = it.type2
+                    }
+                }
+            } ?: mostProminentCard(deck.cards)?.let {
                 GlideApp.with(itemView)
                         .load(it.imageUrl)
                         .placeholder(R.drawable.pokemon_card_back)
@@ -64,6 +83,14 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             actionShare.setOnClickListener { shareClicks.accept(deck) }
             actionDuplicate.setOnClickListener { duplicateClicks.accept(deck) }
             actionDelete.setOnClickListener { deleteClicks.accept(deck) }
+        }
+
+
+        private fun mostProminentCard(cards: List<PokemonCard>): PokemonCard? {
+            val stacks = CardUtils.stackCards().invoke(cards)
+            val evolutions = EvolutionChain.build(stacks)
+            val largestEvolutionLine = evolutions.maxBy { it.size }
+            return largestEvolutionLine?.last()?.cards?.firstOrNull()?.card
         }
     }
 
