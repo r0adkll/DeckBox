@@ -39,12 +39,12 @@ class DecksPresenter @Inject constructor(
                             .onErrorReturn(handleUnknownError)
                 }
 
-        val showPreview = preferences.previewUltraPrism
-                .asObservable()
-                .map { Change.ShowPreview(it) as Change }
+//        val showPreview = preferences.previewUltraPrism
+//                .asObservable()
+//                .map { Change.ShowPreview(it) as Change }
 
         val merged = loadDecks.mergeWith(deleteDecks)
-                .mergeWith(showPreview)
+//                .mergeWith(showPreview)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
@@ -63,7 +63,7 @@ class DecksPresenter @Inject constructor(
 
         disposables += intentions.dismissPreview()
                 .subscribe {
-                    preferences.previewUltraPrism.set(false)
+//                    preferences.previewUltraPrism.set(false)
                 }
     }
 

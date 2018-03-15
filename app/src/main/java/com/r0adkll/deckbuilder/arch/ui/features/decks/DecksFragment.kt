@@ -122,8 +122,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         disposables += viewPreview
                 .subscribe {
-                    Analytics.event(Event.SelectContent.Action("view_preview", "Ultra Prism"))
-                    startActivity(SetBrowserActivity.createIntent(activity!!, "sm5", "Ultra Prism"))
                 }
 
         renderer.start()

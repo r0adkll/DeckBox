@@ -36,6 +36,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
         fun createIntent(context: Context): Intent = Intent(context, HomeActivity::class.java)
     }
 
+
     @Inject lateinit var editor: EditRepository
 
     private lateinit var component: HomeComponent

@@ -37,7 +37,7 @@ class SetBrowserRenderer(
 
         disposables += state
                 .map { s ->
-                    s.cards.sortedBy { it.number.toInt() }
+                    s.cards.sortedBy { it.number.replace("a", "").toIntOrNull() ?: 0 }
                             .filter { when(s.filter) {
                                 ALL -> true
                                 POKEMON -> it.supertype == SuperType.POKEMON

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_tiny"
+    android:stateListAnimator="@animator/elevation_state_anim"
     android:foreground="?attr/selectableItemBackground">
 
     <RelativeLayout

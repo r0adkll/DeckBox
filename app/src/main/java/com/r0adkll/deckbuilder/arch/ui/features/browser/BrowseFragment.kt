@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
+import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.ExpansionRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.browser.di.BrowseModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
@@ -38,10 +39,10 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
         adapter = ExpansionRecyclerAdapter(activity!!)
         adapter.setEmptyView(emptyView)
         adapter.setOnItemClickListener {
-            // TODO: Open set browser
-            toast(it.name)
+            val intent = SetBrowserActivity.createIntent(activity!!, it)
+            startActivity(intent)
         }
-        recycler.layoutManager = GridLayoutManager(activity!!, 2)
+        recycler.layoutManager = LinearLayoutManager(activity!!)
         recycler.adapter = adapter
 
         renderer.start()

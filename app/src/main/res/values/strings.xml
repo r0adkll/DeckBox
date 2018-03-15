@@ -181,4 +181,6 @@
     <string name="dialog_delete_deck_message">Are you sure that you want to delete %1$s? You will not be able to revert this change.</string>
     <string name="empty_browse_message">No set\'s to browse.</string>
     <string name="action_cache">download</string>
+    <string name="expansion_released_date_format">Released on %1$s</string>
+    <string name="fragment_decks">Decks</string>
 </resources>

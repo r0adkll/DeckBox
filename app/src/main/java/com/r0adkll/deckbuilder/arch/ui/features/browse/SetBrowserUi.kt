@@ -67,6 +67,10 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
         }
 
 
+        override fun toString(): String {
+            return "State(setCode=$setCode, isLoading=$isLoading, error=$error, cards=${cards.size}, filter=$filter)"
+        }
+
         companion object {
             @JvmField val CREATOR = PaperParcelSetBrowserUi_State.CREATOR
 

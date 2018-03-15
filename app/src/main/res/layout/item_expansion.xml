@@ -6,23 +6,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="@dimen/padding_tiny"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:stateListAnimator="@animator/elevation_state_anim"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?attr/selectableItemBackground">
+        android:orientation="horizontal">
 
-        <ImageView
+        <com.ftinc.kit.widget.AspectRatioImageView
             android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="128dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:layout_gravity="center"
-            tools:src="@drawable/grising_logo"
+            tools:src="@drawable/smup_logo"
             />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_margin="16dp"
+            >
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="Guardians Rising"
+                />
+
+            <TextView
+                android:id="@+id/series"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="14sp"
+                tools:text="Sun &amp; Moon"
+                />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textColor="?android:textColorSecondaryInverse"
+                android:textSize="14sp"
+                tools:text="Released 11/03/2017"
+                />
+
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/action_layout"
