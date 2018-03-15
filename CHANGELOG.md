@@ -1,6 +1,7 @@
 # 1.5.1
 * Hotfix for Firestore threading issue
 * Added 'new' feature indicator for deck images
+* Added 'Browser' for browsing the expansion sets and it's cards
 
 # 1.5.0
 * [#11](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/11) - Add ability to choose the image for your decks
