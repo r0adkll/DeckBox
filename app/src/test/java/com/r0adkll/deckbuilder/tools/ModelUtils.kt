@@ -11,7 +11,7 @@ object ModelUtils {
 
     fun createPokemonCard(name: String = ""): PokemonCard {
         return PokemonCard("", name, null, "", "", null, SuperType.POKEMON, SubType.BASIC, null, null,
-                null, ",", "", "", "", Expansion("", "", "", "", 0, false, false, "", ""), null, null,
+                null, ",", "", "", "", Expansion("", "", "", "", 0, false, false, "", "", ""), null, null,
                 null, null, null)
     }
 
