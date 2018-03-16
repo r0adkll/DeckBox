@@ -12,5 +12,5 @@ class ExpansionEntity(
         val expandedLegal: Boolean = false,
         val releaseDate: String = "",
         val symbolUrl: String = "",
-        val logoUrl: String = ""
+        val logoUrl: String? = ""
 )
