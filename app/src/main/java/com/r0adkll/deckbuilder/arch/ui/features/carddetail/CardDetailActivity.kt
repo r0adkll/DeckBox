@@ -37,7 +37,7 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindLong
-import com.r0adkll.deckbuilder.util.bindParcelable
+import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
@@ -46,7 +46,7 @@ import javax.inject.Inject
 
 class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions, CardDetailUi.Actions {
 
-    private val card: PokemonCard by bindParcelable(EXTRA_CARD)
+    private val card: PokemonCard? by bindOptionalParcelable(EXTRA_CARD)
     private val sessionId: Long by bindLong(EXTRA_SESSION_ID)
 
     private val addCardClicks: Relay<Unit> = PublishRelay.create()
@@ -73,6 +73,9 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             state = state.copy(sessionId = sessionId)
         }
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }
+
         bindCard()
 
         variantsAdapter = PokemonCardsRecyclerAdapter(this)
@@ -90,6 +93,17 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesRecycler.adapter = evolvesAdapter
+
+        actionClose?.setOnClickListener { finish() }
+        slidingLayout?.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+            override fun onPanelSlide(panel: View?, slideOffset: Float) {
+                val rotation = 180f * slideOffset
+                panelArrow?.rotation = rotation
+            }
+
+            override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
+            }
+        })
 
         renderer.start()
         presenter.start()
@@ -135,12 +149,12 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_add -> {
-                Analytics.event(Event.SelectContent.Action("detail_add_card", card.name))
+                Analytics.event(Event.SelectContent.Action("detail_add_card", card?.name))
                 addCardClicks.accept(Unit)
                 true
             }
             R.id.action_remove -> {
-                Analytics.event(Event.SelectContent.Action("detail_remove_card", card.name))
+                Analytics.event(Event.SelectContent.Action("detail_remove_card", card?.name))
                 removeCardClicks.accept(Unit)
                 true
             }
@@ -204,65 +218,50 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
 
     private fun bindCard() {
-        val number = "#${card.number}"
-        val name = " ${card.name}"
-        val spannable = SpannableString("$number$name")
-        val color = if (slidingLayout == null) color(R.color.black56) else color(R.color.white70)
-        spannable.setSpan(ForegroundColorSpan(color), 0, number.length, 0)
+        card?.let { card ->
+            val number = "#${card.number}"
+            val name = " ${card.name}"
+            val spannable = SpannableString("$number$name")
+            val color = if (slidingLayout == null) color(R.color.black56) else color(R.color.white70)
+            spannable.setSpan(ForegroundColorSpan(color), 0, number.length, 0)
 
-        val prismIndex = name.indexOf("◇")
-        if (prismIndex != -1) {
-            val startIndex = number.length + prismIndex
-            spannable.setSpan(ImageSpan(this@CardDetailActivity, R.drawable.ic_prism_star), startIndex, startIndex + 1, 0)
-        }
-
-        cardTitle.text = spannable
-        cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
-
-        emptyView.visible()
-        emptyView.setLoading(true)
-        var request = GlideApp.with(this)
-                .load(card.imageUrlHiRes)
-                .transition(withCrossFade())
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        emptyView.setEmptyMessage(R.string.image_loading_error)
-                        return false
-                    }
-
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        emptyView.gone()
-                        return false
-                    }
-                })
-
-        if (slidingLayout == null) {
-            request = request.placeholder(R.drawable.pokemon_card_back)
-        }
-
-        request.into(image ?: tabletImage)
-
-
-        GlideApp.with(this)
-                .load(card.expansion?.symbolUrl)
-                .transition(withCrossFade())
-                .into(expansionSymbol)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }
-
-        actionClose?.setOnClickListener { finish() }
-
-
-        slidingLayout?.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
-            override fun onPanelSlide(panel: View?, slideOffset: Float) {
-                val rotation = 180f * slideOffset
-                panelArrow?.rotation = rotation
+            val prismIndex = name.indexOf("◇")
+            if (prismIndex != -1) {
+                val startIndex = number.length + prismIndex
+                spannable.setSpan(ImageSpan(this@CardDetailActivity, R.drawable.ic_prism_star), startIndex, startIndex + 1, 0)
             }
 
-            override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
+            cardTitle.text = spannable
+            cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
+
+            emptyView.visible()
+            emptyView.setLoading(true)
+            var request = GlideApp.with(this)
+                    .load(card.imageUrlHiRes)
+                    .transition(withCrossFade())
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                            emptyView.setEmptyMessage(R.string.image_loading_error)
+                            return false
+                        }
+
+                        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                            emptyView.gone()
+                            return false
+                        }
+                    })
+
+            if (slidingLayout == null) {
+                request = request.placeholder(R.drawable.pokemon_card_back)
             }
-        })
+
+            request.into(image ?: tabletImage)
+
+            GlideApp.with(this)
+                    .load(card.expansion?.symbolUrl)
+                    .transition(withCrossFade())
+                    .into(expansionSymbol)
+        }
     }
 
 
@@ -284,9 +283,11 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         fun show(context: Activity,
                  view: PokemonCardView,
                  sessionId: Long? = null) {
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
-            val intent = createIntent(context, view.card!!, sessionId)
-            context.startActivity(intent, options.toBundle())
+            if (view.card != null) {
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
+                val intent = createIntent(context, view.card!!, sessionId)
+                context.startActivity(intent, options.toBundle())
+            }
         }
     }
 }
