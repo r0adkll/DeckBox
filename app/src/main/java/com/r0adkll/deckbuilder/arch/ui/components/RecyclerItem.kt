@@ -1,9 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.components
 
 
-import android.support.annotation.LayoutRes
-
-
 interface RecyclerItem {
 
     val layoutId: Int

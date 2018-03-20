@@ -21,7 +21,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
      */
     protected var inflater: LayoutInflater
 
-    var items: MutableList<M> = ArrayList<M>(15)
+    var items: MutableList<M> = ArrayList(15)
 
     protected var itemClickListener: OnItemClickListener<M>? = null
     private var itemLongClickListener: OnItemLongClickListener<M>? = null
