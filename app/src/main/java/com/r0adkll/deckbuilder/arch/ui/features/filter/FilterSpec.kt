@@ -297,7 +297,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                             Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost, 0, 4),
                             Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost, 0, 5),
                             Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage, 0, 300),
-                            Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, 0, 250),
+                            Spec.ValueRangeSpec("hp", R.string.filter_header_hp, 0, 250),
                             Spec.TypeSpec("weaknesses", R.string.filter_header_weaknesses),
                             Spec.TypeSpec("resistances", R.string.filter_header_resistances)
                     )
