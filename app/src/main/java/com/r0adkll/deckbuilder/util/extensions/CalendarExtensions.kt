@@ -9,6 +9,7 @@ fun Date.toCalendar(): Calendar {
     return c
 }
 
+
 fun Calendar.clearTime(): Calendar {
     val current = Calendar.getInstance()
     val year = current[Calendar.YEAR]
@@ -22,6 +23,7 @@ fun Calendar.clearTime(): Calendar {
 
     return current
 }
+
 
 fun Calendar.setDate(year: Int, month: Int, dayOfMonth: Int): Calendar {
     this.clearTime()

@@ -34,7 +34,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
-import gov.scstatehouse.houseofcards.di.HasComponent
+import com.r0adkll.deckbuilder.internal.di.HasComponent
 import com.r0adkll.deckbuilder.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable

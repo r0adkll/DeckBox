@@ -34,7 +34,7 @@ import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findEnum
-import gov.scstatehouse.houseofcards.di.HasComponent
+import com.r0adkll.deckbuilder.internal.di.HasComponent
 import com.r0adkll.deckbuilder.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable

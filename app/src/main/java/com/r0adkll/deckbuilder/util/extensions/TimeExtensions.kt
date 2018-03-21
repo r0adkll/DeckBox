@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.util.extensions
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 fun Long.toCalendar(): Calendar {
     val cal = Calendar.getInstance()
     cal.clear()

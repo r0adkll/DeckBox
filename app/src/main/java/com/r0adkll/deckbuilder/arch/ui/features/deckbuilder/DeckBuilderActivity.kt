@@ -5,16 +5,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcel
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
@@ -27,9 +24,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
-import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
 import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
@@ -40,7 +35,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderCompon
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
-import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
@@ -53,7 +47,7 @@ import com.r0adkll.deckbuilder.util.extensions.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
-import gov.scstatehouse.houseofcards.di.HasComponent
+import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*

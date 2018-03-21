@@ -1,4 +1,4 @@
-package gov.scstatehouse.houseofcards.di
+package com.r0adkll.deckbuilder.internal.di
 
 
 interface HasComponent<out C> {

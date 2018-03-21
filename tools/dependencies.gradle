@@ -34,7 +34,7 @@ ext {
     rxbinding_version =      '2.0.0'
     rxpref_version =         '2.0.0-RC3'
     rxrelay_version =        '2.0.0'
-    support_version =        '27.0.2'
+    support_version =        '27.1.0'
     state_version =          '1.1.5'
     stetho_version =         '1.5.0'
     timber_version =         '4.5.1'

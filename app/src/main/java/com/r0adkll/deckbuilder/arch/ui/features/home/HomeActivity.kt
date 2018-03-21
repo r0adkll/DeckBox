@@ -23,7 +23,7 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import gov.scstatehouse.houseofcards.di.HasComponent
+import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject

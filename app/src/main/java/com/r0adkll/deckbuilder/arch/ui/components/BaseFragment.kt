@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.FragmentDelegate
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.StateSaverFragmentDelegate
-import gov.scstatehouse.houseofcards.di.HasComponent
+import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.reactivex.disposables.CompositeDisposable
 import kotlin.reflect.KClass
 

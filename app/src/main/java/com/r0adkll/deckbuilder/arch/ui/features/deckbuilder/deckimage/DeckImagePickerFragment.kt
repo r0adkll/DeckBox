@@ -20,7 +20,7 @@ import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.bindString
 import com.r0adkll.deckbuilder.util.bundle
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
-import gov.scstatehouse.houseofcards.di.HasComponent
+import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_deck_image_picker.*
 import javax.inject.Inject

@@ -16,8 +16,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo.PtcgoExportFragme
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportFragment
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindParcelable
-import com.r0adkll.deckbuilder.util.bindString
-import gov.scstatehouse.houseofcards.di.HasComponent
+import com.r0adkll.deckbuilder.internal.di.HasComponent
 import kotlinx.android.synthetic.main.activity_multi_export.*
 
 
