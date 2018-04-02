@@ -17,7 +17,7 @@ class DeckImageRecyclerAdapter(
         }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): UiViewHolder<DeckImage> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<DeckImage> {
         val itemView = inflater.inflate(viewType, parent, false)
         return UiViewHolder.create(itemView, viewType)
     }

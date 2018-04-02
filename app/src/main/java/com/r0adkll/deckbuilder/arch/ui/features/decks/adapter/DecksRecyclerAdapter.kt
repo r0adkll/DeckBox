@@ -18,7 +18,7 @@ class DecksRecyclerAdapter(
         private val viewPreview: Relay<Unit>
 ) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): UiViewHolder<Item> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
         return UiViewHolder.create(itemView, viewType, shareClicks, duplicateClicks, deleteClicks,
                 dismissPreview, viewPreview)

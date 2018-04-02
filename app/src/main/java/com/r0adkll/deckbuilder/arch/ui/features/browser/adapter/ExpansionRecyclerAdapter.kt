@@ -9,7 +9,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 class ExpansionRecyclerAdapter(context: Context) : ListRecyclerAdapter<Expansion, ExpansionViewHolder>(context) {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ExpansionViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpansionViewHolder {
         return ExpansionViewHolder.create(inflater, parent)
     }
 

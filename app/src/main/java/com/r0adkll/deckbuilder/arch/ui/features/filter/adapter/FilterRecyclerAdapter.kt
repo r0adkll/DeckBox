@@ -14,7 +14,7 @@ class FilterRecyclerAdapter(
 ) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): UiViewHolder<Item> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
         return UiViewHolder.create(itemView, viewType, intentions)
     }

@@ -1,3 +1,6 @@
+# 1.5.2
+* Hotfix for expansion parsing bug
+
 # 1.5.1
 * Hotfix for Firestore threading issue
 * Added 'new' feature indicator for deck images
