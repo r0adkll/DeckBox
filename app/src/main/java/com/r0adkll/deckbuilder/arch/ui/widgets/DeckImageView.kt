@@ -327,7 +327,7 @@ class DeckImageView @JvmOverloads constructor(
         Type.FAIRY -> R.drawable.ic_poketype_fairy
         Type.DARKNESS -> R.drawable.ic_poketype_dark
         else -> R.drawable.ic_poketype_colorless
-    })
+    })!!
 
 
     class CardOutlineProvider(private val radius: Float) : ViewOutlineProvider() {

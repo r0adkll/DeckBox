@@ -1,19 +1,21 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing
 
 
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
+import com.ftinc.kit.arch.presentation.BaseActions
+import com.ftinc.kit.arch.presentation.state.BaseState
+import com.ftinc.kit.arch.presentation.state.Ui
+import com.r0adkll.deckbuilder.arch.domain.features.testing.TestResults
+import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
 
-interface DeckTestingUi : StateRenderer<DeckTestingUi.State> {
-
-    val state: State
+interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
 
 
     interface Intentions {
 
+        fun runTests(): Observable<Int>
     }
 
 
@@ -24,19 +26,23 @@ interface DeckTestingUi : StateRenderer<DeckTestingUi.State> {
 
     @PaperParcel
     data class State(
-            val isLoading: Boolean,
-            val error: String?
-    ) : PaperParcelable {
+            override val isLoading: Boolean,
+            override val error: String?,
+            val sessionId: Long,
+            val results: TestResults?
+    ) : BaseState<State.Change>(isLoading, error), PaperParcelable {
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): Ui.State<Change> = when(change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
+            is Change.Results -> this.copy(results = change.results, isLoading = false)
         }
 
 
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String) : Ui.State.Change(logText) {
             object IsLoading : Change("cache -> loading deck")
             class Error(val description: String) : Change("error -> $description")
+            class Results(val results: TestResults) : Change("test -> $results")
         }
 
 
@@ -44,7 +50,7 @@ interface DeckTestingUi : StateRenderer<DeckTestingUi.State> {
             @JvmField val CREATOR = PaperParcelDeckTestingUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(false, null)
+                State(false, null, -1L, null)
             }
         }
     }

@@ -93,6 +93,10 @@ android {
             }
         }
     }
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
 }
 
 play {
@@ -167,6 +171,9 @@ dependencies {
         exclude group: 'io.reactivex'
     }
     implementation("com.52inc:52Kit-kotlin:$ftkit_version") {
+        exclude group: 'io.reactivex'
+    }
+    implementation("com.52inc:52Kit-arch:$ftkit_version") {
         exclude group: 'io.reactivex'
     }
 

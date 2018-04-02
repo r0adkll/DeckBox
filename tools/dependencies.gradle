@@ -20,11 +20,11 @@ ext {
     butterknife_version =    '8.8.1'
     canvas_version =         '1.0.2'
     dagger_version =         '2.11'
-    ftkit_version =          '0.5.2-SNAPSHOT'
+    ftkit_version =          '0.5.5-SNAPSHOT'
     glide_version =          '4.0.0'
     leakcanary_version =     '1.5.1'
-    paperparcel_version =    '2.0.4'
-    play_version =           '11.8.0'
+    paperparcel_version =    '2.0.5'
+    play_version =           '12.0.1'
     poketcg_version =        '1.0.13'
     retrofit_version =       '2.3.0'
     room_version =           '1.0.0'
@@ -37,7 +37,7 @@ ext {
     support_version =        '27.1.0'
     state_version =          '1.1.5'
     stetho_version =         '1.5.0'
-    timber_version =         '4.5.1'
+    timber_version =         '4.6.1'
     okhttp_version =         '3.8.1'
 
 }

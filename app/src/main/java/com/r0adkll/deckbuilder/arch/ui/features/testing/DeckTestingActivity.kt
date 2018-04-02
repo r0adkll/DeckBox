@@ -2,11 +2,16 @@ package com.r0adkll.deckbuilder.arch.ui.features.testing
 
 
 import android.os.Bundle
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.presentation.delegates.RendererActivityDelegate
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import io.reactivex.Observable
 import javax.inject.Inject
 
 
@@ -15,26 +20,36 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     override var state: State = State.DEFAULT
 
     @Inject lateinit var renderer: DeckTestingRenderer
+    @Inject lateinit var presenter: DeckTestingPresenter
+
+    private val runTestsRelay: Relay<Int> = PublishRelay.create()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_testing)
-
-
-        renderer.start()
     }
 
 
-    override fun setupComponent(component: AppComponent) {
-        component.plus(DeckTestingModule(this))
+
+
+
+    override fun setupComponent() {
+        DeckApp.component.plus(DeckTestingModule(this))
                 .inject(this)
+
+        addDelegate(RendererActivityDelegate(renderer))
     }
 
 
     override fun render(state: State) {
         this.state = state
         renderer.render(state)
+    }
+
+
+    override fun runTests(): Observable<Int> {
+        return runTestsRelay
     }
 
 
