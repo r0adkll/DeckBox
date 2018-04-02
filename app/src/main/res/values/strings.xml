@@ -184,4 +184,5 @@
     <string name="expansion_released_date_format">Released on %1$s</string>
     <string name="fragment_decks">Decks</string>
     <string name="filter_header_hp">HP</string>
+    <string name="activity_deck_testing">Testing</string>
 </resources>

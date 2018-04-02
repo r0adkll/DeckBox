@@ -27,6 +27,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
+import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingComponent
+import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import dagger.Component
 
@@ -51,6 +53,7 @@ interface AppComponent {
     fun plus(module: MultiExportModule): MultiExportComponent
     fun plus(module: SetBrowserModule): SetBrowserComponent
     fun plus(module: DeckImageModule): DeckImageComponent
+    fun plus(module: DeckTestingModule): DeckTestingComponent
 
     fun searchComponentBuilder(): SearchComponent.Builder
 }
