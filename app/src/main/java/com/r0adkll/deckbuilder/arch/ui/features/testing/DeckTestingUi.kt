@@ -21,6 +21,7 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
 
     interface Actions : BaseActions {
 
+        fun showTestResults(results: TestResults)
     }
 
 

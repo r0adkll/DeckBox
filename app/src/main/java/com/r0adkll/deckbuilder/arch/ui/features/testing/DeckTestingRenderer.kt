@@ -18,7 +18,14 @@ class DeckTestingRenderer(
 
     override fun onStart() {
 
-
-
+        disposables += state
+                .mapNullable { it.results }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    if (it.value != null) {
+                        (actions as DeckTestingUi.Actions).showTestResults(it.value)
+                    }
+                }
     }
 }
