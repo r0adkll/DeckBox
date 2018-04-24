@@ -3,18 +3,20 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.8'
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.13'
     }
 }
 
-import io.pokemontcg.Pokemon
 import io.pokemontcg.requests.CardQueryBuilder
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
 import kotlin.Unit
 import kotlin.jvm.functions.Function1
 
-
+/**
+ * Custom task to output a random list of pokemon card images for use in [app/src/main/java/com/r0adkll/deckbuilder/util/CardUtils.kt]
+ * that powers the scrolling marquee of cards on the login/setup screen for the user.
+ */
 task pokePrint {
     doLast {
         def poke = new Pokemon()

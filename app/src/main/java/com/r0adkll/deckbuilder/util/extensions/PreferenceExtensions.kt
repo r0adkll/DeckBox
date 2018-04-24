@@ -78,6 +78,7 @@ interface RxPreferences {
     }
 
 
+    @Suppress("UNCHECKED_CAST")
     class ReactiveEnumPreference<T : Enum<T>>(key: String, val default: T) : ReactivePreference<T>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<T> {

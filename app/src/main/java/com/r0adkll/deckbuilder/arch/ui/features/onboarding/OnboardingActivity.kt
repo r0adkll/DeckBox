@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import com.ftinc.kit.kotlin.extensions.gone
 import com.ftinc.kit.kotlin.extensions.setVisible
 import com.ftinc.kit.kotlin.extensions.visible
+import com.ftinc.kit.kotlin.utils.bundle
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
@@ -24,7 +25,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
-import com.r0adkll.deckbuilder.util.bundle
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding_page.*
 import paperparcel.PaperParcel
@@ -159,7 +159,7 @@ class OnboardingActivity : BaseActivity() {
 
             fun newInstance(page: Page): PageFragment {
                 val fragment = PageFragment()
-                fragment.arguments = bundle { parcel(KEY_PAGE, page) }
+                fragment.arguments = bundle { KEY_PAGE to page }
                 return fragment
             }
         }
