@@ -2,11 +2,12 @@
 <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="200px" />
 </p> 
 <p align="center">
-<img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" href="https://play.google.com/store/apps/details?id=com.r0adkll.deckbuilder" width="300px" align="center"/>
+<a href="https://play.google.com/store/apps/details?id=com.r0adkll.deckbuilder"><img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" width="300px" align="center"/>
+</a>
 <h1 align="center">DeckBox for Pokémon TCG</h1> 
 </p>
 
-[![Build Status](https://www.bitrise.io/app/5d3a8885ec39a72b/status.svg?token=H8Sqp47-k-Ed-tkOkBFSSA&branch=development)](https://www.bitrise.io/app/5d3a8885ec39a72b) 
+[![Build Status](https://www.bitrise.io/app/5d3a8885ec39a72b/status.svg?token=H8Sqp47-k-Ed-tkOkBFSSA&branch=development)](https://www.bitrise.io/app/5d3a8885ec39a72b) &nbsp; ![release version](https://img.shields.io/badge/play%20store-v1.5.1.778-brightgreen.svg)
 
 **DeckBox** is an unofficial deck building app for creating and managing your Pokémon TCG decklists. Whether you are building and tweaking the top decks in the meta or just experimenting with some spicy rogue decks, search through a large collection of Pokémon cards that span from the latest expansion all the way back to the base set
 
