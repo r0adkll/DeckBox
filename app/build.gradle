@@ -7,7 +7,7 @@ apply plugin: 'com.google.gms.oss.licenses.plugin'
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-VERSION_NAME = "1.5.2"
+def VERSION_NAME = "1.5.2"
 
 // Optional: configure the versioner
 ext.gitVersioner = [
