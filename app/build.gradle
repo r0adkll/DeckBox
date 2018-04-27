@@ -49,20 +49,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        release {
-            storeFile file("../distribution/tcg-deckbuilder.jks")
-            keyAlias DB_ALIAS
-            storePassword DB_STORE_PASSWORD
-            keyPassword DB_KEY_PASSWORD
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
 
