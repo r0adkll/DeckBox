@@ -49,6 +49,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
 import com.r0adkll.deckbuilder.internal.di.HasComponent
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*

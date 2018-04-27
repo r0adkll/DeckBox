@@ -4,11 +4,11 @@ package com.r0adkll.deckbuilder.internal.analytics.firebase
 import android.content.Context
 import android.os.Bundle
 import android.provider.Settings
+import com.ftinc.kit.kotlin.utils.bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.FirebaseAnalytics.Param.*
 import com.r0adkll.deckbuilder.internal.analytics.AnalyticInterface
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.util.bundle
 
 
 class FirebaseAnalyticInterface(
@@ -53,9 +53,9 @@ class FirebaseAnalyticInterface(
 
 
     private fun getBundle(event: Event): Bundle = when(event) {
-        Event.Login.Google -> bundle { SIGN_UP_METHOD to "google" }
-        Event.Login.Anonymous -> bundle { SIGN_UP_METHOD to "anonymous" }
-        Event.SignUp.Google -> bundle { SIGN_UP_METHOD to "google" }
+        Event.Login.Google -> bundle { METHOD to "google" }
+        Event.Login.Anonymous -> bundle { METHOD to "anonymous" }
+        Event.SignUp.Google -> bundle { METHOD to "google" }
         is Event.Search -> bundle { SEARCH_TERM to event.term }
         is Event.Share -> bundle {
             CONTENT_TYPE to event.type

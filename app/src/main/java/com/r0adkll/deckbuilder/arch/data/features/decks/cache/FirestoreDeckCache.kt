@@ -55,7 +55,7 @@ class FirestoreDeckCache @Inject constructor(
                                         }
 
                                         val decks = ArrayList<Deck>()
-                                        snapshot.forEach { document ->
+                                        snapshot?.forEach { document ->
                                             val deck = document.toObject(DeckEntity::class.java)
                                             decks.add(EntityMapper.to(expansions, deck, document.id))
                                         }

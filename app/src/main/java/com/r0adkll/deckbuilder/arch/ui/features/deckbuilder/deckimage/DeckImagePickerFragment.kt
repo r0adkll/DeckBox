@@ -8,6 +8,9 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ftinc.kit.kotlin.utils.bindLong
+import com.ftinc.kit.kotlin.utils.bindString
+import com.ftinc.kit.kotlin.utils.bundle
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -16,9 +19,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImageRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckImageModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
-import com.r0adkll.deckbuilder.util.bindLong
-import com.r0adkll.deckbuilder.util.bindString
-import com.r0adkll.deckbuilder.util.bundle
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.reactivex.Observable

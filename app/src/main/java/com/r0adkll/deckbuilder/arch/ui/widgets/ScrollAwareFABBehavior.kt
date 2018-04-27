@@ -9,6 +9,7 @@ import android.view.View
 import com.ftinc.kit.kotlin.extensions.dpToPx
 
 
+@Suppress("UNUSED_PARAMETER")
 class ScrollAwareFABBehavior(
         context: Context,
         attrs: AttributeSet

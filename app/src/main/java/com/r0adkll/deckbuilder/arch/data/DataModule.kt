@@ -22,6 +22,7 @@ import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
+import com.r0adkll.deckbuilder.arch.data.features.testing.DefaultDeckTester
 import com.r0adkll.deckbuilder.arch.data.features.tournament.exporter.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
@@ -34,6 +35,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckReposit
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
@@ -181,5 +183,9 @@ class DataModule {
                 PrismStarRule()
         )
     }
+
+
+    @Provides @AppScope
+    fun provideDeckTester(tester: DefaultDeckTester): DeckTester = tester
 
 }
