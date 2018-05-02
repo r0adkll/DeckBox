@@ -17,7 +17,7 @@ class DeckTestingPresenter @Inject constructor(
     override fun smashObservables(): Observable<DeckTestingUi.State.Change> {
         return intentions.runTests()
                 .flatMap {
-                    tester.testDeck(ui.state.sessionId, it)
+                    tester.testSession(ui.state.sessionId, it)
                             .map { Change.Results(it) as Change }
                             .startWith(Change.IsLoading as Change)
                             .onErrorReturn(handleUnknownError)

@@ -6,6 +6,7 @@ import io.reactivex.Observable
 
 interface DeckTester {
 
-    fun testDeck(sessionId: Long, iterations: Int = 1000): Observable<TestResults>
+    fun testSession(sessionId: Long, iterations: Int = 1000): Observable<TestResults>
     fun testDeck(deck: Deck, iterations: Int = 1000): Observable<TestResults>
+    fun testDeckById(deckId: String, iterations: Int = 1000): Observable<TestResults>
 }
