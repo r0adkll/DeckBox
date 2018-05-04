@@ -32,6 +32,11 @@ DeckBox is **100%** written in [Kotlin](https://kotlinlang.org) and follows an *
 * RxJava 2
 * Firebase Firestore
 
+## Design
+<img src="art/sketch_icon.png" width="64px" />  
+####Sketch Cloud
+https://sketch.cloud/s/vgnyn
+
 ## Build-it Yourself
 To build/run DeckBox your self you will need to configure and setup the following items:
 
@@ -53,4 +58,4 @@ Please follow the guidelines set forth in the [CONTRIBUTING](CONTRIBUTING.md) do
 
 GNU General Public License v3.0
 
-See [LICENSE](LICENSE) to see the full text.
+See [LICENSE](LICENSE) to see the full text.
