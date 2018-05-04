@@ -34,7 +34,8 @@ DeckBox is **100%** written in [Kotlin](https://kotlinlang.org) and follows an *
 
 ## Design
 <img src="art/sketch_icon.png" width="64px" />  
-Check out the designs using [Sketch](https://www.sketchapp.com/)
+
+Check out the designs using [Sketch](https://www.sketchapp.com/)  
 
 **Sketch Cloud**  
 https://sketch.cloud/s/vgnyn
