@@ -122,6 +122,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         disposables += viewPreview
                 .subscribe {
+                    startActivity(SetBrowserActivity.createIntent(this, ))
                 }
 
         renderer.start()
@@ -149,7 +150,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
 
-    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview", "Ultra Prism")) }
+    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview", "Forbidden Light")) }
     override fun shareClicks(): Observable<Deck> = shareClicks
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
     override fun deleteClicks(): Observable<Deck> = deleteClicks.flatMap { deck ->

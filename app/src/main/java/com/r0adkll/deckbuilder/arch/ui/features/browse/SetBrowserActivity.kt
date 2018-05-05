@@ -210,5 +210,10 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             intent.putExtra(EXTRA_EXPANSION, expansion)
             return intent
         }
+
+
+        fun createIntent(context: Context, setCode: String): Intent {
+            val expansion = Expansion(setCode, null, "", "", 0, false, false, "", "", "https://images.pokemontcg.io/sm6/logo.png")
+        }
     }
 }

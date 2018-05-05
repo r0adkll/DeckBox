@@ -31,7 +31,7 @@
                     android:id="@+id/backdrop"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/dr_smup_toolbar_background"
+                    android:src="@drawable/dr_smfl_background"
                     android:scaleType="centerCrop"
                     />
 
@@ -42,7 +42,7 @@
                     android:layout_gravity="center"
                     android:paddingStart="32dp"
                     android:paddingEnd="32dp"
-                    android:src="@drawable/smup_logo"
+                    android:src="@drawable/dr_smfl_logo"
                     />
 
             </FrameLayout>
