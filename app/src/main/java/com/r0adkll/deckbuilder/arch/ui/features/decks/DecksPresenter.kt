@@ -55,11 +55,12 @@ class DecksPresenter @Inject constructor(
                 .flatMap {
                     Analytics.event(Event.SelectContent.Action("duplicate_deck"))
                     repository.duplicateDeck(it)
-                            .onErrorReturn { handleUnknownError }
                 }
-                .subscribe {
+                .subscribe({
                     Timber.i("Deck duplicated!")
-                }
+                }, {
+                    Timber.e(it, "Error duplicating deck")
+                })
 
         disposables += intentions.dismissPreview()
                 .subscribe {

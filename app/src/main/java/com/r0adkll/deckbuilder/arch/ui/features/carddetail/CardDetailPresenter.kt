@@ -30,22 +30,22 @@ class CardDetailPresenter @Inject constructor(
                         it.cards.filter { it.id == ui.state.card?.id }.count()
                     }
                     .map { Change.CountChanged(it) as Change }
+                    .onErrorReturn(handleUnknownError)
         } ?: Observable.empty<Change>()
 
         val loadValidation = validator.validate(listOf(ui.state.card!!))
                 .map { Change.Validated(it) as Change }
+                .onErrorReturn(handleUnknownError)
 
         val loadVariants = repository.search(ui.state.card!!.supertype, "\"${ui.state.card!!.name}\"")
-                // FIXME: Replace with actual error implementation
-                .onErrorReturnItem(emptyList())
                 .map { it.filter { it.id != ui.state.card!!.id } }
                 .map { Change.VariantsLoaded(it) as Change }
+                .onErrorReturn(handleUnknownError)
 
         val loadEvolves = ui.state.card!!.evolvesFrom?.let {
-            // FIXME: Replace with actual error implementation
             repository.search(ui.state.card!!.supertype, "\"$it\"")
-                    .onErrorReturnItem(emptyList())
                     .map { Change.EvolvesFromLoaded(it) as Change }
+                    .onErrorReturn(handleUnknownError)
         } ?: Observable.empty()
 
         disposables += intentions.addCardClicks()
@@ -71,5 +71,14 @@ class CardDetailPresenter @Inject constructor(
         disposables += merged.scan(ui.state, State::reduce)
                 .logState()
                 .subscribe { ui.render(it) }
+    }
+
+
+    companion object {
+
+        val handleUnknownError: (Throwable) -> Change = {
+            Timber.e(it, "Unknown error has occurred")
+            Change.Error("An unknown error has occurred")
+        }
     }
 }

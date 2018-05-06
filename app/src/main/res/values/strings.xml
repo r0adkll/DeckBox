@@ -187,4 +187,5 @@
     <string name="fragment_decks">Decks</string>
     <string name="filter_header_hp">HP</string>
     <string name="activity_deck_testing">Testing</string>
+    <string name="error_exporting_deck">Error exporting your deck for PTCGO</string>
 </resources>
