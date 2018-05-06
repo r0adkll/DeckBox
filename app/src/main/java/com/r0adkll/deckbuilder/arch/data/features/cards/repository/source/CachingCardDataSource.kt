@@ -23,7 +23,7 @@ class CachingCardDataSource @Inject constructor(
         remote: Remote
 ) : CardDataSource {
 
-    private val memoryCache: ExpansionCache = InMemoryExpansionCache()
+    private val memoryCache: ExpansionCache = InMemoryExpansionCache(remote)
     private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences, remote)
 
 

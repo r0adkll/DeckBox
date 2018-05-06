@@ -115,7 +115,7 @@ class SearchPresenter @Inject constructor(
     companion object {
 
         private fun handleUnknownError(category: SuperType): (Throwable) -> Change = { t ->
-            Change.Error(category, t.localizedMessage ?: t.message ?: "Unknown error has occured")
+            Change.Error(category, "Unknown error has occured")
         }
     }
 }

@@ -60,7 +60,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_browser)
 
-        state = state.copy(setCode = expansion.code)
+        state = state.copy(setCode = expansion.code, pageSize = expansion.totalCards)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = " "
@@ -174,7 +174,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
         override fun execute(palette: Palette?) {
             palette?.let {
-                if (expansion.code != "sm5") {
+                if (expansion.code != "sm6" && expansion.code != "sm5") {
                     it.vibrantSwatch?.rgb?.let {
                         backdrop.imageTintList = ColorStateList.valueOf(it)
 
@@ -209,6 +209,12 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             val intent = Intent(context, SetBrowserActivity::class.java)
             intent.putExtra(EXTRA_EXPANSION, expansion)
             return intent
+        }
+
+
+        fun createIntent(context: Context, setCode: String): Intent {
+            val expansion = Expansion(setCode, null, "", "", 300, false, false, "", "", "https://images.pokemontcg.io/sm6/logo.png")
+            return createIntent(context, expansion)
         }
     }
 }

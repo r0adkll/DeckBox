@@ -40,7 +40,7 @@ class SetBrowserPresenter @Inject constructor(
 
         val handleUnknownError: (Throwable) -> Change = {
             Timber.e(it, "Error loading cards")
-            Change.Error(it.localizedMessage ?: "Unable to load cards for this set")
+            Change.Error("Unable to load cards for this set")
         }
     }
 }

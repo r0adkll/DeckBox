@@ -145,8 +145,10 @@
     <string name="tournament_pdf_table_trainer">Trainer</string>
     <string name="tournament_pdf_table_energy">Energy</string>
     <string name="hint_dob_default">1/11/2018</string>
-    <string name="set_preview_title_ultra_prism">Ultra Prism is finally here!</string>
-    <string name="set_preview_message_ultra_prism">Over 150 cards. \n6 Prism Star cards featuring a new game mechanic. \n10 Pokémon GX, including 5 Ultra Beasts. \n18 Trainer cards and 3 Special Energy cards</string>
+
+    <string name="set_preview_title">Forbidden Light is finally here!</string>
+    <string name="set_preview_message">Over 130 cards. \n5 Prism Star cards. \n8 Pokémon GX. \n6 Ultra Beasts. \n18 Trainer cards and 2 Special Energy cards</string>
+
     <string name="action_okay">Okay</string>
     <string name="missing_card_header_expansion">Expansion set</string>
     <string name="missing_card_header_print">Print</string>
@@ -185,4 +187,5 @@
     <string name="fragment_decks">Decks</string>
     <string name="filter_header_hp">HP</string>
     <string name="activity_deck_testing">Testing</string>
+    <string name="error_exporting_deck">Error exporting your deck for PTCGO</string>
 </resources>

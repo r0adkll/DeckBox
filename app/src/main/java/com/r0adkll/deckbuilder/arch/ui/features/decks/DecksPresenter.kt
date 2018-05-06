@@ -39,12 +39,12 @@ class DecksPresenter @Inject constructor(
                             .onErrorReturn(handleUnknownError)
                 }
 
-//        val showPreview = preferences.previewUltraPrism
-//                .asObservable()
-//                .map { Change.ShowPreview(it) as Change }
+        val showPreview = preferences.previewNewExpansion
+                .asObservable()
+                .map { Change.ShowPreview(it) as Change }
 
         val merged = loadDecks.mergeWith(deleteDecks)
-//                .mergeWith(showPreview)
+                .mergeWith(showPreview)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
@@ -55,15 +55,16 @@ class DecksPresenter @Inject constructor(
                 .flatMap {
                     Analytics.event(Event.SelectContent.Action("duplicate_deck"))
                     repository.duplicateDeck(it)
-                            .onErrorReturn { handleUnknownError }
                 }
-                .subscribe {
+                .subscribe({
                     Timber.i("Deck duplicated!")
-                }
+                }, {
+                    Timber.e(it, "Error duplicating deck")
+                })
 
         disposables += intentions.dismissPreview()
                 .subscribe {
-//                    preferences.previewUltraPrism.set(false)
+                    preferences.previewNewExpansion.set(false)
                 }
     }
 
@@ -72,7 +73,7 @@ class DecksPresenter @Inject constructor(
 
         private val handleUnknownError: (Throwable) -> Change = { t ->
             Timber.e(t, "Error getting decks")
-            Change.Error(t.localizedMessage)
+            Change.Error("Something went wrong when trying to load your decks.")
         }
     }
 }
