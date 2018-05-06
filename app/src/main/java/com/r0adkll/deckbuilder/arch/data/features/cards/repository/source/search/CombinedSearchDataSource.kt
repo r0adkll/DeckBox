@@ -25,15 +25,17 @@ class CombinedSearchDataSource @Inject constructor(
 
 
     override fun search(type: SuperType?, query: String, filter: Filter?): Observable<List<PokemonCard>> {
-        return Observable.concat(network.search(type, query, filter), disk.search(type, query, filter))
-                .takeUntil { it.isNotEmpty() }
-                .filter { it.isNotEmpty() }
+        return network.search(type, query, filter)
+//        return Observable.concat(network.search(type, query, filter), disk.search(type, query, filter))
+//                .takeUntil { it.isNotEmpty() }
+//                .filter { it.isNotEmpty() }
     }
 
 
     override fun find(ids: List<String>): Observable<List<PokemonCard>> {
-        return Observable.concat(network.find(ids), disk.find(ids))
-                .takeUntil { it.isNotEmpty() }
-                .filter { it.isNotEmpty() }
+        return network.find(ids)
+//        return Observable.concat(network.find(ids), disk.find(ids))
+//                .takeUntil { it.isNotEmpty() }
+//                .filter { it.isNotEmpty() }
     }
 }

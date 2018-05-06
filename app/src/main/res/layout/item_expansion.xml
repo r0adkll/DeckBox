@@ -23,7 +23,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:layout_gravity="center"
-            tools:src="@drawable/smup_logo"
+            tools:src="@drawable/dr_smfl_logo"
             />
 
         <LinearLayout
