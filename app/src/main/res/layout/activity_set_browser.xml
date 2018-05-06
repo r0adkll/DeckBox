@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/dr_smfl_background"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitXY"
                     />
 
                 <ImageView
