@@ -25,10 +25,10 @@ class AppPreferences @Inject constructor(
         const val KEY_PLAYER_ID = "pref_player_id"
         const val KEY_PLAYER_AGE_DIVISION = "pref_player_age_division"
         const val KEY_PLAYER_DOB = "pref_player_dob"
+        const val KEY_SET_FORBIDDEN_LIGHT = "pref_set_ultraprism_new"
 
         const val KEY_LAST_VERSION = "pref_last_version"
         const val KEY_DEVICE_ID = "pref_local_offline_device_id"
-        const val KEY_SET_ULTRAPRISM = "pref_set_ultraprism_new"
 
         const val KEY_OFFLINE_ENABLED = "pref_offline_enabled"
     }
@@ -39,7 +39,6 @@ class AppPreferences @Inject constructor(
     var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
     var deviceId by StringPreference(KEY_DEVICE_ID)
     var offlineEnabled by BooleanPreference(KEY_OFFLINE_ENABLED, false)
-    val previewUltraPrism by ReactiveBooleanPreference(KEY_SET_ULTRAPRISM, true)
 
     val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
     val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)
@@ -49,6 +48,7 @@ class AppPreferences @Inject constructor(
     val playerDOB by ReactiveDatePreference(KEY_PLAYER_DOB)
     val playerAgeDivision by ReactiveEnumPreference(KEY_PLAYER_AGE_DIVISION, AgeDivision.MASTERS)
 
+    val previewNewExpansion by ReactiveBooleanPreference(KEY_SET_FORBIDDEN_LIGHT, true)
 
     fun clear() {
         sharedPreferences.edit()
