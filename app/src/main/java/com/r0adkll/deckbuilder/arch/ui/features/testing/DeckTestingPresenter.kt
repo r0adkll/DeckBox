@@ -29,7 +29,7 @@ class DeckTestingPresenter @Inject constructor(
 
         val handleUnknownError: (Throwable) -> Change = {
             Timber.e(it, "Unknown error testing deck")
-            Change.Error(it.localizedMessage ?: "Unable to test this deck")
+            Change.Error("Unable to test this deck")
         }
     }
 }

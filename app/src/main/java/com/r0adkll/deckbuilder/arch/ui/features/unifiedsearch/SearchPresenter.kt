@@ -85,7 +85,7 @@ class SearchPresenter @Inject constructor(
         private val handleUnknownError: (Throwable) -> Change = { t ->
             Timber.e(t, "Error occurred during my search")
             t.printStackTrace()
-            Change.Error(t.localizedMessage ?: t.message ?: "Unknown error has occured")
+            Change.Error("Unknown error has occurred")
         }
     }
 }

@@ -232,7 +232,7 @@ class SettingsActivity : BaseActivity() {
                             }
                             else {
                                 Timber.e(it.exception, "Unable to link account")
-                                snackbar(it.exception?.localizedMessage ?: "Unable to link account", Snackbar.LENGTH_LONG)
+                                snackbar("Unable to link account", Snackbar.LENGTH_LONG)
                             }
                         }
             }

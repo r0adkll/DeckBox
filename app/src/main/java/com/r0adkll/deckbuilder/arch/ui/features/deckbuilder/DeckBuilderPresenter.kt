@@ -85,7 +85,7 @@ class DeckBuilderPresenter @Inject constructor(
 
         private val handleUnknownError: (Throwable) -> Change = { t ->
             Timber.e(t, "Error processing deck")
-            Change.Error(t.localizedMessage)
+            Change.Error("Error validating your deck")
         }
     }
 }

@@ -85,7 +85,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                                 startActivity(intent)
                             }, { t ->
                                 Timber.e(t, "Error exporting deck")
-                                snackbar(t.localizedMessage)
+                                snackbar("Error exporting your deck")
                             })
                 }
 

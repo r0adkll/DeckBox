@@ -72,7 +72,7 @@ class DecksPresenter @Inject constructor(
 
         private val handleUnknownError: (Throwable) -> Change = { t ->
             Timber.e(t, "Error getting decks")
-            Change.Error(t.localizedMessage)
+            Change.Error("Something went wrong when trying to load your decks.")
         }
     }
 }
