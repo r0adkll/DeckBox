@@ -34,6 +34,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
     data class State(
             val sessionId: Long?,
             val card: PokemonCard?,
+            val error: String?,
             val count: Int?,
             val variants: List<PokemonCard>,
             val evolvesFrom: List<PokemonCard>,
@@ -45,6 +46,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
 
         fun reduce(change: Change): State = when(change) {
+            is Change.Error -> this.copy(error = error)
             is Change.CountChanged -> this.copy(count = change.count)
             is Change.Validated -> this.copy(validation = change.validation)
             is Change.VariantsLoaded -> this.copy(variants = change.cards)
@@ -53,6 +55,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
 
         sealed class Change(val logText: String) {
+            class Error(val description: String): Change("error -> $description")
             class CountChanged(val count: Int) : Change("user -> number of copies changed $count")
             class VariantsLoaded(val cards: List<PokemonCard>) : Change("network -> variants loaded")
             class EvolvesFromLoaded(val cards: List<PokemonCard>) : Change("network -> evolves loaded")
@@ -69,7 +72,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             @JvmField val CREATOR = PaperParcelCardDetailUi_State.CREATOR
 
             val DEFAULT by lazy {
-                CardDetailUi.State(null, null, null, emptyList(), emptyList(), Validation(false, false, emptyList()))
+                CardDetailUi.State(null, null, null, null, emptyList(), emptyList(), Validation(false, false, emptyList()))
             }
         }
     }
