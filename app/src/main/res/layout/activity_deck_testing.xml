@@ -1,25 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="@color/transparent"
+        app:title=" "
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dr_testing_field"
+        android:layout_above="@+id/infoContainer"
+        android:layout_marginBottom="16dp"
+        />
+
+    <RelativeLayout
+        android:id="@+id/infoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:minHeight="200dp"
         >
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/appbar"
+        <TextView
+            android:id="@+id/title"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@string/activity_deck_testing"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="Beast Box"
             />
 
-    </android.support.design.widget.AppBarLayout>
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="4dp"
+            android:layout_toStartOf="@+id/text_controls_count"
+            android:layout_above="@+id/cardCount"
+            android:layout_below="@+id/title"
+            android:ellipsize="end"
+            tools:text="An assortment of ultra beasts that take advantage of the new Ultra Beast mechanics from Forbidden Light"
+            />
 
+        <com.r0adkll.deckbuilder.arch.ui.widgets.CardCountView
+            android:id="@+id/cardCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_alignParentBottom="true"
+            />
 
+        <LinearLayout
+            android:id="@+id/text_controls_count"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_alignParentEnd="true">
 
-</LinearLayout>
+            <ImageView
+                android:id="@+id/actionIterationPlus"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_drop_up_black_24dp"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+            <EditText
+                android:id="@+id/inputIterations"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryColor"
+                android:background="@color/transparent"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:inputType="number|numberSigned"
+                android:maxLines="1"
+                android:maxLength="5"
+                tools:text="10000"
+                />
+
+            <ImageView
+                android:id="@+id/actionIterationMinus"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_drop_down_black_24dp"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/actionTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_flask"
+        android:tint="@color/white"
+        android:layout_above="@+id/infoContainer"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="-28dp"
+        app:elevation="4dp"
+        app:fabSize="normal"
+        />
+
+</RelativeLayout>
