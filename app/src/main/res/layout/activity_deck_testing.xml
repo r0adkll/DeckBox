@@ -14,12 +14,15 @@
         />
 
     <ImageView
+        android:id="@+id/field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/dr_testing_field"
         android:layout_above="@+id/infoContainer"
         android:layout_marginBottom="16dp"
         />
+
+
 
     <RelativeLayout
         android:id="@+id/infoContainer"
