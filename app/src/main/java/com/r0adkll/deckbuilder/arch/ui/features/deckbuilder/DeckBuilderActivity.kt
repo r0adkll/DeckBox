@@ -38,6 +38,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBui
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
+import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -338,6 +339,11 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             R.id.action_save -> {
                 Analytics.event(Event.SelectContent.MenuAction("save_deck"))
                 saveDeck.accept(Unit)
+                true
+            }
+            R.id.action_test -> {
+                Analytics.event(Event.SelectContent.MenuAction("test_deck"))
+                startActivity(DeckTestingActivity.createIntent(this, sessionId))
                 true
             }
             else -> super.onOptionsItemSelected(item)

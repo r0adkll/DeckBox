@@ -23,6 +23,16 @@
         />
 
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/infoContainer"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small"
+        android:clipToPadding="false"
+        />
+
 
     <RelativeLayout
         android:id="@+id/infoContainer"
@@ -35,7 +45,7 @@
         >
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/name"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

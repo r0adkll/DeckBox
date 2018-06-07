@@ -65,7 +65,7 @@ class DefaultDeckTester @Inject constructor(
 
     private fun test(cards: List<PokemonCard>, iterations: Int): TestResults {
         var mulligans = 0;
-        var startingHands = HashMap<String, Int>()
+        var startingHands = HashMap<PokemonCard, Int>()
 
         (0..iterations).forEach {
             val shuffledCards = cards.shuffled()
@@ -82,8 +82,8 @@ class DefaultDeckTester @Inject constructor(
                 mulligans++
             } else {
                 firstHand.forEach {
-                    val count = startingHands[it.id] ?: 0
-                    startingHands[it.id] = count + 1
+                    val count = startingHands[it] ?: 0
+                    startingHands[it] = count + 1
                 }
             }
         }

@@ -31,4 +31,8 @@
           android:title="@string/action_export"
         />
 
+    <item android:id="@+id/action_test"
+        android:title="@string/action_test"
+        />
+
 </menu>
