@@ -18,7 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/dr_testing_field"
-        android:layout_above="@+id/infoContainer"
         android:layout_marginBottom="16dp"
         />
 
@@ -28,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/infoContainer"
-        android:paddingTop="@dimen/padding_small"
+        android:paddingTop="?attr/actionBarSize"
         android:paddingBottom="@dimen/padding_small"
         android:clipToPadding="false"
         />

@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 
 
-data class TestResult(val pokemonCard: PokemonCard?, val percentage: Float) : RecyclerItem {
+data class TestResult(val pokemonCard: PokemonCard?, val percentage: Float, val maxPercentage: Float) : RecyclerItem {
 
     override val layoutId: Int = R.layout.item_test_result
 

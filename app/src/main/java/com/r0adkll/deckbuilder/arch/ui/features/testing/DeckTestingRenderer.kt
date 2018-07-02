@@ -6,6 +6,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
+import timber.log.Timber
 
 
 class DeckTestingRenderer(
@@ -22,15 +23,20 @@ class DeckTestingRenderer(
                     it.results?.let { result ->
                         val testResults = ArrayList<TestResult>()
 
+                        val maxPercentage = (result.startingHand.values.max()?.toFloat() ?: 1f) / result.count.toFloat()
+
                         if (result.mulligans > 0) {
                             val percentage = result.mulligans.toFloat() / result.count.toFloat()
-                            testResults += TestResult(null, percentage)
+                            testResults += TestResult(null, percentage, maxPercentage)
                         }
 
-                        result.startingHand.forEach {
-                            val percentage = it.value.toFloat() / result.count.toFloat()
-                            testResults += TestResult(it.key, percentage)
-                        }
+                        result.startingHand.entries
+                                .sortedByDescending { it.value }
+                                .forEach {
+                                    val percentage = it.value.toFloat() / result.count.toFloat()
+                                    testResults += TestResult(it.key, percentage, maxPercentage)
+                                    Timber.i("Result($percentage, max: $maxPercentage)")
+                                }
 
                         testResults
                     }
