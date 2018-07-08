@@ -47,17 +47,25 @@ class DeckTestingPresenter @Inject constructor(
 
         val runTests = intentions.runTests()
                 .flatMap {
-                    val testObservable = when {
-                        ui.state.sessionId != null -> tester.testSession(ui.state.sessionId!!, it)
-                        ui.state.deckId != null -> tester.testDeckById(ui.state.deckId!!, it)
-                        else -> Observable.empty()
-                    }
-
-                    testObservable
-                            .map { Change.Results(it) as Change }
+                    tester.testHand(ui.state.sessionId ?: -1L, it)
+                            .map { Change.Hand(it) as Change }
                             .startWith(Change.IsLoading as Change)
                             .onErrorReturn(handleUnknownError)
                 }
+
+//        val runTests = intentions.runTests()
+//                .flatMap {
+//                    val testObservable = when {
+//                        ui.state.sessionId != null -> tester.testSession(ui.state.sessionId!!, it)
+//                        ui.state.deckId != null -> tester.testDeckById(ui.state.deckId!!, it)
+//                        else -> Observable.empty()
+//                    }
+//
+//                    testObservable
+//                            .map { Change.Results(it) as Change }
+//                            .startWith(Change.IsLoading as Change)
+//                            .onErrorReturn(handleUnknownError)
+//                }
 
         return loadMetaData
                 .mergeWith(incrementIterations)

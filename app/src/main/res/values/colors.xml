@@ -28,4 +28,5 @@
     <color name="poketype_dragon">#947718</color>
     <color name="poketype_fairy">#FC5897</color>
     <color name="poketype_dark">#122640</color>
+    <color name="playmat">#CDCDCD</color>
 </resources>

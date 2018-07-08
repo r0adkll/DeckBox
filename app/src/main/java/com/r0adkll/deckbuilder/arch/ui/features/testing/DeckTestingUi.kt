@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.testing
 import com.ftinc.kit.arch.presentation.BaseActions
 import com.ftinc.kit.arch.presentation.state.BaseState
 import com.ftinc.kit.arch.presentation.state.Ui
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.testing.TestResults
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import io.reactivex.Observable
@@ -25,6 +26,7 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
     interface Actions : BaseActions {
 
         fun showTestResults(results: List<TestResult>)
+        fun showTestHand(hand: List<PokemonCard>)
         fun setTestIterations(iterations: Int)
         fun setMetadata(metadata: Metadata)
     }
@@ -54,7 +56,8 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
             val metadata: Metadata?,
 
             val iterations: Int,
-            val results: TestResults?
+            val results: TestResults?,
+            val hand: List<PokemonCard>?
     ) : BaseState<State.Change>(isLoading, error), PaperParcelable {
 
         override fun reduce(change: Change): Ui.State<Change> = when(change) {
@@ -64,6 +67,7 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
             is Change.IncrementIterations -> this.copy(iterations = iterations.plus(change.amount).coerceAtLeast(0))
             is Change.DecrementIterations -> this.copy(iterations = iterations.minus(change.amount).coerceAtLeast(0))
             is Change.MetadataLoaded -> this.copy(metadata = change.metadata)
+            is Change.Hand -> this.copy(hand = change.hand)
         }
 
 
@@ -71,6 +75,7 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
             object IsLoading : Change("cache -> loading deck")
             class Error(val description: String) : Change("error -> $description")
             class Results(val results: TestResults) : Change("test -> $results")
+            class Hand(val hand: List<PokemonCard>) : Change("rest -> hand: $hand")
             class IncrementIterations(val amount: Int) : Change("user -> increment iterations by $amount")
             class DecrementIterations(val amount: Int) : Change("user -> decrement iterations by $amount")
             class MetadataLoaded(val metadata: Metadata) : Change("network -> metadata loaded: $metadata")
@@ -81,7 +86,7 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
             @JvmField val CREATOR = PaperParcelDeckTestingUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(false, null, null, null, null, 1000, null)
+                State(false, null, null, null, null, 1000, null, null)
             }
         }
     }

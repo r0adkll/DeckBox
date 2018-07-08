@@ -63,6 +63,31 @@ class DefaultDeckTester @Inject constructor(
     }
 
 
+    override fun testHand(sessionId: Long, iterations: Int): Observable<List<PokemonCard>> {
+        return editRepository.getSession(sessionId)
+                .flatMap { session ->
+                    validator.validate(session.cards)
+                            .map {
+                                if (it.isValid) {
+                                    deal(session.cards, iterations)
+                                } else {
+                                    throw InvalidDeckException()
+                                }
+                            }
+                }
+    }
+
+
+    private fun deal(cards: List<PokemonCard>, iterations: Int): List<PokemonCard> {
+        val deck = cards.toMutableList()
+        (0 until iterations).forEach {
+            deck.shuffle()
+        }
+
+        return deck.subList(0, 7)
+    }
+
+
     private fun test(cards: List<PokemonCard>, iterations: Int): TestResults {
         var mulligans = 0;
         var startingHands = HashMap<PokemonCard, Int>()

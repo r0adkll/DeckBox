@@ -1,30 +1,47 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing
 
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.util.bindViews
 import com.ftinc.kit.arch.util.uiDebounce
 import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.kotlin.extensions.snackbar
 import com.ftinc.kit.kotlin.utils.bindLong
 import com.ftinc.kit.kotlin.utils.bindOptionalString
 import com.ftinc.kit.widget.DividerSpacerItemDecoration
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.longClicks
 import com.r0adkll.deckbuilder.DeckApp
+import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.PresenterActivityDelegate
 import com.r0adkll.deckbuilder.util.RendererActivityDelegate
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.extensions.snackbar
+import io.pokemontcg.model.SubType
+import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_deck_testing.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -32,6 +49,8 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
     private val sessionId: Long by bindLong(EXTRA_SESSION_ID, -1L)
     private val deckId: String? by bindOptionalString(EXTRA_DECK_ID)
+    private val cards: List<PokemonCardView> by bindViews(R.id.card1, R.id.card2, R.id.card3,
+            R.id.card4, R.id.card5, R.id.card6, R.id.card7)
 
     override var state: State = State.DEFAULT
 
@@ -83,6 +102,35 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     override fun runTests(): Observable<Int> {
         return actionTest.clicks()
                 .uiDebounce()
+                .flatMap {
+                    Observable.create<Unit> { e ->
+                        val animators = cards.map {
+                            it.elevation = 0f
+                            val x = ObjectAnimator.ofFloat(it, "translationX", 0f)
+                            val y = ObjectAnimator.ofFloat(it, "translationY", 0f)
+                            val set = AnimatorSet()
+                            set.playTogether(x, y)
+                            set.duration = DEAL_RETURN_ANIMATION_DURATION
+                            set.interpolator = FastOutSlowInInterpolator()
+                            set
+                        }
+
+                        val superSet = AnimatorSet()
+                        superSet.playTogether(animators)
+                        superSet.addListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                e.onNext(Unit)
+                                e.onComplete()
+                            }
+
+                            override fun onAnimationCancel(animation: Animator?) {
+                                e.onNext(Unit)
+                                e.onComplete()
+                            }
+                        })
+                        superSet.start()
+                    }.subscribeOn(AndroidSchedulers.mainThread())
+                }
                 .map { state.iterations }
     }
 
@@ -121,6 +169,86 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     }
 
 
+    override fun showTestHand(hand: List<PokemonCard>) {
+        val futures = hand.map {
+            GlideApp.with(this)
+                    .load(it.imageUrl)
+                    .submit()
+        }
+
+        disposables += Observable.just(futures)
+                .map { it.map { it.get() } }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ images ->
+                    (0 until cards.size).forEach {
+                        cards[it].setImageDrawable(images[it])
+                        val isBasic = hand[it].let { it.supertype == SuperType.POKEMON
+                                && (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank()) }
+                        cards[it].elevation = if (isBasic) dpToPx(4f) else 0f
+                        cards[it].scaleX = if (isBasic) 1.05f else 1f
+                        cards[it].scaleY = if (isBasic) 1.05f else 1f
+                    }
+
+                    // Animate cards out
+                    val width = field.width
+                    val height = field.height
+                    val outerMargin = dpToPx(32f)
+                    val innerMargin = dpToPx(8f)
+                    val cardWidth = ((width - ((2 * outerMargin) + (3 * innerMargin))) / 4f).toInt()
+                    val lowerOuterMargin = (width - ((3 * cardWidth) + (2 * innerMargin))) / 2f
+                    Timber.i("Showing Hand (width: $width, height: $height, outerMargin: $outerMargin, lowerOuterMargin: $lowerOuterMargin, innerMargin: $innerMargin, cardWidth: $cardWidth)")
+                    (0 until 4).forEach {
+                        val x = outerMargin + (it * cardWidth) + (it * innerMargin)
+                        val y = (height / 2f) + ((cardWidth * PokemonCardView.RATIO) + innerMargin/2f)
+                        Timber.i("Card($it) [x: $x, y: $y]")
+
+                        val card = cards[it]
+                        val lp = card.layoutParams
+                        if (lp.width != cardWidth) {
+                            lp.width = cardWidth
+                            lp.height = (cardWidth * PokemonCardView.RATIO).toInt()
+                            card.layoutParams = lp
+                        }
+
+                        val startDelay = it * DEAL_ANIMATION_DELAY
+                        card.animate()
+                                .translationX(-(card.x - x))
+                                .translationY(-y)
+                                .setDuration(DEAL_ANIMATION_DURATION)
+                                .setStartDelay(startDelay)
+                                .setInterpolator(FastOutSlowInInterpolator())
+                                .start()
+                    }
+
+                    (0 until 3).forEach {
+                        val x = lowerOuterMargin + (it * cardWidth) + (it * innerMargin)
+                        val y = (height / 2f) - (innerMargin / 2f)
+                        Timber.i("Card(${it + 4}) [x: $x, y: $y]")
+                        val card = cards[4 + it]
+                        val lp = card.layoutParams
+                        if (lp.width != cardWidth) {
+                            lp.width = cardWidth
+                            lp.height = (cardWidth * PokemonCardView.RATIO).toInt()
+                            card.layoutParams = lp
+                        }
+
+                        val startDelay = (it + 4) * DEAL_ANIMATION_DELAY
+                        card.animate()
+                                .translationX(-(card.x - x))
+                                .translationY(-y)
+                                .setDuration(DEAL_ANIMATION_DURATION)
+                                .setStartDelay(startDelay)
+                                .setInterpolator(FastOutSlowInInterpolator())
+                                .start()
+                    }
+                }, {
+                    Timber.e(it, "Error loading all card images")
+                })
+
+    }
+
+
     override fun setTestIterations(iterations: Int) {
         inputIterations.setText("$iterations")
     }
@@ -146,6 +274,10 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         private const val EXTRA_DECK_ID = "DeckTestingActivity.DeckId"
         private const val STEP = 100
         private const val LARGE_STEP = 1000
+
+        private const val DEAL_ANIMATION_DELAY = 100L
+        private const val DEAL_ANIMATION_DURATION = 250L
+        private const val DEAL_RETURN_ANIMATION_DURATION = 200L
 
 
         fun createIntent(context: Context, sessionId: Long): Intent {

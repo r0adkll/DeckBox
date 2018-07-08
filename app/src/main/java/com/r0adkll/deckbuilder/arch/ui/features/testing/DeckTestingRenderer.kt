@@ -50,6 +50,16 @@ class DeckTestingRenderer(
                 }
 
         disposables += state
+                .mapNullable { it.hand }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    if (it.value != null) {
+                        actions.showTestHand(it.value)
+                    }
+                }
+
+        disposables += state
                 .mapNullable { it.metadata }
                 .distinctUntilChanged()
                 .addToLifecycle()
