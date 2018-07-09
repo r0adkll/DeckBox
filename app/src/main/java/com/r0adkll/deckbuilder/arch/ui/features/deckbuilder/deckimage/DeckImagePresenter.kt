@@ -48,7 +48,7 @@ class DeckImagePresenter @Inject constructor(
 
         val handleUnknownError: (Throwable) -> Change = {
             Timber.e(it, "Unknown error loading session")
-            Change.Error(it.localizedMessage ?: "Unable to find any Pokémon cards in your deck to set an image with.")
+            Change.Error("Unable to find any Pokémon cards in your deck to set an image with.")
         }
     }
 }

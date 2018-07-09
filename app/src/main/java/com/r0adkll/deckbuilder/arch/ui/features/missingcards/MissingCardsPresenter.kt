@@ -75,7 +75,7 @@ class MissingCardsPresenter @Inject constructor(
 
         val handleUnknownError: (Throwable) -> Change = {
             Timber.e(it, "Unknown error during missing card report")
-            Change.Error(it.localizedMessage ?: "Something went wrong")
+            Change.Error("Failed to send missing card report.")
         }
     }
 }

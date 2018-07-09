@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/dr_up_background">
+        android:background="@drawable/dr_smfl_background">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -20,19 +20,19 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/dr_up_header"
+                android:src="@drawable/dr_smfl_header"
                 android:scaleType="fitXY"
                 />
 
-            <ImageView
+            <com.ftinc.kit.widget.AspectRatioImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginEnd="64dp"
                 android:layout_marginBottom="8dp"
                 android:layout_gravity="center"
-                android:src="@drawable/smup_logo"
+                android:src="@drawable/dr_smfl_logo"
                 />
 
         </FrameLayout>
@@ -44,7 +44,7 @@
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_tiny"
-            android:text="@string/set_preview_title_ultra_prism"
+            android:text="@string/set_preview_title"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             android:fontFamily="sans-serif-medium"
@@ -56,7 +56,7 @@
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
             android:layout_marginTop="@dimen/padding_tiny"
-            android:text="@string/set_preview_message_ultra_prism"
+            android:text="@string/set_preview_message"
             android:textColor="?android:textColorPrimary"
             />
 

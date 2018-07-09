@@ -35,7 +35,7 @@ class BrowsePresenter @Inject constructor(
     companion object {
         val handleUnknownError: (Throwable) -> Change = {
             Timber.e(it, "Error loading expansions")
-            Change.Error(it.localizedMessage ?: "Error loading expansions")
+            Change.Error("Error loading expansions")
         }
     }
 }

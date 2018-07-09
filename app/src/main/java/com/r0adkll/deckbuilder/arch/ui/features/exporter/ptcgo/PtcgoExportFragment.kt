@@ -23,6 +23,7 @@ import com.r0adkll.deckbuilder.util.Schedulers
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.fragment_ptcgo_export.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -53,13 +54,23 @@ class PtcgoExportFragment : BaseFragment() {
                     .flatMap { converter.export(it.cards, it.name) }
                     .subscribeOn(schedulers.comp)
                     .observeOn(schedulers.main)
-                    .subscribe { deckList.text = it }
+                    .subscribe({
+                        deckList.text = it
+                    }, {
+                        Timber.e(it, "Error exporting deck")
+                        deckList.text = getText(R.string.error_exporting_deck)
+                    })
         } else {
             disposables += editRepository.getSession(exportTask.sessionId!!)
                     .flatMap { converter.export(it.cards, it.name) }
                     .subscribeOn(schedulers.comp)
                     .observeOn(schedulers.main)
-                    .subscribe { deckList.text = it }
+                    .subscribe({
+                        deckList.text = it
+                    }, {
+                        Timber.e(it, "Error exporting deck")
+                        deckList.text = getText(R.string.error_exporting_deck)
+                    })
         }
 
         disposables += actionCopy.clicks()

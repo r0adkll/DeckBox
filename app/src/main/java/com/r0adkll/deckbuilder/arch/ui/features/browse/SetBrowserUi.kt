@@ -44,11 +44,12 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
             val isLoading: Boolean,
             val error: String?,
             val cards: List<PokemonCard>,
-            val filter: BrowseFilter
+            val filter: BrowseFilter,
+            val pageSize: Int = 300
     ) : PaperParcelable {
 
         val searchFilter: Filter
-            get() = Filter.DEFAULT.copy(expansions = listOf(Expansion(setCode, null, "", "", 0, false, false, "", "", "")))
+            get() = Filter.DEFAULT.copy(expansions = listOf(Expansion(setCode, null, "", "", 0, false, false, "", "", "")), pageSize = pageSize)
 
 
         fun reduce(change: Change): State = when(change) {

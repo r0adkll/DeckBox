@@ -7,7 +7,7 @@
 <h1 align="center">DeckBox for Pokémon TCG</h1> 
 </p>
 
-[![Build Status](https://www.bitrise.io/app/5d3a8885ec39a72b/status.svg?token=H8Sqp47-k-Ed-tkOkBFSSA&branch=development)](https://www.bitrise.io/app/5d3a8885ec39a72b) &nbsp; ![release version](https://img.shields.io/badge/play%20store-v1.5.1.778-brightgreen.svg)
+[![Build Status](https://www.bitrise.io/app/5d3a8885ec39a72b/status.svg?token=H8Sqp47-k-Ed-tkOkBFSSA&branch=development)](https://www.bitrise.io/app/5d3a8885ec39a72b) 
 
 **DeckBox** is an unofficial deck building app for creating and managing your Pokémon TCG decklists. Whether you are building and tweaking the top decks in the meta or just experimenting with some spicy rogue decks, search through a large collection of Pokémon cards that span from the latest expansion all the way back to the base set
 
@@ -32,6 +32,14 @@ DeckBox is **100%** written in [Kotlin](https://kotlinlang.org) and follows an *
 * RxJava 2
 * Firebase Firestore
 
+## Design
+<img src="art/sketch_icon.png" width="64px" />  
+
+Check out the designs using [Sketch](https://www.sketchapp.com/)  
+
+**Sketch Cloud**  
+https://sketch.cloud/s/vgnyn
+
 ## Build-it Yourself
 To build/run DeckBox your self you will need to configure and setup the following items:
 
@@ -53,4 +61,4 @@ Please follow the guidelines set forth in the [CONTRIBUTING](CONTRIBUTING.md) do
 
 GNU General Public License v3.0
 
-See [LICENSE](LICENSE) to see the full text.
+See [LICENSE](LICENSE) to see the full text.

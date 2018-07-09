@@ -37,6 +37,6 @@ class DeckImportPresenter @Inject constructor(
 
     companion object {
 
-        private val handleUnknownError: (Throwable) -> Change = { t -> Change.Error(t.localizedMessage) }
+        private val handleUnknownError: (Throwable) -> Change = { t -> Change.Error("Error importing your decklist") }
     }
 }

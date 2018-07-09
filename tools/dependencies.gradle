@@ -25,7 +25,7 @@ ext {
     leakcanary_version =     '1.5.1'
     paperparcel_version =    '2.0.5'
     play_version =           '15.0.0'
-    poketcg_version =        '1.0.13'
+    poketcg_version =        '1.0.14'
     retrofit_version =       '2.3.0'
     room_version =           '1.0.0'
     requery_version =        '1.5.0'
