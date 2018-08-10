@@ -19,6 +19,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
@@ -110,16 +111,16 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 AlertDialog.Builder(this)
                         .setTitle(R.string.deckbuilder_unsaved_changes_title)
                         .setMessage(R.string.deckbuilder_unsaved_changes_message)
-                        .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
+                        .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
                             Analytics.event(Event.SelectContent.Action("discarded_changes"))
                             dialog.dismiss()
                             destroySession()
                             supportFinishAfterTransition()
-                        })
-                        .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
+                        }
+                        .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
                             Analytics.event(Event.SelectContent.Action("kept_changes"))
                             dialog.dismiss()
-                        })
+                        }
                         .show()
             }
             else {
@@ -154,9 +155,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         }
 
         tabletDropZone?.let {
-            TabletDragListener.attach(it, pager, { card ->
+            TabletDragListener.attach(it, pager) { card ->
                 editCardIntentions.addCardClicks.accept(listOf(card))
-            })
+            }
         }
 
         EditDragListener.attach(dropZone, object : EditDragListener.DropListener {
@@ -268,16 +269,16 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
             AlertDialog.Builder(this)
                     .setTitle(R.string.deckbuilder_unsaved_changes_title)
                     .setMessage(R.string.deckbuilder_unsaved_changes_message)
-                    .setPositiveButton(R.string.dialog_action_yes, { dialog, _ ->
+                    .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
                         Analytics.event(Event.SelectContent.Action("discarded_changes"))
                         dialog.dismiss()
                         destroySession()
                         super.onBackPressed()
-                    })
-                    .setNegativeButton(R.string.dialog_action_no, { dialog, _ ->
+                    }
+                    .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
                         Analytics.event(Event.SelectContent.Action("kept_changes"))
                         dialog.dismiss()
-                    })
+                    }
                     .show()
         }
         else {
@@ -312,6 +313,9 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         val finishEditItem = menu.findItem(R.id.action_finish_edit)
         editItem.isVisible = !state.isEditing
         finishEditItem.isVisible = state.isEditing
+
+        val testItem = menu.findItem(R.id.action_test)
+        testItem.isVisible = BuildConfig.DEBUG
         return true
     }
 
