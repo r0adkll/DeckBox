@@ -100,6 +100,10 @@ class SettingsActivity : BaseActivity() {
                     startActivity(IntentUtils.openLink(getString(R.string.developer_website_url)))
                     true
                 }
+                "pref_about_opensource" -> {
+                    startActivity(IntentUtils.openLink(getString(R.string.opensource_repository_url)))
+                    true
+                }
                 "pref_about_oss" -> {
                     val intent = Intent(activity, OssLicensesMenuActivity::class.java)
                     val title = getString(R.string.activity_licenses)

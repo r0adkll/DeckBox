@@ -1,2 +1,4 @@
-• Support for Forbidden Light
-• Fixed bug causing Base1 and Base2 to not appear in browser or search
+• Support for Celestial Storm
+• Fixed a crash in the expansion memory management
+• Improved tournament exporter to condense the supporter and energy card rows in the table (Github#10)
+• Improved the robustness of the deck list importer to accept any list that follows the card format: [COUNT] [CARD-NAME] [PTCGO-CODE] [CARD-NUMBER]

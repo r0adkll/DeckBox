@@ -1,3 +1,9 @@
+# 1.5.3
+* Support for Celestial Storm
+* Fixed a crash in the expansion memory management
+* [#10](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/10) - Improved tournament exporter to condense the supporter and energy card rows in the table (Github#10)
+* [#3](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/3) - Improved the robustness of the deck list importer to accept any list that follows the card format: {COUNT} {CARD-NAME} {PTCGO-CODE} {CARD-NUMBER}
+
 # 1.5.2
 * Hotfix for expansion parsing bug
 

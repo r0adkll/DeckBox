@@ -146,8 +146,8 @@
     <string name="tournament_pdf_table_energy">Energy</string>
     <string name="hint_dob_default">1/11/2018</string>
 
-    <string name="set_preview_title">Forbidden Light is finally here!</string>
-    <string name="set_preview_message">Over 130 cards. \n5 Prism Star cards. \n8 Pokémon GX. \n6 Ultra Beasts. \n18 Trainer cards and 2 Special Energy cards</string>
+    <string name="set_preview_title">Celestial Storm is finally here!</string>
+    <string name="set_preview_message">Over 160 cards. \n3 Prism Star cards. \n11 Pokémon GX. \n3 Ultra Beasts. \n27 Trainer cards, plus Rainbow Energy</string>
 
     <string name="action_okay">Okay</string>
     <string name="missing_card_header_expansion">Expansion set</string>
@@ -187,5 +187,9 @@
     <string name="fragment_decks">Decks</string>
     <string name="filter_header_hp">HP</string>
     <string name="activity_deck_testing">Testing</string>
+    <string name="mulligan">Mulligan</string>
+    <string name="action_test">Test deck</string>
     <string name="error_exporting_deck">Error exporting your deck for PTCGO</string>
+    <string name="opensource_repository_url">https://github.com/r0adkll/DeckBox</string>
+    <string name="tournament_pdf_generated_by">Generated using DeckBox for Pokemon TCG</string>
 </resources>

@@ -174,7 +174,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
         override fun execute(palette: Palette?) {
             palette?.let {
-                if (expansion.code != "sm6" && expansion.code != "sm5") {
+                if (expansion.code != "sm6" && expansion.code != "sm5" && expansion.code != "sm7") {
                     it.vibrantSwatch?.rgb?.let {
                         backdrop.imageTintList = ColorStateList.valueOf(it)
 
@@ -213,7 +213,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
 
         fun createIntent(context: Context, setCode: String): Intent {
-            val expansion = Expansion(setCode, null, "", "", 300, false, false, "", "", "https://images.pokemontcg.io/sm6/logo.png")
+            val expansion = Expansion(setCode, null, "", "", 300, false, false, "", "", "https://images.pokemontcg.io/$setCode/logo.png")
             return createIntent(context, expansion)
         }
     }

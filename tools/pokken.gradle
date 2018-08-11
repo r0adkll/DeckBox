@@ -3,15 +3,21 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.13'
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.14'
+        classpath 'com.squareup:kotlinpoet:1.0.0-RC1'
     }
 }
 
+
+import io.pokemontcg.model.CardSet
 import io.pokemontcg.requests.CardQueryBuilder
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
+import io.pokemontcg.requests.CardSetQueryBuilder
 import kotlin.Unit
 import kotlin.jvm.functions.Function1
+
+
 
 /**
  * Custom task to output a random list of pokemon card images for use in [app/src/main/java/com/r0adkll/deckbuilder/util/CardUtils.kt]
@@ -24,7 +30,7 @@ task pokePrint {
             @Override
             Unit invoke(CardQueryBuilder cardQueryBuilder) {
                 cardQueryBuilder.pageSize = 1000
-                cardQueryBuilder.setCode = "sm2|sm3|sm35|sm4|sm5"
+                cardQueryBuilder.setCode = "sm2|sm3|sm35|sm4|sm5|sm6|sm7"
                 return null
             }
         }).all()
@@ -34,5 +40,15 @@ task pokePrint {
             println "\"${card.imageUrl}\","
         }
     }
+}
 
+task generateExpansionsTest {
+    doLast {
+        def poke = new Pokemon()
+        def sets = poke.set().all()
+
+        for (CardSet set : sets) {
+            println "Expansion(\"${set.code}\", \"${set.ptcgoCode}\", \"${set.name}\", \"\", 0, true, true, \"\", \"\", null),"
+        }
+    }
 }
