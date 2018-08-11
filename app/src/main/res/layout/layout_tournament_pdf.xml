@@ -246,6 +246,16 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/tournament_pdf_generated_by"
+                android:textStyle="italic"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="16sp"
+                />
+
         </LinearLayout>
 
         <LinearLayout
