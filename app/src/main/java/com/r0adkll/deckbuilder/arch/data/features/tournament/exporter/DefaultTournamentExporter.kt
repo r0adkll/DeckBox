@@ -8,10 +8,13 @@ import android.graphics.pdf.PdfDocument
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
@@ -19,6 +22,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.util.CardUtils
+import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
@@ -110,25 +114,19 @@ class DefaultTournamentExporter @Inject constructor(
         dateOfBirth.setText(playerInfo.displayDate())
 
         val stacked = CardUtils.stackCards().invoke(cards)
-        stacked.forEach { card ->
-            val row = inflater.inflate(R.layout.layout_tournament_card_row, view, false)
-            val quantity = row.findViewById<TextView>(R.id.quantity)
-            val name = row.findViewById<TextView>(R.id.name)
-            val setCode = row.findViewById<TextView>(R.id.setCode)
-            val setNumber = row.findViewById<TextView>(R.id.setNumber)
+        val stackedGroups = stacked.groupBy { it.card.supertype }
 
-            quantity.text = card.count.toString()
-            name.text = card.card.name
-            setCode.text = card.card.expansion?.ptcgoCode
-            setNumber.text = card.card.number
+        stackedGroups[SuperType.POKEMON]
+                ?.map { createRow(inflater, view, it) }
+                ?.forEach { tablePokemon.addView(it) }
 
-            when(card.card.supertype) {
-                SuperType.POKEMON -> tablePokemon.addView(row)
-                SuperType.TRAINER -> tableTrainer.addView(row)
-                SuperType.ENERGY -> tableEnergy.addView(row)
-                else -> Unit // Do Nothing
-            }
-        }
+        stackedGroups[SuperType.TRAINER]?.reduce()
+                ?.map { createRow(inflater, view, it) }
+                ?.forEach { tableTrainer.addView(it) }
+
+        stackedGroups[SuperType.ENERGY]?.reduce()
+                ?.map { createRow(inflater, view, it) }
+                ?.forEach { tableEnergy.addView(it) }
 
         val width = canvas.width
         val height = canvas.height
@@ -140,6 +138,51 @@ class DefaultTournamentExporter @Inject constructor(
         view.measure(measureWidth, measuredHeight)
         view.layout(0, 0, width, height)
         view.draw(canvas)
+    }
+
+
+    private fun createRow(inflater: LayoutInflater, parent: ViewGroup, card: StackedPokemonCard): View {
+        val row = inflater.inflate(R.layout.layout_tournament_card_row, parent, false)
+        val quantity = row.findViewById<TextView>(R.id.quantity)
+        val name = row.findViewById<TextView>(R.id.name)
+        val setCode = row.findViewById<TextView>(R.id.setCode)
+        val setNumber = row.findViewById<TextView>(R.id.setNumber)
+
+        quantity.text = card.count.toString()
+        name.text = card.card.name
+        setCode.text = card.card.expansion?.ptcgoCode
+        setNumber.text = card.card.number
+
+        setCode.setVisible(card.card.supertype == SuperType.POKEMON)
+        setNumber.setVisible(card.card.supertype == SuperType.POKEMON)
+
+        return row
+    }
+
+
+    private fun List<StackedPokemonCard>.reduce(): List<StackedPokemonCard> {
+        val reducedStackedTrainers = HashMap<String, StackedPokemonCard>()
+
+        this.forEach {
+
+            val name = if (it.card.supertype == SuperType.ENERGY && it.card.subtype == SubType.BASIC) {
+                // Make sure to trim the term "Basic" out of energy cards
+                it.card.name.replace("Basic", "").trim()
+            } else {
+                it.card.name
+            }
+
+            val stack = reducedStackedTrainers[name]
+            if (stack == null) {
+                reducedStackedTrainers[name] = it
+            } else {
+                val newCount = stack.count + it.count
+                reducedStackedTrainers[name] = stack.copy(count = newCount)
+            }
+
+        }
+
+        return reducedStackedTrainers.values.toList()
     }
 
 

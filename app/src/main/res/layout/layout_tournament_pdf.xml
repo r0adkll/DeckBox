@@ -354,31 +354,6 @@
                         android:layout_column="1"
                         />
 
-                    <TextView
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:text="SET:"
-                        android:textColor="@color/white"
-                        android:textAllCaps="true"
-                        android:gravity="center"
-                        android:textStyle="bold"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-
-                        />
-
-                    <TextView
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:text="COLL. #:"
-                        android:textColor="@color/white"
-                        android:textAllCaps="true"
-                        android:gravity="center"
-                        android:textStyle="bold"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        />
-
                 </TableRow>
 
                 <!--<include layout="@layout/layout_tournament_card_row" />-->
@@ -418,31 +393,6 @@
                         android:paddingBottom="4dp"
 
                         android:layout_column="1"
-                        />
-
-                    <TextView
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:text="SET:"
-                        android:textColor="@color/white"
-                        android:textAllCaps="true"
-                        android:gravity="center"
-                        android:textStyle="bold"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-
-                        />
-
-                    <TextView
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:text="COLL. #:"
-                        android:textColor="@color/white"
-                        android:textAllCaps="true"
-                        android:gravity="center"
-                        android:textStyle="bold"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
                         />
 
                 </TableRow>

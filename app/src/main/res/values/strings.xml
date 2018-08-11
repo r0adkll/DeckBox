@@ -190,4 +190,5 @@
     <string name="mulligan">Mulligan</string>
     <string name="action_test">Test deck</string>
     <string name="error_exporting_deck">Error exporting your deck for PTCGO</string>
+    <string name="opensource_repository_url">https://github.com/r0adkll/DeckBox</string>
 </resources>

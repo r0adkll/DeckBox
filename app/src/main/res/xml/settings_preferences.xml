@@ -41,11 +41,11 @@
             android:summary="@string/pref_help_feedback_summary"
             />
 
-        <Preference
-            android:key="pref_missing_card"
-            android:title="@string/pref_help_missing_card_title"
-            android:summary="@string/pref_help_missing_card_summary"
-            />
+        <!--<Preference-->
+            <!--android:key="pref_missing_card"-->
+            <!--android:title="@string/pref_help_missing_card_title"-->
+            <!--android:summary="@string/pref_help_missing_card_summary"-->
+            <!--/>-->
 
     </PreferenceCategory>
 
@@ -54,6 +54,12 @@
         <Preference
             android:key="pref_about_oss"
             android:title="@string/pref_about_oss_title"
+            />
+
+        <Preference
+            android:key="pref_about_opensource"
+            android:title="Contribute"
+            android:summary="DeckBox is now open source. Contribute @ Github"
             />
 
         <Preference
