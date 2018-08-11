@@ -57,6 +57,13 @@ class CardCountView @JvmOverloads constructor(
     }
 
 
+    fun count(pokemon: Int, trainer: Int, energy: Int) {
+        pokemonCountView.text = pokemon.toString()
+        trainerCountView.text = trainer.toString()
+        energyCountView.text = energy.toString()
+    }
+
+
     @Suppress("NON_EXHAUSTIVE_WHEN")
     fun count(superType: SuperType, cards: List<PokemonCard>) {
         val count = cards.count { it.supertype == superType }.toString()

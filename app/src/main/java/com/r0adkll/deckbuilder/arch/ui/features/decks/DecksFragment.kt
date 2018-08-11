@@ -122,7 +122,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         disposables += viewPreview
                 .subscribe {
-                    startActivity(SetBrowserActivity.createIntent(activity!!, "sm6"))
+                    startActivity(SetBrowserActivity.createIntent(activity!!, "sm7"))
                 }
 
         renderer.start()
