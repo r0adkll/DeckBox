@@ -80,6 +80,8 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.addItemDecoration(DividerSpacerItemDecoration(dpToPx(8f), false))
+
+        inputIterations.setOnClickListener { toast(R.string.test_iterations_explanation) }
     }
 
 
@@ -249,7 +251,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
 
     override fun setTestIterations(iterations: Int) {
-        inputIterations.setText("$iterations")
+        inputIterations.text = "$iterations"
     }
 
 

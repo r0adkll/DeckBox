@@ -29,4 +29,10 @@
     <item android:id="@+id/action_export"
           android:title="@string/action_export" />
 
+    <!-- FIXME: Disable this by default until ready -->
+    <item android:id="@+id/action_test"
+        android:title="@string/action_test"
+        android:visible="false"
+        />
+
 </menu>

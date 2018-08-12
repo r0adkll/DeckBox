@@ -175,7 +175,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 />
 
-            <EditText
+            <TextView
                 android:id="@+id/inputIterations"
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
@@ -185,7 +185,6 @@
                 android:paddingBottom="8dp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-medium"
-                android:inputType="number|numberSigned"
                 android:maxLines="1"
                 android:maxLength="5"
                 tools:text="10000"
