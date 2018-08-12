@@ -30,6 +30,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.PresenterActivityDelegate
 import com.r0adkll.deckbuilder.util.RendererActivityDelegate
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -133,6 +135,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                     }.subscribeOn(AndroidSchedulers.mainThread())
                 }
                 .map { state.iterations }
+                .doOnNext { Analytics.event(Event.SelectContent.Action("test_deck", value = it.toLong())) }
     }
 
 
@@ -144,6 +147,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                 .map { LARGE_STEP }
 
         return incrementSmall.mergeWith(incrementLarge)
+                .doOnNext { Analytics.event(Event.SelectContent.Action("increment_test_iterations", value = it.toLong())) }
     }
 
 
@@ -155,6 +159,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                 .map { LARGE_STEP }
 
         return decrementSmall.mergeWith(decrementLarge)
+                .doOnNext { Analytics.event(Event.SelectContent.Action("decrement_test_iterations", value = it.toLong())) }
     }
 
 

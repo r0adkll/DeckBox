@@ -28,8 +28,8 @@ sealed class Event {
         data class PokemonCard(override val id: String) : SelectContent("pokemon_card", id)
         data class Deck(override val id: String) : SelectContent("deck", id)
 
-        data class Action(override val id: String, override val name: String? = null) : SelectContent("action", id, name)
-        data class MenuAction(override val id: String) : SelectContent("menu_action", id)
+        data class Action(override val id: String, override val name: String? = null, override val value: Long? = null) : SelectContent("action", id, name, value)
+        data class MenuAction(override val id: String, override val value: Long? = null) : SelectContent("menu_action", id, value = value)
         data class FilterOption(
                 override val id: String,
                 override val name: String?,

@@ -193,4 +193,5 @@
     <string name="opensource_repository_url">https://github.com/r0adkll/DeckBox</string>
     <string name="tournament_pdf_generated_by">Generated using DeckBox for Pokemon TCG</string>
     <string name="test_iterations_explanation">The number of shuffles before dealing a hand</string>
+    <string name="action_test_type_hand">Deal Hand</string>
 </resources>
