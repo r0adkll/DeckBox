@@ -94,6 +94,26 @@
         android:layout_marginTop="8dp"
         />
 
+    <TextView
+        android:id="@+id/errorBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/infoContainer"
+        android:minHeight="48dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@color/red_300"
+        android:gravity="center_vertical|start"
+        android:paddingStart="@dimen/padding_normal"
+        android:paddingEnd="@dimen/padding_normal"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-medium"
+        android:visibility="gone"
+
+        tools:text="Some error has occured"
+        tools:visibility="visible"
+        />
+
     <RelativeLayout
         android:id="@+id/infoContainer"
         android:layout_width="match_parent"

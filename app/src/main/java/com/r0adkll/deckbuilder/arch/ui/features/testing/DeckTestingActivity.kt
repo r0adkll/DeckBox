@@ -15,8 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.util.bindViews
 import com.ftinc.kit.arch.util.uiDebounce
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.snackbar
+import com.ftinc.kit.kotlin.extensions.*
 import com.ftinc.kit.kotlin.utils.bindLong
 import com.ftinc.kit.kotlin.utils.bindOptionalString
 import com.ftinc.kit.widget.DividerSpacerItemDecoration
@@ -260,12 +259,13 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
 
     override fun showError(description: String) {
-
+        errorBar.text = description
+        errorBar.visible()
     }
 
 
     override fun hideError() {
-
+        errorBar.gone()
     }
 
 
