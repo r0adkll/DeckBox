@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/infoContainer"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         />
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -45,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/infoContainer"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         />
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -53,6 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/infoContainer"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         />
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -61,6 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/infoContainer"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         />
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -69,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/infoContainer"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         />
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -77,6 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/infoContainer"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         />
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -85,6 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/infoContainer"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         />
 
     <RelativeLayout
