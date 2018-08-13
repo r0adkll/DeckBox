@@ -11,6 +11,10 @@ data class Validation(
         val expanded: Boolean,
         val rules: List<Int>
 ) : PaperParcelable {
+
+    val isValid: Boolean get() = rules.isEmpty()
+
+
     companion object {
         @JvmField val CREATOR = PaperParcelValidation.CREATOR
     }

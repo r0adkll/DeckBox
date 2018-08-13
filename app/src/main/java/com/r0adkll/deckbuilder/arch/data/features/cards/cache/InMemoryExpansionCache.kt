@@ -18,20 +18,27 @@ class InMemoryExpansionCache(
 
 
     override fun putExpansions(expansions: List<Expansion>) {
-        this.expansions.clear()
-        this.expansions.addAll(expansions)
+        synchronized(this) {
+            this.expansions.clear()
+            this.expansions.addAll(expansions)
+        }
     }
 
 
     override fun getExpansions(): Observable<List<Expansion>> {
-        if (expansions.none { it.code == remote.latestExpansion }) {
-            expansions.clear()
+        return synchronized(this) {
+            if (expansions.none { it.code == remote.latestExpansion }) {
+                expansions.clear()
+            }
+
+            Observable.just(expansions.toList())
         }
-        return Observable.just(expansions)
     }
 
 
     override fun clear() {
-        expansions.clear()
+        synchronized(this) {
+            expansions.clear()
+        }
     }
 }

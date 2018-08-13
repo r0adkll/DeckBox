@@ -46,7 +46,7 @@ class PokemonCardView @JvmOverloads constructor(
     private var cachedWidth: Int = 0
     private var cachedHeight: Int = 0
 
-    private val radius = dpToPx(8f)
+    private val radius = dpToPx(4f)
     private val punchRadius = dpToPx(10f)
     private val countRadius = dpToPx(16f)
 

@@ -5,70 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/formatStandardDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_input_deck_description"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_small"
-        android:orientation="horizontal"
-        android:gravity="start|center_vertical">
+    <com.r0adkll.deckbuilder.arch.ui.widgets.TestResultView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-
-        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-
-            android:padding="2dp"
-            app:ringPadding="4dp"
-            app:strokeWidth="2dp"
-            app:format="standard"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="@string/format_standard"
-            android:textSize="14sp"
-            android:textColor="@color/black54"
-            android:fontFamily="sans-serif-medium"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/formatExpandedDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/formatStandardDetail"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="@dimen/margin_small"
-        android:orientation="horizontal"
-        android:gravity="start|center_vertical">
-
-
-        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-
-            android:padding="2dp"
-            app:ringPadding="4dp"
-            app:strokeWidth="2dp"
-            app:format="standard"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="@string/format_standard"
-            android:textSize="14sp"
-            android:textColor="@color/black54"
-            android:fontFamily="sans-serif-medium"
-            />
-
-    </LinearLayout>
+    </com.r0adkll.deckbuilder.arch.ui.widgets.TestResultView>
 
 </LinearLayout>
