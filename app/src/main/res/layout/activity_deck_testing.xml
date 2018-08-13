@@ -17,6 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
+        android:elevation="6dp"
+        android:outlineProvider="none"
         app:title=" "
         />
 
@@ -109,6 +111,7 @@
         android:textColor="@color/white"
         android:fontFamily="sans-serif-medium"
         android:visibility="gone"
+        android:elevation="4dp"
 
         tools:text="Some error has occured"
         tools:visibility="visible"

@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing
 
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
+import com.r0adkll.deckbuilder.arch.data.features.testing.InvalidDeckException
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
@@ -78,7 +79,11 @@ class DeckTestingPresenter @Inject constructor(
 
         val handleUnknownError: (Throwable) -> Change = {
             Timber.e(it, "Unknown error testing deck")
-            Change.Error("Unable to test this deck")
+            if (it is InvalidDeckException) {
+                Change.Error("This deck is invalid. Please fix before testing.")
+            } else {
+                Change.Error("Unable to test this deck")
+            }
         }
     }
 }
