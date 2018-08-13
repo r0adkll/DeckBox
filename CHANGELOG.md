@@ -1,3 +1,7 @@
+# 1.5.4
+* Hotfix for bug with leaving the testing menu option out of the tablet menu config
+* Minor tweaks to testing interface
+
 # 1.5.3
 * Support for Celestial Storm
 * Fixed a crash in the expansion memory management
