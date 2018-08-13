@@ -12,7 +12,7 @@ def VERSION_NAME = "1.5.4"
 
 
 ext.gitVersioner = [
-        defaultBranch           : "development",
+        defaultBranch           : "master",
         stableBranches          : ["release"],
         yearFactor              : 1200,
         snapshotEnabled         : false,
