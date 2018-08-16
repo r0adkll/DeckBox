@@ -46,32 +46,33 @@ class DeckTestingPresenter @Inject constructor(
         val decrementIterations = intentions.decrementIterations()
                 .map { Change.DecrementIterations(it) as Change }
 
-        val runTests = intentions.runTests()
-                .flatMap {
-                    tester.testHand(ui.state.sessionId ?: -1L, it)
+        val testSingleHand = intentions.testSingleHand()
+                .flatMap { iterations ->
+                    tester.testHand(ui.state.sessionId ?: -1L, iterations)
                             .map { Change.Hand(it) as Change }
                             .startWith(Change.IsLoading as Change)
                             .onErrorReturn(handleUnknownError)
                 }
 
-//        val runTests = intentions.runTests()
-//                .flatMap {
-//                    val testObservable = when {
-//                        ui.state.sessionId != null -> tester.testSession(ui.state.sessionId!!, it)
-//                        ui.state.deckId != null -> tester.testDeckById(ui.state.deckId!!, it)
-//                        else -> Observable.empty()
-//                    }
-//
-//                    testObservable
-//                            .map { Change.Results(it) as Change }
-//                            .startWith(Change.IsLoading as Change)
-//                            .onErrorReturn(handleUnknownError)
-//                }
+        val testOverallHands = intentions.testOverallHands()
+                .flatMap { iterations ->
+                    val testObservable = when {
+                        ui.state.sessionId != null -> tester.testSession(ui.state.sessionId!!, iterations)
+                        ui.state.deckId != null -> tester.testDeckById(ui.state.deckId!!, iterations)
+                        else -> Observable.empty()
+                    }
+
+                    testObservable
+                            .map { Change.Results(it) as Change }
+                            .startWith(Change.IsLoading as Change)
+                            .onErrorReturn(handleUnknownError)
+                }
 
         return loadMetaData
                 .mergeWith(incrementIterations)
                 .mergeWith(decrementIterations)
-                .mergeWith(runTests)
+                .mergeWith(testSingleHand)
+                .mergeWith(testOverallHands)
     }
 
 

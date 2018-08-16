@@ -34,6 +34,7 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.PresenterActivityDelegate
 import com.r0adkll.deckbuilder.util.RendererActivityDelegate
+import com.r0adkll.deckbuilder.util.extensions.isMulligan
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.pokemontcg.model.SubType
@@ -79,6 +80,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
         // Setup result recycler
         adapter = TestResultsRecyclerAdapter(this)
+        adapter.setEmptyView(emptyView)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.addItemDecoration(DividerSpacerItemDecoration(dpToPx(8f), false))
@@ -102,24 +104,12 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     }
 
 
-    override fun runTests(): Observable<Int> {
-        return actionTest.clicks()
+    override fun testSingleHand(): Observable<Int> {
+        return actionTestSingleHand.clicks()
                 .uiDebounce()
                 .flatMap {
                     Observable.create<Unit> { e ->
-                        val animators = cards.map {
-                            it.elevation = 0f
-                            val x = ObjectAnimator.ofFloat(it, "translationX", 0f)
-                            val y = ObjectAnimator.ofFloat(it, "translationY", 0f)
-                            val set = AnimatorSet()
-                            set.playTogether(x, y)
-                            set.duration = DEAL_RETURN_ANIMATION_DURATION
-                            set.interpolator = FastOutSlowInInterpolator()
-                            set
-                        }
-
-                        val superSet = AnimatorSet()
-                        superSet.playTogether(animators)
+                        val superSet = createHideHandAnimation()
                         superSet.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
                                 e.onNext(Unit)
@@ -136,6 +126,13 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                 }
                 .map { state.iterations }
                 .doOnNext { Analytics.event(Event.SelectContent.Action("test_deck", value = it.toLong())) }
+    }
+
+
+    override fun testOverallHands(): Observable<Int> {
+        return actionTestOverall.clicks()
+                .uiDebounce()
+                .map { state.iterations }
     }
 
 
@@ -176,6 +173,9 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
 
     override fun showTestHand(hand: List<PokemonCard>) {
+        // artifically hide emptyview
+        emptyView.gone()
+
         val futures = hand.map {
             GlideApp.with(this)
                     .load(it.imageUrl)
@@ -248,6 +248,13 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                                 .setInterpolator(FastOutSlowInInterpolator())
                                 .start()
                     }
+
+
+                    if (hand.isMulligan()) {
+                        showError(getString(R.string.mulligan))
+                    } else {
+                        hideError()
+                    }
                 }, {
                     Timber.e(it, "Error loading all card images")
                 })
@@ -261,7 +268,11 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
 
     override fun showLoading(isLoading: Boolean) {
-
+        createHideHandAnimation().start()
+        adapter.clear()
+        adapter.notifyDataSetChanged()
+        emptyView.visible()
+        emptyView.setLoading(isLoading)
     }
 
 
@@ -273,6 +284,24 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
     override fun hideError() {
         errorBar.gone()
+    }
+
+
+    private fun createHideHandAnimation(): AnimatorSet {
+        val animators = cards.map {
+            it.elevation = 0f
+            val x = ObjectAnimator.ofFloat(it, "translationX", 0f)
+            val y = ObjectAnimator.ofFloat(it, "translationY", 0f)
+            val set = AnimatorSet()
+            set.playTogether(x, y)
+            set.duration = DEAL_RETURN_ANIMATION_DURATION
+            set.interpolator = FastOutSlowInInterpolator()
+            set
+        }
+
+        val superSet = AnimatorSet()
+        superSet.playTogether(animators)
+        return superSet
     }
 
 

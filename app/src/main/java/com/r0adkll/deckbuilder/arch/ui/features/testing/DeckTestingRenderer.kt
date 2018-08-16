@@ -23,7 +23,8 @@ class DeckTestingRenderer(
                     it.results?.let { result ->
                         val testResults = ArrayList<TestResult>()
 
-                        val maxPercentage = (result.startingHand.values.max()?.toFloat() ?: 1f) / result.count.toFloat()
+                        val cumulativeResultCount = result.startingHand.values.sum().toFloat()
+                        val maxPercentage = ((result.startingHand.values.max()?.toFloat() ?: 1f) / cumulativeResultCount) + 0.1f
 
                         if (result.mulligans > 0) {
                             val percentage = result.mulligans.toFloat() / result.count.toFloat()
@@ -33,7 +34,7 @@ class DeckTestingRenderer(
                         result.startingHand.entries
                                 .sortedByDescending { it.value }
                                 .forEach {
-                                    val percentage = it.value.toFloat() / result.count.toFloat()
+                                    val percentage = it.value.toFloat() / cumulativeResultCount
                                     testResults += TestResult(it.key, percentage, maxPercentage)
                                     Timber.i("Result($percentage, max: $maxPercentage)")
                                 }

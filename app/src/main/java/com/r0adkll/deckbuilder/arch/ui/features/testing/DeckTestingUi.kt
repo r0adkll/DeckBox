@@ -17,7 +17,8 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
 
     interface Intentions {
 
-        fun runTests(): Observable<Int>
+        fun testSingleHand(): Observable<Int>
+        fun testOverallHands(): Observable<Int>
         fun incrementIterations(): Observable<Int>
         fun decrementIterations(): Observable<Int>
     }
