@@ -32,6 +32,21 @@
         android:clipToPadding="false"
         />
 
+    <com.ftinc.kit.widget.EmptyView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/infoContainer"
+        android:paddingTop="?attr/actionBarSize"
+        android:paddingStart="128dp"
+        android:paddingEnd="128dp"
+
+        app:emptyMessage="Choose one of the options below to begin testing"
+        app:emptyMessageColor="@color/grey_500"
+        app:emptyMessageTextSize="16sp"
+        app:emptyMessageTypeface="medium"
+        />
+
     <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
         android:id="@+id/card1"
         android:layout_width="72dp"
@@ -144,7 +159,7 @@
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginTop="4dp"
             android:layout_toStartOf="@+id/text_controls_count"
-            android:layout_above="@+id/cardCount"
+            android:layout_above="@+id/actions"
             android:layout_below="@+id/name"
             android:ellipsize="end"
             tools:text="An assortment of ultra beasts that take advantage of the new Ultra Beast mechanics from Forbidden Light"
@@ -154,16 +169,50 @@
             android:id="@+id/cardCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/margin_small"
             android:layout_alignParentBottom="true"
+            android:visibility="gone"
             />
+
+        <LinearLayout
+            android:id="@+id/actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:paddingBottom="@dimen/padding_small"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_small"
+            android:paddingStart="@dimen/padding_small"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/actionTestSingleHand"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_test_single_hand"
+                />
+
+            <Button
+                android:id="@+id/actionTestOverall"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_test_overall_hands"
+                />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/text_controls_count"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
+            android:layout_above="@+id/actions"
+            android:paddingEnd="@dimen/padding_normal"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_small"
             android:orientation="vertical"
             android:gravity="center"
             android:layout_alignParentEnd="true">
@@ -217,6 +266,7 @@
         android:layout_marginBottom="-28dp"
         app:elevation="4dp"
         app:fabSize="normal"
+        android:visibility="gone"
         />
 
 </RelativeLayout>
