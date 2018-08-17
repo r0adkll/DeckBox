@@ -162,7 +162,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
                     filterState.visibility
                 }
 
-                newFilters[category] = filterState.copy(filter = newFilter, visibility = visibility)
+                newFilters[category] = filterState.copy(spec = FilterSpec.create(filterState.category, expansions, visibility), filter = newFilter, visibility = visibility)
                 this.copy(filters = newFilters.toMap())
             }
 
