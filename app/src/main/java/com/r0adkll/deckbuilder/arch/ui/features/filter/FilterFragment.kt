@@ -111,6 +111,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
             is FilterAttribute.SuperTypeAttribute -> attr.superType.displayName
             is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
             is FilterAttribute.ContainsAttribute -> attr.attribute
+            is FilterAttribute.ExpansionAttribute -> attr.format.name.toLowerCase()
         }))
     }
 

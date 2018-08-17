@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
@@ -7,6 +8,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.SubTypeAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.SuperTypeAttribute
+import com.r0adkll.deckbuilder.util.extensions.expanded
+import com.r0adkll.deckbuilder.util.extensions.standard
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
@@ -32,6 +35,7 @@ object FilterReducer {
         is SuperTypeAttribute -> filter.copy(superType = filter.toggle(attribute.superType))
         is SubTypeAttribute -> filter.copy(subTypes = filter.subTypes.toggle(attribute.subType))
         is FilterAttribute.ContainsAttribute -> filter.copy(contains = filter.contains.toggle(attribute.attribute))
+        is FilterAttribute.ExpansionAttribute -> filter.toggle(attribute.expansions, attribute.format)
     }
 
 
@@ -67,4 +71,27 @@ object FilterReducer {
 
     private fun Filter.toggle(value: SuperType): SuperType? =
             if (this.superType == value) null else value
+
+
+    private fun Filter.toggle(expansions: List<Expansion>, format: Format): Filter {
+        val isStandardSelected = this.expansions.containsAll(expansions.standard())
+        val isExpandedSelected = this.expansions.containsAll(expansions.expanded())
+
+        return when(format) {
+            Format.STANDARD -> if ((!isStandardSelected && !isExpandedSelected) || (isStandardSelected && isExpandedSelected)) {
+                // Select only standard expansions
+                this.copy(expansions = expansions.standard())
+            } else if (isStandardSelected && !isExpandedSelected) {
+                this.copy(expansions = emptyList())
+            } else {
+                this
+            }
+            Format.EXPANDED -> if (!isExpandedSelected) {
+                this.copy(expansions = expansions.expanded())
+            } else {
+                this.copy(expansions = emptyList())
+            }
+            else -> this
+        }
+    }
 }

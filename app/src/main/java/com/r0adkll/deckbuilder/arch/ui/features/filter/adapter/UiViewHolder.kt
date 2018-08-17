@@ -137,6 +137,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                     is FilterAttribute.SuperTypeAttribute -> attr.superType.displayName
                     is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
                     is FilterAttribute.ContainsAttribute -> attr.attribute
+                    is FilterAttribute.ExpansionAttribute -> attr.format.name.toLowerCase().capitalize()
                 }
                 view.setTextColor(color(if (isChecked) R.color.white else R.color.black87))
                 view.elevation = if (isChecked) dpToPx(4f) else 0f

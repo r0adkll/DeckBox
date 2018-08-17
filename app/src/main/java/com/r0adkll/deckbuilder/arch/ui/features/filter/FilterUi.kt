@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
@@ -8,12 +9,15 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.*
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
+import com.r0adkll.deckbuilder.util.extensions.expanded
+import com.r0adkll.deckbuilder.util.extensions.standard
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
+import kotlin.math.exp
 
 
 interface FilterUi : StateRenderer<FilterUi.State> {
@@ -69,6 +73,14 @@ interface FilterUi : StateRenderer<FilterUi.State> {
         data class ContainsAttribute(val attribute: String) : FilterAttribute() {
             companion object {
                 @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_ContainsAttribute.CREATOR
+            }
+        }
+
+
+        @PaperParcel
+        data class ExpansionAttribute(val format: Format, val expansions: List<Expansion>) : FilterAttribute() {
+            companion object {
+                @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_ExpansionAttribute.CREATOR
             }
         }
     }
@@ -138,8 +150,19 @@ interface FilterUi : StateRenderer<FilterUi.State> {
 
             is AttributeSelected -> {
                 val newFilters = filters.toMutableMap()
-                newFilters[category] = newFilters[category]!!
-                        .copy(filter = FilterReducer.reduceAttribute(change.attribute, newFilters[category]!!.filter))
+                val filterState = newFilters[category]!!
+                val newFilter = FilterReducer.reduceAttribute(change.attribute, filterState.filter)
+                val visibility = if (change.attribute is FilterAttribute.ExpansionAttribute) {
+                    when {
+                        newFilter.expansions.containsAll(expansions.expanded()) -> ExpansionVisibility.EXPANDED
+                        newFilter.expansions.containsAll(expansions.standard()) -> ExpansionVisibility.STANDARD
+                        else -> filterState.visibility
+                    }
+                } else {
+                    filterState.visibility
+                }
+
+                newFilters[category] = filterState.copy(filter = newFilter, visibility = visibility)
                 this.copy(filters = newFilters.toMap())
             }
 
