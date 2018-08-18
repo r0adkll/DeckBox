@@ -79,6 +79,21 @@ class DefaultDeckTester @Inject constructor(
     }
 
 
+    override fun testHandById(deckId: String, iterations: Int): Observable<List<PokemonCard>> {
+        return deckRepository.getDeck(deckId)
+                .flatMap { deck ->
+                    validator.validate(deck.cards)
+                            .map {
+                                if (it.isValid) {
+                                    deal(deck.cards, iterations)
+                                } else {
+                                    throw InvalidDeckException()
+                                }
+                            }
+                }
+    }
+
+
     private fun deal(cards: List<PokemonCard>, iterations: Int): List<PokemonCard> {
         val deck = cards.toMutableList()
         (0 until iterations).forEach {

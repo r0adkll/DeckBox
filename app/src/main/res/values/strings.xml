@@ -196,4 +196,5 @@
     <string name="action_test_type_hand">Deal Hand</string>
     <string name="action_test_single_hand">Single Hand</string>
     <string name="action_test_overall_hands">Overall</string>
+    <string name="action_duplicate">Duplicate</string>
 </resources>

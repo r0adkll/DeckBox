@@ -22,11 +22,13 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.DialogUtils
 import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.*
 import com.r0adkll.deckbuilder.util.ScreenUtils
+import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -50,6 +52,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     private val shareClicks: Relay<Deck> = PublishRelay.create()
     private val duplicateClicks: Relay<Deck> = PublishRelay.create()
     private val deleteClicks: Relay<Deck> = PublishRelay.create()
+    private val testClicks: Relay<Deck> = PublishRelay.create()
 
     private lateinit var adapter: DecksRecyclerAdapter
 
@@ -62,7 +65,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks, dismissPreview, viewPreview)
+        adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks,
+                testClicks, dismissPreview, viewPreview)
         adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Item> {
             override fun onItemClick(v: View, item: Item, position: Int) {
                 if (item is Item.DeckItem) {
@@ -80,7 +84,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         adapter.setEmptyView(empty_view)
 
-        val layoutManager = GridLayoutManager(activity, if (ScreenUtils.smallestWidth(resources, ScreenUtils.Config.TABLET_10)) 6 else 2)
+        val layoutManager = GridLayoutManager(activity, if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 val item = adapter.items[position]
@@ -93,7 +97,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
 
-        fab.setOnClickListener {
+        fab.setOnClickListener { _ ->
             if (quickTip.isVisible()) {
                 quickTip.hide(fab)
             }
@@ -117,6 +121,13 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 .subscribe {
                     Analytics.event(Event.SelectContent.Action("export_decklist"))
                     val intent = MultiExportActivity.createIntent(activity!!, it)
+                    startActivity(intent)
+                }
+
+        disposables += testClicks
+                .subscribe {
+                    Analytics.event(Event.SelectContent.Action("test_decklist"))
+                    val intent = DeckTestingActivity.createIntent(activity!!, it.id)
                     startActivity(intent)
                 }
 

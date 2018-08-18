@@ -48,7 +48,12 @@ class DeckTestingPresenter @Inject constructor(
 
         val testSingleHand = intentions.testSingleHand()
                 .flatMap { iterations ->
-                    tester.testHand(ui.state.sessionId ?: -1L, iterations)
+                    val testObservable = when {
+                        ui.state.sessionId != null -> tester.testHand(ui.state.sessionId!!, iterations)
+                        ui.state.deckId != null -> tester.testHandById(ui.state.deckId!!, iterations)
+                        else -> Observable.empty()
+                    }
+                    testObservable
                             .map { Change.Hand(it) as Change }
                             .startWith(Change.IsLoading as Change)
                             .onErrorReturn(handleUnknownError)

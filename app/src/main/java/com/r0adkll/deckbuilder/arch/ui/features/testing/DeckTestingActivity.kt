@@ -89,6 +89,16 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     }
 
 
+    override fun onPause() {
+        super.onPause()
+        cards.forEach {
+            it.translationX = 0f
+            it.translationY = 0f
+        }
+        state = state.copy(hand = null)
+    }
+
+
     override fun setupComponent() {
         DeckApp.component.plus(DeckTestingModule(this))
                 .inject(this)

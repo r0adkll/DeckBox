@@ -66,11 +66,11 @@
                 android:layout_weight="1"/>
 
             <ImageView
-                android:id="@+id/action_duplicate"
+                android:id="@+id/action_test"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:src="@drawable/ic_content_copy_black_24dp"
+                android:src="@drawable/ic_flask"
                 android:alpha=".54"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 />
@@ -81,11 +81,11 @@
                 android:layout_weight="1"/>
 
             <ImageView
-                android:id="@+id/action_delete"
+                android:id="@+id/action_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:src="@drawable/ic_delete_black_24dp"
+                android:src="@drawable/ic_more_vert_black_24dp"
                 android:alpha=".54"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 />

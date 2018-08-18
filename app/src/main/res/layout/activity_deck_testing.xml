@@ -131,14 +131,14 @@
         tools:visibility="visible"
         />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/infoContainer"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:elevation="4dp"
-        android:minHeight="200dp"
+        android:orientation="vertical"
         >
 
         <TextView
@@ -157,10 +157,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
             android:layout_marginTop="4dp"
-            android:layout_toStartOf="@+id/text_controls_count"
-            android:layout_above="@+id/actions"
-            android:layout_below="@+id/name"
             android:ellipsize="end"
             tools:text="An assortment of ultra beasts that take advantage of the new Ultra Beast mechanics from Forbidden Light"
             />
@@ -169,9 +167,8 @@
             android:id="@+id/cardCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="8dp"
             />
 
         <LinearLayout
@@ -205,68 +202,74 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/text_controls_count"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/actions"
-            android:paddingEnd="@dimen/padding_normal"
-            android:paddingStart="@dimen/padding_normal"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingBottom="@dimen/padding_small"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_alignParentEnd="true">
-
-            <ImageView
-                android:id="@+id/actionIterationPlus"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_drop_up_black_24dp"
-                android:padding="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/inputIterations"
-                android:layout_width="56dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primaryColor"
-                android:background="@color/transparent"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:gravity="center"
-                android:fontFamily="sans-serif-medium"
-                android:maxLines="1"
-                android:maxLength="5"
-                tools:text="10000"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/margin_small"
+                android:gravity="end"
+                android:text="Shuffles per hand"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"
                 />
 
-            <ImageView
-                android:id="@+id/actionIterationMinus"
-                android:layout_width="56dp"
+            <LinearLayout
+                android:id="@+id/text_controls_count"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_drop_down_black_24dp"
-                android:padding="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                />
+                android:paddingEnd="@dimen/padding_normal"
+                android:paddingStart="@dimen/padding_normal"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/actionIterationPlus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_remove_circle_black_24dp"
+                    android:alpha=".54"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    />
+
+                <TextView
+                    android:id="@+id/inputIterations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="16sp"
+                    android:background="@color/transparent"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:maxLength="5"
+                    tools:text="7"
+                    />
+
+                <ImageView
+                    android:id="@+id/actionIterationMinus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_add_circle_black_24dp"
+                    android:alpha=".54"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </RelativeLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/actionTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_flask"
-        android:tint="@color/white"
-        android:layout_above="@+id/infoContainer"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="-28dp"
-        app:elevation="4dp"
-        app:fabSize="normal"
-        android:visibility="gone"
-        />
+    </LinearLayout>
 
 </RelativeLayout>
