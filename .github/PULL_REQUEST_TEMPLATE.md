@@ -12,6 +12,3 @@
 
 ## Notes
 <!-- Misc. notes or caveats related to this release/build -->
-
-
-<!-- Tag Andy Johnson for review to get final approval on releases -->
