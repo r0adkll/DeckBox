@@ -34,6 +34,8 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.PresenterActivityDelegate
 import com.r0adkll.deckbuilder.util.RendererActivityDelegate
+import com.r0adkll.deckbuilder.util.extensions.fromHtml
+import com.r0adkll.deckbuilder.util.extensions.isMulligan
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.pokemontcg.model.SubType
@@ -102,24 +104,12 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     }
 
 
-    override fun runTests(): Observable<Int> {
-        return actionTest.clicks()
+    override fun testSingleHand(): Observable<Int> {
+        return actionTestSingleHand.clicks()
                 .uiDebounce()
                 .flatMap {
                     Observable.create<Unit> { e ->
-                        val animators = cards.map {
-                            it.elevation = 0f
-                            val x = ObjectAnimator.ofFloat(it, "translationX", 0f)
-                            val y = ObjectAnimator.ofFloat(it, "translationY", 0f)
-                            val set = AnimatorSet()
-                            set.playTogether(x, y)
-                            set.duration = DEAL_RETURN_ANIMATION_DURATION
-                            set.interpolator = FastOutSlowInInterpolator()
-                            set
-                        }
-
-                        val superSet = AnimatorSet()
-                        superSet.playTogether(animators)
+                        val superSet = createHideHandAnimation()
                         superSet.addListener(object : AnimatorListenerAdapter() {
                             override fun onAnimationEnd(animation: Animator?) {
                                 e.onNext(Unit)
@@ -136,6 +126,13 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                 }
                 .map { state.iterations }
                 .doOnNext { Analytics.event(Event.SelectContent.Action("test_deck", value = it.toLong())) }
+    }
+
+
+    override fun testOverallHands(): Observable<Int> {
+        return actionTestOverall.clicks()
+                .uiDebounce()
+                .map { state.iterations }
     }
 
 
@@ -165,7 +162,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
     override fun setMetadata(metadata: DeckTestingUi.Metadata) {
         name.text = metadata.name
-        description.text = metadata.description
+        description.text = if (metadata.description.isEmpty()) getString(R.string.empty_metadata_description).fromHtml() else metadata.description
         cardCount.count(metadata.pokemon, metadata.trainer, metadata.energy)
     }
 
@@ -187,66 +184,83 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ images ->
-                    (0 until cards.size).forEach {
-                        cards[it].setImageDrawable(images[it])
-                        val isBasic = hand[it].let { it.supertype == SuperType.POKEMON
-                                && (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank()) }
-                        cards[it].elevation = if (isBasic) dpToPx(4f) else 0f
-                        cards[it].scaleX = if (isBasic) 1.05f else 1f
-                        cards[it].scaleY = if (isBasic) 1.05f else 1f
-                    }
-
-                    // Animate cards out
-                    val width = field.width
-                    val height = field.height
-                    val outerMargin = dpToPx(32f)
-                    val innerMargin = dpToPx(8f)
-                    val cardWidth = ((width - ((2 * outerMargin) + (3 * innerMargin))) / 4f).toInt()
-                    val lowerOuterMargin = (width - ((3 * cardWidth) + (2 * innerMargin))) / 2f
-                    Timber.i("Showing Hand (width: $width, height: $height, outerMargin: $outerMargin, lowerOuterMargin: $lowerOuterMargin, innerMargin: $innerMargin, cardWidth: $cardWidth)")
-                    (0 until 4).forEach {
-                        val x = outerMargin + (it * cardWidth) + (it * innerMargin)
-                        val y = (height / 2f) + ((cardWidth * PokemonCardView.RATIO) + innerMargin/2f) + dpToPx(8f)
-                        Timber.i("Card($it) [x: $x, y: $y]")
-
-                        val card = cards[it]
-                        val lp = card.layoutParams
-                        if (lp.width != cardWidth) {
-                            lp.width = cardWidth
-                            lp.height = (cardWidth * PokemonCardView.RATIO).toInt()
-                            card.layoutParams = lp
+                    field.post { // Ensure that this occurs when things have been layed out so the math doesn't get wonky
+                        (0 until cards.size).forEach {
+                            cards[it].setImageDrawable(images[it])
+                            val isBasic = hand[it].let { it.supertype == SuperType.POKEMON
+                                    && (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank()) }
+                            cards[it].elevation = if (isBasic) dpToPx(4f) else 0f
+                            cards[it].scaleX = if (isBasic) 1.05f else 1f
+                            cards[it].scaleY = if (isBasic) 1.05f else 1f
                         }
 
-                        val startDelay = it * DEAL_ANIMATION_DELAY
-                        card.animate()
-                                .translationX(-(card.x - x))
-                                .translationY(-y)
-                                .setDuration(DEAL_ANIMATION_DURATION)
-                                .setStartDelay(startDelay)
-                                .setInterpolator(FastOutSlowInInterpolator())
-                                .start()
-                    }
+                        // Animate cards out
+                        val width = field.width
+                        val height = field.height
+                        val outerMargin = dpToPx(32f)
+                        val innerMargin = dpToPx(8f)
+                        val cardWidth = ((width - ((2 * outerMargin) + (3 * innerMargin))) / 4f).toInt()
+                        val lowerOuterMargin = (width - ((3 * cardWidth) + (2 * innerMargin))) / 2f
+                        Timber.i("Showing Hand (width: $width, height: $height, outerMargin: $outerMargin, lowerOuterMargin: $lowerOuterMargin, innerMargin: $innerMargin, cardWidth: $cardWidth)")
+                        (0 until 4).forEach {
+                            val x = outerMargin + (it * cardWidth) + (it * innerMargin)
+                            val y = (height / 2f) + ((cardWidth * PokemonCardView.RATIO) + innerMargin/2f) + dpToPx(8f)
+                            Timber.i("Card($it) [x: $x, y: $y]")
 
-                    (0 until 3).forEach {
-                        val x = lowerOuterMargin + (it * cardWidth) + (it * innerMargin)
-                        val y = (height / 2f) - (innerMargin / 2f)
-                        Timber.i("Card(${it + 4}) [x: $x, y: $y]")
-                        val card = cards[4 + it]
-                        val lp = card.layoutParams
-                        if (lp.width != cardWidth) {
-                            lp.width = cardWidth
-                            lp.height = (cardWidth * PokemonCardView.RATIO).toInt()
-                            card.layoutParams = lp
+                            val card = cards[it]
+                            val lp = card.layoutParams
+                            if (lp.width != cardWidth) {
+                                lp.width = cardWidth
+                                lp.height = (cardWidth * PokemonCardView.RATIO).toInt()
+                                card.layoutParams = lp
+                            }
+
+                            val translationX = -(card.x - x)
+                            val translationY = -y
+                            val startDelay = it * DEAL_ANIMATION_DELAY
+                            if (card.translationX != translationX || card.translationY != translationY) {
+                                card.animate()
+                                        .translationX(translationX)
+                                        .translationY(translationY)
+                                        .setDuration(DEAL_ANIMATION_DURATION)
+                                        .setStartDelay(startDelay)
+                                        .setInterpolator(FastOutSlowInInterpolator())
+                                        .start()
+                            }
                         }
 
-                        val startDelay = (it + 4) * DEAL_ANIMATION_DELAY
-                        card.animate()
-                                .translationX(-(card.x - x))
-                                .translationY(-y)
-                                .setDuration(DEAL_ANIMATION_DURATION)
-                                .setStartDelay(startDelay)
-                                .setInterpolator(FastOutSlowInInterpolator())
-                                .start()
+                        (0 until 3).forEach {
+                            val x = lowerOuterMargin + (it * cardWidth) + (it * innerMargin)
+                            val y = (height / 2f) - (innerMargin / 2f)
+                            Timber.i("Card(${it + 4}) [x: $x, y: $y]")
+                            val card = cards[4 + it]
+                            val lp = card.layoutParams
+                            if (lp.width != cardWidth) {
+                                lp.width = cardWidth
+                                lp.height = (cardWidth * PokemonCardView.RATIO).toInt()
+                                card.layoutParams = lp
+                            }
+
+                            val translationX = -(card.x - x)
+                            val translationY = -y
+                            val startDelay = (it + 4) * DEAL_ANIMATION_DELAY
+                            if (card.translationX != translationX || card.translationY != translationY) {
+                                card.animate()
+                                        .translationX(translationX)
+                                        .translationY(translationY)
+                                        .setDuration(DEAL_ANIMATION_DURATION)
+                                        .setStartDelay(startDelay)
+                                        .setInterpolator(FastOutSlowInInterpolator())
+                                        .start()
+                            }
+                        }
+
+
+                        if (hand.isMulligan()) {
+                            showError(getString(R.string.mulligan))
+                        } else {
+                            hideError()
+                        }
                     }
                 }, {
                     Timber.e(it, "Error loading all card images")
@@ -261,7 +275,10 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
 
     override fun showLoading(isLoading: Boolean) {
-
+        hideError()
+        actionTestSingleHand.isEnabled = !isLoading
+        actionTestOverall.isEnabled = !isLoading
+        emptyView.setLoading(isLoading)
     }
 
 
@@ -273,6 +290,45 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
     override fun hideError() {
         errorBar.gone()
+    }
+
+
+    override fun hideTestHand() {
+        createHideHandAnimation().start()
+    }
+
+
+    override fun hideTestResults() {
+        adapter.clear()
+        adapter.notifyDataSetChanged()
+    }
+
+
+    override fun showEmptyView() {
+        emptyView.visible()
+    }
+
+
+    override fun hideEmptyView() {
+        emptyView.gone()
+    }
+
+
+    private fun createHideHandAnimation(): AnimatorSet {
+        val animators = cards.map {
+            it.elevation = 0f
+            val x = ObjectAnimator.ofFloat(it, "translationX", 0f)
+            val y = ObjectAnimator.ofFloat(it, "translationY", 0f)
+            val set = AnimatorSet()
+            set.playTogether(x, y)
+            set.duration = DEAL_RETURN_ANIMATION_DURATION
+            set.interpolator = FastOutSlowInInterpolator()
+            set
+        }
+
+        val superSet = AnimatorSet()
+        superSet.playTogether(animators)
+        return superSet
     }
 
 

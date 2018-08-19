@@ -1,2 +1,2 @@
-• Hotfix for crash in previous build
-• Added experimental deck testing feature
+• Added Deck Testing - Test dealing a single hand, or show an overall breakdown of a 1000 first hands.
+• Added support for selecting all standard/expanded expansions at once when searching for cards.

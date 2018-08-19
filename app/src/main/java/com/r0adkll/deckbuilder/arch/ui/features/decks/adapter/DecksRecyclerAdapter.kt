@@ -14,14 +14,15 @@ class DecksRecyclerAdapter(
         private val shareClicks: Relay<Deck>,
         private val duplicateClicks: Relay<Deck>,
         private val deleteClicks: Relay<Deck>,
+        private val testClicks: Relay<Deck>,
         private val dismissPreview: Relay<Unit>,
         private val viewPreview: Relay<Unit>
 ) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
-        return UiViewHolder.create(itemView, viewType, shareClicks, duplicateClicks, deleteClicks,
-                dismissPreview, viewPreview)
+        return UiViewHolder.create(itemView, viewType, shareClicks, duplicateClicks, testClicks,
+                deleteClicks, dismissPreview, viewPreview)
     }
 
 

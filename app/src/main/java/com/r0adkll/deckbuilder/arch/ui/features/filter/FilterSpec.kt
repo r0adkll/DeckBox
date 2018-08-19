@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 import android.support.annotation.StringRes
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
@@ -113,6 +114,12 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
             override fun apply(filter: Filter): List<Item> {
                 val items = ArrayList<Item>()
                 items += Item.Header(R.string.filter_header_expansions)
+
+                val attributes = listOf(FilterAttribute.ExpansionAttribute(Format.STANDARD, expansions),
+                        FilterAttribute.ExpansionAttribute(Format.EXPANDED, expansions))
+                val selectedAttributes = getSelectedFormatAttributes(filter)
+                items += Item.Attribute(attributes, selectedAttributes)
+
                 items += getVisibleExpansions(filter)
                 if (visibility != UNLIMITED) {
                     items += Item.ViewMore(when(visibility){
@@ -134,6 +141,20 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                 }.map {
                     ExpansionOption("expansion", it, filter.expansions.contains(it))
                 }
+            }
+
+
+            private fun getSelectedFormatAttributes(filter: Filter): List<FilterAttribute> {
+                val standardExpansions = expansions.filter { it.standardLegal }
+                val expandedExpansions = expansions.filter { it.expandedLegal }
+                val attrs = ArrayList<FilterAttribute.ExpansionAttribute>()
+                if (filter.expansions.containsAll(standardExpansions)) {
+                    attrs += FilterAttribute.ExpansionAttribute(Format.STANDARD, expansions)
+                }
+                if (filter.expansions.containsAll(expandedExpansions)) {
+                    attrs += FilterAttribute.ExpansionAttribute(Format.EXPANDED, expansions)
+                }
+                return attrs
             }
 
             companion object {

@@ -1,10 +1,12 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
+import android.annotation.SuppressLint
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -46,16 +48,18 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             itemView: View,
             private val shareClicks: Relay<Deck>,
             private val duplicateClicks: Relay<Deck>,
+            private val testClicks: Relay<Deck>,
             private val deleteClicks: Relay<Deck>
     ) : UiViewHolder<Item.DeckItem>(itemView) {
 
         private val image: DeckImageView by bindView(R.id.image)
         private val title: TextView by bindView(R.id.title)
         private val actionShare: ImageView by bindView(R.id.action_share)
-        private val actionDuplicate: ImageView by bindView(R.id.action_duplicate)
-        private val actionDelete: ImageView by bindView(R.id.action_delete)
+        private val actionMore: ImageView by bindView(R.id.action_more)
+        private val actionTest: ImageView by bindView(R.id.action_test)
 
 
+        @SuppressLint("ClickableViewAccessibility")
         override fun bind(item: Item.DeckItem) {
             val deck = item.deck
             title.text = deck.name
@@ -80,9 +84,23 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                         .into(image)
             }
 
+            val popupMenu = PopupMenu(itemView.context, actionMore)
+            popupMenu.inflate(R.menu.deck_actions)
+            popupMenu.setOnMenuItemClickListener { item ->
+                when(item.itemId) {
+                    R.id.action_duplicate -> { duplicateClicks.accept(deck); true }
+                    R.id.action_delete -> { deleteClicks.accept(deck); true }
+                    else -> false
+                }
+            }
+
+            actionMore.setOnTouchListener(popupMenu.dragToOpenListener)
+            actionMore.setOnClickListener {
+                popupMenu.show()
+            }
+
             actionShare.setOnClickListener { shareClicks.accept(deck) }
-            actionDuplicate.setOnClickListener { duplicateClicks.accept(deck) }
-            actionDelete.setOnClickListener { deleteClicks.accept(deck) }
+            actionTest.setOnClickListener { testClicks.accept(deck) }
         }
 
 
@@ -119,13 +137,14 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                    layoutId: Int,
                    shareClicks: Relay<Deck>,
                    duplicateClicks: Relay<Deck>,
+                   testClicks: Relay<Deck>,
                    deleteClicks: Relay<Deck>,
                    dismissPreview: Relay<Unit>,
                    viewPreview: Relay<Unit>): UiViewHolder<Item> {
             val viewType = ViewType.of(layoutId)
             return when(viewType) {
                 PREVIEW -> PreviewViewHolder(itemView, dismissPreview, viewPreview) as UiViewHolder<Item>
-                DECK -> DeckViewHolder(itemView, shareClicks, duplicateClicks, deleteClicks) as UiViewHolder<Item>
+                DECK -> DeckViewHolder(itemView, shareClicks, duplicateClicks, testClicks, deleteClicks) as UiViewHolder<Item>
             }
         }
     }

@@ -315,7 +315,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         finishEditItem.isVisible = state.isEditing
 
         val testItem = menu.findItem(R.id.action_test)
-//        testItem.isVisible = BuildConfig.DEBUG
+        testItem.isVisible = BuildConfig.DEBUG
         testItem.isEnabled = state.validation.isValid
         return true
     }

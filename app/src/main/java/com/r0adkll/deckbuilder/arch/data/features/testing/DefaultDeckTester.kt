@@ -8,6 +8,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepos
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
 import com.r0adkll.deckbuilder.arch.domain.features.testing.TestResults
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
+import com.r0adkll.deckbuilder.util.extensions.isMulligan
+import com.r0adkll.deckbuilder.util.extensions.shuffle
 import io.pokemontcg.model.Card
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
@@ -78,6 +80,21 @@ class DefaultDeckTester @Inject constructor(
     }
 
 
+    override fun testHandById(deckId: String, iterations: Int): Observable<List<PokemonCard>> {
+        return deckRepository.getDeck(deckId)
+                .flatMap { deck ->
+                    validator.validate(deck.cards)
+                            .map {
+                                if (it.isValid) {
+                                    deal(deck.cards, iterations)
+                                } else {
+                                    throw InvalidDeckException()
+                                }
+                            }
+                }
+    }
+
+
     private fun deal(cards: List<PokemonCard>, iterations: Int): List<PokemonCard> {
         val deck = cards.toMutableList()
         (0 until iterations).forEach {
@@ -89,18 +106,15 @@ class DefaultDeckTester @Inject constructor(
 
 
     private fun test(cards: List<PokemonCard>, iterations: Int): TestResults {
-        var mulligans = 0;
+        var mulligans = 0
         var startingHands = HashMap<PokemonCard, Int>()
 
         (0..iterations).forEach {
-            val shuffledCards = cards.shuffled()
+            val shuffledCards = cards.shuffle(DEFAULT_SHUFFLE_PER_HAND)
             val firstHand = shuffledCards.subList(0, DEFAULT_HAND_SIZE)
 
             // 1) Check for mulligans
-            val didMulligan = firstHand.none {
-                it.supertype == SuperType.POKEMON
-                        && (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank())
-            }
+            val didMulligan = firstHand.isMulligan()
 
             // 2) If we didn't mulligan, then update mapping
             if (didMulligan) {
@@ -119,5 +133,8 @@ class DefaultDeckTester @Inject constructor(
 
     companion object {
         const val DEFAULT_HAND_SIZE = 7
+
+        // This value is to emulate the ideal # of riffle shuffles one should do when shuffling the deck
+        const val DEFAULT_SHUFFLE_PER_HAND = 7
     }
 }
