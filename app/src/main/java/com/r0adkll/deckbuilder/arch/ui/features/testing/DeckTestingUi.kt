@@ -30,6 +30,10 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
         fun showTestHand(hand: List<PokemonCard>)
         fun setTestIterations(iterations: Int)
         fun setMetadata(metadata: Metadata)
+        fun hideTestHand()
+        fun hideTestResults()
+        fun showEmptyView()
+        fun hideEmptyView()
     }
 
 
@@ -62,13 +66,13 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
     ) : BaseState<State.Change>(isLoading, error), PaperParcelable {
 
         override fun reduce(change: Change): Ui.State<Change> = when(change) {
-            Change.IsLoading -> this.copy(isLoading = true, error = null)
+            Change.IsLoading -> this.copy(isLoading = true, error = null, hand = null, results = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
-            is Change.Results -> this.copy(results = change.results, isLoading = false)
+            is Change.Results -> this.copy(results = change.results, isLoading = false, hand = null)
             is Change.IncrementIterations -> this.copy(iterations = iterations.plus(change.amount).coerceAtLeast(0))
             is Change.DecrementIterations -> this.copy(iterations = iterations.minus(change.amount).coerceAtLeast(0))
             is Change.MetadataLoaded -> this.copy(metadata = change.metadata)
-            is Change.Hand -> this.copy(hand = change.hand)
+            is Change.Hand -> this.copy(hand = change.hand, isLoading = false, results = null)
         }
 
 

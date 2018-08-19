@@ -47,10 +47,10 @@ class DeckTestingPresenter @Inject constructor(
                 .map { Change.DecrementIterations(it) as Change }
 
         val testSingleHand = intentions.testSingleHand()
-                .flatMap { iterations ->
+                .flatMap { _ ->
                     val testObservable = when {
-                        ui.state.sessionId != null -> tester.testHand(ui.state.sessionId!!, iterations)
-                        ui.state.deckId != null -> tester.testHandById(ui.state.deckId!!, iterations)
+                        ui.state.sessionId != null -> tester.testHand(ui.state.sessionId!!)
+                        ui.state.deckId != null -> tester.testHandById(ui.state.deckId!!)
                         else -> Observable.empty()
                     }
                     testObservable

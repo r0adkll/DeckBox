@@ -47,6 +47,8 @@ class DeckTestingRenderer(
                 .subscribe {
                     if (it.value != null) {
                         actions.showTestResults(it.value)
+                    } else {
+                        actions.hideTestResults()
                     }
                 }
 
@@ -57,6 +59,8 @@ class DeckTestingRenderer(
                 .subscribe {
                     if (it.value != null) {
                         actions.showTestHand(it.value)
+                    } else {
+                        actions.hideTestHand()
                     }
                 }
 
@@ -75,5 +79,19 @@ class DeckTestingRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.setTestIterations(it) }
+
+        disposables += state
+                .map {
+                    (it.hand == null && it.results == null) || it.isLoading
+                }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    if (it) {
+                        actions.showEmptyView()
+                    } else {
+                        actions.hideEmptyView()
+                    }
+                }
     }
 }

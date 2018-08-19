@@ -65,7 +65,8 @@
         <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
         <activity android:name=".arch.ui.features.browse.SetBrowserActivity"
             android:theme="@style/Theme.DeckBuilder.Translucent" />
-        <activity android:name=".arch.ui.features.testing.DeckTestingActivity" />
+        <activity android:name=".arch.ui.features.testing.DeckTestingActivity"
+            android:screenOrientation="sensorPortrait"/>
 
         <service android:name=".arch.data.features.cards.service.CacheService"
                  android:exported="false" />

@@ -9,6 +9,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
 import com.r0adkll.deckbuilder.arch.domain.features.testing.TestResults
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
+import com.r0adkll.deckbuilder.util.extensions.shuffle
 import io.pokemontcg.model.Card
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
@@ -109,7 +110,7 @@ class DefaultDeckTester @Inject constructor(
         var startingHands = HashMap<PokemonCard, Int>()
 
         (0..iterations).forEach {
-            val shuffledCards = cards.shuffled()
+            val shuffledCards = cards.shuffle(DEFAULT_SHUFFLE_PER_HAND)
             val firstHand = shuffledCards.subList(0, DEFAULT_HAND_SIZE)
 
             // 1) Check for mulligans
@@ -132,5 +133,8 @@ class DefaultDeckTester @Inject constructor(
 
     companion object {
         const val DEFAULT_HAND_SIZE = 7
+
+        // This value is to emulate the ideal # of riffle shuffles one should do when shuffling the deck
+        const val DEFAULT_SHUFFLE_PER_HAND = 7
     }
 }

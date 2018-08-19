@@ -1,5 +1,5 @@
 # 1.6.0
-* New deck testing feature where users can test out single hand deals or an overall multi-hand percentage view.
+* [#12](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/12) - New deck testing feature where users can test out single hand deals or an overall multi-hand percentage view.
 * [#20](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/20) - Added convienence filters for mass selecting standard or expanded expansions when searching
 * Misc bug fixes
 

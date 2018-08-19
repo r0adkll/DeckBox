@@ -197,4 +197,7 @@
     <string name="action_test_single_hand">Single Hand</string>
     <string name="action_test_overall_hands">Overall</string>
     <string name="action_duplicate">Duplicate</string>
+    <string name="empty_metadata_description"><![CDATA[
+    <i>No description</i>
+    ]]></string>
 </resources>
