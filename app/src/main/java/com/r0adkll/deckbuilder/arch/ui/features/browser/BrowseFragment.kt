@@ -34,7 +34,6 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(true)
 
         adapter = ExpansionRecyclerAdapter(activity!!)
         adapter.setEmptyView(emptyView)
@@ -47,21 +46,9 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
 
         renderer.start()
         presenter.start()
-    }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
-        inflater.inflate(R.menu.fragment_browser, menu)
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.action_search -> {
-                startActivity(SearchActivity.createIntent(activity!!))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        actionSearch.setOnClickListener {
+            startActivity(SearchActivity.createIntent(it.context))
         }
     }
 

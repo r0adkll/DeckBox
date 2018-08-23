@@ -15,6 +15,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
@@ -68,8 +69,8 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardLongClicks,
-                editCardIntentions)
+        adapter = ResultsPagerAdapter(this, sessionId != Session.NO_ID,
+                KeyboardScrollHideListener(searchView), pokemonCardLongClicks, editCardIntentions)
         pager.offscreenPageLimit = 3
         pager.adapter = adapter
         tabs.setupWithViewPager(pager)
@@ -325,7 +326,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
         fun createIntent(context: Context,
-                         sessionId: Long = -1L,
+                         sessionId: Long = Session.NO_ID,
                          superType: SuperType = SuperType.POKEMON): Intent {
             val intent = Intent(context, SearchActivity::class.java)
             intent.putExtra(EXTRA_SESSION_ID, sessionId)
