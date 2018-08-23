@@ -3,9 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
@@ -13,6 +11,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.ExpansionRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.browser.di.BrowseModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.fragment_browse.*
 import javax.inject.Inject
@@ -35,6 +34,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
 
         adapter = ExpansionRecyclerAdapter(activity!!)
         adapter.setEmptyView(emptyView)
@@ -47,6 +47,22 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
 
         renderer.start()
         presenter.start()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+        inflater.inflate(R.menu.fragment_browser, menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_search -> {
+                startActivity(SearchActivity.createIntent(activity!!))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 

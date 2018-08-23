@@ -70,9 +70,9 @@ class SearchPresenter @Inject constructor(
 
         disposables += merged.scan(ui.state, State::reduce)
                 .logState()
-                .subscribe(ui::render, {
+                .subscribe(ui::render) {
                     Timber.e(it, "Error reducing search state")
-                })
+                }
     }
 
 

@@ -47,7 +47,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
     @State override var state: SearchUi.State = SearchUi.State.DEFAULT
-
     @State var superType: SuperType = SuperType.POKEMON
 
     val sessionId: Long by bindLong(EXTRA_SESSION_ID)
@@ -287,9 +286,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         val text = resources.getQuantityString(R.plurals.card_selection_count, count, count)
         if (selectionSnackBar == null) {
             selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.action_undo, {
-                        clearSelectionClicks.accept(Unit)
-                    })
+                    .setAction(R.string.action_undo) { clearSelectionClicks.accept(Unit) }
                     .setActionTextColor(color(R.color.primaryColor))
         }
 
@@ -328,7 +325,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
         fun createIntent(context: Context,
-                         sessionId: Long,
+                         sessionId: Long = -1L,
                          superType: SuperType = SuperType.POKEMON): Intent {
             val intent = Intent(context, SearchActivity::class.java)
             intent.putExtra(EXTRA_SESSION_ID, sessionId)
