@@ -207,12 +207,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/margin_small"
-                android:src="@drawable/ic_add_white_24dp"
+                android:src="@drawable/ic_fullscreen_white_24dp"
                 app:elevation="6dp"
                 app:fabSize="normal"
                 app:rippleColor="@color/white30"
                 app:backgroundTint="?attr/colorPrimary"
-                android:visibility="gone"
                 />
 
             <ImageView

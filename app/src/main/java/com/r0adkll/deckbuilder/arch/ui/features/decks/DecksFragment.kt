@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,16 +85,20 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         adapter.setEmptyView(empty_view)
 
-        val layoutManager = GridLayoutManager(activity, if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val item = adapter.items[position]
-                return when(item) {
-                    Item.Preview -> 2
-                    else -> 1
-                }
-            }
-        }
+//        val layoutManager = GridLayoutManager(activity, if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2)
+//        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+//            override fun getSpanSize(position: Int): Int {
+//                val item = adapter.items[position]
+//                return when(item) {
+//                    Item.Preview -> 2
+//                    else -> 1
+//                }
+//            }
+//        }
+
+        val layoutManager = StaggeredGridLayoutManager(if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2, StaggeredGridLayoutManager.VERTICAL)
+
+
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
 
