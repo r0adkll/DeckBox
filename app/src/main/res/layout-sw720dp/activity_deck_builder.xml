@@ -230,7 +230,6 @@
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <!-- TODO: Add Unified search fragment here -->
     <fragment
         android:id="@+id/search_fragment"
         android:layout_width="match_parent"
