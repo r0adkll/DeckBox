@@ -118,6 +118,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         }
 
         if (preferences.quickStart) {
+
+            // This can be called after the activity is destroyed and cause a NPE with the fab
             fab.postDelayed({ quickTip.show(fab, R.string.deck_quickstart_message) }, 300L)
             preferences.quickStart = false
         }

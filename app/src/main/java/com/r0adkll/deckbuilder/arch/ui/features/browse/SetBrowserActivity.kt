@@ -24,7 +24,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.*
 import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -32,14 +32,11 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindParcelable
-import com.r0adkll.deckbuilder.util.bindString
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.palette.PaletteBitmapViewTarget
-import com.r0adkll.deckbuilder.util.palette.PaletteTargetBuilder
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_set_browser.*
-import timber.log.Timber
 import javax.inject.Inject
 
 

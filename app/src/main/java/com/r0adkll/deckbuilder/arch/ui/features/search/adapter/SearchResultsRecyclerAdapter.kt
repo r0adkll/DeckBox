@@ -4,12 +4,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.adapter
 import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.view.ViewGroup
-import com.jakewharton.rxrelay2.PublishRelay
-import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 
 
 class SearchResultsRecyclerAdapter(

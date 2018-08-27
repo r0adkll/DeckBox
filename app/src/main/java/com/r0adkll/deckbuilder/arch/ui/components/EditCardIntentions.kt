@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
+package com.r0adkll.deckbuilder.arch.ui.components
 
 
 import com.jakewharton.rxrelay2.PublishRelay
