@@ -39,8 +39,10 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRec
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
+import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewFragment
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
+import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -98,7 +100,6 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         newFeatureDeckImage.setVisible(flags.newFeatureDeckImage)
 
         // Setup AppBar
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = null
         appbarTitle.setOnClickListener {
@@ -145,14 +146,27 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         // Setup Listeners
 
         fab.setOnClickListener {
-            val superType = when(tabs.selectedTabPosition) {
-                0 -> SuperType.POKEMON
-                1 -> SuperType.TRAINER
-                2 -> SuperType.ENERGY
-                else -> SuperType.POKEMON
+            if (fragmentContainer == null) {
+                val superType = when (tabs.selectedTabPosition) {
+                    0 -> SuperType.POKEMON
+                    1 -> SuperType.TRAINER
+                    2 -> SuperType.ENERGY
+                    else -> SuperType.POKEMON
+                }
+                Analytics.event(Event.SelectContent.Action("add_new_card"))
+                startActivity(SearchActivity.createIntent(this, sessionId, superType))
+            } else {
+                // Show the overview fragment
+                val overviewFragment = OverviewFragment.newInstance(sessionId)
+
+                supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left)
+                        .replace(R.id.fragmentContainer, overviewFragment, OverviewFragment.TAG)
+                        .commit()
+
+                slidingLayout.panelState = EXPANDED
+                slidingLayout.isTouchEnabled = false
             }
-            Analytics.event(Event.SelectContent.Action("add_new_card"))
-            startActivity(SearchActivity.createIntent(this, sessionId, superType))
         }
 
         tabletDropZone?.let {
@@ -231,9 +245,28 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         })
 
         infoBar.setNavigationOnClickListener {
-            imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
-            imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
-            slidingLayout.panelState = COLLAPSED
+            var normalOperation = true
+            if (fragmentContainer != null) {
+                val overviewFragment = supportFragmentManager.findFragmentByTag(OverviewFragment.TAG)
+                normalOperation = if (overviewFragment != null) {
+                    supportFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+                            .replace(R.id.fragmentContainer, SearchFragment(), SearchFragment.TAG)
+                            .commit()
+
+                    slidingLayout.panelState = COLLAPSED
+                    slidingLayout.isTouchEnabled = true
+                    false
+                } else {
+                    true
+                }
+            }
+
+            if (normalOperation) {
+                imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
+                imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
+                slidingLayout.panelState = COLLAPSED
+            }
         }
 
         state = state.copy(sessionId = sessionId)
@@ -254,6 +287,15 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                     DeckImagePickerFragment.newInstance(sessionId, state.image)
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
                 }
+
+        // Setup tablet fragments, if possible
+        if (fragmentContainer != null) {
+
+            // By default show the search fragment
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, SearchFragment())
+                    .commit()
+        }
     }
 
 

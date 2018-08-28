@@ -230,12 +230,20 @@
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <fragment
-        android:id="@+id/search_fragment"
+    <!-- This is used to dynamically show the search/overview fragments -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment"
-        tools:layout="@layout/fragment_search"
-        />
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <!--<fragment-->
+        <!--android:id="@+id/search_fragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:name="com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment"-->
+        <!--tools:layout="@layout/fragment_search"-->
+        <!--/>-->
 
 </LinearLayout>

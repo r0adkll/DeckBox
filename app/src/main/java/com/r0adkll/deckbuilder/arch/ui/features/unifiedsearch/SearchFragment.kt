@@ -260,4 +260,9 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
             toolBar.elevation = 0f
         }
     }
+
+
+    companion object {
+        const val TAG = "UnifiedSearchFragment"
+    }
 }

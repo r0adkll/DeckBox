@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.*
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
@@ -12,6 +13,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.ExpansionRecycle
 import com.r0adkll.deckbuilder.arch.ui.features.browser.di.BrowseModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
+import com.r0adkll.deckbuilder.util.ScreenUtils
+import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.fragment_browse.*
 import javax.inject.Inject
@@ -41,7 +44,11 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
             val intent = SetBrowserActivity.createIntent(activity!!, it)
             startActivity(intent)
         }
-        recycler.layoutManager = LinearLayoutManager(activity!!)
+        recycler.layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
+            GridLayoutManager(activity!!, 3)
+        } else {
+            LinearLayoutManager(activity!!)
+        }
         recycler.adapter = adapter
 
         renderer.start()

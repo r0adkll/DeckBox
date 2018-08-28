@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.overview
 
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -37,11 +38,21 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        state = state.copy(sessionId = sessionId)
+
+        // Now call this since it will trigger presenter.start()
         super.onActivityCreated(savedInstanceState)
 
         adapter = OverviewRecyclerAdapter(activity!!, editCardIntentions)
         adapter.setEmptyView(emptyView)
-
+        val layoutManager = GridLayoutManager(activity!!, 7)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                val item = adapter.items[position]
+                return item.size
+            }
+        }
+        recycler.layoutManager = layoutManager
         recycler.adapter = adapter
     }
 
@@ -97,6 +108,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
 
     companion object {
+        const val TAG = "OverviewFragment"
         private const val EXTRA_SESSION_ID = "OverviewFragment.SessionId"
 
 

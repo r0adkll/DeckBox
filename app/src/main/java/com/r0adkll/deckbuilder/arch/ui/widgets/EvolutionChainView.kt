@@ -61,10 +61,10 @@ class EvolutionChainView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        cardWidth = ((parent as ViewGroup).measuredWidth - (2 * stageSpacing + 2 * linkSpacing)) / 3
-        if (cardWidth == 0) {
-            cardWidth = defaultCardWidth
-        }
+//        cardWidth = ((parent as ViewGroup).measuredWidth - (2 * stageSpacing + 2 * linkSpacing)) / 3
+//        if (cardWidth == 0) {
+//            cardWidth = defaultCardWidth
+//        }
     }
 
 

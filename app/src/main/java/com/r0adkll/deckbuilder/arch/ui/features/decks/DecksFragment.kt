@@ -98,7 +98,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         val layoutManager = StaggeredGridLayoutManager(if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2, StaggeredGridLayoutManager.VERTICAL)
 
-
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
 

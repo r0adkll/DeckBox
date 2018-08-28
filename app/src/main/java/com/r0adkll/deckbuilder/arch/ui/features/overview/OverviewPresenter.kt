@@ -43,9 +43,6 @@ class OverviewPresenter @Inject constructor(
     }
 
 
-
-
-
     companion object {
 
         val handleUnknownError: (Throwable) -> OverviewUi.State.Change = {
