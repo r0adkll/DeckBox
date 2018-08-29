@@ -27,6 +27,7 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
 
         fun setFilter(filter: BrowseFilter)
         fun setCards(cards: List<PokemonCard>)
+        fun hideFilters(vararg filters: BrowseFilter)
     }
 
 
@@ -34,7 +35,9 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
         ALL,
         POKEMON,
         TRAINER,
-        ENERGY
+        ENERGY,
+        GX,
+        PRISM
     }
 
 

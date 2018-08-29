@@ -202,4 +202,6 @@
     ]]></string>
     <string name="action_search">Search</string>
     <string name="empty_deck_overview">Unable to load your deck. Please try again.</string>
+    <string name="tab_prism">Prism Star</string>
+    <string name="tab_gx">GX</string>
 </resources>

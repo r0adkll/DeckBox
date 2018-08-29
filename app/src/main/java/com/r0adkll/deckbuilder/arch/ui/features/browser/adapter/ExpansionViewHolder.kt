@@ -26,6 +26,7 @@ class ExpansionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         name.text = expansion.name
         series.text = expansion.series
         date.text = string(R.string.expansion_released_date_format, expansion.releaseDate)
+
         GlideApp.with(itemView)
                 .load(expansion.logoUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())

@@ -31,6 +31,9 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.ScreenUtils
+import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
+import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.palette.PaletteBitmap
@@ -69,13 +72,21 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 .into(PaletteBitmapViewTarget(logo, listOf(TargetPaletteAction())))
 
         // listen for tab changes
+        // FIXME: Hack
+        BrowseFilter.values().forEachIndexed { index, browseFilter ->
+            tabs.getTabAt(index)?.tag = browseFilter.name
+        }
+
+        tabs.tabMode = if (smallestWidth(TABLET_10)) TabLayout.MODE_FIXED else TabLayout.MODE_SCROLLABLE
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                val filter = when(tab.position) {
-                    0 -> BrowseFilter.ALL
-                    1 -> BrowseFilter.POKEMON
-                    2 -> BrowseFilter.TRAINER
-                    3 -> BrowseFilter.ENERGY
+                val filter = when(tab.tag as? String) {
+                    "ALL" -> BrowseFilter.ALL
+                    "POKEMON" -> BrowseFilter.POKEMON
+                    "TRAINER" -> BrowseFilter.TRAINER
+                    "ENERGY" -> BrowseFilter.ENERGY
+                    "GX" -> BrowseFilter.GX
+                    "PRISM" -> BrowseFilter.PRISM
                     else -> BrowseFilter.ALL
                 }
                 filterChanges.accept(filter)
@@ -105,7 +116,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
         adapter = PokemonBuilderRecyclerAdapter(this, EditCardIntentions(), cardClicks)
         adapter.setEmptyView(emptyView)
-        recycler.layoutManager = GridLayoutManager(this, 3)
+        recycler.layoutManager = GridLayoutManager(this, if (smallestWidth(TABLET_10)) 9 else 3)
         recycler.adapter = adapter
 
         renderer.start()
@@ -138,13 +149,27 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
 
     override fun setFilter(filter: SetBrowserUi.BrowseFilter) {
-        val position = when(filter) {
-            BrowseFilter.ALL -> 0
-            BrowseFilter.POKEMON -> 1
-            BrowseFilter.TRAINER -> 2
-            BrowseFilter.ENERGY -> 3
+        for (i in (0 until tabs.tabCount)) {
+            val tab = tabs.getTabAt(i)
+            val tag = tab?.tag as? String
+            if (tag?.equals(filter.name, true) == true) {
+                tab.select()
+                break
+            }
         }
-        tabs.getTabAt(position)?.select()
+    }
+
+
+    override fun hideFilters(vararg filters: BrowseFilter) {
+        filters.forEach { filter ->
+            for (i in (0 until tabs.tabCount)) {
+                val tag = tabs.getTabAt(i)?.tag as? String
+                if (tag?.equals(filter.name, true) == true) {
+                    tabs.removeTabAt(i)
+                    break
+                }
+            }
+        }
     }
 
 
@@ -170,9 +195,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
         override fun execute(palette: Palette?) {
-            palette?.let {
+            palette?.let { p ->
                 if (expansion.code != "sm6" && expansion.code != "sm5" && expansion.code != "sm7") {
-                    it.vibrantSwatch?.rgb?.let {
+                    p.vibrantSwatch?.rgb?.let {
                         backdrop.imageTintList = ColorStateList.valueOf(it)
 
                         // Calculate control color

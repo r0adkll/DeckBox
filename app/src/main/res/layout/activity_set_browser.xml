@@ -66,6 +66,7 @@
                 android:fitsSystemWindows="true"
                 app:tabIndicatorColor="@color/white"
                 app:layout_collapseMode="pin"
+                app:tabMode="scrollable"
                 >
 
                 <android.support.design.widget.TabItem
@@ -73,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_all"
+                    android:tag="ALL"
                     />
 
                 <android.support.design.widget.TabItem
@@ -80,6 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_pokemon"
+                    android:tag="POKEMON"
                     />
 
                 <android.support.design.widget.TabItem
@@ -87,6 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_trainer"
+                    android:tag="TRAINER"
                     />
 
                 <android.support.design.widget.TabItem
@@ -94,6 +98,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_energy"
+                    android:tag="ENERGY"
+                    />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabGx"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_gx"
+                    android:tag="GX"
+                    />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabPrism"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_prism"
+                    android:tag="PRISM"
                     />
 
             </android.support.design.widget.TabLayout>
