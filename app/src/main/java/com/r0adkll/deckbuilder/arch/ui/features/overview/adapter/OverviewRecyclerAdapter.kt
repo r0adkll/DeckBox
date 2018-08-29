@@ -15,7 +15,7 @@ class OverviewRecyclerAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverviewViewHolder {
-        return OverviewViewHolder.create(inflater, parent)
+        return OverviewViewHolder.create(inflater, parent, editCardIntentions)
     }
 
 

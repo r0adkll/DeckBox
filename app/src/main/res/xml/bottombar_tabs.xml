@@ -17,7 +17,7 @@
         <!--/>-->
     <tab
         id="@+id/tab_browser"
-        icon="@drawable/ic_search_black_24dp"
+        icon="@drawable/ic_feature_search_outline"
         title="@string/tab_browse"
         />
 </tabs>
