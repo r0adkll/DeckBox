@@ -22,7 +22,6 @@ class OverviewPresenter @Inject constructor(
     override fun smashObservables(): Observable<Change> {
 
         val observeDeck = repository.observeSession(ui.state.sessionId)
-                .delay(300L, TimeUnit.MILLISECONDS)
                 .map { it.cards }
                 .map { Change.CardsLoaded(it) as Change }
                 .onErrorReturn(handleUnknownError)

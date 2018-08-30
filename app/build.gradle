@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-def VERSION_NAME = "1.6.0"
+def VERSION_NAME = "1.7.0"
 
 
 ext.gitVersioner = [
@@ -89,13 +89,13 @@ dependencies {
     implementation "com.android.support:palette-v7:$support_version"
 
 
-    implementation "com.google.firebase:firebase-core:16.0.1"
-    implementation "com.google.firebase:firebase-firestore:17.0.4"
-    implementation "com.google.firebase:firebase-auth:16.0.2"
+    implementation "com.google.firebase:firebase-core:16.0.3"
+    implementation "com.google.firebase:firebase-firestore:17.1.0"
+    implementation "com.google.firebase:firebase-auth:16.0.3"
     implementation "com.google.firebase:firebase-config:16.0.0"
-    implementation "com.google.android.gms:play-services-auth:15.0.1"
+    implementation "com.google.android.gms:play-services-auth:16.0.0"
     implementation "com.google.android.gms:play-services-oss-licenses:16.0.0"
-    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"

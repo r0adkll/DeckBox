@@ -46,6 +46,6 @@ class OverviewRecyclerAdapter(
         })
 
         items = ArrayList(cards)
-        diff.dispatchUpdatesTo(getListUpdateCallback(true))
+        diff.dispatchUpdatesTo(getListUpdateCallback())
     }
 }

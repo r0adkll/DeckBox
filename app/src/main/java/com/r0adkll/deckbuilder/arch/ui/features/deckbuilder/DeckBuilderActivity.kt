@@ -40,6 +40,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBui
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewFragment
+import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewableComponent
+import com.r0adkll.deckbuilder.arch.ui.features.overview.di.SessionModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment
@@ -63,8 +65,11 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, DeckBuilderUi,
-        DeckBuilderUi.Intentions, DeckBuilderUi.Actions {
+class DeckBuilderActivity : BaseActivity(),
+        HasComponent<DeckBuilderComponent>,
+        DeckBuilderUi,
+        DeckBuilderUi.Intentions,
+        DeckBuilderUi.Actions {
 
     private val sessionId: Long by bindLong(EXTRA_SESSION_ID)
     private val isNewDeck: Boolean by bindBoolean(EXTRA_IS_NEW)
@@ -146,7 +151,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
         // Setup Listeners
 
         fab.setOnClickListener {
-            if (fragmentContainer == null) {
+            if (fragmentSwitcher == null) {
                 val superType = when (tabs.selectedTabPosition) {
                     0 -> SuperType.POKEMON
                     1 -> SuperType.TRAINER
@@ -157,13 +162,7 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                 startActivity(SearchActivity.createIntent(this, sessionId, superType))
             } else {
                 // Show the overview fragment
-                val overviewFragment = OverviewFragment.newInstance(sessionId)
-
-                supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left)
-                        .replace(R.id.fragmentContainer, overviewFragment, OverviewFragment.TAG)
-                        .commit()
-
+                fragmentSwitcher?.showNext()
                 slidingLayout.panelState = EXPANDED
                 slidingLayout.isTouchEnabled = false
             }
@@ -246,19 +245,12 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
         infoBar.setNavigationOnClickListener {
             var normalOperation = true
-            if (fragmentContainer != null) {
-                val overviewFragment = supportFragmentManager.findFragmentByTag(OverviewFragment.TAG)
-                normalOperation = if (overviewFragment != null) {
-                    supportFragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
-                            .replace(R.id.fragmentContainer, SearchFragment(), SearchFragment.TAG)
-                            .commit()
-
+            if (fragmentSwitcher != null) {
+                if (fragmentSwitcher!!.displayedChild == 1 /* Overview */) {
+                    fragmentSwitcher!!.showPrevious()
                     slidingLayout.panelState = COLLAPSED
                     slidingLayout.isTouchEnabled = true
-                    false
-                } else {
-                    true
+                    normalOperation = false
                 }
             }
 
@@ -288,13 +280,8 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
                 }
 
-        // Setup tablet fragments, if possible
-        if (fragmentContainer != null) {
-
-            // By default show the search fragment
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, SearchFragment())
-                    .commit()
+        if (slidingLayout.panelState != SlidingUpPanelLayout.PanelState.COLLAPSED) {
+            slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
         }
     }
 
@@ -405,7 +392,10 @@ class DeckBuilderActivity : BaseActivity(), HasComponent<DeckBuilderComponent>, 
 
 
     override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(DeckBuilderModule(this))
+        this.component = component.deckBuilderComponentBuilder()
+                .sessionModule(SessionModule(sessionId))
+                .deckBuilderModule(DeckBuilderModule(this))
+                .build()
         this.component.inject(this)
     }
 

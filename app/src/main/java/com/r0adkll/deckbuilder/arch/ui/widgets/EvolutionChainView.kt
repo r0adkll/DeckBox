@@ -72,7 +72,6 @@ class EvolutionChainView @JvmOverloads constructor(
         if (evolutionChain != null) {
             val unitWidth = measuredWidth / evolutionChain!!.size
             cardWidth = unitWidth - linkSpacing
-            Timber.d("CardWidth($cardWidth, unit: $unitWidth)")
             (0 until childCount).forEach {
                 val child = getChildAt(it)
                 val lp = child.layoutParams
@@ -80,10 +79,6 @@ class EvolutionChainView @JvmOverloads constructor(
                 child.layoutParams = lp
             }
         }
-//        cardWidth = ((parent as ViewGroup).measuredWidth - (2 * stageSpacing + 2 * linkSpacing)) / 3
-//        if (cardWidth == 0) {
-//            cardWidth = defaultCardWidth
-//        }
     }
 
 
@@ -195,11 +190,9 @@ class EvolutionChainView @JvmOverloads constructor(
                         if (p.width > 0) {
                             val lm = p.layoutManager as GridLayoutManager
                             cardWidth = (p.width - (2 * stageSpacing + (lm.spanCount - 1) * linkSpacing)) / lm.spanCount
-                            Timber.d("Recycler based CardWidth($cardWidth)")
                         }
                     }
 
-                    Timber.i("Applying CardWidth($cardWidth, cardIndex: $cardIndex, nodeIndex: $nodeIndex)")
                     val lp = LayoutParams(cardWidth, LayoutParams.WRAP_CONTENT)
                     lp.marginStart = if (cardIndex == 0 && nodeIndex == 0) {
                         linkSpacing / 2
@@ -229,8 +222,8 @@ class EvolutionChainView @JvmOverloads constructor(
             // If there are more views than views than what was index, remove those views
             if (childCount > viewIndex) {
                 val count = childCount
-                (viewIndex until count).forEach {
-                    removeViewAt(it)
+                (viewIndex until count).forEach { i ->
+                    getChildAt(i)?.let { removeView(it) }
                 }
             }
 

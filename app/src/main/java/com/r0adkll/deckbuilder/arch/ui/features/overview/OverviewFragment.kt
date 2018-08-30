@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.ui.features.overview
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import com.ftinc.kit.kotlin.utils.bindLong
 import com.ftinc.kit.kotlin.utils.bundle
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
-import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -22,6 +20,8 @@ import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.overview.adapter.OverviewRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewModule
+import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewableComponent
+import com.r0adkll.deckbuilder.arch.ui.features.overview.di.SessionId
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
@@ -33,14 +33,26 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
     override var state: OverviewUi.State = OverviewUi.State.DEFAULT
 
-    private val sessionId by bindLong(EXTRA_SESSION_ID, Session.NO_ID)
+    private val sessionIdByIntent by bindLong(EXTRA_SESSION_ID, Session.NO_ID)
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
+
+
+    @JvmField
+    @field:[Inject SessionId]
+    var sessionIdByInject: Long = Session.NO_ID
 
     @Inject lateinit var presenter: OverviewPresenter
     @Inject lateinit var renderer: OverviewRenderer
 
     private lateinit var adapter: OverviewRecyclerAdapter
+
+    private val sessionId
+        get() = if (sessionIdByInject != Session.NO_ID) {
+            sessionIdByInject
+        } else {
+            sessionIdByIntent
+        }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -73,7 +85,8 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
 
     override fun setupComponent() {
-        DeckApp.component.plus(OverviewModule(this))
+        getComponent(OverviewableComponent::class)
+                .plus(OverviewModule(this))
                 .inject(this)
 
         addDelegate(RendererFragmentDelegate(renderer))

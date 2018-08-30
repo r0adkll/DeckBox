@@ -48,7 +48,6 @@ interface AppComponent {
     fun inject(service: CacheService)
 
     fun plus(module: HomeModule): HomeComponent
-    fun plus(module: DeckBuilderModule): DeckBuilderComponent
     fun plus(module: CardDetailModule): CardDetailComponent
     fun plus(module: DeckImportModule): DeckImportComponent
     fun plus(module: MissingCardsModule): MissingCardsComponent
@@ -59,4 +58,5 @@ interface AppComponent {
     fun plus(module: OverviewModule): OverviewComponent
 
     fun searchComponentBuilder(): SearchComponent.Builder
+    fun deckBuilderComponentBuilder(): DeckBuilderComponent.Builder
 }

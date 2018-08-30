@@ -7,7 +7,7 @@ import dagger.Subcomponent
 
 
 @FragmentScope
-@Subcomponent(modules = [(OverviewModule::class)])
+@Subcomponent(modules = [OverviewModule::class])
 interface OverviewComponent {
 
     fun inject(fragment: OverviewFragment)

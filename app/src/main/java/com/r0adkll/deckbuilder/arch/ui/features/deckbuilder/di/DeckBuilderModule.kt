@@ -32,5 +32,4 @@ class DeckBuilderModule(
             actions: DeckBuilderUi.Actions,
             schedulers: Schedulers
     ) : DeckBuilderRenderer = DeckBuilderRenderer(actions, schedulers.main, schedulers.comp)
-
 }
