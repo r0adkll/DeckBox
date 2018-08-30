@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -21,9 +22,10 @@ class OverviewPresenter @Inject constructor(
     override fun smashObservables(): Observable<Change> {
 
         val observeDeck = repository.observeSession(ui.state.sessionId)
-                    .map { it.cards }
-                    .map { Change.CardsLoaded(it) as Change }
-                    .onErrorReturn(handleUnknownError)
+                .delay(300L, TimeUnit.MILLISECONDS)
+                .map { it.cards }
+                .map { Change.CardsLoaded(it) as Change }
+                .onErrorReturn(handleUnknownError)
 
         disposables += intentions.addCards()
                 .flatMap { repository.addCards(ui.state.sessionId, it) }

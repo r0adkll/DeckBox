@@ -3,19 +3,22 @@ package com.r0adkll.deckbuilder.arch.ui.features.overview.adapter
 import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.view.ViewGroup
+import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 
 class OverviewRecyclerAdapter(
         context: Context,
+        private val cardClicks: Relay<PokemonCardView>,
         private val editCardIntentions: EditCardIntentions
 ) : ListRecyclerAdapter<EvolutionChain, OverviewViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverviewViewHolder {
-        return OverviewViewHolder.create(inflater, parent, editCardIntentions)
+        return OverviewViewHolder.create(inflater, parent, cardClicks, editCardIntentions)
     }
 
 
@@ -43,6 +46,6 @@ class OverviewRecyclerAdapter(
         })
 
         items = ArrayList(cards)
-        diff.dispatchUpdatesTo(getListUpdateCallback())
+        diff.dispatchUpdatesTo(getListUpdateCallback(true))
     }
 }

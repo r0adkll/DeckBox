@@ -1,5 +1,7 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
+import java.util.*
+
 
 /**
  * Class that collects and defines evolution chains for pokemon in a deck
@@ -104,6 +106,34 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
             return ((this.name?.hashCode() ?: 0 * 31) +
                     (this.evolvesFrom?.hashCode() ?: 0 * 31) +
                     this.cards.hashCode() * 31)
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Node
+
+            if (name != other.name) return false
+            if (evolvesFrom != other.evolvesFrom) return false
+            if (!cards.equalTo(other.cards)) return false
+
+            return true
+        }
+
+        private fun List<StackedPokemonCard>.equalTo(o: List<StackedPokemonCard>?): Boolean {
+            if (o !is List<StackedPokemonCard>)
+                return false
+
+            val e1 = listIterator()
+            val e2 = o.listIterator()
+            while (e1.hasNext() && e2.hasNext()) {
+                val o1 = e1.next()
+                val o2 = e2.next()
+                if (o1.card != o2.card || o1.count != o2.count)
+                    return false
+            }
+            return !(e1.hasNext() || e2.hasNext())
         }
     }
 

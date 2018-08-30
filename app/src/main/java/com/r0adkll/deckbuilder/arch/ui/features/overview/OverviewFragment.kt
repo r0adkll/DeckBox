@@ -11,14 +11,19 @@ import com.ftinc.kit.arch.presentation.delegates.PresenterFragmentDelegate
 import com.ftinc.kit.arch.presentation.delegates.RendererFragmentDelegate
 import com.ftinc.kit.kotlin.utils.bindLong
 import com.ftinc.kit.kotlin.utils.bundle
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.overview.adapter.OverviewRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewModule
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_overview.*
 import javax.inject.Inject
@@ -30,6 +35,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
     private val sessionId by bindLong(EXTRA_SESSION_ID, Session.NO_ID)
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
+    private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
 
     @Inject lateinit var presenter: OverviewPresenter
     @Inject lateinit var renderer: OverviewRenderer
@@ -43,7 +49,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         // Now call this since it will trigger presenter.start()
         super.onActivityCreated(savedInstanceState)
 
-        adapter = OverviewRecyclerAdapter(activity!!, editCardIntentions)
+        adapter = OverviewRecyclerAdapter(activity!!, cardClicks, editCardIntentions)
         adapter.setEmptyView(emptyView)
         val layoutManager = GridLayoutManager(activity!!, 7)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -54,6 +60,10 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         }
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
+
+        disposables += cardClicks.subscribe {
+            CardDetailActivity.show(activity!!, it, sessionId)
+        }
     }
 
 

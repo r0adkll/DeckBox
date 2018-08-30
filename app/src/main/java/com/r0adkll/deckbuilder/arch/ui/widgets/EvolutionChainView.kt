@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,7 +32,7 @@ class EvolutionChainView @JvmOverloads constructor(
     private val linkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val linkBarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private var defaultCardWidth: Int = dipToPx(120f)
+    private var defaultCardWidth: Int = dipToPx(156f)
     private var cardWidth: Int = defaultCardWidth
     private val linkSpacing: Int = dipToPx(24f)
     private val stageSpacing: Int = dipToPx(16f)
@@ -67,6 +69,17 @@ class EvolutionChainView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        if (evolutionChain != null) {
+            val unitWidth = measuredWidth / evolutionChain!!.size
+            cardWidth = unitWidth - linkSpacing
+            Timber.d("CardWidth($cardWidth, unit: $unitWidth)")
+            (0 until childCount).forEach {
+                val child = getChildAt(it)
+                val lp = child.layoutParams
+                lp.width = cardWidth
+                child.layoutParams = lp
+            }
+        }
 //        cardWidth = ((parent as ViewGroup).measuredWidth - (2 * stageSpacing + 2 * linkSpacing)) / 3
 //        if (cardWidth == 0) {
 //            cardWidth = defaultCardWidth
@@ -125,7 +138,7 @@ class EvolutionChainView @JvmOverloads constructor(
 
     @SuppressLint("NewApi")
     private fun configurePokemonCardViews() {
-        removeAllViews() // ???
+        //removeAllViews() // ???
         evolutionChain?.let { chain ->
 
             var node = chain.first()
@@ -141,6 +154,7 @@ class EvolutionChainView @JvmOverloads constructor(
                     }
 
                     val cardView = view.findViewById<PokemonCardView>(R.id.card)
+                    val actionLayout = view.findViewById<LinearLayout>(R.id.action_layout)
                     val actionAdd = view.findViewById<ImageView>(R.id.action_add)
                     val actionRemove = view.findViewById<ImageView>(R.id.action_remove)
 
@@ -167,9 +181,28 @@ class EvolutionChainView @JvmOverloads constructor(
                         pokemonCardEditListener?.onPokemonCardRemoved(card.card)
                     }
 
+                    val clp = cardView.layoutParams as MarginLayoutParams
+                    clp.setMargins(0, 0, 0, 0)
+                    cardView.layoutParams = clp
+
+                    val alp = actionLayout.layoutParams as MarginLayoutParams
+                    alp.bottomMargin = dipToPx(24f)
+                    actionLayout.layoutParams = alp
+
+                    // Calculate approximate cardWidth
+                    if (this@EvolutionChainView.parent is RecyclerView) {
+                        val p = this@EvolutionChainView.parent as RecyclerView
+                        if (p.width > 0) {
+                            val lm = p.layoutManager as GridLayoutManager
+                            cardWidth = (p.width - (2 * stageSpacing + (lm.spanCount - 1) * linkSpacing)) / lm.spanCount
+                            Timber.d("Recycler based CardWidth($cardWidth)")
+                        }
+                    }
+
+                    Timber.i("Applying CardWidth($cardWidth, cardIndex: $cardIndex, nodeIndex: $nodeIndex)")
                     val lp = LayoutParams(cardWidth, LayoutParams.WRAP_CONTENT)
                     lp.marginStart = if (cardIndex == 0 && nodeIndex == 0) {
-                        stageSpacing
+                        linkSpacing / 2
                     } else if (cardIndex == 0) {
                         linkSpacing
                     } else {

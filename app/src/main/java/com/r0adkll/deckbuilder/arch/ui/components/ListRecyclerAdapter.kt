@@ -7,6 +7,7 @@ import android.support.v7.util.ListUpdateCallback
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import timber.log.Timber
 
 import java.util.ArrayList
 import java.util.Collections
@@ -135,7 +136,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
      *
      */
 
-    protected fun getListUpdateCallback(): ListUpdateCallback = DiffUpdateCallback()
+    protected fun getListUpdateCallback(log: Boolean = false): ListUpdateCallback = DiffUpdateCallback(log)
 
     /**
      * Call this to trigger the user set item click listener
@@ -299,22 +300,26 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
     }
 
 
-    protected inner class DiffUpdateCallback: ListUpdateCallback {
+    protected inner class DiffUpdateCallback(val log: Boolean = false): ListUpdateCallback {
         override fun onChanged(position: Int, count: Int, payload: Any?) {
+            if (log) Timber.d("onChanged(pos: $position, count: $count, payload: $payload)")
             notifyItemRangeChanged(position, count, payload)
             checkIfEmpty()
         }
 
         override fun onMoved(fromPosition: Int, toPosition: Int) {
+            if (log) Timber.d("onMoved(from: $fromPosition, to: $toPosition)")
             notifyItemMoved(fromPosition, toPosition)
         }
 
         override fun onInserted(position: Int, count: Int) {
+            if (log) Timber.d("onInserted(pos: $position, count: $count)")
             notifyItemRangeInserted(position, count)
             checkIfEmpty()
         }
 
         override fun onRemoved(position: Int, count: Int) {
+            if (log) Timber.d("onRemoved(pos: $position, count: $count)")
             notifyItemRangeRemoved(position, count)
             checkIfEmpty()
         }
