@@ -1,5 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.overview.di
-
+package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di
 
 import dagger.Module
 import dagger.Provides

@@ -234,7 +234,9 @@
     <ViewSwitcher
         android:id="@+id/fragmentSwitcher"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:inAnimation="@anim/slide_in_left"
+        android:outAnimation="@anim/slide_out_left">
 
         <fragment
             android:id="@+id/search_fragment"

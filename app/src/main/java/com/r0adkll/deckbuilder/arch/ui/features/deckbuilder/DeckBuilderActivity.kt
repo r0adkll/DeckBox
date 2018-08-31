@@ -35,16 +35,13 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageP
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.SessionModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter.RuleRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter.DeckBuilderPagerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
-import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewFragment
-import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewableComponent
-import com.r0adkll.deckbuilder.arch.ui.features.overview.di.SessionModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
-import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -162,6 +159,8 @@ class DeckBuilderActivity : BaseActivity(),
                 startActivity(SearchActivity.createIntent(this, sessionId, superType))
             } else {
                 // Show the overview fragment
+                fragmentSwitcher?.setInAnimation(this, R.anim.slide_in_left)
+                fragmentSwitcher?.setOutAnimation(this, R.anim.slide_out_right)
                 fragmentSwitcher?.showNext()
                 slidingLayout.panelState = EXPANDED
                 slidingLayout.isTouchEnabled = false
@@ -247,6 +246,8 @@ class DeckBuilderActivity : BaseActivity(),
             var normalOperation = true
             if (fragmentSwitcher != null) {
                 if (fragmentSwitcher!!.displayedChild == 1 /* Overview */) {
+                    fragmentSwitcher?.setInAnimation(this, R.anim.slide_in_right)
+                    fragmentSwitcher?.setOutAnimation(this, R.anim.slide_out_left)
                     fragmentSwitcher!!.showPrevious()
                     slidingLayout.panelState = COLLAPSED
                     slidingLayout.isTouchEnabled = true
@@ -294,7 +295,13 @@ class DeckBuilderActivity : BaseActivity(),
 
 
     override fun onBackPressed() {
-        if (state.isChanged) {
+        if (fragmentSwitcher != null && fragmentSwitcher.displayedChild == 1) {
+            fragmentSwitcher?.setInAnimation(this, R.anim.slide_in_right)
+            fragmentSwitcher?.setOutAnimation(this, R.anim.slide_out_left)
+            fragmentSwitcher!!.showPrevious()
+            slidingLayout.panelState = COLLAPSED
+            slidingLayout.isTouchEnabled = true
+        } else if (state.isChanged) {
             Analytics.event(Event.SelectContent.Action("close_deck_editor"))
             AlertDialog.Builder(this)
                     .setTitle(R.string.deckbuilder_unsaved_changes_title)

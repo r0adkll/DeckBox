@@ -5,9 +5,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ftinc.kit.arch.presentation.BaseFragment
-import com.ftinc.kit.arch.presentation.delegates.PresenterFragmentDelegate
-import com.ftinc.kit.arch.presentation.delegates.RendererFragmentDelegate
 import com.ftinc.kit.kotlin.utils.bindLong
 import com.ftinc.kit.kotlin.utils.bundle
 import com.jakewharton.rxrelay2.PublishRelay
@@ -16,12 +13,13 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.SessionId
 import com.r0adkll.deckbuilder.arch.ui.features.overview.adapter.OverviewRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewModule
 import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewableComponent
-import com.r0adkll.deckbuilder.arch.ui.features.overview.di.SessionId
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
@@ -37,11 +35,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
 
-
-    @JvmField
-    @field:[Inject SessionId]
-    var sessionIdByInject: Long = Session.NO_ID
-
+    @JvmField @field:[Inject SessionId] var sessionIdByInject: Long = Session.NO_ID
     @Inject lateinit var presenter: OverviewPresenter
     @Inject lateinit var renderer: OverviewRenderer
 
@@ -56,10 +50,9 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        state = state.copy(sessionId = sessionId)
-
-        // Now call this since it will trigger presenter.start()
         super.onActivityCreated(savedInstanceState)
+
+        state = state.copy(sessionId = sessionId)
 
         adapter = OverviewRecyclerAdapter(activity!!, cardClicks, editCardIntentions)
         adapter.setEmptyView(emptyView)
@@ -89,8 +82,21 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
                 .plus(OverviewModule(this))
                 .inject(this)
 
-        addDelegate(RendererFragmentDelegate(renderer))
-        addDelegate(PresenterFragmentDelegate(presenter))
+//        addDelegate(RendererFragmentDelegate(renderer))
+//        addDelegate(PresenterFragmentDelegate(presenter))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        renderer.start()
+        presenter.start()
+    }
+
+
+    override fun onStop() {
+        presenter.stop()
+        renderer.stop()
+        super.onStop()
     }
 
 

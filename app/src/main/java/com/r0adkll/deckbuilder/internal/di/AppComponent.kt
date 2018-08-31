@@ -36,7 +36,7 @@ import dagger.Component
 
 
 @AppScope
-@Component(modules = [(AppModule::class), (BuildModule::class), (DataModule::class)])
+@Component(modules = [AppModule::class, BuildModule::class, DataModule::class])
 interface AppComponent {
 
     fun inject(app: DeckApp)
@@ -55,7 +55,6 @@ interface AppComponent {
     fun plus(module: SetBrowserModule): SetBrowserComponent
     fun plus(module: DeckImageModule): DeckImageComponent
     fun plus(module: DeckTestingModule): DeckTestingComponent
-    fun plus(module: OverviewModule): OverviewComponent
 
     fun searchComponentBuilder(): SearchComponent.Builder
     fun deckBuilderComponentBuilder(): DeckBuilderComponent.Builder
