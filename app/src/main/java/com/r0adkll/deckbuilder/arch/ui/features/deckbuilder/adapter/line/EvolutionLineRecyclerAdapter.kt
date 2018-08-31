@@ -21,7 +21,8 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
  */
 class EvolutionLineRecyclerAdapter(
         val context: Context,
-        val editCardIntentions: EditCardIntentions
+        val editCardIntentions: EditCardIntentions,
+        val spanCount: Int
 ) : RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
 
     private val linkSpacing: Int = context.dipToPx(24f)
@@ -46,7 +47,7 @@ class EvolutionLineRecyclerAdapter(
         if (parentWidth <= 0) {
             parentWidth = parent.resources.displayMetrics.widthPixels
         }
-        val width = (parentWidth - (2 * stageSpacing + 2 * linkSpacing)) / 3
+        val width = (parentWidth - (2 * stageSpacing + (spanCount - 1) * linkSpacing)) / spanCount
 
         val lp = vh.itemView.layoutParams
         lp.width = width

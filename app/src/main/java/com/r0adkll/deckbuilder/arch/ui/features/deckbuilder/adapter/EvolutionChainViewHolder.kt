@@ -19,6 +19,7 @@ import com.r0adkll.deckbuilder.util.bindView
 
 class EvolutionChainViewHolder(
         itemView: View,
+        private val spanCount: Int,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
 ): RecyclerView.ViewHolder(itemView) {
@@ -29,7 +30,7 @@ class EvolutionChainViewHolder(
     fun bind(evolutionChain: EvolutionChain, isEditing: Boolean) {
 
         if (recyclerView.adapter == null) {
-            val adapter = EvolutionLineRecyclerAdapter(itemView.context, editCardIntentions)
+            val adapter = EvolutionLineRecyclerAdapter(itemView.context, editCardIntentions, spanCount)
             adapter.setOnPokemonCardViewClickListener { pokemonCardClicks.accept(it) }
             recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = adapter
@@ -54,11 +55,12 @@ class EvolutionChainViewHolder(
 
         fun create(inflater: LayoutInflater,
                    parent: ViewGroup?,
+                   spanCount: Int,
                    editCardIntentions: EditCardIntentions,
                    pokemonCardClicks: Relay<PokemonCardView>
         ): EvolutionChainViewHolder {
             return EvolutionChainViewHolder(inflater.inflate(R.layout.item_evolution_chain, parent, false),
-                    editCardIntentions, pokemonCardClicks)
+                    spanCount, editCardIntentions, pokemonCardClicks)
         }
     }
 }
