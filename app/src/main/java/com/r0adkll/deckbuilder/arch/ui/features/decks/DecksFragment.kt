@@ -36,6 +36,7 @@ import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_decks.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -118,8 +119,12 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         if (preferences.quickStart) {
 
-            // This can be called after the activity is destroyed and cause a NPE with the fab
-            fab.postDelayed({ quickTip.show(fab, R.string.deck_quickstart_message) }, 300L)
+            // Fix for Fabric#212
+            disposables += Observable.timer(300L, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        quickTip.show(fab, R.string.deck_quickstart_message)
+                    }
             preferences.quickStart = false
         }
 

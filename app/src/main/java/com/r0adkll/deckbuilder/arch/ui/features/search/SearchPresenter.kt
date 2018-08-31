@@ -53,6 +53,7 @@ class SearchPresenter @Inject constructor(
         val observeSession = if (ui.state.sessionId != Session.NO_ID) {
             editor.observeSession(ui.state.sessionId)
                     .map { Change.SessionUpdated(it) as Change }
+                    .onErrorReturn(handleUnknownError(SuperType.UNKNOWN))
         } else {
             Observable.empty()
         }
