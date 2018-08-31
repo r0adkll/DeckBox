@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
 import android.content.Context
 import android.support.v4.view.PagerAdapter
-import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,7 +16,7 @@ import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -29,18 +28,20 @@ import io.pokemontcg.model.SuperType
 @Suppress("NON_EXHAUSTIVE_WHEN")
 class ResultsPagerAdapter(
         val context: Context,
-        val scrollHideListener: KeyboardScrollHideListener,
+        val hasValidSession: Boolean,
+        private val scrollHideListener: KeyboardScrollHideListener,
         private val pokemonCardLongClicks: Relay<PokemonCardView>,
         private val editCardIntentions: EditCardIntentions
 ) : PagerAdapter() {
 
     private val inflater = LayoutInflater.from(context)
-    private val viewHolders: Array<SearchResultViewHolder?> = Array(3, { _ -> null })
+    private val viewHolders: Array<SearchResultViewHolder?> = Array(3) { _ -> null }
 
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
-        val vh = SearchResultViewHolder(view, position, scrollHideListener, pokemonCardLongClicks, editCardIntentions)
+        val vh = SearchResultViewHolder(view, position, hasValidSession, scrollHideListener,
+                pokemonCardLongClicks, editCardIntentions)
         view.tag = vh
         viewHolders[position] = vh
 
@@ -141,6 +142,7 @@ class ResultsPagerAdapter(
     private class SearchResultViewHolder(
             val itemView: View,
             val position: Int,
+            val hasValidSession: Boolean,
             scrollHideListener: KeyboardScrollHideListener,
             pokemonCardLongClicks: Relay<PokemonCardView>,
             editCardIntentions: EditCardIntentions
@@ -160,12 +162,19 @@ class ResultsPagerAdapter(
             })
 
             adapter.setEmptyView(emptyView)
-            adapter.setOnItemClickListener { editCardIntentions.addCardClicks.accept(listOf(it)) }
-            adapter.setOnItemLongClickListener { view, _ ->
-                // TODO: Fix this atrocity
-                val card = view.findViewById<PokemonCardView>(R.id.card)
-                pokemonCardLongClicks.accept(card)
-                true
+            if (hasValidSession) {
+                adapter.setOnItemClickListener { editCardIntentions.addCardClicks.accept(listOf(it)) }
+                adapter.setOnItemLongClickListener { view, _ ->
+                    // TODO: Fix this atrocity
+                    val card = view.findViewById<PokemonCardView>(R.id.card)
+                    pokemonCardLongClicks.accept(card)
+                    true
+                }
+            } else {
+                adapter.setOnViewItemClickListener { view, _ ->
+                    val card = view.findViewById<PokemonCardView>(R.id.card)
+                    pokemonCardLongClicks.accept(card)
+                }
             }
 
             recycler.layoutManager = GridLayoutManager(itemView.context, 3)

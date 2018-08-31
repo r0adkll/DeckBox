@@ -46,7 +46,7 @@ class FirestoreDeckCache @Inject constructor(
     override fun getDecks(): Observable<List<Deck>> {
         return cardRepository.getExpansions()
                 .flatMap { expansions ->
-                            Observable.create<List<Deck>>({ emitter ->
+                            Observable.create<List<Deck>> { emitter ->
                                 getUserDeckCollection()?.let { collection ->
                                     val registration = collection.addSnapshotListener(schedulers.firebaseExecutor, EventListener { snapshot, exception ->
                                         if (exception != null) {
@@ -69,8 +69,8 @@ class FirestoreDeckCache @Inject constructor(
                                         registration.remove()
                                     }
                                 } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
-                            })
-                            .subscribeOn(schedulers.firebase)
+                            }
+                                    .subscribeOn(schedulers.firebase)
                             .doOnNext { Timber.d("Firebase::getDecks() - Thread(${Thread.currentThread()?.name})") }
                 }
     }

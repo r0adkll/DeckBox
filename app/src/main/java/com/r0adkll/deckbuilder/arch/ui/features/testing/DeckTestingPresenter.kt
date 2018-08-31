@@ -38,7 +38,7 @@ class DeckTestingPresenter @Inject constructor(
             else -> Observable.empty()
         }.map {
             Change.MetadataLoaded(it) as Change
-        }
+        }.onErrorReturn(handleUnknownError)
 
         val incrementIterations = intentions.incrementIterations()
                 .map { Change.IncrementIterations(it) as Change }

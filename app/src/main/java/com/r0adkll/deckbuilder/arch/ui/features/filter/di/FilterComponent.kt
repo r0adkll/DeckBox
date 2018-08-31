@@ -7,7 +7,7 @@ import dagger.Subcomponent
 
 
 @FilterScope
-@Subcomponent(modules = arrayOf(FilterModule::class))
+@Subcomponent(modules = [FilterModule::class])
 interface FilterComponent {
 
     fun inject(fragment: FilterFragment)

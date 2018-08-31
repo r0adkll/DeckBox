@@ -5,17 +5,15 @@ import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import timber.log.Timber
 
 
 /**
@@ -23,7 +21,8 @@ import timber.log.Timber
  */
 class EvolutionLineRecyclerAdapter(
         val context: Context,
-        val editCardIntentions: EditCardIntentions
+        val editCardIntentions: EditCardIntentions,
+        val spanCount: Int
 ) : RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
 
     private val linkSpacing: Int = context.dipToPx(24f)
@@ -48,7 +47,7 @@ class EvolutionLineRecyclerAdapter(
         if (parentWidth <= 0) {
             parentWidth = parent.resources.displayMetrics.widthPixels
         }
-        val width = (parentWidth - (2 * stageSpacing + 2 * linkSpacing)) / 3
+        val width = (parentWidth - (2 * stageSpacing + (spanCount - 1) * linkSpacing)) / spanCount
 
         val lp = vh.itemView.layoutParams
         lp.width = width

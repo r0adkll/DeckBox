@@ -29,6 +29,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
@@ -275,7 +276,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
                          sessionId: Long? = null): Intent {
             val intent = Intent(context, CardDetailActivity::class.java)
             intent.putExtra(EXTRA_CARD, card)
-            sessionId?.let { intent.putExtra(EXTRA_SESSION_ID, it) }
+            sessionId?.let { if (it != Session.NO_ID) intent.putExtra(EXTRA_SESSION_ID, it) }
             return intent
         }
 

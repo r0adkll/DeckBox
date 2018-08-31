@@ -159,7 +159,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
             val DEFAULT by lazy {
                 State(UUID.randomUUID().toString(),
-                        -1L,
+                        Session.NO_ID,
                         SuperType.POKEMON,
                         mapOf(
                                 SuperType.POKEMON to Result.createDefault(SuperType.POKEMON),

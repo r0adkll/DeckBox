@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 
 class PokemonBuilderRecyclerAdapter(
         context: Context,
+        private val spanCount: Int,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
 ) : ListRecyclerAdapter<PokemonItem, RecyclerView.ViewHolder>(context) {
@@ -28,7 +29,7 @@ class PokemonBuilderRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.item_evolution_chain -> {
-                EvolutionChainViewHolder.create(inflater, parent, editCardIntentions, pokemonCardClicks)
+                EvolutionChainViewHolder.create(inflater, parent, spanCount, editCardIntentions, pokemonCardClicks)
             }
             else -> {
                 PokemonCardViewHolder.create(inflater, parent, false,

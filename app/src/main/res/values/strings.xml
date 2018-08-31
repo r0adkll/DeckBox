@@ -61,7 +61,7 @@
     <string name="validation_rule_prism_star">You can\’t have more than 1 Prism Star card with the same name in your deck</string>
     <string name="format_standard">Standard</string>
     <string name="format_expanded">Expanded</string>
-    <string name="action_export">Export</string>
+    <string name="action_export">Export as…</string>
     <string name="section_variants">Variants</string>
     <string name="section_evolves">Evolves from</string>
 
@@ -200,4 +200,8 @@
     <string name="empty_metadata_description"><![CDATA[
     <i>No description</i>
     ]]></string>
+    <string name="action_search">Search</string>
+    <string name="empty_deck_overview">Unable to load your deck. Please try again.</string>
+    <string name="tab_prism">Prism Star</string>
+    <string name="tab_gx">GX</string>
 </resources>

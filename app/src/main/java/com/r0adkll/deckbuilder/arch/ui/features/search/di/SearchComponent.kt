@@ -9,10 +9,7 @@ import dagger.Subcomponent
 
 
 @ActivityScope
-@Subcomponent(modules = arrayOf(
-        SearchModule::class,
-        FilterableModule::class
-))
+@Subcomponent(modules = [SearchModule::class, FilterableModule::class])
 interface SearchComponent : FilterableComponent {
 
     fun inject(activity: SearchActivity)

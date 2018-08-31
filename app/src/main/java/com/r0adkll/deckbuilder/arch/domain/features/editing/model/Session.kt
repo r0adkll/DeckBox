@@ -28,5 +28,7 @@ data class Session(
 
     companion object {
         @JvmField val CREATOR = PaperParcelSession.CREATOR
+
+        const val NO_ID = -1L
     }
 }

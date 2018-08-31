@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,7 @@ import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_decks.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -84,16 +86,19 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         adapter.setEmptyView(empty_view)
 
-        val layoutManager = GridLayoutManager(activity, if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val item = adapter.items[position]
-                return when(item) {
-                    Item.Preview -> 2
-                    else -> 1
-                }
-            }
-        }
+//        val layoutManager = GridLayoutManager(activity, if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2)
+//        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+//            override fun getSpanSize(position: Int): Int {
+//                val item = adapter.items[position]
+//                return when(item) {
+//                    Item.Preview -> 2
+//                    else -> 1
+//                }
+//            }
+//        }
+
+        val layoutManager = StaggeredGridLayoutManager(if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2, StaggeredGridLayoutManager.VERTICAL)
+
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
 
@@ -113,7 +118,13 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         }
 
         if (preferences.quickStart) {
-            fab.postDelayed({ quickTip.show(fab, R.string.deck_quickstart_message) }, 300L)
+
+            // Fix for Fabric#212
+            disposables += Observable.timer(300L, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        quickTip.show(fab, R.string.deck_quickstart_message)
+                    }
             preferences.quickStart = false
         }
 

@@ -24,6 +24,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsComponent
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsModule
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
+import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewComponent
+import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
@@ -34,7 +36,7 @@ import dagger.Component
 
 
 @AppScope
-@Component(modules = [(AppModule::class), (BuildModule::class), (DataModule::class)])
+@Component(modules = [AppModule::class, BuildModule::class, DataModule::class])
 interface AppComponent {
 
     fun inject(app: DeckApp)
@@ -46,7 +48,6 @@ interface AppComponent {
     fun inject(service: CacheService)
 
     fun plus(module: HomeModule): HomeComponent
-    fun plus(module: DeckBuilderModule): DeckBuilderComponent
     fun plus(module: CardDetailModule): CardDetailComponent
     fun plus(module: DeckImportModule): DeckImportComponent
     fun plus(module: MissingCardsModule): MissingCardsComponent
@@ -56,4 +57,5 @@ interface AppComponent {
     fun plus(module: DeckTestingModule): DeckTestingComponent
 
     fun searchComponentBuilder(): SearchComponent.Builder
+    fun deckBuilderComponentBuilder(): DeckBuilderComponent.Builder
 }

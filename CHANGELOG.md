@@ -1,3 +1,11 @@
+# 1.7.0
+* [#8](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/8) - Added 'Overview' feature to tablet deck builder interface that allows you to view all the cards in your deck.
+* [#21](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/21) - Added ability to search cards from the browse tab
+* Added ability to filter expansions by 'GX' and 'Prism Star'
+* Optimized expansion browser for tablets
+* Optimized landscape phone deck builder interface
+* Bug Fixes
+
 # 1.6.0
 * [#12](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/12) - New deck testing feature where users can test out single hand deals or an overall multi-hand percentage view.
 * [#20](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/20) - Added convienence filters for mass selecting standard or expanded expansions when searching

@@ -15,9 +15,10 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
@@ -47,7 +48,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
     @State override var state: SearchUi.State = SearchUi.State.DEFAULT
-
     @State var superType: SuperType = SuperType.POKEMON
 
     val sessionId: Long by bindLong(EXTRA_SESSION_ID)
@@ -69,8 +69,8 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        adapter = ResultsPagerAdapter(this, KeyboardScrollHideListener(searchView), pokemonCardLongClicks,
-                editCardIntentions)
+        adapter = ResultsPagerAdapter(this, sessionId != Session.NO_ID,
+                KeyboardScrollHideListener(searchView), pokemonCardLongClicks, editCardIntentions)
         pager.offscreenPageLimit = 3
         pager.adapter = adapter
         tabs.setupWithViewPager(pager)
@@ -287,9 +287,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         val text = resources.getQuantityString(R.plurals.card_selection_count, count, count)
         if (selectionSnackBar == null) {
             selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.action_undo, {
-                        clearSelectionClicks.accept(Unit)
-                    })
+                    .setAction(R.string.action_undo) { clearSelectionClicks.accept(Unit) }
                     .setActionTextColor(color(R.color.primaryColor))
         }
 
@@ -328,7 +326,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
         fun createIntent(context: Context,
-                         sessionId: Long,
+                         sessionId: Long = Session.NO_ID,
                          superType: SuperType = SuperType.POKEMON): Intent {
             val intent = Intent(context, SearchActivity::class.java)
             intent.putExtra(EXTRA_SESSION_ID, sessionId)
