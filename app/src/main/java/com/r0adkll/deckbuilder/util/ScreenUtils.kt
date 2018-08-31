@@ -17,9 +17,16 @@ object ScreenUtils {
     fun smallestWidth(resources: Resources, config: Config): Boolean = smallestWidth(resources, config.widthInDp)
 
 
+    fun orientation(resources: Resources, orientation: Int): Boolean = resources.configuration.orientation == orientation
+
+
     fun View.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
     fun Context.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
     fun Fragment.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
+
+    fun View.orientation(orientation: Int): Boolean = orientation(this.resources, orientation)
+    fun Context.orientation(orientation: Int): Boolean = orientation(this.resources, orientation)
+    fun Fragment.orientation(orientation: Int): Boolean = orientation(this.resources, orientation)
 
 
     enum class Config(val widthInDp: Int) {

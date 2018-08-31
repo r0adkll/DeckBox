@@ -226,7 +226,9 @@
 
         </RelativeLayout>
 
-        <include layout="@layout/layout_detail_panel" />
+        <include layout="@layout/layout_detail_panel"
+            android:id="@+id/detailPanel"
+            />
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

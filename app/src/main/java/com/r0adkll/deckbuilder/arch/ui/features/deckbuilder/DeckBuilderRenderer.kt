@@ -1,9 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
-import android.util.ArrayMap
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.CardUtils.stackCards
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
@@ -54,6 +51,12 @@ class DeckBuilderRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showIsEditing(it) }
+
+        disposables += state
+                .map { it.isOverview }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.showIsOverview(it) }
 
         disposables += state
                 .mapNullable { it.error }
@@ -108,8 +111,8 @@ class DeckBuilderRenderer(
                 .mapNullable { it.description }
                 .distinctUntilChanged()
                 .addToLifecycle()
-                .subscribe {
-                    it.value?.let {
+                .subscribe { desc ->
+                    desc.value?.let {
                         actions.showDeckDescription(it)
                     }
                 }
