@@ -164,6 +164,7 @@ class DeckBuilderActivity : BaseActivity(),
                 fragmentSwitcher?.showNext()
                 slidingLayout.panelState = EXPANDED
                 slidingLayout.isTouchEnabled = false
+                Analytics.event(Event.SelectContent.Action("open_overview"))
             }
         }
 
@@ -252,6 +253,7 @@ class DeckBuilderActivity : BaseActivity(),
                     slidingLayout.panelState = COLLAPSED
                     slidingLayout.isTouchEnabled = true
                     normalOperation = false
+                    Analytics.event(Event.SelectContent.Action("close_overview"))
                 }
             }
 
@@ -415,11 +417,13 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
+                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
     }
 
 
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
+                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
     }
 
 

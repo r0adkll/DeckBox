@@ -21,6 +21,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.overview.adapter.OverviewRecycle
 import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewModule
 import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewableComponent
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_overview.*
@@ -108,11 +110,13 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
+                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
     }
 
 
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
+                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
     }
 
 

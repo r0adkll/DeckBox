@@ -90,6 +90,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                     else -> BrowseFilter.ALL
                 }
                 filterChanges.accept(filter)
+                Analytics.event(Event.SelectContent.Action("expansion_filter", filter.name))
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {}

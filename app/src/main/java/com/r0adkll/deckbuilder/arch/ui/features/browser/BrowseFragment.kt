@@ -13,6 +13,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.ExpansionRecycle
 import com.r0adkll.deckbuilder.arch.ui.features.browser.di.BrowseModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.extensions.toast
@@ -41,6 +43,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
         adapter = ExpansionRecyclerAdapter(activity!!)
         adapter.setEmptyView(emptyView)
         adapter.setOnItemClickListener {
+            Analytics.event(Event.SelectContent.Action("expansion", it.name))
             val intent = SetBrowserActivity.createIntent(activity!!, it)
             startActivity(intent)
         }
