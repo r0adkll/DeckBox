@@ -170,6 +170,10 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 }
             }
         }
+
+        if (!smallestWidth(TABLET_10) && tabs.tabCount <= 5) {
+            tabs.tabMode = TabLayout.MODE_FIXED
+        }
     }
 
 
