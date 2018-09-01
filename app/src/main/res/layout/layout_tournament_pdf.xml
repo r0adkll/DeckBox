@@ -259,17 +259,18 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/extraColumn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TableLayout
                 android:id="@+id/tablePokemon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:stretchColumns="1">
+                android:layout_marginStart="16dp">
 
                 <TableRow android:background="#CCC">
 
@@ -282,12 +283,14 @@
                 <TableRow android:background="@color/black">
 
                     <TextView
-                        android:text="QTY:"
+                        android:text="@string/export_column_quantity_title"
                         style="@style/TextAppearance.Deck.Pdf.Quantity"
                         />
 
                     <TextView
-                        android:text="NAME:"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/export_column_name_title"
                         android:textColor="@color/white"
                         android:textAllCaps="true"
                         android:gravity="center"
@@ -301,7 +304,7 @@
                     <TextView
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:text="SET:"
+                        android:text="@string/export_column_set_title"
                         android:textColor="@color/white"
                         android:textAllCaps="true"
                         android:gravity="center"
@@ -314,13 +317,91 @@
                     <TextView
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp"
-                        android:text="COLL. #:"
+                        android:text="@string/export_column_collection_number_title"
                         android:textColor="@color/white"
                         android:textAllCaps="true"
                         android:gravity="center"
                         android:textStyle="bold"
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
+                        android:minWidth="48dp"
+                        />
+
+                </TableRow>
+
+                <!--<include layout="@layout/layout_tournament_card_row" />-->
+
+            </TableLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:id="@+id/tablePokemon2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp">
+
+                <TableRow android:background="#CCC">
+
+                    <TextView
+                        android:id="@+id/tablePokemon2Title"
+                        android:text="@string/tournament_pdf_table_pokemon_contd"
+                        style="@style/TextAppearance.Deck.Pdf.TableTitle" />
+
+                </TableRow>
+
+                <TableRow android:background="@color/black">
+
+                    <TextView
+                        android:text="@string/export_column_quantity_title"
+                        style="@style/TextAppearance.Deck.Pdf.Quantity"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/export_column_name_title"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        android:layout_column="1"
+                        />
+
+                    <TextView
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="@string/export_column_set_title"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+
+                        />
+
+                    <TextView
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="@string/export_column_collection_number_title"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:minWidth="48dp"
                         />
 
                 </TableRow>
@@ -333,9 +414,7 @@
                 android:id="@+id/tableTrainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:stretchColumns="1">
+                android:layout_marginStart="16dp">
 
                 <TableRow android:background="#CCC">
 
@@ -348,12 +427,14 @@
                 <TableRow android:background="@color/black">
 
                     <TextView
-                        android:text="QTY:"
+                        android:text="@string/export_column_quantity_title"
                         style="@style/TextAppearance.Deck.Pdf.Quantity"
                         />
 
                     <TextView
-                        android:text="NAME:"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/export_column_name_title"
                         android:textColor="@color/white"
                         android:textAllCaps="true"
                         android:gravity="center"
@@ -375,8 +456,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:stretchColumns="1">
+                android:layout_marginTop="16dp">
 
                 <TableRow android:background="#CCC">
 
@@ -389,12 +469,14 @@
                 <TableRow android:background="@color/black">
 
                     <TextView
-                        android:text="QTY:"
+                        android:text="@string/export_column_quantity_title"
                         style="@style/TextAppearance.Deck.Pdf.Quantity"
                         />
 
                     <TextView
-                        android:text="NAME:"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/export_column_name_title"
                         android:textColor="@color/white"
                         android:textAllCaps="true"
                         android:gravity="center"

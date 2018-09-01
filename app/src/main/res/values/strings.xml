@@ -204,4 +204,9 @@
     <string name="empty_deck_overview">Unable to load your deck. Please try again.</string>
     <string name="tab_prism">Prism Star</string>
     <string name="tab_gx">GX</string>
+    <string name="tournament_pdf_table_pokemon_contd">Pokemon (cont\'d)</string>
+    <string name="export_column_quantity_title">QTY</string>
+    <string name="export_column_name_title">NAME</string>
+    <string name="export_column_set_title">SET</string>
+    <string name="export_column_collection_number_title">#</string>
 </resources>
