@@ -63,6 +63,9 @@ class DeckBuilderPresenter @Inject constructor(
         val editDeck = intentions.editDeckClicks()
                 .map { Change.Editing(it) as Change }
 
+        val editOverview = intentions.editOverviewClicks()
+                .map { Change.Overview(it) as Change }
+
         val saveDeck = intentions.saveDeck()
                 .flatMap {
                     repository.persistSession(ui.state.sessionId)
@@ -72,6 +75,7 @@ class DeckBuilderPresenter @Inject constructor(
 
         val merged = observeSession
                 .mergeWith(editDeck)
+                .mergeWith(editOverview)
                 .mergeWith(saveDeck)
                 .doOnNext { Timber.d(it.logText) }
 

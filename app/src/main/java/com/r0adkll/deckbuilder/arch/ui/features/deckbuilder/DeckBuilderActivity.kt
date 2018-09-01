@@ -68,6 +68,64 @@ class DeckBuilderActivity : BaseActivity(),
         DeckBuilderUi.Intentions,
         DeckBuilderUi.Actions {
 
+    inner class DeckBuilderPanelSlideListener : SlidingUpPanelLayout.PanelSlideListener {
+        override fun onPanelSlide(panel: View, slideOffset: Float) {
+            interpolateCardCounter(panel, slideOffset)
+            interpolateFormats(panel, slideOffset)
+            interpolatePanelIndicator(slideOffset)
+            interpolateErrorMarker(panel, slideOffset)
+
+            val infoBarOffset = calculateAlpha(slideOffset, .95f)
+            infoBar.alpha = infoBarOffset
+            infoBar.elevation = infoBarOffset * dpToPx(4f)
+            deckImage.alpha = calculateAlpha(slideOffset, .80f)
+            text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
+            text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
+
+            if (slideOffset > 0f && !infoBar.isVisible()) {
+                infoBar.visible()
+            }
+            else if (slideOffset == 0f && infoBar.isVisible()) {
+                infoBar.invisible()
+            }
+        }
+
+        override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
+            if (previousState != COLLAPSED && newState == COLLAPSED) {
+                imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
+                imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
+            }
+        }
+
+        private fun calculateAlpha(offset: Float, ratio: Float): Float = (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
+
+        private fun interpolateErrorMarker(panel: View, offset: Float) {
+            if (ruleAdapter.itemCount > 0) {
+                val iconOffset = ruleRecycler.getChildAt(0)?.let {
+                    (it.height.toFloat() / 2f) //- iconOffset
+                } ?: defaultOffset
+                val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
+                deckError.setVisibleWeak(offset < recyclerOffset)
+            }
+        }
+
+        private fun interpolateCardCounter(panel: View, offset: Float) {
+            cardCount.translationY = offset * (panel.height - cardCount.height)
+        }
+
+
+        private fun interpolateFormats(panel: View, offset: Float) {
+            formats.translationY = offset * (panel.height - formats.height)
+        }
+
+
+        private fun interpolatePanelIndicator(offset: Float) {
+            val transY = mainContent.height * offset
+            panelIndicator.translationY = -transY
+            panelIndicator.alpha = (1f - (offset * 5f).coerceAtMost(1f)) * .54f
+        }
+    }
+
     private val sessionId: Long by bindLong(EXTRA_SESSION_ID)
     private val isNewDeck: Boolean by bindBoolean(EXTRA_IS_NEW)
 
@@ -84,10 +142,12 @@ class DeckBuilderActivity : BaseActivity(),
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val saveDeck: Relay<Unit> = PublishRelay.create()
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
+    private val editOverviewClicks: Relay<Boolean> = PublishRelay.create()
 
     private val iconOffset: Float by lazy { dpToPx(12f) }
     private val defaultOffset: Float by lazy { dpToPx(22f) }
 
+    private val panelSlideListener = DeckBuilderPanelSlideListener()
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
@@ -159,12 +219,7 @@ class DeckBuilderActivity : BaseActivity(),
                 startActivity(SearchActivity.createIntent(this, sessionId, superType))
             } else {
                 // Show the overview fragment
-                fragmentSwitcher?.setInAnimation(this, R.anim.slide_in_left)
-                fragmentSwitcher?.setOutAnimation(this, R.anim.slide_out_right)
-                fragmentSwitcher?.showNext()
-                slidingLayout.panelState = EXPANDED
-                slidingLayout.isTouchEnabled = false
-                Analytics.event(Event.SelectContent.Action("open_overview"))
+                editOverviewClicks.accept(true)
             }
         }
 
@@ -185,75 +240,14 @@ class DeckBuilderActivity : BaseActivity(),
             }
         })
 
-        slidingLayout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
-            override fun onPanelSlide(panel: View, slideOffset: Float) {
-                interpolateCardCounter(panel, slideOffset)
-                interpolateFormats(panel, slideOffset)
-                interpolatePanelIndicator(slideOffset)
-                interpolateErrorMarker(panel, slideOffset)
-
-                val infoBarOffset = calculateAlpha(slideOffset, .95f)
-                infoBar.alpha = infoBarOffset
-                infoBar.elevation = infoBarOffset * dpToPx(4f)
-                deckImage.alpha = calculateAlpha(slideOffset, .80f)
-                text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
-                text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
-
-                if (slideOffset > 0f && !infoBar.isVisible()) {
-                    infoBar.visible()
-                }
-                else if (slideOffset == 0f && infoBar.isVisible()) {
-                    infoBar.invisible()
-                }
-            }
-
-            override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
-                if (previousState != COLLAPSED && newState == COLLAPSED) {
-                    imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
-                    imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
-                }
-            }
-
-            private fun calculateAlpha(offset: Float, ratio: Float): Float = (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
-
-            private fun interpolateErrorMarker(panel: View, offset: Float) {
-                if (ruleAdapter.itemCount > 0) {
-                    val iconOffset = ruleRecycler.getChildAt(0)?.let {
-                        (it.height.toFloat() / 2f) //- iconOffset
-                    } ?: defaultOffset
-                    val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
-                    deckError.setVisibleWeak(offset < recyclerOffset)
-                }
-            }
-
-            private fun interpolateCardCounter(panel: View, offset: Float) {
-                cardCount.translationY = offset * (panel.height - cardCount.height)
-            }
-
-
-            private fun interpolateFormats(panel: View, offset: Float) {
-                formats.translationY = offset * (panel.height - formats.height)
-            }
-
-
-            private fun interpolatePanelIndicator(offset: Float) {
-                val transY = mainContent.height * offset
-                panelIndicator.translationY = -transY
-                panelIndicator.alpha = (1f - (offset * 5f).coerceAtMost(1f)) * .54f
-            }
-        })
+        slidingLayout.addPanelSlideListener(panelSlideListener)
 
         infoBar.setNavigationOnClickListener {
             var normalOperation = true
             if (fragmentSwitcher != null) {
                 if (fragmentSwitcher!!.displayedChild == 1 /* Overview */) {
-                    fragmentSwitcher?.setInAnimation(this, R.anim.slide_in_right)
-                    fragmentSwitcher?.setOutAnimation(this, R.anim.slide_out_left)
-                    fragmentSwitcher!!.showPrevious()
-                    slidingLayout.panelState = COLLAPSED
-                    slidingLayout.isTouchEnabled = true
+                    editOverviewClicks.accept(false)
                     normalOperation = false
-                    Analytics.event(Event.SelectContent.Action("close_overview"))
                 }
             }
 
@@ -297,12 +291,8 @@ class DeckBuilderActivity : BaseActivity(),
 
 
     override fun onBackPressed() {
-        if (fragmentSwitcher != null && fragmentSwitcher.displayedChild == 1) {
-            fragmentSwitcher?.setInAnimation(this, R.anim.slide_in_right)
-            fragmentSwitcher?.setOutAnimation(this, R.anim.slide_out_left)
-            fragmentSwitcher!!.showPrevious()
-            slidingLayout.panelState = COLLAPSED
-            slidingLayout.isTouchEnabled = true
+        if (fragmentSwitcher != null && fragmentSwitcher!!.displayedChild == 1) {
+            editOverviewClicks.accept(false)
         } else if (state.isChanged) {
             Analytics.event(Event.SelectContent.Action("close_deck_editor"))
             AlertDialog.Builder(this)
@@ -432,6 +422,11 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
 
+    override fun editOverviewClicks(): Observable<Boolean> {
+        return editOverviewClicks
+    }
+
+
     override fun editDeckName(): Observable<String> {
         return inputDeckName.textChanges()
                 .map { it.toString() }
@@ -556,6 +551,33 @@ class DeckBuilderActivity : BaseActivity(),
     override fun showIsEditing(isEditing: Boolean) {
         invalidateOptionsMenu()
         adapter.isEditing = isEditing
+    }
+
+
+    override fun showIsOverview(isOverview: Boolean) {
+        if (fragmentSwitcher != null) {
+            if (isOverview && fragmentSwitcher!!.displayedChild == 0) {
+                // Show the overview fragment
+                fragmentSwitcher?.setInAnimation(this, R.anim.slide_in_left)
+                fragmentSwitcher?.setOutAnimation(this, R.anim.slide_out_right)
+                fragmentSwitcher?.showNext()
+
+                if (slidingLayout.panelState == EXPANDED) {
+                    panelSlideListener.onPanelSlide(slidingLayout, 1f)
+                }
+
+                slidingLayout.panelState = EXPANDED
+                slidingLayout.isTouchEnabled = false
+                Analytics.event(Event.SelectContent.Action("open_overview"))
+            } else if (!isOverview && fragmentSwitcher!!.displayedChild == 1) {
+                fragmentSwitcher?.setInAnimation(this, R.anim.slide_in_right)
+                fragmentSwitcher?.setOutAnimation(this, R.anim.slide_out_left)
+                fragmentSwitcher!!.showPrevious()
+                slidingLayout.panelState = COLLAPSED
+                slidingLayout.isTouchEnabled = true
+                Analytics.event(Event.SelectContent.Action("close_overview"))
+            }
+        }
     }
 
 

@@ -1,5 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.overview
 
+import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -23,6 +25,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewableComponen
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
+import com.r0adkll.deckbuilder.util.ScreenUtils.orientation
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_overview.*
@@ -58,7 +61,8 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
         adapter = OverviewRecyclerAdapter(activity!!, cardClicks, editCardIntentions)
         adapter.setEmptyView(emptyView)
-        val layoutManager = GridLayoutManager(activity!!, 7)
+        val spanCount = if (orientation(ORIENTATION_LANDSCAPE)) 7 else 4
+        val layoutManager = GridLayoutManager(activity!!, spanCount)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 val item = adapter.items[position]

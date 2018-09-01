@@ -26,6 +26,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun addCards(): Observable<List<PokemonCard>>
         fun removeCard(): Observable<PokemonCard>
         fun editDeckClicks(): Observable<Boolean>
+        fun editOverviewClicks(): Observable<Boolean>
         fun editDeckName(): Observable<String>
         fun editDeckDescription(): Observable<String>
     }
@@ -38,6 +39,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun showIsExpanded(isExpanded: Boolean)
         fun showIsSaving(isSaving: Boolean)
         fun showIsEditing(isEditing: Boolean)
+        fun showIsOverview(isOverview: Boolean)
         fun showError(description: String)
         fun showSaveAction(hasChanges: Boolean)
         fun showCardCount(count: Int)
@@ -57,6 +59,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             val isSaving: Boolean,
             val isEditing: Boolean,
             val isChanged: Boolean,
+            val isOverview: Boolean,
             val error: String?,
 
             val name: String?,
@@ -89,6 +92,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     error = null
             )
             is Change.Editing -> this.copy(isEditing = change.isEditing)
+            is Change.Overview -> this.copy(isOverview = change.isOverview)
             is Change.Error -> this.copy(error = change.description)
             is Change.AddCards -> {
                 val pokemons = change.cards.filter { it.supertype == POKEMON }
@@ -119,6 +123,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     "isSaving=$isSaving, " +
                     "isEditing=$isEditing, " +
                     "isChanged=$isChanged, " +
+                    "isOverview=$isOverview, " +
                     "error=$error, " +
                     "pokemonCards=${pokemonCards.size}, " +
                     "trainerCards=${trainerCards.size}, " +
@@ -135,6 +140,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             object Saved : Change("network -> deck saved!")
             class SessionUpdated(val session: Session) : Change("cache -> Session changed/updated $session")
             class Editing(val isEditing: Boolean) : Change("user -> is editing: $isEditing")
+            class Overview(val isOverview: Boolean) : Change("user -> is overview: $isOverview")
             class Error(val description: String) : Change("error -> $description")
             class AddCards(val cards: List<PokemonCard>) : Change("user -> added ${cards.size} cards")
             class RemoveCard(val card: PokemonCard) : Change("user -> removing ${card.name}")
@@ -149,7 +155,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(-1L, false, false, false, null, null, null, null,
+                State(-1L, false, false, false, false, null, null, null, null,
                         Validation(false, false, emptyList()), emptyList(), emptyList(), emptyList())
             }
         }

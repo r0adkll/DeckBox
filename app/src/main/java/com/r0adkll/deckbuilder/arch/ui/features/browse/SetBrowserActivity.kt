@@ -115,9 +115,10 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                     CardDetailActivity.show(this, it)
                 }
 
-        adapter = PokemonBuilderRecyclerAdapter(this, EditCardIntentions(), cardClicks)
+        val spanCount = if (smallestWidth(TABLET_10)) 9 else 3
+        adapter = PokemonBuilderRecyclerAdapter(this, spanCount, EditCardIntentions(), cardClicks)
         adapter.setEmptyView(emptyView)
-        recycler.layoutManager = GridLayoutManager(this, if (smallestWidth(TABLET_10)) 9 else 3)
+        recycler.layoutManager = GridLayoutManager(this, spanCount)
         recycler.adapter = adapter
 
         renderer.start()
