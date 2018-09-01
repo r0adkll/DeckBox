@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,59 +7,67 @@
 
     <TextView
         android:id="@+id/quantity"
-        android:background="@color/grey_300"
-        android:layout_height="24dp"
-        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_column="0"
         android:layout_marginBottom="1dp"
+        android:background="@color/grey_300"
+        android:gravity="center"
 
-        tools:text="4"
+        android:minHeight="24dp"
         android:textColor="@color/black"
 
-        android:layout_column="0" />
+        tools:text="4" />
 
     <TextView
         android:id="@+id/name"
-        android:background="@color/grey_300"
-        android:layout_height="24dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_column="1"
+        android:layout_gravity="top"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="1dp"
+        android:layout_weight="1"
+        android:background="@color/grey_300"
         android:gravity="start|center_vertical"
+        android:minHeight="24dp"
         android:paddingStart="8dp"
-        android:paddingEnd="8dp"
 
-        tools:text="Decidueye-GX"
+        android:paddingEnd="8dp"
         android:textColor="@color/black"
 
-        android:layout_column="1" />
+        tools:text="Decidueye-GX\nDecidueye-GX" />
 
     <TextView
         android:id="@+id/setCode"
-        android:background="@color/grey_300"
-        android:layout_height="24dp"
+        android:layout_height="match_parent"
+        android:layout_column="2"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="1dp"
+        android:background="@color/grey_300"
         android:gravity="center"
+        android:minHeight="24dp"
         android:paddingStart="8dp"
-        android:paddingEnd="8dp"
 
-        tools:text="SUM"
+        android:paddingEnd="8dp"
         android:textColor="@color/black"
 
-        android:layout_column="2" />
+        tools:text="SUM" />
 
     <TextView
         android:id="@+id/setNumber"
-        android:background="@color/grey_300"
-        android:layout_height="24dp"
+        android:layout_height="match_parent"
+        android:layout_column="3"
         android:layout_marginBottom="1dp"
+        android:background="@color/grey_300"
         android:gravity="center"
+        android:minWidth="48dp"
+        android:minHeight="24dp"
+
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-
-        tools:text="151"
         android:textColor="@color/black"
 
-        android:layout_column="3" />
+        tools:text="151" />
 
 </TableRow>

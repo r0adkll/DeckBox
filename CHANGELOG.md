@@ -1,14 +1,17 @@
+# 1.7.1
+* [#25](https://github.com/r0adkll/DeckBox/issues/25) - Improved the layout of the tournament PDF exporter to allow for more cards without cutting out the page
+
 # 1.7.0
-* [#8](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/8) - Added 'Overview' feature to tablet deck builder interface that allows you to view all the cards in your deck.
-* [#21](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/21) - Added ability to search cards from the browse tab
+* [#8](https://github.com/r0adkll/DeckBox/issues/8) - Added 'Overview' feature to tablet deck builder interface that allows you to view all the cards in your deck.
+* [#21](https://github.com/r0adkll/DeckBox/issues/21) - Added ability to search cards from the browse tab
 * Added ability to filter expansions by 'GX' and 'Prism Star'
 * Optimized expansion browser for tablets
 * Optimized landscape phone deck builder interface
 * Bug Fixes
 
 # 1.6.0
-* [#12](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/12) - New deck testing feature where users can test out single hand deals or an overall multi-hand percentage view.
-* [#20](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/20) - Added convienence filters for mass selecting standard or expanded expansions when searching
+* [#12](https://github.com/r0adkll/DeckBox/issues/12) - New deck testing feature where users can test out single hand deals or an overall multi-hand percentage view.
+* [#20](https://github.com/r0adkll/DeckBox/issues/20) - Added convienence filters for mass selecting standard or expanded expansions when searching
 * Misc bug fixes
 
 # 1.5.4
@@ -18,8 +21,8 @@
 # 1.5.3
 * Support for Celestial Storm
 * Fixed a crash in the expansion memory management
-* [#10](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/10) - Improved tournament exporter to condense the supporter and energy card rows in the table (Github#10)
-* [#3](https://gitlab.com/r0adkll/pokemon-tcg-deckbuilder/issues/3) - Improved the robustness of the deck list importer to accept any list that follows the card format: {COUNT} {CARD-NAME} {PTCGO-CODE} {CARD-NUMBER}
+* [#10](https://github.com/r0adkll/DeckBox/issues/10) - Improved tournament exporter to condense the supporter and energy card rows in the table (Github#10)
+* [#3](https://github.com/r0adkll/DeckBox/issues/issues/3) - Improved the robustness of the deck list importer to accept any list that follows the card format: {COUNT} {CARD-NAME} {PTCGO-CODE} {CARD-NUMBER}
 
 # 1.5.2
 * Hotfix for expansion parsing bug

@@ -1,6 +1,1 @@
-• Added 'Overview' view to the tablet deck building interface that allows you to edit all the cards at once
-• Added the ability to search cards from the browse tab
-• Added the ability to filter cards in the expansion browser by 'GX' and 'Prism Star' now
-• Optimized the expansion browser screens for tablet
-• Optimized landscape orientation of the deck builder interface for phones
-• Misc. Bug Fixes
+• Fixed Tournament PDF exporter to allow for longer card lists without cutting off the page

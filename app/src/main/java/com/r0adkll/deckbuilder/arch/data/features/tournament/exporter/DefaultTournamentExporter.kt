@@ -10,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.ftinc.kit.kotlin.extensions.gone
 import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.kotlin.extensions.visible
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -94,7 +96,10 @@ class DefaultTournamentExporter @Inject constructor(
         val ageJunior = view.findViewById<ImageView>(R.id.optionAgeDivisionJunior)
         val ageSenior = view.findViewById<ImageView>(R.id.optionAgeDivisionSenior)
         val ageMaster = view.findViewById<ImageView>(R.id.optionAgeDivisionMasters)
+        val extraColumn = view.findViewById<LinearLayout>(R.id.extraColumn)
         val tablePokemon = view.findViewById<TableLayout>(R.id.tablePokemon)
+        val tablePokemon2 = view.findViewById<TableLayout>(R.id.tablePokemon2)
+        val tablePokemon2Title = view.findViewById<TextView>(R.id.tablePokemon2Title)
         val tableTrainer= view.findViewById<TableLayout>(R.id.tableTrainer)
         val tableEnergy = view.findViewById<TableLayout>(R.id.tableEnergy)
 
@@ -117,14 +122,39 @@ class DefaultTournamentExporter @Inject constructor(
         val stackedGroups = stacked.groupBy { it.card.supertype }
 
         stackedGroups[SuperType.POKEMON]
-                ?.map { createRow(inflater, view, it) }
-                ?.forEach { tablePokemon.addView(it) }
+                ?.sortedByDescending { it.count }
+                ?.let {
+            if (stacked.size >= 31) {
+                extraColumn.visible()
+
+                if (it.size >= 34) {
+                    val pokemon1 = it.subList(0, 34)
+                    val pokemon2 = it.subList(34, it.size)
+
+                    pokemon1.map { createRow(inflater, view, it) }
+                            .forEach { tablePokemon.addView(it) }
+
+                    pokemon2.map { createRow(inflater, view, it) }
+                            .forEach { tablePokemon2.addView(it) }
+                } else {
+                    tablePokemon2.gone()
+                    it.map { createRow(inflater, view, it) }
+                            .forEach { tablePokemon.addView(it) }
+                }
+            } else {
+                tablePokemon2Title.setText(R.string.tournament_pdf_table_pokemon)
+                it.map { createRow(inflater, view, it) }
+                        .forEach { tablePokemon2.addView(it) }
+            }
+        }
 
         stackedGroups[SuperType.TRAINER]?.reduce()
+                ?.sortedByDescending { it.count }
                 ?.map { createRow(inflater, view, it) }
                 ?.forEach { tableTrainer.addView(it) }
 
         stackedGroups[SuperType.ENERGY]?.reduce()
+                ?.sortedByDescending { it.count }
                 ?.map { createRow(inflater, view, it) }
                 ?.forEach { tableEnergy.addView(it) }
 
