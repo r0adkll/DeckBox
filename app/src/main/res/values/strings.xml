@@ -209,4 +209,5 @@
     <string name="export_column_name_title">NAME</string>
     <string name="export_column_set_title">SET</string>
     <string name="export_column_collection_number_title">#</string>
+    <string name="empty_playtest_hand">Empty hand</string>
 </resources>

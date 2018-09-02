@@ -67,6 +67,7 @@
             android:theme="@style/Theme.DeckBuilder.Translucent" />
         <activity android:name=".arch.ui.features.testing.DeckTestingActivity"
             android:screenOrientation="sensorPortrait"/>
+        <activity android:name=".arch.ui.features.playtest.PlaytestActivity" />
 
         <service android:name=".arch.data.features.cards.service.CacheService"
                  android:exported="false" />
