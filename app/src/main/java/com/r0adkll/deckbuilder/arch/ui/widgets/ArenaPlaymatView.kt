@@ -2,6 +2,9 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
 import android.graphics.*
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import com.ftinc.kit.kotlin.extensions.color
@@ -141,7 +144,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
              * Player Lost Zone
              */
             val lostZoneElement = board[Player.Type.PLAYER]!![BoardElement.LOST_ZONE] as Element.Card
-            val lostZoneX = deckX - (elementWidth + elementMargin)
+            val lostZoneX = deckX - (elementWidth + elementMargin / 2f)
             val lostZoneY = discardY
             lostZoneElement.bounds.set(lostZoneX, lostZoneY, lostZoneX + elementWidth, lostZoneY + elementHeight)
 
@@ -206,7 +209,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
              * Opponent Lost Zone
              */
             val lostZoneElement = board[Player.Type.OPPONENT]!![BoardElement.LOST_ZONE] as Element.Card
-            val lostZoneX = deckX + elementWidth + elementWidth + elementMargin
+            val lostZoneX = deckX + elementWidth + elementMargin / 2f
             val lostZoneY = discardY
             lostZoneElement.bounds.set(lostZoneX, lostZoneY, lostZoneX + elementWidth, lostZoneY + elementHeight)
         }
@@ -259,7 +262,16 @@ class ArenaPlaymatView @JvmOverloads constructor(
         }
         canvas.drawRoundRect(bounds, cardRadius, cardRadius, elementPaint)
         if (text != null) {
-            canvas.drawText(text, bounds.left + elementWidth / 2f, (bounds.top + elementHeight / 2f), elementTextPaint)
+            val p = TextPaint(elementTextPaint)
+            val width = text.split("\n").maxBy { p.measureText(it) }?.let { p.measureText(it).toInt() } ?: p.measureText(text).toInt()
+            val layout = StaticLayout(text, p, width, Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+            val height = layout.height
+            val count = canvas.save()
+            val dX = bounds.left + (elementWidth / 2f)
+            val dY = (bounds.top + elementHeight / 2f) - height / 2f
+            canvas.translate(dX, dY)
+            layout.draw(canvas)
+            canvas.restoreToCount(count)
         }
     }
 
