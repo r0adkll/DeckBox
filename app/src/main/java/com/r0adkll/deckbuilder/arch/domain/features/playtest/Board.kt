@@ -7,20 +7,20 @@ import java.util.*
 /**
  * This represents the entire board state of a game
  */
-class Board(
-        var player: Player,
-        var opponent: Player,
-        var turn: Turn
+data class Board(
+        val player: Player,
+        val opponent: Player,
+        val turn: Turn
 ) {
 
     /**
      * Get the boards active stadium, if exists
      */
-    val stadium: Card?
+    val stadium: PokemonCard?
         get() = player.stadium ?: opponent.stadium
 
 
-    class Turn(
+    data class Turn(
             val count: Int,
             val whos: Player.Type
     )
@@ -29,15 +29,15 @@ class Board(
     /**
      * Represents a player's board state in the game
      */
-    class Player(
+    data class Player(
             val hand: List<PokemonCard>,
-            val prizes: List<PokemonCard>,
-            val deck: List<PokemonCard>,
+            val prizes: List<Ordered<PokemonCard>>,
+            val deck: ArrayDeque<PokemonCard>,
             val discard: List<PokemonCard>,
             val lostZone: List<PokemonCard>,
             val bench: Bench,
             val active: Card?,
-            val stadium: Card?
+            val stadium: PokemonCard?
     ) {
 
         enum class Type {
@@ -50,8 +50,8 @@ class Board(
      * Represents a bench state on the board with a default size of 5, and possible expansion
      * of up to 8 via SkyField
      */
-    class Bench(
-            val cards: Array<Card?> = Array(8) { null },
+    data class Bench(
+            val cards: List<Ordered<Card>> = emptyList(),
             val size: Int = 5
     )
 
@@ -60,7 +60,7 @@ class Board(
      * Represents a card on the board, including it's evolutions, energy, tools, status effects,
      * damage, and so on
      */
-    class Card(
+    data class Card(
             val pokemons: Stack<PokemonCard>,
             val energy: List<PokemonCard>,
             val tool: PokemonCard?,
@@ -79,4 +79,11 @@ class Board(
             PARALYZED
         }
     }
+
+
+    /**
+     * Class wrapper to indicate specific indexes on items without having to maintain nullable
+     * valued arrays. i.e. for prize cards, or for benched cards. This is primarily for UI purposes
+     */
+    abstract class Ordered<C>(val index: Int, val item: C)
 }
