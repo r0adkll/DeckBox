@@ -34,6 +34,13 @@ class CachingCardDataSource @Inject constructor(
     }
 
 
+    override fun refreshExpansions(): Observable<List<Expansion>> {
+        // Force a refresh from the network, that will subsequently update cache implementations,
+        // but won't clear on failure
+        return network()
+    }
+
+
     private fun network(): Observable<List<Expansion>> {
         return api.set()
                 .observeAll()

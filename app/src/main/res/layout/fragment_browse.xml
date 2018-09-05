@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    >
 
     <com.ftinc.kit.widget.TightSwipeRefreshLayout
         android:id="@+id/swipeRefresh"
@@ -36,6 +37,9 @@
         android:layout_margin="@dimen/margin_small"
         android:src="@drawable/ic_search_white_24dp"
         app:fabSize="normal"
+        app:pressedTranslationZ="6dp"
+        app:rippleColor="@color/white30"
+        app:layout_behavior="com.r0adkll.deckbuilder.arch.ui.widgets.ScrollAwareFABBehavior"
         />
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

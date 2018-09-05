@@ -8,4 +8,5 @@ import io.reactivex.Observable
 interface CardDataSource {
 
     fun getExpansions(): Observable<List<Expansion>>
+    fun refreshExpansions(): Observable<List<Expansion>>
 }

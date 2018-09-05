@@ -47,6 +47,11 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
         }
 
 
+        override fun toString(): String {
+            return "State(isLoading=$isLoading, error=$error, expansions=${expansions.map { it.code }})"
+        }
+
+
         companion object {
             @JvmField val CREATOR = PaperParcelBrowseUi_State.CREATOR
 

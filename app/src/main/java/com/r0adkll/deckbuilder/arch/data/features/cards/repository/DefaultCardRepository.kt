@@ -23,6 +23,11 @@ class DefaultCardRepository @Inject constructor(
     }
 
 
+    override fun refreshExpansions(): Observable<List<Expansion>> {
+        return dataSource.refreshExpansions()
+    }
+
+
     override fun search(type: SuperType?, text: String, filter: Filter?): Observable<List<PokemonCard>> {
         return searchDataSource.search(type, text, filter)
     }
