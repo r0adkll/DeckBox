@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
+import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
@@ -11,6 +12,12 @@ import paperparcel.PaperParcelable
 interface BrowseUi : StateRenderer<BrowseUi.State> {
 
     val state: State
+
+
+    interface Intentions {
+
+        fun refreshExpansions(): Observable<Unit>
+    }
 
 
     interface Actions : BaseActions {

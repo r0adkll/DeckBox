@@ -18,6 +18,10 @@ class BrowseModule(val fragment: BrowseFragment) {
 
 
     @Provides @FragmentScope
+    fun provideIntentions(): BrowseUi.Intentions = fragment
+
+
+    @Provides @FragmentScope
     fun provideActions(): BrowseUi.Actions = fragment
 
 

@@ -30,7 +30,7 @@ class Remote @Inject constructor() {
 
 
     /**
-     * This is a list of search proxy/aliases that better improve the search expierence for the user
+     * This is a list of search proxy/aliases that better improve the search experience for the user
      */
     val searchProxies by RemoteObject(KEY_SEARCH_PROXIES, SearchProxies::class)
 

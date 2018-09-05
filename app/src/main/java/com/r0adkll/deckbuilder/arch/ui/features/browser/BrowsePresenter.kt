@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 class BrowsePresenter @Inject constructor(
         val ui: BrowseUi,
+        val intentions: BrowseUi.Intentions,
         val repository: CardRepository
 ) : Presenter() {
 
@@ -23,6 +24,8 @@ class BrowsePresenter @Inject constructor(
                 .map { Change.ExpansionsLoaded(it) as Change }
                 .startWith(Change.IsLoading as Change)
                 .onErrorReturn(handleUnknownError)
+
+        val refreshExpansions = repository.getExpansions()
 
         val merged = loadExpansions.doOnNext { Timber.d(it.logText) }
 
