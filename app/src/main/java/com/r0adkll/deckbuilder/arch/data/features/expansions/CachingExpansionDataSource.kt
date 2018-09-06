@@ -32,13 +32,10 @@ class CachingExpansionDataSource @Inject constructor(
         // Subscribe to any changes in the remote status and detect if we need to clear expansion cache
         remote.observeChanges()
                 .subscribe {
-                    val version = it.expansionVersion.split(".")
-                    if (version.size == 2) {
-                        val versionCode = version[0].toIntOrNull() ?: 1
-                        val expansionCode = version[1]
-
+                    it.expansionVersion?.let { (versionCode, expansionCode) ->
                         val invalidCache = memoryCache.getExpansions().blockingFirst().none { it.code == expansionCode } ||
                                 diskCache.getExpansions().blockingFirst().none { it.code == expansionCode }
+
                         if (versionCode > preferences.expansionsVersion || invalidCache) {
                             clearExpansions()
                             preferences.expansionsVersion = versionCode
