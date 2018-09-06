@@ -10,10 +10,10 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.CombinedSearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.SearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
@@ -50,9 +50,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.requery.Persistable
 import io.requery.android.sqlite.DatabaseSource
 import io.requery.reactivex.KotlinReactiveEntityStore
-import io.requery.sql.KotlinConfiguration
 import io.requery.sql.KotlinEntityDataStore
-import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import java.util.concurrent.Executors
@@ -132,7 +130,7 @@ class DataModule {
      */
 
     @Provides @AppScope
-    fun provideCardDataSource(dataSource: CachingCardDataSource): CardDataSource = dataSource
+    fun provideExpansionDataSource(dataSource: CachingExpansionDataSource): ExpansionDataSource = dataSource
 
 
     @Provides @AppScope

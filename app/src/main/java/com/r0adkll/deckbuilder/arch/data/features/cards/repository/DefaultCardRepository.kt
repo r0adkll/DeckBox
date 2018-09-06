@@ -1,8 +1,8 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.repository
 
 
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.SearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 
 class DefaultCardRepository @Inject constructor(
-        val dataSource: CardDataSource,
+        val dataSource: ExpansionDataSource,
         val searchDataSource: SearchDataSource
 ) : CardRepository {
 

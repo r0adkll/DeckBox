@@ -6,9 +6,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchProxies
+import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.properties.ReadOnlyProperty
@@ -30,13 +33,33 @@ class Remote @Inject constructor() {
 
 
     /**
+     * This is the versioning string for the latest expansion set offered by the api. It's format as
+     * follows: <version_code>.<expansion_code> e.g. 1.sm7
+     *
+     * - version_code represents the version of the data that may change unrelated to new expansions (i.e. rotation legality changes)
+     * - expansion_code represents the latest available expansion in the set (i.e. sm7 - Celestial Storm) which can indicate if a new expansion was added
+     */
+    val expansionVersion by RemoteString(KEY_EXPANSION_VERSION)
+
+
+    /**
      * This is a list of search proxy/aliases that better improve the search experience for the user
      */
     val searchProxies by RemoteObject(KEY_SEARCH_PROXIES, SearchProxies::class)
 
 
+    /**
+     * Property to access the Firebase Remote Config instance
+     */
     private val remote: FirebaseRemoteConfig
         get() = FirebaseRemoteConfig.getInstance()
+
+
+    /**
+     * This relay will be used to notify any subscribers if the the remote values have been fetched
+     * or updated
+     */
+    private val remoteFetchRelay: Relay<Remote> = PublishRelay.create()
 
 
     /**
@@ -59,8 +82,15 @@ class Remote @Inject constructor() {
                 .addOnCompleteListener {
                     Timber.i("Remote Config values fetched. Activating!")
                     remote.activateFetched()
+                    remoteFetchRelay.accept(this@Remote)
                 }
     }
+
+
+    /**
+     * Observe any changes/updates to the remote configuration
+     */
+    fun observeChanges(): Observable<Remote> = remoteFetchRelay
 
 
     /**
@@ -95,6 +125,7 @@ class Remote @Inject constructor() {
 
 
     companion object {
+        private const val KEY_EXPANSION_VERSION = "expansion_version"
         private const val KEY_LATEST_EXPANSION = "latest_expansion"
         private const val KEY_SEARCH_PROXIES = "search_proxies"
 

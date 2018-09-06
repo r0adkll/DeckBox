@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.cards.cache
+package com.r0adkll.deckbuilder.arch.data.features.expansions.cache
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion

@@ -6,7 +6,7 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.ICardEntity
 import com.r0adkll.deckbuilder.arch.data.database.mapping.EntityMapper
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class RequeryCardCache @Inject constructor(
         val db: KotlinReactiveEntityStore<Persistable>,
-        val cache: CardDataSource,
+        val cache: ExpansionDataSource,
         val remote: Remote
 ) : CardCache {
 
