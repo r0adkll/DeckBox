@@ -27,7 +27,7 @@ class InMemoryExpansionCache(
 
     override fun getExpansions(): Observable<List<Expansion>> {
         return synchronized(this) {
-            if (expansions.none { it.code == remote.latestExpansion }) {
+            if (expansions.none { it.code == remote.expansionVersion?.expansionCode }) {
                 expansions.clear()
             }
 

@@ -19,7 +19,7 @@ class PreferenceExpansionCache(
 
     override fun getExpansions(): Observable<List<Expansion>> {
         // Check to see if we have the latest expansion as per the remote config
-        if (preferences.expansions.get().none { it.code == remote.latestExpansion }) {
+        if (preferences.expansions.get().none { it.code == remote.expansionVersion?.expansionCode }) {
             preferences.expansions.delete()
         }
 

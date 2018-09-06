@@ -26,14 +26,6 @@ import kotlin.reflect.KProperty
 class Remote @Inject constructor() {
 
     /**
-     * The the set code for the latest expansion in the API. This field is used to invalidate the
-     * set/expansion cache in the event of when new set's get added without having to ship an app
-     * update or poll the API.
-     */
-    val latestExpansion by RemoteString(KEY_LATEST_EXPANSION)
-
-
-    /**
      * This is the versioning string for the latest expansion set offered by the api. It's format as
      * follows: <version_code>.<expansion_code> e.g. 1.sm7
      *
@@ -127,7 +119,6 @@ class Remote @Inject constructor() {
 
     companion object {
         private const val KEY_EXPANSION_VERSION = "expansion_version"
-        private const val KEY_LATEST_EXPANSION = "latest_expansion"
         private const val KEY_SEARCH_PROXIES = "search_proxies"
 
         private const val CACHE_EXPIRATION = 3600L

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>latest_expansion</key>
-        <value>sm5</value>
+        <key>expansion_version</key>
+        <value>{"version":1,"expansionCode":"sm7"}</value>
     </entry>
     <entry>
         <key>search_proxies</key>
