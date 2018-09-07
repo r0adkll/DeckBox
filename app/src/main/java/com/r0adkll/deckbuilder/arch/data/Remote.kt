@@ -60,6 +60,7 @@ class Remote @Inject constructor() {
      * remote configuration settings if needed
      */
     fun check() {
+        Timber.d("Checking remote config values...")
 
         // Configure
         val settings = FirebaseRemoteConfigSettings.Builder()
@@ -74,6 +75,8 @@ class Remote @Inject constructor() {
         remote.fetch(cacheExpiration)
                 .addOnCompleteListener {
                     Timber.i("Remote Config values fetched. Activating!")
+                    Timber.i("> Expansion Version: $expansionVersion")
+                    Timber.i("> Search Proxies: $searchProxies")
                     remote.activateFetched()
                     remoteFetchRelay.accept(this@Remote)
                 }

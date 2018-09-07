@@ -30,9 +30,13 @@ class CachingExpansionDataSource @Inject constructor(
 
     init {
         // Subscribe to any changes in the remote status and detect if we need to clear expansion cache
+        Timber.i("Subscribing to remote changes")
         remote.observeChanges()
+                .doOnNext { Timber.d("Remote Changed: $it") }
                 .subscribe {
                     it.expansionVersion?.let { (versionCode, expansionCode) ->
+                        Timber.d("Checking Expansion Cache (version: $versionCode, expansion: $expansionCode, prefVersion: ${preferences.expansionsVersion})")
+
                         val invalidCache = memoryCache.getExpansions().blockingFirst().none { it.code == expansionCode } ||
                                 diskCache.getExpansions().blockingFirst().none { it.code == expansionCode }
 
