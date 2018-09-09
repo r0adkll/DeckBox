@@ -107,7 +107,7 @@ object EntityMapper {
                 expansion.expandedLegal,
                 expansion.releaseDate,
                 expansion.symbolUrl,
-                "" // FIXME: Replace this once SDK has been updated
+                expansion.logoUrl
         )
     }
 

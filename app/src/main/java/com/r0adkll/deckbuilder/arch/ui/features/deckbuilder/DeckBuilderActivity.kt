@@ -293,6 +293,8 @@ class DeckBuilderActivity : BaseActivity(),
     override fun onBackPressed() {
         if (fragmentSwitcher != null && fragmentSwitcher!!.displayedChild == 1) {
             editOverviewClicks.accept(false)
+        } else if (slidingLayout.panelState == EXPANDED) {
+            slidingLayout.panelState = COLLAPSED
         } else if (state.isChanged) {
             Analytics.event(Event.SelectContent.Action("close_deck_editor"))
             AlertDialog.Builder(this)

@@ -1,7 +1,6 @@
-package com.r0adkll.deckbuilder.arch.data.features.cards.cache
+package com.r0adkll.deckbuilder.arch.data.features.expansions.cache
 
 
-import com.r0adkll.deckbuilder.arch.data.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import io.reactivex.Observable
 
@@ -10,9 +9,7 @@ import io.reactivex.Observable
  * In Memory implementation of [Expansion] cache to store a list of
  * expansions loaded from API in memory so we don't have to keep requesting it
  */
-class InMemoryExpansionCache(
-        val remote: Remote
-) : ExpansionCache {
+class InMemoryExpansionCache : ExpansionCache {
 
     private val expansions: ArrayList<Expansion> = ArrayList()
 
@@ -27,10 +24,6 @@ class InMemoryExpansionCache(
 
     override fun getExpansions(): Observable<List<Expansion>> {
         return synchronized(this) {
-            if (expansions.none { it.code == remote.latestExpansion }) {
-                expansions.clear()
-            }
-
             Observable.just(expansions.toList())
         }
     }
