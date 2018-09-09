@@ -10,4 +10,13 @@ interface ExpansionCache {
     fun putExpansions(expansions: List<Expansion>)
     fun getExpansions(): Observable<List<Expansion>>
     fun clear()
+
+    /**
+     * Details the source from which you wish to grab the expansions
+     */
+    enum class Source {
+        ALL,
+        LOCAL,
+        NETWORK
+    }
 }

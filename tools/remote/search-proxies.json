@@ -27,6 +27,10 @@
     {
       "regex": "(Mega)(?= \\w)",
       "replacement": "M"
+    },
+    {
+      "regex": "(Prism)(?! Star)",
+      "replacement": "Prism Star"
     }
   ]
 }

@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
 
-import com.r0adkll.deckbuilder.arch.data.Remote
+import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.mappings.CardMapper
 import com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper

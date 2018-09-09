@@ -29,6 +29,8 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.PrismStarRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
+import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
+import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
@@ -44,6 +46,7 @@ import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.ElementsIntoSet
+import dagger.multibindings.IntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -58,6 +61,10 @@ import java.util.concurrent.Executors
 
 @Module
 class DataModule {
+
+    @Provides @AppScope @IntoSet
+    fun provideCacheInvalidatePlugin(plugin: CacheInvalidatePlugin): RemotePlugin = plugin
+
 
     @Provides @AppScope
     fun provideSharedPreferences(context: Context): SharedPreferences {

@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data
+package com.r0adkll.deckbuilder.arch.data.remote
 
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -11,6 +11,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.features.expansions.model.ExpansionVersion
+import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchProxies
 import io.reactivex.Observable
 import timber.log.Timber
@@ -23,7 +24,9 @@ import kotlin.reflect.KProperty
 /**
  * Wrapper around Firebase Remote Configuration SDK
  */
-class Remote @Inject constructor() {
+class Remote @Inject constructor(
+        val plugins: Set<@JvmSuppressWildcards RemotePlugin>
+) {
 
     /**
      * This is the versioning string for the latest expansion set offered by the api. It's format as
@@ -49,13 +52,6 @@ class Remote @Inject constructor() {
 
 
     /**
-     * This relay will be used to notify any subscribers if the the remote values have been fetched
-     * or updated
-     */
-    private val remoteFetchRelay: Relay<Remote> = PublishRelay.create()
-
-
-    /**
      * Check for update remote config values and update them if needed. Also set
      * remote configuration settings if needed
      */
@@ -73,20 +69,14 @@ class Remote @Inject constructor() {
         // Fetch
         val cacheExpiration = if (remote.info.configSettings.isDeveloperModeEnabled) 0L else CACHE_EXPIRATION
         remote.fetch(cacheExpiration)
-                .addOnCompleteListener {
+                .addOnCompleteListener { _ ->
                     Timber.i("Remote Config values fetched. Activating!")
                     Timber.i("> Expansion Version: $expansionVersion")
                     Timber.i("> Search Proxies: $searchProxies")
                     remote.activateFetched()
-                    remoteFetchRelay.accept(this@Remote)
+                    plugins.forEach { it.onFetchActivated(this@Remote) }
                 }
     }
-
-
-    /**
-     * Observe any changes/updates to the remote configuration
-     */
-    fun observeChanges(): Observable<Remote> = remoteFetchRelay
 
 
     /**

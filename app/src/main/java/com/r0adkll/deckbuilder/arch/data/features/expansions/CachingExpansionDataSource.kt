@@ -3,8 +3,9 @@ package com.r0adkll.deckbuilder.arch.data.features.expansions
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.Remote
+import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.ExpansionCache
+import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.ExpansionCache.*
 import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.InMemoryExpansionCache
 import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.PreferenceExpansionCache
 import com.r0adkll.deckbuilder.arch.data.mappings.SetMapper
@@ -19,39 +20,19 @@ import javax.inject.Inject
 class CachingExpansionDataSource @Inject constructor(
         val api: Pokemon,
         val preferences: AppPreferences,
-        val schedulers: Schedulers,
-        remote: Remote
+        val schedulers: Schedulers
 ) : ExpansionDataSource {
 
-    private val memoryCache: ExpansionCache = InMemoryExpansionCache(remote)
-    private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences, remote)
+    private val memoryCache: ExpansionCache = InMemoryExpansionCache()
+    private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences)
 
 
-
-    init {
-        // Subscribe to any changes in the remote status and detect if we need to clear expansion cache
-        Timber.i("Subscribing to remote changes")
-        remote.observeChanges()
-                .doOnNext { Timber.d("Remote Changed: $it") }
-                .subscribe {
-                    it.expansionVersion?.let { (versionCode, expansionCode) ->
-                        Timber.d("Checking Expansion Cache (version: $versionCode, expansion: $expansionCode, prefVersion: ${preferences.expansionsVersion})")
-
-                        val invalidCache = memoryCache.getExpansions().blockingFirst().none { it.code == expansionCode } ||
-                                diskCache.getExpansions().blockingFirst().none { it.code == expansionCode }
-
-                        if (versionCode > preferences.expansionsVersion || invalidCache) {
-                            clearExpansions()
-                            preferences.expansionsVersion = versionCode
-                            Timber.i("Expansion Cache Invalidated (version: $versionCode, expansion: $expansionCode)")
-                        }
-                    }
-                }
-    }
-
-
-    override fun getExpansions(): Observable<List<Expansion>> {
-        return Observable.concat(memory(), disk(), network())
+    override fun getExpansions(source: ExpansionCache.Source): Observable<List<Expansion>> {
+        return when(source) {
+            Source.ALL -> Observable.concat(memory(), disk(), network())
+            Source.LOCAL -> Observable.concat(memory(), disk())
+            Source.NETWORK -> network()
+        }
                 .takeUntil { it.isNotEmpty() }
                 .filter { it.isNotEmpty() }
     }

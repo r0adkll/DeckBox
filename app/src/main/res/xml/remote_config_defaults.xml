@@ -6,6 +6,6 @@
     </entry>
     <entry>
         <key>search_proxies</key>
-        <value>{"proxies":[{"regex":"\\bn\\b","replacement":"\"N\""},{"regex":"\\b(electric)\\b(?=( +energy))","replacement":"Lightning"},{"regex":"\\b(dark)\\b(?=( +energy))","replacement":"Darkness"},{"regex":"\\b(steel)\\b(?=( +energy))","replacement":"Metal"},{"regex":"\\b( GX)\\b","replacement":"-GX"},{"regex":"\\b( EX)\\b","replacement":"-EX"},{"regex":"(Mega)(?= \\w)","replacement":"M"}]}</value>
+        <value>{"proxies":[{"regex":"\\bn\\b","replacement":"\"N\""},{"regex":"\\b(electric)\\b(?=( +energy))","replacement":"Lightning"},{"regex":"\\b(dark)\\b(?=( +energy))","replacement":"Darkness"},{"regex":"\\b(steel)\\b(?=( +energy))","replacement":"Metal"},{"regex":"\\b( GX)\\b","replacement":"-GX"},{"regex":"\\b( EX)\\b","replacement":"-EX"},{"regex":"(Mega)(?= \\w)","replacement":"M"},{"regex":"(Prism)(?! Star)","replacement":"Prism Star"}]}</value>
     </entry>
 </defaultsMap>

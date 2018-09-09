@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.cache
 
 
-import com.r0adkll.deckbuilder.arch.data.Remote
+import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.ICardEntity
