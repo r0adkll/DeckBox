@@ -17,6 +17,11 @@
     <style name="Theme.DeckBuilder" parent="Base.Theme.DeckBuilder">
     </style>
 
+    <style name="Theme.DeckBuilder.Splash">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="colorPrimaryDark">@color/primaryColor</item>
+    </style>
+
     <style name="Theme.DeckBuilder.OSS" parent="Theme.AppCompat.DayNight.DarkActionBar" >
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>

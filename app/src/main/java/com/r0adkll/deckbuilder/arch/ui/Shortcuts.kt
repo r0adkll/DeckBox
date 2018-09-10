@@ -1,23 +1,44 @@
 package com.r0adkll.deckbuilder.arch.ui
 
-import android.app.TaskStackBuilder
+
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.graphics.*
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.view.View
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
+import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
+import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
+import timber.log.Timber
 
 
+/**
+ * Helper class for creating and managing shortcuts in the home launcher using [ShortcutManager]
+ */
 object Shortcuts {
 
-    private const val CREATE_DECK_ID = "create-new-deck"
+    const val CREATE_DECK_ID = "create-new-deck"
 
     /**
-     * Add the 'Create new deck' shortcut if it doesn't already exist
+     * Report the usage of a shortcut by it's Id
+     */
+    fun reportUsage(context: Context, shortcutId: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            context.shortcutManager().reportShortcutUsed(shortcutId)
+        }
+    }
+
+
+    /**
+     * Add the 'Create new deck' shortcut if it doesn't already exist, otherwise don't take any action
      */
     fun addNewDeckShortcut(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
@@ -27,8 +48,8 @@ object Shortcuts {
                 val shortcut = ShortcutInfo.Builder(context, CREATE_DECK_ID)
                         .setShortLabel(context.getString(R.string.shortcut_create_deck_short_label))
                         .setLongLabel(context.getString(R.string.shortcut_create_deck_long_label))
-                        .setIcon(Icon.createWithResource(context, R.drawable.ic_add_white_24dp))
-                        .setIntent(RouteActivity.createNewDeckIntent(context))
+                        .setIcon(Icon.createWithResource(context, R.drawable.dr_shortcut_add))
+                        .setIntent(ShortcutActivity.createNewDeckIntent(context))
                         .setRank(0)
                         .build()
 
@@ -50,14 +71,16 @@ object Shortcuts {
                     .setShortLabel(deck.name.take(10))
                     .setLongLabel(deck.name.take(25))
                     .setIcon(Icon.createWithResource(context, R.drawable.ic_cards_variant))
-                    .setIntent(RouteActivity.createOpenDeckIntent(context, deck.id))
+                    .setIntent(ShortcutActivity.createOpenDeckIntent(context, deck.id))
                     .setRank(1)
                     .build()
 
             // 1) Determine if we already have a shortcut for this deck then float it's rank to 1
             val existing = shortcutManager.dynamicShortcuts.find { it.id == deck.id }
             if (existing != null) {
+                shortcutManager.reportShortcutUsed(deck.id)
                 shortcutManager.updateShortcuts(listOf(shortcut))
+                generateDeckImage(context, deck)
             } else {
 
                 // Determine if we need to drop a shortcut
@@ -69,6 +92,7 @@ object Shortcuts {
                 }
 
                 shortcutManager.addDynamicShortcuts(listOf(shortcut))
+                generateDeckImage(context, deck)
             }
         }
     }
@@ -79,8 +103,87 @@ object Shortcuts {
      */
     fun clearShortcuts(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            context.shortcutManager()
-                    .removeAllDynamicShortcuts()
+            val shortcutManager = context.shortcutManager()
+            if (shortcutManager.dynamicShortcuts.size + shortcutManager.manifestShortcuts.size > 0) {
+                shortcutManager.removeAllDynamicShortcuts()
+            }
+        }
+    }
+
+
+    /**
+     * Asynchronously generate the deck image and update the shortcut with it
+     */
+    @RequiresApi(Build.VERSION_CODES.N_MR1)
+    private fun generateDeckImage(context: Context, deck: Deck) {
+        val size = context.dipToPx(44f)
+
+        deck.image?.let { image ->
+            when(image) {
+                is DeckImage.Pokemon -> {
+                    GlideApp.with(context)
+                            .asBitmap()
+                            .load(image.imageUrl)
+                            .circleCrop()
+                            .into(object : SimpleTarget<Bitmap>(size, size) {
+                                override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
+                                    if (resource != null) {
+                                        Timber.i("Pokemon Deck Image loaded")
+                                        updateDeckShortcutIcon(context, deck, resource)
+                                    }
+                                }
+                            })
+                }
+                is DeckImage.Type -> {
+                    val view = DeckImageView(context)
+                    view.primaryType = image.type1
+                    view.secondaryType = image.type2
+
+                    val viewSize = context.dipToPx(128f)
+                    val measureWidth = View.MeasureSpec.makeMeasureSpec(viewSize, View.MeasureSpec.EXACTLY)
+                    val measuredHeight = View.MeasureSpec.makeMeasureSpec(viewSize, View.MeasureSpec.EXACTLY)
+
+                    view.measure(measureWidth, measuredHeight)
+                    view.layout(0, 0, viewSize, viewSize)
+
+                    val deckImageBitmap = Bitmap.createBitmap(viewSize, viewSize, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(deckImageBitmap)
+                    view.draw(canvas)
+
+                    // Now we setup to crop
+                    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+                    canvas.setBitmap(bitmap)
+
+                    // Render circle
+                    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+                    paint.color = Color.BLACK
+                    canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+
+                    // Render bitmap
+                    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+                    canvas.drawBitmap(deckImageBitmap, null, Rect(0, 0, size, size), paint)
+
+                    updateDeckShortcutIcon(context, deck, bitmap)
+                }
+            }
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.N_MR1)
+    private fun updateDeckShortcutIcon(context: Context, deck: Deck, bitmap: Bitmap) {
+        val shortcutManager = context.shortcutManager()
+        val shortcut = shortcutManager.dynamicShortcuts.find { it.id == deck.id }
+        if (shortcut != null) {
+            val updatedShortcut = ShortcutInfo.Builder(context, deck.id)
+                    .setShortLabel(deck.name.take(10))
+                    .setLongLabel(deck.name.take(25))
+                    .setIcon(Icon.createWithBitmap(bitmap))
+                    .setIntent(ShortcutActivity.createOpenDeckIntent(context, deck.id))
+                    .setRank(1)
+                    .build()
+
+            shortcutManager.updateShortcuts(listOf(updatedShortcut))
         }
     }
 

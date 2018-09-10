@@ -25,6 +25,7 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
+import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
@@ -134,6 +135,7 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 "pref_account_signout" -> {
+                    Shortcuts.clearShortcuts(activity!!)
                     preferences.deviceId = null
                     FirebaseAuth.getInstance().signOut()
                     if (googleClient != null && googleClient?.isConnected == true) {
