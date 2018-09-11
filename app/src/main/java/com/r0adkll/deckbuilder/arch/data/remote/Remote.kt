@@ -6,14 +6,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
-import com.jakewharton.rxrelay2.PublishRelay
-import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.data.features.expansions.model.ExpansionVersion
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionVersion
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchProxies
-import io.reactivex.Observable
+import com.r0adkll.deckbuilder.arch.data.remote.model.SearchProxies
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.properties.ReadOnlyProperty
@@ -36,6 +34,14 @@ class Remote @Inject constructor(
      * - expansion_code represents the latest available expansion in the set (i.e. sm7 - Celestial Storm) which can indicate if a new expansion was added
      */
     val expansionVersion by RemoteObject(KEY_EXPANSION_VERSION, ExpansionVersion::class)
+
+
+    /**
+     * This is the spec for an expansion preview card that appears on the deck list screen to tell
+     * users about a new expansion that has been added and other information about it. It also attempts
+     * to direct them to browse the expansion
+     */
+    val expansionPreview by RemoteObject(KEY_EXPANSION_PREVIEW, ExpansionPreview::class)
 
 
     /**
@@ -73,6 +79,7 @@ class Remote @Inject constructor(
                     Timber.i("Remote Config values fetched. Activating!")
                     Timber.i("> Expansion Version: $expansionVersion")
                     Timber.i("> Search Proxies: $searchProxies")
+                    Timber.i("> Preview: $expansionPreview")
                     remote.activateFetched()
                     plugins.forEach { it.onFetchActivated(this@Remote) }
                 }
@@ -112,6 +119,7 @@ class Remote @Inject constructor(
 
     companion object {
         private const val KEY_EXPANSION_VERSION = "expansion_version"
+        private const val KEY_EXPANSION_PREVIEW = "expansion_preview"
         private const val KEY_SEARCH_PROXIES = "search_proxies"
 
         private const val CACHE_EXPIRATION = 3600L

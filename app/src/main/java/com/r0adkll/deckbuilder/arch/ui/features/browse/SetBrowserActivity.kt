@@ -4,8 +4,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.browse
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.Shader
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.graphics.ColorUtils
@@ -202,9 +207,20 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
         override fun execute(palette: Palette?) {
             palette?.let { p ->
-                if (expansion.code != "sm6" && expansion.code != "sm5" && expansion.code != "sm7") {
+                if (expansion.code != "sm5") {
                     p.vibrantSwatch?.rgb?.let {
-                        backdrop.imageTintList = ColorStateList.valueOf(it)
+                        if (expansion.code != "sm75") {
+                            backdrop.imageTintList = ColorStateList.valueOf(it)
+                            backdrop.imageTintMode = PorterDuff.Mode.ADD
+                        } else {
+                            val background = ColorDrawable(it)
+                            val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
+                            val foreground = BitmapDrawable(resources, pattern).apply {
+                                setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
+                                setTargetDensity(resources.displayMetrics.densityDpi * 4)
+                            }
+                            backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
+                        }
 
                         // Calculate control color
                         if (ColorUtils.calculateContrast(Color.WHITE, it) < 3.0) {
@@ -221,10 +237,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                             tabs.setTabTextColors(secondaryColor, color)
                             tabs.setSelectedTabIndicatorColor(color)
                         }
-
-
                     }
-                    backdrop.imageTintMode = PorterDuff.Mode.ADD
                 }
             }
         }

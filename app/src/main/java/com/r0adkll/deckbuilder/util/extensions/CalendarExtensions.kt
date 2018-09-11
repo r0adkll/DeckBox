@@ -1,5 +1,8 @@
 package com.r0adkll.deckbuilder.util.extensions
 
+import com.google.gson.internal.bind.util.ISO8601Utils
+import java.text.ParsePosition
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -31,4 +34,9 @@ fun Calendar.setDate(year: Int, month: Int, dayOfMonth: Int): Calendar {
     this[Calendar.MONTH] = month
     this[Calendar.DAY_OF_MONTH] = dayOfMonth
     return this
+}
+
+
+fun String.iso8601(): Long {
+    return ISO8601Utils.parse(this, ParsePosition(0)).time
 }

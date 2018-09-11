@@ -1,11 +1,15 @@
 package com.r0adkll.deckbuilder.util.extensions
 
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.support.v4.util.PatternsCompat
 import android.text.Html
 import android.text.Spanned
 import android.text.TextUtils
+import android.util.Base64
+import timber.log.Timber
 
 
 fun String.fromHtml(): Spanned {
@@ -33,6 +37,17 @@ fun String.rawFromHtml(): String {
     val chars = CharArray(documentSpan.length)
     TextUtils.getChars(documentSpan, 0, documentSpan.length, chars, 0)
     return String(chars)
+}
+
+
+fun String.toBitmap(): Bitmap? {
+    val bytes = Base64.decode(this, Base64.DEFAULT)
+    try {
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    } catch (e: OutOfMemoryError) {
+        Timber.e(e, "Error decoding image, no memory")
+    }
+    return null
 }
 
 

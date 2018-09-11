@@ -25,7 +25,7 @@ class AppPreferences @Inject constructor(
         const val KEY_PLAYER_ID = "pref_player_id"
         const val KEY_PLAYER_AGE_DIVISION = "pref_player_age_division"
         const val KEY_PLAYER_DOB = "pref_player_dob"
-        const val KEY_SET_LATEST = "pref_set_latest_sm7"
+        const val KEY_PREVIEW_VERSION = "pref_last_preview_version"
 
         const val KEY_LAST_VERSION = "pref_last_version"
         const val KEY_DEVICE_ID = "pref_local_offline_device_id"
@@ -49,7 +49,7 @@ class AppPreferences @Inject constructor(
     val playerDOB by ReactiveDatePreference(KEY_PLAYER_DOB)
     val playerAgeDivision by ReactiveEnumPreference(KEY_PLAYER_AGE_DIVISION, AgeDivision.MASTERS)
 
-    val previewNewExpansion by ReactiveBooleanPreference(KEY_SET_LATEST, true)
+    val previewVersion by ReactiveIntPreference(KEY_PREVIEW_VERSION)
 
     fun clear() {
         sharedPreferences.edit()

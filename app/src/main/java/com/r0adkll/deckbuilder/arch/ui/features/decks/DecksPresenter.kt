@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
@@ -9,6 +10,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State.*
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
+import com.r0adkll.deckbuilder.util.extensions.iso8601
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
@@ -20,6 +22,7 @@ class DecksPresenter @Inject constructor(
         val ui: DecksUi,
         val intentions: DecksUi.Intentions,
         val repository: DeckRepository,
+        val remote: Remote,
         val preferences: AppPreferences
 ) : Presenter() {
 
@@ -39,9 +42,18 @@ class DecksPresenter @Inject constructor(
                             .onErrorReturn(handleUnknownError)
                 }
 
-        val showPreview = preferences.previewNewExpansion
+        val showPreview = preferences.previewVersion
                 .asObservable()
-                .map { Change.ShowPreview(it) as Change }
+                .map { version ->
+                    val preview = remote.expansionPreview
+                    if (preview != null && // If preview exists
+                            preview.version > version && // If we haven't dismissed this version
+                            preview.expiresAt.iso8601() > System.currentTimeMillis()) { // If the preview hasn't expired
+                        Change.ShowPreview(preview)
+                    } else {
+                        Change.HidePreview
+                    }
+                }
 
         val merged = loadDecks.mergeWith(deleteDecks)
                 .mergeWith(showPreview)
@@ -63,8 +75,10 @@ class DecksPresenter @Inject constructor(
                 })
 
         disposables += intentions.dismissPreview()
-                .subscribe {
-                    preferences.previewNewExpansion.set(false)
+                .subscribe { _ ->
+                    remote.expansionPreview?.let {
+                        preferences.previewVersion.set(it.version)
+                    }
                 }
     }
 

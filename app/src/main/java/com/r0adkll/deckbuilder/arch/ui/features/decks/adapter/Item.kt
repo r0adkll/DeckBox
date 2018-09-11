@@ -2,16 +2,26 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 
 
 sealed class Item : RecyclerItem{
 
-    object Preview : Item() {
+    data class Preview(val spec: ExpansionPreview) : Item() {
 
-        override fun isItemSame(new: RecyclerItem): Boolean = new == Preview
-        override fun isContentSame(new: RecyclerItem): Boolean = new == Preview
+        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+            is Preview -> new.spec.version == spec.version
+            else -> false
+        }
+
+
+        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+            is Preview -> new.spec == spec
+            else -> false
+        }
+
 
         override val layoutId: Int = R.layout.item_set_preview
     }

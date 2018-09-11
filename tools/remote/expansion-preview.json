@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "expiresAt": "2018-10-01T12:00Z",
+  "code": "sm75",
+  "preview": {
+    "logoUrl": "https://images.pokemontcg.io/sm75/logo.png",
+    "title": "Dragon Majesty is finally here!",
+    "description": "Over 70 cards! \n20+ Dragon-type Pokémon\n6 Pokémon GX \n2 Prism Star cards \n6 full-art cards",
+    "textColor": "#000000",
+    "background": [
+      {
+        "type": "color",
+        "data": "#E9BB3F"
+      },
+      {
+        "type": "tile",
+        "data": "iVBORw0KGgoAAAANSUhEUgAAADUAAAAXCAMAAACcXPd/AAAAeFBMVEXtmiP6zFHwpijojCT5uB38x0Turzb2sjL2wUf3vjT1sSL3kx7ffyb81Fb/65P/+sT0uD//znf/2mP/34bUjzX/96rumCLspUvmnTDznSL8v2brkyTgnzv2tFb/9aL6yEz//d7/4IH5tkH///fCfi75oB/hgyb/+reavzFxAAAAKHRSTlMmJiYlJiYmJiYmJiUmJiYlJSYmJSUmJCUlKSYpJSYlKSYoJyYmJSkpPZeDIwAAAthJREFUOMtF1Nlu6yAQgOEBzGpsY7CD9z3J+7/hGUil04tUnximlfIL6MTwer3Yu2m20D0x4VWGYwvLswz5qD2aen26JcPhXNtBt4/jPH/G713v8yMz5vP+evoIM86o/f6e19PJjPE4zp1BV1AKYKG/vRkekcBYuOtCPINBMUvuRovnb44eR2UWvGWklFQ2hzZLZzJojStcN6QjQf1d/wc/mkIvEMdCc0JUODWJUfzQ1kq5GH8gdaVVjKbgnChee71HmC5URQDwI05rGqxEqUkV18kUCMckfqyTTFBAeYW32jbRMSAe4g+KMeXF0LYrggBzXrGpnYwmRFhRkXmFcE6GE5rm7DvULZ4JJjy3ZVvjDtxHq4pZUoe1IApw+fBxEHqkBlFxa0vS17gSKMG58uq3VmoKylNbvusEAQ6Xz29w3z44QzlhFsp339eroaoaEGXAHZLKSlhWlh6/XZwjytqxhHePFJrj3BsHmz7EDBRp0jWOlxBXgtCaMcBb5Xn0dcReAAA3Hs22/gEHcYcQP717RJeP8BZLt9yzCMAfdmFz5OkERWCbx3bS5YeyPvpzeBLmF1h/95V4FoNkVh6Nl90iM6A5Ti6EyEiV8aHLtxj+LQwmZ5aiU3dTiO4P9Li5cdGYBNhuj8lRxPgCdzbeqGUopFZK+iYgFlMk8KbH36tJR05vjdaxo4jdgbsIJ2tcTQ5GEgzvD0RyjDCnhHJXpUjMbe4Eho9MAbZXGhQWQxBrSolXioHybsWUfmEpr+KUduyIGQNkbWhNCiaHNYWUEqEpQHvVIS0UOSwIYTLpP3xdXlvGt3oq+C9AK+uUo8ph5TYl4heW33DHLkDs3KbMMEdsLgdYtpiBloBhIXjOEUQOS/ZbcMUAfP988LHYv/g4FHrHR2OcL8RaFLtEjGP/xaSLXae58fz27ViAGzp8lMr09kyLW7oX6r1hm4twGdjmFiKCJUwN9r38A5SfRG+FmoNCAAAAAElFTkSuQmCC"
+      }
+    ],
+    "foreground": {
+      "type": "svg",
+      "data": "<svg width=\"600\" height=\"179\" viewBox=\"0 0 329 98\" xmlns=\"http://www.w3.org/2000/svg\"><defs><linearGradient x1=\"50%\" y1=\"96.288%\" x2=\"50%\" y2=\"0%\" id=\"a\"><stop stop-color=\"#014A34\" offset=\"0%\"/><stop stop-color=\"#0D2220\" offset=\"100%\"/></linearGradient><linearGradient x1=\"50%\" y1=\"100%\" x2=\"50%\" y2=\"0%\" id=\"b\"><stop stop-color=\"#FAD961\" offset=\"0%\"/><stop stop-color=\"#F76B1C\" offset=\"100%\"/></linearGradient></defs><g fill=\"none\" fill-rule=\"evenodd\"><path d=\"M-213 .246h756v16.432L164.922 97.44-213 16.679z\" fill=\"#000\" fill-rule=\"nonzero\"/><path d=\"M-213 .246h756v16.432L164.922 97.44-213 16.679z\" fill=\"#0D2220\"/><path d=\"M-213 .246h756v6L164.922 86.902-213 6.246z\" fill=\"#000\" fill-rule=\"nonzero\"/><path d=\"M0 .246h756v6L377.922 86.902 0 6.246z\" fill=\"url(#a)\" transform=\"translate(-213)\"/><path stroke=\"url(#b)\" stroke-width=\"2\" d=\"M0 2.634l377.53 81.659L756 2.634\" transform=\"translate(-213)\"/></g></svg>"
+    }
+  }
+}
