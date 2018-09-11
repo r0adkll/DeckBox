@@ -13,6 +13,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
@@ -73,6 +74,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             override fun onItemClick(v: View, item: Item, position: Int) {
                 if (item is Item.DeckItem) {
                     Analytics.event(Event.SelectContent.Deck(item.deck.id))
+
+                    // Update shortcuts
+                    Shortcuts.addDeckShortcut(v.context, item.deck)
 
                     // Generate a new session and pass to builder activity
                     disposables += editor.createSession(item.deck)

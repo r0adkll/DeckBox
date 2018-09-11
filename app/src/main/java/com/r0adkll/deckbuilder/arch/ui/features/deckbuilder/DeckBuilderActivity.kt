@@ -618,7 +618,7 @@ class DeckBuilderActivity : BaseActivity(),
         private const val EXTRA_SESSION_ID = "DeckBuilderActivity.SessionId"
 
 
-        fun createIntent(context: Context): Intent = Intent(context, DeckBuilderActivity::class.java)
+        private fun createIntent(context: Context): Intent = Intent(context, DeckBuilderActivity::class.java)
 
 
         fun createIntent(context: Context, sessionId: Long, isNew: Boolean = false): Intent {

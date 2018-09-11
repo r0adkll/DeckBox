@@ -209,4 +209,6 @@
     <string name="export_column_name_title">NAME</string>
     <string name="export_column_set_title">SET</string>
     <string name="export_column_collection_number_title">#</string>
+    <string name="shortcut_create_deck_short_label">New Deck</string>
+    <string name="shortcut_create_deck_long_label">Create new deck</string>
 </resources>

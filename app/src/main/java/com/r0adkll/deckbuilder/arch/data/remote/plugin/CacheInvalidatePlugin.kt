@@ -20,18 +20,22 @@ class CacheInvalidatePlugin @Inject constructor(
         remote.expansionVersion?.let { (versionCode, expansionCode) ->
             Timber.d("Checking Expansion Cache (version: $versionCode, expansion: $expansionCode, prefVersion: ${preferences.expansionsVersion})")
 
-            val invalidCache = expansionDataSource.getExpansions(ExpansionCache.Source.LOCAL)
-                    .blockingFirst().none { it.code == expansionCode }
+            try {
+                val invalidCache = expansionDataSource.getExpansions(ExpansionCache.Source.LOCAL)
+                        .blockingFirst().none { it.code == expansionCode }
 
-            if (versionCode > preferences.expansionsVersion || invalidCache) {
-                Timber.i("Expansion Cache Invalidated, Refreshing from server (version: $versionCode, expansion: $expansionCode)")
-                expansionDataSource.refreshExpansions()
-                        .subscribe({
-                            Timber.d("Expansions refreshed, updating version(${preferences.expansionsVersion} > $versionCode)")
-                            preferences.expansionsVersion = versionCode
-                        }, {
-                            Timber.e(it, "Unable to refresh expansions, keeping old cache")
-                        })
+                if (versionCode > preferences.expansionsVersion || invalidCache) {
+                    Timber.i("Expansion Cache Invalidated, Refreshing from server (version: $versionCode, expansion: $expansionCode)")
+                    expansionDataSource.refreshExpansions()
+                            .subscribe({
+                                Timber.d("Expansions refreshed, updating version(${preferences.expansionsVersion} > $versionCode)")
+                                preferences.expansionsVersion = versionCode
+                            }, {
+                                Timber.e(it, "Unable to refresh expansions, keeping old cache")
+                            })
+                }
+            } catch (e: NoSuchElementException) {
+                Timber.e("Unable to verify local expansions")
             }
         }
     }
