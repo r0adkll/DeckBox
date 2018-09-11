@@ -12,6 +12,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
@@ -51,7 +52,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var preferences: AppPreferences
     @Inject lateinit var editor: EditRepository
 
-    private val viewPreview: Relay<Unit> = PublishRelay.create()
+    private val viewPreview: Relay<ExpansionPreview> = PublishRelay.create()
     private val dismissPreview: Relay<Unit> = PublishRelay.create()
     private val shareClicks: Relay<Deck> = PublishRelay.create()
     private val duplicateClicks: Relay<Deck> = PublishRelay.create()
@@ -101,7 +102,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 override fun getSpanSize(position: Int): Int {
                     val item = adapter.items[position]
                     return when(item) {
-                        Item.Preview -> 2
+                        is Item.Preview -> 2
                         else -> 1
                     }
                 }
@@ -153,8 +154,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 }
 
         disposables += viewPreview
-                .subscribe {
-                    startActivity(SetBrowserActivity.createIntent(activity!!, "sm7"))
+                .subscribe { preview ->
+                    startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
                 }
 
         renderer.start()

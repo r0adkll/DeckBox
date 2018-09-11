@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.expansions.model
+package com.r0adkll.deckbuilder.arch.data.remote.model
 
 
 
