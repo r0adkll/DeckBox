@@ -1,1 +1,6 @@
-• Fixed Tournament PDF exporter to allow for longer card lists without cutting off the page
+• Updates for Dragon Majesty
+• Added App Shortcuts (7.1+)
+• Improved expansion cache invalidation when new expansions get updated
+• Added Adaptive App Icon
+• Fixed preview layout on phones
+• Adjusted the header coloring and pattern on some expansion set browsers
