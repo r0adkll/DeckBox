@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder
 
 import android.app.Application
 import com.bumptech.glide.request.target.ViewTarget
+import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.r0adkll.deckbuilder.internal.AppDelegate
@@ -54,6 +55,7 @@ class DeckApp : Application() {
 
 
     fun installFirestore() {
+        FirebaseApp.initializeApp(this)
         val firestore = FirebaseFirestore.getInstance()
         val settings = FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
