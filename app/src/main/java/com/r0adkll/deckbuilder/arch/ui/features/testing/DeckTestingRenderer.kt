@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
 import timber.log.Timber
+import kotlin.math.max
 
 
 class DeckTestingRenderer(
@@ -24,7 +25,9 @@ class DeckTestingRenderer(
                         val testResults = ArrayList<TestResult>()
 
                         val cumulativeResultCount = result.startingHand.values.sum().toFloat()
-                        val maxPercentage = ((result.startingHand.values.max()?.toFloat() ?: 1f) / cumulativeResultCount) + 0.1f
+                        val maxHandPercentage = ((result.startingHand.values.max()?.toFloat() ?: 1f) / cumulativeResultCount) + 0.1f
+                        val maxMulliganPercentage = result.mulligans.toFloat() / result.count.toFloat()
+                        val maxPercentage = max(maxHandPercentage, maxMulliganPercentage)
 
                         if (result.mulligans > 0) {
                             val percentage = result.mulligans.toFloat() / result.count.toFloat()

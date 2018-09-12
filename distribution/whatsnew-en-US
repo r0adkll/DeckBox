@@ -1,3 +1,6 @@
+• Hotfix for shortcuts crash
+• Fixed deck testing graph from going offscreen
+-----------------------------
 • Updates for Dragon Majesty
 • Added App Shortcuts (7.1+)
 • Improved expansion cache invalidation when new expansions get updated

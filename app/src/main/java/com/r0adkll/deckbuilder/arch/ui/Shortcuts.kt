@@ -67,9 +67,12 @@ object Shortcuts {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             val shortcutManager = context.shortcutManager()
 
+            val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(10) else "Deck"
+            val longLabel = if(deck.name.isNotEmpty()) deck.name.take(25) else "Deck with no name"
+
             val shortcut = ShortcutInfo.Builder(context, deck.id)
-                    .setShortLabel(deck.name.take(10))
-                    .setLongLabel(deck.name.take(25))
+                    .setShortLabel(shortLabel)
+                    .setLongLabel(longLabel)
                     .setIcon(Icon.createWithResource(context, R.drawable.ic_cards_variant))
                     .setIntent(ShortcutActivity.createOpenDeckIntent(context, deck.id))
                     .setRank(1)
@@ -94,6 +97,24 @@ object Shortcuts {
                 shortcutManager.addDynamicShortcuts(listOf(shortcut))
                 generateDeckImage(context, deck)
             }
+        }
+    }
+
+
+    fun balanceShortcuts(context: Context, decks: List<Deck>) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            val shortcutManager = context.shortcutManager()
+
+            // Find any shortcuts that don't exist as decks
+            val deadShortcuts = shortcutManager.dynamicShortcuts
+                    .filter { it.id != CREATE_DECK_ID } // We don't want to delete the create deck sc
+                    .filter { shortcut -> decks.none { it.id == shortcut.id } }
+                    .map { it.id }
+            shortcutManager.removeDynamicShortcuts(deadShortcuts)
+
+            // Update existing deck shortcuts
+            val aliveShortcuts = decks.filter { deck -> shortcutManager.dynamicShortcuts.any { it.id == deck.id} }
+            aliveShortcuts.forEach { addDeckShortcut(context, it) }
         }
     }
 
