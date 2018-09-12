@@ -86,17 +86,20 @@ class PokemonViewHolder(
 
     override fun setup() {
         super.setup()
-
-        (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val item = adapter.items[position]
-                return when(item) {
-                    is PokemonItem.Evolution -> spanSize
-                    else -> 1
+        (layoutManager as GridLayoutManager).apply {
+            spanCount = spanSize
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val item = adapter.items[position]
+                    return when(item) {
+                        is PokemonItem.Evolution -> spanSize
+                        else -> 1
+                    }
                 }
             }
         }
     }
+
 
     override fun bind(cards: List<StackedPokemonCard>) {
         val evolutions = EvolutionChain.build(cards)
@@ -147,6 +150,11 @@ class TrainerEnergyViewHolder(
 
     init {
         recycler.setHasFixedSize(true)
+    }
+
+    override fun setup() {
+        super.setup()
+        (layoutManager as GridLayoutManager).spanCount = spanSize
     }
 
     override fun bind(cards: List<StackedPokemonCard>) {

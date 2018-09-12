@@ -6,6 +6,7 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.DataModule
 import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
+import com.r0adkll.deckbuilder.arch.ui.ShortcutActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserComponent
 import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailComponent
@@ -43,6 +44,7 @@ interface AppComponent {
     fun inject(activity: SetupActivity)
     fun inject(activity: DeckExportActivity)
     fun inject(activity: RouteActivity)
+    fun inject(activity: ShortcutActivity)
     fun inject(activity: OnboardingActivity)
     fun inject(fragment: SettingsActivity.SettingsFragment)
     fun inject(service: CacheService)
@@ -58,4 +60,5 @@ interface AppComponent {
 
     fun searchComponentBuilder(): SearchComponent.Builder
     fun deckBuilderComponentBuilder(): DeckBuilderComponent.Builder
+
 }

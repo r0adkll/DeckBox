@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,10 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
@@ -49,7 +52,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var preferences: AppPreferences
     @Inject lateinit var editor: EditRepository
 
-    private val viewPreview: Relay<Unit> = PublishRelay.create()
+    private val viewPreview: Relay<ExpansionPreview> = PublishRelay.create()
     private val dismissPreview: Relay<Unit> = PublishRelay.create()
     private val shareClicks: Relay<Deck> = PublishRelay.create()
     private val duplicateClicks: Relay<Deck> = PublishRelay.create()
@@ -74,6 +77,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 if (item is Item.DeckItem) {
                     Analytics.event(Event.SelectContent.Deck(item.deck.id))
 
+                    // Update shortcuts
+                    Shortcuts.addDeckShortcut(v.context, item.deck)
+
                     // Generate a new session and pass to builder activity
                     disposables += editor.createSession(item.deck)
                             .subscribeOn(AndroidSchedulers.mainThread())
@@ -86,18 +92,23 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         adapter.setEmptyView(empty_view)
 
-//        val layoutManager = GridLayoutManager(activity, if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2)
-//        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-//            override fun getSpanSize(position: Int): Int {
-//                val item = adapter.items[position]
-//                return when(item) {
-//                    Item.Preview -> 2
-//                    else -> 1
-//                }
-//            }
-//        }
 
-        val layoutManager = StaggeredGridLayoutManager(if (smallestWidth(ScreenUtils.Config.TABLET_10)) 6 else 2, StaggeredGridLayoutManager.VERTICAL)
+
+        val layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
+            StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) as RecyclerView.LayoutManager
+        } else {
+            val lm = GridLayoutManager(activity, 2)
+            lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val item = adapter.items[position]
+                    return when(item) {
+                        is Item.Preview -> 2
+                        else -> 1
+                    }
+                }
+            }
+            lm
+        }
 
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
@@ -143,8 +154,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 }
 
         disposables += viewPreview
-                .subscribe {
-                    startActivity(SetBrowserActivity.createIntent(activity!!, "sm7"))
+                .subscribe { preview ->
+                    startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
                 }
 
         renderer.start()

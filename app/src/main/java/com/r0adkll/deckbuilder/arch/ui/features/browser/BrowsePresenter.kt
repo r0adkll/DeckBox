@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 class BrowsePresenter @Inject constructor(
         val ui: BrowseUi,
+        val intentions: BrowseUi.Intentions,
         val repository: CardRepository
 ) : Presenter() {
 
@@ -24,7 +25,18 @@ class BrowsePresenter @Inject constructor(
                 .startWith(Change.IsLoading as Change)
                 .onErrorReturn(handleUnknownError)
 
-        val merged = loadExpansions.doOnNext { Timber.d(it.logText) }
+        val refreshExpansions = intentions.refreshExpansions()
+                .flatMap { _ ->
+                    repository.refreshExpansions()
+                            .map { it.reversed() }
+                            .map { Change.ExpansionsLoaded(it) as Change }
+                            .startWith(Change.IsLoading as Change)
+                            .onErrorReturn(handleUnknownError)
+                }
+
+        val merged = loadExpansions
+                .mergeWith(refreshExpansions)
+                .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
                 .logState()

@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 
@@ -16,7 +17,7 @@ class DecksRecyclerAdapter(
         private val deleteClicks: Relay<Deck>,
         private val testClicks: Relay<Deck>,
         private val dismissPreview: Relay<Unit>,
-        private val viewPreview: Relay<Unit>
+        private val viewPreview: Relay<ExpansionPreview>
 ) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {

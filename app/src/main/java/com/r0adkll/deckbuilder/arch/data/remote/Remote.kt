@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data
+package com.r0adkll.deckbuilder.arch.data.remote
 
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -8,7 +8,10 @@ import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchProxies
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionVersion
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
+import com.r0adkll.deckbuilder.arch.data.remote.model.SearchProxies
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.properties.ReadOnlyProperty
@@ -19,22 +22,37 @@ import kotlin.reflect.KProperty
 /**
  * Wrapper around Firebase Remote Configuration SDK
  */
-class Remote @Inject constructor() {
+class Remote @Inject constructor(
+        val plugins: Set<@JvmSuppressWildcards RemotePlugin>
+) {
 
     /**
-     * The the set code for the latest expansion in the API. This field is used to invalidate the
-     * set/expansion cache in the event of when new set's get added without having to ship an app
-     * update or poll the API.
+     * This is the versioning string for the latest expansion set offered by the api. It's format as
+     * follows: <version_code>.<expansion_code> e.g. 1.sm7
+     *
+     * - version_code represents the version of the data that may change unrelated to new expansions (i.e. rotation legality changes)
+     * - expansion_code represents the latest available expansion in the set (i.e. sm7 - Celestial Storm) which can indicate if a new expansion was added
      */
-    val latestExpansion by RemoteString(KEY_LATEST_EXPANSION)
+    val expansionVersion by RemoteObject(KEY_EXPANSION_VERSION, ExpansionVersion::class)
 
 
     /**
-     * This is a list of search proxy/aliases that better improve the search expierence for the user
+     * This is the spec for an expansion preview card that appears on the deck list screen to tell
+     * users about a new expansion that has been added and other information about it. It also attempts
+     * to direct them to browse the expansion
+     */
+    val expansionPreview by RemoteObject(KEY_EXPANSION_PREVIEW, ExpansionPreview::class)
+
+
+    /**
+     * This is a list of search proxy/aliases that better improve the search experience for the user
      */
     val searchProxies by RemoteObject(KEY_SEARCH_PROXIES, SearchProxies::class)
 
 
+    /**
+     * Property to access the Firebase Remote Config instance
+     */
     private val remote: FirebaseRemoteConfig
         get() = FirebaseRemoteConfig.getInstance()
 
@@ -44,6 +62,7 @@ class Remote @Inject constructor() {
      * remote configuration settings if needed
      */
     fun check() {
+        Timber.d("Checking remote config values...")
 
         // Configure
         val settings = FirebaseRemoteConfigSettings.Builder()
@@ -56,9 +75,13 @@ class Remote @Inject constructor() {
         // Fetch
         val cacheExpiration = if (remote.info.configSettings.isDeveloperModeEnabled) 0L else CACHE_EXPIRATION
         remote.fetch(cacheExpiration)
-                .addOnCompleteListener {
+                .addOnCompleteListener { _ ->
                     Timber.i("Remote Config values fetched. Activating!")
+                    Timber.i("> Expansion Version: $expansionVersion")
+                    Timber.i("> Search Proxies: $searchProxies")
+                    Timber.i("> Preview: $expansionPreview")
                     remote.activateFetched()
+                    plugins.forEach { it.onFetchActivated(this@Remote) }
                 }
     }
 
@@ -95,7 +118,8 @@ class Remote @Inject constructor() {
 
 
     companion object {
-        private const val KEY_LATEST_EXPANSION = "latest_expansion"
+        private const val KEY_EXPANSION_VERSION = "expansion_version"
+        private const val KEY_EXPANSION_PREVIEW = "expansion_preview"
         private const val KEY_SEARCH_PROXIES = "search_proxies"
 
         private const val CACHE_EXPIRATION = 3600L

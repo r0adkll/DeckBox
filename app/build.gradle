@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-def VERSION_NAME = "1.7.1"
+def VERSION_NAME = "1.7.2"
 
 
 ext.gitVersioner = [
@@ -102,6 +102,7 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
+    implementation 'com.caverock:androidsvg-aar:1.3'
 
     implementation "nz.bradcampbell:paperparcel:$paperparcel_version"
     implementation "nz.bradcampbell:paperparcel-kotlin:$paperparcel_version"

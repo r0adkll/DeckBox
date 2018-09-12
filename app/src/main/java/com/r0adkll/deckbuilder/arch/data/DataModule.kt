@@ -10,10 +10,10 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingCardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.CombinedSearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search.SearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
@@ -29,6 +29,8 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.PrismStarRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
+import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
+import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
@@ -44,15 +46,14 @@ import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.ElementsIntoSet
+import dagger.multibindings.IntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.requery.Persistable
 import io.requery.android.sqlite.DatabaseSource
 import io.requery.reactivex.KotlinReactiveEntityStore
-import io.requery.sql.KotlinConfiguration
 import io.requery.sql.KotlinEntityDataStore
-import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import java.util.concurrent.Executors
@@ -60,6 +61,10 @@ import java.util.concurrent.Executors
 
 @Module
 class DataModule {
+
+    @Provides @AppScope @IntoSet
+    fun provideCacheInvalidatePlugin(plugin: CacheInvalidatePlugin): RemotePlugin = plugin
+
 
     @Provides @AppScope
     fun provideSharedPreferences(context: Context): SharedPreferences {
@@ -132,7 +137,7 @@ class DataModule {
      */
 
     @Provides @AppScope
-    fun provideCardDataSource(dataSource: CachingCardDataSource): CardDataSource = dataSource
+    fun provideExpansionDataSource(dataSource: CachingExpansionDataSource): ExpansionDataSource = dataSource
 
 
     @Provides @AppScope

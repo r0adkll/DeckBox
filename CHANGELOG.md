@@ -1,3 +1,13 @@
+# 1.7.2
+
+* [#35](https://github.com/r0adkll/DeckBox/issues/35)  - Expansion preview is now based on RemoteConfig
+* [#33](https://github.com/r0adkll/DeckBox/issues/33) - App Shortcuts (7.1+) 
+* [#31](https://github.com/r0adkll/DeckBox/issues/31) - Improved expansion invalidation based on RemoteConfig 
+* Added Adaptive App Icon
+* Fixed preview layout on phones
+* Adjusted the header coloring and pattern on some expansion set browsers
+* Bug fixes
+
 # 1.7.1
 * [#25](https://github.com/r0adkll/DeckBox/issues/25) - Improved the layout of the tournament PDF exporter to allow for more cards without cutting out the page
 

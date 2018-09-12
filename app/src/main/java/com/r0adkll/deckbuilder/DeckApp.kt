@@ -3,6 +3,9 @@ package com.r0adkll.deckbuilder
 
 import android.app.Application
 import com.bumptech.glide.request.target.ViewTarget
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.r0adkll.deckbuilder.internal.AppDelegate
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.LoggingAnalyticInterface
@@ -29,6 +32,7 @@ class DeckApp : Application() {
         installDagger().inject(this)
         installAnalytics()
         installDelegates()
+        installFirestore()
 
         // Setup Glide to allow for custom tag id's so we can set tags to images for our own purpose
         ViewTarget.setTagId(R.id.glide_tag_id)
@@ -47,6 +51,16 @@ class DeckApp : Application() {
 
     fun installLeakCanary() {
         refWatcher = LeakCanary.install(this)
+    }
+
+
+    fun installFirestore() {
+        FirebaseApp.initializeApp(this)
+        val firestore = FirebaseFirestore.getInstance()
+        val settings = FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build()
+        firestore.firestoreSettings = settings
     }
 
 
