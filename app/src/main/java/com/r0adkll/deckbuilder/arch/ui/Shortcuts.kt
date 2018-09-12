@@ -115,15 +115,6 @@ object Shortcuts {
             // Update existing deck shortcuts
             val aliveShortcuts = decks.filter { deck -> shortcutManager.dynamicShortcuts.any { it.id == deck.id} }
             aliveShortcuts.forEach { addDeckShortcut(context, it) }
-
-            // If we have room to add shortcuts, show last updated decks
-            val count = shortcutManager.maxShortcutCountPerActivity - (shortcutManager.dynamicShortcuts.size + shortcutManager.manifestShortcuts.size)
-            if (count > 0 && decks.size >= count) {
-                (0 until count).forEach {
-                    val deck = decks[it]
-                    addDeckShortcut(context, deck)
-                }
-            }
         }
     }
 
