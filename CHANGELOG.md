@@ -1,5 +1,6 @@
 # 1.7.3
 * Hotfix for Shortcuts crashing issue
+* Fixed deck testing overall graph from rendering the mulligan bar offscreen
 
 # 1.7.2
 
