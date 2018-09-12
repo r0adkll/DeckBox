@@ -6,7 +6,7 @@
 
     <!-- Foreground -->
     <item>
-        <bitmap android:src="@mipmap/ic_launcher"
+        <bitmap android:src="@mipmap/ic_launcher_regular"
             android:gravity="center"/>
     </item>
 
