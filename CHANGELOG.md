@@ -1,3 +1,6 @@
+# 1.7.3
+* Hotfix for Shortcuts crashing issue
+
 # 1.7.2
 
 * [#35](https://github.com/r0adkll/DeckBox/issues/35)  - Expansion preview is now based on RemoteConfig
