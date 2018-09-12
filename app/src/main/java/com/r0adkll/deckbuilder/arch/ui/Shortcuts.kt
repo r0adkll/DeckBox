@@ -101,6 +101,33 @@ object Shortcuts {
     }
 
 
+    fun balanceShortcuts(context: Context, decks: List<Deck>) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            val shortcutManager = context.shortcutManager()
+
+            // Find any shortcuts that don't exist as decks
+            val deadShortcuts = shortcutManager.dynamicShortcuts
+                    .filter { it.id != CREATE_DECK_ID } // We don't want to delete the create deck sc
+                    .filter { shortcut -> decks.none { it.id == shortcut.id } }
+                    .map { it.id }
+            shortcutManager.removeDynamicShortcuts(deadShortcuts)
+
+            // Update existing deck shortcuts
+            val aliveShortcuts = decks.filter { deck -> shortcutManager.dynamicShortcuts.any { it.id == deck.id} }
+            aliveShortcuts.forEach { addDeckShortcut(context, it) }
+
+            // If we have room to add shortcuts, show last updated decks
+            val count = shortcutManager.maxShortcutCountPerActivity - (shortcutManager.dynamicShortcuts.size + shortcutManager.manifestShortcuts.size)
+            if (count > 0 && decks.size >= count) {
+                (0 until count).forEach {
+                    val deck = decks[it]
+                    addDeckShortcut(context, deck)
+                }
+            }
+        }
+    }
+
+
     /**
      * Clear all shortcuts out
      */

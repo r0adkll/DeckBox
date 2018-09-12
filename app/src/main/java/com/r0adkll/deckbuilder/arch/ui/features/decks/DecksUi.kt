@@ -28,6 +28,7 @@ interface DecksUi : StateRenderer<DecksUi.State> {
     interface Actions : BaseActions {
 
         fun showItems(items: List<Item>)
+        fun balanceShortcuts(decks: List<Deck>)
     }
 
 

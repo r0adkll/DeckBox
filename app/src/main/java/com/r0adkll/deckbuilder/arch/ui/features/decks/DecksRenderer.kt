@@ -35,6 +35,12 @@ class DecksRenderer(
                 .subscribe { actions.showItems(it) }
 
         disposables += state
+                .map { it.decks }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.balanceShortcuts(it) }
+
+        disposables += state
                 .map { it.isLoading }
                 .distinctUntilChanged()
                 .addToLifecycle()

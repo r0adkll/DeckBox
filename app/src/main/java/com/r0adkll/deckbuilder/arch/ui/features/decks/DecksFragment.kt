@@ -214,6 +214,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         adapter.showItems(items)
     }
 
+    override fun balanceShortcuts(decks: List<Deck>) {
+        Shortcuts.balanceShortcuts(activity!!, decks)
+    }
 
     companion object {
 
