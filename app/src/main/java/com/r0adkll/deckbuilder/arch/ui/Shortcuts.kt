@@ -196,9 +196,12 @@ object Shortcuts {
         val shortcutManager = context.shortcutManager()
         val shortcut = shortcutManager.dynamicShortcuts.find { it.id == deck.id }
         if (shortcut != null) {
+            val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(10) else "Deck"
+            val longLabel = if(deck.name.isNotEmpty()) deck.name.take(25) else "Deck with no name"
+
             val updatedShortcut = ShortcutInfo.Builder(context, deck.id)
-                    .setShortLabel(deck.name.take(10))
-                    .setLongLabel(deck.name.take(25))
+                    .setShortLabel(shortLabel)
+                    .setLongLabel(longLabel)
                     .setIcon(Icon.createWithBitmap(bitmap))
                     .setIntent(ShortcutActivity.createOpenDeckIntent(context, deck.id))
                     .setRank(1)
