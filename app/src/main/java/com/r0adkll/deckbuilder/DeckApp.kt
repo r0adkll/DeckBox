@@ -15,6 +15,11 @@ import com.r0adkll.deckbuilder.internal.di.DaggerAppComponent
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import javax.inject.Inject
+import io.reactivex.exceptions.UndeliverableException
+import io.reactivex.plugins.RxJavaPlugins
+import timber.log.Timber
+import java.io.IOException
+import java.net.SocketException
 
 
 class DeckApp : Application() {
@@ -33,34 +38,61 @@ class DeckApp : Application() {
         installAnalytics()
         installDelegates()
         installFirestore()
+        installRxErrorHandler()
 
         // Setup Glide to allow for custom tag id's so we can set tags to images for our own purpose
         ViewTarget.setTagId(R.id.glide_tag_id)
     }
 
 
-    fun installAnalytics() {
+    private fun installAnalytics() {
         Analytics.add(LoggingAnalyticInterface())
     }
 
 
-    fun installDelegates() {
+    private fun installDelegates() {
         delegates.forEach { it.onCreate(this) }
     }
 
 
-    fun installLeakCanary() {
+    private fun installLeakCanary() {
         refWatcher = LeakCanary.install(this)
     }
 
 
-    fun installFirestore() {
+    private fun installFirestore() {
         FirebaseApp.initializeApp(this)
         val firestore = FirebaseFirestore.getInstance()
         val settings = FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
                 .build()
         firestore.firestoreSettings = settings
+    }
+
+    private fun installRxErrorHandler() {
+        RxJavaPlugins.setErrorHandler { e ->
+            var ex: Throwable? = e
+            if (e is UndeliverableException) {
+                ex = e.cause
+            }
+            if (e is IOException || e is SocketException) {
+                // fine, irrelevant network problem or API that throws on cancellation
+            }
+            if (e is InterruptedException) {
+                // fine, some blocking code was interrupted by a dispose call
+            }
+            if (e is NullPointerException || e is IllegalArgumentException) {
+                // that's likely a bug in the application
+                Thread.currentThread().uncaughtExceptionHandler
+                        .uncaughtException(Thread.currentThread(), e)
+            }
+            if (e is IllegalStateException) {
+                // that's a bug in RxJava or in a custom operator
+                Thread.currentThread().uncaughtExceptionHandler
+                        .uncaughtException(Thread.currentThread(), e)
+            }
+            Timber.w(ex, "Undeliverable exception received, not sure what to do")
+        }
     }
 
 
