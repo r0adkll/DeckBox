@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-def VERSION_NAME = "1.7.3"
+def VERSION_NAME = "1.7.4"
 
 
 ext.gitVersioner = [
@@ -150,7 +150,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
     debugImplementation "com.facebook.stetho:stetho:$stetho_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
 }
 
