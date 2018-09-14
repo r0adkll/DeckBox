@@ -1,10 +1,2 @@
-• Hotfix for shortcuts crash
-• Fixed deck testing graph from going offscreen
------------------------------
-• Updates for Dragon Majesty
-• Added App Shortcuts (7.1+)
-• Improved expansion cache invalidation when new expansions get updated
-• Added Adaptive App Icon
-• Fixed preview layout on phones
-• Adjusted the header coloring and pattern on some expansion set browsers
-• Bug Fixes
+• Fixed second Shortcuts bug that I missed causing a lot of crashes for 7.0+ devices
+• Bug fixes

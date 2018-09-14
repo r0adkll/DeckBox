@@ -1,5 +1,7 @@
 package com.r0adkll.deckbuilder.internal.analytics
 
+import com.r0adkll.deckbuilder.arch.data.remote.model.SearchProxies
+
 
 sealed class Event {
 
@@ -14,6 +16,7 @@ sealed class Event {
     }
 
     data class Search(val term: String) : Event()
+    data class SearchProxy(val proxy: SearchProxies.Proxy) : Event()
     data class Share(val type: String, val id: String = "") : Event()
 
     object TutorialBegin : Event()

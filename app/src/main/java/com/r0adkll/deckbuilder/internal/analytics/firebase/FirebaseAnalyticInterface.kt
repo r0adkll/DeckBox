@@ -46,6 +46,7 @@ class FirebaseAnalyticInterface(
         is Event.SignUp -> FirebaseAnalytics.Event.SIGN_UP
         is Event.SelectContent -> FirebaseAnalytics.Event.SELECT_CONTENT
         is Event.Search -> FirebaseAnalytics.Event.SEARCH
+        is Event.SearchProxy -> FirebaseAnalytics.Event.SEARCH
         is Event.Share -> FirebaseAnalytics.Event.SHARE
         Event.TutorialBegin -> FirebaseAnalytics.Event.TUTORIAL_BEGIN
         Event.TutorialComplete -> FirebaseAnalytics.Event.TUTORIAL_COMPLETE
@@ -57,6 +58,10 @@ class FirebaseAnalyticInterface(
         Event.Login.Anonymous -> bundle { METHOD to "anonymous" }
         Event.SignUp.Google -> bundle { METHOD to "google" }
         is Event.Search -> bundle { SEARCH_TERM to event.term }
+        is Event.SearchProxy -> bundle {
+            ITEM_ID to event.proxy.replacement
+            ITEM_NAME to event.proxy.regex
+        }
         is Event.Share -> bundle {
             CONTENT_TYPE to event.type
             ITEM_ID to event.id
