@@ -26,20 +26,20 @@ class NetworkSearchDataSource(
 ) : SearchDataSource {
 
     override fun search(type: SuperType?, query: String, filter: Filter?): Observable<List<PokemonCard>> {
-        return Observable.combineLatestDelayError(listOf(source.getExpansions(), searchNetwork(type, query, filter)), { t: Array<out Any> ->
+        return Observable.combineLatestDelayError(listOf(source.getExpansions(), searchNetwork(type, query, filter))) { t: Array<out Any> ->
             val expansions = t[0] as List<Expansion>
             val cards = t[1] as List<Card>
             cards.map { CardMapper.to(it, expansions) }
-        }).onErrorResumeNext(Observable.just(emptyList()))
+        }.onErrorResumeNext(Observable.just(emptyList()))
     }
 
 
     override fun find(ids: List<String>): Observable<List<PokemonCard>> {
-        return Observable.combineLatestDelayError(listOf(source.getExpansions(), findNetwork(ids)), { t: Array<out Any> ->
+        return Observable.combineLatestDelayError(listOf(source.getExpansions(), findNetwork(ids))) { t: Array<out Any> ->
             val expansions = t[0] as List<Expansion>
             val cards = t[1] as List<Card>
             cards.map { CardMapper.to(it, expansions) }
-        }).onErrorReturnItem(emptyList())
+        }.onErrorReturnItem(emptyList())
     }
 
 

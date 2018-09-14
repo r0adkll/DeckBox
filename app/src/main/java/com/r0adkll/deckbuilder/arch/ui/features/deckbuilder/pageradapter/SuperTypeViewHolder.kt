@@ -24,6 +24,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokem
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import io.pokemontcg.model.SubType
+import kotlin.math.min
 
 
 /**
@@ -80,6 +81,14 @@ class PokemonViewHolder(
         editCardIntentions: EditCardIntentions
 ) : SuperTypeViewHolder<PokemonBuilderRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
 
+    class PokemonSpanSizeLookup(private val lookup: (Int) -> Int) : GridLayoutManager.SpanSizeLookup() {
+
+        override fun getSpanSize(position: Int): Int {
+            return lookup.invoke(position)
+        }
+    }
+
+
     override val adapter: PokemonBuilderRecyclerAdapter = PokemonBuilderRecyclerAdapter(itemView.context, spanSize, editCardIntentions, pokemonCardClicks)
     override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
 
@@ -88,13 +97,13 @@ class PokemonViewHolder(
         super.setup()
         (layoutManager as GridLayoutManager).apply {
             spanCount = spanSize
-            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    val item = adapter.items[position]
-                    return when(item) {
-                        is PokemonItem.Evolution -> spanSize
-                        else -> 1
+            spanSizeLookup = PokemonSpanSizeLookup {
+                val item = adapter.items[it]
+                when(item) {
+                    is PokemonItem.Evolution -> {
+                        min(layoutManager.spanCount, spanSize) // We really, really want to make sure the correct span size is being returned here
                     }
+                    else -> 1
                 }
             }
         }

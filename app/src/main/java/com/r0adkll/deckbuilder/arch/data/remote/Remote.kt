@@ -79,7 +79,7 @@ class Remote @Inject constructor(
                     Timber.i("Remote Config values fetched. Activating!")
                     Timber.i("> Expansion Version: $expansionVersion")
                     Timber.i("> Search Proxies: $searchProxies")
-                    Timber.i("> Preview: $expansionPreview")
+                    Timber.i("> Preview: (version: ${expansionPreview?.version}, code: ${expansionPreview?.code})")
                     remote.activateFetched()
                     plugins.forEach { it.onFetchActivated(this@Remote) }
                 }
