@@ -206,12 +206,12 @@ class ResultsPagerAdapter(
                 1 -> R.string.empty_search_results_trainer_message
                 else -> R.string.empty_search_results_energy_message
             })
-            emptyView.setActionLabelRes(R.string.empty_search_missing_card)
-            emptyView.actionColor = emptyView.color(R.color.red_500)
-            emptyView.setOnActionClickListener {
-                Analytics.event(Event.SelectContent.Action("search_missing_card", position.toString()))
-                MissingCardsActivity.show(itemView.context)
-            }
+//            emptyView.setActionLabelRes(R.string.empty_search_missing_card)
+//            emptyView.actionColor = emptyView.color(R.color.red_500)
+//            emptyView.setOnActionClickListener {
+//                Analytics.event(Event.SelectContent.Action("search_missing_card", position.toString()))
+//                MissingCardsActivity.show(itemView.context)
+//            }
         }
 
 

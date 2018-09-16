@@ -164,12 +164,12 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     override fun showEmptyResults() {
         emptyView.setEmptyMessage(R.string.empty_search_results_category)
-        emptyView.setActionLabelRes(R.string.empty_search_missing_card)
-        emptyView.setActionColorRes(R.color.red_500)
-        emptyView.setOnActionClickListener {
-            Analytics.event(Event.SelectContent.Action("search_missing_card", "tablet"))
-            MissingCardsActivity.show(activity!!)
-        }
+//        emptyView.setActionLabelRes(R.string.empty_search_missing_card)
+//        emptyView.setActionColorRes(R.color.red_500)
+//        emptyView.setOnActionClickListener {
+//            Analytics.event(Event.SelectContent.Action("search_missing_card", "tablet"))
+//            MissingCardsActivity.show(activity!!)
+//        }
     }
 
 
