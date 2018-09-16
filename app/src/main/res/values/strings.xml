@@ -84,7 +84,7 @@
     <string name="pref_help_suggestions_title">Suggestions</string>
     <string name="pref_help_suggestions_summary">Submit any suggestions or improvements you might have</string>
     <string name="disclaimer">This application is not produced, endorsed, supported, or affiliated with Nintendo or The Pokémon Company.</string>
-    <string name="support_email_address">incoming+r0adkll/pokemon-tcg-deckbuilder@gitlab.com</string>
+    <string name="support_email_address">veedubusc+deckbox@gmail.com</string>
     <string name="developer_website_url">https://github.com/R0ADKLL</string>
     <string name="dropzone_add_message">Add Card</string>
     <string name="pref_category_account">Account</string>
@@ -146,8 +146,8 @@
     <string name="tournament_pdf_table_energy">Energy</string>
     <string name="hint_dob_default">1/11/2018</string>
 
-    <string name="set_preview_title">Celestial Storm is finally here!</string>
-    <string name="set_preview_message">Over 160 cards. \n3 Prism Star cards. \n11 Pokémon GX. \n3 Ultra Beasts. \n27 Trainer cards, plus Rainbow Energy</string>
+    <string name="set_preview_title">Dragon Majesty is finally here!</string>
+    <string name="set_preview_message">Over 70 cards! \n20+ Dragon-type Pokémon\n6 Pokémon GX \n2 Prism Star cards \n6 full-art cards</string>
 
     <string name="action_okay">Okay</string>
     <string name="missing_card_header_expansion">Expansion set</string>
@@ -209,5 +209,7 @@
     <string name="export_column_name_title">NAME</string>
     <string name="export_column_set_title">SET</string>
     <string name="export_column_collection_number_title">#</string>
+    <string name="shortcut_create_deck_short_label">New Deck</string>
+    <string name="shortcut_create_deck_long_label">Create new deck</string>
     <string name="empty_playtest_hand">Empty hand</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search
+package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter

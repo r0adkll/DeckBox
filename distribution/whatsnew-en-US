@@ -1,1 +1,2 @@
-• Fixed Tournament PDF exporter to allow for longer card lists without cutting off the page
+• Fixed second Shortcuts bug that I missed causing a lot of crashes for 7.0+ devices
+• Bug fixes

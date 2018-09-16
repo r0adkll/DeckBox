@@ -1,8 +1,8 @@
-package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search
+package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
-import com.r0adkll.deckbuilder.arch.data.Remote
+import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.util.Schedulers
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class CombinedSearchDataSource @Inject constructor(
         val api: Pokemon,
         val cache: CardCache,
-        val source: CardDataSource, // FIXME: I should probably come up with better naming/abstractions
+        val source: ExpansionDataSource, // FIXME: I should probably come up with better naming/abstractions
         val remote: Remote,
         val schedulers: Schedulers
 ) : SearchDataSource {

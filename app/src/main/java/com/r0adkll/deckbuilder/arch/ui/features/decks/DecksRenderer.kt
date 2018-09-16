@@ -17,14 +17,14 @@ class DecksRenderer(
     override fun start() {
 
         disposables += state
-                .map {
+                .map { s ->
                     val items = ArrayList<Item>()
 
-                    if (it.showPreview) {
-                        items += Item.Preview
+                    if (s.preview != null) {
+                        items += Item.Preview(s.preview)
                     }
 
-                    items += it.decks
+                    items += s.decks
                             .sortedByDescending { it.timestamp }
                             .map { Item.DeckItem(it) }
 
@@ -33,6 +33,12 @@ class DecksRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showItems(it) }
+
+        disposables += state
+                .map { it.decks }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.balanceShortcuts(it) }
 
         disposables += state
                 .map { it.isLoading }

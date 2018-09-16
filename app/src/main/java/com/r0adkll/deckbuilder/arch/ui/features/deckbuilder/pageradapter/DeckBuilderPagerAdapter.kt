@@ -34,7 +34,7 @@ class DeckBuilderPagerAdapter(
     private var energyCards: List<StackedPokemonCard> = emptyList()
 
     private val inflater = LayoutInflater.from(context)
-    private val viewHolders: Array<SuperTypeViewHolder<*>?> = Array(3, { _ -> null })
+    private val viewHolders: Array<SuperTypeViewHolder<*>?> = Array(3) { _ -> null }
 
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

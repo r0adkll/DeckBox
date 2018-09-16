@@ -5,6 +5,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.*
+import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
@@ -18,11 +19,12 @@ import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.extensions.toast
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_browse.*
 import javax.inject.Inject
 
 
-class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
+class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Intentions {
 
     override var state: BrowseUi.State = BrowseUi.State.DEFAULT
 
@@ -54,6 +56,19 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
         }
         recycler.adapter = adapter
 
+        swipeRefresh.setColorSchemeResources(
+                R.color.poketype_fire,
+                R.color.poketype_grass,
+                R.color.poketype_water,
+                R.color.poketype_electric,
+                R.color.poketype_fighting,
+                R.color.poketype_psychic,
+                R.color.poketype_steel,
+                R.color.poketype_dragon,
+                R.color.poketype_fairy,
+                R.color.poketype_dark
+        )
+
         renderer.start()
         presenter.start()
 
@@ -83,6 +98,11 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
     }
 
 
+    override fun refreshExpansions(): Observable<Unit> {
+        return swipeRefresh.refreshes()
+    }
+
+
     override fun setExpansions(expansions: List<Expansion>) {
         adapter.setExpansions(expansions)
     }
@@ -90,6 +110,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions {
 
     override fun showLoading(isLoading: Boolean) {
         emptyView.setLoading(isLoading)
+        swipeRefresh.isRefreshing = isLoading
     }
 
 

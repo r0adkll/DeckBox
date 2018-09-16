@@ -24,6 +24,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokem
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import io.pokemontcg.model.SubType
+import kotlin.math.min
 
 
 /**
@@ -80,23 +81,34 @@ class PokemonViewHolder(
         editCardIntentions: EditCardIntentions
 ) : SuperTypeViewHolder<PokemonBuilderRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
 
+    class PokemonSpanSizeLookup(private val lookup: (Int) -> Int) : GridLayoutManager.SpanSizeLookup() {
+
+        override fun getSpanSize(position: Int): Int {
+            return lookup.invoke(position)
+        }
+    }
+
+
     override val adapter: PokemonBuilderRecyclerAdapter = PokemonBuilderRecyclerAdapter(itemView.context, spanSize, editCardIntentions, pokemonCardClicks)
     override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
 
 
     override fun setup() {
         super.setup()
-
-        (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val item = adapter.items[position]
-                return when(item) {
-                    is PokemonItem.Evolution -> spanSize
+        (layoutManager as GridLayoutManager).apply {
+            spanCount = spanSize
+            spanSizeLookup = PokemonSpanSizeLookup {
+                val item = adapter.items[it]
+                when(item) {
+                    is PokemonItem.Evolution -> {
+                        min(layoutManager.spanCount, spanSize) // We really, really want to make sure the correct span size is being returned here
+                    }
                     else -> 1
                 }
             }
         }
     }
+
 
     override fun bind(cards: List<StackedPokemonCard>) {
         val evolutions = EvolutionChain.build(cards)
@@ -147,6 +159,11 @@ class TrainerEnergyViewHolder(
 
     init {
         recycler.setHasFixedSize(true)
+    }
+
+    override fun setup() {
+        super.setup()
+        (layoutManager as GridLayoutManager).spanCount = spanSize
     }
 
     override fun bind(cards: List<StackedPokemonCard>) {

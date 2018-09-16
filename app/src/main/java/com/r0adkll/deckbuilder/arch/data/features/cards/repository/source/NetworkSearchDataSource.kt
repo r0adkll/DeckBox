@@ -1,8 +1,8 @@
-package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.search
+package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
 
-import com.r0adkll.deckbuilder.arch.data.Remote
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
+import com.r0adkll.deckbuilder.arch.data.remote.Remote
+import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.mappings.CardMapper
 import com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
@@ -15,33 +15,31 @@ import io.pokemontcg.model.Card
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.requests.CardQueryBuilder
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
-import timber.log.Timber
 
 
 @Suppress("UNCHECKED_CAST")
 class NetworkSearchDataSource(
         val api: Pokemon,
-        val source: CardDataSource,
+        val source: ExpansionDataSource,
         val remote: Remote,
         val schedulers: Schedulers
 ) : SearchDataSource {
 
     override fun search(type: SuperType?, query: String, filter: Filter?): Observable<List<PokemonCard>> {
-        return Observable.combineLatestDelayError(listOf(source.getExpansions(), searchNetwork(type, query, filter)), { t: Array<out Any> ->
+        return Observable.combineLatestDelayError(listOf(source.getExpansions(), searchNetwork(type, query, filter))) { t: Array<out Any> ->
             val expansions = t[0] as List<Expansion>
             val cards = t[1] as List<Card>
             cards.map { CardMapper.to(it, expansions) }
-        }).onErrorResumeNext(Observable.just(emptyList()))
+        }.onErrorResumeNext(Observable.just(emptyList()))
     }
 
 
     override fun find(ids: List<String>): Observable<List<PokemonCard>> {
-        return Observable.combineLatestDelayError(listOf(source.getExpansions(), findNetwork(ids)), { t: Array<out Any> ->
+        return Observable.combineLatestDelayError(listOf(source.getExpansions(), findNetwork(ids))) { t: Array<out Any> ->
             val expansions = t[0] as List<Expansion>
             val cards = t[1] as List<Card>
             cards.map { CardMapper.to(it, expansions) }
-        }).onErrorReturnItem(emptyList())
+        }.onErrorReturnItem(emptyList())
     }
 
 

@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.r0adkll.deckbuilder.arch.ui.widgets.TestResultView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </com.r0adkll.deckbuilder.arch.ui.widgets.TestResultView>
+    <com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        app:primaryType="darkness"
+        app:secondaryType="psychic"
+        />
 
 </LinearLayout>
