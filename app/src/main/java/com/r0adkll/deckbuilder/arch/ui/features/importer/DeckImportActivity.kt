@@ -144,8 +144,8 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
 
 
     companion object {
-        @JvmField val RC_IMPORT = 200
-        @JvmField val KEY_RESULTS = "DeckImportActivity.Results"
+        private const val RC_IMPORT = 200
+        private const val KEY_RESULTS = "DeckImportActivity.Results"
 
 
         fun show(activity: Activity) {

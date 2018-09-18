@@ -5,22 +5,16 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.text.DynamicLayout
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.ftinc.kit.kotlin.extensions.*
+import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.kotlin.extensions.spToPx
 import com.r0adkll.deckbuilder.R
-import kotlinx.android.synthetic.main.item_test_result2.view.*
-import kotlin.math.max
-import kotlin.math.roundToInt
 
 
 class TestResultProgressView @JvmOverloads constructor(

@@ -22,11 +22,8 @@ class TabletDragListener(
         val pager: ViewPager
 ) : View.OnDragListener {
 
-    private val ANIM_DURATION = 200L
-    private val WIGGLE_DURATION = 500L
-    private val WIGGLE_ROTATION = 10f
-    private val SELECTED_COLOR by lazy { dropZone.color(R.color.secondaryColor) }
-    private val UNSELECTED_COLOR by lazy { dropZone.color(R.color.white) }
+    private val selectedColor by lazy { dropZone.color(R.color.secondaryColor) }
+    private val unselectedColor by lazy { dropZone.color(R.color.white) }
 
     private val background: ImageView by lazy { dropZone.findViewById<ImageView>(R.id.dropBackground) }
     private val card: ImageView by lazy { dropZone.findViewById<ImageView>(R.id.dropCard) }
@@ -99,7 +96,7 @@ class TabletDragListener(
     private fun unselectDropZone() {
         background.setImageResource(R.drawable.dr_dropzone_background)
         card.imageTintList = null
-        message.setTextColor(UNSELECTED_COLOR)
+        message.setTextColor(unselectedColor)
 
         wiggleAnimator?.end()
     }
@@ -107,8 +104,8 @@ class TabletDragListener(
 
     private fun selectDropZone() {
         background.setImageResource(R.drawable.dr_dropzone_background_selected)
-        card.imageTintList = ColorStateList.valueOf(SELECTED_COLOR)
-        message.setTextColor(SELECTED_COLOR)
+        card.imageTintList = ColorStateList.valueOf(selectedColor)
+        message.setTextColor(selectedColor)
 
         wiggleAnimator?.end()
         wiggleAnimator = ObjectAnimator.ofFloat(card, "rotation", 0f, WIGGLE_ROTATION, 0f, -WIGGLE_ROTATION, 0f)
@@ -145,6 +142,9 @@ class TabletDragListener(
 
 
     companion object {
+        private const val ANIM_DURATION = 200L
+        private const val WIGGLE_DURATION = 500L
+        private const val WIGGLE_ROTATION = 10f
 
         /**
          * Attach a new [TabletDragListener] to the target view to handle the

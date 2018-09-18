@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.overview
 
-import android.content.res.Configuration
+import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -54,6 +54,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         }
 
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -12,7 +13,6 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.R
-import kotlinx.android.synthetic.main.item_filter_value_range.view.*
 
 
 class SeekBarIndicatorView @JvmOverloads constructor(
@@ -36,6 +36,7 @@ class SeekBarIndicatorView @JvmOverloads constructor(
 
 
         if (isInEditMode) {
+            @SuppressLint("SetTextI18n")
             indicator.text = "50"
             post { syncToProgress(50, 100) }
         }

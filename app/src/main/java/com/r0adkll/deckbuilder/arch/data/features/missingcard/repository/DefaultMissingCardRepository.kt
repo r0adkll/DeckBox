@@ -1,7 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.missingcard.repository
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.mapper.EntityMapper
@@ -34,6 +33,6 @@ class DefaultMissingCardRepository @Inject constructor(
 
 
     companion object {
-        private val COLLECTION_MISSING_CARDS = "missing_cards"
+        private const val COLLECTION_MISSING_CARDS = "missing_cards"
     }
 }

@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
@@ -12,6 +13,7 @@ class FilterRenderer(
         comp: Scheduler
 ) : DisposableStateRenderer<FilterUi.State>(main, comp) {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         disposables += state

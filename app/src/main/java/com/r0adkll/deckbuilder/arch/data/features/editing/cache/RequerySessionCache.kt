@@ -197,7 +197,7 @@ class RequerySessionCache @Inject constructor(
 
 
     override fun clearSearchSession(sessionId: Long, searchSessionId: String): Observable<Unit> {
-        return return db.select(SessionEntity::class)
+        return db.select(SessionEntity::class)
                 .where(SessionEntity.ID.eq(sessionId))
                 .get()
                 .observable()
@@ -207,13 +207,14 @@ class RequerySessionCache @Inject constructor(
                             .mapValues { it.value.sumBy { it.change } }
                             .filter { it.value > 0 }
 
-                    changes.forEach { cardId, count ->
-                        (0 until count).forEach {
+                    changes.forEach { (cardId, count) ->
+                        (0 until count).forEach { _ ->
                             session.cards.find { it.cardId == cardId }?.let {
                                 (session.cards as java.util.List<ISessionCardEntity>).remove(it)
                             }
                         }
                     }
+
                     (session.changes as java.util.List<IChangeEntity>).removeAll { it.searchSessionId == searchSessionId }
 
                     db.update(session).toObservable().map { Unit }

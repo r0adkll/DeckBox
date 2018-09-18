@@ -153,9 +153,9 @@ class FirestoreDeckCache @Inject constructor(
 
 
     companion object {
-        @JvmField val DUPLICATE_REGEX = "\\(\\d+\\)"
-        @JvmField val COLLECTION_USERS = "decks" // Do to an error on my side, this is now stuck as 'decks', but it is users
-        @JvmField val COLLECTION_OFFLINE_USERS = "offline_users" // Do to an error on my side, this is now stuck as 'decks', but it is users
-        @JvmField val COLLECTION_DECKS = "decks"
+        private const val DUPLICATE_REGEX = "\\(\\d+\\)"
+        private const val COLLECTION_USERS = "decks" // Do to an error on my side, this is now stuck as 'decks', but it is users
+        private const val COLLECTION_OFFLINE_USERS = "offline_users" // Do to an error on my side, this is now stuck as 'decks', but it is users
+        private const val COLLECTION_DECKS = "decks"
     }
 }

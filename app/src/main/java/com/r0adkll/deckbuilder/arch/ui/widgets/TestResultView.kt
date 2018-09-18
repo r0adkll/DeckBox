@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -20,6 +21,7 @@ class TestResultView @JvmOverloads constructor(
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
     var percentage: Float = 0f
+        @SuppressLint("SetTextI18n")
         set(value) {
             field = value
             resultPercentage.text = "${(percentage * 100f).roundToInt()}%"
@@ -65,6 +67,7 @@ class TestResultView @JvmOverloads constructor(
         resultPercentage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
         resultPercentage.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         resultPercentage.setTextColor(color(R.color.white))
+        @SuppressLint("SetTextI18n")
         resultPercentage.text = "${(percentage * 100f).roundToInt()}%"
         addView(resultPercentage)
 

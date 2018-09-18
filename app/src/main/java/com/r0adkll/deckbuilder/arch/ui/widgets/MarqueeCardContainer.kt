@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v4.util.Pools
 import android.util.AttributeSet
@@ -14,9 +15,7 @@ import com.r0adkll.deckbuilder.util.CardUtils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 
 class MarqueeCardContainer @JvmOverloads constructor(
@@ -34,7 +33,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
 
     init {
         // Initialize at least 5 views
-        (0..NUMBER_CARDS).forEach {
+        (0..NUMBER_CARDS).forEach { _ ->
             addNewCard()
         }
 
@@ -65,6 +64,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
     }
 
 
+    @SuppressLint("RxSubscribeOnError", "RxDefaultScheduler")
     private fun setupAnimator() {
         disposable = Observable.interval(25L, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())

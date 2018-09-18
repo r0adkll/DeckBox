@@ -4,7 +4,6 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
-import android.content.Intent
 import android.graphics.*
 import android.os.Build
 import android.text.Layout
@@ -14,12 +13,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewOutlineProvider
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.kotlin.extensions.spToPx
-import com.ftinc.kit.util.BuildUtils
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -350,7 +346,7 @@ class PokemonCardView @JvmOverloads constructor(
 
 
     companion object {
-        @JvmField val KEY_CARD = "PokemonCardView.Card"
+        private const val KEY_CARD = "PokemonCardView.Card"
         const val RATIO = 1.3959183673f
     }
 }

@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.data.features.expansions.cache
 
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import io.reactivex.Observable
 

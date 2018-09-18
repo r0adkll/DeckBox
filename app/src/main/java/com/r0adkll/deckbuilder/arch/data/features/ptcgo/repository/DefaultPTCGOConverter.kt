@@ -27,7 +27,7 @@ class DefaultPTCGOConverter @Inject constructor(
     override fun import(deckList: String): Observable<List<PokemonCard>> {
         return repository.getExpansions()
                 .onErrorReturnItem(emptyList())
-                .flatMap {
+                .flatMap { it ->
                     val cards = parser.parse(it, deckList)
                     val ids = cards.map { it.id }
                     repository.find(ids)
@@ -35,7 +35,7 @@ class DefaultPTCGOConverter @Inject constructor(
                                 val allCards = ArrayList<PokemonCard>()
                                 pokes.forEach { poke ->
                                     val count = cards.find { it.id == poke.id }?.count ?: 0
-                                    (0 until count).forEach {
+                                    (0 until count).forEach { _ ->
                                         allCards.add(poke.copy())
                                     }
                                 }
@@ -68,7 +68,7 @@ class DefaultPTCGOConverter @Inject constructor(
                                                     pokes.forEach { poke ->
                                                         val count = missingEnergyCards.find { it.second == poke.id }?.first?.count ?: 0
                                                         Timber.d("* $count Energy($poke)")
-                                                        (0 until count).forEach {
+                                                        (0 until count).forEach { _ ->
                                                             allCards.add(poke.copy())
                                                         }
                                                     }

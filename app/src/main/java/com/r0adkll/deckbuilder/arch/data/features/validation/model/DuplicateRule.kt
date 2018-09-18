@@ -10,11 +10,9 @@ import io.pokemontcg.model.SuperType
 
 class DuplicateRule : Rule {
 
-    private val MAXCOUNT = 4
-
     override fun check(cards: List<PokemonCard>): Int? {
         val groups = cards.groupBy { it.name }
-        val invalidGroups = groups.values.find { it.size > MAXCOUNT &&
+        val invalidGroups = groups.values.find { it.size > MAX_COUNT &&
                 !(it.first().supertype == SuperType.ENERGY && it.first().subtype == SubType.BASIC)  }
 
         return if (invalidGroups == null) {
@@ -22,5 +20,10 @@ class DuplicateRule : Rule {
         } else {
             R.string.validation_rule_four_of_a_kind
         }
+    }
+
+
+    companion object {
+        private const val MAX_COUNT = 4
     }
 }

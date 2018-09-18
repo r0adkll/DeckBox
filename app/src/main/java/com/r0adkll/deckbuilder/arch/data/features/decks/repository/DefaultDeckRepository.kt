@@ -6,7 +6,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.Schedulers
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject

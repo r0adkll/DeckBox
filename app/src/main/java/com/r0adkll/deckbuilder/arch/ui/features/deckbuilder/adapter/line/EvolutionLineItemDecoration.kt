@@ -55,12 +55,12 @@ class EvolutionLineItemDecoration(
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, s: RecyclerView.State) {
         val adapter = parent.adapter
-        adapter?.let {
+        adapter?.let { it ->
             (0 until it.itemCount).forEach { index ->
                 val state = this.adapter.getEvolutionState(index)
                 if (state.evolution == PokemonCardView.Evolution.END || state.evolution == PokemonCardView.Evolution.MIDDLE) {
                     val child = parent.getChildAt(index)
-                    val nextChild = parent.getChildAt(index + 1)?.let { it.findViewById<PokemonCardView>(R.id.card) }
+                    val nextChild = parent.getChildAt(index + 1)?.findViewById<PokemonCardView>(R.id.card)
                     if (nextChild != null && (nextChild.evolution == PokemonCardView.Evolution.START || nextChild.evolution == PokemonCardView.Evolution.MIDDLE)) {
                         // Render Link
                         val y = child.top + (child.height / 2f)

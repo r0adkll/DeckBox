@@ -8,11 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.jakewharton.rxbinding2.view.preDraws
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.TestResultProgressView
-import com.r0adkll.deckbuilder.arch.ui.widgets.TestResultView
 import com.r0adkll.deckbuilder.util.bindView
 
 

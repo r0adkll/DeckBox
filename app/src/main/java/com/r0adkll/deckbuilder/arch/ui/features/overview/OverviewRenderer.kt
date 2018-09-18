@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.overview
 
+import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -17,6 +18,7 @@ class OverviewRenderer(
         comp: Scheduler
 ) : UiBaseStateRenderer<OverviewUi.State, OverviewUi.State.Change, OverviewUi.Actions>(actions, main, comp) {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onStart() {
 
         disposables += state

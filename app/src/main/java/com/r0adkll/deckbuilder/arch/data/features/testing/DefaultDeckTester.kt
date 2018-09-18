@@ -10,9 +10,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.testing.TestResults
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
 import com.r0adkll.deckbuilder.util.extensions.shuffle
-import io.pokemontcg.model.Card
-import io.pokemontcg.model.SubType
-import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -97,7 +94,7 @@ class DefaultDeckTester @Inject constructor(
 
     private fun deal(cards: List<PokemonCard>, iterations: Int): List<PokemonCard> {
         val deck = cards.toMutableList()
-        (0 until iterations).forEach {
+        (0 until iterations).forEach { _ ->
             deck.shuffle()
         }
 
@@ -107,9 +104,9 @@ class DefaultDeckTester @Inject constructor(
 
     private fun test(cards: List<PokemonCard>, iterations: Int): TestResults {
         var mulligans = 0
-        var startingHands = HashMap<PokemonCard, Int>()
+        val startingHands = HashMap<PokemonCard, Int>()
 
-        (0..iterations).forEach {
+        (0..iterations).forEach { _ ->
             val shuffledCards = cards.shuffle(DEFAULT_SHUFFLE_PER_HAND)
             val firstHand = shuffledCards.subList(0, DEFAULT_HAND_SIZE)
 

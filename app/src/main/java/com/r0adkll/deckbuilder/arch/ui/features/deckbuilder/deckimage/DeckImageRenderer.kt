@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
@@ -19,19 +20,20 @@ class DeckImageRenderer(
         comp: Scheduler
 ) : DisposableStateRenderer<DeckImageUi.State>(main, comp) {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         disposables += state
                 .map { it.cards }
-                .map {
+                .map { it ->
                     val cards = it.filter { it.supertype == SuperType.POKEMON }
                     val stacks = CardUtils.stackCards().invoke(cards)
                     val evolutions = EvolutionChain.build(stacks)
                     val types = stacks.flatMap { it.card.types ?: emptyList() }
-                            .fold(HashSet<Type>(), { acc, type ->
+                            .fold(HashSet<Type>()) { acc, type ->
                                 acc.add(type)
                                 acc
-                            })
+                            }
 
                     val images = ArrayList<DeckImage>()
 

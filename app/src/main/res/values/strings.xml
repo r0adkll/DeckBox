@@ -211,4 +211,6 @@
     <string name="export_column_collection_number_title">#</string>
     <string name="shortcut_create_deck_short_label">New Deck</string>
     <string name="shortcut_create_deck_long_label">Create new deck</string>
+    <string name="error_session_opening_deck">Unable to open your deck</string>
+    <string name="error_session_new_deck">Error creating new deck</string>
 </resources>
