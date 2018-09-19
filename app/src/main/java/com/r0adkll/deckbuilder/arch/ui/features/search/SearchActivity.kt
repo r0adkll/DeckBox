@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -65,6 +66,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     private lateinit var component: SearchComponent
 
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)

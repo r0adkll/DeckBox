@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.tournament.exporter
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
@@ -84,6 +85,7 @@ class DefaultTournamentExporter @Inject constructor(
     }
 
 
+    @SuppressLint("InflateParams")
     private fun printDeck(cards: List<PokemonCard>, playerInfo: PlayerInfo, canvas: Canvas, context: Context) {
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.layout_tournament_pdf, null, false) as LinearLayout

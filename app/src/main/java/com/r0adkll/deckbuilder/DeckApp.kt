@@ -14,6 +14,7 @@ import com.r0adkll.deckbuilder.internal.di.AppModule
 import com.r0adkll.deckbuilder.internal.di.DaggerAppComponent
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
+import io.reactivex.Observable
 import javax.inject.Inject
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
@@ -93,6 +94,11 @@ class DeckApp : Application() {
             }
             Timber.w(ex, "Undeliverable exception received, not sure what to do")
         }
+
+        val s = Observable.just("Bacon")
+                .subscribe({
+
+                })
     }
 
 

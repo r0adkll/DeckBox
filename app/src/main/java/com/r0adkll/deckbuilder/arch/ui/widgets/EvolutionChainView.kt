@@ -1,9 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint
-import android.content.ClipData
 import android.content.Context
-import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.support.v7.widget.GridLayoutManager
@@ -16,12 +14,10 @@ import android.widget.LinearLayout
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.util.BuildUtils
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.*
-import timber.log.Timber
 
 
 class EvolutionChainView @JvmOverloads constructor(
@@ -88,7 +84,7 @@ class EvolutionChainView @JvmOverloads constructor(
             val childLayout = getChildAt(index)
             val child = childLayout.findViewById<PokemonCardView>(R.id.card)
             if (child.evolution == END || child.evolution == MIDDLE) {
-                val nextChild = getChildAt(index + 1)?.let { it.findViewById<PokemonCardView>(R.id.card) }
+                val nextChild = getChildAt(index + 1)?.findViewById<PokemonCardView>(R.id.card)
                 if (nextChild != null && (nextChild.evolution == START || nextChild.evolution == MIDDLE)) {
                     // Render Link
                     val y = childLayout.top + (childLayout.height / 2f)

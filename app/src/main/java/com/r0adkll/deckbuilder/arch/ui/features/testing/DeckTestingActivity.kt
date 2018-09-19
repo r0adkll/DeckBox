@@ -10,12 +10,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.animation.FastOutSlowInInterpolator
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.util.bindViews
 import com.ftinc.kit.arch.util.uiDebounce
-import com.ftinc.kit.kotlin.extensions.*
+import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.kotlin.extensions.gone
+import com.ftinc.kit.kotlin.extensions.toast
+import com.ftinc.kit.kotlin.extensions.visible
 import com.ftinc.kit.kotlin.utils.bindLong
 import com.ftinc.kit.kotlin.utils.bindOptionalString
 import com.ftinc.kit.widget.DividerSpacerItemDecoration
@@ -37,7 +39,6 @@ import com.r0adkll.deckbuilder.util.RendererActivityDelegate
 import com.r0adkll.deckbuilder.util.extensions.fromHtml
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable

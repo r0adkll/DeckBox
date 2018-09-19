@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.ui.features.overview.di
 import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewFragment
 import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewUi
-import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
 import com.r0adkll.deckbuilder.util.Schedulers
 import dagger.Module

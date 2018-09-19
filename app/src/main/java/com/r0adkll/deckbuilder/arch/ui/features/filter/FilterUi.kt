@@ -17,7 +17,6 @@ import io.pokemontcg.model.Type
 import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
-import kotlin.math.exp
 
 
 interface FilterUi : StateRenderer<FilterUi.State> {

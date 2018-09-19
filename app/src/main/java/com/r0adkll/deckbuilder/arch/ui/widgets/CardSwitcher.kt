@@ -1,23 +1,19 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.graphics.Palette
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.View
 import android.widget.ViewSwitcher
-import com.bumptech.glide.RequestManager
 import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.widget.AspectRatioImageView
 import com.r0adkll.deckbuilder.GlideApp
-import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -81,6 +77,7 @@ class CardSwitcher : ViewSwitcher {
     }
 
 
+    @SuppressLint("RxSubscribeOnError", "RxDefaultScheduler")
     private fun startSwitching() {
         disposable?.dispose()
         disposable = Observable.interval(INTERVAL, TimeUnit.MILLISECONDS)
@@ -143,10 +140,11 @@ class CardSwitcher : ViewSwitcher {
 
 
     companion object {
-        val INTERVAL = 6000L
+        private const val INTERVAL = 6000L
+
         val SHUFFLED_CARDS by lazy {
             val cards = mutableListOf(*CardUtils.CARDS)
-            Collections.shuffle(cards)
+            cards.shuffle()
             cards
         }
     }

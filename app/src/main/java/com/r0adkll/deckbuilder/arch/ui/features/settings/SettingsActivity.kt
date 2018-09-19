@@ -24,15 +24,12 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject
@@ -56,7 +53,6 @@ class SettingsActivity : BaseActivity() {
 
     class SettingsFragment : PreferenceFragment(), GoogleApiClient.OnConnectionFailedListener {
 
-        private val RC_SIGN_IN = 100
         private var googleClient: GoogleApiClient? = null
 
         @Inject lateinit var preferences: AppPreferences
@@ -246,6 +242,10 @@ class SettingsActivity : BaseActivity() {
                 Timber.e("Unable to link account: ${result.status}")
                 snackbar("Unable to link account.")
             }
+        }
+
+        companion object {
+            private const val RC_SIGN_IN = 100
         }
     }
 

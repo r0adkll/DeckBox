@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.preview
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -40,6 +41,7 @@ class PdfPreviewActivity : BaseActivity() {
     private var currentPage: PdfRenderer.Page? = null
 
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdf_preview)

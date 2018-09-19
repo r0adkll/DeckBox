@@ -10,7 +10,9 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckReposit
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 
@@ -19,6 +21,7 @@ class ShortcutActivity : Activity() {
     @Inject lateinit var deckRepository: DeckRepository
     @Inject lateinit var editor: EditRepository
 
+    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +31,7 @@ class ShortcutActivity : Activity() {
         when(action) {
             ACTION_NEW_DECK -> {
                 Shortcuts.reportUsage(this, Shortcuts.CREATE_DECK_ID)
-                editor.createSession()
+                disposables += editor.createSession()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ sessionId ->
                             TaskStackBuilder.create(this)
@@ -45,7 +48,7 @@ class ShortcutActivity : Activity() {
                 val deckId = intent?.getStringExtra(EXTRA_DECK_ID)
                 if (deckId != null) {
                     Shortcuts.reportUsage(this, deckId)
-                    deckRepository.getDeck(deckId)
+                    disposables += deckRepository.getDeck(deckId)
                             .flatMap { editor.createSession(it) }
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ sessionId ->
@@ -67,6 +70,12 @@ class ShortcutActivity : Activity() {
                 finish()
             }
         }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.clear()
     }
 
 

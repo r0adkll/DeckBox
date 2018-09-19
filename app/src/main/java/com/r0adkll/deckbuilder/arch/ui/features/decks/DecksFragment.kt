@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -40,6 +41,7 @@ import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_decks.*
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -84,9 +86,12 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     // Generate a new session and pass to builder activity
                     disposables += editor.createSession(item.deck)
                             .subscribeOn(AndroidSchedulers.mainThread())
-                            .subscribe {
+                            .subscribe({
                                 startActivity(DeckBuilderActivity.createIntent(activity!!, it))
-                            }
+                            }, {
+                                Timber.e(it)
+                                snackbar(R.string.error_session_opening_deck)
+                            })
                 }
             }
         })
@@ -124,14 +129,18 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             // Generate a new session and pass to builder activity
             disposables += editor.createSession()
                     .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
+                    .subscribe({
                         startActivity(DeckBuilderActivity.createIntent(activity!!, it, true))
-                    }
+                    }, {
+                        Timber.e(it)
+                        snackbar(R.string.error_session_opening_deck)
+                    })
         }
 
         if (preferences.quickStart) {
 
             // Fix for Fabric#212
+            @SuppressLint("RxSubscribeOnError")
             disposables += Observable.timer(300L, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
@@ -140,6 +149,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             preferences.quickStart = false
         }
 
+        @SuppressLint("RxSubscribeOnError")
         disposables += shareClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.Action("export_decklist"))
@@ -147,6 +157,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     startActivity(intent)
                 }
 
+        @SuppressLint("RxSubscribeOnError")
         disposables += testClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.Action("test_decklist"))
@@ -154,6 +165,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     startActivity(intent)
                 }
 
+        @SuppressLint("RxSubscribeOnError")
         disposables += viewPreview
                 .subscribe { preview ->
                     startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))

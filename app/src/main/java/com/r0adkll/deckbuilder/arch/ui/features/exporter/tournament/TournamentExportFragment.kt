@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +14,6 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
@@ -51,6 +51,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
     }
 
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         parent.requestFocus()
@@ -75,7 +76,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                 }
 
         disposables += actionExport.clicks()
-                .subscribe {
+                .subscribe { _ ->
                     Analytics.event(Event.SelectContent.Action("tournament_export"))
                     val playerInfo = state.toPlayerInfo()
 
@@ -84,7 +85,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                                 val intent = PdfPreviewActivity.createIntent(activity!!, it)
                                 startActivity(intent)
                             }, { t ->
-                                Timber.e(t, "Error exporting deck")
+                                Timber.e(t)
                                 snackbar("Error exporting your deck")
                             })
                 }
@@ -167,7 +168,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
 
 
     override fun setDateOfBirth(dob: String?) {
-        inputDateOfBirth.setText(dob)
+        inputDateOfBirth.text = dob
     }
 
 

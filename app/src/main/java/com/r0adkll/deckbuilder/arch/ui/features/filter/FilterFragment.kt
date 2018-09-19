@@ -12,15 +12,14 @@ import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
-import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
-import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.FilterRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterModule
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
-import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
+import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import io.pokemontcg.model.Type

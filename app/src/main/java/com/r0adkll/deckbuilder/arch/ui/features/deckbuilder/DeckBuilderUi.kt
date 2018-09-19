@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer

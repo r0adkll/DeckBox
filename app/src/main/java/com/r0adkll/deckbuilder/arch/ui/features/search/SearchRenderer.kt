@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -13,6 +14,7 @@ class SearchRenderer(
         comp: Scheduler
 ) : DisposableStateRenderer<SearchUi.State>(main, comp) {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         subscribeToSuperType(SuperType.POKEMON)
@@ -44,6 +46,7 @@ class SearchRenderer(
     }
 
 
+    @SuppressLint("RxSubscribeOnError")
     private fun subscribeToSuperType(superType: SuperType) {
 
         disposables += state

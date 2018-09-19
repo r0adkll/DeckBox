@@ -36,12 +36,10 @@ class ScrollAwareFABBehavior(
                                 nestedScrollType: Int) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, nestedScrollType)
 
-        val dY = if (dyConsumed != 0) {
-            dyConsumed
-        } else if (child.translationY != 0f) {
-            dyUnconsumed
-        } else {
-            0
+        val dY = when {
+            dyConsumed != 0 -> dyConsumed
+            child.translationY != 0f -> dyUnconsumed
+            else -> 0
         }
 
         val transY = (child.translationY + dY).coerceIn(0f..maxTransY)

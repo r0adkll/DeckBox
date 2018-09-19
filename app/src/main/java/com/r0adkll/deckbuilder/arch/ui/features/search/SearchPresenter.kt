@@ -99,12 +99,12 @@ class SearchPresenter @Inject constructor(
 
     private fun getReSearchCardsObservable(category: SuperType, filter: Filter): Observable<Change> {
         val result = ui.state.results[category]
-        if (result?.query.isNullOrBlank() && filter.isEmptyWithoutField) {
-            return Observable.just(Change.FilterChanged(category, filter) as Change)
+        return if (result?.query.isNullOrBlank() && filter.isEmptyWithoutField) {
+            Observable.just(Change.FilterChanged(category, filter) as Change)
         }
         else {
             val query = result?.query ?: ""
-            return repository.search(category, query.replace(",", "|"), filter)
+            repository.search(category, query.replace(",", "|"), filter)
                     .map { Change.ResultsLoaded(category, it) as Change }
                     .startWith(listOf(
                             Change.FilterChanged(category, filter) as Change,

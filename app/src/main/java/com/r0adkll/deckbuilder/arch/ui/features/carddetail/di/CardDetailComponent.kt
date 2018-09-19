@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
 import dagger.Subcomponent
 
 @ActivityScope
-@Subcomponent(modules = arrayOf(CardDetailModule::class))
+@Subcomponent(modules = [CardDetailModule::class])
 interface CardDetailComponent {
 
     fun inject(activity: CardDetailActivity)

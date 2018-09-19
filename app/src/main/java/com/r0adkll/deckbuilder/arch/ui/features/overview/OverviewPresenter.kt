@@ -3,12 +3,11 @@ package com.r0adkll.deckbuilder.arch.ui.features.overview
 
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
-import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewUi.State.*
+import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewUi.State.Change
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 

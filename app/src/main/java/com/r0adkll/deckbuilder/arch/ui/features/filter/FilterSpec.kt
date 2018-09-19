@@ -7,13 +7,13 @@ import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterSpec.Spec.AttributeSpec
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.ExpansionVisibility.*
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute.*
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
-import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.Option.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.Option.ExpansionOption
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.Option.RarityOption
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.*
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Value
 import io.pokemontcg.model.SubType.*
@@ -21,7 +21,6 @@ import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
-import timber.log.Timber
 
 
 @PaperParcel
