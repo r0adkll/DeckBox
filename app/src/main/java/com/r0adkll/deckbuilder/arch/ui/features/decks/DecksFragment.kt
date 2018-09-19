@@ -26,6 +26,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.PlaytestActivity
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -149,7 +150,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         disposables += testClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.Action("test_decklist"))
-                    val intent = DeckTestingActivity.createIntent(activity!!, it.id)
+                    val intent = PlaytestActivity.createIntent(activity!!) //DeckTestingActivity.createIntent(activity!!, it.id)
                     startActivity(intent)
                 }
 

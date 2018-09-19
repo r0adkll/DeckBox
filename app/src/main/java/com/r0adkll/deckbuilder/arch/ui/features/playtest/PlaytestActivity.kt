@@ -1,5 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.playtest
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.r0adkll.deckbuilder.DeckApp
@@ -52,5 +54,11 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
 
     override fun showLoading(isLoading: Boolean) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
+    companion object {
+
+        fun createIntent(context: Context): Intent = Intent(context, PlaytestActivity::class.java)
     }
 }
