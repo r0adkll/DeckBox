@@ -93,6 +93,10 @@ class SettingsActivity : BaseActivity() {
                 "pref_account_profile" -> {
                     true
                 }
+                "pref_about_privacy_policy" -> {
+                    startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
+                    true
+                }
                 "pref_about_developer" -> {
                     startActivity(IntentUtils.openLink(getString(R.string.developer_website_url)))
                     true

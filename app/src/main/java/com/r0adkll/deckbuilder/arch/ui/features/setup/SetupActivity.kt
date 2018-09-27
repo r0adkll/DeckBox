@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
 import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
@@ -73,6 +74,10 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             action_continue.text = "Go away bots!!"
             action_continue.isEnabled = false
         }
+
+        actionPrivacyPolicy.setOnClickListener {
+            startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
+        }
     }
 
 
@@ -115,7 +120,6 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     private fun setupClient() {
         val result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if (result == ConnectionResult.SUCCESS) {
-
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(getString(R.string.default_web_client_id))
                     .requestEmail()
