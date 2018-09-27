@@ -1,5 +1,12 @@
 package com.r0adkll.deckbuilder.arch.domain.features.playtest
 
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player
+import com.r0adkll.deckbuilder.util.extensions.shuffle
+import io.pokemontcg.model.SubType
+import io.pokemontcg.model.SuperType
+import java.util.*
+
 
 /**
  * A defined set of actions that can modify the board/player states
@@ -9,50 +16,335 @@ sealed class Action {
 
     abstract fun apply(board: Board): Board
 
-
     /**
-     * Draw a single card off the deck as per the rules for each players turn
+     * Action group that denotes all subclassed actions act upon a player selection as defined
+     * by it's constructor parameter [player]
      */
-    class TurnDraw(val player: Board.Player.Type) : Action() {
+    sealed class Actor(val player: Player.Type) : Action() {
 
-        override fun apply(board: Board): Board = when(player) {
-            Board.Player.Type.PLAYER -> board.copy(player = turnDrawCard(board.player))
-            Board.Player.Type.OPPONENT -> board.copy(opponent = turnDrawCard(board.opponent))
-        }
+        /**
+         * Apply the action to the specified [actor] and return it's updated state
+         * @param board the current board state before the action is applied
+         * @param actor the player actor that is to be applied to
+         */
+        abstract fun apply(board: Board, actor: Player): Player
 
-        private fun turnDrawCard(player: Board.Player): Board.Player {
-            if (player.deck.isEmpty()) {
-                throw PlaytestException.DeckOutException()
-            } else {
-                val deck = player.deck
-                val hand = player.hand.toMutableList()
-                hand.add(deck.pollFirst())
-                return player.copy(deck = deck, hand = hand)
+
+        override fun apply(board: Board): Board {
+            val actor = board[player]
+            return when(player) {
+                Player.Type.PLAYER -> board.copy(player = apply(board, actor))
+                Player.Type.OPPONENT -> board.copy(opponent = apply(board, actor))
             }
         }
+
+        /**
+         * Draw a single card off the deck as per the rules for each players turn
+         */
+        class TurnDraw(player: Player.Type) : Actor(player) {
+
+            override fun apply(board: Board, actor: Player): Player {
+                if (actor.deck.isEmpty()) {
+                    throw PlaytestException.DeckOutException()
+                } else {
+                    val deck = actor.deck
+                    val hand = actor.hand.toMutableList()
+                    hand.add(deck.pollFirst())
+                    return actor.copy(deck = deck, hand = hand)
+                }
+            }
+        }
+
+
+        /**
+         * Action Group for Deck-Based actions
+         */
+        sealed class Deck(player: Player.Type) : Actor(player) {
+
+            /**
+             * Shuffle the deck, preserving it's previous order for undo-ability
+             */
+            class Shuffle(player: Player.Type) : Deck(player) {
+
+                /**
+                 * An ordered list of card id's that represents the order of the deck before this shuffle action
+                 * takes place.
+                 */
+                var previousOrder = emptyList<String>()
+                    private set
+
+
+                override fun apply(board: Board, actor: Player): Player {
+                    previousOrder = actor.deck.map { it.id }
+                    val shuffledDeck = actor.deck.shuffle(2)
+                    return actor.copy(deck = shuffledDeck)
+                }
+            }
+
+
+            /**
+             * Shuffles the user's hand back into the deck
+             */
+            class ShuffleHand(player: Player.Type) : Deck(player) {
+
+                /**
+                 * An ordered list of card id's that represents the order of the deck before this shuffle action
+                 * takes place.
+                 */
+                var previousOrder = emptyList<String>()
+                    private set
+
+                /**
+                 * An ordered list of card ids that represents the order of the hand before this shuffle action
+                 * takes place.
+                 */
+                var previousHand = emptyList<String>()
+                    private set
+
+
+                override fun apply(board: Board, actor: Player): Player {
+                    previousOrder = actor.deck.map { it.id }
+                    previousHand = actor.hand.map { it.id }
+                    val shuffledDeck = actor.deck.plus(actor.hand).shuffled()
+                    return actor.copy(hand = emptyList(), deck = ArrayDeque(shuffledDeck))
+                }
+            }
+
+
+            /**
+             * Draw a # of cards from either the top or bottom of the deck
+             *
+             * @param fromTop whether or not to draw from the top or bottom of the deck
+             */
+            class Draw(player: Player.Type, val fromTop: Boolean = true) : Deck(player) {
+
+                /**
+                 * The number of cards to draw from the deck
+                 */
+                var count = 1
+
+
+                override fun apply(board: Board, actor: Player): Player {
+                    if (actor.deck.size <= count) {
+                        throw PlaytestException.DeckOutException()
+                    } else {
+                        val deck = actor.deck
+                        val draw = if (fromTop) {
+                            (0 until count).map { deck.pollFirst() }
+                        } else {
+                            (0 until count).map { deck.pollLast() }
+                        }
+                        val hand = actor.hand.plus(draw)
+                        return actor.copy(deck = deck, hand = hand)
+                    }
+                }
+            }
+
+
+            /**
+             * Deck Subgroup for search based actions. This includes drawing the search based selections
+             * or stacking them at the top/bottom of the deck
+             */
+            sealed class Search(player: Player.Type, val selection: List<Int>) : Deck(player) {
+
+                /**
+                 * Draw the selected cards into the players hand
+                 */
+                class Draw(player: Player.Type, selection: List<Int>) : Search(player, selection) {
+
+                    override fun apply(board: Board, actor: Player): Player {
+                        val deck = actor.deck.toMutableList()
+                        val cardsToDraw = selection.map { deck[it] }
+                        deck.removeAll(cardsToDraw)
+                        val hand = actor.hand.plus(cardsToDraw)
+                        return actor.copy(deck = ArrayDeque(deck), hand = hand)
+                    }
+                }
+
+
+                /**
+                 * Stack the selected cards on the top or bottom of the deck
+                 * @param onTop whether or not to stack the cards on the top of the deck, false for stacking on the bottom (top: 1, 2, 3,...,deck; bottom: deck,...,3, 2, 1)
+                 */
+                class Stack(player: Player.Type, selection: List<Int>, val onTop: Boolean = true) : Search(player, selection) {
+
+                    override fun apply(board: Board, actor: Player): Player {
+                        val deck = actor.deck.toMutableList()
+                        val cardsToDraw = selection.map { deck[it] }
+                        deck.removeAll(cardsToDraw)
+                        deck.shuffle()
+
+                        // Stack cards
+                        if (onTop) {
+                            deck.addAll(0, cardsToDraw)
+                        } else {
+                            deck.addAll(cardsToDraw.asReversed())
+                        }
+
+                        return actor.copy(deck = ArrayDeque(deck))
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * Action Group for Active-Card based actions
+         */
+        sealed class Active(player: Player.Type) : Actor(player) {
+
+            /**
+             * Apply a condition to the [player]s active card. Apply [burned] or [poisoned] condition.
+             * @param burned whether or not the active pokemon should become burned
+             * @param poisoned whether or not the active pokemon should become poisoned
+             */
+            class Condition(player: Player.Type, val burned: Boolean?, val poisoned: Boolean?) : Active(player) {
+
+                override fun apply(board: Board, actor: Player): Player {
+                    val active = actor.active
+                    return active?.let {
+                        val isBurned = burned ?: it.isBurned
+                        val isPoisoned = poisoned ?: it.isPoisoned
+                        actor.copy(active = it.copy(isBurned = isBurned, isPoisoned = isPoisoned))
+                    } ?: actor
+                }
+            }
+
+
+            /**
+             * Apply a status (condition) to the [player]s active card.
+             * @param status the status (condition) to apply
+             * @see Board.Card.Status
+             */
+            class Status(player: Player.Type, val status: Board.Card.Status) : Active(player) {
+
+                override fun apply(board: Board, actor: Player): Player {
+                    val active = actor.active
+                    return active?.let {
+                        actor.copy(active = it.copy(statusEffect = status))
+                    } ?: actor
+                }
+            }
+
+
+            /**
+             * Apply an amount of damage to the [player]s active card.
+             * @param amount the amount of damage to inflict
+             */
+            class Damage(player: Player.Type, val amount: Int) : Active(player) {
+
+                override fun apply(board: Board, actor: Player): Player {
+                    val active = actor.active
+                    return active?.let {
+                        val damage = it.damage + amount
+                        actor.copy(active = it.copy(damage = damage))
+                    } ?: actor
+                }
+            }
+
+
+            /**
+             * Attach a [PokemonCard] from the [player]'s hand to the [player]'s active
+             * pokemon.
+             *
+             * For the various type of card attaching, this will attach it appropriately
+             * * ENERGY -> adds it to it's attached energy list
+             * * TRAINER -> if card is a tool, set's as the cards attached tool card
+             * * POKEMON -> if card is the correct evolution of the card on the top of the stack it evolves the card
+             *
+             * @param card the card from the [player]'s hand to attach
+             */
+            class Attach(player: Player.Type, val card: PokemonCard) : Active(player) {
+
+                override fun apply(board: Board, actor: Player): Player {
+                    val active = actor.active
+                    return active?.let {
+                        // remove the card from the player's hand
+                        val attached = attach(active, card)
+                        if (attached != null) { // If we successfully attach to the card
+                            val hand = actor.hand.toMutableList()
+                            if (hand.remove(card)) { // If we can successfully remove the card from our hand
+                                actor.copy(active = attached)
+                            }
+                        }
+                        null
+                    } ?: actor
+                }
+
+
+                private fun attach(active: Board.Card, card: PokemonCard): Board.Card? = when(card.supertype) {
+                    SuperType.ENERGY -> active.copy(energy = active.energy.plus(card))
+                    SuperType.TRAINER -> when(card.subtype) {
+                        SubType.POKEMON_TOOL -> active.copy(tool = card)
+                        else -> null
+                    }
+                    SuperType.POKEMON -> {
+                        val topCard = active.pokemons.peek()
+                        if (topCard.name == card.evolvesFrom) {
+                            active.pokemons.push(card)
+                            active
+                        } else {
+                            null
+                        }
+                    }
+                    else -> null
+                }
+            }
+
+
+            /**
+             * Detach a [PokemonCard] form the [player]'s active card to the specified [target]
+             *
+             * @param card the card to detach from the active board position
+             * @param target the target of where to detach the card to
+             */
+            class Detach(player: Player.Type, val card: PokemonCard, val target: Target) : Active(player) {
+
+                override fun apply(board: Board, actor: Player): Player {
+                    val active = actor.active
+                    return active?.let {
+                        when(card.supertype) {
+                            SuperType.ENERGY -> {
+                                val energy = it.energy.toMutableList()
+                                if (energy.remove(card)) { // If we can remove it from our list of energies, yay
+                                    val updatedActor = actor.copy(active = it.copy(energy = energy))
+                                    target.apply(updatedActor, card)
+                                } else {
+                                    null
+                                }
+                            }
+                            SuperType.TRAINER -> {
+                                if (card == it.tool) {
+                                    val updatedActor = actor.copy(active = it.copy(tool = null))
+                                    target.apply(updatedActor, card)
+                                } else {
+                                    null
+                                }
+                            }
+                            SuperType.POKEMON -> {
+                                if (it.pokemons.remove(card)) {
+                                    target.apply(actor, card)
+                                } else {
+                                    null
+                                }
+                            }
+                            else -> null
+                        }
+                    } ?: actor
+                }
+            }
+
+
+            class Discard(player: Player.Type, val target: Target) : Active(player) {
+
+                override fun apply(board: Board, actor: Player): Player {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            }
+        }
+
     }
 
 
-    /**
-     * A subsection of actions for supporter cards. This is so that we can easily detect that
-     * a user has used a supporter card for their turn
-     */
-    sealed class SupporterAction(val player: Board.Player.Type) : Action() {
 
-        
-        class Draw(player: Board.Player.Type, val count: Int) : SupporterAction(player) {
-
-            override fun apply(board: Board): Board {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        }
-
-
-        class ShuffleDraw(player: Board.Player.Type, val count: Int) : SupporterAction(player) {
-
-            override fun apply(board: Board): Board {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        }
-    }
 }

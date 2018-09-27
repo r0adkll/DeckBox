@@ -137,14 +137,14 @@ class ArenaPlaymatView @JvmOverloads constructor(
              */
             val prizesElement = board[Player.Type.PLAYER]!![BoardElement.PRIZES] as Element.Card
             val prizesX = baseX
-            val prizesY = baseY + (((activeY - baseY) / 2f) - elementHeight / 2f)
+            val prizesY = discardY
             prizesElement.bounds.set(prizesX, prizesY, prizesX + elementWidth, prizesY + elementHeight)
 
             /*
              * Player Lost Zone
              */
             val lostZoneElement = board[Player.Type.PLAYER]!![BoardElement.LOST_ZONE] as Element.Card
-            val lostZoneX = deckX - (elementWidth + elementMargin / 2f)
+            val lostZoneX = deckX - (elementWidth + elementMargin)
             val lostZoneY = discardY
             lostZoneElement.bounds.set(lostZoneX, lostZoneY, lostZoneX + elementWidth, lostZoneY + elementHeight)
 
@@ -202,14 +202,14 @@ class ArenaPlaymatView @JvmOverloads constructor(
             val prizesElement = board[Player.Type.OPPONENT]!![BoardElement.PRIZES] as Element.Card
             val baseY = boardPadding + elementHeight + elementMargin
             val prizesX = measuredWidth - (boardPadding + elementWidth)
-            val prizesY = baseY + ((((activeY + elementHeight) - baseY) / 2f) - (elementHeight / 2f))
+            val prizesY = discardY
             prizesElement.bounds.set(prizesX, prizesY, prizesX + elementWidth, prizesY + elementHeight)
 
             /*
              * Opponent Lost Zone
              */
             val lostZoneElement = board[Player.Type.OPPONENT]!![BoardElement.LOST_ZONE] as Element.Card
-            val lostZoneX = deckX + elementWidth + elementMargin / 2f
+            val lostZoneX = deckX + elementWidth + elementMargin
             val lostZoneY = discardY
             lostZoneElement.bounds.set(lostZoneX, lostZoneY, lostZoneX + elementWidth, lostZoneY + elementHeight)
         }
@@ -238,7 +238,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
 
 
     private fun drawCard(canvas: Canvas, element: BoardElement) {
-        val border = element == BoardElement.ACTIVE || element == BoardElement.STADIUM
+        val border = element == BoardElement.ACTIVE || element == BoardElement.STADIUM || element == BoardElement.LOST_ZONE
         val text = when(element) {
             BoardElement.DECK -> "DECK"
             BoardElement.DISCARD -> "DISC."

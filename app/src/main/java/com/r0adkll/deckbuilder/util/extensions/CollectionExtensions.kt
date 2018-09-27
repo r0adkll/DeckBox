@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.util.extensions
 
+import java.util.*
 
 
 fun <T1, T2> Collection<T1>.combine(other: Iterable<T2>): List<Pair<T1, T2>> {
@@ -14,8 +15,17 @@ fun <T1, T2, R> Collection<T1>.combine(other: Iterable<T2>, transformer: (thisIt
 
 fun <T> Collection<T>.shuffle(iterations: Int): List<T> {
     val items = this.toMutableList()
-    (0 until iterations).forEach {
+    (0 until iterations).forEach { _ ->
         items.shuffle()
     }
     return items.toList()
+}
+
+
+fun <T> ArrayDeque<T>.shuffle(iterations: Int): ArrayDeque<T> {
+    val items = this.toMutableList()
+    (0 until iterations).forEach { _ ->
+        items.shuffle()
+    }
+    return ArrayDeque(items)
 }

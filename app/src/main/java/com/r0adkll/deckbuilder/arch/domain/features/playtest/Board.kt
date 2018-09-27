@@ -20,6 +20,12 @@ data class Board(
         get() = player.stadium ?: opponent.stadium
 
 
+    operator fun get(type: Player.Type): Player = when(type) {
+        Player.Type.PLAYER -> player
+        Player.Type.OPPONENT -> opponent
+    }
+
+
     data class Turn(
             val count: Int,
             val whos: Player.Type
