@@ -117,9 +117,9 @@ object EntityMapper {
 
 
     private fun List<Type>.compactTypes(): String {
-        return this.fold("", { acc, type ->
+        return this.fold("") { acc, type ->
             acc.plus(type.compact())
-        })
+        }
     }
 
 
@@ -132,13 +132,13 @@ object EntityMapper {
 
 
     private fun List<Effect>.compactEffects(): String {
-        return this.foldIndexed("", { index, acc, effect ->
+        return this.foldIndexed("") { index, acc, effect ->
             val new = acc.plus("[${effect.type.displayName[0].toUpperCase()}|${effect.value}]")
             if (index != this.size - 1) {
                 new.plus(",")
             } else {
                 new
             }
-        })
+        }
     }
 }

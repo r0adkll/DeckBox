@@ -1,28 +1,28 @@
 package com.r0adkll.deckbuilder.arch.ui.features.setup
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
 import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
-import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
-import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.GooglePlayServicesUtil
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
+import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.RxFirebase
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -70,8 +70,13 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
         val testLabSetting = Settings.System.getString(contentResolver, "firebase.test.lab")
         if ("true" == testLabSetting) {
+            @SuppressLint("SetTextI18n")
             action_continue.text = "Go away bots!!"
             action_continue.isEnabled = false
+        }
+
+        actionPrivacyPolicy.setOnClickListener {
+            startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
         }
     }
 
@@ -115,7 +120,6 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     private fun setupClient() {
         val result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if (result == ConnectionResult.SUCCESS) {
-
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(getString(R.string.default_web_client_id))
                     .requestEmail()

@@ -8,17 +8,19 @@ import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 
 class PrismStarRule : Rule {
 
-    private val MAXCOUNT = 1
-
-
     override fun check(cards: List<PokemonCard>): Int? {
         val groups = cards.filter { it.name.contains("◇") }.groupBy { it.name }
-        val invalidGroups = groups.values.find { it.size > MAXCOUNT }
+        val invalidGroups = groups.values.find { it.size > MAX_COUNT }
 
         return if (invalidGroups == null) {
             null
         } else {
             R.string.validation_rule_prism_star
         }
+    }
+
+
+    companion object {
+        private const val MAX_COUNT = 1
     }
 }

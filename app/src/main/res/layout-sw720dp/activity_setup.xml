@@ -23,6 +23,12 @@
         android:gravity="start|center_vertical"
         android:orientation="vertical">
 
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/setupTitle"
             android:layout_width="wrap_content"
@@ -74,6 +80,24 @@
                 />
 
         </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/actionPrivacyPolicy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/pref_about_privacy_policy"
+            android:textColor="@color/white70"
+            android:background="?attr/selectableItemBackground"
+            />
 
     </LinearLayout>
 

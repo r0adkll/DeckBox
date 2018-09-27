@@ -24,8 +24,10 @@ import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.internal.di.HasComponent
+import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -87,9 +89,12 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
                 Analytics.event(Event.SelectContent.Action("import_cards"))
                 disposables += editor.createSession(imports = it)
                         .subscribeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            startActivity(DeckBuilderActivity.createIntent(this, it, true))
-                        }
+                        .subscribe({ sessionId ->
+                            startActivity(DeckBuilderActivity.createIntent(this, sessionId, true))
+                        }, { t ->
+                            Timber.e(t)
+                            snackbar(R.string.error_session_new_deck)
+                        })
             }
         }
     }

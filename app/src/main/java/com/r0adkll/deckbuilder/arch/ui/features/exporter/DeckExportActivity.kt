@@ -19,8 +19,10 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.Schedulers
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.activity_deck_exporter.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -60,7 +62,12 @@ class DeckExportActivity : BaseActivity() {
         disposables += converter.export(deck.cards, deck.name)
                 .subscribeOn(schedulers.comp)
                 .observeOn(schedulers.main)
-                .subscribe { deckList.text = it }
+                .subscribe({
+                    deckList.text = it
+                }, {
+                    Timber.e(it)
+                    snackbar(R.string.error_exporting_deck)
+                })
     }
 
 
@@ -90,7 +97,7 @@ class DeckExportActivity : BaseActivity() {
 
 
     companion object {
-        @JvmField val EXTRA_DECK = "DeckExportActivity.Deck"
+        private const val EXTRA_DECK = "DeckExportActivity.Deck"
 
         fun createIntent(context: Context, deck: Deck): Intent {
             val intent = Intent(context, DeckExportActivity::class.java)

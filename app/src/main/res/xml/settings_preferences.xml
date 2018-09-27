@@ -52,6 +52,11 @@
     <PreferenceCategory android:title="@string/pref_category_about">
 
         <Preference
+            android:key="pref_about_privacy_policy"
+            android:title="@string/pref_about_privacy_policy"
+            />
+
+        <Preference
             android:key="pref_about_oss"
             android:title="@string/pref_about_oss_title"
             />

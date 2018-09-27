@@ -14,7 +14,7 @@ class CacheInvalidatePlugin @Inject constructor(
     val preferences: AppPreferences
 ) : RemotePlugin {
 
-    @SuppressLint("CheckResult")
+    @SuppressLint("CheckResult", "RxLeakedSubscription")
     override fun onFetchActivated(remote: Remote) {
         // Verify cache, and invalidate if needed
         remote.expansionVersion?.let { (versionCode, expansionCode) ->

@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing
 
 
+import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
@@ -17,6 +18,7 @@ class DeckTestingRenderer(
 ) : UiBaseStateRenderer<DeckTestingUi.State, DeckTestingUi.State.Change, DeckTestingUi.Actions>(actions, main, comp) {
 
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onStart() {
 
         disposables += state

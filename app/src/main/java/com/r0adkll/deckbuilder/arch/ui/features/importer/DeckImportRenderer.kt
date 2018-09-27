@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.importer
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -13,6 +14,7 @@ class DeckImportRenderer(
         main: Scheduler
 ) : DisposableStateRenderer<DeckImportUi.State>(main, comp) {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         disposables += state

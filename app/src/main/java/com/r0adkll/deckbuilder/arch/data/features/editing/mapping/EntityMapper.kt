@@ -2,13 +2,15 @@ package com.r0adkll.deckbuilder.arch.data.features.editing.mapping
 
 import com.r0adkll.deckbuilder.arch.data.features.editing.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Ability
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Change
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.util.*
+import com.r0adkll.deckbuilder.util.compactEffects
+import com.r0adkll.deckbuilder.util.compactTypes
+import com.r0adkll.deckbuilder.util.deserializeEffects
+import com.r0adkll.deckbuilder.util.deserializeTypes
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type

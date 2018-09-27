@@ -263,12 +263,14 @@ class DeckBuilderActivity : BaseActivity(),
         renderer.start()
         presenter.start()
 
+        @SuppressLint("RxSubscribeOnError")
         disposables += pokemonCardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it, sessionId)
                 }
 
+        @SuppressLint("RxSubscribeOnError")
         disposables += actionDeckImage.clicks()
                 .subscribe {
                     flags.newFeatureDeckImage = false
@@ -604,7 +606,7 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
 
-    @SuppressLint("CheckResult")
+    @SuppressLint("CheckResult", "RxLeakedSubscription")
     private fun destroySession() {
         editRepository.deleteSession(sessionId)
                 .subscribe({

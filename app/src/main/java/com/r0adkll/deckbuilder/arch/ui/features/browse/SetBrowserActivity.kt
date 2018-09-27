@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browse
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -26,17 +27,17 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.*
+import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.BrowseFilter
+import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
-import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.bindParcelable
@@ -61,6 +62,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private lateinit var adapter: PokemonBuilderRecyclerAdapter
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_browser)

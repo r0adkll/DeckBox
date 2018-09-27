@@ -7,8 +7,7 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.widget.ImageView
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.*
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R

@@ -10,10 +10,6 @@ class AspectRatioImageView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
 
-    // Ratio Type Constants
-    val RATIO_WIDTH = 0
-    val RATIO_HEIGHT = 1
-
     // The Ratio Type
     var ratioType = RATIO_WIDTH
 
@@ -42,5 +38,8 @@ class AspectRatioImageView @JvmOverloads constructor(
         }
     }
 
-
+    companion object {
+        private const val RATIO_WIDTH = 0
+        private const val RATIO_HEIGHT = 1
+    }
 }

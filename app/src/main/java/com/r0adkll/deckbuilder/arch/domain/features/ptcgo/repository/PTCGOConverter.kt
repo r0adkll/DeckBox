@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import io.reactivex.Observable
 
 

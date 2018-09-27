@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
 import android.graphics.*
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import com.ftinc.kit.kotlin.extensions.color

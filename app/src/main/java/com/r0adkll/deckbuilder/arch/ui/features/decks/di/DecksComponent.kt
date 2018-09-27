@@ -7,7 +7,7 @@ import dagger.Subcomponent
 
 
 @FragmentScope
-@Subcomponent(modules = arrayOf(DecksModule::class))
+@Subcomponent(modules = [DecksModule::class])
 interface DecksComponent {
 
     fun inject(fragment: DecksFragment)

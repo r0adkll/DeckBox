@@ -21,21 +21,20 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
-import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
-import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
-import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
+import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
+import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.internal.di.HasComponent
 import com.r0adkll.deckbuilder.util.ImeUtils
+import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -164,12 +163,12 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     override fun showEmptyResults() {
         emptyView.setEmptyMessage(R.string.empty_search_results_category)
-        emptyView.setActionLabelRes(R.string.empty_search_missing_card)
-        emptyView.setActionColorRes(R.color.red_500)
-        emptyView.setOnActionClickListener {
-            Analytics.event(Event.SelectContent.Action("search_missing_card", "tablet"))
-            MissingCardsActivity.show(activity!!)
-        }
+//        emptyView.setActionLabelRes(R.string.empty_search_missing_card)
+//        emptyView.setActionColorRes(R.color.red_500)
+//        emptyView.setOnActionClickListener {
+//            Analytics.event(Event.SelectContent.Action("search_missing_card", "tablet"))
+//            MissingCardsActivity.show(activity!!)
+//        }
     }
 
 
@@ -242,16 +241,16 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
 
 
     class ToolbarScrollListener(
-            val toolBar: View
+            private val toolBar: View
     ) : RecyclerView.OnScrollListener() {
 
-        private val ELEVATION: Float by lazy { toolBar.dpToPx(4f) }
+        private val elevation: Float by lazy { toolBar.dpToPx(4f) }
         private var scrollY: Float = 0f
 
 
         override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
             scrollY += dy
-            toolBar.elevation = scrollY.coerceIn(0f, ELEVATION)
+            toolBar.elevation = scrollY.coerceIn(0f, elevation)
         }
 
 

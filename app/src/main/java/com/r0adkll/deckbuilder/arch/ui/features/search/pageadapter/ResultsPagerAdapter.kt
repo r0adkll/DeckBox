@@ -10,18 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.*
 import android.view.animation.Animation.RELATIVE_TO_SELF
-import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.internal.analytics.Analytics
-import com.r0adkll.deckbuilder.internal.analytics.Event
 import io.pokemontcg.model.SuperType
 
 
@@ -140,7 +136,7 @@ class ResultsPagerAdapter(
 
 
     private class SearchResultViewHolder(
-            val itemView: View,
+            itemView: View,
             val position: Int,
             val hasValidSession: Boolean,
             scrollHideListener: KeyboardScrollHideListener,
@@ -206,12 +202,12 @@ class ResultsPagerAdapter(
                 1 -> R.string.empty_search_results_trainer_message
                 else -> R.string.empty_search_results_energy_message
             })
-            emptyView.setActionLabelRes(R.string.empty_search_missing_card)
-            emptyView.actionColor = emptyView.color(R.color.red_500)
-            emptyView.setOnActionClickListener {
-                Analytics.event(Event.SelectContent.Action("search_missing_card", position.toString()))
-                MissingCardsActivity.show(itemView.context)
-            }
+//            emptyView.setActionLabelRes(R.string.empty_search_missing_card)
+//            emptyView.actionColor = emptyView.color(R.color.red_500)
+//            emptyView.setOnActionClickListener {
+//                Analytics.event(Event.SelectContent.Action("search_missing_card", position.toString()))
+//                MissingCardsActivity.show(itemView.context)
+//            }
         }
 
 

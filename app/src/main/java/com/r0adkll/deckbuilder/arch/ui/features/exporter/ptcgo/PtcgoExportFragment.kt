@@ -45,6 +45,7 @@ class PtcgoExportFragment : BaseFragment() {
     }
 
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)

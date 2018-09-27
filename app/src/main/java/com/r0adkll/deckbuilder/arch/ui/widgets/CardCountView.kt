@@ -97,7 +97,6 @@ class CardCountView @JvmOverloads constructor(
     private fun createCountView(@DrawableRes icon: Int): TextView {
         val view = TextView(context)
         view.gravity = Gravity.CENTER
-        view.text = "26"
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
         view.setTextColor(color(R.color.black56))
         view.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)

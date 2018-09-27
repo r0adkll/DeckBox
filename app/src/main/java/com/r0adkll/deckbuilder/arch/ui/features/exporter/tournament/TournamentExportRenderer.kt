@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.dateOfBirth
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
@@ -14,6 +15,7 @@ class TournamentExportRenderer(
         comp: Scheduler
 ) : DisposableStateRenderer<TournamentExportUi.State>(main, comp) {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         disposables += state

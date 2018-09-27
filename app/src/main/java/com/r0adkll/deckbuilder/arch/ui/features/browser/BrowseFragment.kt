@@ -3,8 +3,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
@@ -18,7 +19,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
-import com.r0adkll.deckbuilder.util.extensions.toast
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_browse.*
 import javax.inject.Inject

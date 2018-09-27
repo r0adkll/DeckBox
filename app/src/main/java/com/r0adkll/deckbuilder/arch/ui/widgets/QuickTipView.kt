@@ -4,30 +4,24 @@ import android.animation.Animator
 import android.content.Context
 import android.graphics.*
 import android.support.annotation.StringRes
-import android.support.graphics.drawable.AnimationUtilsCompat
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewPropertyAnimatorListener
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.*
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.ftinc.kit.kotlin.extensions.*
 import com.ftinc.kit.util.UIUtils
-import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
-import timber.log.Timber
 
 
 class QuickTipView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-
-    private val ANIM_DURATION = 300L
-    private val TABLET_WIDTH = 400f
 
     private val title: TextView
 
@@ -81,12 +75,11 @@ class QuickTipView @JvmOverloads constructor(
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             val d = Math.sqrt(Math.pow((centerX - ev.x).toDouble(), 2.0) +
                     Math.pow((centerY - ev.y).toDouble(), 2.0))
-            if (d > holeRadius) {
-                return true
-            }
-            else {
+            return if (d > holeRadius) {
+                true
+            } else {
                 view?.let { hide(it) }
-                return false
+                false
             }
         }
         return false
@@ -196,5 +189,11 @@ class QuickTipView @JvmOverloads constructor(
         } else {
             Math.max(measuredWidth / 2f, measuredHeight / 2f) + dpToPx(56f) + dpToPx(32f)
         }
+    }
+
+
+    companion object {
+        private const val ANIM_DURATION = 300L
+        private const val TABLET_WIDTH = 400f
     }
 }

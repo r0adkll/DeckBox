@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.CardUtils.stackCards
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
@@ -14,6 +15,7 @@ class DeckBuilderRenderer(
         comp: Scheduler
 ) : DisposableStateRenderer<DeckBuilderUi.State>(main, comp) {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         disposables += state
