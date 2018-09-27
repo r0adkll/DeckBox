@@ -264,7 +264,7 @@ sealed class Action {
                         if (attached != null) { // If we successfully attach to the card
                             val hand = actor.hand.toMutableList()
                             if (hand.remove(card)) { // If we can successfully remove the card from our hand
-                                actor.copy(active = attached)
+                                actor.copy(active = attached, hand = hand)
                             }
                         }
                         null
