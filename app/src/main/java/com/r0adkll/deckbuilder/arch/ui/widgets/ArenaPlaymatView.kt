@@ -6,8 +6,8 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dpToPx
@@ -20,7 +20,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player
  */
 class ArenaPlaymatView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ViewGroup(context, attrs, defStyleAttr) {
+) : ViewGroup(context, attrs, defStyleAttr), GestureDetector.OnGestureListener {
 
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val elementPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -33,6 +33,9 @@ class ArenaPlaymatView @JvmOverloads constructor(
     private var elementHeight: Float = 0f
     private val cardRadius = dpToPx(4f)
     private val cardPunchPadding = dpToPx(2f)
+
+    private val gestureDetector: GestureDetector
+    private var listener: BoardListener? = null
 
     /**
      * A Map of Maps to contain all the positional element components of a playmat board
@@ -85,6 +88,8 @@ class ArenaPlaymatView @JvmOverloads constructor(
 
         board[Player.Type.PLAYER] = player
         board[Player.Type.OPPONENT] = opponent
+
+        gestureDetector = GestureDetector(context, this)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -220,7 +225,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
 
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
 
@@ -245,15 +250,90 @@ class ArenaPlaymatView @JvmOverloads constructor(
     }
 
 
-    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return super.onInterceptTouchEvent(ev)
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        val x = ev.x.toInt()
+        val y = ev.y.toInt()
+
+        // Check if any of the children can intercept
+        val hitRect = Rect()
+        for (index in 0 until childCount) {
+            val child = getChildAt(index)
+            child.getHitRect(hitRect)
+            if (hitRect.contains(x, y)) {
+                return false
+            }
+        }
+
+        return true
     }
 
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        return gestureDetector.onTouchEvent(event)
+    }
 
 
-        return super.onTouchEvent(event)
+    override fun onShowPress(e: MotionEvent?) {
+
+    }
+
+
+    override fun onSingleTapUp(e: MotionEvent): Boolean {
+        val x = e.x
+        val y = e.y
+
+        // Find a board element that this might contain the xy
+        findBoardElements(x, y)?.let { result ->
+            listener?.onBoardElementClicked(result.type, result.elementType, result.element)
+            return true
+        }
+
+        return false
+    }
+
+
+    override fun onDown(e: MotionEvent?): Boolean {
+        return false
+    }
+
+
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+        return false
+    }
+
+
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+        return false
+    }
+
+
+    override fun onLongPress(e: MotionEvent) {
+        val x = e.x
+        val y = e.y
+
+        // Find a board element that this might contain the xy
+        findBoardElements(x, y)?.let { result ->
+            listener?.onBoardElementLongClicked(result.type, result.elementType, result.element)
+        }
+    }
+
+
+    fun setBoardListener(listener: BoardListener) {
+        this.listener = listener
+    }
+
+
+    private fun findBoardElements(x: Float, y: Float): Result? {
+        board.forEach { entry ->
+            val type = entry.key
+            entry.value.forEach {
+                val elementType = it.key
+                if (it.value.bounds.contains(x, y)) {
+                    return Result(type, elementType, it.value)
+                }
+            }
+        }
+        return null
     }
 
 
@@ -309,6 +389,13 @@ class ArenaPlaymatView @JvmOverloads constructor(
     }
 
 
+    interface BoardListener {
+
+        fun onBoardElementClicked(playerType: Player.Type, elementType: BoardElement, element: Element)
+        fun onBoardElementLongClicked(playerType: Player.Type, elementType: BoardElement, element: Element)
+    }
+
+
     /**
      * Per-Player board elements to be represented as [Element]s
      */
@@ -341,4 +428,11 @@ class ArenaPlaymatView @JvmOverloads constructor(
                 }
         }
     }
+
+
+    private data class Result(
+            val type: Player.Type,
+            val elementType: BoardElement,
+            val element: Element
+    )
 }

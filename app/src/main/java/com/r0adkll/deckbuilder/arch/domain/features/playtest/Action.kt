@@ -435,6 +435,28 @@ sealed class Action {
                     } ?: actor
                 }
             }
+
+
+            /**
+             * Swap the active card with the specified [benchPosition]
+             * @param benchPosition the position on the bench to swap the active with
+             */
+            class Swap(player: Player.Type, val benchPosition: Int) : Active(player) {
+
+                override fun apply(board: Board, actor: Player): Player {
+                    val active = actor.active
+                    return active?.let {
+                        val bench = actor.bench.cards[benchPosition]
+                        if (bench != null) {
+                            val newBench = actor.bench.cards.toMutableMap()
+                            newBench[benchPosition] = it
+                            actor.copy(active = bench, bench = actor.bench.copy(cards = newBench))
+                        } else {
+                            actor
+                        }
+                    } ?: actor
+                }
+            }
         }
 
 

@@ -85,11 +85,4 @@ data class Board(
             PARALYZED
         }
     }
-
-
-    /**
-     * Class wrapper to indicate specific indexes on items without having to maintain nullable
-     * valued arrays. i.e. for prize cards, or for benched cards. This is primarily for UI purposes
-     */
-    class Ordered<C>(val index: Int, val item: C)
 }
