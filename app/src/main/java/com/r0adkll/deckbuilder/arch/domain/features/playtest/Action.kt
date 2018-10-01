@@ -57,6 +57,216 @@ sealed class Action {
 
 
         /**
+         * Apply an amount of damage to the [player]s active card.
+         * @param amount the amount of damage to inflict
+         */
+        class Damage(player: Player.Type, val source: Source<Board.Card, Source.CardBuilder>, val amount: Int) : Actor(player) {
+
+            override fun apply(board: Board, actor: Player): Player {
+                return source.apply(actor) {
+                    damage += amount
+                }
+            }
+        }
+
+
+        /**
+         * Attach a [PokemonCard] from the [player]'s hand to the [player]'s active
+         * pokemon.
+         *
+         * For the various type of card attaching, this will attach it appropriately
+         * * ENERGY -> adds it to it's attached energy list
+         * * TRAINER -> if card is a tool, set's as the cards attached tool card
+         * * POKEMON -> if card is the correct evolution of the card on the top of the stack it evolves the card
+         *
+         * @param card the card from the [player]'s hand to attach
+         */
+        class Attach(player: Player.Type, val source: Source<Board.Card, Source.CardBuilder>, val card: PokemonCard) : Actor(player) {
+
+            override fun apply(board: Board, actor: Player): Player {
+                return source.apply(actor) {
+                    if (attach(this, card)) {
+                        val hand = actor.hand.toMutableList()
+                        if (hand.remove(card)) { // If we can successfully remove the card from our hand
+                            actor.copy(hand = hand)
+                        }
+                    }
+                }
+            }
+
+
+            private fun attach(source: Source.CardBuilder, card: PokemonCard): Boolean = when(card.supertype) {
+                SuperType.ENERGY -> {
+                    source.energy.add(card)
+                    true
+                }
+                SuperType.TRAINER -> when(card.subtype) {
+                    SubType.POKEMON_TOOL -> {
+                        source.tool = card
+                        true
+                    }
+                    else -> false
+                }
+                SuperType.POKEMON -> {
+                    val topCard = source.pokemons.peek()
+                    if (topCard.name == card.evolvesFrom) {
+                        source.pokemons.push(card)
+                        true
+                    } else {
+                        false
+                    }
+                }
+                else -> false
+            }
+        }
+
+
+        /**
+         * Detach a [PokemonCard] form the [player]'s active card to the specified [target]
+         *
+         * @param card the card to detach from the active board position
+         * @param target the target of where to detach the card to
+         */
+        class Detach(
+                player: Player.Type,
+                val source: Source<Board.Card, Source.CardBuilder>,
+                val target: Source<List<PokemonCard>, Source.ListBuilder>,
+                val card: PokemonCard
+        ) : Actor(player) {
+
+            override fun apply(board: Board, actor: Player): Player {
+                return source.apply(actor) {
+                    when(card.supertype) {
+                        SuperType.ENERGY -> {
+                            if (energy.remove(card)) { // If we can remove it from our list of energies, yay
+                                target.apply(actor) { items.add(card) }
+                            }
+                        }
+                        SuperType.TRAINER -> {
+                            if (card == tool) {
+                                tool = null
+                                target.apply(actor) { items.add(card) }
+                            }
+                        }
+                        SuperType.POKEMON -> {
+                            if (pokemons.remove(card)) {
+                                target.apply(actor) { items.add(card) }
+                            }
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * Discard a [Board.Card] and all attachments into the [target]
+         * @param source the [Board.Card] source on the [Player] object to take action upon
+         * @param target the [PokemonCard] list target on the [Player] object to discard to
+         */
+        class Discard(
+                player: Player.Type,
+                val source: Source<Board.Card, Source.CardBuilder>,
+                val target: Source<List<PokemonCard>, Source.ListBuilder>
+        ) : Actor(player) {
+
+            override fun apply(board: Board, actor: Player): Player {
+                return source.apply(actor) {
+                    val cardsToDiscard = ArrayList<PokemonCard>()
+
+                    // Discard all pokemon/evolutions
+                    cardsToDiscard += pokemons
+                    pokemons.clear()
+
+                    // Discard energy
+                    cardsToDiscard += energy
+                    energy.clear()
+
+                    // Discard tool
+                    tool?.let { cardsToDiscard += it }
+                    tool = null
+
+                    // Now add cards to target
+                    target.apply(actor) {
+                        items += cardsToDiscard
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * Action Group for Hand based actions
+         */
+        sealed class Hand(player: Player.Type) : Actor(player) {
+
+            /**
+             * Drop a [card] from the [player]'s hand into the [target]
+             * @param target the player source target to drop the card into
+             * @param card the card to remove from the player's hand and drop into the target
+             */
+            class Drop(player: Player.Type, val target: Source<List<PokemonCard>, Source.ListBuilder>, val card: PokemonCard) : Hand(player) {
+
+                override fun apply(board: Board, actor: Player): Player {
+                    val hand = actor.hand.minus(card)
+                    val updatedActor = actor.copy(hand = hand)
+                    return target.apply(updatedActor) {
+                        items.add(card)
+                    }
+                }
+            }
+
+
+            /**
+             * Play a stadium card from the [player]'s hand
+             * @param stadiumCard the Stadium card to play
+             */
+            class Stadium(player: Player.Type, val stadiumCard: PokemonCard) : Hand(player) {
+
+                private val otherPlayer: Player.Type
+                    get() = when(player) {
+                        Player.Type.PLAYER -> Player.Type.OPPONENT
+                        Player.Type.OPPONENT -> Player.Type.PLAYER
+                    }
+
+                override fun apply(board: Board): Board {
+                    val actor = board[player]
+                    val otherActor = board[otherPlayer]
+                    if (otherActor.stadium == null || otherActor.stadium.name != stadiumCard.name) {
+
+                        // Cause the other stadium to be discarded
+                        val updatedOtherActor = otherActor.stadium?.let {
+                            otherActor.copy(stadium = null, discard = otherActor.discard.plus(otherActor.stadium))
+                        }
+
+                        val hand = actor.hand.toMutableList()
+                        return if (hand.remove(stadiumCard)) {
+                            val updatedActor = actor.copy(hand = hand, stadium = stadiumCard)
+                            updatedBoard(board, updatedActor, updatedOtherActor ?: otherActor)
+                        } else {
+                            board
+                        }
+                    } else {
+                        return board
+                    }
+                }
+
+
+                // Not used
+                override fun apply(board: Board, actor: Player): Player = actor
+
+                private fun updatedBoard(board: Board, actor: Player, otherActor: Player): Board {
+                    return board.copy(
+                            player = if (player == Player.Type.PLAYER) actor else otherActor,
+                            opponent = if (player == Player.Type.OPPONENT) actor else otherActor
+                    )
+                }
+            }
+        }
+
+
+        /**
          * Action Group for Deck-Based actions
          */
         sealed class Deck(player: Player.Type) : Actor(player) {
@@ -225,126 +435,51 @@ sealed class Action {
                     } ?: actor
                 }
             }
+        }
 
 
-            /**
-             * Apply an amount of damage to the [player]s active card.
-             * @param amount the amount of damage to inflict
-             */
-            class Damage(player: Player.Type, val amount: Int) : Active(player) {
-
-                override fun apply(board: Board, actor: Player): Player {
-                    val active = actor.active
-                    return active?.let {
-                        val damage = it.damage + amount
-                        actor.copy(active = it.copy(damage = damage))
-                    } ?: actor
-                }
-            }
-
+        /**
+         * Action Group for Prize based actions
+         */
+        sealed class Prizes(player: Player.Type) : Actor(player) {
 
             /**
-             * Attach a [PokemonCard] from the [player]'s hand to the [player]'s active
-             * pokemon.
-             *
-             * For the various type of card attaching, this will attach it appropriately
-             * * ENERGY -> adds it to it's attached energy list
-             * * TRAINER -> if card is a tool, set's as the cards attached tool card
-             * * POKEMON -> if card is the correct evolution of the card on the top of the stack it evolves the card
-             *
-             * @param card the card from the [player]'s hand to attach
+             * Draw a selected indices of Prize cards into the [target] list on the player
              */
-            class Attach(player: Player.Type, val card: PokemonCard) : Active(player) {
+            class Draw(player: Player.Type,
+                       val target: Source<List<PokemonCard>, Source.ListBuilder>,
+                       val indices: List<Int>) : Prizes(player) {
 
                 override fun apply(board: Board, actor: Player): Player {
-                    val active = actor.active
-                    return active?.let {
-                        // remove the card from the player's hand
-                        val attached = attach(active, card)
-                        if (attached != null) { // If we successfully attach to the card
-                            val hand = actor.hand.toMutableList()
-                            if (hand.remove(card)) { // If we can successfully remove the card from our hand
-                                actor.copy(active = attached, hand = hand)
-                            }
-                        }
-                        null
-                    } ?: actor
-                }
-
-
-                private fun attach(active: Board.Card, card: PokemonCard): Board.Card? = when(card.supertype) {
-                    SuperType.ENERGY -> active.copy(energy = active.energy.plus(card))
-                    SuperType.TRAINER -> when(card.subtype) {
-                        SubType.POKEMON_TOOL -> active.copy(tool = card)
-                        else -> null
+                    val prizes = actor.prizes.toMutableMap()
+                    val selectedPrizes = indices.map { prizes.remove(it) }.filter { it == null }.map { it!! }
+                    val updatedActor = actor.copy(prizes = prizes)
+                    return target.apply(updatedActor) {
+                        items.addAll(selectedPrizes)
                     }
-                    SuperType.POKEMON -> {
-                        val topCard = active.pokemons.peek()
-                        if (topCard.name == card.evolvesFrom) {
-                            active.pokemons.push(card)
-                            active
-                        } else {
-                            null
-                        }
-                    }
-                    else -> null
                 }
             }
 
 
             /**
-             * Detach a [PokemonCard] form the [player]'s active card to the specified [target]
-             *
-             * @param card the card to detach from the active board position
-             * @param target the target of where to detach the card to
+             * Add a list of cards from [source] to the [player]'s prize cards
              */
-            class Detach(player: Player.Type, val card: PokemonCard, val target: Target) : Active(player) {
+            class Add(player: Player.Type,
+                      val source: Source<List<PokemonCard>, Source.ListBuilder>,
+                      val cards: List<PokemonCard>) : Actor(player) {
 
                 override fun apply(board: Board, actor: Player): Player {
-                    val active = actor.active
-                    return active?.let {
-                        when(card.supertype) {
-                            SuperType.ENERGY -> {
-                                val energy = it.energy.toMutableList()
-                                if (energy.remove(card)) { // If we can remove it from our list of energies, yay
-                                    val updatedActor = actor.copy(active = it.copy(energy = energy))
-                                    target.apply(updatedActor, card)
-                                } else {
-                                    null
-                                }
-                            }
-                            SuperType.TRAINER -> {
-                                if (card == it.tool) {
-                                    val updatedActor = actor.copy(active = it.copy(tool = null))
-                                    target.apply(updatedActor, card)
-                                } else {
-                                    null
-                                }
-                            }
-                            SuperType.POKEMON -> {
-                                if (it.pokemons.remove(card)) {
-                                    target.apply(actor, card)
-                                } else {
-                                    null
-                                }
-                            }
-                            else -> null
-                        }
-                    } ?: actor
-                }
-            }
-
-
-            class Discard(player: Player.Type, val target: Target) : Active(player) {
-
-                override fun apply(board: Board, actor: Player): Player {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    val prizes = actor.prizes.toMutableMap()
+                    val lastIndex = prizes.keys.max()?.plus(1) ?: 6
+                    cards.forEachIndexed { index, pokemonCard ->
+                        prizes[lastIndex + index] = pokemonCard
+                    }
+                    val updatedActor = actor.copy(prizes = prizes)
+                    return source.apply(updatedActor) {
+                        items.removeAll(cards)
+                    }
                 }
             }
         }
-
     }
-
-
-
 }

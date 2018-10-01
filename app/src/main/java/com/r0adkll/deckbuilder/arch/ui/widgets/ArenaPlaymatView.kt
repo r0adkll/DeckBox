@@ -6,7 +6,9 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.kotlin.extensions.spToPx
@@ -18,7 +20,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player
  */
 class ArenaPlaymatView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : ViewGroup(context, attrs, defStyleAttr) {
 
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val elementPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -41,6 +43,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
 
 
     init {
+        setWillNotDraw(false)
         paint.color = color(R.color.playmat)
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = dpToPx(8f)
@@ -216,6 +219,11 @@ class ArenaPlaymatView @JvmOverloads constructor(
     }
 
 
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
     override fun onDraw(canvas: Canvas) {
         /*
          * Draw the Active Arena
@@ -234,6 +242,18 @@ class ArenaPlaymatView @JvmOverloads constructor(
                 drawCard(canvas, element)
             }
         }
+    }
+
+
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        return super.onInterceptTouchEvent(ev)
+    }
+
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+
+        return super.onTouchEvent(event)
     }
 
 

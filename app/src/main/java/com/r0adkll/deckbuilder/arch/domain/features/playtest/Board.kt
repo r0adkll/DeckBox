@@ -37,7 +37,7 @@ data class Board(
      */
     data class Player(
             val hand: List<PokemonCard>,
-            val prizes: List<Ordered<PokemonCard>>,
+            val prizes: Map<Int, PokemonCard>,
             val deck: ArrayDeque<PokemonCard>,
             val discard: List<PokemonCard>,
             val lostZone: List<PokemonCard>,
@@ -57,7 +57,7 @@ data class Board(
      * of up to 8 via SkyField
      */
     data class Bench(
-            val cards: List<Ordered<Card>> = emptyList(),
+            val cards: Map<Int, Card> = HashMap(),
             val size: Int = 5
     )
 
@@ -91,5 +91,5 @@ data class Board(
      * Class wrapper to indicate specific indexes on items without having to maintain nullable
      * valued arrays. i.e. for prize cards, or for benched cards. This is primarily for UI purposes
      */
-    abstract class Ordered<C>(val index: Int, val item: C)
+    class Ordered<C>(val index: Int, val item: C)
 }
