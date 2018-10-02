@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.text.Layout
@@ -16,9 +17,10 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player
 
 /**
- * TODO: NAME TO CHANGE
+ * This is the view that renders and manages the board for a Playtest simulator session renderering
+ * the [com.r0adkll.deckbuilder.arch.domain.features.playtest.Board] state
  */
-class ArenaPlaymatView @JvmOverloads constructor(
+class BoardView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr), GestureDetector.OnGestureListener {
 
@@ -230,9 +232,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
 
 
     override fun onDraw(canvas: Canvas) {
-        /*
-         * Draw the Active Arena
-         */
+        //Draw the Active Arena
         drawPokeBall(canvas)
 
         // Draw Elements
@@ -268,6 +268,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return gestureDetector.onTouchEvent(event)
     }
@@ -284,6 +285,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
 
         // Find a board element that this might contain the xy
         findBoardElements(x, y)?.let { result ->
+            performClick()
             listener?.onBoardElementClicked(result.type, result.elementType, result.element)
             return true
         }
@@ -313,6 +315,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
 
         // Find a board element that this might contain the xy
         findBoardElements(x, y)?.let { result ->
+            performLongClick()
             listener?.onBoardElementLongClicked(result.type, result.elementType, result.element)
         }
     }
@@ -328,7 +331,17 @@ class ArenaPlaymatView @JvmOverloads constructor(
             val type = entry.key
             entry.value.forEach {
                 val elementType = it.key
-                if (it.value.bounds.contains(x, y)) {
+                val element = it.value
+
+                if (element is Element.Bench) {
+                    element.cards.forEach { benchElement ->
+                        if (benchElement.bounds.contains(x, y)) {
+                            return Result(type, elementType, benchElement)
+                        }
+                    }
+                }
+
+                if (element.bounds.contains(x, y)) {
                     return Result(type, elementType, it.value)
                 }
             }
@@ -435,4 +448,7 @@ class ArenaPlaymatView @JvmOverloads constructor(
             val elementType: BoardElement,
             val element: Element
     )
+
+
+
 }

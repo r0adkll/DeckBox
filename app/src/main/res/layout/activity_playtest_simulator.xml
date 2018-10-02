@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.r0adkll.deckbuilder.arch.ui.widgets.ArenaPlaymatView
+    <com.r0adkll.deckbuilder.arch.ui.widgets.BoardView
         android:id="@+id/playmat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
