@@ -213,4 +213,5 @@
     <string name="shortcut_create_deck_long_label">Create new deck</string>
     <string name="error_session_opening_deck">Unable to open your deck</string>
     <string name="error_session_new_deck">Error creating new deck</string>
+    <string name="section_evolves_to">Evolves to</string>
 </resources>

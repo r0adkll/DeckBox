@@ -166,6 +166,28 @@
             />
 
         <TextView
+            android:id="@+id/evolvesToHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_normal"
+            android:text="@string/section_evolves_to"
+            android:textSize="14sp"
+            android:textColor="@color/white70"
+            android:fontFamily="sans-serif-medium"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/evolvesToRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:clipToPadding="false"
+            />
+
+        <TextView
             android:id="@+id/evolvesHeader"
             android:layout_width="wrap_content"
             android:layout_height="48dp"

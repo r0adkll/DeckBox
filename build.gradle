@@ -2,17 +2,17 @@ apply from: 'tools/dependencies.gradle'
 
 
 buildscript {
-    ext.kotlin_version = '1.2.60'
+    ext.kotlin_version = '1.2.71'
     repositories {
         google()
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-rc03'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha13'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:3.2.1'
-        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.14'
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.15'
         //noinspection GradleDynamicVersion
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.google.gms:oss-licenses:0.9.2'
@@ -27,6 +27,7 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url 'https://maven.fabric.io/public' }
+//        maven { url  "https://dl.bintray.com/r0adkll/pokemon-tcg-sdk-kotlin" }
     }
 }
 

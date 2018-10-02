@@ -45,6 +45,10 @@ object FilterMapper {
             builder.hp = filter.hp
         }
 
+        if (!filter.evolvesFrom.isNullOrBlank()) {
+            builder.evolvesFrom = filter.evolvesFrom
+        }
+
         if (filter.weaknesses.isNotEmpty()) {
             builder.weaknesses = filter.weaknesses.joinToString("|") { it.displayName }
         }
