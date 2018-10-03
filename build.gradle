@@ -27,7 +27,6 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url 'https://maven.fabric.io/public' }
-//        maven { url  "https://dl.bintray.com/r0adkll/pokemon-tcg-sdk-kotlin" }
     }
 }
 

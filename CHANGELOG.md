@@ -1,3 +1,6 @@
+# 1.7.5
+* Update to include privacy policy from within the app
+
 # 1.7.4
 * Added a custom RxErrorHandler using `RxJavaPlugins.setErrorHandler` method to help track/eliminate these errors that are dying outside the scope of my code
 * Fixed second Shortcuts bug that I missed causing a lot of crashes for 7.0+ devices

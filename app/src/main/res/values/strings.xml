@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">DeckBox</string>
     <string name="app_description">Create and edit Pokémon Trading Card Game decks to share and compare with others in the community.</string>
+    <string name="privacy_policy_url">http://r0adkll.com/deckbox/privacy_policy.html</string>
+
     <string name="action_continue">or continue here</string>
     <string name="action_skip">Skip</string>
     <string name="action_next">Next</string>
@@ -214,4 +216,5 @@
     <string name="error_session_opening_deck">Unable to open your deck</string>
     <string name="error_session_new_deck">Error creating new deck</string>
     <string name="section_evolves_to">Evolves to</string>
+    <string name="pref_about_privacy_policy">Privacy policy</string>
 </resources>
