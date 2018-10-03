@@ -6,9 +6,13 @@ import android.os.Bundle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.di.PlaytestModule
+import com.r0adkll.deckbuilder.arch.ui.widgets.BoardView
 import com.r0adkll.deckbuilder.util.PresenterActivityDelegate
 import com.r0adkll.deckbuilder.util.RendererActivityDelegate
+import com.r0adkll.deckbuilder.util.extensions.toast
+import kotlinx.android.synthetic.main.activity_playtest_simulator.*
 import javax.inject.Inject
 
 
@@ -24,6 +28,15 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playtest_simulator)
 
+        playmat.setBoardListener(object : BoardView.BoardListener {
+            override fun onBoardElementClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
+                toast("Element Clicked ($playerType, $elementType, $element)")
+            }
+
+            override fun onBoardElementLongClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
+                toast("Element Long Clicked ($playerType, $elementType, $element)")
+            }
+        })
     }
 
 
