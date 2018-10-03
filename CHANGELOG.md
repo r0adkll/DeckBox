@@ -1,3 +1,7 @@
+# 1.7.6
+* [#40](https://github.com/r0adkll/DeckBox/issues/40) - Added 'Evolves to' related cards row in card detail view
+* Fixed issue where secret rares wouldn't appear in the expansion browser
+
 # 1.7.5
 * Update to include privacy policy from within the app
 
