@@ -67,7 +67,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_browser)
 
-        state = state.copy(setCode = expansion.code, pageSize = expansion.totalCards)
+        state = state.copy(setCode = expansion.code, pageSize = expansion.totalCards + 25 /* Hack to account for secret rares */)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = " "

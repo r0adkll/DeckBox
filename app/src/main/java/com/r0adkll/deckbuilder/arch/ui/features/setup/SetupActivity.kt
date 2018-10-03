@@ -181,13 +181,15 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
                 val acct = result.signInAccount
                 val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
                 firebaseAuth.signInWithCredential(credential)
-                        .addOnCompleteListener {
-                            if (it.isSuccessful) {
+                        .addOnCompleteListener { r ->
+                            if (r.isSuccessful) {
                                 // Auto-grab the user's name from their account
-                                it.result?.user?.displayName?.let {
+                                r.result?.user?.displayName?.let {
                                     preferences.playerName.set(it)
                                 }
-                                Analytics.userId(it.result.user.uid)
+                                r.result?.user?.uid?.let {
+                                    Analytics.userId(it)
+                                }
                                 Analytics.event(Event.Login.Google)
                                 startActivity(HomeActivity.createIntent(this@SetupActivity))
                                 finish()

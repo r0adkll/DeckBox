@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-def VERSION_NAME = "1.7.5"
+def VERSION_NAME = "1.7.6"
 
 
 ext.gitVersioner = [
@@ -152,6 +152,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'nl.littlerobots.rxlint:rxlint:1.6.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
 }
 

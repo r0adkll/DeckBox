@@ -233,7 +233,7 @@ class SettingsActivity : BaseActivity() {
                         .currentUser?.linkWithCredential(credential)
                         ?.addOnCompleteListener {
                             if (it.isSuccessful) {
-                                snackbar("${it.result.user.email} linked!")
+                                snackbar("${it.result?.user?.email} linked!")
                                 setupPreferences()
                             }
                             else {

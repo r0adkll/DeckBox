@@ -59,7 +59,8 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     @Inject lateinit var presenter: CardDetailPresenter
 
     private lateinit var variantsAdapter: PokemonCardsRecyclerAdapter
-    private lateinit var evolvesAdapter: PokemonCardsRecyclerAdapter
+    private lateinit var evolvesFromAdapter: PokemonCardsRecyclerAdapter
+    private lateinit var evolvesToAdapter: PokemonCardsRecyclerAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +80,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
         bindCard()
 
+        // Setup variants recycler
         variantsAdapter = PokemonCardsRecyclerAdapter(this)
         variantsAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
@@ -87,13 +89,23 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
 
-        evolvesAdapter = PokemonCardsRecyclerAdapter(this)
-        evolvesAdapter.setOnViewItemClickListener { view, _ ->
+        // Setup evolves from adapter
+        evolvesFromAdapter = PokemonCardsRecyclerAdapter(this)
+        evolvesFromAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
             CardDetailActivity.show(this, view, sessionId)
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        evolvesRecycler.adapter = evolvesAdapter
+        evolvesRecycler.adapter = evolvesFromAdapter
+
+        // Setup evolves to adapter
+        evolvesToAdapter = PokemonCardsRecyclerAdapter(this)
+        evolvesToAdapter.setOnViewItemClickListener { view, _ ->
+            Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
+            CardDetailActivity.show(this, view, sessionId)
+        }
+        evolvesToRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        evolvesToRecycler.adapter = evolvesToAdapter
 
         actionClose?.setOnClickListener { finish() }
         slidingLayout?.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
@@ -212,9 +224,16 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
 
     override fun showEvolvesFrom(cards: List<PokemonCard>) {
-        evolvesAdapter.setCards(cards)
+        evolvesFromAdapter.setCards(cards)
         evolvesHeader.setVisible(cards.isNotEmpty())
         evolvesRecycler.setVisible(cards.isNotEmpty())
+    }
+
+
+    override fun showEvolvesTo(cards: List<PokemonCard>) {
+        evolvesToAdapter.setCards(cards)
+        evolvesToHeader.setVisible(cards.isNotEmpty())
+        evolvesToRecycler.setVisible(cards.isNotEmpty())
     }
 
 

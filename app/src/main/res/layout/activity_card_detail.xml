@@ -10,6 +10,7 @@
     android:gravity="bottom"
     app:umanoOverlay="true"
     app:umanoPanelHeight="48dp"
+    app:umanoScrollableView="@+id/contentScrollView"
     >
 
     <FrameLayout
@@ -51,137 +52,172 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/contentScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black75"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:paddingStart="12dp">
+            android:layout_height="wrap_content"
+            android:background="@color/black75"
+            android:orientation="vertical">
 
-            <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-                android:id="@+id/formatStandard"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="start|center_vertical"
-                android:padding="4dp"
-                app:format="standard"
-                app:strokeWidth="2dp"
-                app:strokeColor="@color/white"
-                app:fillColor="@color/black"
-                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:paddingStart="12dp">
 
-            <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-                android:id="@+id/formatExpanded"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="start|center_vertical"
-                android:padding="4dp"
-                app:format="expanded"
-                app:strokeWidth="2dp"
-                app:strokeColor="@color/white"
-                app:fillColor="@color/black"
-                />
+                <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+                    android:id="@+id/formatStandard"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:padding="4dp"
+                    app:format="standard"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/white"
+                    app:fillColor="@color/black"
+                    />
 
-            <ImageView
-                android:id="@+id/expansionSymbol"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="start|center_vertical"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:scaleType="fitCenter"
-                />
+                <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
+                    android:id="@+id/formatExpanded"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:padding="4dp"
+                    app:format="expanded"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/white"
+                    app:fillColor="@color/black"
+                    />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                />
+                <ImageView
+                    android:id="@+id/expansionSymbol"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:scaleType="fitCenter"
+                    />
 
-            <ImageView
-                android:id="@+id/panelArrow"
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    />
+
+                <ImageView
+                    android:id="@+id/panelArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/cardTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_gravity="start|center_vertical"
-                android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+                android:layout_marginTop="8dp"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                android:textSize="@dimen/display_1"
+                />
+
+            <TextView
+                android:id="@+id/cardSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:textSize="20sp"
+                android:textColor="@color/white70"
+                android:drawablePadding="8dp"
+                />
+
+            <TextView
+                android:id="@+id/variantsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:text="@string/section_variants"
+                android:textSize="14sp"
+                android:textColor="@color/white70"
+                android:fontFamily="sans-serif-medium"
+                android:visibility="gone"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/variantsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:clipToPadding="false"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/evolvesToHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:text="@string/section_evolves_to"
+                android:textSize="14sp"
+                android:textColor="@color/white70"
+                android:fontFamily="sans-serif-medium"
+                android:visibility="gone"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/evolvesToRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:clipToPadding="false"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/evolvesHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:text="@string/section_evolves"
+                android:textSize="14sp"
+                android:textColor="@color/white70"
+                android:fontFamily="sans-serif-medium"
+                android:visibility="gone"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/evolvesRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:clipToPadding="false"
+                android:visibility="gone"
                 />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/cardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingStart="@dimen/padding_normal"
-            android:paddingEnd="@dimen/padding_normal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-            android:textSize="@dimen/display_1"
-            />
-
-        <TextView
-            android:id="@+id/cardSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_normal"
-            android:paddingEnd="@dimen/padding_normal"
-            android:textSize="20sp"
-            android:textColor="@color/white70"
-            android:drawablePadding="8dp"
-            />
-
-        <TextView
-            android:id="@+id/variantsHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/padding_normal"
-            android:paddingEnd="@dimen/padding_normal"
-            android:text="@string/section_variants"
-            android:textSize="14sp"
-            android:textColor="@color/white70"
-            android:fontFamily="sans-serif-medium"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/variantsRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:clipToPadding="false"
-            />
-
-        <TextView
-            android:id="@+id/evolvesHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/padding_normal"
-            android:paddingEnd="@dimen/padding_normal"
-            android:text="@string/section_evolves"
-            android:textSize="14sp"
-            android:textColor="@color/white70"
-            android:fontFamily="sans-serif-medium"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/evolvesRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:clipToPadding="false"
-            />
-
-    </LinearLayout>
+    </ScrollView>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

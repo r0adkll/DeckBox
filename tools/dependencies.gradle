@@ -4,7 +4,7 @@ ext {
     minSdkVersion = 21
     targetSdkVersion = 27
     compileSdkVersion = 27
-    buildToolsVersion = '28.0.2'
+    buildToolsVersion = '28.0.3'
     sourceCompatibilityVersion = JavaVersion.VERSION_1_8
     targetCompatibilityVersion = JavaVersion.VERSION_1_8
 
@@ -25,7 +25,7 @@ ext {
     leakcanary_version =     '1.5.1'
     paperparcel_version =    '2.0.5'
     play_version =           '15.0.0'
-    poketcg_version =        '1.0.14'
+    poketcg_version =        '1.0.15'
     retrofit_version =       '2.3.0'
     room_version =           '1.0.0'
     requery_version =        '1.5.0'
