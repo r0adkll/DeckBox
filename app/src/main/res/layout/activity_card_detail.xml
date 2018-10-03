@@ -155,6 +155,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/white70"
                 android:fontFamily="sans-serif-medium"
+                android:visibility="gone"
                 />
 
             <android.support.v7.widget.RecyclerView
@@ -164,6 +165,7 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:clipToPadding="false"
+                android:visibility="gone"
                 />
 
             <TextView
@@ -177,6 +179,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/white70"
                 android:fontFamily="sans-serif-medium"
+                android:visibility="gone"
                 />
 
             <android.support.v7.widget.RecyclerView
@@ -186,6 +189,7 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:clipToPadding="false"
+                android:visibility="gone"
                 />
 
             <TextView
@@ -199,6 +203,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/white70"
                 android:fontFamily="sans-serif-medium"
+                android:visibility="gone"
                 />
 
             <android.support.v7.widget.RecyclerView
@@ -208,6 +213,7 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:clipToPadding="false"
+                android:visibility="gone"
                 />
 
         </LinearLayout>
