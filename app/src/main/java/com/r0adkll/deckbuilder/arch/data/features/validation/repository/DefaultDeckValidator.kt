@@ -4,6 +4,8 @@ package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
@@ -15,13 +17,27 @@ import javax.inject.Inject
 
 class DefaultDeckValidator @Inject constructor(
         val rules: Set<@JvmSuppressWildcards Rule>,
-        val repository: CardRepository,
+        val cardRepository: CardRepository,
+        val deckRepository: DeckRepository,
+        val editRepository: EditRepository,
         val remote: Remote
 ) : DeckValidator {
 
 
+    override fun validate(sessionId: Long): Observable<Validation> {
+        return editRepository.getSession(sessionId)
+                .flatMap { validate(it.cards) }
+    }
+
+
+    override fun validate(deckId: String): Observable<Validation> {
+        return deckRepository.getDeck(deckId)
+                .flatMap { validate(it.cards) }
+    }
+
+
     override fun validate(cards: List<PokemonCard>): Observable<Validation> {
-        return repository.getExpansions()
+        return cardRepository.getExpansions()
                 .onErrorReturnItem(emptyList())
                 .map { expansions ->
                     val reprints = remote.reprints

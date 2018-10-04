@@ -142,7 +142,7 @@
             app:fabSize="normal"
             app:rippleColor="@color/white30"
             app:backgroundTint="?attr/colorPrimary"
-            />
+            tools:ignore="RelativeOverlap" />
 
         <ImageView
             android:id="@+id/panelIndicator"

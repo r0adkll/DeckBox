@@ -217,4 +217,5 @@
     <string name="error_session_new_deck">Error creating new deck</string>
     <string name="section_evolves_to">Evolves to</string>
     <string name="pref_about_privacy_policy">Privacy policy</string>
+    <string name="format_lock_subhead">Format lock</string>
 </resources>

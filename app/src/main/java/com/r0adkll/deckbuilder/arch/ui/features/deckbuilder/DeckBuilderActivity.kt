@@ -281,6 +281,10 @@ class DeckBuilderActivity : BaseActivity(),
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
                 }
 
+        deckFormat.setOnClickListener {
+
+        }
+
         if (slidingLayout.panelState != SlidingUpPanelLayout.PanelState.COLLAPSED) {
             slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
         }
