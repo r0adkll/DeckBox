@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 
 
+import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 class DefaultDeckValidator @Inject constructor(
         val rules: Set<@JvmSuppressWildcards Rule>,
-        val repository: CardRepository
+        val repository: CardRepository,
+        val remote: Remote
 ) : DeckValidator {
 
 
@@ -22,23 +24,36 @@ class DefaultDeckValidator @Inject constructor(
         return repository.getExpansions()
                 .onErrorReturnItem(emptyList())
                 .map { expansions ->
+                    val reprints = remote.reprints
 
                     // Validate for standard format
-                    // TODO: Find a way to account for reprints
                     val standardLegal = cards.isNotEmpty() && cards.all { card ->
                         if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
                             true
                         } else {
-                            expansions.find { it.code == card.expansion?.code }?.standardLegal ?: false
+                            if (expansions.find { it.code == card.expansion?.code }?.standardLegal == true) {
+                                true
+                            } else if (reprints != null) {
+                                val hash = card.reprintHash()
+                                reprints.standardHashes.contains(hash)
+                            } else {
+                                false
+                            }
                         }
                     }
 
-                    // TODO: Find a way to account for reprints
                     val expandedLegal = cards.isNotEmpty() && cards.all { card ->
                         if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
                             true
                         } else {
-                            expansions.find { it.code == card.expansion?.code }?.expandedLegal ?: false
+                            if (expansions.find { it.code == card.expansion?.code }?.expandedLegal == true) {
+                                true
+                            } else if (reprints != null) {
+                                val hash = card.reprintHash()
+                                reprints.expandedHashes.contains(hash)
+                            } else {
+                                false
+                            }
                         }
                     }
 
@@ -50,5 +65,11 @@ class DefaultDeckValidator @Inject constructor(
 
                     Validation(standardLegal, expandedLegal, ruleResults)
                 }
+    }
+
+
+    private fun PokemonCard.reprintHash(): Long {
+        return (this.name.hashCode().toLong() * 31L) +
+                (this.text?.hashCode()?.toLong() ?: 0L * 31L)
     }
 }

@@ -1,9 +1,13 @@
 #!/usr/bin/env kscript
 
-// Dependencies
+/*
+ * Dependencies
+ */
 @file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.15")
 @file:DependsOn("me.xdrop:fuzzywuzzy:1.1.10")
+@file:DependsOn("com.google.code.gson:gson:2.8.5")
 
+import com.google.gson.Gson
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
@@ -12,11 +16,27 @@ import me.xdrop.fuzzywuzzy.FuzzySearch
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 
+/*
+ * Function and Class Definitions
+ */
+
 // Define hashing function
 fun Card.reprintHash(): Long {
     return (this.name.hashCode().toLong() * 31L) +
             (this.text?.hashCode()?.toLong() ?: 0L * 31L)
 }
+
+/**
+ * The output json class representation
+ */
+class Reprints(
+        val standardHashes: List<Long>,
+        val expandedHashes: List<Long>
+)
+
+/*
+ * Script
+ */
 
 // Create our SDK instance
 val pokemon = Pokemon(Config(logLevel = HttpLoggingInterceptor.Level.NONE))
@@ -85,38 +105,53 @@ fun checkReprints(legality: String, cards: List<Card>, constant: List<Card>): Pa
 }
 
 // Now for both expanded and unlimited cards, compute and compare hash codes against standard
-val standardReprintIds = checkReprints("Standard", expandedCards.plus(unlimitedCards), standardCards)
-val expandedReprintIds = checkReprints("Expanded", unlimitedCards, expandedCards)
+val standardReprints = checkReprints("Standard", expandedCards.plus(unlimitedCards), standardCards)
+val expandedReprints = checkReprints("Expanded", unlimitedCards, expandedCards)
 
 // Compile output text
 val output =
-        "Standard Reprint Hashes\n" +
+        "Standard Reprint Hashes (#${standardReprints.second.size})\n" +
         "-----------------------\n\n" +
-        standardReprintIds.second.joinToString(separator = "\n") { it.toString()} +
+        standardReprints.second.joinToString(separator = "\n") { it.toString()} +
         "\n\n" +
-        "Standard Reprint Ids\n" +
+        "Standard Reprint Ids (#${standardReprints.first.size})\n" +
         "-----------------------\n\n" +
-        standardReprintIds.first.joinToString(separator = "\n") +
+        standardReprints.first.joinToString(separator = "\n") +
         "\n\n" +
-        "Expanded Reprint Hashes\n" +
+        "Expanded Reprint Hashes (#${expandedReprints.second.size})\n" +
         "-----------------------\n\n" +
-        expandedReprintIds.second.joinToString(separator = "\n") { it.toString() } +
+        expandedReprints.second.joinToString(separator = "\n") { it.toString() } +
         "\n\n" +
-        "Expanded Reprint Ids\n" +
+        "Expanded Reprint Ids (#${expandedReprints.first.size})\n" +
         "-----------------------\n\n" +
-        expandedReprintIds.first.joinToString(separator = "\n")
+        expandedReprints.first.joinToString(separator = "\n")
+
+val outputJsonObject = Reprints(standardReprints.second.toList(), expandedReprints.second.toList())
 
 // generate files
 val directory = File(".")
-val reprintsFile = File(directory, "reprint_hashes.txt")
+val reprintsFile = File(directory, "reprints.txt")
+val reprintsJsonFile = File(directory, "reprints.json")
 
 if (reprintsFile.exists()) {
     reprintsFile.delete()
 }
 
+if (reprintsJsonFile.exists()) {
+    reprintsJsonFile.delete()
+}
+
 if (reprintsFile.createNewFile()) {
-    reprintsFile.writeText(output, Charsets.UTF_8)
+    reprintsFile.writeText(output)
     println("Reprint hash file generated @ ${reprintsFile.absolutePath}")
 } else {
     println("ERROR: Unable to create reprint output file")
+}
+
+if (reprintsJsonFile.createNewFile()) {
+    val gson = Gson()
+    reprintsJsonFile.writeText(gson.toJson(outputJsonObject))
+    println("Reprint hash json file generated @ ${reprintsFile.absolutePath}")
+} else {
+    println("ERROR: Unable to create reprint output json file")
 }
