@@ -88,6 +88,7 @@ class Remote @Inject constructor(
                     Timber.i("> Expansion Version: $expansionVersion")
                     Timber.i("> Search Proxies: $searchProxies")
                     Timber.i("> Preview: (version: ${expansionPreview?.version}, code: ${expansionPreview?.code})")
+                    Timber.i("> Reprints: Standard(${reprints?.standardHashes?.size}), Expanded(${reprints?.expandedHashes?.size})")
                     remote.activateFetched()
                     plugins.forEach { it.onFetchActivated(this@Remote) }
                 }

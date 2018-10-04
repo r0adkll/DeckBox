@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
@@ -34,8 +35,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
     interface Actions {
 
         fun showBrokenRules(errors: List<Int>)
-        fun showIsStandard(isStandard: Boolean)
-        fun showIsExpanded(isExpanded: Boolean)
+        fun showFormat(format: Format)
         fun showIsSaving(isSaving: Boolean)
         fun showIsEditing(isEditing: Boolean)
         fun showIsOverview(isOverview: Boolean)

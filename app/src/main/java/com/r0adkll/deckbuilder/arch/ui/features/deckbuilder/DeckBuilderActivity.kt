@@ -23,6 +23,7 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
@@ -105,7 +106,8 @@ class DeckBuilderActivity : BaseActivity(),
                     (it.height.toFloat() / 2f) //- iconOffset
                 } ?: defaultOffset
                 val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
-                deckError.setVisibleWeak(offset < recyclerOffset)
+//                deckError.setVisibleWeak(offset < recyclerOffset)
+                deckError.setVisible(offset < recyclerOffset)
             }
         }
 
@@ -590,13 +592,8 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
 
-    override fun showIsStandard(isStandard: Boolean) {
-        format_standard.setVisible(isStandard)
-    }
-
-
-    override fun showIsExpanded(isExpanded: Boolean) {
-        format_expanded.setVisible(isExpanded)
+    override fun showFormat(format: Format) {
+        deckFormat.text = format.name.toLowerCase().capitalize()
     }
 
 
