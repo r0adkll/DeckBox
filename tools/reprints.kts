@@ -11,7 +11,9 @@ import com.google.gson.Gson
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
+import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
+import io.pokemontcg.util.or
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
@@ -55,8 +57,8 @@ val unlimitedCards = ArrayList<Card>()
 sets.forEach { set ->
     val cards = pokemon.card().where {
         setCode = set.code
-        supertype = SuperType.TRAINER.displayName
-    }.all()
+        supertype = SuperType.TRAINER.displayName.or(SuperType.ENERGY.displayName)
+    }.all().filter { it.supertype == SuperType.TRAINER || (it.supertype == SuperType.ENERGY && it.subtype == SubType.SPECIAL) }
 
     when {
         set.standardLegal -> standardCards += cards
@@ -97,7 +99,7 @@ fun checkReprints(legality: String, cards: List<Card>, constant: List<Card>): Pa
     hashes.forEach { hash, hashedCards ->
         val isValidHash = hashedCards.all { it.name == hashedCards.firstOrNull()?.name }
         println("--= Hash: $hash, Valid: $isValidHash =--")
-        println(hashedCards.joinToString(separator = "\n") { "(${it.id} - ${it.name}" })
+        println(hashedCards.joinToString(separator = "\n") { "• ${it.id} - ${it.name}" })
     }
     println()
 
