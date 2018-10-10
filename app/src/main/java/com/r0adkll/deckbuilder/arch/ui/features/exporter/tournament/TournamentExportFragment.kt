@@ -145,7 +145,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
 
 
     override fun formatChanged(): Observable<Format> {
-        return optionsFormat.checkedChanges()
+        return optionsFormat.checkedChanges().skipInitialValue()
                 .map { when(it) {
                     R.id.optionFormatStandard -> Format.STANDARD
                     else -> Format.EXPANDED

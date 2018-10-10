@@ -45,24 +45,6 @@
                     android:text="@string/activity_deck_builder"
                     />
 
-                <!--<TextView-->
-                    <!--android:id="@+id/cardCounter"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginStart="16dp"-->
-                    <!--android:paddingTop="4dp"-->
-                    <!--android:paddingBottom="4dp"-->
-                    <!--android:paddingStart="12dp"-->
-                    <!--android:paddingEnd="12dp"-->
-                    <!--android:textColor="@color/white"-->
-                    <!--android:fontFamily="sans-serif-medium"-->
-                    <!--android:textSize="16sp"-->
-                    <!--android:background="@drawable/dr_card_count_background"-->
-                    <!--android:visibility="gone"-->
-                    <!--tools:text="60"-->
-                    <!--tools:visibility="visible"-->
-                    <!--/>-->
-
             </android.support.v7.widget.Toolbar>
 
             <android.support.design.widget.TabLayout
@@ -160,7 +142,7 @@
             app:fabSize="normal"
             app:rippleColor="@color/white30"
             app:backgroundTint="?attr/colorPrimary"
-            />
+            tools:ignore="RelativeOverlap" />
 
         <ImageView
             android:id="@+id/panelIndicator"
