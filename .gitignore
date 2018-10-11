@@ -8,4 +8,4 @@
 .externalNativeBuild
 tools/reprint_hashes.txt
 tools/reprints.txt
-tools/reprints.json
+tools/*.json
