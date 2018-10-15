@@ -218,4 +218,6 @@
     <string name="section_evolves_to">Evolves to</string>
     <string name="pref_about_privacy_policy">Privacy policy</string>
     <string name="format_lock_subhead">Format lock</string>
+    <string name="deck_quickstart_title">Get started!</string>
+    <string name="deck_quickstart_message_extended">Start building your decks by picking one of the most recent tournament winners or theme decks.</string>
 </resources>

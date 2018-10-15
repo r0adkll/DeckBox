@@ -54,12 +54,14 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var preferences: AppPreferences
     @Inject lateinit var editor: EditRepository
 
-    private val viewPreview: Relay<ExpansionPreview> = PublishRelay.create()
-    private val dismissPreview: Relay<Unit> = PublishRelay.create()
-    private val shareClicks: Relay<Deck> = PublishRelay.create()
-    private val duplicateClicks: Relay<Deck> = PublishRelay.create()
-    private val deleteClicks: Relay<Deck> = PublishRelay.create()
-    private val testClicks: Relay<Deck> = PublishRelay.create()
+    private val viewPreview = PublishRelay.create<ExpansionPreview>()
+    private val dismissPreview = PublishRelay.create<Unit>()
+    private val shareClicks = PublishRelay.create<Deck>()
+    private val duplicateClicks = PublishRelay.create<Deck>()
+    private val deleteClicks = PublishRelay.create<Deck>()
+    private val testClicks = PublishRelay.create<Deck>()
+    private val quickStartClicks = PublishRelay.create<Deck>()
+    private val dismissQuickStart = PublishRelay.create<Unit>()
 
     private lateinit var adapter: DecksRecyclerAdapter
 
@@ -73,7 +75,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         super.onActivityCreated(savedInstanceState)
 
         adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks,
-                testClicks, dismissPreview, viewPreview)
+                testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
         adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Item> {
             override fun onItemClick(v: View, item: Item, position: Int) {
                 if (item is Item.DeckItem) {
@@ -97,8 +99,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         adapter.setEmptyView(empty_view)
 
-
-
         val layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
             StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) as RecyclerView.LayoutManager
         } else {
@@ -108,6 +108,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     val item = adapter.items[position]
                     return when(item) {
                         is Item.Preview -> 2
+                        is Item.QuickStart -> 2
                         else -> 1
                     }
                 }
@@ -136,17 +137,17 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     })
         }
 
-        if (preferences.quickStart) {
-
-            // Fix for Fabric#212
-            @SuppressLint("RxSubscribeOnError")
-            disposables += Observable.timer(300L, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        quickTip.show(fab, R.string.deck_quickstart_message)
-                    }
-            preferences.quickStart = false
-        }
+//        if (preferences.quickStart) {
+//
+//            // Fix for Fabric#212
+//            @SuppressLint("RxSubscribeOnError")
+//            disposables += Observable.timer(300L, TimeUnit.MILLISECONDS)
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe {
+//                        quickTip.show(fab, R.string.deck_quickstart_message)
+//                    }
+//            preferences.quickStart = false
+//        }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += shareClicks
@@ -168,6 +169,12 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         disposables += viewPreview
                 .subscribe { preview ->
                     startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
+                }
+
+        @SuppressLint("RxSubscribeOnError")
+        disposables += dismissQuickStart
+                .subscribe {
+                    preferences.quickStart.set(false)
                 }
 
         renderer.start()

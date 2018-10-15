@@ -26,6 +26,10 @@ class DecksRenderer(
                         items += Item.Preview(s.preview)
                     }
 
+                    if (s.quickStart != null) {
+                        items += Item.QuickStart(s.quickStart)
+                    }
+
                     items += s.decks
                             .sortedByDescending { it.timestamp }
                             .map { Item.DeckItem(it) }

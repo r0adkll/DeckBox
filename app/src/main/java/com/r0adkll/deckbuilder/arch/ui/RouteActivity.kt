@@ -52,7 +52,7 @@ class RouteActivity : AppCompatActivity() {
     private fun compatibilityCheck() {
         if (preferences.lastVersion == -1 && preferences.onboarding) {
             // We want to disable the quickstart if the user has already passed the onboarding phase
-            preferences.quickStart = false
+            preferences.quickStart.set(false)
         }
 
         // Set the last version that was installed for future compat checks

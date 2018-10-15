@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.Shader
 import android.graphics.drawable.*
 import android.support.annotation.LayoutRes
+import android.support.v7.widget.CardView
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
@@ -19,8 +21,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.DECK
-import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.PREVIEW
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.*
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
@@ -41,13 +42,13 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             private val viewPreview: Relay<ExpansionPreview>
     ) : UiViewHolder<Item.Preview>(itemView) {
 
-        private val background: LinearLayout by bindView(R.id.background)
-        private val foreground: ImageView by bindView(R.id.foreground)
-        private val logo: ImageView by bindView(R.id.logo)
-        private val title: TextView by bindView(R.id.title)
-        private val description: TextView by bindView(R.id.description)
-        private val actionDismiss: Button by bindView(R.id.actionDismiss)
-        private val actionView: Button by bindView(R.id.actionView)
+        private val background by bindView<LinearLayout>(R.id.background)
+        private val foreground by bindView<ImageView>(R.id.foreground)
+        private val logo by bindView<ImageView>(R.id.logo)
+        private val title by bindView<TextView>(R.id.title)
+        private val description by bindView<TextView>(R.id.description)
+        private val actionDismiss by bindView<Button>(R.id.actionDismiss)
+        private val actionView by bindView<Button>(R.id.actionView)
 
 
         override fun bind(item: Item.Preview) {
@@ -155,6 +156,40 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
     }
 
 
+    class QuickViewHolder(
+            itemView: View,
+            private val quickStart: Relay<Deck>,
+            private val dismissQuickStart: Relay<Unit>
+    ) : UiViewHolder<Item.QuickStart>(itemView) {
+
+        private val recycler by bindView<RecyclerView>(R.id.recycler)
+        private val actionDismiss by bindView<Button>(R.id.actionDismiss)
+
+
+        override fun bind(item: Item.QuickStart) {
+            // Setup recycler
+            var adapter = recycler.adapter as? QuickStartRecyclerAdapter
+            if (adapter == null) {
+                adapter = QuickStartRecyclerAdapter(itemView.context, quickStart)
+                recycler.adapter = adapter
+                recycler.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, true)
+            }
+
+            val items = if (item.quickStart.templates.isNotEmpty()) {
+                item.quickStart.templates.map { QuickStartRecyclerAdapter.Item.Template(it) }
+            } else {
+                (0 until 5).map { QuickStartRecyclerAdapter.Item.Placeholder(it) }
+            }
+
+            adapter.setQuickStartItems(items)
+
+            actionDismiss.setOnClickListener {
+                dismissQuickStart.accept(Unit)
+            }
+        }
+    }
+
+
     class DeckViewHolder(
             itemView: View,
             private val shareClicks: Relay<Deck>,
@@ -163,11 +198,11 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             private val deleteClicks: Relay<Deck>
     ) : UiViewHolder<Item.DeckItem>(itemView) {
 
-        private val image: DeckImageView by bindView(R.id.image)
-        private val title: TextView by bindView(R.id.title)
-        private val actionShare: ImageView by bindView(R.id.action_share)
-        private val actionMore: ImageView by bindView(R.id.action_more)
-        private val actionTest: ImageView by bindView(R.id.action_test)
+        private val image by bindView<DeckImageView>(R.id.image)
+        private val title by bindView<TextView>(R.id.title)
+        private val actionShare by bindView<ImageView>(R.id.action_share)
+        private val actionMore by bindView<ImageView>(R.id.action_more)
+        private val actionTest by bindView<ImageView>(R.id.action_test)
 
 
         @SuppressLint("ClickableViewAccessibility")
@@ -226,6 +261,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         PREVIEW(R.layout.item_set_preview),
+        QUICK_START(R.layout.item_quickstart_v2),
         DECK(R.layout.item_deck);
 
         companion object {
@@ -251,10 +287,13 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                    testClicks: Relay<Deck>,
                    deleteClicks: Relay<Deck>,
                    dismissPreview: Relay<Unit>,
-                   viewPreview: Relay<ExpansionPreview>): UiViewHolder<Item> {
+                   viewPreview: Relay<ExpansionPreview>,
+                   quickStart: Relay<Deck>,
+                   dismissQuickStart: Relay<Unit>): UiViewHolder<Item> {
             val viewType = ViewType.of(layoutId)
             return when(viewType) {
                 PREVIEW -> PreviewViewHolder(itemView, dismissPreview, viewPreview) as UiViewHolder<Item>
+                QUICK_START -> QuickViewHolder(itemView, quickStart, dismissQuickStart) as UiViewHolder<Item>
                 DECK -> DeckViewHolder(itemView, shareClicks, duplicateClicks, testClicks, deleteClicks) as UiViewHolder<Item>
             }
         }

@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar
 import android.support.v14.preference.PreferenceFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceCategory
 import com.ftinc.kit.kotlin.extensions.clear
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
@@ -182,6 +183,34 @@ class SettingsActivity : BaseActivity() {
 
             val versionPref = findPreference("pref_about_version")
             versionPref.summary = BuildConfig.VERSION_NAME
+
+
+            /*
+             * Debug options
+             */
+            if (BuildConfig.DEBUG) {
+                val category = PreferenceCategory(activity)
+                category.title = "Developer"
+                preferenceScreen.addPreference(category)
+
+                val clearPreferenceQuickStart = Preference(activity)
+                clearPreferenceQuickStart.title = "Clear QuickStart"
+                clearPreferenceQuickStart.summary = "Delete the quick start preference flag"
+                clearPreferenceQuickStart.setOnPreferenceClickListener {
+                    preferences.quickStart.delete()
+                    true
+                }
+                category.addPreference(clearPreferenceQuickStart)
+
+                val clearPreferencePreview = Preference(activity)
+                clearPreferencePreview.title = "Clear Preview"
+                clearPreferencePreview.summary = "Delete the preview preference flag"
+                clearPreferencePreview.setOnPreferenceClickListener {
+                    preferences.previewVersion.delete()
+                    true
+                }
+                category.addPreference(clearPreferencePreview)
+            }
 
 
 //            disposables += cacheManager.observeCacheStatus()

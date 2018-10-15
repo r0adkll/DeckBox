@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:padding="8dp"
         android:clipToPadding="false"
+        android:clipChildren="false"
         />
 
     <com.ftinc.kit.widget.EmptyView

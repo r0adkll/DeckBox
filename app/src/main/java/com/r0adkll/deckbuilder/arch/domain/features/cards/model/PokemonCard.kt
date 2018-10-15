@@ -1,14 +1,14 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 
+import android.os.Parcelable
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.Type
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
-@PaperParcel
+@Parcelize
 data class PokemonCard(
         val id: String,
         val name: String,
@@ -31,8 +31,4 @@ data class PokemonCard(
         val weaknesses: List<Effect>?,
         val resistances: List<Effect>?,
         val ability: Ability?
-) : PaperParcelable {
-    companion object {
-        @JvmField val CREATOR = PaperParcelPokemonCard.CREATOR
-    }
-}
+) : Parcelable

@@ -14,6 +14,9 @@ import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDat
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
+import com.r0adkll.deckbuilder.arch.data.features.community.cache.FirestoreCommunityCache
+import com.r0adkll.deckbuilder.arch.data.features.community.repository.DefaultCommunityRepository
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
@@ -33,6 +36,7 @@ import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
@@ -125,6 +129,10 @@ class DataModule {
 
 
     @Provides @AppScope
+    fun provideCommunityCache(cache: FirestoreCommunityCache): CommunityCache = cache
+
+
+    @Provides @AppScope
     fun provideSessionCache(cache: RequerySessionCache): SessionCache = cache
 
 
@@ -150,6 +158,10 @@ class DataModule {
 
     @Provides @AppScope
     fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository
+
+
+    @Provides @AppScope
+    fun provideCommunityRepository(repository: DefaultCommunityRepository): CommunityRepository = repository
 
 
     @Provides @AppScope

@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.remote.Remote
+import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
@@ -13,6 +14,7 @@ import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
 import com.r0adkll.deckbuilder.util.extensions.iso8601
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -21,7 +23,8 @@ import javax.inject.Inject
 class DecksPresenter @Inject constructor(
         val ui: DecksUi,
         val intentions: DecksUi.Intentions,
-        val repository: DeckRepository,
+        val deckRepository: DeckRepository,
+        val communityRepository: CommunityRepository,
         val remote: Remote,
         val preferences: AppPreferences
 ) : Presenter() {
@@ -29,15 +32,15 @@ class DecksPresenter @Inject constructor(
     @SuppressLint("CheckResult")
     override fun start() {
 
-        val loadDecks = repository.getDecks()
+        val loadDecks = deckRepository.getDecks()
                 .map { Change.DecksLoaded(it) as Change }
 //                .startWith(Change.IsLoading as Change)
                 .onErrorReturn(handleUnknownError)
 
         val deleteDecks = intentions.deleteClicks()
-                .flatMap {
+                .flatMap { deck ->
                     Analytics.event(Event.SelectContent.Action("delete_deck"))
-                    repository.deleteDeck(it)
+                    deckRepository.deleteDeck(deck)
                             .map { Change.DeckDeleted as Change }
                             .onErrorReturn(handleUnknownError)
                 }
@@ -55,7 +58,21 @@ class DecksPresenter @Inject constructor(
                     }
                 }
 
+        val showQuickStart = preferences.quickStart
+                .asObservable()
+                .flatMap { canQuickStart ->
+                    if (canQuickStart) {
+                        communityRepository.getDeckTemplates()
+                                .map { DecksUi.QuickStart(it) }
+                                .map { Change.ShowQuickStart(it) }
+                                .startWith(Change.ShowQuickStart(DecksUi.QuickStart()))
+                    } else {
+                        Observable.just(Change.HideQuickStart)
+                    }
+                }
+
         val merged = loadDecks.mergeWith(deleteDecks)
+                .mergeWith(showQuickStart)
                 .mergeWith(showPreview)
                 .doOnNext { Timber.d(it.logText) }
 
@@ -66,7 +83,7 @@ class DecksPresenter @Inject constructor(
         disposables += intentions.duplicateClicks()
                 .flatMap {
                     Analytics.event(Event.SelectContent.Action("duplicate_deck"))
-                    repository.duplicateDeck(it)
+                    deckRepository.duplicateDeck(it)
                 }
                 .subscribe({
                     Timber.i("Deck duplicated!")

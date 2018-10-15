@@ -35,12 +35,12 @@ class AppPreferences @Inject constructor(
 
 
     var onboarding by BooleanPreference(KEY_ONBOARDING, false)
-    var quickStart by BooleanPreference(KEY_QUICKSTART, true)
     var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
     var deviceId by StringPreference(KEY_DEVICE_ID)
     var offlineEnabled by BooleanPreference(KEY_OFFLINE_ENABLED, false)
     var expansionsVersion by IntPreference(KEY_EXPANSIONS_VERSION, 1)
 
+    val quickStart by ReactiveBooleanPreference(KEY_QUICKSTART, true)
     val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
     val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)
 
