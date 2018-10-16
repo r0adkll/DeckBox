@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.ptcgo.parser
+package com.r0adkll.deckbuilder.arch.data.features.importer.parser
 
 
 import com.r0adkll.deckbuilder.tools.ModelUtils.EXPANSIONS

@@ -1,8 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.PlayerInfo
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
 import paperparcel.PaperParcel

@@ -11,7 +11,7 @@ import android.view.MenuItem
 import com.ftinc.kit.util.IntentUtils
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -35,7 +35,7 @@ class DeckExportActivity : BaseActivity() {
     }
 
     @Inject lateinit var schedulers: Schedulers
-    @Inject lateinit var converter: PTCGOConverter
+    @Inject lateinit var exporter: PtcgoExporter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +59,7 @@ class DeckExportActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        disposables += converter.export(deck.cards, deck.name)
+        disposables += exporter.export(deck.cards, deck.name)
                 .subscribeOn(schedulers.comp)
                 .observeOn(schedulers.main)
                 .subscribe({

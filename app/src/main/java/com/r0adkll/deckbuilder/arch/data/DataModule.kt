@@ -10,8 +10,6 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDataSource
-import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
@@ -23,10 +21,13 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRe
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RequerySessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
+import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExporter
+import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
+import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.ptcgo.repository.DefaultPTCGOConverter
 import com.r0adkll.deckbuilder.arch.data.features.testing.DefaultDeckTester
-import com.r0adkll.deckbuilder.arch.data.features.tournament.exporter.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.PrismStarRule
@@ -39,10 +40,11 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
+import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
-import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
@@ -181,7 +183,11 @@ class DataModule {
 
 
     @Provides @AppScope
-    fun providePtcgoConverter(converter: DefaultPTCGOConverter): PTCGOConverter = converter
+    fun provideImporter(importer: DefaultImporter): Importer = importer
+
+
+    @Provides @AppScope
+    fun providePtcgoExporter(): PtcgoExporter = DefaultPtcgoExporter()
 
 
     @Provides @AppScope

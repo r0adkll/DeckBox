@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State.*

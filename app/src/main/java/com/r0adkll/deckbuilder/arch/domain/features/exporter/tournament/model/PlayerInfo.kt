@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.domain.features.tournament.model
+package com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model
 
 import java.text.SimpleDateFormat
 import java.util.*

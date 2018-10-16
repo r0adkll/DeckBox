@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.ptcgo.model
+package com.r0adkll.deckbuilder.arch.data.features.importer.model
 
 
 data class CardSpec(

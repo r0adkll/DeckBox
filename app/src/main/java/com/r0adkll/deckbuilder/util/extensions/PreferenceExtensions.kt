@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.internal.bind.util.ISO8601Utils
 import com.google.gson.reflect.TypeToken
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
-import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.model.BasicEnergySet
+import com.r0adkll.deckbuilder.arch.domain.features.importer.model.BasicEnergySet
 import java.text.ParsePosition
 import java.util.*
 import kotlin.properties.ReadOnlyProperty

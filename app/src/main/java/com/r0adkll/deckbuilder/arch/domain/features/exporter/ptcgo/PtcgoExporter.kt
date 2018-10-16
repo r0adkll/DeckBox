@@ -1,12 +1,10 @@
-package com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository
-
+package com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import io.reactivex.Observable
 
 
-interface PTCGOConverter {
+interface PtcgoExporter {
 
-    fun import(deckList: String): Observable<List<PokemonCard>>
     fun export(cards: List<PokemonCard>, name: String): Observable<String>
 }

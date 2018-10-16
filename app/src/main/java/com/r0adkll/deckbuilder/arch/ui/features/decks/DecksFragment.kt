@@ -137,17 +137,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     })
         }
 
-//        if (preferences.quickStart) {
-//
-//            // Fix for Fabric#212
-//            @SuppressLint("RxSubscribeOnError")
-//            disposables += Observable.timer(300L, TimeUnit.MILLISECONDS)
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe {
-//                        quickTip.show(fab, R.string.deck_quickstart_message)
-//                    }
-//            preferences.quickStart = false
-//        }
+        if (preferences.quickStart.get()) {
+            state = state.copy(quickStart = DecksUi.QuickStart())
+        }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += shareClicks

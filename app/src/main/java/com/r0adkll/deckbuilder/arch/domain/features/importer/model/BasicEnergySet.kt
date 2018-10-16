@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.domain.features.ptcgo.model
+package com.r0adkll.deckbuilder.arch.domain.features.importer.model
 
 import io.pokemontcg.model.Type
 import io.pokemontcg.model.Type.*

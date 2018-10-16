@@ -1,6 +1,6 @@
-package com.r0adkll.deckbuilder.arch.data.features.ptcgo.parser
+package com.r0adkll.deckbuilder.arch.data.features.importer.parser
 
-import com.r0adkll.deckbuilder.arch.data.features.ptcgo.model.CardSpec
+import com.r0adkll.deckbuilder.arch.data.features.importer.model.CardSpec
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import java.io.StringReader
 

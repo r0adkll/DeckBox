@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.tournament.exporter
+package com.r0adkll.deckbuilder.arch.data.features.exporter.tournament
 
 
 import android.annotation.SuppressLint
@@ -20,10 +20,10 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.PlayerInfo
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.util.CardUtils
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType

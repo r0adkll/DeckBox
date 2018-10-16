@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.ftinc.kit.kotlin.extensions.Preferences
 import com.ftinc.kit.kotlin.extensions.Preferences.*
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences.*
 import javax.inject.Inject
