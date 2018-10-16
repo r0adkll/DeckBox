@@ -96,41 +96,9 @@ object EntityMapper {
     }
 
 
-    fun to(expansion: Expansion): ExpansionEntity {
-        return ExpansionEntity(
-                expansion.code,
-                expansion.ptcgoCode,
-                expansion.name,
-                expansion.series,
-                expansion.totalCards,
-                expansion.standardLegal,
-                expansion.expandedLegal,
-                expansion.releaseDate,
-                expansion.symbolUrl,
-                expansion.logoUrl
-        )
-    }
-
-
-    fun to(entity: ExpansionEntity): Expansion {
-        return Expansion(
-                entity.code,
-                entity.ptcgoCode,
-                entity.name,
-                entity.series,
-                entity.totalCards,
-                entity.standardLegal,
-                entity.expandedLegal,
-                entity.releaseDate,
-                entity.symbolUrl,
-                entity.logoUrl
-        )
-    }
-
-
     fun to(attack: Attack): AttackEntity {
         return AttackEntity(
-//                attack.cost.map { it.displayName },
+                attack.cost?.compactTypes() ?: "",
                 attack.name,
                 attack.text ?: "",
                 attack.damage,
@@ -141,7 +109,7 @@ object EntityMapper {
 
     fun to(entity: AttackEntity): Attack {
         return Attack(
-                emptyList(),
+                entity.cost.deserializeTypes(),
                 entity.name,
                 entity.text,
                 entity.damage,
@@ -149,16 +117,4 @@ object EntityMapper {
         )
     }
 
-
-    fun to(effect: Effect): EffectEntity {
-        return EffectEntity(
-                effect.type.displayName,
-                effect.value
-        )
-    }
-
-
-    fun to(entity: EffectEntity): Effect {
-        return Effect(Type.find(entity.type), entity.value)
-    }
 }
