@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Shader
 import android.graphics.drawable.*
 import android.support.annotation.LayoutRes
-import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -172,7 +171,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             if (adapter == null) {
                 adapter = QuickStartRecyclerAdapter(itemView.context, quickStart)
                 recycler.adapter = adapter
-                recycler.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, true)
+                recycler.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             }
 
             val items = if (item.quickStart.templates.isNotEmpty()) {
@@ -261,7 +260,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         PREVIEW(R.layout.item_set_preview),
-        QUICK_START(R.layout.item_quickstart_v2),
+        QUICK_START(R.layout.item_quickstart),
         DECK(R.layout.item_deck);
 
         companion object {

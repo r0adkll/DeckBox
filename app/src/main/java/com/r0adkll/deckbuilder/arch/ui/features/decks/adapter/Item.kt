@@ -39,7 +39,7 @@ sealed class Item : RecyclerItem{
         }
 
 
-        override val layoutId: Int = R.layout.item_quickstart_v2
+        override val layoutId: Int = R.layout.item_quickstart
     }
 
 

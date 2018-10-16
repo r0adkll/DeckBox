@@ -1,10 +1,18 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.support.annotation.LayoutRes
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -43,6 +51,12 @@ class QuickStartRecyclerAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return items[position].viewType
+    }
+
+
+    override fun onViewAttachedToWindow(holder: QuickStartViewHolder<Item>) {
+        super.onViewAttachedToWindow(holder)
+        holder.applyAnimation()
     }
 
 
@@ -87,12 +101,54 @@ class QuickStartRecyclerAdapter(
     sealed class QuickStartViewHolder<in I : Item>(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         abstract fun bind(item: I)
+        open fun applyAnimation() {}
 
 
         class PlaceholderViewHolder(itemView: View): QuickStartViewHolder<Item.Placeholder>(itemView) {
 
+            private val image by bindView<View>(R.id.image)
+            private val title by bindView<View>(R.id.title)
+            private val subtitle by bindView<View>(R.id.subtitle)
+
+            private var set: AnimatorSet? = null
+
             override fun bind(item: Item.Placeholder) {
-                // Do Nothing
+            }
+
+
+            override fun applyAnimation() {
+                set?.cancel()
+                set = AnimatorSet().apply {
+                    this.playTogether(
+                            applyAnimator(image),
+                            applyAnimator(title, 75L),
+                            applyAnimator(subtitle, 150L)
+                    )
+                    this.start()
+                }
+            }
+
+
+            private fun applyAnimator(view: View, startDelay: Long = 0L, duration: Long = 300L): AnimatorSet {
+                return AnimatorSet().apply {
+                    val alphaOut = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.15f)
+                    alphaOut.duration = duration
+                    alphaOut.interpolator = AccelerateDecelerateInterpolator()
+
+                    val alphaIn = ObjectAnimator.ofFloat(view, "alpha", 0.15f, 1f)
+                    alphaIn.duration = duration
+                    alphaIn.interpolator = AccelerateDecelerateInterpolator()
+
+                    this.startDelay = startDelay
+                    this.playSequentially(alphaOut, alphaIn)
+                    this.addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator?) {
+                            itemView.postDelayed({
+                                animation?.start()
+                            }, 1000L - (startDelay + duration))
+                        }
+                    })
+                }
             }
         }
 
@@ -147,7 +203,7 @@ class QuickStartRecyclerAdapter(
         }
 
 
-        private enum class ViewType(@LayoutRes val layoutId: Int) {
+        enum class ViewType(@LayoutRes val layoutId: Int) {
             PLACEHOLDER(R.layout.item_deck_placeholder),
             DECK(R.layout.item_deck_quickstart);
 
