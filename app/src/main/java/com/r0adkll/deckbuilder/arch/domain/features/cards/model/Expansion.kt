@@ -1,11 +1,11 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
 
-@PaperParcel
+@Parcelize
 data class Expansion(
         val code: String,
         val ptcgoCode: String?,
@@ -17,8 +17,4 @@ data class Expansion(
         val releaseDate: String,
         val symbolUrl: String,
         val logoUrl: String?
-) : PaperParcelable {
-    companion object {
-        @JvmField val CREATOR = PaperParcelExpansion.CREATOR
-    }
-}
+) : Parcelable

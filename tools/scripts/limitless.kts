@@ -7,6 +7,13 @@
 @file:MavenRepository("maven-central","http://central.maven.org/maven2/")
 @file:DependsOn("org.jsoup:jsoup:1.11.3")
 @file:DependsOn("com.google.code.gson:gson:2.8.5")
+@file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.15")
+
+@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/decks/model/AttackEntity.kt")
+@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/decks/model/DeckEntity.kt")
+@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/decks/model/PokemonCardEntity.kt")
+@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/importer/model/CardSpec.kt")
+@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/importer/parser/LineValidator.kt")
 
 /*
  * Imports
@@ -17,7 +24,6 @@ import org.jsoup.Jsoup
 import java.io.File
 import java.net.URL
 import kotlin.math.min
-
 
 
 /*

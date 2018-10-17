@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.importer.parser
 
-import com.r0adkll.deckbuilder.arch.data.features.importer.model.CardSpec
+
 import timber.log.Timber
 
 
@@ -10,7 +10,7 @@ import timber.log.Timber
 class LineValidator {
 
     /**
-     * Validate a line of a deck list to see if it can be parsed into a [CardSpec]
+     * Validate a line of a deck list to see if it can be parsed into a CardSpec
      * @return a raw valid card spec string that can be imported using the apps format, or null if just plain invalid
      */
     fun validate(line: String): String? {
