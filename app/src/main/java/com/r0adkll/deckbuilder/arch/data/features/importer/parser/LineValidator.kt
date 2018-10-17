@@ -1,9 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.importer.parser
 
 
-import timber.log.Timber
-
-
 /**
  * Interface for validating a line of text in a deck list for importing
  */
@@ -25,16 +22,11 @@ class LineValidator {
 
                 // Validate count
                 if (parts.size < MIN_PART_COUNT) {
-                    Timber.e("Invalid Number of Parts [$line]")
                     return null // Invalid formatted line
                 }
 
                 // Validate card count
-                val cardCount = parts[0].toIntOrNull()
-                if (cardCount == null) {
-                    Timber.e("Invalid Card Count [$line]")
-                    return null
-                }
+                parts[0].toIntOrNull() ?: return null
 
                 return cleanLine
             }
