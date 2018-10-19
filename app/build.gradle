@@ -40,7 +40,7 @@ android {
 
         buildConfigField "String", "GIT_SHA", "\"$GIT_SHA\""
         buildConfigField "String", "GIT_TAG", "\"$GIT_TAG\""
-        buildConfigField "String", "DATABASE_NAME", "\"cards.db\""
+        buildConfigField "String", "DATABASE_NAME", "\"deckbox.db\""
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -115,6 +115,11 @@ dependencies {
     implementation "io.requery:requery-android:$requery_version"
     implementation "io.requery:requery-kotlin:$requery_version"
     kapt "io.requery:requery-processor:$requery_version"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
