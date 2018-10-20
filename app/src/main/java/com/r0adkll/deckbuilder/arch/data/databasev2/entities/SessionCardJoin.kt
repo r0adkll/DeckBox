@@ -23,5 +23,6 @@ import androidx.room.PrimaryKey
 class SessionCardJoin(
         @PrimaryKey(autoGenerate = true) var uid: Long,
         var sessionId: Long,
-        var cardId: String
+        var cardId: String,
+        var count: Int
 )
