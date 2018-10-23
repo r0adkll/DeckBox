@@ -2,12 +2,12 @@ package com.r0adkll.deckbuilder.arch.data.databasev2.dao
 
 
 import android.net.Uri
-import android.se.omapi.Session
 import androidx.room.*
 import com.r0adkll.deckbuilder.arch.data.databasev2.entities.*
+import com.r0adkll.deckbuilder.arch.data.databasev2.relations.CardWithAttacks
+import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionCard
 import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionWithChanges
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 
 @Dao
@@ -16,8 +16,8 @@ abstract class SessionDao {
     @Transaction @Query("SELECT * FROM sessions WHERE uid = :sessionId")
     abstract fun getSessionWithChanges(sessionId: Long): Flowable<SessionWithChanges>
 
-    @Query("SELECT * FROM session_card_join INNER JOIN cards ON session_card_join.cardId = cards.id WHERE session_card_join.sessionId = :sessionId")
-    abstract fun getSessionCards(sessionId: Long): Flowable<List<SessionCardEntity>>
+    @Transaction @Query("SELECT * FROM session_card_join INNER JOIN cards ON session_card_join.cardId = cards.id WHERE session_card_join.sessionId = :sessionId")
+    abstract fun getSessionCards(sessionId: Long): Flowable<List<SessionCard>>
 
     @Query("SELECT * FROM session_card_join WHERE sessionId = :sessionId")
     abstract fun getSessionCardJoins(sessionId: Long): List<SessionCardJoin>
@@ -56,7 +56,10 @@ abstract class SessionDao {
     abstract fun insertCards(cards: List<CardEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertCard(card: CardEntity)
+    abstract fun insertCard(card: CardEntity): Long
+
+    @Insert
+    abstract fun insertAttacks(attacks: List<AttackEntity>)
 
     @Insert
     abstract fun insertJoins(joins: List<SessionCardJoin>)
@@ -86,13 +89,26 @@ abstract class SessionDao {
     abstract fun deleteChanges(changes: List<SessionChangeEntity>)
 
 
+    private fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {
+        cards.forEach {
+            insertCardWithAttacks(it)
+        }
+    }
+
+    private fun insertCardWithAttacks(card: CardWithAttacks) {
+        if (insertCard(card.card) > 0L) {
+            insertAttacks(card.attacks)
+        }
+    }
+
     /*
      * Insert new session
      */
 
     @Transaction
-    open fun insertNewSession(session: SessionEntity, cards: List<CardEntity>, joins: List<SessionCardJoin>): Long {
-        insertCards(cards)
+    open fun insertNewSession(session: SessionEntity, cards: List<CardWithAttacks>, joins: List<SessionCardJoin>): Long {
+        insertCardsWithAttacks(cards)
+
         val sessionId = insertSession(session)
         joins.forEach { it.sessionId = sessionId }
         insertJoins(joins)
@@ -104,8 +120,8 @@ abstract class SessionDao {
      */
 
     @Transaction
-    open fun insertAddChanges(sessionId: Long, cards: List<CardEntity>, changes: List<SessionChangeEntity>) {
-        insertCards(cards)
+    open fun insertAddChanges(sessionId: Long, cards: List<CardWithAttacks>, changes: List<SessionChangeEntity>) {
+        insertCardsWithAttacks(cards)
         insertChanges(changes)
 
         val joins = getSessionCardJoins(sessionId).toMutableList()
@@ -137,8 +153,8 @@ abstract class SessionDao {
     }
 
     @Transaction
-    open fun insertRemoveChange(sessionId: Long, card: CardEntity?, change: SessionChangeEntity){
-        card?.let { insertCard(it) }
+    open fun insertRemoveChange(sessionId: Long, card: CardWithAttacks?, change: SessionChangeEntity){
+        card?.let { insertCardWithAttacks(it) }
         insertChange(change)
 
         // Find existing join

@@ -25,5 +25,5 @@ class AttackEntity(
         var name: String,
         var text: String?,
         var damage: String?,
-        var convertedDamageAmount: Int
+        var convertedDamageCost: Int?
  )

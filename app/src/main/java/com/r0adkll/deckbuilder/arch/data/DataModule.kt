@@ -19,7 +19,6 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.Search
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
-import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RequerySessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RoomSessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository

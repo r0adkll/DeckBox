@@ -5,7 +5,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import io.pokemontcg.model.Type
-import java.util.*
 
 
 object CardUtils {
@@ -751,7 +750,7 @@ fun List<Type>.compactTypes(): String {
 }
 
 
-fun String.deserializeEffects(): List<com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect> {
+fun String.deserializeEffects(): List<Effect> {
     return this.split(",").map {
         val parts = it.replace("[", "").replace("]", "").split("|")
         com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect(parts[0].type(), parts[1])
@@ -760,6 +759,26 @@ fun String.deserializeEffects(): List<com.r0adkll.deckbuilder.arch.domain.featur
 
 
 fun List<Effect>.compactEffects(): String {
+    return this.foldIndexed("") { index, acc, effect ->
+        val new = acc.plus("[${effect.type.displayName[0].toUpperCase()}|${effect.value}]")
+        if (index != this.size - 1) {
+            new.plus(",")
+        } else {
+            new
+        }
+    }
+}
+
+
+fun String.deserializeCardEffects(): List<io.pokemontcg.model.Effect> {
+    return this.split(",").map {
+        val parts = it.replace("[", "").replace("]", "").split("|")
+        io.pokemontcg.model.Effect(parts[0].type(), parts[1])
+    }
+}
+
+
+fun List<io.pokemontcg.model.Effect>.compactCardEffects(): String {
     return this.foldIndexed("") { index, acc, effect ->
         val new = acc.plus("[${effect.type.displayName[0].toUpperCase()}|${effect.value}]")
         if (index != this.size - 1) {

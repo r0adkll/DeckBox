@@ -1,10 +1,10 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.cache
 
 import com.r0adkll.deckbuilder.arch.data.databasev2.DeckDatabase
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.SessionCardEntity
+import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionCard
 import com.r0adkll.deckbuilder.arch.data.databasev2.entities.SessionEntity
 import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionWithChanges
-import com.r0adkll.deckbuilder.arch.data.features.editing.mapping.RoomEntityMapper
+import com.r0adkll.deckbuilder.arch.data.databasev2.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
@@ -14,7 +14,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.Observable
 import io.reactivex.functions.Function3
-import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
@@ -52,7 +51,7 @@ class RoomSessionCache @Inject constructor(
         val expansions = cardRepository.getExpansions()
 
         return Observable.combineLatest(session, cards, expansions,
-                Function3<SessionWithChanges, List<SessionCardEntity>, List<Expansion>, Session> { s, c, e ->
+                Function3<SessionWithChanges, List<SessionCard>, List<Expansion>, Session> { s, c, e ->
                     RoomEntityMapper.to(s, c, e)
                 })
     }
