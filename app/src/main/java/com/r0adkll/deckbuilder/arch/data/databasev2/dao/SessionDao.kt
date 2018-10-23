@@ -52,10 +52,10 @@ abstract class SessionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSession(session: SessionEntity): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertCards(cards: List<CardEntity>)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertCard(card: CardEntity)
 
     @Insert
@@ -118,7 +118,7 @@ abstract class SessionDao {
         val joinsToInsert = condensedChanges.filter { change ->
             joins.none { it.cardId == change.first }
         }.map {
-            SessionCardJoin(0L, sessionId, it.first, it.second)
+            SessionCardJoin(sessionId, it.first, it.second)
         }
 
         // Find joins to Update

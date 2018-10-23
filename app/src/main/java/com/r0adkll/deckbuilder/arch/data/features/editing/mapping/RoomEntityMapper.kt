@@ -79,7 +79,7 @@ object RoomEntityMapper {
 
 
     fun to(sessionId: Long, stack: StackedPokemonCard): SessionCardJoin {
-        return SessionCardJoin(0L, sessionId, stack.card.id, stack.count)
+        return SessionCardJoin(sessionId, stack.card.id, stack.count)
     }
 
 

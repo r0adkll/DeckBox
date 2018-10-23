@@ -8,12 +8,14 @@ import androidx.room.PrimaryKey
 
 @Entity(
         tableName = "session_card_join",
-        indices = [Index("sessionId", unique = true), Index("cardId", unique = true)],
+        primaryKeys = ["sessionId", "cardId"],
+        indices = [Index("cardId")],
         foreignKeys = [
             ForeignKey(
                     entity = SessionEntity::class,
                     parentColumns = ["uid"],
-                    childColumns = ["sessionId"]
+                    childColumns = ["sessionId"],
+                    onDelete = ForeignKey.CASCADE
             ),
             ForeignKey(
                     entity = CardEntity::class,
@@ -23,7 +25,6 @@ import androidx.room.PrimaryKey
         ]
 )
 class SessionCardJoin(
-        @PrimaryKey(autoGenerate = true) var uid: Long,
         var sessionId: Long,
         var cardId: String,
         var count: Int

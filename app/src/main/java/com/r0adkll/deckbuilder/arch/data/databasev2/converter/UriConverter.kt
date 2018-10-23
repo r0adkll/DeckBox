@@ -8,9 +8,9 @@ object UriConverter {
 
     @JvmStatic
     @TypeConverter
-    fun urlToUri(url: String?): Uri = Uri.parse(url)
+    fun urlToUri(url: String?): Uri? = url?.let { Uri.parse(it) }
 
     @JvmStatic
     @TypeConverter
-    fun uriToUrl(uri: Uri): String = uri.toString()
+    fun uriToUrl(uri: Uri?): String? = uri?.toString()
 }

@@ -33,9 +33,12 @@ class DefaultEditRepository @Inject constructor(
 
     override fun persistSession(sessionId: Long): Observable<Unit> {
         return cache.getSession(sessionId)
-                .flatMap {
-                    decks.persistDeck(it.deckId, it.cards, it.name, it.description, it.image)
-                            .flatMap { cache.resetSession(sessionId) }
+                .flatMap { deck ->
+                    decks.persistDeck(deck.deckId, deck.cards, deck.name, deck.description, deck.image)
+                            .flatMap {
+                                cache.resetSession(sessionId)
+                                        .subscribeOn(schedulers.database)
+                            }
                 }
                 .subscribeOn(schedulers.database)
     }
