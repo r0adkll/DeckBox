@@ -3,9 +3,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,10 +100,10 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
 
         val layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) as RecyclerView.LayoutManager
+            androidx.recyclerview.widget.StaggeredGridLayoutManager(6, androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL) as androidx.recyclerview.widget.RecyclerView.LayoutManager
         } else {
-            val lm = GridLayoutManager(activity, 2)
-            lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            val lm = androidx.recyclerview.widget.GridLayoutManager(activity, 2)
+            lm.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     val item = adapter.items[position]
                     return when(item) {

@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorInt
-import android.support.v7.widget.AppCompatImageView
+import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider

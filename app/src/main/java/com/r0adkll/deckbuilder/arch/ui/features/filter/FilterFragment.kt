@@ -2,8 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,9 +61,9 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         }
 
         adapter = FilterRecyclerAdapter(activity!!, filterIntentions)
-        recycler.layoutManager = LinearLayoutManager(activity)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         recycler.adapter = adapter
-        (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        (recycler.itemAnimator as androidx.recyclerview.widget.SimpleItemAnimator).supportsChangeAnimations = false
 
         if (activity is SearchActivity) {
             val type = (activity as SearchActivity).superType

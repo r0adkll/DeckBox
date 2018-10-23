@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.util.extensions
 
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView

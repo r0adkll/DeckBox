@@ -5,8 +5,8 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Shader
 import android.graphics.drawable.*
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import com.caverock.androidsvg.SVG
@@ -30,7 +30,7 @@ import com.r0adkll.deckbuilder.util.svg.SvgViewTarget
 import timber.log.Timber
 
 
-sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
 

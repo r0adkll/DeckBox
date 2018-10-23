@@ -9,8 +9,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.view.animation.FastOutSlowInInterpolator
-import android.support.v7.widget.LinearLayoutManager
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.util.bindViews
 import com.ftinc.kit.arch.util.uiDebounce
@@ -83,7 +83,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         // Setup result recycler
         adapter = TestResultsRecyclerAdapter(this)
         recycler.adapter = adapter
-        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recycler.addItemDecoration(DividerSpacerItemDecoration(dpToPx(8f), false))
 
         inputIterations.setOnClickListener { toast(R.string.test_iterations_explanation) }

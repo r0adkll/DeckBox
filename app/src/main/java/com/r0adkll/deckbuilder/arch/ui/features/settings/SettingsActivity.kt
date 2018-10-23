@@ -4,10 +4,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v14.preference.PreferenceFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.preference.Preference
+import com.google.android.material.snackbar.Snackbar
+import androidx.preference.PreferenceFragment
+import androidx.fragment.app.FragmentActivity
+import androidx.preference.Preference
 import com.ftinc.kit.kotlin.extensions.clear
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
@@ -213,7 +213,7 @@ class SettingsActivity : BaseActivity() {
                     .build()
 
             googleClient = GoogleApiClient.Builder(activity)
-                    .enableAutoManage(activity as FragmentActivity, this)
+                    .enableAutoManage(activity as androidx.fragment.app.FragmentActivity, this)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build()
         }
@@ -238,7 +238,7 @@ class SettingsActivity : BaseActivity() {
                             }
                             else {
                                 Timber.e(it.exception, "Unable to link account")
-                                snackbar("Unable to link account", Snackbar.LENGTH_LONG)
+                                snackbar("Unable to link account", com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
                             }
                         }
             }

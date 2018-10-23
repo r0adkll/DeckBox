@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +21,7 @@ class DeckBuilderPagerAdapter(
         private val context: Context,
         private val pokemonCardClicks: Relay<PokemonCardView>,
         private val editCardIntentions: EditCardIntentions
-) : PagerAdapter() {
+) : androidx.viewpager.widget.PagerAdapter() {
 
     var isEditing: Boolean = false
         set(value) {

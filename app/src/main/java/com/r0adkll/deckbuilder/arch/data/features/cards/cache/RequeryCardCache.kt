@@ -103,7 +103,7 @@ class RequeryCardCache @Inject constructor(
 
         // Adjust query for contains
         filter?.contains?.forEach {
-            if (it.equals("Ability", true)) {
+            if (it.equals("AbilityEntity", true)) {
                 filterQuery = filterQuery.and(CardEntity.ABILITY_NAME.notNull())
             } // else ignore
         }

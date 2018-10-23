@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import io.pokemontcg.model.Type
+import java.util.*
 
 
 object CardUtils {
@@ -681,6 +682,13 @@ object CardUtils {
                     .sortedBy { card -> card.card.nationalPokedexNumber }
         }
     }
+}
+
+
+fun List<PokemonCard>.stack(): List<StackedPokemonCard> = CardUtils.stackCards().invoke(this)
+
+fun List<StackedPokemonCard>.unstack(): List<PokemonCard> = this.flatMap { stack ->
+    (0 until stack.count).map { stack.card.copy() }
 }
 
 

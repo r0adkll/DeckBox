@@ -13,12 +13,13 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.graphics.ColorUtils
-import android.support.v7.graphics.Palette
-import android.support.v7.widget.GridLayoutManager
+import com.google.android.material.tabs.TabLayout
+import androidx.core.graphics.ColorUtils
+import androidx.palette.graphics.Palette
+import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.google.android.material.appbar.AppBarLayout
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -84,9 +85,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             tabs.getTabAt(index)?.tag = browseFilter.name
         }
 
-        tabs.tabMode = if (smallestWidth(TABLET_10)) TabLayout.MODE_FIXED else TabLayout.MODE_SCROLLABLE
-        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
+        tabs.tabMode = if (smallestWidth(TABLET_10)) com.google.android.material.tabs.TabLayout.MODE_FIXED else com.google.android.material.tabs.TabLayout.MODE_SCROLLABLE
+        tabs.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
                 val filter = when(tab.tag as? String) {
                     "ALL" -> BrowseFilter.ALL
                     "POKEMON" -> BrowseFilter.POKEMON
@@ -100,11 +101,11 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 Analytics.event(Event.SelectContent.Action("expansion_filter", filter.name))
             }
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
         })
 
-        appBarLayout.addOnOffsetChangedListener { view, offset ->
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { view, offset ->
             val height = view.height.toFloat() - ((appbar?.height ?: 0) + dipToPx(24f))
             val percent = offset.toFloat() / height
             val minScale = 0.4f
@@ -114,7 +115,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             logo.pivotY = logo.height.toFloat() * 0.9f
             logo.scaleX = scale
             logo.scaleY = scale
-        }
+        })
 
         disposables += cardClicks
                 .subscribe {
@@ -125,7 +126,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         val spanCount = if (smallestWidth(TABLET_10)) 9 else 3
         adapter = PokemonBuilderRecyclerAdapter(this, spanCount, EditCardIntentions(), cardClicks)
         adapter.setEmptyView(emptyView)
-        recycler.layoutManager = GridLayoutManager(this, spanCount)
+        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, spanCount)
         recycler.adapter = adapter
 
         renderer.start()
@@ -181,7 +182,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         }
 
         if (!smallestWidth(TABLET_10) && tabs.tabCount <= 4) {
-            tabs.tabMode = TabLayout.MODE_FIXED
+            tabs.tabMode = com.google.android.material.tabs.TabLayout.MODE_FIXED
         }
     }
 
@@ -207,7 +208,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
-        override fun execute(palette: Palette?) {
+        override fun execute(palette: androidx.palette.graphics.Palette?) {
             palette?.let { p ->
                 if (expansion.code != "sm5") {
                     p.vibrantSwatch?.rgb?.let {

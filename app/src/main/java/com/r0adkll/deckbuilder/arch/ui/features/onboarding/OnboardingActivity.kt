@@ -4,12 +4,12 @@ package com.r0adkll.deckbuilder.arch.ui.features.onboarding
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +73,7 @@ class OnboardingActivity : BaseActivity() {
     }
 
 
-    inner class IndicatorPageChangeListener : ViewPager.OnPageChangeListener {
+    inner class IndicatorPageChangeListener : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
 
         override fun onPageScrollStateChanged(state: Int) {
 
@@ -109,10 +109,10 @@ class OnboardingActivity : BaseActivity() {
 
     class OnboardingPagerAdapter(
             val pages: List<Page>,
-            fragmentManager: FragmentManager
-    ) : FragmentPagerAdapter(fragmentManager) {
+            fragmentManager: androidx.fragment.app.FragmentManager
+    ) : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
 
-        override fun getItem(position: Int): Fragment {
+        override fun getItem(position: Int): androidx.fragment.app.Fragment {
             val page = pages[position]
             return PageFragment.newInstance(page)
         }
@@ -135,7 +135,7 @@ class OnboardingActivity : BaseActivity() {
     }
 
 
-    class PageFragment : Fragment() {
+    class PageFragment : androidx.fragment.app.Fragment() {
 
         val page: Page by bindOptionalParcelable(KEY_PAGE)
 

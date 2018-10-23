@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
@@ -37,7 +37,7 @@ class DecksRecyclerAdapter(
 
 
     override fun getItemViewType(position: Int): Int {
-        if (position != RecyclerView.NO_POSITION) {
+        if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
             return items[position].viewType
         }
         return super.getItemViewType(position)

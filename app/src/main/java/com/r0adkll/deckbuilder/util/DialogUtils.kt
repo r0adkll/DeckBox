@@ -2,8 +2,8 @@ package com.r0adkll.deckbuilder.util
 
 
 import android.content.Context
-import android.support.annotation.StringRes
-import android.support.v7.app.AlertDialog
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import android.text.InputType
 import android.widget.EditText
 import android.widget.FrameLayout

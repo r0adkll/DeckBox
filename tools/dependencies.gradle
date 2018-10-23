@@ -6,9 +6,9 @@ ext {
 
     // Testing Dependencies
     junit_version =          '4.12'
-    espresso_version =       '3.0.0'
+    espresso_version = '3.1.0-alpha4'
     mockito_version =        '1.10.19'
-    runner_version =         '1.0.1'
+    runner_version = '1.1.0-alpha4'
     kluent_version =         '1.27'
 
     // Dependencies
@@ -30,7 +30,7 @@ ext {
     rxbinding_version =      '2.0.0'
     rxpref_version =         '2.0.0-RC3'
     rxrelay_version =        '2.0.0'
-    support_version =        '28.0.0'
+    support_version =        '1.0.0'
     state_version =          '1.1.5'
     stetho_version =         '1.5.0'
     timber_version =         '4.7.0'

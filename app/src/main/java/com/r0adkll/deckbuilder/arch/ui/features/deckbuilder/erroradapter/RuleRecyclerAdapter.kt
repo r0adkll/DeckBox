@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.erroradapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +29,7 @@ class RuleRecyclerAdapter(context: Context) : ListRecyclerAdapter<Int, RuleRecyc
     }
 
 
-    class RuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class RuleViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         private val text: TextView = itemView as TextView
 

@@ -16,8 +16,8 @@ class SessionEntity(
         @PrimaryKey(autoGenerate = true) var uid: Long,
         var deckId: String?,
 
-        var originalName: String,
-        var originalDescription: String,
+        var originalName: String?,
+        var originalDescription: String?,
         var originalImage: Uri?,
 
         var name: String?,

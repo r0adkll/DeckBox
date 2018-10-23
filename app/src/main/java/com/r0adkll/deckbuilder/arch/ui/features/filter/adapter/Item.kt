@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion

@@ -42,7 +42,14 @@ android {
         buildConfigField "String", "GIT_TAG", "\"$GIT_TAG\""
         buildConfigField "String", "DATABASE_NAME", "\"deckbox.db\""
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -71,8 +78,8 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.amshove.kluent:kluent:$kluent_version"
     androidTestImplementation "org.amshove.kluent:kluent:$kluent_version"
-    androidTestImplementation "com.android.support.test:runner:$runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test:runner:$runner_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
@@ -80,13 +87,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
-    implementation "com.android.support:appcompat-v7:$support_version"
-    implementation "com.android.support:recyclerview-v7:$support_version"
-    implementation "com.android.support:cardview-v7:$support_version"
-    implementation "com.android.support:preference-v7:$support_version"
-    implementation "com.android.support:preference-v14:$support_version"
-    implementation "com.android.support:design:$support_version"
-    implementation "com.android.support:palette-v7:$support_version"
+    implementation "androidx.appcompat:appcompat:$support_version"
+    implementation "androidx.recyclerview:recyclerview:$support_version"
+    implementation "androidx.cardview:cardview:$support_version"
+    implementation "androidx.preference:preference:$support_version"
+    implementation "androidx.legacy:legacy-preference-v14:$support_version"
+    implementation "com.google.android.material:material:$support_version"
+    implementation "androidx.palette:palette:$support_version"
 
 
     implementation "com.google.firebase:firebase-core:16.0.3"
@@ -157,7 +164,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'nl.littlerobots.rxlint:rxlint:1.6.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
 
 }
 

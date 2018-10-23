@@ -4,8 +4,10 @@ package com.r0adkll.deckbuilder.arch.data
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import androidx.room.Room
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
+import com.r0adkll.deckbuilder.arch.data.databasev2.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
@@ -18,6 +20,7 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RequerySessionCache
+import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RoomSessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
@@ -111,6 +114,17 @@ class DataModule {
         return KotlinReactiveEntityStore(entityStore)
     }
 
+    /**
+     * Change Log
+     * ---
+     * 1. Initial Version
+     */
+    @Provides @AppScope
+    fun provideRoomDatabase(context: Context): DeckDatabase {
+        return Room.databaseBuilder(context, DeckDatabase::class.java, "Room_" + BuildConfig.DATABASE_NAME)
+                .build()
+    }
+
 
     /*
      * Caching
@@ -125,7 +139,7 @@ class DataModule {
 
 
     @Provides @AppScope
-    fun provideSessionCache(cache: RequerySessionCache): SessionCache = cache
+    fun provideSessionCache(cache: RoomSessionCache): SessionCache = cache
 
 
     @Provides @AppScope

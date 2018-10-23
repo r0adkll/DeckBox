@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.graphics.Palette
+import androidx.palette.graphics.Palette
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ViewSwitcher
@@ -68,9 +68,9 @@ class CardSwitcher : ViewSwitcher {
     }
 
 
-    fun setOnPaletteChangeListener(listener: (Palette) -> Unit) {
+    fun setOnPaletteChangeListener(listener: (androidx.palette.graphics.Palette) -> Unit) {
         paletteChangeListener = object : OnPaletteChangeListener {
-            override fun onPaletteChanged(palette: Palette) {
+            override fun onPaletteChanged(palette: androidx.palette.graphics.Palette) {
                 listener.invoke(palette)
             }
         }
@@ -125,7 +125,7 @@ class CardSwitcher : ViewSwitcher {
 
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
-        override fun execute(palette: Palette?) {
+        override fun execute(palette: androidx.palette.graphics.Palette?) {
             palette?.let {
                 paletteChangeListener?.onPaletteChanged(it)
             }
@@ -135,7 +135,7 @@ class CardSwitcher : ViewSwitcher {
 
     interface OnPaletteChangeListener {
 
-        fun onPaletteChanged(palette: Palette)
+        fun onPaletteChanged(palette: androidx.palette.graphics.Palette)
     }
 
 
