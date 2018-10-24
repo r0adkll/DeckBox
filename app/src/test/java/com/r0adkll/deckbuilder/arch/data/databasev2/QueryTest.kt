@@ -32,5 +32,21 @@ class QueryTest {
         result `should equal` "SELECT * FROM cards WHERE hp > 100 AND subtype = Basic OR subtype = GX"
     }
 
+    @Test
+    fun testQueryMultiSubCondition() {
+        val result = Query.select("cards")
+                .where("hp" lt 100)
+                .and(("subtype" eq SubType.GX.displayName) or ("subtype" eq SubType.STAGE_2.displayName))
+                .get()
+        result `should equal` "SELECT * FROM cards WHERE hp < 100 AND (subtype = GX OR subtype = Stage 2)"
+    }
 
+    @Test
+    fun testQueryTerminalCondition() {
+        val result = Query.select("cards")
+                .where("name" eq "Charizard")
+                .and("text".notNull())
+                .get()
+        result `should equal` "SELECT * FROM cards WHERE name = Charizard AND text IS NOT NULL"
+    }
 }

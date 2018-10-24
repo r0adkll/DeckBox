@@ -11,6 +11,7 @@ import com.r0adkll.deckbuilder.arch.data.databasev2.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
@@ -130,7 +131,7 @@ class DataModule {
      */
 
     @Provides @AppScope
-    fun provideCardCache(cache: RequeryCardCache): CardCache = cache
+    fun provideCardCache(cache: RoomCardCache): CardCache = cache
 
 
     @Provides @AppScope

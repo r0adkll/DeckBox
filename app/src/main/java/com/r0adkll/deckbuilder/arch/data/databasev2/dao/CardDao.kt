@@ -27,6 +27,9 @@ abstract class CardDao {
     @Insert
     abstract fun insertAttacks(attacks: List<AttackEntity>)
 
+    @Query("DELETE FROM cards")
+    abstract fun clear()
+
 
     @Transaction
     open fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {
