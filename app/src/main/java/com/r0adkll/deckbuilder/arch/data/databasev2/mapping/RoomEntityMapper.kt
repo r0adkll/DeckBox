@@ -186,6 +186,37 @@ object RoomEntityMapper {
     }
 
 
+    fun fromCards(expansions: List<Expansion>, entities: List<CardWithAttacks>): List<PokemonCard> {
+        return entities.map { e ->
+                PokemonCard(
+                        e.card.id,
+                        e.card.name,
+                        e.card.nationalPokedexNumber,
+                        e.card.imageUrl,
+                        e.card.imageUrlHiRes,
+                        e.card.types?.deserializeTypes(),
+                        SuperType.find(e.card.superType),
+                        SubType.find(e.card.subType),
+                        e.card.evolvesFrom,
+                        e.card.hp,
+                        (0 until e.card.retreatCost).map { Type.COLORLESS },
+                        e.card.number,
+                        e.card.artist,
+                        e.card.rarity,
+                        e.card.series,
+                        expansions.find { it.code == e.card.setCode },
+                        e.card.text?.split("\n"),
+                        e.attacks.map { from(it) },
+                        e.card.weaknesses?.deserializeEffects(),
+                        e.card.resistances?.deserializeEffects(),
+                        e.card.ability?.let {
+                            Ability(it.name, it.text)
+                        }
+                )
+        }
+    }
+
+
     fun from(entity: AttackEntity): Attack {
         return Attack(
                 entity.cost?.deserializeTypes(),
