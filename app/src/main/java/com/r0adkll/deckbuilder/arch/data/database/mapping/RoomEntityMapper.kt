@@ -1,9 +1,9 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2.mapping
+package com.r0adkll.deckbuilder.arch.data.database.mapping
 
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.*
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.CardWithAttacks
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionCard
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionWithChanges
+import com.r0adkll.deckbuilder.arch.data.database.entities.*
+import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
+import com.r0adkll.deckbuilder.arch.data.database.relations.SessionCard
+import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Change
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session

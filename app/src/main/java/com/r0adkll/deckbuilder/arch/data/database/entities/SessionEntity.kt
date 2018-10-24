@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2.entities
+package com.r0adkll.deckbuilder.arch.data.database.entities
 
 import android.net.Uri
 import androidx.room.Entity

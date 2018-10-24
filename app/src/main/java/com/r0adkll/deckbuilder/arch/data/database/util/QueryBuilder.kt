@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2
+package com.r0adkll.deckbuilder.arch.data.database.util
 
 enum class Operator(val text: String) {
     AND("AND"),
@@ -24,6 +24,14 @@ interface Condition<L, R> {
     val leftOperand: L
     val operator: Operator
     val rightOperand: R
+
+    fun R.sql(): String {
+        return when(this) {
+            is String -> "\"$this\""
+            is List<*> -> "(${this.joinToString { if (it is String) "\"$it\"" else it.toString()}})"
+            else -> this.toString()
+        }
+    }
 }
 
 interface AndOr<out Q> {
@@ -60,7 +68,7 @@ class FieldCondition(
 ): Condition<String, Any?> {
 
     override fun toString(): String {
-        return "$leftOperand ${operator.text}${rightOperand?.let { " $it" } ?: ""}"
+        return "$leftOperand ${operator.text}${rightOperand?.let { " ${it.sql()}" } ?: ""}"
     }
 }
 
@@ -72,7 +80,7 @@ class AndOrCondition(
     override val operator: Operator = condition.operator
     override val rightOperand: Any? = condition.rightOperand
 
-    override fun toString() = "${andOrOperator.text} $leftOperand ${operator.text}${rightOperand?.let { " $it" } ?: ""}"
+    override fun toString() = "${andOrOperator.text} $leftOperand ${operator.text}${rightOperand?.let { " ${it.sql()}" } ?: ""}"
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -105,7 +113,7 @@ class LogicalCondition(
             builder.append(")")
             builder.toString()
         } else {
-            "$leftOperand ${operator.text}${rightOperand?.let { " $it" } ?: ""}"
+            "$leftOperand ${operator.text}${rightOperand?.let { " ${it.sql()}" } ?: ""}"
         }
     }
 }
@@ -237,8 +245,8 @@ infix fun String.gt(other: Any): Logical<String, Any?> = LogicalCondition(FieldC
 infix fun String.lte(other: Any): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.LESS_THAN_OR_EQUAL, other))
 infix fun String.gte(other: Any): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.GREATER_THAN_OR_EQUAL, other))
 infix fun String.like(other: String): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.LIKE, other))
-fun String.`in`(other: List<Any>): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.IN, "(${other.joinToString { it.toString() }})"))
-fun String.notIn(other: List<Any>): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.NOT_IN, "(${other.joinToString { it.toString() }})"))
+fun String.`in`(other: List<Any>): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.IN, other))
+fun String.notIn(other: List<Any>): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.NOT_IN, other))
 fun String.isNull(): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.IS_NULL, null))
 fun String.notNull(): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.NOT_NULL, null))
 

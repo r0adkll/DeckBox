@@ -7,10 +7,9 @@ import android.preference.PreferenceManager
 import androidx.room.Room
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
-import com.r0adkll.deckbuilder.arch.data.databasev2.DeckDatabase
+import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
-import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDataSource
@@ -53,10 +52,6 @@ import dagger.multibindings.IntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.requery.Persistable
-import io.requery.android.sqlite.DatabaseSource
-import io.requery.reactivex.KotlinReactiveEntityStore
-import io.requery.sql.KotlinEntityDataStore
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import java.util.concurrent.Executors
@@ -102,17 +97,6 @@ class DataModule {
     @Provides @AppScope
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
-
-    /**
-     * - 1: Initial Version
-     * - 2: Added deck image to SessionEntity;
-     */
-    @Provides @AppScope
-    fun provideDatabase(context: Context): KotlinReactiveEntityStore<Persistable> {
-        val source = DatabaseSource(context, Models.DEFAULT, BuildConfig.DATABASE_NAME, 2)
-        val entityStore = KotlinEntityDataStore<Persistable>(source.configuration)
-        return KotlinReactiveEntityStore(entityStore)
-    }
 
     /**
      * Change Log

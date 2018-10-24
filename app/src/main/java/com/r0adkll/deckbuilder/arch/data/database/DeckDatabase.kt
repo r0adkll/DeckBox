@@ -1,12 +1,12 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2
+package com.r0adkll.deckbuilder.arch.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.r0adkll.deckbuilder.arch.data.databasev2.converter.UriConverter
-import com.r0adkll.deckbuilder.arch.data.databasev2.dao.CardDao
-import com.r0adkll.deckbuilder.arch.data.databasev2.dao.SessionDao
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.*
+import com.r0adkll.deckbuilder.arch.data.database.converter.UriConverter
+import com.r0adkll.deckbuilder.arch.data.database.dao.CardDao
+import com.r0adkll.deckbuilder.arch.data.database.dao.SessionDao
+import com.r0adkll.deckbuilder.arch.data.database.entities.*
 
 
 @Database(

@@ -1,8 +1,8 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2
+package com.r0adkll.deckbuilder.arch.data.database
 
+import com.r0adkll.deckbuilder.arch.data.database.util.*
 import io.pokemontcg.model.SubType
 import org.amshove.kluent.`should equal`
-import org.junit.Assert.*
 import org.junit.Test
 
 class QueryTest {

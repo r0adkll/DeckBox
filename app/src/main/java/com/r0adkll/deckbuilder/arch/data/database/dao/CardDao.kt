@@ -1,11 +1,11 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2.dao
+package com.r0adkll.deckbuilder.arch.data.database.dao
 
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.AttackEntity
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.CardEntity
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.CardWithAttacks
+import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
+import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import io.reactivex.Single
 
 

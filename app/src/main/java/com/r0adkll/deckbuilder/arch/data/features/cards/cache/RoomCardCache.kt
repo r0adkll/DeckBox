@@ -1,18 +1,14 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.cache
 
-import androidx.sqlite.db.SimpleSQLiteQuery
-import com.r0adkll.deckbuilder.arch.data.databasev2.*
-import com.r0adkll.deckbuilder.arch.data.databasev2.mapping.RoomEntityMapper
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.CardWithAttacks
+import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
+import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
+import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
+import com.r0adkll.deckbuilder.arch.data.database.util.FilterQueryHelper
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
-import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterSpec
-import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
-import com.r0adkll.deckbuilder.util.compact
 import io.pokemontcg.model.Card
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -40,123 +36,15 @@ class RoomCardCache @Inject constructor(
 
     override fun findCards(query: String, filter: Filter?): Observable<List<PokemonCard>> {
         val adjustedQuery = remote.searchProxies?.apply(query) ?: query
-        val statement = Query.select("cards")
-
-        // Adjust statement for search field
-        var filterQuery = if (query.isNotBlank()) {
-            when (filter?.field ?: SearchField.NAME) {
-                SearchField.NAME -> statement.where("name" like "%$adjustedQuery%")
-                SearchField.TEXT -> statement.where("text" like "%$adjustedQuery%")
-                SearchField.ABILITY_NAME -> statement.where("ability_name" like "%$adjustedQuery%")
-                SearchField.ABILITY_TEXT -> statement.where("ability_text" like "%$adjustedQuery%")
-                SearchField.ATTACK_TEXT -> {
-                    statement.join("attacks").on("attacks.cardId" eq "cards.id")
-                            .where("attacks.text" like "%$adjustedQuery%")
-                }
-                SearchField.ATTACK_NAME -> {
-                    statement.join("attacks").on("attacks.cardId" eq "cards.id")
-                            .where("attacks.name" like "%$adjustedQuery%")
-                }
-            }
-        } else {
-            // This is a nothing statement that will always result in true for every row
-            statement.where("name".notNull())
-        }
-
-        // Adjust query for types
-        filter?.types?.forEach { t ->
-            val type = t.compact()
-            filterQuery = filterQuery.and("types" like "%$type%")
-        }
-
-        // Adjust query for supertype
-        filter?.superType?.let {
-            filterQuery = filterQuery.and("superType" eq it.displayName)
-        }
-
-        // Adjust query for subtypes
-        if (filter?.subTypes?.isNotEmpty() == true) {
-            if (filter.subTypes.size == 1) {
-                filterQuery = filterQuery.and("subType" eq filter.subTypes[0].displayName)
-            } else if (filter.subTypes.size > 1) {
-                var condition = ("subType" eq filter.subTypes[0].displayName) or ("subType" eq filter.subTypes[1].displayName)
-                if (filter.subTypes.size > 2) {
-                    (2 until filter.subTypes.size).forEach {
-                        val subType = filter.subTypes[it]
-                        condition = condition or ("subType" eq subType.displayName)
-                    }
-                }
-
-                filterQuery = filterQuery.and(condition)
-            }
-        }
-
-        // Adjust query for contains
-        filter?.contains?.forEach {
-            if (it.equals("AbilityEntity", true)) {
-                filterQuery = filterQuery.and("ability_name".notNull())
-            } // else ignore
-        }
-
-        // Adjust query for expansions
-        if (filter?.expansions?.isNotEmpty() == true) {
-            val setCodes = filter.expansions.map { it.code }
-            filterQuery = filterQuery.and("setCode".`in`(setCodes))
-        }
-
-        // Adjust query for rarities
-        if (filter?.rarity?.isNotEmpty() == true) {
-            val rarities = filter.rarity.map { it.key }
-            filterQuery = filterQuery.and("rarity".`in`(rarities))
-        }
-
-        // Adjust query for retreatCost
-        filter?.retreatCost?.let {
-            val value = FilterSpec.Spec.ValueRangeSpec.parseValue(it)
-            filterQuery = when(value.modifier) {
-                Item.ValueRange.Modifier.GREATER_THAN -> filterQuery.and("retreatCost" gt value.value)
-                Item.ValueRange.Modifier.GREATER_THAN_EQUALS -> filterQuery.and("retreatCost" gte value.value)
-                Item.ValueRange.Modifier.LESS_THAN -> filterQuery.and("retreatCost" lt value.value)
-                Item.ValueRange.Modifier.LESS_THAN_EQUALS -> filterQuery.and("retreatCost" lte value.value)
-                Item.ValueRange.Modifier.NONE -> filterQuery.and("retreatCost" eq value.value)
-            }
-        }
-
-        // Adjust query for attackCost
-        filter?.hp?.let {
-            val value = FilterSpec.Spec.ValueRangeSpec.parseValue(it)
-            filterQuery = when(value.modifier) {
-                Item.ValueRange.Modifier.GREATER_THAN -> filterQuery.and("hp" gt value.value)
-                Item.ValueRange.Modifier.GREATER_THAN_EQUALS -> filterQuery.and("hp" gte value.value)
-                Item.ValueRange.Modifier.LESS_THAN -> filterQuery.and("hp" lt value.value)
-                Item.ValueRange.Modifier.LESS_THAN_EQUALS -> filterQuery.and("hp" lte value.value)
-                Item.ValueRange.Modifier.NONE -> filterQuery.and("hp" eq value.value)
-            }
-        }
-
-        // Adjust for weaknesses
-        filter?.weaknesses?.forEach { t ->
-            val type = t.compact()
-            filterQuery = filterQuery.and("weaknesses" like "%$type%")
-        }
-
-        // Adjust for weaknesses
-        filter?.resistances?.forEach { t ->
-            val type = t.compact()
-            filterQuery = filterQuery.and("resistances" like "%$type%")
-        }
-
-        val sqLiteQuery = SimpleSQLiteQuery(filterQuery.get())
-        val search = db.cards().searchCards(sqLiteQuery).toObservable()
+        val search = db.cards().searchCards(FilterQueryHelper.createQuery(adjustedQuery, filter)).toObservable()
         val expansions = cache.getExpansions()
 
-        return Observable.combineLatest(search, expansions, BiFunction<List<CardWithAttacks>, List<Expansion>, List<PokemonCard>> { cards, expansions ->
-            RoomEntityMapper.fromCards(expansions, cards)
+        return Observable.combineLatest(search, expansions, BiFunction<List<CardWithAttacks>, List<Expansion>, List<PokemonCard>> { c, e ->
+            RoomEntityMapper.fromCards(e, c)
         })
     }
 
     override fun clear() {
         db.cards().clear()
     }
-
 }

@@ -1,9 +1,9 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2.relations
+package com.r0adkll.deckbuilder.arch.data.database.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.SessionChangeEntity
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.SessionEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionChangeEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
 
 
 data class SessionWithChanges(

@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2.converter
+package com.r0adkll.deckbuilder.arch.data.database.converter
 
 import android.net.Uri
 import androidx.room.TypeConverter

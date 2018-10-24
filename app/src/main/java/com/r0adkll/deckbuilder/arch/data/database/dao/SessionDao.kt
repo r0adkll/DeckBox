@@ -1,12 +1,12 @@
-package com.r0adkll.deckbuilder.arch.data.databasev2.dao
+package com.r0adkll.deckbuilder.arch.data.database.dao
 
 
 import android.net.Uri
 import androidx.room.*
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.*
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.CardWithAttacks
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionCard
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionWithChanges
+import com.r0adkll.deckbuilder.arch.data.database.entities.*
+import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
+import com.r0adkll.deckbuilder.arch.data.database.relations.SessionCard
+import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import io.reactivex.Flowable
 
 

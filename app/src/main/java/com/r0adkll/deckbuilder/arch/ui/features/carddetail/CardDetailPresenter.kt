@@ -38,13 +38,13 @@ class CardDetailPresenter @Inject constructor(
                 .map { Change.Validated(it) as Change }
                 .onErrorReturn(handleUnknownError)
 
-        val loadVariants = repository.search(ui.state.card!!.supertype, "\"${ui.state.card!!.name}\"")
+        val loadVariants = repository.search(ui.state.card!!.supertype, ui.state.card!!.name)
                 .map { it.filter { it.id != ui.state.card!!.id } }
                 .map { Change.VariantsLoaded(it) as Change }
                 .onErrorReturn(handleUnknownError)
 
         val loadEvolves = ui.state.card!!.evolvesFrom?.let {
-            repository.search(ui.state.card!!.supertype, "\"$it\"")
+            repository.search(ui.state.card!!.supertype, it)
                     .map { Change.EvolvesFromLoaded(it) as Change }
                     .onErrorReturn(handleUnknownError)
         } ?: Observable.empty()

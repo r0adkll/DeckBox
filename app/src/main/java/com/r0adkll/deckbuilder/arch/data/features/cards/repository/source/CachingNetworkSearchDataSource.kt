@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
 
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.mappings.CardMapper
@@ -10,6 +11,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.helper.Connectivity
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
 import io.pokemontcg.model.SuperType
@@ -18,9 +20,10 @@ import io.reactivex.Observable
 
 
 @Suppress("UNCHECKED_CAST")
-class NetworkSearchDataSource(
+class CachingNetworkSearchDataSource(
         val api: Pokemon,
         val source: ExpansionDataSource,
+        val cache: CardCache,
         val remote: Remote,
         val schedulers: Schedulers
 ) : SearchDataSource {
@@ -49,6 +52,7 @@ class NetworkSearchDataSource(
                     id = ids.joinToString("|")
                 }
                 .observeAll()
+                .doOnNext { cache.putCards(it) }
                 .subscribeOn(schedulers.network)
     }
 
@@ -82,6 +86,7 @@ class NetworkSearchDataSource(
         return api.card()
                 .where(request)
                 .observeAll()
+                .doOnNext { cache.putCards(it) }
                 .subscribeOn(schedulers.network)
     }
 }

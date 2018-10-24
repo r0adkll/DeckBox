@@ -1,10 +1,10 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.cache
 
-import com.r0adkll.deckbuilder.arch.data.databasev2.DeckDatabase
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionCard
-import com.r0adkll.deckbuilder.arch.data.databasev2.entities.SessionEntity
-import com.r0adkll.deckbuilder.arch.data.databasev2.relations.SessionWithChanges
-import com.r0adkll.deckbuilder.arch.data.databasev2.mapping.RoomEntityMapper
+import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
+import com.r0adkll.deckbuilder.arch.data.database.relations.SessionCard
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
+import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
+import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
