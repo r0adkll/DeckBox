@@ -5,6 +5,7 @@ class DeckEntity(
         val name: String = "",
         val description: String = "",
         val image: String? = null,
-        val cards: List<PokemonCardEntity> = emptyList(),
+        @Deprecated("Use 'cardStacks'") val cards: List<PokemonCardEntity> = emptyList(),
+        val cardStacks: List<CardEntity>? = null,
         val timestamp: Long = 0L
 )

@@ -52,7 +52,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var renderer: DecksRenderer
     @Inject lateinit var presenter: DecksPresenter
     @Inject lateinit var preferences: AppPreferences
-    @Inject lateinit var editor: EditRepository
 
     private val viewPreview: Relay<ExpansionPreview> = PublishRelay.create()
     private val dismissPreview: Relay<Unit> = PublishRelay.create()
@@ -60,6 +59,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     private val duplicateClicks: Relay<Deck> = PublishRelay.create()
     private val deleteClicks: Relay<Deck> = PublishRelay.create()
     private val testClicks: Relay<Deck> = PublishRelay.create()
+    private val createSession: Relay<Deck> = PublishRelay.create()
+    private val createNewSession: Relay<Unit> = PublishRelay.create()
+    private val clearSession: Relay<Unit> = PublishRelay.create()
 
     private lateinit var adapter: DecksRecyclerAdapter
 
@@ -83,14 +85,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     Shortcuts.addDeckShortcut(v.context, item.deck)
 
                     // Generate a new session and pass to builder activity
-                    disposables += editor.createSession(item.deck)
-                            .subscribeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-                                startActivity(DeckBuilderActivity.createIntent(activity!!, it))
-                            }, {
-                                Timber.e(it)
-                                snackbar(R.string.error_session_opening_deck)
-                            })
+                    createSession.accept(item.deck)
                 }
             }
         })
@@ -126,14 +121,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             Analytics.event(Event.SelectContent.Action("new_deck"))
 
             // Generate a new session and pass to builder activity
-            disposables += editor.createSession()
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        startActivity(DeckBuilderActivity.createIntent(activity!!, it, true))
-                    }, {
-                        Timber.e(it)
-                        snackbar(R.string.error_session_opening_deck)
-                    })
+            createNewSession.accept(Unit)
         }
 
         if (preferences.quickStart) {
@@ -195,7 +183,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
 
-    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview", "Forbidden Light")) }
+    override fun createSession(): Observable<Deck> = createSession
+    override fun createNewSession(): Observable<Unit> = createNewSession
+    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview")) }
     override fun shareClicks(): Observable<Deck> = shareClicks
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
     override fun deleteClicks(): Observable<Deck> = deleteClicks.flatMap { deck ->
@@ -228,6 +218,11 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
     override fun balanceShortcuts(decks: List<Deck>) {
         Shortcuts.balanceShortcuts(activity!!, decks)
+    }
+
+    override fun openSession(sessionId: Long) {
+
+        startActivity(DeckBuilderActivity.createIntent(activity!!, sessionId))
     }
 
     companion object {

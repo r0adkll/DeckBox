@@ -27,7 +27,7 @@ sealed class Item : RecyclerItem{
     }
 
 
-    data class DeckItem(val deck: Deck) : Item() {
+    data class DeckItem(val deck: Deck, val isLoading: Boolean) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
             is DeckItem -> new.deck.id == deck.id
@@ -36,7 +36,7 @@ sealed class Item : RecyclerItem{
 
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
-            is DeckItem -> new.deck == deck
+            is DeckItem -> new.deck == deck && new.isLoading == isLoading
             else -> false
         }
 

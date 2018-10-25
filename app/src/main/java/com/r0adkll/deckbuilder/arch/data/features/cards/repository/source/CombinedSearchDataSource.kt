@@ -38,8 +38,16 @@ class CombinedSearchDataSource @Inject constructor(
 
     override fun find(ids: List<String>): Observable<List<PokemonCard>> {
         return if (connectivity.isConnected()) {
-            network.find(ids)
-                    .onErrorResumeNext(disk.find(ids))
+            disk.find(ids)
+                    .flatMap { diskCards ->
+                        val missingIds = ids.filter { id -> diskCards.none { card -> card.id == id } }
+                        if (missingIds.isNotEmpty()) {
+                            network.find(missingIds)
+                                    .map { it.plus(diskCards) }
+                        } else {
+                            Observable.just(diskCards)
+                        }
+                    }
         } else {
             disk.find(ids)
         }
