@@ -185,6 +185,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
     override fun createSession(): Observable<Deck> = createSession
     override fun createNewSession(): Observable<Unit> = createNewSession
+    override fun clearSession(): Observable<Unit> = clearSession
     override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview")) }
     override fun shareClicks(): Observable<Deck> = shareClicks
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
@@ -221,7 +222,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
     override fun openSession(sessionId: Long) {
-
+        clearSession.accept(Unit)
         startActivity(DeckBuilderActivity.createIntent(activity!!, sessionId))
     }
 

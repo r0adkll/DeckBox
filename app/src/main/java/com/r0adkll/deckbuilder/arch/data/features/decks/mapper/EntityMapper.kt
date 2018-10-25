@@ -2,14 +2,12 @@ package com.r0adkll.deckbuilder.arch.data.features.decks.mapper
 
 
 import android.net.Uri
+import android.util.ArrayMap
 import com.r0adkll.deckbuilder.arch.data.features.decks.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.util.compactEffects
-import com.r0adkll.deckbuilder.util.compactTypes
-import com.r0adkll.deckbuilder.util.deserializeEffects
-import com.r0adkll.deckbuilder.util.deserializeTypes
+import com.r0adkll.deckbuilder.util.*
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
@@ -18,24 +16,56 @@ import io.pokemontcg.model.Type
 object EntityMapper {
 
     fun to(deck: Deck): DeckEntity {
-        return DeckEntity(
+        return DeckEntity("",
                 deck.name,
                 deck.description,
                 deck.image?.uri?.toString(),
-                deck.cards.map { to(it) },
+                /* Deprecated */ emptyList(),
+                deck.cards.stack().map { to(it) },
                 System.currentTimeMillis()
         )
     }
 
 
-    fun to(expansions: List<Expansion>, entity: DeckEntity, id: String): Deck {
+    fun to(entity: DeckEntity, cards: List<PokemonCard>, isMissingCards: Boolean): Deck {
         return Deck(
-                id,
+                entity.id,
                 entity.name,
                 entity.description,
                 entity.image?.let { DeckImage.from(Uri.parse(it)) },
-                entity.cards.map { to(it, expansions) },
+                cards,
+                isMissingCards,
                 entity.timestamp
+        )
+    }
+
+
+    fun to(entity: DeckEntity, cards: List<PokemonCard>): Deck {
+        var isMissingCards = false
+        val stackedCards = ArrayList<StackedPokemonCard>()
+        val metadata = entity.metadata()
+
+        metadata.forEach { meta ->
+            // find card
+            val card = cards.find { it.id == meta.id }
+            if (card != null) {
+                stackedCards.add(StackedPokemonCard(card, meta.count))
+            } else {
+                isMissingCards = true
+            }
+        }
+
+        return EntityMapper.to(entity, stackedCards.unstack(), isMissingCards)
+    }
+
+
+    fun to(stackedCard: StackedPokemonCard): CardMetadataEntity {
+        return CardMetadataEntity(
+                stackedCard.card.id,
+                stackedCard.card.supertype.displayName,
+                stackedCard.card.imageUrl,
+                stackedCard.card.imageUrlHiRes,
+                stackedCard.count
         )
     }
 
@@ -96,69 +126,25 @@ object EntityMapper {
     }
 
 
-    fun to(expansion: Expansion): ExpansionEntity {
-        return ExpansionEntity(
-                expansion.code,
-                expansion.ptcgoCode,
-                expansion.name,
-                expansion.series,
-                expansion.totalCards,
-                expansion.standardLegal,
-                expansion.expandedLegal,
-                expansion.releaseDate,
-                expansion.symbolUrl,
-                expansion.logoUrl
-        )
+    fun to(entity: PokemonCardEntity, count: Int): CardMetadataEntity {
+        return CardMetadataEntity(entity.id, entity.supertype, entity.imageUrl, entity.imageUrlHiRes, count)
     }
 
 
-    fun to(entity: ExpansionEntity): Expansion {
-        return Expansion(
-                entity.code,
-                entity.ptcgoCode,
-                entity.name,
-                entity.series,
-                entity.totalCards,
-                entity.standardLegal,
-                entity.expandedLegal,
-                entity.releaseDate,
-                entity.symbolUrl,
-                entity.logoUrl
-        )
+    fun DeckEntity.metadata(): List<CardMetadataEntity> {
+        return this.cardMetadata
+                ?: this.cards.stackCards().map {
+                    EntityMapper.to(it.first, it.second)
+                }
     }
 
 
-    fun to(attack: Attack): AttackEntity {
-        return AttackEntity(
-//                attack.cost.map { it.displayName },
-                attack.name,
-                attack.text ?: "",
-                attack.damage,
-                attack.convertedEnergyCost
-        )
-    }
-
-
-    fun to(entity: AttackEntity): Attack {
-        return Attack(
-                emptyList(),
-                entity.name,
-                entity.text,
-                entity.damage,
-                entity.convertedEnergyCost
-        )
-    }
-
-
-    fun to(effect: Effect): EffectEntity {
-        return EffectEntity(
-                effect.type.displayName,
-                effect.value
-        )
-    }
-
-
-    fun to(entity: EffectEntity): Effect {
-        return Effect(Type.find(entity.type), entity.value)
+    fun List<PokemonCardEntity>.stackCards(): List<Pair<PokemonCardEntity, Int>> {
+        val map = ArrayMap<PokemonCardEntity, Int>(this.size)
+        this.forEach { card ->
+            val count = map[card] ?: 0
+            map[card] = count + 1
+        }
+        return map.map { Pair(it.key, it.value) }
     }
 }

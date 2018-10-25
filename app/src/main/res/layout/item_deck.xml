@@ -20,6 +20,29 @@
             android:background="@color/grey_300"
             />
 
+        <ImageView
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/margin_small"
+            android:src="@drawable/ic_error_red_24dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/bottom_bar"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"

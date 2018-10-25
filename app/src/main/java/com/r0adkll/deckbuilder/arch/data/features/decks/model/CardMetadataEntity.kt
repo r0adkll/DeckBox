@@ -10,7 +10,7 @@ package com.r0adkll.deckbuilder.arch.data.features.decks.model
  * @param imageUrl the HiRes card image url
  * @param count the number of instances of this card in the deck
  */
-class CardEntity(
+class CardMetadataEntity(
         val id: String = "",
         val superType: String = "",
         val imageUrl: String = "",

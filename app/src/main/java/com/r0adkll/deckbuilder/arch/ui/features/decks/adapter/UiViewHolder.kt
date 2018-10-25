@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.*
 import com.caverock.androidsvg.SVG
 import com.caverock.androidsvg.SVGParseException
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
@@ -164,6 +165,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.w
     ) : UiViewHolder<Item.DeckItem>(itemView) {
 
         private val image: DeckImageView by bindView(R.id.image)
+        private val loading: ProgressBar by bindView(R.id.loading)
+        private val error: ImageView by bindView(R.id.error)
         private val title: TextView by bindView(R.id.title)
         private val actionShare: ImageView by bindView(R.id.action_share)
         private val actionMore: ImageView by bindView(R.id.action_more)
@@ -174,6 +177,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.w
         override fun bind(item: Item.DeckItem) {
             val deck = item.deck
             title.text = deck.name
+            error.setVisible(item.deck.isMissingCards)
+            loading.setVisible(item.isLoading)
 
             deck.image?.let {
                 when(it) {
