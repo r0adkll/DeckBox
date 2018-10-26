@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.cache
 
 import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
-import com.r0adkll.deckbuilder.arch.data.database.relations.SessionCard
+import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
@@ -51,7 +51,7 @@ class RoomSessionCache @Inject constructor(
         val expansions = cardRepository.getExpansions()
 
         return Observable.combineLatest(session, cards, expansions,
-                Function3<SessionWithChanges, List<SessionCard>, List<Expansion>, Session> { s, c, e ->
+                Function3<SessionWithChanges, List<StackedCard>, List<Expansion>, Session> { s, c, e ->
                     RoomEntityMapper.to(s, c, e)
                 })
     }

@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.room.*
 import com.r0adkll.deckbuilder.arch.data.database.entities.*
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
-import com.r0adkll.deckbuilder.arch.data.database.relations.SessionCard
+import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import io.reactivex.Flowable
 
@@ -17,7 +17,7 @@ abstract class SessionDao {
     abstract fun getSessionWithChanges(sessionId: Long): Flowable<SessionWithChanges>
 
     @Transaction @Query("SELECT * FROM session_card_join INNER JOIN cards ON session_card_join.cardId = cards.id WHERE session_card_join.sessionId = :sessionId")
-    abstract fun getSessionCards(sessionId: Long): Flowable<List<SessionCard>>
+    abstract fun getSessionCards(sessionId: Long): Flowable<List<StackedCard>>
 
     @Query("SELECT * FROM session_card_join WHERE sessionId = :sessionId")
     abstract fun getSessionCardJoins(sessionId: Long): List<SessionCardJoin>

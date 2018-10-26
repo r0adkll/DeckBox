@@ -2,9 +2,10 @@ package com.r0adkll.deckbuilder.arch.data.database.mapping
 
 import com.r0adkll.deckbuilder.arch.data.database.entities.*
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
-import com.r0adkll.deckbuilder.arch.data.database.relations.SessionCard
+import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Change
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
@@ -27,7 +28,20 @@ object RoomEntityMapper {
     }
 
 
-    fun to(entity: SessionWithChanges, cards: List<SessionCard>, expansions: List<Expansion>): Session {
+    fun to(entity: DeckEntity, cards: List<StackedCard>, expansions: List<Expansion>): Deck {
+        return Deck(
+                entity.uid.toString(),
+                entity.name,
+                entity.description ?: "",
+                entity.image?.let { DeckImage.from(it) },
+                from(expansions, cards).unstack(),
+                false,
+                entity.timestamp
+        )
+    }
+
+
+    fun to(entity: SessionWithChanges, cards: List<StackedCard>, expansions: List<Expansion>): Session {
         return Session(
                 entity.session.uid,
                 entity.session.deckId,
@@ -152,7 +166,7 @@ object RoomEntityMapper {
     }
 
 
-    fun from(expansions: List<Expansion>, entities: List<SessionCard>): List<StackedPokemonCard> {
+    fun from(expansions: List<Expansion>, entities: List<StackedCard>): List<StackedPokemonCard> {
         return entities.map { e ->
             StackedPokemonCard(
                     PokemonCard(

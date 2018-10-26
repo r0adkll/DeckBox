@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 class DeckEntity(
         @PrimaryKey(autoGenerate = true) var uid: Long,
         var name: String,
-        var description: String,
+        var description: String?,
         var image: Uri?,
         var timestamp: Long
 )
