@@ -143,6 +143,25 @@ class FirestoreDeckCache @Inject constructor(
     }
 
 
+    fun putDecks(decks: List<Deck>): Observable<Unit> {
+        val db = FirebaseFirestore.getInstance()
+        return getUserDeckCollection()?.let { collection ->
+            val models = decks.map { EntityMapper.to(it) }
+            val batch = db.batch()
+
+            models.forEach {
+                val document = collection.document()
+                batch.set(document, it)
+            }
+
+            val task = batch.commit()
+
+            RxFirebase.fromVoid(task)
+                    .subscribeOn(schedulers.firebase)
+        } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
+    }
+
+
     private fun getUserDeckCollection(): CollectionReference? {
         val user = FirebaseAuth.getInstance().currentUser
         val db = FirebaseFirestore.getInstance()

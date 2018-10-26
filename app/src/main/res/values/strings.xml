@@ -166,8 +166,6 @@
     <string name="notification_caching_text_format">%1$d cards downloaded.</string>
     <string name="notification_caching_text">Waiting on server…</string>
     <string name="notification_caching_text_error">Please try again.</string>
-    <string name="pref_offline_cache_download_title">Download card data</string>
-    <string name="pref_offline_cache_download_summary">Cache all card data for offline use</string>
     <string name="pref_offline_cache_delete_title">Delete cached card data</string>
     <string name="pref_offline_cache_delete_summary">Delete all locally stored card data</string>
     <string name="pref_offline_cache_deleting_title">Deleting cached data</string>
@@ -218,4 +216,7 @@
     <string name="section_evolves_to">Evolves to</string>
     <string name="pref_about_privacy_policy">Privacy policy</string>
     <string name="format_lock_subhead">Format lock</string>
+    <string name="pref_category_cache">Cache</string>
+    <string name="pref_cache_manage_title">Offline data</string>
+    <string name="pref_cache_manage_summary">Manage your cached card and image data</string>
 </resources>

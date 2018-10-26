@@ -1,11 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.features.settings
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.preference.Preference
 import com.ftinc.kit.kotlin.extensions.clear
 import com.ftinc.kit.util.IntentUtils
@@ -15,24 +13,24 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.BasePreferenceFragment
+import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject
@@ -59,7 +57,6 @@ class SettingsActivity : BaseActivity() {
         private var googleClient: GoogleApiClient? = null
 
         @Inject lateinit var preferences: AppPreferences
-        @Inject lateinit var cacheManager: CacheManager
         private val disposables = CompositeDisposable()
 
 
@@ -133,8 +130,8 @@ class SettingsActivity : BaseActivity() {
                     signIn()
                     true
                 }
-                "pref_cache_cards" -> {
-                    CacheService.start(activity!!)
+                "pref_cache_manage" -> {
+
                     true
                 }
                 "pref_account_signout" -> {
@@ -178,36 +175,14 @@ class SettingsActivity : BaseActivity() {
             } else {
                 profilePref.avatarUrl = null
                 profilePref.title = "Offline"
-                profilePref.summary = preferences.deviceId
+                profilePref.summary = preferences.offlineId ?: preferences.deviceId
 
                 val linkAccount = findPreference("pref_account_link")
-                linkAccount.isVisible = false
+                linkAccount.isVisible = true
             }
 
             val versionPref = findPreference("pref_about_version")
             versionPref.summary = BuildConfig.VERSION_NAME
-
-
-            @SuppressLint("RxSubscribeOnError")
-            disposables += cacheManager.observeCacheStatus()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { status ->
-                        Timber.i("Cache Status: $status")
-                        val cachePref = findPreference("pref_cache_cards")
-                        cachePref.isEnabled = status !is CacheStatus.Downloading && status != CacheStatus.Deleting
-                        cachePref.setTitle(when(status) {
-                            CacheStatus.Empty -> R.string.pref_offline_cache_download_title
-                            CacheStatus.Cached -> R.string.pref_offline_cache_delete_title
-                            is CacheStatus.Downloading -> R.string.pref_offline_cache_downloading_title
-                            CacheStatus.Deleting -> R.string.pref_offline_cache_deleting_title
-                        })
-                        cachePref.summary = when(status) {
-                            CacheStatus.Empty -> getString(R.string.pref_offline_cache_download_summary)
-                            CacheStatus.Cached -> getString(R.string.pref_offline_cache_delete_summary)
-                            is CacheStatus.Downloading -> getString(R.string.pref_offline_cache_downloading_summary, status.count)
-                            CacheStatus.Deleting -> getString(R.string.pref_offline_cache_deleting_summary)
-                        }
-                    }
         }
 
 
@@ -232,20 +207,44 @@ class SettingsActivity : BaseActivity() {
 
         private fun handleSignInResult(result: GoogleSignInResult) {
             if (result.isSuccess) {
+                val firebaseAuth = FirebaseAuth.getInstance()
                 val acct = result.signInAccount
                 val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
-                FirebaseAuth.getInstance()
-                        .currentUser?.linkWithCredential(credential)
-                        ?.addOnCompleteListener {
-                            if (it.isSuccessful) {
-                                snackbar("${it.result?.user?.email} linked!")
-                                setupPreferences()
+                val currentUser = firebaseAuth.currentUser
+                if (currentUser != null && currentUser.isAnonymous) {
+                    currentUser.linkWithCredential(credential)
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    Analytics.event(Event.SignUp.Google)
+                                    snackbar("${it.result?.user?.email} linked!")
+                                    setupPreferences()
+                                } else {
+                                    Timber.e(it.exception, "Unable to link account")
+                                    snackbar("Unable to link account", Snackbar.LENGTH_LONG)
+                                }
                             }
-                            else {
-                                Timber.e(it.exception, "Unable to link account")
-                                snackbar("Unable to link account", Snackbar.LENGTH_LONG)
+                } else {
+                    firebaseAuth.signInWithCredential(credential)
+                            .addOnCompleteListener { r ->
+                                if (r.isSuccessful) {
+                                    // Auto-grab the user's name from their account
+                                    r.result?.user?.displayName?.let {
+                                        preferences.playerName.set(it)
+                                    }
+                                    r.result?.user?.uid?.let {
+                                        Analytics.userId(it)
+                                    }
+                                    Analytics.event(Event.SignUp.Google)
+
+                                    // TODO: Now we need to migrate any existing local decks to their account
+
+
+
+                                } else {
+                                    snackbar("Authentication failed")
+                                }
                             }
-                        }
+                }
             }
             else {
                 Timber.e("Unable to link account: ${result.status}")

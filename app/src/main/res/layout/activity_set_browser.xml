@@ -51,8 +51,8 @@
                 android:id="@+id/appbar"
                 android:layout_width="match_parent"
                 android:layout_height="104dp"
-                android:layout_marginTop="24dp"
                 android:paddingBottom="48dp"
+                android:fitsSystemWindows="true"
                 app:layout_collapseMode="pin"
                 app:title=" "
                 />

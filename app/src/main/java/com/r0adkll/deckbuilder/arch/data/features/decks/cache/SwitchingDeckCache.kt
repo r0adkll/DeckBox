@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.cache
 
-import com.google.firebase.auth.FirebaseAuth
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck

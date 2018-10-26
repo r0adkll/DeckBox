@@ -22,12 +22,12 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Offline">
+    <PreferenceCategory android:title="@string/pref_category_cache">
 
         <Preference
-            android:key="pref_cache_cards"
-            android:title="@string/pref_offline_cache_download_title"
-            android:summary="@string/pref_offline_cache_download_summary"
+            android:key="pref_cache_manage"
+            android:title="@string/pref_cache_manage_title"
+            android:summary="@string/pref_cache_manage_summary"
             />
 
     </PreferenceCategory>
