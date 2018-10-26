@@ -40,5 +40,5 @@ class SwitchingDeckCache @Inject constructor(
         else -> firestoreDeckCache.duplicateDeck(deck)
     }
 
-    private fun isOffline(): Boolean = FirebaseAuth.getInstance().currentUser == null && preferences.deviceId == null
+    private fun isOffline(): Boolean = preferences.offlineId != null
 }

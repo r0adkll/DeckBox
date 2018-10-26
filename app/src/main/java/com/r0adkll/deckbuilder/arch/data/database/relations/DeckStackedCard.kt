@@ -1,8 +1,11 @@
 package com.r0adkll.deckbuilder.arch.data.database.relations
 
+import androidx.room.Embedded
+
 
 class DeckStackedCard(
         var deckId: Long,
-        count: Int,
-        card: CardWithAttacks
-) : StackedCard(count, card)
+        var count: Int,
+        @Embedded
+        var card: CardWithAttacks
+)

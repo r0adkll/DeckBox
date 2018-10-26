@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.data.database.mapping
 
 import com.r0adkll.deckbuilder.arch.data.database.entities.*
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
+import com.r0adkll.deckbuilder.arch.data.database.relations.DeckStackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
@@ -35,6 +36,19 @@ object RoomEntityMapper {
                 entity.description ?: "",
                 entity.image?.let { DeckImage.from(it) },
                 from(expansions, cards).unstack(),
+                false,
+                entity.timestamp
+        )
+    }
+
+
+    fun toDeck(entity: DeckEntity, cards: List<DeckStackedCard>, expansions: List<Expansion>): Deck {
+        return Deck(
+                entity.uid.toString(),
+                entity.name,
+                entity.description ?: "",
+                entity.image?.let { DeckImage.from(it) },
+                fromDeck(expansions, cards).unstack(),
                 false,
                 entity.timestamp
         )
@@ -167,6 +181,40 @@ object RoomEntityMapper {
 
 
     fun from(expansions: List<Expansion>, entities: List<StackedCard>): List<StackedPokemonCard> {
+        return entities.map { e ->
+            StackedPokemonCard(
+                    PokemonCard(
+                            e.card.card.id,
+                            e.card.card.name,
+                            e.card.card.nationalPokedexNumber,
+                            e.card.card.imageUrl,
+                            e.card.card.imageUrlHiRes,
+                            e.card.card.types?.deserializeTypes(),
+                            SuperType.find(e.card.card.superType),
+                            SubType.find(e.card.card.subType),
+                            e.card.card.evolvesFrom,
+                            e.card.card.hp,
+                            (0 until e.card.card.retreatCost).map { Type.COLORLESS },
+                            e.card.card.number,
+                            e.card.card.artist,
+                            e.card.card.rarity,
+                            e.card.card.series,
+                            expansions.find { it.code == e.card.card.setCode },
+                            e.card.card.text?.split("\n"),
+                            e.card.attacks.map { from(it) },
+                            e.card.card.weaknesses?.deserializeEffects(),
+                            e.card.card.resistances?.deserializeEffects(),
+                            e.card.card.ability?.let {
+                                Ability(it.name, it.text)
+                            }
+                    ),
+                    e.count
+            )
+        }
+    }
+
+
+    fun fromDeck(expansions: List<Expansion>, entities: List<DeckStackedCard>): List<StackedPokemonCard> {
         return entities.map { e ->
             StackedPokemonCard(
                     PokemonCard(

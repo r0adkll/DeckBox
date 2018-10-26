@@ -48,7 +48,7 @@ class RoomDeckCache @Inject constructor(
                     Observable.combineLatest(decks, deckCards, BiFunction<List<DeckEntity>, List<DeckStackedCard>, List<Deck>> { d, c ->
                         d.map { deck ->
                             val cards = c.filter { it.deckId == deck.uid }
-                            RoomEntityMapper.to(deck, cards, expansions)
+                            RoomEntityMapper.toDeck(deck, cards, expansions)
                         }
                     })
                 }
