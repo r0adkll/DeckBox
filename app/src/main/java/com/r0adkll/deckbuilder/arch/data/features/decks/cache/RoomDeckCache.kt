@@ -55,16 +55,9 @@ class RoomDeckCache @Inject constructor(
     }
 
     override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> {
-        val deckId = id?.toLongOrNull()
-        return if (deckId != null) {
-            Observable.fromCallable {
-                val cardsWithAttacks = cards.map { RoomEntityMapper.to(it) }
-                val joins = cards.stack().map { DeckCardJoin(deckId, it.card.id, it.count) }
-                val entity = db.decks().insertDeckWithCards(deckId, cardsWithAttacks, joins, name, description, image)
-                Deck(entity.uid.toString(), name, description ?: "", image, cards, false, entity.timestamp)
-            }
-        } else {
-            Observable.error(InvalidParameterException("'id' is not a valid deckId"))
+        return Observable.fromCallable {
+            val entity = db.decks().insertDeckWithCards(id?.toLongOrNull(), cards, name, description, image)
+            Deck(entity.uid.toString(), name, description ?: "", image, cards, false, entity.timestamp)
         }
     }
 

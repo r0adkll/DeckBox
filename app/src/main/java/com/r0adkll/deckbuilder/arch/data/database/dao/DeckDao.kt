@@ -6,9 +6,12 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckCardJoin
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckEntity
+import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import com.r0adkll.deckbuilder.arch.data.database.relations.DeckStackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
+import com.r0adkll.deckbuilder.arch.data.features.decks.mapper.EntityMapper
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.stack
@@ -40,6 +43,9 @@ abstract class DeckDao {
     @Query("DELETE FROM decks WHERE uid = :deckId")
     abstract fun deleteDeck(deckId: Long)
 
+    @Query("DELETE FROM deck_card_join WHERE deckId = :deckId")
+    abstract fun deleteDeckJoins(deckId: Long)
+
     @Insert
     abstract fun insertDeck(deck: DeckEntity): Long
 
@@ -55,25 +61,27 @@ abstract class DeckDao {
 
     @Transaction
     open fun insertDeckWithCards(id: Long?,
-                                 cards: List<CardWithAttacks>,
-                                 joins: List<DeckCardJoin>,
+                                 cards: List<PokemonCard>,
                                  name: String,
                                  description: String?,
                                  image: DeckImage?): DeckEntity {
         // Insert Cards
-        insertCardsWithAttacks(cards)
+        val cardsWithAttacks = cards.map { RoomEntityMapper.to(it) }
+        insertCardsWithAttacks(cardsWithAttacks)
 
         // Insert or Update deck
-        var deck: DeckEntity? = null
+        val deck: DeckEntity?
         if (id != null) {
             updateDeck(id, name, description, image?.uri)
             deck = DeckEntity(id, name, description, image?.uri, System.currentTimeMillis())
+            deleteDeckJoins(id)
         } else {
             deck = DeckEntity(0L, name, description, image?.uri, System.currentTimeMillis())
             deck.uid = insertDeck(deck)
         }
 
         // Insert/Update joins
+        val joins = cards.stack().map { DeckCardJoin(deck.uid, it.card.id, it.count) }
         insertJoins(joins)
 
         return deck

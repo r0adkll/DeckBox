@@ -31,7 +31,7 @@ class RouteActivity : AppCompatActivity() {
         compatibilityCheck()
         remote.check()
 
-        if (firebase.currentUser != null || preferences.deviceId != null) {
+        if (firebase.currentUser != null || preferences.deviceId != null || preferences.offlineId != null) {
             firebase.currentUser?.uid?.let { Analytics.userId(it) }
             Shortcuts.addNewDeckShortcut(this)
             startActivity(HomeActivity.createIntent(this))
