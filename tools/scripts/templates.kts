@@ -7,25 +7,36 @@
 @file:DependsOn("org.jsoup:jsoup:1.11.3")
 @file:DependsOn("com.google.code.gson:gson:2.8.5")
 @file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.15")
+@file:DependsOn("com.google.firebase:firebase-admin:6.5.0")
 @file:MavenRepository("maven-central","http://central.maven.org/maven2/")
 
-@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/decks/model/AttackEntity.kt")
-@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/decks/model/DeckEntity.kt")
-@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/decks/model/PokemonCardEntity.kt")
+@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/decks/model/CardMetadataEntity.kt")
 @file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/importer/model/CardSpec.kt")
 @file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/importer/parser/LineValidator.kt")
 @file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/domain/features/importer/model/BasicEnergySet.kt")
 @file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/community/model/TournamentEntity.kt")
+@file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/community/model/DeckInfoEntity.kt")
 
 import DependsOn
 import MavenRepository
 import Include
+import com.google.api.client.util.ArrayMap
+import com.google.auth.oauth2.GoogleCredentials
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
+import com.google.firebase.cloud.FirestoreClient
 
 /*
  * Imports
  */
 
 import com.google.gson.Gson
+//import com.r0adkll.deckbuilder.arch.data.features.community.model.DeckInfoEntity
+//import com.r0adkll.deckbuilder.arch.data.features.decks.model.CardMetadataEntity
+//import com.r0adkll.deckbuilder.arch.data.features.community.model.TournamentEntity
+//import com.r0adkll.deckbuilder.arch.data.features.importer.model.CardSpec
+//import com.r0adkll.deckbuilder.arch.data.features.importer.parser.LineValidator
+//import com.r0adkll.deckbuilder.arch.domain.features.importer.model.BasicEnergySet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
@@ -35,14 +46,31 @@ import io.pokemontcg.model.Type
 import okhttp3.logging.HttpLoggingInterceptor
 import org.jsoup.Jsoup
 import java.io.File
+import java.io.FileInputStream
 import java.io.StringReader
 import java.net.URL
 import kotlin.math.min
+import kotlin.system.exitProcess
 
 
 /*
  * Configuration
  */
+
+if (args.isEmpty()) {
+    println("No arguments supplied")
+    exitProcess(1)
+}
+
+val firebaseConfigPath = args[0]
+val serviceAccount = FileInputStream(firebaseConfigPath)
+val options = FirebaseOptions.Builder()
+        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+        .setDatabaseUrl("https://deck-builder-1b711.firebaseio.com/")
+        .build()
+FirebaseApp.initializeApp(options)
+
+
 
 val pokemon = Pokemon(Config(logLevel = HttpLoggingInterceptor.Level.NONE))
 
@@ -56,10 +84,16 @@ val basicEnergySet = BasicEnergySet.SunMoon
  */
 
 class TournamentDeckTemplateEntity(
-        val author: String = "",
         val rank: Int = 0,
-        val deck: DeckEntity? = null,
-        val tournament: TournamentEntity? = null
+        val name: String = "",
+        val description: String = "",
+        val image: String? = null,
+        val author: String = "",
+        val authorCountry: String = "",
+        val deckInfo: List<DeckInfoEntity> = emptyList(),
+        val cardMetadata: List<CardMetadataEntity>? = null,
+        val tournament: TournamentEntity? = null,
+        val timestamp: Long = 0L
 )
 
 data class Tournament(
@@ -74,6 +108,8 @@ data class Tournament(
 data class Player(
         val place: Int,
         val name: String,
+        val country: String,
+        val deckInfo: List<DeckInfoEntity>,
         val deckList: String
 )
 
@@ -129,35 +165,44 @@ class DeckListParser {
  * Functions
  */
 
-fun loadDecklistsForTournament(url: String, count: Int): List<Player> {
+fun loadTournamentWinners(url: String, count: Int): List<Player> {
     val players = ArrayList<Player>()
-    val document = Jsoup.parse(URL("$url&show=lists"), 30000)
-    val decklists = document.select("h3.tournamentdecklists-heading, div.decklist")
-    if (decklists.isNotEmpty()) {
 
-        var currentRank: Int? = null
-        var currentName: String? = null
+    val document = Jsoup.parse(URL(url), 30000)
+    val playerList = document.select("table.rankingtable > tbody > tr")
+    if (playerList.isNotEmpty()) {
+        val c = Math.min(playerList.size, count)
+        (0 until c).forEach {
+            val row = playerList[it]
+            val columns = row.select("td")
+            if (columns.isNotEmpty()) {
 
-        val minCount = min(count * 2, decklists.size)
-        println("Loading ($count :: ${decklists.size}) player decks...")
-        (0 until minCount).forEach {
-            val element = decklists[it]
-            if (element.`is`("h3.tournamentdecklists-heading")) {
-                val parts = element.text().split("-")
+                // Get Rank
+                val rank = columns[0].text().toIntOrNull() ?: 0
 
-                // rank
-                currentRank = parts[0].trim().replace("st", "").replace("nd", "").replace("rd", "").replace("th", "").toIntOrNull() ?: -1
-                currentName = parts[1].trim()
+                // Get Name
+                val name = columns[1].child(0).text()
 
-                println("Player: #$currentRank - $currentName")
-            } else if (element.`is`("div.decklist")) {
+                // Get Country
+                val country = columns[2].child(0).child(0).attr("alt")
 
-                val decklist = element.select("form > input").attr("value")
-                players += Player(currentRank ?: -1, currentName ?: "Unknown", decklist)
+                // Get Deck Info
+                val infos = columns[3].select("span > a > img").map {
+                    DeckInfoEntity(it.attr("alt"), it.absUrl("src"))
+                }
 
-                println("Player: #$currentRank - $currentName - Decklist")
+                val deckListUrl = columns[4].select("a").firstOrNull()?.absUrl("href")
+
+                if (deckListUrl != null) {
+                    val deckListDocument = Jsoup.parse(URL(deckListUrl), 30000)
+                    val deckList = deckListDocument.select("div.decklist > div.list-modal > textarea").firstOrNull()?.text()
+                    if (deckList != null) {
+                        players += Player(rank, name, country, infos, deckList)
+                    }
+                }
             }
         }
+
     }
 
     return players
@@ -226,31 +271,24 @@ fun List<Effect>.compactEffects(): String {
     }
 }
 
-fun Card.entity(): PokemonCardEntity = PokemonCardEntity(
-        this.id,
-        this.name,
-        this.nationalPokedexNumber,
-        this.imageUrl,
-        this.imageUrlHiRes,
-        this.types?.compactTypes(),
-        this.supertype.displayName,
-        this.subtype.displayName,
-        this.evolvesFrom,
-        this.hp,
-        this.retreatCost?.size,
-        this.number,
-        this.artist,
-        this.rarity,
-        this.series,
-        this.setCode,
-        this.text?.joinToString(separator = "\n"),
-        this.weaknesses?.compactEffects(),
-        this.resistances?.compactEffects(),
-        this.ability?.name,
-        this.ability?.text
+fun List<Card>.stackCards(): List<Pair<Card, Int>> {
+    val map = ArrayMap<Card, Int>()
+    this.forEach { card ->
+        val count = map[card] ?: 0
+        map[card] = count + 1
+    }
+    return map.map { Pair(it.key, it.value) }
+}
+
+fun Pair<Card, Int>.entity(): CardMetadataEntity = CardMetadataEntity(
+        this.first.id,
+        this.first.supertype.displayName,
+        this.first.imageUrl,
+        this.first.imageUrlHiRes,
+        this.second
 )
 
-fun importDeckList(deckList: String): List<PokemonCardEntity> {
+fun importDeckList(deckList: String): List<CardMetadataEntity> {
     val allCards = ArrayList<Card>()
 
     val cards = parser.parse(expansions, deckList)
@@ -289,12 +327,12 @@ fun importDeckList(deckList: String): List<PokemonCardEntity> {
                 (0 until count).map { poke.copy() }
             }
 
-            return allCards.map { it.entity() }
+            return allCards.stackCards().map { it.entity() }
         } else {
-            return allCards.map { it.entity() }
+            return allCards.stackCards().map { it.entity() }
         }
     } else {
-        return allCards.map { it.entity() }
+        return allCards.stackCards().map { it.entity() }
     }
 }
 
@@ -334,7 +372,7 @@ rankingTable.forEach { row ->
         println("Tournament Found ($date, $country, $name, $format, $playerCount)")
 
         // Create tournament object
-        tournaments += Tournament(name, date, country, format, playerCount, loadDecklistsForTournament(url, 8))
+        tournaments += Tournament(name, date, country, format, playerCount, loadTournamentWinners(url, 8))
     }
 }
 
@@ -352,13 +390,39 @@ val tournamentDeckTemplates = tournaments
                 // Parse decklist
                 val deckName = "${tournament.name} - Winner"
                 val deckListCards = importDeckList(player.deckList)
-                val deckEntity = DeckEntity(deckName, player.name, null, deckListCards, -1L)
-                TournamentDeckTemplateEntity(player.name, player.place, deckEntity,
-                        TournamentEntity(tournament.name, tournament.date, tournament.country, tournament.format, tournament.playerCount))
+                TournamentDeckTemplateEntity(
+                        player.place,
+                        deckName,
+                        "",
+                        null,
+                        player.name,
+                        player.country,
+                        player.deckInfo,
+                        deckListCards,
+                        TournamentEntity(tournament.name, tournament.date, tournament.country, tournament.format, tournament.playerCount),
+                        0L
+                )
             }
         }
 
+val db = FirestoreClient.getFirestore()
+val collection =
+        db.collection("templates")
+        .document("tournaments")
+        .collection("decks")
 
+val batch = db.batch()
+
+tournamentDeckTemplates.forEach { template ->
+    val key = "${template.tournament!!.name}-${template.tournament.date}-${template.rank}-${template.author}"
+    val document = collection.document(key)
+    batch.set(document, template)
+}
+
+val results = batch.commit().get()
+println("Templates uploaded to Firestore: $results")
+
+println("Generating JSON file...")
 val gson = Gson()
 val scriptDir = File(".")
 val outputFile = File(scriptDir, "tournaments.json")
@@ -369,3 +433,4 @@ if (outputFile.exists()) {
 
 val json = gson.toJson(tournamentDeckTemplates)
 outputFile.writeText(json)
+println("====== Finished =====")

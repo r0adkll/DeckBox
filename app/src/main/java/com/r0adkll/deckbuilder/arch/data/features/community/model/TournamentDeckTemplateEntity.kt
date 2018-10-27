@@ -1,11 +1,17 @@
 package com.r0adkll.deckbuilder.arch.data.features.community.model
 
-import com.r0adkll.deckbuilder.arch.data.features.decks.model.DeckEntity
+import com.r0adkll.deckbuilder.arch.data.features.decks.model.CardMetadataEntity
 
 
 class TournamentDeckTemplateEntity(
-        val author: String = "",
         val rank: Int = 0,
-        val deck: DeckEntity? = null,
-        val tournament: TournamentEntity? = null
+        val name: String = "",
+        val description: String = "",
+        val image: String? = null,
+        val author: String = "",
+        val authorCountry: String = "",
+        val deckInfo: List<DeckInfoEntity> = emptyList(),
+        val cardMetadata: List<CardMetadataEntity>? = null,
+        val tournament: TournamentEntity? = null,
+        val timestamp: Long = 0L
 )
