@@ -170,7 +170,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     private fun signInOffline() {
-        preferences.offlineId = UUID.randomUUID().toString()
+        preferences.offlineId.set(UUID.randomUUID().toString())
         Analytics.event(Event.Login.Offline)
         startActivity(HomeActivity.createIntent(this@SetupActivity))
         finish()

@@ -143,22 +143,106 @@ class FirestoreDeckCache @Inject constructor(
     }
 
 
+    /**
+     * Batch insert a list of decks into an authed account
+     * @return observable of the task, or an observable error if account is anonymous or null
+     */
     fun putDecks(decks: List<Deck>): Observable<Unit> {
+        val models = decks.map { EntityMapper.to(it) }
+        return putDeckEntities(models)
+    }
+
+
+    /**
+     * Batch insert a list of decks into an authed account
+     * @return observable of the task, or an observable error if account is anonymous or null
+     */
+    private fun putDeckEntities(decks: List<DeckEntity>): Observable<Unit> {
         val db = FirebaseFirestore.getInstance()
-        return getUserDeckCollection()?.let { collection ->
-            val models = decks.map { EntityMapper.to(it) }
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user?.isAnonymous == false) {
+            val collection = db.collection(COLLECTION_USERS)
+                    .document(user.uid)
+                    .collection(COLLECTION_DECKS)
+
             val batch = db.batch()
 
-            models.forEach {
+            decks.forEach {
                 val document = collection.document()
                 batch.set(document, it)
             }
 
             val task = batch.commit()
 
-            RxFirebase.fromVoid(task)
+            return RxFirebase.fromVoid(task)
                     .subscribeOn(schedulers.firebase)
-        } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
+        } else {
+            return Observable.error(FirebaseAuthException("-1", "No current user logged in"))
+        }
+    }
+
+
+    /**
+     * Batch insert a list of decks into an authed account
+     * @return observable of the task, or an observable error if account is anonymous or null
+     */
+    fun migrateOfflineDecks(): Observable<Unit> {
+        val db = FirebaseFirestore.getInstance()
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user?.isAnonymous == false && preferences.deviceId != null) {
+            val offlineCollection = db.collection(COLLECTION_OFFLINE_USERS)
+                    .document(preferences.deviceId!!)
+                    .collection(COLLECTION_DECKS)
+
+            val onlineCollection = db.collection(COLLECTION_USERS)
+                    .document(user.uid)
+                    .collection(COLLECTION_DECKS)
+
+            return RxFirebase.from(offlineCollection.get(), schedulers.firebaseExecutor)
+                    .map { snapshot ->
+                        val decks = ArrayList<DeckEntity>()
+                        snapshot.forEach { document ->
+                            val deckEntity = document.toObject(DeckEntity::class.java)
+                            deckEntity.id = document.id
+                            decks += deckEntity
+                        }
+                        decks
+                    }
+                    .flatMap { decks ->
+                        val batch = db.batch()
+                        decks.forEach {
+                            val document = onlineCollection.document()
+                            batch.set(document, it)
+                            batch.delete(offlineCollection.document(it.id))
+                        }
+                        val task = batch.commit()
+                        RxFirebase.fromVoid(task, schedulers.firebaseExecutor)
+                    }
+        } else {
+            return Observable.error(FirebaseAuthException("-1", "No current user logged in"))
+        }
+    }
+
+
+    /**
+     * Get the a list of offline decks for a give device Id
+     */
+    fun getOfflineDecks(deviceId: String): Observable<List<DeckEntity>> {
+        val db = FirebaseFirestore.getInstance()
+        val collection = db.collection(COLLECTION_OFFLINE_USERS)
+                .document(deviceId)
+                .collection(COLLECTION_DECKS)
+
+        return RxFirebase.from(collection.get(), schedulers.firebaseExecutor)
+                .map { snapshot ->
+                    val decks = ArrayList<DeckEntity>()
+                    snapshot?.forEach { document ->
+                        val deckEntity = document.toObject(DeckEntity::class.java)
+                        deckEntity.id = document.id
+                        decks += deckEntity
+                    }
+                    decks
+                }
     }
 
 

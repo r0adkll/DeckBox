@@ -131,6 +131,12 @@ object EntityMapper {
     }
 
 
+    fun DeckEntity.migrate(): DeckEntity {
+        val metadata = this.metadata()
+        return DeckEntity(this.id, this.name, this.description, this.image, emptyList(), metadata, this.timestamp)
+    }
+
+
     fun DeckEntity.metadata(): List<CardMetadataEntity> {
         return this.cardMetadata
                 ?: this.cards.stackCards().map {

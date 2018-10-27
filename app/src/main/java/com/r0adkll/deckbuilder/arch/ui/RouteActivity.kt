@@ -31,18 +31,19 @@ class RouteActivity : AppCompatActivity() {
         compatibilityCheck()
         remote.check()
 
-        if (firebase.currentUser != null || preferences.deviceId != null || preferences.offlineId != null) {
+        if (firebase.currentUser != null || preferences.deviceId != null
+                || (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())) {
             firebase.currentUser?.uid?.let { Analytics.userId(it) }
             Shortcuts.addNewDeckShortcut(this)
             startActivity(HomeActivity.createIntent(this))
         }
         else {
             Shortcuts.clearShortcuts(this)
-            if (preferences.onboarding) {
+//            if (preferences.onboarding) {
                 startActivity(SetupActivity.createIntent(this))
-            } else {
-                startActivity(OnboardingActivity.createIntent(this))
-            }
+//            } else {
+//                startActivity(OnboardingActivity.createIntent(this))
+//            }
         }
 
         finish()

@@ -20,6 +20,7 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
@@ -30,7 +31,9 @@ import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject
@@ -57,7 +60,10 @@ class SettingsActivity : BaseActivity() {
         private var googleClient: GoogleApiClient? = null
 
         @Inject lateinit var preferences: AppPreferences
+        @Inject lateinit var accountRepository: AccountRepository
+
         private val disposables = CompositeDisposable()
+        private var migrationSnackbar: Snackbar? = null
 
 
         override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -69,6 +75,8 @@ class SettingsActivity : BaseActivity() {
         override fun onDestroy() {
             super.onDestroy()
             disposables.clear()
+            migrationSnackbar?.dismiss()
+            migrationSnackbar = null
         }
 
 
@@ -94,18 +102,22 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 "pref_about_privacy_policy" -> {
+                    Analytics.event(Event.SelectContent.Action("settings", "privacy_policy"))
                     startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
                     true
                 }
                 "pref_about_developer" -> {
+                    Analytics.event(Event.SelectContent.Action("settings", "developer"))
                     startActivity(IntentUtils.openLink(getString(R.string.developer_website_url)))
                     true
                 }
                 "pref_about_opensource" -> {
+                    Analytics.event(Event.SelectContent.Action("settings", "contribute"))
                     startActivity(IntentUtils.openLink(getString(R.string.opensource_repository_url)))
                     true
                 }
                 "pref_about_oss" -> {
+                    Analytics.event(Event.SelectContent.Action("settings", "oss"))
                     val intent = Intent(activity, OssLicensesMenuActivity::class.java)
                     val title = getString(R.string.activity_licenses)
                     intent.putExtra("title", title)
@@ -113,6 +125,7 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 "pref_help_feedback" -> {
+                    Analytics.event(Event.SelectContent.Action("settings", "feedback"))
                     val userId = FirebaseAuth.getInstance().currentUser?.uid
                     val text =
                             "Version: ${BuildConfig.VERSION_NAME} \n" +
@@ -122,21 +135,20 @@ class SettingsActivity : BaseActivity() {
                     startActivity(intent)
                     true
                 }
-                "pref_missing_card" -> {
-                    MissingCardsActivity.show(activity!!)
-                    true
-                }
                 "pref_account_link" -> {
+                    Analytics.event(Event.SelectContent.Action("settings", "link_account"))
                     signIn()
                     true
                 }
                 "pref_cache_manage" -> {
-
+                    Analytics.event(Event.SelectContent.Action("settings", "manage_cache"))
                     true
                 }
                 "pref_account_signout" -> {
+                    Analytics.event(Event.Logout)
                     Shortcuts.clearShortcuts(activity!!)
                     preferences.deviceId = null
+                    preferences.offlineId.delete()
                     FirebaseAuth.getInstance().signOut()
                     if (googleClient != null && googleClient?.isConnected == true) {
                         googleClient?.clearDefaultAccountAndReconnect()
@@ -173,9 +185,6 @@ class SettingsActivity : BaseActivity() {
                 val linkAccount = findPreference("pref_account_link")
                 linkAccount.isVisible = user.isAnonymous
             } else {
-                profilePref.avatarUrl = null
-                profilePref.title = "Offline"
-                profilePref.summary = preferences.offlineId ?: preferences.deviceId
                 profilePref.isVisible = false
 
                 val linkAccount = findPreference("pref_account_link")
@@ -236,9 +245,20 @@ class SettingsActivity : BaseActivity() {
                                         Analytics.userId(it)
                                     }
                                     Analytics.event(Event.SignUp.Google)
+                                    setupPreferences()
 
-                                    // TODO: Now we need to migrate any existing local decks to their account
-
+                                    // Now we need to migrate any existing local decks to their account
+                                    migrationSnackbar = Snackbar.make(view!!, R.string.account_migration_started, Snackbar.LENGTH_INDEFINITE)
+                                    migrationSnackbar?.show()
+                                    disposables += accountRepository.migrateAccount()
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe({
+                                                migrationSnackbar = Snackbar.make(view!!, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
+                                                migrationSnackbar?.show()
+                                            }, {
+                                                migrationSnackbar = Snackbar.make(view!!, it.localizedMessage, Snackbar.LENGTH_SHORT)
+                                                migrationSnackbar?.show()
+                                            })
 
 
                                 } else {

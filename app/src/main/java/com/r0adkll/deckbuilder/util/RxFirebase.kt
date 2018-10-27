@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import io.reactivex.Observable
 import timber.log.Timber
+import java.util.concurrent.Executor
 import kotlin.reflect.KClass
 
 
@@ -99,6 +100,32 @@ object RxFirebase {
     /**
      * Create an observable for any [Task] spawned from Firebase operation
      */
+    fun <T : Any> from(task: Task<T>, executor: Executor) : Observable<T> {
+        return Observable.create { emitter ->
+            val successListener = OnSuccessListener<T> {
+                if(!emitter.isDisposed) {
+                    Timber.d("RxFirebase::from::onSuccess($it)")
+                    emitter.onNext(it)
+                    emitter.onComplete()
+                }
+            }
+
+            val failureListener = OnFailureListener {
+                if(!emitter.isDisposed) {
+                    Timber.w("RxFirebase::from::onFailure($it)")
+                    emitter.onError(it)
+                }
+            }
+
+            task.addOnSuccessListener(executor, successListener)
+            task.addOnFailureListener(executor, failureListener)
+        }
+    }
+
+
+    /**
+     * Create an observable for any [Task] spawned from Firebase operation
+     */
     fun fromVoid(task: Task<Void>) : Observable<Unit> {
         return Observable.create { emitter ->
             val successListener = OnSuccessListener<Void> {
@@ -118,6 +145,32 @@ object RxFirebase {
 
             task.addOnSuccessListener(successListener)
             task.addOnFailureListener(failureListener)
+        }
+    }
+
+
+    /**
+     * Create an observable for any [Task] spawned from Firebase operation
+     */
+    fun fromVoid(task: Task<Void>, executor: Executor) : Observable<Unit> {
+        return Observable.create { emitter ->
+            val successListener = OnSuccessListener<Void> {
+                if(!emitter.isDisposed) {
+                    Timber.d("RxFirebase::from::onSuccess($it)")
+                    emitter.onNext(Unit)
+                    emitter.onComplete()
+                }
+            }
+
+            val failureListener = OnFailureListener {
+                if(!emitter.isDisposed) {
+                    Timber.w("RxFirebase::from::onFailure($it)")
+                    emitter.onError(it)
+                }
+            }
+
+            task.addOnSuccessListener(executor, successListener)
+            task.addOnFailureListener(executor, failureListener)
         }
     }
 

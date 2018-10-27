@@ -46,6 +46,9 @@ abstract class DeckDao {
     @Query("DELETE FROM deck_card_join WHERE deckId = :deckId")
     abstract fun deleteDeckJoins(deckId: Long)
 
+    @Query("DELETE FROM decks")
+    abstract fun deleteDecks()
+
     @Insert
     abstract fun insertDeck(deck: DeckEntity): Long
 

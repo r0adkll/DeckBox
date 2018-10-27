@@ -49,6 +49,16 @@ interface RxPreferences {
     }
 
 
+    class ReactiveOptionalStringPreference(key: String, val default: String? = null) : ReactivePreference<String?>(key) {
+
+        override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<String?> {
+            return default?.let {
+                return thisRef.rxSharedPreferences.getString(key, it)
+            } ?: thisRef.rxSharedPreferences.getString(key)
+        }
+    }
+
+
     class ReactiveStringSetPreference(key: String, val default: Set<String> = HashSet()) : ReactivePreference<Set<String>>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<Set<String>> {

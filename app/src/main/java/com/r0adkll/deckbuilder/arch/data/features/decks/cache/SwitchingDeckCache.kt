@@ -19,9 +19,11 @@ class SwitchingDeckCache @Inject constructor(
         else -> firestoreDeckCache.getDeck(id)
     }
 
-    override fun getDecks(): Observable<List<Deck>> = when(isOffline()) {
-        true -> roomDeckCache.getDecks()
-        else -> firestoreDeckCache.getDecks()
+    override fun getDecks(): Observable<List<Deck>> = preferences.offlineId.asObservable().switchMap {
+        when (isOffline()) {
+            true -> roomDeckCache.getDecks()
+            else -> firestoreDeckCache.getDecks()
+        }
     }
 
     override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> = when(isOffline()) {
@@ -39,5 +41,5 @@ class SwitchingDeckCache @Inject constructor(
         else -> firestoreDeckCache.duplicateDeck(deck)
     }
 
-    private fun isOffline(): Boolean = preferences.offlineId != null
+    private fun isOffline(): Boolean = preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank()
 }

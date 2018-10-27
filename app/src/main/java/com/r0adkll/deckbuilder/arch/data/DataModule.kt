@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data
 
 
+import android.accounts.AccountAuthenticatorResponse
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
@@ -8,6 +9,7 @@ import androidx.room.Room
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
+import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
@@ -33,6 +35,7 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
+import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
@@ -145,6 +148,10 @@ class DataModule {
     /*
      * Repositories
      */
+
+    @Provides @AppScope
+    fun provideAccountRepository(repository: DefaultAccountRepository): AccountRepository = repository
+
 
     @Provides @AppScope
     fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository

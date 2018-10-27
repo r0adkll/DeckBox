@@ -72,4 +72,8 @@ class RoomDeckCache @Inject constructor(
             db.decks().duplicateDeck(deck)
         }
     }
+
+    fun deleteAllDecks(){
+        db.decks().deleteDecks()
+    }
 }

@@ -15,6 +15,8 @@ sealed class Event {
         object Google : SignUp()
     }
 
+    object Logout : Event()
+
     data class Search(val term: String) : Event()
     data class SearchProxy(val proxy: SearchProxies.Proxy) : Event()
     data class Share(val type: String, val id: String = "") : Event()
