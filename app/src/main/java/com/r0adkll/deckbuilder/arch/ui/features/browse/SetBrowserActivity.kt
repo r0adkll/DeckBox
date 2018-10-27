@@ -12,13 +12,16 @@ import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
+import android.os.Build
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.tabs.TabLayout
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.util.UIUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -42,6 +45,9 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.bindParcelable
+import com.r0adkll.deckbuilder.util.extensions.addLayoutHeight
+import com.r0adkll.deckbuilder.util.extensions.layoutHeight
+import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.palette.PaletteBitmapViewTarget
@@ -62,13 +68,15 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     private val filterChanges: Relay<SetBrowserUi.BrowseFilter> = PublishRelay.create()
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private lateinit var adapter: PokemonBuilderRecyclerAdapter
+    
+    private var statusBarHeight: Int = 0
+    
 
-    @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_browser)
 
-        state = state.copy(setCode = expansion.code, pageSize = expansion.totalCards + 25 /* Hack to account for secret rares */)
+        state = state.copy(setCode = expansion.code, pageSize = expansion.totalCards + 100 /* Hack to account for secret rares */)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = " "
@@ -105,8 +113,14 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
         })
 
+        statusBarHeight = UIUtils.getStatusBarHeight(this)
+        appBarLayout.addLayoutHeight((statusBarHeight - dipToPx(24f)))
+        appbar?.margins(top = statusBarHeight)
+        logo?.layoutHeight(dipToPx(100f))
+        logo?.margins(top = (statusBarHeight - dipToPx(24f)) / 2)
+
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { view, offset ->
-            val height = view.height.toFloat() - ((appbar?.height ?: 0) + dipToPx(24f))
+            val height = view.height.toFloat() - ((appbar?.height ?: 0) + statusBarHeight)
             val percent = offset.toFloat() / height
             val minScale = 0.4f
             val maxScale = 1f
@@ -117,6 +131,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             logo.scaleY = scale
         })
 
+        @SuppressLint("RxSubscribeOnError")
         disposables += cardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))

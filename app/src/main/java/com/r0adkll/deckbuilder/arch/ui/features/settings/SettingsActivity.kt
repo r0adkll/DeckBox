@@ -176,6 +176,7 @@ class SettingsActivity : BaseActivity() {
                 profilePref.avatarUrl = null
                 profilePref.title = "Offline"
                 profilePref.summary = preferences.offlineId ?: preferences.deviceId
+                profilePref.isVisible = false
 
                 val linkAccount = findPreference("pref_account_link")
                 linkAccount.isVisible = true
