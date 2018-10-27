@@ -4,12 +4,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v14.preference.PreferenceFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceCategory
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import com.ftinc.kit.kotlin.extensions.clear
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
@@ -26,12 +22,9 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
-import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.BasePreferenceFragment
-import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
-import com.r0adkll.deckbuilder.arch.ui.features.missingcards.MissingCardsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -203,9 +196,13 @@ class SettingsActivity : BaseActivity() {
              * Debug options
              */
             if (BuildConfig.DEBUG) {
+                val disclaimer = preferenceManager.findPreference("pref_disclaimer")
+                preferenceScreen.removePreference(disclaimer)
+
                 val category = PreferenceCategory(activity)
                 category.title = "Developer"
                 preferenceScreen.addPreference(category)
+                preferenceScreen.addPreference(disclaimer)
 
                 val clearPreferenceQuickStart = Preference(activity)
                 clearPreferenceQuickStart.title = "Clear QuickStart"
@@ -225,27 +222,6 @@ class SettingsActivity : BaseActivity() {
                 }
                 category.addPreference(clearPreferencePreview)
             }
-
-
-//            disposables += cacheManager.observeCacheStatus()
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe { status ->
-//                        Timber.i("Cache Status: $status")
-//                        val cachePref = findPreference("pref_cache_cards")
-//                        cachePref.isEnabled = status !is CacheStatus.Downloading && status != CacheStatus.Deleting
-//                        cachePref.setTitle(when(status) {
-//                            CacheStatus.Empty -> R.string.pref_offline_cache_download_title
-//                            CacheStatus.Cached -> R.string.pref_offline_cache_delete_title
-//                            is CacheStatus.Downloading -> R.string.pref_offline_cache_downloading_title
-//                            CacheStatus.Deleting -> R.string.pref_offline_cache_deleting_title
-//                        })
-//                        cachePref.summary = when(status) {
-//                            CacheStatus.Empty -> getString(R.string.pref_offline_cache_download_summary)
-//                            CacheStatus.Cached -> getString(R.string.pref_offline_cache_delete_summary)
-//                            is CacheStatus.Downloading -> getString(R.string.pref_offline_cache_downloading_summary, status.count)
-//                            CacheStatus.Deleting -> getString(R.string.pref_offline_cache_deleting_summary)
-//                        }
-//                    }
         }
 
 
