@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.util.palette;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v7.graphics.Palette;
+import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.Resource;

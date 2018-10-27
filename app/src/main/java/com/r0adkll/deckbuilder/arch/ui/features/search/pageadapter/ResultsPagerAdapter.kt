@@ -2,9 +2,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +28,7 @@ class ResultsPagerAdapter(
         private val scrollHideListener: KeyboardScrollHideListener,
         private val pokemonCardLongClicks: Relay<PokemonCardView>,
         private val editCardIntentions: EditCardIntentions
-) : PagerAdapter() {
+) : androidx.viewpager.widget.PagerAdapter() {
 
     private val inflater = LayoutInflater.from(context)
     private val viewHolders: Array<SearchResultViewHolder?> = Array(3) { _ -> null }
@@ -144,7 +144,7 @@ class ResultsPagerAdapter(
             editCardIntentions: EditCardIntentions
     ) {
 
-        private val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
+        private val recycler: androidx.recyclerview.widget.RecyclerView = itemView.findViewById(R.id.recycler)
         private val emptyView: EmptyView = itemView.findViewById(R.id.empty_view)
         private val adapter: SearchResultsRecyclerAdapter = SearchResultsRecyclerAdapter(itemView.context,
                 editCardIntentions = editCardIntentions)
@@ -173,7 +173,7 @@ class ResultsPagerAdapter(
                 }
             }
 
-            recycler.layoutManager = GridLayoutManager(itemView.context, 3)
+            recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(itemView.context, 3)
             recycler.adapter = adapter
             recycler.setHasFixedSize(true)
 
@@ -233,9 +233,10 @@ class ResultsPagerAdapter(
 
         fun wiggleCard(card: PokemonCard) {
             val adapterPosition = adapter.indexOf(card)
-            if (adapterPosition != RecyclerView.NO_POSITION) {
-                val childIndex = adapterPosition - (recycler.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
-                val child = recycler.layoutManager.getChildAt(childIndex)
+            if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                val layoutManager = recycler.layoutManager as androidx.recyclerview.widget.GridLayoutManager
+                val childIndex = adapterPosition - layoutManager.findFirstVisibleItemPosition()
+                val child = layoutManager.getChildAt(childIndex)
                 child?.let {
                     val rotateAnim = RotateAnimation(-5f, 5f, RELATIVE_TO_SELF, .5f, RELATIVE_TO_SELF, .5f)
                     rotateAnim.repeatCount = 3

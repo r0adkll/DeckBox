@@ -2,11 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter
 
 
 import android.content.res.Configuration
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SimpleItemAnimator
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import android.view.View
 import android.view.animation.*
 import com.ftinc.kit.kotlin.extensions.dpToPx
@@ -48,11 +45,11 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
         }
     }
 
-    protected val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
+    protected val recycler: androidx.recyclerview.widget.RecyclerView = itemView.findViewById(R.id.recycler)
     private val emptyView: EmptyView = itemView.findViewById(R.id.empty_view)
 
     abstract val adapter: A
-    abstract val layoutManager: RecyclerView.LayoutManager
+    abstract val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
     abstract fun bind(cards: List<StackedPokemonCard>)
     abstract fun wiggleCard(card: PokemonCard)
     abstract fun setEditMode(isEditing: Boolean)
@@ -65,7 +62,7 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
         adapter.setEmptyView(emptyView)
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
-        (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        (recycler.itemAnimator as androidx.recyclerview.widget.SimpleItemAnimator).supportsChangeAnimations = false
     }
 }
 
@@ -81,7 +78,7 @@ class PokemonViewHolder(
         editCardIntentions: EditCardIntentions
 ) : SuperTypeViewHolder<PokemonBuilderRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
 
-    class PokemonSpanSizeLookup(private val lookup: (Int) -> Int) : GridLayoutManager.SpanSizeLookup() {
+    class PokemonSpanSizeLookup(private val lookup: (Int) -> Int) : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
 
         override fun getSpanSize(position: Int): Int {
             return lookup.invoke(position)
@@ -90,12 +87,12 @@ class PokemonViewHolder(
 
 
     override val adapter: PokemonBuilderRecyclerAdapter = PokemonBuilderRecyclerAdapter(itemView.context, spanSize, editCardIntentions, pokemonCardClicks)
-    override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
+    override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.GridLayoutManager(itemView.context, spanSize)
 
 
     override fun setup() {
         super.setup()
-        (layoutManager as GridLayoutManager).apply {
+        (layoutManager as androidx.recyclerview.widget.GridLayoutManager).apply {
             spanCount = spanSize
             spanSizeLookup = PokemonSpanSizeLookup {
                 val item = adapter.items[it]
@@ -155,7 +152,7 @@ class TrainerEnergyViewHolder(
 
     override val adapter: StackedPokemonRecyclerAdapter = StackedPokemonRecyclerAdapter(itemView.context,
             editCardIntentions.addCardClicks, editCardIntentions.removeCardClicks)
-    override val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
+    override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.GridLayoutManager(itemView.context, spanSize)
 
     init {
         recycler.setHasFixedSize(true)
@@ -163,7 +160,7 @@ class TrainerEnergyViewHolder(
 
     override fun setup() {
         super.setup()
-        (layoutManager as GridLayoutManager).spanCount = spanSize
+        (layoutManager as androidx.recyclerview.widget.GridLayoutManager).spanCount = spanSize
     }
 
     override fun bind(cards: List<StackedPokemonCard>) {
@@ -188,9 +185,10 @@ class TrainerEnergyViewHolder(
 
     override fun wiggleCard(card: PokemonCard) {
         val adapterPosition = adapter.items.indexOfFirst { it.card.id == card.id }
-        if (adapterPosition != RecyclerView.NO_POSITION) {
-            val childIndex = adapterPosition - (recycler.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
-            val child = recycler.layoutManager.getChildAt(childIndex)
+        if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+            val layoutManager = recycler.layoutManager as androidx.recyclerview.widget.GridLayoutManager
+            val childIndex = adapterPosition - layoutManager.findFirstVisibleItemPosition()
+            val child = layoutManager.getChildAt(childIndex)
             child?.let {
                 val rotateAnim = RotateAnimation(-5f, 5f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f)
                 rotateAnim.repeatCount = 3

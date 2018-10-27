@@ -1,14 +1,18 @@
 package com.r0adkll.deckbuilder.arch.data
 
 
+import android.accounts.AccountAuthenticatorResponse
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import androidx.room.Room
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
+import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
+import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
-import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RequeryCardCache
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
@@ -16,9 +20,9 @@ import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.FirestoreCommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.repository.DefaultCommunityRepository
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
-import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
+import com.r0adkll.deckbuilder.arch.data.features.decks.cache.SwitchingDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
-import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RequerySessionCache
+import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RoomSessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDataSource
@@ -35,6 +39,7 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
+import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
@@ -56,10 +61,6 @@ import dagger.multibindings.IntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.requery.Persistable
-import io.requery.android.sqlite.DatabaseSource
-import io.requery.reactivex.KotlinReactiveEntityStore
-import io.requery.sql.KotlinEntityDataStore
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import java.util.concurrent.Executors
@@ -107,14 +108,14 @@ class DataModule {
 
 
     /**
-     * - 1: Initial Version
-     * - 2: Added deck image to SessionEntity;
+     * Change Log
+     * ---
+     * 1. Initial Version
      */
     @Provides @AppScope
-    fun provideDatabase(context: Context): KotlinReactiveEntityStore<Persistable> {
-        val source = DatabaseSource(context, Models.DEFAULT, BuildConfig.DATABASE_NAME, 2)
-        val entityStore = KotlinEntityDataStore<Persistable>(source.configuration)
-        return KotlinReactiveEntityStore(entityStore)
+    fun provideRoomDatabase(context: Context): DeckDatabase {
+        return Room.databaseBuilder(context, DeckDatabase::class.java, "Room_" + BuildConfig.DATABASE_NAME)
+                .build()
     }
 
 
@@ -123,11 +124,11 @@ class DataModule {
      */
 
     @Provides @AppScope
-    fun provideCardCache(cache: RequeryCardCache): CardCache = cache
+    fun provideCardCache(cache: RoomCardCache): CardCache = cache
 
 
     @Provides @AppScope
-    fun provideDeckCache(cache: FirestoreDeckCache): DeckCache = cache
+    fun provideDeckCache(cache: SwitchingDeckCache): DeckCache = cache
 
 
     @Provides @AppScope
@@ -135,7 +136,7 @@ class DataModule {
 
 
     @Provides @AppScope
-    fun provideSessionCache(cache: RequerySessionCache): SessionCache = cache
+    fun provideSessionCache(cache: RoomSessionCache): SessionCache = cache
 
 
     @Provides @AppScope
@@ -157,6 +158,10 @@ class DataModule {
     /*
      * Repositories
      */
+
+    @Provides @AppScope
+    fun provideAccountRepository(repository: DefaultAccountRepository): AccountRepository = repository
+
 
     @Provides @AppScope
     fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository

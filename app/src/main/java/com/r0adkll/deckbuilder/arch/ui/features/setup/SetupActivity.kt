@@ -148,27 +148,29 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     private fun signInAnonymously() {
-        try {
-            disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
-                    .subscribe({
-                        Analytics.event(Event.Login.Anonymous)
-                        startActivity(HomeActivity.createIntent(this@SetupActivity))
-                        finish()
-                    }, {
-                        Timber.e(it)
-                        Timber.i("Anonymous signin failed, generate an offline device id")
-                        signInOffline()
-                    })
-        } catch (e: Exception) {
-            Timber.e(e)
-            Timber.i("Anonymous signin failed, generate an offline device id")
-            signInOffline()
-        }
+//        try {
+//            disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
+//                    .subscribe({
+//                        Analytics.event(Event.Login.Anonymous)
+//                        startActivity(HomeActivity.createIntent(this@SetupActivity))
+//                        finish()
+//                    }, {
+//                        Timber.e(it)
+//                        Timber.i("Anonymous signin failed, generate an offline device id")
+//                        signInOffline()
+//                    })
+//        } catch (e: Exception) {
+//            Timber.e(e)
+//            Timber.i("Anonymous signin failed, generate an offline device id")
+//            signInOffline()
+//        }
+
+        signInOffline()
     }
 
 
     private fun signInOffline() {
-        preferences.deviceId = UUID.randomUUID().toString()
+        preferences.offlineId.set(UUID.randomUUID().toString())
         Analytics.event(Event.Login.Offline)
         startActivity(HomeActivity.createIntent(this@SetupActivity))
         finish()

@@ -5,9 +5,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.view.GravityCompat
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import androidx.core.view.GravityCompat
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.color
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
@@ -61,7 +61,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     private val pokemonCardLongClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
     private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
-    private var selectionSnackBar: Snackbar? = null
+    private var selectionSnackBar: com.google.android.material.snackbar.Snackbar? = null
     private lateinit var adapter: ResultsPagerAdapter
     private lateinit var component: SearchComponent
 
@@ -88,7 +88,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         }
 
         tabs.addOnTabSelectedListener(object : OnTabSelectedAdapter() {
-            override fun onTabSelected(tab: TabLayout.Tab) {
+            override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
                 val category = when(tab.position) {
                     0 -> SuperType.POKEMON
                     1 -> SuperType.TRAINER
@@ -288,7 +288,7 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     private fun showSelectionSnackbar(count: Int) {
         val text = resources.getQuantityString(R.plurals.card_selection_count, count, count)
         if (selectionSnackBar == null) {
-            selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
+            selectionSnackBar = com.google.android.material.snackbar.Snackbar.make(coordinator, text, com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.action_undo) { clearSelectionClicks.accept(Unit) }
                     .setActionTextColor(color(R.color.primaryColor))
         }
@@ -310,9 +310,9 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     private fun validationSnackbar(result: Int) {
         val wasShown = selectionSnackBar?.isShownOrQueued ?: false
 
-        val snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT)
-        snackbar.addCallback(object : Snackbar.Callback() {
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+        val snackbar = com.google.android.material.snackbar.Snackbar.make(coordinator, result, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT)
+        snackbar.addCallback(object : com.google.android.material.snackbar.Snackbar.Callback() {
+            override fun onDismissed(transientBottomBar: com.google.android.material.snackbar.Snackbar?, event: Int) {
                 if (wasShown) {
                     showSelectionSnackbar(state.selected.size)
                 }

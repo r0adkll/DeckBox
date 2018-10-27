@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.components
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.FragmentDelegate
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.StateSaverFragmentDelegate
 import com.r0adkll.deckbuilder.internal.di.HasComponent
@@ -10,7 +10,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlin.reflect.KClass
 
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : androidx.fragment.app.Fragment() {
 
     private val delegates = ArrayList<FragmentDelegate>()
     protected val disposables = CompositeDisposable()

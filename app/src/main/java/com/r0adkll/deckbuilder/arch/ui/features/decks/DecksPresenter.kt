@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State.*
@@ -25,6 +26,7 @@ class DecksPresenter @Inject constructor(
         val intentions: DecksUi.Intentions,
         val deckRepository: DeckRepository,
         val communityRepository: CommunityRepository,
+        val editRepository: EditRepository,
         val remote: Remote,
         val preferences: AppPreferences
 ) : Presenter() {
@@ -44,6 +46,25 @@ class DecksPresenter @Inject constructor(
                             .map { Change.DeckDeleted as Change }
                             .onErrorReturn(handleUnknownError)
                 }
+
+        val createSession = intentions.createSession()
+                .flatMap { deck ->
+                    editRepository.createSession(deck, null)
+                            .map { Change.SessionLoaded(it) as Change }
+                            .startWith(Change.IsSessionLoading(deck.id))
+                            .onErrorReturn(handleUnknownError)
+                }
+
+        val createNewSession = intentions.createNewSession()
+                .flatMap {
+                    editRepository.createSession()
+                            .map { Change.SessionLoaded(it) as Change }
+                            .startWith(Change.IsSessionLoading(""))
+                            .onErrorReturn(handleUnknownError)
+                }
+
+        val clearSession = intentions.clearSession()
+                .map { Change.ClearSession as Change }
 
         val showPreview = preferences.previewVersion
                 .asObservable()
@@ -72,6 +93,9 @@ class DecksPresenter @Inject constructor(
                 }
 
         val merged = loadDecks.mergeWith(deleteDecks)
+                .mergeWith(createSession)
+                .mergeWith(createNewSession)
+                .mergeWith(clearSession)
                 .mergeWith(showQuickStart)
                 .mergeWith(showPreview)
                 .doOnNext { Timber.d(it.logText) }

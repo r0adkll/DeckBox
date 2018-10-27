@@ -5,13 +5,13 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Shader
 import android.graphics.drawable.*
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import com.caverock.androidsvg.SVG
 import com.caverock.androidsvg.SVGParseException
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
@@ -30,7 +30,7 @@ import com.r0adkll.deckbuilder.util.svg.SvgViewTarget
 import timber.log.Timber
 
 
-sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
 
@@ -199,6 +199,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
         private val image by bindView<DeckImageView>(R.id.image)
         private val title by bindView<TextView>(R.id.title)
+        private val loading by bindView<ProgressBar>(R.id.loading)
+        private val error by bindView<ImageView>(R.id.error)
         private val actionShare by bindView<ImageView>(R.id.action_share)
         private val actionMore by bindView<ImageView>(R.id.action_more)
         private val actionTest by bindView<ImageView>(R.id.action_test)
@@ -208,6 +210,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
         override fun bind(item: Item.DeckItem) {
             val deck = item.deck
             title.text = deck.name
+            error.setVisible(item.deck.isMissingCards)
+            loading.setVisible(item.isLoading)
 
             deck.image?.let {
                 when(it) {

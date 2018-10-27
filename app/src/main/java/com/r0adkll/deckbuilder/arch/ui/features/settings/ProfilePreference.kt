@@ -3,8 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.settings
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceViewHolder
+import androidx.preference.Preference
+import androidx.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.widget.ImageView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade

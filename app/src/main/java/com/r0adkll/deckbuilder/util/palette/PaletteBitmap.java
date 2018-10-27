@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.util.palette;
 
 import android.graphics.Bitmap;
-import android.support.v7.graphics.Palette;
+import androidx.palette.graphics.Palette;
 
 /**
  * A simple wrapper for a {@link Palette} and a {@link

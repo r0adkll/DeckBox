@@ -3,8 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -50,7 +50,7 @@ class StackedPokemonRecyclerAdapter(
 
 
     override fun getItemId(position: Int): Long {
-        if (position != RecyclerView.NO_POSITION) {
+        if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
             val item = items[position]
             return item.card.hashCode().toLong()
         }

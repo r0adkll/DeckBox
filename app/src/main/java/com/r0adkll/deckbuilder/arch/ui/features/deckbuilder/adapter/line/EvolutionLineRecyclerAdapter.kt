@@ -2,8 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
 
 import android.content.Context
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.ftinc.kit.kotlin.extensions.dipToPx
@@ -23,7 +23,7 @@ class EvolutionLineRecyclerAdapter(
         val context: Context,
         val editCardIntentions: EditCardIntentions,
         val spanCount: Int
-) : RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
 
     private val linkSpacing: Int = context.dipToPx(24f)
     private val stageSpacing: Int = context.dipToPx(16f)
@@ -87,7 +87,7 @@ class EvolutionLineRecyclerAdapter(
 
 
     override fun getItemId(position: Int): Long {
-        return evolution.getItem(position)?.card?.hashCode()?.toLong() ?: RecyclerView.NO_ID
+        return evolution.getItem(position)?.card?.hashCode()?.toLong() ?: androidx.recyclerview.widget.RecyclerView.NO_ID
     }
 
 

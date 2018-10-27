@@ -9,6 +9,7 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.decks.mapper.EntityMapper
+import com.r0adkll.deckbuilder.arch.data.features.decks.mapper.EntityMapper.metadata
 import com.r0adkll.deckbuilder.arch.data.features.decks.model.DeckEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
@@ -29,56 +30,62 @@ class FirestoreDeckCache @Inject constructor(
 ) : DeckCache {
 
     override fun getDeck(id: String): Observable<Deck> {
-        return cardRepository.getExpansions()
-                .flatMap { expansions ->
-                    getUserDeckCollection()?.let { collection ->
-                        val task = collection.document(id).get()
-                        RxFirebase.from(task)
-                                .map { it.toObject(DeckEntity::class.java) }
-                                .map { EntityMapper.to(expansions, it, id) }
-                                .subscribeOn(schedulers.firebase)
-                                .doOnNext { Timber.d("Firebase::getDeck($id) - Thread(${Thread.currentThread()?.name})") }
-                    } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
-                }
+        return getUserDeckCollection()?.let { collection ->
+            val task = collection.document(id).get()
+            RxFirebase.from(task)
+                    .map { it.toObject(DeckEntity::class.java) }
+                    .flatMap { deck ->
+                        val cardIds = deck.metadata().map { it.id }.toHashSet()
+                        cardRepository.find(cardIds.toList())
+                                .map { EntityMapper.to(deck, it) }
+                    }
+                    .subscribeOn(schedulers.firebase)
+                    .doOnNext { Timber.d("Firebase::getDeck($id) - Thread(${Thread.currentThread()?.name})") }
+        } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
 
     override fun getDecks(): Observable<List<Deck>> {
-        return cardRepository.getExpansions()
-                .flatMap { expansions ->
-                            Observable.create<List<Deck>> { emitter ->
-                                getUserDeckCollection()?.let { collection ->
-                                    val registration = collection.addSnapshotListener(schedulers.firebaseExecutor, EventListener { snapshot, exception ->
-                                        if (exception != null) {
-                                            emitter.onError(exception)
-                                            return@EventListener
-                                        }
-
-                                        val decks = ArrayList<Deck>()
-                                        snapshot?.forEach { document ->
-                                            val deck = document.toObject(DeckEntity::class.java)
-                                            decks.add(EntityMapper.to(expansions, deck, document.id))
-                                        }
-
-
-                                        Timber.d("Firebase::getDecks()::onNext() - Thread(${Thread.currentThread()?.name})")
-                                        emitter.onNext(decks)
-                                    })
-
-                                    emitter.setCancellable {
-                                        registration.remove()
-                                    }
-                                } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
+        return Observable.create<List<DeckEntity>> { emitter ->
+                    getUserDeckCollection()?.let { collection ->
+                        val registration = collection.addSnapshotListener(schedulers.firebaseExecutor, EventListener { snapshot, exception ->
+                            if (exception != null) {
+                                emitter.onError(exception)
+                                return@EventListener
                             }
-                                    .subscribeOn(schedulers.firebase)
-                            .doOnNext { Timber.d("Firebase::getDecks() - Thread(${Thread.currentThread()?.name})") }
+
+                            val decks = ArrayList<DeckEntity>()
+                            snapshot?.forEach { document ->
+                                val deckEntity = document.toObject(DeckEntity::class.java)
+                                deckEntity.id = document.id
+                                decks += deckEntity
+                            }
+
+                            emitter.onNext(decks)
+                        })
+
+                        emitter.setCancellable {
+                            registration.remove()
+                        }
+                    } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
                 }
+                .flatMap { decks ->
+                    val cardIds = decks.flatMap {
+                        it.metadata().map { it.id }
+                    }.toHashSet() // Convert to set so we don't request duplicate id's
+
+                    cardRepository.find(cardIds.toList())
+                            .map { cards ->
+                                decks.map { EntityMapper.to(it, cards) }
+                            }
+                }
+                .subscribeOn(schedulers.firebase)
     }
 
 
     override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> {
         return getUserDeckCollection()?.let { collection ->
-            val newDeck = Deck(id ?: "", name, description ?: "", image, cards, System.currentTimeMillis())
+            val newDeck = Deck(id ?: "", name, description ?: "", image, cards, false, System.currentTimeMillis())
             val model = EntityMapper.to(newDeck)
             if (id == null) {
                 val task = collection.add(model)
@@ -115,7 +122,7 @@ class FirestoreDeckCache @Inject constructor(
 
                             val cleanName = deck.name.replace(regex, "").trim()
                             val newName = "$cleanName ($count)"
-                            duplicateDeck(Deck("", newName, deck.description, deck.image, deck.cards, deck.timestamp))
+                            duplicateDeck(Deck("", newName, deck.description, deck.image, deck.cards, false, deck.timestamp))
                         }
                     }
                     .map { Unit }
@@ -133,6 +140,109 @@ class FirestoreDeckCache @Inject constructor(
             RxFirebase.fromVoid(task)
                     .subscribeOn(schedulers.firebase)
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
+    }
+
+
+    /**
+     * Batch insert a list of decks into an authed account
+     * @return observable of the task, or an observable error if account is anonymous or null
+     */
+    fun putDecks(decks: List<Deck>): Observable<Unit> {
+        val models = decks.map { EntityMapper.to(it) }
+        return putDeckEntities(models)
+    }
+
+
+    /**
+     * Batch insert a list of decks into an authed account
+     * @return observable of the task, or an observable error if account is anonymous or null
+     */
+    private fun putDeckEntities(decks: List<DeckEntity>): Observable<Unit> {
+        val db = FirebaseFirestore.getInstance()
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user?.isAnonymous == false) {
+            val collection = db.collection(COLLECTION_USERS)
+                    .document(user.uid)
+                    .collection(COLLECTION_DECKS)
+
+            val batch = db.batch()
+
+            decks.forEach {
+                val document = collection.document()
+                batch.set(document, it)
+            }
+
+            val task = batch.commit()
+
+            return RxFirebase.fromVoid(task)
+                    .subscribeOn(schedulers.firebase)
+        } else {
+            return Observable.error(FirebaseAuthException("-1", "No current user logged in"))
+        }
+    }
+
+
+    /**
+     * Batch insert a list of decks into an authed account
+     * @return observable of the task, or an observable error if account is anonymous or null
+     */
+    fun migrateOfflineDecks(): Observable<Unit> {
+        val db = FirebaseFirestore.getInstance()
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user?.isAnonymous == false && preferences.deviceId != null) {
+            val offlineCollection = db.collection(COLLECTION_OFFLINE_USERS)
+                    .document(preferences.deviceId!!)
+                    .collection(COLLECTION_DECKS)
+
+            val onlineCollection = db.collection(COLLECTION_USERS)
+                    .document(user.uid)
+                    .collection(COLLECTION_DECKS)
+
+            return RxFirebase.from(offlineCollection.get(), schedulers.firebaseExecutor)
+                    .map { snapshot ->
+                        val decks = ArrayList<DeckEntity>()
+                        snapshot.forEach { document ->
+                            val deckEntity = document.toObject(DeckEntity::class.java)
+                            deckEntity.id = document.id
+                            decks += deckEntity
+                        }
+                        decks
+                    }
+                    .flatMap { decks ->
+                        val batch = db.batch()
+                        decks.forEach {
+                            val document = onlineCollection.document()
+                            batch.set(document, it)
+                            batch.delete(offlineCollection.document(it.id))
+                        }
+                        val task = batch.commit()
+                        RxFirebase.fromVoid(task, schedulers.firebaseExecutor)
+                    }
+        } else {
+            return Observable.error(FirebaseAuthException("-1", "No current user logged in"))
+        }
+    }
+
+
+    /**
+     * Get the a list of offline decks for a give device Id
+     */
+    fun getOfflineDecks(deviceId: String): Observable<List<DeckEntity>> {
+        val db = FirebaseFirestore.getInstance()
+        val collection = db.collection(COLLECTION_OFFLINE_USERS)
+                .document(deviceId)
+                .collection(COLLECTION_DECKS)
+
+        return RxFirebase.from(collection.get(), schedulers.firebaseExecutor)
+                .map { snapshot ->
+                    val decks = ArrayList<DeckEntity>()
+                    snapshot?.forEach { document ->
+                        val deckEntity = document.toObject(DeckEntity::class.java)
+                        deckEntity.id = document.id
+                        decks += deckEntity
+                    }
+                    decks
+                }
     }
 
 

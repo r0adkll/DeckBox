@@ -23,6 +23,7 @@ class AppPreferences @Inject constructor(
         const val KEY_DEFAULT_ENERGY_SET = "pref_default_energy_set"
         const val KEY_PLAYER_NAME = "pref_player_name"
         const val KEY_PLAYER_ID = "pref_player_id"
+        const val KEY_OFFLINE_ID = "pref_offline_id"
         const val KEY_PLAYER_AGE_DIVISION = "pref_player_age_division"
         const val KEY_PLAYER_DOB = "pref_player_dob"
         const val KEY_PREVIEW_VERSION = "pref_last_preview_version"
@@ -40,6 +41,7 @@ class AppPreferences @Inject constructor(
     var offlineEnabled by BooleanPreference(KEY_OFFLINE_ENABLED, false)
     var expansionsVersion by IntPreference(KEY_EXPANSIONS_VERSION, 1)
 
+    val offlineId by ReactiveStringPreference(KEY_OFFLINE_ID)
     val quickStart by ReactiveBooleanPreference(KEY_QUICKSTART, true)
     val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
     val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)

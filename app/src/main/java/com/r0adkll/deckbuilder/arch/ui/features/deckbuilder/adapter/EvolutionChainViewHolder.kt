@@ -1,9 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,9 +22,9 @@ class EvolutionChainViewHolder(
         private val spanCount: Int,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
-): RecyclerView.ViewHolder(itemView) {
+): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
-    private val recyclerView: RecyclerView by bindView(R.id.recycler)
+    private val recyclerView: androidx.recyclerview.widget.RecyclerView by bindView(R.id.recycler)
 
 
     fun bind(evolutionChain: EvolutionChain, isEditing: Boolean) {
@@ -32,9 +32,9 @@ class EvolutionChainViewHolder(
         if (recyclerView.adapter == null) {
             val adapter = EvolutionLineRecyclerAdapter(itemView.context, editCardIntentions, spanCount)
             adapter.setOnPokemonCardViewClickListener { pokemonCardClicks.accept(it) }
-            recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(itemView.context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = adapter
-            (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+            (recyclerView.itemAnimator as androidx.recyclerview.widget.SimpleItemAnimator).supportsChangeAnimations = false
             (0 until recyclerView.itemDecorationCount).forEach { recyclerView.removeItemDecorationAt(it) }
             recyclerView.addItemDecoration(EvolutionLineItemDecoration(itemView.context, adapter))
         }

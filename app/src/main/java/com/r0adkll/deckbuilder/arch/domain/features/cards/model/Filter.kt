@@ -9,6 +9,13 @@ import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
 
+/**
+ * Search filter master object. Any changes or updates to this class must be propagated to it's
+ * respected query mappers for network and local requests
+ *
+ * @see com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper
+ * @see com.r0adkll.deckbuilder.arch.data.database.util.FilterQueryHelper
+ */
 @PaperParcel
 data class Filter(
         val field: SearchField = SearchField.NAME,

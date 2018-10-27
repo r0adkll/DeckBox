@@ -1,8 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browser
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,9 +50,9 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
             startActivity(intent)
         }
         recycler.layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            GridLayoutManager(activity!!, 3)
+            androidx.recyclerview.widget.GridLayoutManager(activity!!, 3)
         } else {
-            LinearLayoutManager(activity!!)
+            androidx.recyclerview.widget.LinearLayoutManager(activity!!)
         }
         recycler.adapter = adapter
 

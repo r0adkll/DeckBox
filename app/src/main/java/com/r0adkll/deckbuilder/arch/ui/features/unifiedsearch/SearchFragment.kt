@@ -2,10 +2,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 
 import android.os.Bundle
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +44,7 @@ import javax.inject.Inject
 class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
-    private val drawer: DrawerLayout by lazy { view as DrawerLayout }
+    private val drawer: androidx.drawerlayout.widget.DrawerLayout by lazy { view as androidx.drawerlayout.widget.DrawerLayout }
 
     override var state: SearchUi.State = SearchUi.State.DEFAULT
 
@@ -80,7 +80,7 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
             ImeUtils.hideIme(searchView)
         }
 
-        recycler.layoutManager = GridLayoutManager(activity!!, 6)
+        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 6)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
         recycler.setItemViewCacheSize(20)
@@ -216,8 +216,9 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     fun wiggleCard(card: PokemonCard) {
         val adapterPosition = adapter.indexOf(card)
         if (adapterPosition != RecyclerView.NO_POSITION) {
-            val childIndex = adapterPosition - (recycler.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
-            val child = recycler.layoutManager.getChildAt(childIndex)
+            val layoutManager = recycler.layoutManager as androidx.recyclerview.widget.GridLayoutManager
+            val childIndex = adapterPosition - layoutManager.findFirstVisibleItemPosition()
+            val child = layoutManager.getChildAt(childIndex)
             child?.let {
                 val rotateAnim = RotateAnimation(-5f, 5f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f)
                 rotateAnim.repeatCount = 3
@@ -248,7 +249,7 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         private var scrollY: Float = 0f
 
 
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             scrollY += dy
             toolBar.elevation = scrollY.coerceIn(0f, elevation)
         }

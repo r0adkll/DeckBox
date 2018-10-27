@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 import android.animation.Animator
 import android.content.Context
 import android.graphics.*
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity

@@ -15,6 +15,7 @@ data class Deck(
         val description: String,
         val image: DeckImage?,
         val cards: List<PokemonCard>,
+        val isMissingCards: Boolean,
         val timestamp: Long
 ) : PaperParcelable {
 
@@ -23,7 +24,7 @@ data class Deck(
     val energyCount: Int get() = cards.count { it.supertype == SuperType.ENERGY }
 
     override fun toString(): String {
-        return "Deck(id='$id', name='$name', description='$description', cards=${cards.size}, timestamp=$timestamp)"
+        return "Deck(id='$id', name='$name', description='$description', cards=${cards.size}, isMissingCards=$isMissingCards, timestamp=$timestamp)"
     }
 
     companion object {
