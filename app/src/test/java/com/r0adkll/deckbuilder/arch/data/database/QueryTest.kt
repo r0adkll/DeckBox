@@ -19,7 +19,7 @@ class QueryTest {
                 .join("attacks").on("cards.id" eq "attacks.cardId")
                 .where("attacks.name" like "%scratch%")
                 .get()
-        result `should equal` "SELECT * FROM cards INNER JOIN attacks ON cards.id = attacks.cardId WHERE attacks.name LIKE %scratch%"
+        result `should equal` "SELECT * FROM cards INNER JOIN attacks ON cards.id = \"attacks.cardId\" WHERE attacks.name LIKE \"%scratch%\""
     }
 
     @Test
@@ -29,7 +29,7 @@ class QueryTest {
                 .and("subtype" eq SubType.BASIC.displayName)
                 .or("subtype" eq SubType.GX.displayName)
                 .get()
-        result `should equal` "SELECT * FROM cards WHERE hp > 100 AND subtype = Basic OR subtype = GX"
+        result `should equal` "SELECT * FROM cards WHERE hp > 100 AND subtype = \"Basic\" OR subtype = \"GX\""
     }
 
     @Test
@@ -38,7 +38,7 @@ class QueryTest {
                 .where("hp" lt 100)
                 .and(("subtype" eq SubType.GX.displayName) or ("subtype" eq SubType.STAGE_2.displayName))
                 .get()
-        result `should equal` "SELECT * FROM cards WHERE hp < 100 AND (subtype = GX OR subtype = Stage 2)"
+        result `should equal` "SELECT * FROM cards WHERE hp < 100 AND (subtype = \"GX\" OR subtype = \"Stage 2\")"
     }
 
     @Test
@@ -47,6 +47,6 @@ class QueryTest {
                 .where("name" eq "Charizard")
                 .and("text".notNull())
                 .get()
-        result `should equal` "SELECT * FROM cards WHERE name = Charizard AND text IS NOT NULL"
+        result `should equal` "SELECT * FROM cards WHERE name = \"Charizard\" AND text IS NOT NULL"
     }
 }
