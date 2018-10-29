@@ -14,9 +14,9 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.exporter.TournamentExporter
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.Format
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.preview.PdfPreviewActivity
@@ -145,7 +145,7 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
 
 
     override fun formatChanged(): Observable<Format> {
-        return optionsFormat.checkedChanges()
+        return optionsFormat.checkedChanges().skipInitialValue()
                 .map { when(it) {
                     R.id.optionFormatStandard -> Format.STANDARD
                     else -> Format.EXPANDED

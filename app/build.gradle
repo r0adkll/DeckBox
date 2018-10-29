@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-def VERSION_NAME = "1.7.4"
+def VERSION_NAME = "1.7.6"
 
 
 ext.gitVersioner = [
@@ -25,14 +25,14 @@ apply from: 'https://raw.githubusercontent.com/passsy/gradle-GitVersioner/master
 
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.r0adkll.deckbuilder"
-        buildToolsVersion rootProject.ext.buildToolsVersion
+        buildToolsVersion "28.0.3"
 
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 21
+        targetSdkVersion 28
 
         versionCode gitVersion.version
         versionName "$VERSION_NAME.${gitVersion.version}"
@@ -40,9 +40,16 @@ android {
 
         buildConfigField "String", "GIT_SHA", "\"$GIT_SHA\""
         buildConfigField "String", "GIT_TAG", "\"$GIT_TAG\""
-        buildConfigField "String", "DATABASE_NAME", "\"cards.db\""
+        buildConfigField "String", "DATABASE_NAME", "\"deckbox.db\""
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -66,13 +73,17 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.amshove.kluent:kluent:$kluent_version"
     androidTestImplementation "org.amshove.kluent:kluent:$kluent_version"
-    androidTestImplementation "com.android.support.test:runner:$runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test:runner:$runner_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
@@ -80,13 +91,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
-    implementation "com.android.support:appcompat-v7:$support_version"
-    implementation "com.android.support:recyclerview-v7:$support_version"
-    implementation "com.android.support:cardview-v7:$support_version"
-    implementation "com.android.support:preference-v7:$support_version"
-    implementation "com.android.support:preference-v14:$support_version"
-    implementation "com.android.support:design:$support_version"
-    implementation "com.android.support:palette-v7:$support_version"
+    implementation "androidx.appcompat:appcompat:$support_version"
+    implementation "androidx.recyclerview:recyclerview:$support_version"
+    implementation "androidx.cardview:cardview:$support_version"
+    implementation "androidx.preference:preference:$support_version"
+    implementation "androidx.legacy:legacy-preference-v14:$support_version"
+    implementation "com.google.android.material:material:$support_version"
+    implementation "androidx.palette:palette:$support_version"
 
 
     implementation "com.google.firebase:firebase-core:16.0.3"
@@ -111,10 +122,10 @@ dependencies {
     implementation "com.evernote:android-state:$state_version"
     kapt "com.evernote:android-state-processor:$state_version"
 
-    implementation "io.requery:requery:$requery_version"
-    implementation "io.requery:requery-android:$requery_version"
-    implementation "io.requery:requery-kotlin:$requery_version"
-    kapt "io.requery:requery-processor:$requery_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
@@ -150,9 +161,8 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
     debugImplementation "com.facebook.stetho:stetho:$stetho_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'nl.littlerobots.rxlint:rxlint:1.6.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
 }
 

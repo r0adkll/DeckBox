@@ -1,18 +1,20 @@
 package com.r0adkll.deckbuilder.arch.data.remote.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
 
-@PaperParcel
+@Parcelize
 data class ExpansionPreview(
         val version: Int,
         val expiresAt: String,
         val code: String,
         val preview: PreviewSpec
-) : PaperParcelable {
+) : Parcelable {
 
-    @PaperParcel
+    @Parcelize
     data class PreviewSpec(
             val logoUrl: String,
             val title: String,
@@ -20,24 +22,12 @@ data class ExpansionPreview(
             val textColor: String,
             val background: List<DrawableSpec>,
             val foreground: DrawableSpec?
-    ) : PaperParcelable {
+    ) : Parcelable {
 
-        @PaperParcel
+        @Parcelize
         data class DrawableSpec(
                 val type: String,
                 val data: String
-        ) : PaperParcelable {
-            companion object {
-                @JvmField val CREATOR = PaperParcelExpansionPreview_PreviewSpec_DrawableSpec.CREATOR
-            }
-        }
-
-        companion object {
-            @JvmField val CREATOR = PaperParcelExpansionPreview_PreviewSpec.CREATOR
-        }
-    }
-
-    companion object {
-        @JvmField val CREATOR = PaperParcelExpansionPreview.CREATOR
+        ) : Parcelable
     }
 }

@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.util
 
 import android.content.Context
 import android.content.res.Resources
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.View
 
 
@@ -22,11 +22,11 @@ object ScreenUtils {
 
     fun View.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
     fun Context.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
-    fun Fragment.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
+    fun androidx.fragment.app.Fragment.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
 
     fun View.orientation(orientation: Int): Boolean = orientation(this.resources, orientation)
     fun Context.orientation(orientation: Int): Boolean = orientation(this.resources, orientation)
-    fun Fragment.orientation(orientation: Int): Boolean = orientation(this.resources, orientation)
+    fun androidx.fragment.app.Fragment.orientation(orientation: Int): Boolean = orientation(this.resources, orientation)
 
 
     enum class Config(val widthInDp: Int) {

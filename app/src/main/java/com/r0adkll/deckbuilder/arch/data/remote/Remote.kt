@@ -10,6 +10,7 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionVersion
 import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.data.remote.model.Reprints
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.model.SearchProxies
 import timber.log.Timber
@@ -51,6 +52,13 @@ class Remote @Inject constructor(
 
 
     /**
+     * This is a list of hashes for cards that are not in standard or expanded formats but have been
+     * reprinted in format valid sets since.
+     */
+    val reprints by RemoteObject(KEY_REPRINTS, Reprints::class)
+
+
+    /**
      * Property to access the Firebase Remote Config instance
      */
     private val remote: FirebaseRemoteConfig
@@ -80,6 +88,7 @@ class Remote @Inject constructor(
                     Timber.i("> Expansion Version: $expansionVersion")
                     Timber.i("> Search Proxies: $searchProxies")
                     Timber.i("> Preview: (version: ${expansionPreview?.version}, code: ${expansionPreview?.code})")
+                    Timber.i("> Reprints: Standard(${reprints?.standardHashes?.size}), Expanded(${reprints?.expandedHashes?.size})")
                     remote.activateFetched()
                     plugins.forEach { it.onFetchActivated(this@Remote) }
                 }
@@ -121,6 +130,7 @@ class Remote @Inject constructor(
         private const val KEY_EXPANSION_VERSION = "expansion_version"
         private const val KEY_EXPANSION_PREVIEW = "expansion_preview"
         private const val KEY_SEARCH_PROXIES = "search_proxies"
+        private const val KEY_REPRINTS = "reprints"
 
         private const val CACHE_EXPIRATION = 3600L
     }

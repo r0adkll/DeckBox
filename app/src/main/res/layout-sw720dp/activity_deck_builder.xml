@@ -29,13 +29,13 @@
             android:focusableInTouchMode="true"
             >
 
-            <android.support.design.widget.AppBarLayout
+            <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/appbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
 
-                <android.support.v7.widget.Toolbar
+                <androidx.appcompat.widget.Toolbar
                     android:id="@+id/appbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -51,9 +51,9 @@
                         android:text="@string/activity_deck_builder"
                         />
 
-                </android.support.v7.widget.Toolbar>
+                </androidx.appcompat.widget.Toolbar>
 
-                <android.support.design.widget.TabLayout
+                <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -64,25 +64,25 @@
                     app:tabGravity="fill"
                     >
 
-                    <android.support.design.widget.TabItem
+                    <com.google.android.material.tabs.TabItem
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/tab_pokemon"
                         />
 
-                    <android.support.design.widget.TabItem
+                    <com.google.android.material.tabs.TabItem
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/tab_trainer"
                         />
 
-                    <android.support.design.widget.TabItem
+                    <com.google.android.material.tabs.TabItem
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/tab_energy"
                         />
 
-                </android.support.design.widget.TabLayout>
+                </com.google.android.material.tabs.TabLayout>
 
                 <!--<View-->
                     <!--android:layout_width="match_parent"-->
@@ -90,7 +90,7 @@
                     <!--android:background="@color/black12"-->
                     <!--/>-->
 
-            </android.support.design.widget.AppBarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
 
             <LinearLayout
                 android:id="@+id/dropZone"
@@ -139,7 +139,7 @@
 
             </LinearLayout>
 
-            <android.support.v4.view.ViewPager
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -200,7 +200,7 @@
 
             </FrameLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

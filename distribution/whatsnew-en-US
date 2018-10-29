@@ -1,2 +1,6 @@
-• Fixed second Shortcuts bug that I missed causing a lot of crashes for 7.0+ devices
-• Bug fixes
+• Added 'Evolves to' related cards row in card detail view
+• Improved format validation with reprint support. Improved how the format is displayed
+• Fixed issue where secret rares wouldn't appear in the expansion browser
+• Improved the onboarding experience
+• Added improved offline support
+• Added notch support

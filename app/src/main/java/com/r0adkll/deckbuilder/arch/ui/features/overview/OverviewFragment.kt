@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.overview
 import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,8 +63,8 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         adapter = OverviewRecyclerAdapter(activity!!, cardClicks, editCardIntentions)
         adapter.setEmptyView(emptyView)
         val spanCount = if (orientation(ORIENTATION_LANDSCAPE)) 7 else 4
-        val layoutManager = GridLayoutManager(activity!!, spanCount)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, spanCount)
+        layoutManager.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 val item = adapter.items[position]
                 return item.size

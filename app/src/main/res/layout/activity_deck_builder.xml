@@ -23,13 +23,13 @@
         android:focusableInTouchMode="true"
         >
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="4dp">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/appbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,27 +45,9 @@
                     android:text="@string/activity_deck_builder"
                     />
 
-                <!--<TextView-->
-                    <!--android:id="@+id/cardCounter"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginStart="16dp"-->
-                    <!--android:paddingTop="4dp"-->
-                    <!--android:paddingBottom="4dp"-->
-                    <!--android:paddingStart="12dp"-->
-                    <!--android:paddingEnd="12dp"-->
-                    <!--android:textColor="@color/white"-->
-                    <!--android:fontFamily="sans-serif-medium"-->
-                    <!--android:textSize="16sp"-->
-                    <!--android:background="@drawable/dr_card_count_background"-->
-                    <!--android:visibility="gone"-->
-                    <!--tools:text="60"-->
-                    <!--tools:visibility="visible"-->
-                    <!--/>-->
+            </androidx.appcompat.widget.Toolbar>
 
-            </android.support.v7.widget.Toolbar>
-
-            <android.support.design.widget.TabLayout
+            <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,27 +56,27 @@
                 app:tabIndicatorColor="@color/white"
                 >
 
-                <android.support.design.widget.TabItem
+                <com.google.android.material.tabs.TabItem
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_pokemon"
                     />
 
-                <android.support.design.widget.TabItem
+                <com.google.android.material.tabs.TabItem
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_trainer"
                     />
 
-                <android.support.design.widget.TabItem
+                <com.google.android.material.tabs.TabItem
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_energy"
                     />
 
-            </android.support.design.widget.TabLayout>
+            </com.google.android.material.tabs.TabLayout>
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
             android:id="@+id/dropZone"
@@ -141,14 +123,14 @@
 
         </LinearLayout>
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/appbar_layout"
             />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,7 +142,7 @@
             app:fabSize="normal"
             app:rippleColor="@color/white30"
             app:backgroundTint="?attr/colorPrimary"
-            />
+            tools:ignore="RelativeOverlap" />
 
         <ImageView
             android:id="@+id/panelIndicator"

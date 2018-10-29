@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.components.drag
 
-import android.support.v4.view.animation.FastOutLinearInInterpolator
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import android.view.DragEvent
 import android.view.View
 import android.widget.TextView

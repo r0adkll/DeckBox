@@ -65,6 +65,24 @@
             android:background="?attr/selectableItemBackground"
             />
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/actionPrivacyPolicy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:padding="16dp"
+            android:text="@string/pref_about_privacy_policy"
+            android:textColor="@color/white70"
+            android:background="?attr/selectableItemBackground"
+            />
+
     </LinearLayout>
 
 </LinearLayout>

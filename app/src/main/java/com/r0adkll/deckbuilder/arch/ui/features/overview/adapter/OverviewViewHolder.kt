@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.overview.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ class OverviewViewHolder(
         itemView: View,
         private val cardClicks: Relay<PokemonCardView>,
         private val editCardIntentions: EditCardIntentions
-) : RecyclerView.ViewHolder(itemView) {
+) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     private val chainView = itemView as EvolutionChainView
 

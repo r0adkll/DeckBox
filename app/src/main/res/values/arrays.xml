@@ -20,4 +20,10 @@
         <item>Crimson Invasion</item>
     </string-array>
 
+    <string-array name="formats">
+        <item>Standard</item>
+        <item>Expanded</item>
+        <item>Unlimited</item>
+    </string-array>
+
 </resources>

@@ -2,19 +2,17 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.graphics.Palette
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ViewSwitcher
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.util.CardUtils
-import com.r0adkll.deckbuilder.util.palette.PaletteBitmap
-import com.r0adkll.deckbuilder.util.palette.PaletteBitmapViewTarget
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -68,9 +66,9 @@ class CardSwitcher : ViewSwitcher {
     }
 
 
-    fun setOnPaletteChangeListener(listener: (Palette) -> Unit) {
+    fun setOnPaletteChangeListener(listener: (androidx.palette.graphics.Palette) -> Unit) {
         paletteChangeListener = object : OnPaletteChangeListener {
-            override fun onPaletteChanged(palette: Palette) {
+            override fun onPaletteChanged(palette: androidx.palette.graphics.Palette) {
                 listener.invoke(palette)
             }
         }
@@ -125,7 +123,7 @@ class CardSwitcher : ViewSwitcher {
 
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
-        override fun execute(palette: Palette?) {
+        override fun execute(palette: androidx.palette.graphics.Palette?) {
             palette?.let {
                 paletteChangeListener?.onPaletteChanged(it)
             }
@@ -135,7 +133,7 @@ class CardSwitcher : ViewSwitcher {
 
     interface OnPaletteChangeListener {
 
-        fun onPaletteChanged(palette: Palette)
+        fun onPaletteChanged(palette: androidx.palette.graphics.Palette)
     }
 
 

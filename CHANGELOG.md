@@ -1,3 +1,17 @@
+# 1.7.6
+_In Progress_
+* [#40](https://github.com/r0adkll/DeckBox/issues/40) - Added 'Evolves to' related cards row in card detail view
+* [#32](https://github.com/r0adkll/DeckBox/issues/32) - Improved the visualization of deck formats. Added reprint validation.
+* Fixed issue where secret rares would not appear in the expansion browser
+* Improved offline and card caching support
+* Added notch support
+* Improved deck > card relation format for better accuracy and a more compact format
+* Migrated all database to Room
+* Added support for local offline, i.e. Decks are stored in the database
+
+# 1.7.5
+* Update to include privacy policy from within the app
+
 # 1.7.4
 * Added a custom RxErrorHandler using `RxJavaPlugins.setErrorHandler` method to help track/eliminate these errors that are dying outside the scope of my code
 * Fixed second Shortcuts bug that I missed causing a lot of crashes for 7.0+ devices

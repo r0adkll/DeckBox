@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -17,7 +17,7 @@ class PokemonBuilderRecyclerAdapter(
         private val spanCount: Int,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
-) : ListRecyclerAdapter<PokemonItem, RecyclerView.ViewHolder>(context) {
+) : ListRecyclerAdapter<PokemonItem, androidx.recyclerview.widget.RecyclerView.ViewHolder>(context) {
 
     var isEditing: Boolean = false
         set(value) {
@@ -26,7 +26,7 @@ class PokemonBuilderRecyclerAdapter(
         }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.item_evolution_chain -> {
                 EvolutionChainViewHolder.create(inflater, parent, spanCount, editCardIntentions, pokemonCardClicks)
@@ -40,7 +40,7 @@ class PokemonBuilderRecyclerAdapter(
     }
 
 
-    override fun onBindViewHolder(vh: RecyclerView.ViewHolder, i: Int) {
+    override fun onBindViewHolder(vh: androidx.recyclerview.widget.RecyclerView.ViewHolder, i: Int) {
         val item = items[i]
         when(vh) {
             is EvolutionChainViewHolder -> {
@@ -65,7 +65,7 @@ class PokemonBuilderRecyclerAdapter(
 
 
     override fun getItemId(position: Int): Long {
-        if (position != RecyclerView.NO_POSITION) {
+        if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
             val item = items[position]
             return when(item) {
                 is PokemonItem.Evolution -> item.evolutionChain.hashCode().toLong()

@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.util.Pools
+import androidx.core.util.Pools
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.FrameLayout

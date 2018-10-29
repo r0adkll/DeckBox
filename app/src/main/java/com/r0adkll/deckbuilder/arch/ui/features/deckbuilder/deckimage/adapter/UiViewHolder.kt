@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter
 
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ftinc.kit.kotlin.extensions.dpToPx
@@ -11,7 +11,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 
-sealed class UiViewHolder<in I : DeckImage>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I, isSelected: Boolean?)
 

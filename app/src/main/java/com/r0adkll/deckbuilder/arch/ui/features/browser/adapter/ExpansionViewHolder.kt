@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browser.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.util.bindView
 
 
-class ExpansionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ExpansionViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     private val logo: ImageView by bindView(R.id.logo)
     private val name: TextView by bindView(R.id.name)

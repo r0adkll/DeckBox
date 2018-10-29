@@ -5,9 +5,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +23,7 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
@@ -105,7 +106,8 @@ class DeckBuilderActivity : BaseActivity(),
                     (it.height.toFloat() / 2f) //- iconOffset
                 } ?: defaultOffset
                 val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
-                deckError.setVisibleWeak(offset < recyclerOffset)
+//                deckError.setVisibleWeak(offset < recyclerOffset)
+                deckError.setVisible(offset < recyclerOffset)
             }
         }
 
@@ -151,7 +153,7 @@ class DeckBuilderActivity : BaseActivity(),
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
-    private var savingSnackBar: Snackbar? = null
+    private var savingSnackBar: com.google.android.material.snackbar.Snackbar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -196,7 +198,7 @@ class DeckBuilderActivity : BaseActivity(),
         // Setup pager
 
         ruleAdapter = RuleRecyclerAdapter(this)
-        ruleRecycler.layoutManager = LinearLayoutManager(this)
+        ruleRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         ruleRecycler.adapter = ruleAdapter
 
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
@@ -278,6 +280,10 @@ class DeckBuilderActivity : BaseActivity(),
                     DeckImagePickerFragment.newInstance(sessionId, state.image)
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
                 }
+
+        deckFormat.setOnClickListener {
+
+        }
 
         if (slidingLayout.panelState != SlidingUpPanelLayout.PanelState.COLLAPSED) {
             slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -485,7 +491,7 @@ class DeckBuilderActivity : BaseActivity(),
         else {
             appbarTitle?.text = name
         }
-        if (inputDeckName.text.isBlank()) {
+        if (inputDeckName.text.isNullOrBlank()) {
             inputDeckName.setText(name)
             inputDeckName.setSelection(name.length)
         }
@@ -493,7 +499,7 @@ class DeckBuilderActivity : BaseActivity(),
 
 
     override fun showDeckDescription(description: String) {
-        if (inputDeckDescription.text.isBlank()) {
+        if (inputDeckDescription.text.isNullOrBlank()) {
             inputDeckDescription.setText(description)
             inputDeckDescription.setSelection(description.length)
         }
@@ -527,22 +533,22 @@ class DeckBuilderActivity : BaseActivity(),
         invalidateOptionsMenu()
         if (isSaving) {
             if (savingSnackBar == null) {
-                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saving_message, Snackbar.LENGTH_INDEFINITE)
+                savingSnackBar = com.google.android.material.snackbar.Snackbar.make(pager, R.string.deckbuilder_saving_message, com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE)
             }
             else {
                 savingSnackBar?.setText(R.string.deckbuilder_saving_message)
-                savingSnackBar?.duration = Snackbar.LENGTH_INDEFINITE
+                savingSnackBar?.duration = com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE
             }
 
             savingSnackBar?.show()
         }
         else {
             if (savingSnackBar == null) {
-                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saved_message, Snackbar.LENGTH_SHORT)
+                savingSnackBar = com.google.android.material.snackbar.Snackbar.make(pager, R.string.deckbuilder_saved_message, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT)
             }
             else {
                 savingSnackBar?.setText(R.string.deckbuilder_saved_message)
-                savingSnackBar?.duration = Snackbar.LENGTH_SHORT
+                savingSnackBar?.duration = com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
             }
 
             if (savingSnackBar?.isShown == true) {
@@ -590,13 +596,8 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
 
-    override fun showIsStandard(isStandard: Boolean) {
-        format_standard.setVisible(isStandard)
-    }
-
-
-    override fun showIsExpanded(isExpanded: Boolean) {
-        format_expanded.setVisible(isExpanded)
+    override fun showFormat(format: Format) {
+        deckFormat.text = format.name.toLowerCase().capitalize()
     }
 
 
