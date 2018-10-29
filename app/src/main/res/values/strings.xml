@@ -66,31 +66,33 @@
     <string name="action_export">Export as…</string>
     <string name="section_variants">Variants</string>
     <string name="section_evolves">Evolves from</string>
-
-    <string name="deck_list_example" translatable="false">
-
-    </string>
     <string name="activity_deck_export">Export</string>
     <string name="action_share">Share</string>
     <string name="action_import">Import</string>
-    <string name="hint_import_field"><![CDATA[<p>Paste your decklist from Pokemon Trading Card Game Online or other sources such as LimitlessTCG.com here…\n
-\nYour deck list must follow the general format \nto import correctly:\n
-\n<b>COUNT</b> <b>CARD NAME</b> <b>SET CODE</b> <b>SET NUMBER</b>\n
-\nAll other lines will be ignored. For example:\n
-\n
-<i>Pokemon - 19</i>\n
-4 Inkay FLI 50\n
-4 Malamar FLI 51\n
-2 Marshadow-GX BUS 80\n
-2 Deoxys CES 67\n
-1 Necrozma-GX BUS 63\n
-1 Dawn Wings Necrozma-GX UPR 63\n
-1 Mimikyu GRI 58\n
-1 Chimecho CIN 43\n
-1 Tapu Lele-GX GRI 60\n
-1 Marshadow SLG 45\n
-1 Oricorio GRI 55\n
-</p>]]></string>
+    <string name="hint_import_field"><![CDATA[
+    <p>Paste your decklist from Pokemon Trading Card Game Online or other sources such as LimitlessTCG.com here…</p>
+    <p>Your deck list must follow the general format <br/>to import correctly:<p>
+    <br/>
+    <p><b>COUNT</b> <b>CARD NAME</b> <b>SET CODE</b> <b>SET NUMBER</b></p>
+    <br/>
+    <p>All other lines will be ignored. For example:</p>
+    <br/>
+    <i>Pokemon - 19</i>
+    <p>
+    4 Inkay FLI 50<br/>
+    4 Malamar FLI 51<br/>
+    2 Marshadow-GX BUS 80<br/>
+    2 Deoxys CES 67<br/>
+    1 Necrozma-GX BUS 63<br/>
+    1 Dawn Wings Necrozma-GX UPR 63<br/>
+    1 Mimikyu GRI 58<br/>
+    1 Chimecho CIN 43<br/>
+    1 Tapu Lele-GX GRI 60<br/>
+    1 Marshadow SLG 45<br/>
+    1 Oricorio GRI 55<br/>
+    </p>
+    ]]>
+    </string>
     <string name="invalid_decklist">Your decklist is invalid. Please check and try again.</string>
     <string name="activity_settings">Settings</string>
     <string name="pref_category_about">About</string>
