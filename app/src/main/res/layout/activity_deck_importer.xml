@@ -66,6 +66,7 @@
         android:background="@color/transparent"
         android:hint="@string/hint_import_field"
         android:textSize="16sp"
+        android:inputType="text"
         />
 
     <ProgressBar

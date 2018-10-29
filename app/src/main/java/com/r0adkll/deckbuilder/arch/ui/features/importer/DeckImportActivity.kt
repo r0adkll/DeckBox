@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.text.HtmlCompat
 import com.ftinc.kit.kotlin.extensions.gone
 import com.ftinc.kit.kotlin.extensions.setVisible
 import com.ftinc.kit.kotlin.extensions.visible
@@ -58,6 +60,8 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+
+        deckList.hint = HtmlCompat.fromHtml(getString(R.string.hint_import_field), HtmlCompat.FROM_HTML_MODE_LEGACY)
 
         renderer.start()
         presenter.start()
