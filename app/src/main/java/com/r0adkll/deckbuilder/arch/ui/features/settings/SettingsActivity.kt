@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.settings
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -133,6 +134,10 @@ class SettingsActivity : BaseActivity() {
                     startActivity(intent)
                     true
                 }
+                "pref_reset_quickstart" -> {
+                    preferences.quickStart.set(true)
+                    true
+                }
                 "pref_account_link" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "link_account"))
                     signIn()
@@ -191,27 +196,26 @@ class SettingsActivity : BaseActivity() {
             val versionPref = findPreference("pref_about_version")
             versionPref.summary = BuildConfig.VERSION_NAME
 
+            val resetQuickStart = findPreference("pref_reset_quickstart")
+            resetQuickStart.isVisible = !preferences.quickStart.get()
+
+            @SuppressLint("RxSubscribeOnError")
+            disposables += preferences.quickStart.asObservable()
+                    .subscribe {
+                        resetQuickStart.isVisible = !it
+                    }
 
             /*
              * Debug options
              */
             if (BuildConfig.DEBUG) {
-                val disclaimer = preferenceManager.findPreference("pref_disclaimer")
+                val disclaimer = findPreference("pref_disclaimer")
                 preferenceScreen.removePreference(disclaimer)
 
                 val category = PreferenceCategory(activity)
                 category.title = "Developer"
                 preferenceScreen.addPreference(category)
                 preferenceScreen.addPreference(disclaimer)
-
-                val clearPreferenceQuickStart = Preference(activity)
-                clearPreferenceQuickStart.title = "Clear QuickStart"
-                clearPreferenceQuickStart.summary = "Delete the quick start preference flag"
-                clearPreferenceQuickStart.setOnPreferenceClickListener {
-                    preferences.quickStart.delete()
-                    true
-                }
-                category.addPreference(clearPreferenceQuickStart)
 
                 val clearPreferencePreview = Preference(activity)
                 clearPreferencePreview.title = "Clear Preview"

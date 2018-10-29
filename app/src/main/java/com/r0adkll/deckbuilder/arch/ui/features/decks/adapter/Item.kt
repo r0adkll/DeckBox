@@ -17,12 +17,10 @@ sealed class Item : RecyclerItem{
             else -> false
         }
 
-
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Preview -> new.spec == spec
             else -> false
         }
-
 
         override val layoutId: Int = R.layout.item_set_preview
     }
@@ -32,12 +30,10 @@ sealed class Item : RecyclerItem{
 
         override fun isItemSame(new: RecyclerItem): Boolean = new is QuickStart
 
-
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is QuickStart -> new.quickStart.templates == quickStart.templates
             else -> false
         }
-
 
         override val layoutId: Int = R.layout.item_quickstart
     }
@@ -50,14 +46,11 @@ sealed class Item : RecyclerItem{
             else -> false
         }
 
-
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is DeckItem -> new.deck == deck && new.isLoading == isLoading
             else -> false
         }
 
-
         override val layoutId: Int = R.layout.item_deck
     }
-
 }

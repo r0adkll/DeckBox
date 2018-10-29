@@ -8,11 +8,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
-import com.r0adkll.deckbuilder.util.extensions.Nullable
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
 
 
 interface DecksUi : StateRenderer<DecksUi.State> {

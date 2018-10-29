@@ -219,8 +219,10 @@
     <string name="pref_category_cache">Cache</string>
     <string name="pref_cache_manage_title">Offline data</string>
     <string name="pref_cache_manage_summary">Manage your cached card and image data</string>
-    <string name="account_migration_started">Uploading decks...</string>
+    <string name="account_migration_started">Uploading decks…</string>
     <string name="account_migration_finished">Decks uploaded!</string>
     <string name="deck_quickstart_title">Get started!</string>
-    <string name="deck_quickstart_message_extended">Start building your decks by picking one of the most recent tournament winners or theme decks.</string>
+    <string name="deck_quickstart_message_extended">Start building your decks by choosing from this list of recent tournament winners to get an edge on your opponents.</string>
+    <string name="pref_help_quickstart_title">Reshow quick start</string>
+    <string name="pref_help_quickstart_summary">Show the get started helper that let\'s you pick a deck template</string>
 </resources>

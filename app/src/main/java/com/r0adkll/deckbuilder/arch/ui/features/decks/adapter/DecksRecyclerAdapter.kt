@@ -39,7 +39,7 @@ class DecksRecyclerAdapter(
 
 
     override fun getItemViewType(position: Int): Int {
-        if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+        if (position != RecyclerView.NO_POSITION) {
             return items[position].viewType
         }
         return super.getItemViewType(position)

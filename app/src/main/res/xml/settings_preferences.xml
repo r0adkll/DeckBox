@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/pref_category_account">
 
@@ -37,9 +38,16 @@
         <Preference
             android:key="pref_help_feedback"
             android:title="@string/pref_help_feedback_title"
-
             android:summary="@string/pref_help_feedback_summary"
             />
+
+        <Preference
+            android:key="pref_reset_quickstart"
+            android:title="@string/pref_help_quickstart_title"
+            android:summary="@string/pref_help_quickstart_summary"
+            android:visible="false"
+            />
+
 
     </PreferenceCategory>
 
