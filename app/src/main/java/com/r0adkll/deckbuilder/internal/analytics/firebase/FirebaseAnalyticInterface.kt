@@ -48,6 +48,7 @@ class FirebaseAnalyticInterface(
         is Event.Search -> FirebaseAnalytics.Event.SEARCH
         is Event.SearchProxy -> FirebaseAnalytics.Event.SEARCH
         is Event.Share -> FirebaseAnalytics.Event.SHARE
+        Event.Logout -> "logout"
         Event.TutorialBegin -> FirebaseAnalytics.Event.TUTORIAL_BEGIN
         Event.TutorialComplete -> FirebaseAnalytics.Event.TUTORIAL_COMPLETE
     }

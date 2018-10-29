@@ -3,10 +3,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import com.r0adkll.deckbuilder.R
@@ -67,7 +67,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
             }
         }, false)
 
-        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        pager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
@@ -133,10 +133,10 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
 
     class HomePagerAdapter(
-            fragmentManager: FragmentManager
-    ) : FragmentPagerAdapter(fragmentManager) {
+            fragmentManager: androidx.fragment.app.FragmentManager
+    ) : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
 
-        override fun getItem(position: Int): Fragment? = when(position) {
+        override fun getItem(position: Int): androidx.fragment.app.Fragment? = when(position) {
             0 -> DecksFragment.newInstance()
             1 -> BrowseFragment.newInstance()
             else -> null

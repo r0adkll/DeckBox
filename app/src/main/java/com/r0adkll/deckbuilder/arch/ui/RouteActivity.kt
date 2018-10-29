@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
@@ -31,18 +31,19 @@ class RouteActivity : AppCompatActivity() {
         compatibilityCheck()
         remote.check()
 
-        if (firebase.currentUser != null || preferences.deviceId != null) {
+        if (firebase.currentUser != null || preferences.deviceId != null
+                || (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())) {
             firebase.currentUser?.uid?.let { Analytics.userId(it) }
             Shortcuts.addNewDeckShortcut(this)
             startActivity(HomeActivity.createIntent(this))
         }
         else {
             Shortcuts.clearShortcuts(this)
-            if (preferences.onboarding) {
+//            if (preferences.onboarding) {
                 startActivity(SetupActivity.createIntent(this))
-            } else {
-                startActivity(OnboardingActivity.createIntent(this))
-            }
+//            } else {
+//                startActivity(OnboardingActivity.createIntent(this))
+//            }
         }
 
         finish()
@@ -52,7 +53,7 @@ class RouteActivity : AppCompatActivity() {
     private fun compatibilityCheck() {
         if (preferences.lastVersion == -1 && preferences.onboarding) {
             // We want to disable the quickstart if the user has already passed the onboarding phase
-            preferences.quickStart = false
+            preferences.quickStart.set(false)
         }
 
         // Set the last version that was installed for future compat checks

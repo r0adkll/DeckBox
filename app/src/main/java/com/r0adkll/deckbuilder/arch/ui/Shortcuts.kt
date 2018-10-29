@@ -7,7 +7,7 @@ import android.content.pm.ShortcutManager
 import android.graphics.*
 import android.graphics.drawable.Icon
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.view.View
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition

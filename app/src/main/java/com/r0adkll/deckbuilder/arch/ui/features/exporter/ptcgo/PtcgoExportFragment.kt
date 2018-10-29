@@ -14,7 +14,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
-import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
@@ -36,7 +36,7 @@ class PtcgoExportFragment : BaseFragment() {
     @Inject lateinit var schedulers: Schedulers
     @Inject lateinit var deckRepository: DeckRepository
     @Inject lateinit var editRepository: EditRepository
-    @Inject lateinit var converter: PTCGOConverter
+    @Inject lateinit var exporter: PtcgoExporter
     @Inject lateinit var exportTask: ExportTask
 
 
@@ -52,7 +52,7 @@ class PtcgoExportFragment : BaseFragment() {
 
         if (exportTask.deckId != null) {
             disposables += deckRepository.getDeck(exportTask.deckId!!)
-                    .flatMap { converter.export(it.cards, it.name) }
+                    .flatMap { exporter.export(it.cards, it.name) }
                     .subscribeOn(schedulers.comp)
                     .observeOn(schedulers.main)
                     .subscribe({
@@ -63,7 +63,7 @@ class PtcgoExportFragment : BaseFragment() {
                     })
         } else {
             disposables += editRepository.getSession(exportTask.sessionId!!)
-                    .flatMap { converter.export(it.cards, it.name) }
+                    .flatMap { exporter.export(it.cards, it.name) }
                     .subscribeOn(schedulers.comp)
                     .observeOn(schedulers.main)
                     .subscribe({

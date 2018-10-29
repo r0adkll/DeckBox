@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.adapter
 
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +24,7 @@ class PokemonCardViewHolder(
         val startDragImmediately: Boolean = false,
         val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
         val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
-): RecyclerView.ViewHolder(itemView) {
+): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     val cardView: PokemonCardView by bindView(R.id.card)
     private val actionLayout: LinearLayout? by bindOptionalView(R.id.action_layout)

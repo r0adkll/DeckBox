@@ -4,7 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.View
 import com.ftinc.kit.kotlin.extensions.color
@@ -15,7 +15,7 @@ import com.r0adkll.deckbuilder.R
 
 class DotPageIndicator @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr), ViewPager.OnPageChangeListener {
+) : View(context, attrs, defStyleAttr), androidx.viewpager.widget.ViewPager.OnPageChangeListener {
 
     var index: Int = 0
         set(value) {
@@ -45,7 +45,7 @@ class DotPageIndicator @JvmOverloads constructor(
     val spacing: Float = dpToPx(8f)
 
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var pager: ViewPager? = null
+    private var pager: androidx.viewpager.widget.ViewPager? = null
 
 
     override fun onDetachedFromWindow() {
@@ -92,7 +92,7 @@ class DotPageIndicator @JvmOverloads constructor(
     }
 
 
-    fun setupWithViewPager(pager: ViewPager) {
+    fun setupWithViewPager(pager: androidx.viewpager.widget.ViewPager) {
         this.pager = pager
         max = pager.adapter?.count ?: 0
         pager.addOnPageChangeListener(this)

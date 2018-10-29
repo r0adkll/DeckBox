@@ -4,7 +4,7 @@ package com.r0adkll.deckbuilder.util.extensions
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.support.v4.util.PatternsCompat
+import androidx.core.util.PatternsCompat
 import android.text.Html
 import android.text.Spanned
 import android.text.TextUtils

@@ -2,8 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.FloatingActionButton
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import android.view.View
 import com.ftinc.kit.kotlin.extensions.dpToPx
@@ -13,13 +13,13 @@ import com.ftinc.kit.kotlin.extensions.dpToPx
 class ScrollAwareFABBehavior(
         context: Context,
         attrs: AttributeSet
-) : CoordinatorLayout.Behavior<FloatingActionButton>() {
+) : androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior<com.google.android.material.floatingactionbutton.FloatingActionButton>() {
 
     private val maxTransY = context.dpToPx(56f + 16f)
 
 
-    override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout,
-                                     child: FloatingActionButton,
+    override fun onStartNestedScroll(coordinatorLayout: androidx.coordinatorlayout.widget.CoordinatorLayout,
+                                     child: com.google.android.material.floatingactionbutton.FloatingActionButton,
                                      directTargetChild: View,
                                      target: View,
                                      nestedScrollAxes: Int,
@@ -28,8 +28,8 @@ class ScrollAwareFABBehavior(
     }
 
 
-    override fun onNestedScroll(coordinatorLayout: CoordinatorLayout,
-                                child: FloatingActionButton,
+    override fun onNestedScroll(coordinatorLayout: androidx.coordinatorlayout.widget.CoordinatorLayout,
+                                child: com.google.android.material.floatingactionbutton.FloatingActionButton,
                                 target: View,
                                 dxConsumed: Int, dyConsumed: Int,
                                 dxUnconsumed: Int, dyUnconsumed: Int,

@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Outline
 import android.graphics.Paint
-import android.support.annotation.ColorInt
-import android.support.v7.widget.AppCompatImageView
+import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider

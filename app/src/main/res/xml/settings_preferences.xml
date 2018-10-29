@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/pref_category_account">
 
@@ -22,24 +23,31 @@
 
     </PreferenceCategory>
 
-    <!--<PreferenceCategory android:title="Offline">-->
+    <PreferenceCategory android:title="@string/pref_category_cache">
 
-        <!--<Preference-->
-            <!--android:key="pref_cache_cards"-->
-            <!--android:title="@string/pref_offline_cache_download_title"-->
-            <!--android:summary="@string/pref_offline_cache_download_summary"-->
-            <!--/>-->
+        <Preference
+            android:key="pref_cache_manage"
+            android:title="@string/pref_cache_manage_title"
+            android:summary="@string/pref_cache_manage_summary"
+            />
 
-    <!--</PreferenceCategory>-->
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_help">
 
         <Preference
             android:key="pref_help_feedback"
             android:title="@string/pref_help_feedback_title"
-
             android:summary="@string/pref_help_feedback_summary"
             />
+
+        <Preference
+            android:key="pref_reset_quickstart"
+            android:title="@string/pref_help_quickstart_title"
+            android:summary="@string/pref_help_quickstart_summary"
+            android:visible="false"
+            />
+
 
     </PreferenceCategory>
 
@@ -77,6 +85,7 @@
     </PreferenceCategory>
 
     <Preference
+        android:key="pref_disclaimer"
         android:layout="@layout/layout_disclaimer"
         />
 

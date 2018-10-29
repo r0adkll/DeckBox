@@ -6,6 +6,6 @@
 /build
 /captures
 .externalNativeBuild
-tools/reprint_hashes.txt
-tools/reprints.txt
-tools/reprints.json
+tools/scripts/reprint_hashes.txt
+tools/scripts/reprints.txt
+tools/scripts/*.json

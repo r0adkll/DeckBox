@@ -2,9 +2,9 @@ package com.r0adkll.deckbuilder.arch.ui.components
 
 
 import android.content.Context
-import android.support.v7.util.DiffUtil
-import android.support.v7.util.ListUpdateCallback
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListUpdateCallback
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import timber.log.Timber
@@ -13,9 +13,9 @@ import java.util.ArrayList
 import java.util.Collections
 
 
-abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
+abstract class ListRecyclerAdapter<M, VH : androidx.recyclerview.widget.RecyclerView.ViewHolder>(
         protected val context: Context
-) : RecyclerView.Adapter<VH>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<VH>() {
 
     /**
      * Used to inflate the layouts of all the items
@@ -175,7 +175,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
      */
     private val mEmptyObserver = EmptyObserver()
 
-    inner class EmptyObserver : RecyclerView.AdapterDataObserver() {
+    inner class EmptyObserver : androidx.recyclerview.widget.RecyclerView.AdapterDataObserver() {
         override fun onChanged() {
             checkIfEmpty()
         }
@@ -251,7 +251,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         if (itemClickListener != null) {
             vh.itemView.setOnClickListener { v ->
                 val position = vh.adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
+                if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
                     itemClickListener!!.onItemClick(v, items[position], position)
                 }
             }
@@ -261,7 +261,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         if (itemLongClickListener != null) {
             vh.itemView.setOnLongClickListener { v ->
                 val position = vh.adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
+                if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
                     itemLongClickListener!!.onItemLongClick(v, items[position], position)
                 } else {
                     false
@@ -282,7 +282,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
             if (item != null) return item.hashCode().toLong()
             return position.toLong()
         }
-        return RecyclerView.NO_ID
+        return androidx.recyclerview.widget.RecyclerView.NO_ID
     }
 
 

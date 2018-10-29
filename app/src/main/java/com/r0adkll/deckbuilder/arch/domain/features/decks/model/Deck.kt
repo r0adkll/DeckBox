@@ -15,20 +15,17 @@ data class Deck(
         val description: String,
         val image: DeckImage?,
         val cards: List<PokemonCard>,
+        val isMissingCards: Boolean,
         val timestamp: Long
 ) : PaperParcelable {
 
-    val standardLegal: Boolean get() = cards.none { !(it.expansion?.standardLegal ?: false) }
-    val expandedLegal: Boolean get() = cards.none { !(it.expansion?.expandedLegal ?: false) }
     val pokemonCount: Int get() = cards.count { it.supertype == SuperType.POKEMON }
     val trainerCount: Int get() = cards.count { it.supertype == SuperType.TRAINER }
     val energyCount: Int get() = cards.count { it.supertype == SuperType.ENERGY }
 
-
     override fun toString(): String {
-        return "Deck(id='$id', name='$name', description='$description', cards=${cards.size}, timestamp=$timestamp)"
+        return "Deck(id='$id', name='$name', description='$description', cards=${cards.size}, isMissingCards=$isMissingCards, timestamp=$timestamp)"
     }
-
 
     companion object {
         @JvmField val CREATOR = PaperParcelDeck.CREATOR

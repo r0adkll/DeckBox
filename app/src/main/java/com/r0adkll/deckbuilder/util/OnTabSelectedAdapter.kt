@@ -1,17 +1,17 @@
 package com.r0adkll.deckbuilder.util
 
 
-import android.support.design.widget.TabLayout
+import com.google.android.material.tabs.TabLayout
 
 
-abstract class OnTabSelectedAdapter : TabLayout.OnTabSelectedListener {
+abstract class OnTabSelectedAdapter : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
 
-    override fun onTabReselected(tab: TabLayout.Tab) {
+    override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab) {
     }
 
-    override fun onTabUnselected(tab: TabLayout.Tab) {
+    override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab) {
     }
 
-    override fun onTabSelected(tab: TabLayout.Tab) {
+    override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
     }
 }
