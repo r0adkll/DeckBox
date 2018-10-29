@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import com.ftinc.kit.kotlin.extensions.clear
@@ -34,6 +35,7 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
 import javax.inject.Inject
 

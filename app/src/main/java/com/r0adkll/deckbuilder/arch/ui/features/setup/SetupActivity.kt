@@ -68,13 +68,6 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             action_continue.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
         }
 
-        val testLabSetting = Settings.System.getString(contentResolver, "firebase.test.lab")
-        if ("true" == testLabSetting) {
-            @SuppressLint("SetTextI18n")
-            action_continue.text = "Go away bots!!"
-            action_continue.isEnabled = false
-        }
-
         actionPrivacyPolicy.setOnClickListener {
             startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
         }
