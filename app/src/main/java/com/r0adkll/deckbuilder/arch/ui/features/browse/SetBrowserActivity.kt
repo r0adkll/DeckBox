@@ -12,13 +12,8 @@ import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import com.google.android.material.tabs.TabLayout
 import androidx.core.graphics.ColorUtils
-import androidx.palette.graphics.Palette
-import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.util.UIUtils
@@ -49,8 +44,8 @@ import com.r0adkll.deckbuilder.util.extensions.addLayoutHeight
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.palette.PaletteBitmap
-import com.r0adkll.deckbuilder.util.palette.PaletteBitmapViewTarget
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_set_browser.*
 import javax.inject.Inject

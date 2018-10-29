@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.util.svg;
+package com.r0adkll.deckbuilder.util.glide.svg;
 
 import androidx.annotation.NonNull;
 import com.bumptech.glide.load.Options;

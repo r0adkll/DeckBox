@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.util.palette;
+package com.r0adkll.deckbuilder.util.glide.palette;
 
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;

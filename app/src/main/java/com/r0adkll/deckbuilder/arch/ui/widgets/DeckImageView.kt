@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
-import android.widget.ImageView
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
@@ -46,6 +45,12 @@ class DeckImageView @JvmOverloads constructor(
     var forceAspectRatio = false
     var primaryType: Type? = null
     var secondaryType: Type? = null
+
+    var topCropEnabled: Boolean = false
+        set(value) {
+            field = value
+            scaleType = ScaleType.MATRIX
+        }
 
 
     init {
@@ -134,8 +139,15 @@ class DeckImageView @JvmOverloads constructor(
         }
     }
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        computeMatrix()
+    }
+
 
     override fun setFrame(l: Int, t: Int, r: Int, b: Int): Boolean {
+        computeMatrix()
+
         val changed = super.setFrame(l, t, r, b)
         mBounds = Rect(0, 0, r - l, b - t)
         mBoundsF = RectF(mBounds)
@@ -253,6 +265,18 @@ class DeckImageView @JvmOverloads constructor(
         primaryType = null
         secondaryType = null
         setImageDrawable(null)
+    }
+
+
+    private fun computeMatrix() {
+        if (topCropEnabled && drawable != null) {
+            val padding = dpToPx(8f)
+            val matrix = imageMatrix
+            val scaleFactor = (width + 2*padding) / drawable.intrinsicWidth.toFloat()
+            matrix.setScale(scaleFactor, scaleFactor, 0f, 0f)
+            matrix.postTranslate(-padding, -padding)
+            imageMatrix = matrix
+        }
     }
 
 

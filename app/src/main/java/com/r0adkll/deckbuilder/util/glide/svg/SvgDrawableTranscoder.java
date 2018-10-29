@@ -1,10 +1,10 @@
-package com.r0adkll.deckbuilder.util.svg;
+package com.r0adkll.deckbuilder.util.glide.svg;
 
 import android.graphics.Picture;
 import android.graphics.drawable.PictureDrawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.bumptech.glide.load.Options;
+
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.resource.SimpleResource;
 import com.bumptech.glide.load.resource.transcode.ResourceTranscoder;

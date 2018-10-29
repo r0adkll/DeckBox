@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.util.palette;
+package com.r0adkll.deckbuilder.util.glide.palette;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -16,8 +16,8 @@ import com.bumptech.glide.util.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.r0adkll.deckbuilder.util.palette.PaletteBitmapViewTarget.*;
-import static com.r0adkll.deckbuilder.util.palette.PaletteTargetBuilder.*;
+import static com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget.*;
+import static com.r0adkll.deckbuilder.util.glide.palette.PaletteTargetBuilder.*;
 
 /**
  * Builder and executor of basic Swatch applications to Views.

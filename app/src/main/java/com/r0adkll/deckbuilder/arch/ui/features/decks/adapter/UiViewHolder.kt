@@ -26,8 +26,8 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.extensions.toBitmap
-import com.r0adkll.deckbuilder.util.svg.SvgSoftwareLayerSetter
-import com.r0adkll.deckbuilder.util.svg.SvgViewTarget
+import com.r0adkll.deckbuilder.util.glide.svg.SvgSoftwareLayerSetter
+import com.r0adkll.deckbuilder.util.glide.svg.SvgViewTarget
 import timber.log.Timber
 
 
@@ -209,6 +209,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.w
 
         @SuppressLint("ClickableViewAccessibility")
         override fun bind(item: Item.DeckItem) {
+            image.topCropEnabled = true
+
             val deck = item.deck
             title.text = deck.name
             error.setVisible(item.deck.isMissingCards)

@@ -24,7 +24,7 @@ class DefaultDeckRepository @Inject constructor(
 
     override fun getDecks(): Observable<List<Deck>> {
         return cache.getDecks()
-                .subscribeOn(schedulers.firebase)
+//                .subscribeOn(schedulers.firebase)
     }
 
 

@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.util.palette;
+package com.r0adkll.deckbuilder.util.glide.palette;
 
 import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
@@ -8,7 +8,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.util.Preconditions;
-import com.r0adkll.deckbuilder.R;
 
 /**
  * A {@link com.bumptech.glide.request.target.Target} that can display an {@link

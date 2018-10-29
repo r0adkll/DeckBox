@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.util.svg;
+package com.r0adkll.deckbuilder.util.glide.svg;
 
 import android.widget.ImageView;
 import com.bumptech.glide.load.DataSource;

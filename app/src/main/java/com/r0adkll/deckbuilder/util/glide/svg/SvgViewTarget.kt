@@ -1,9 +1,8 @@
-package com.r0adkll.deckbuilder.util.svg
+package com.r0adkll.deckbuilder.util.glide.svg
 
 import android.graphics.drawable.PictureDrawable
 import android.widget.ImageView
 import com.bumptech.glide.request.target.ImageViewTarget
-import com.caverock.androidsvg.RenderOptions
 import com.caverock.androidsvg.SVG
 import timber.log.Timber
 

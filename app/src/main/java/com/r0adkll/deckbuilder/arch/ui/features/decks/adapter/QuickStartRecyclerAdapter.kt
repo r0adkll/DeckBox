@@ -8,8 +8,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
@@ -163,6 +161,8 @@ class QuickStartRecyclerAdapter(
 
 
             override fun bind(item: Item.Template) {
+                image.topCropEnabled = true
+
                 val deck = item.template.deck
                 deck.image?.let {
                     when(it) {

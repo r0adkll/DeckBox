@@ -15,6 +15,5 @@ class DefaultCommunityRepository @Inject constructor(
 
     override fun getDeckTemplates(): Observable<List<DeckTemplate>> {
         return cache.getDeckTemplates()
-                .subscribeOn(schedulers.firebase)
     }
 }

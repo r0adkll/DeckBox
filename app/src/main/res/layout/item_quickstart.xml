@@ -40,7 +40,9 @@
             android:paddingEnd="@dimen/padding_normal"
             android:text="@string/deck_quickstart_title"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            />
 
         <TextView
             android:id="@+id/message"
@@ -63,11 +65,15 @@
         android:layout_marginEnd="-8dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:elevation="@dimen/cardview_default_elevation"
         android:minHeight="160dp"
         android:orientation="horizontal"
         android:clipToPadding="false"
+        android:clipChildren="false"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_deck_placeholder" />
 
     <Button

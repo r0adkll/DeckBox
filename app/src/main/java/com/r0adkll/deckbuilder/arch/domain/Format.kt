@@ -7,5 +7,12 @@ enum class Format {
     EXPANDED,
     UNLIMITED,
     LEGACY,
-    THEME
+    THEME;
+
+    companion object {
+
+        fun of(value: String): Format {
+            return values().find { it.name.equals(value, true) } ?: UNLIMITED
+        }
+    }
 }

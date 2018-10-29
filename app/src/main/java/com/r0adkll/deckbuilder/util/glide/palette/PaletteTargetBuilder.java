@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.util.palette;
+package com.r0adkll.deckbuilder.util.glide.palette;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;

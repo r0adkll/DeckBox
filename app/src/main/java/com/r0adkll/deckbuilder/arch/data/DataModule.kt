@@ -1,7 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data
 
 
-import android.accounts.AccountAuthenticatorResponse
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
@@ -114,7 +113,7 @@ class DataModule {
      */
     @Provides @AppScope
     fun provideRoomDatabase(context: Context): DeckDatabase {
-        return Room.databaseBuilder(context, DeckDatabase::class.java, "Room_" + BuildConfig.DATABASE_NAME)
+        return Room.databaseBuilder(context, DeckDatabase::class.java, BuildConfig.DATABASE_NAME)
                 .build()
     }
 
@@ -182,22 +181,6 @@ class DataModule {
     @Provides @AppScope
     fun provideMissingCardRepository(repository: DefaultMissingCardRepository): MissingCardRepository = repository
 
-
-    @Provides @AppScope
-    fun provideDeckValidator(validator: DefaultDeckValidator): DeckValidator = validator
-
-
-    @Provides @AppScope
-    fun provideImporter(importer: DefaultImporter): Importer = importer
-
-
-    @Provides @AppScope
-    fun providePtcgoExporter(): PtcgoExporter = DefaultPtcgoExporter()
-
-
-    @Provides @AppScope
-    fun provideTournamentExporter(exporter: DefaultTournamentExporter): TournamentExporter = exporter
-
     /*
      * Deck Validation Rules
      */
@@ -216,5 +199,21 @@ class DataModule {
 
     @Provides @AppScope
     fun provideDeckTester(tester: DefaultDeckTester): DeckTester = tester
+
+
+    @Provides @AppScope
+    fun provideDeckValidator(validator: DefaultDeckValidator): DeckValidator = validator
+
+
+    @Provides @AppScope
+    fun provideImporter(importer: DefaultImporter): Importer = importer
+
+
+    @Provides @AppScope
+    fun providePtcgoExporter(): PtcgoExporter = DefaultPtcgoExporter()
+
+
+    @Provides @AppScope
+    fun provideTournamentExporter(exporter: DefaultTournamentExporter): TournamentExporter = exporter
 
 }

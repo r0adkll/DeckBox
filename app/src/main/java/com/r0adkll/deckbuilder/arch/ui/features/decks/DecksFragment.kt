@@ -157,6 +157,12 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     preferences.quickStart.set(false)
                 }
 
+        @SuppressLint("RxSubscribeOnError")
+        disposables += quickStartClicks
+                .subscribe {
+                    createSession.accept(it)
+                }
+
         renderer.start()
         presenter.start()
     }
