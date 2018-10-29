@@ -1,8 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
-import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 
 

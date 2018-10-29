@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.playtest
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player
-import io.requery.query.Order
 import java.util.*
 
 
