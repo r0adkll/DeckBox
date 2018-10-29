@@ -70,7 +70,7 @@
     <string name="action_share">Share</string>
     <string name="action_import">Import</string>
     <string name="hint_import_field"><![CDATA[
-    <p>Paste your decklist from Pokemon Trading Card Game Online or other sources such as LimitlessTCG.com here…</p>
+    <p>Paste your decklist from Pokemon Trading Card <br/>Game Online or other sources such as LimitlessTCG.com here…</p>
     <p>Your deck list must follow the general format <br/>to import correctly:<p>
     <br/>
     <p><b>COUNT</b> <b>CARD NAME</b> <b>SET CODE</b> <b>SET NUMBER</b></p>
