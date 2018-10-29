@@ -278,7 +278,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                                     SubTypeAttribute(TECHNICAL_MACHINE),
                                     SubTypeAttribute(POKEMON_TOOL),
                                     SubTypeAttribute(ROCKETS_SECRET_MACHINE),
-                                    ContainsAttribute("AbilityEntity")
+                                    ContainsAttribute("Ability")
                             )),
                             Spec.ExpansionSpec(expansions, visibility),
                             Spec.RaritySpec(Rarity.values().toList()),
@@ -310,7 +310,7 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                                     SubTypeAttribute(BREAK),
                                     SubTypeAttribute(LEGEND),
                                     SubTypeAttribute(RESTORED),
-                                    ContainsAttribute("AbilityEntity")
+                                    ContainsAttribute("Ability")
                             )),
                             Spec.ExpansionSpec(expansions, visibility),
                             Spec.RaritySpec(Rarity.values().toList()),

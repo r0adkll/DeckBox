@@ -76,8 +76,8 @@ object FilterQueryHelper {
 
         // Adjust query for contains
         filter?.contains?.forEach {
-            if (it.equals("AbilityEntity", true)) {
-                filterQuery = filterQuery.and("ability_name".notNull())
+            if (it.equals("Ability", true)) {
+                filterQuery = filterQuery.and("ability".notNull())
             } // else ignore
         }
 
