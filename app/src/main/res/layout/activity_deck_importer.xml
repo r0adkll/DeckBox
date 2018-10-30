@@ -15,7 +15,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:elevation="@dimen/appbar_elevation"
         app:navigationIcon="@drawable/ic_close_white_24dp"
-        app:title="@string/action_import"
+        app:title="@string/activity_deck_import"
         />
 
 
@@ -66,7 +66,6 @@
         android:background="@color/transparent"
         android:hint="@string/hint_import_field"
         android:textSize="16sp"
-        android:inputType="text"
         />
 
     <ProgressBar

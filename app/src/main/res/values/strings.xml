@@ -67,16 +67,15 @@
     <string name="section_variants">Variants</string>
     <string name="section_evolves">Evolves from</string>
     <string name="activity_deck_export">Export</string>
+    <string name="activity_deck_import">Import cards</string>
     <string name="action_share">Share</string>
     <string name="action_import">Import</string>
     <string name="hint_import_field"><![CDATA[
-    <p>Paste your decklist from Pokemon Trading Card <br/>Game Online or other sources such as LimitlessTCG.com here…</p>
-    <p>Your deck list must follow the general format <br/>to import correctly:<p>
+    <p>Paste your decklist from Pokemon Trading Card <br/>Game Online or other sources such as <br/>LimitlessTCG.com here…</p>
+    <p>The items in your decklist must follow this format <br/>to import correctly otherwise it will be ignored.<p>
+    <p><b>[COUNT]</b> <b>[CARD NAME]</b> <b>[SET CODE]</b> <b>[SET NUMBER]</b></p>
     <br/>
-    <p><b>COUNT</b> <b>CARD NAME</b> <b>SET CODE</b> <b>SET NUMBER</b></p>
-    <br/>
-    <p>All other lines will be ignored. For example:</p>
-    <br/>
+    <p>For example:</p>
     <i>Pokemon - 19</i>
     <p>
     4 Inkay FLI 50<br/>
@@ -93,6 +92,8 @@
     </p>
     ]]>
     </string>
+    <string name="import_clipboard_found_message">Found a decklist in your clipboard. Would you like to paste it in now?</string>
+    <string name="action_paste">Paste</string>
     <string name="invalid_decklist">Your decklist is invalid. Please check and try again.</string>
     <string name="activity_settings">Settings</string>
     <string name="pref_category_about">About</string>
