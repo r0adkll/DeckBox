@@ -74,7 +74,7 @@
             android:theme="@style/Theme.DeckBuilder.Splash"
             />
 
-        <service android:name=".arch.data.features.cards.service.CacheService"
+        <service android:name=".arch.data.features.offline.service.CacheService"
                  android:exported="false" />
 
         <provider

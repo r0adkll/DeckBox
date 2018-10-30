@@ -1,7 +1,7 @@
-package com.r0adkll.deckbuilder.arch.domain.features.cards
+package com.r0adkll.deckbuilder.arch.domain.features.offline
 
 
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
+import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import io.reactivex.Observable
 
 

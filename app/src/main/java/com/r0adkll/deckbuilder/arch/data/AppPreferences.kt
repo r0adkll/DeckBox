@@ -30,15 +30,12 @@ class AppPreferences @Inject constructor(
 
         const val KEY_LAST_VERSION = "pref_last_version"
         const val KEY_DEVICE_ID = "pref_local_offline_device_id"
-
-        const val KEY_OFFLINE_ENABLED = "pref_offline_enabled"
     }
 
 
     var onboarding by BooleanPreference(KEY_ONBOARDING, false)
     var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
     var deviceId by StringPreference(KEY_DEVICE_ID)
-    var offlineEnabled by BooleanPreference(KEY_OFFLINE_ENABLED, false)
     var expansionsVersion by IntPreference(KEY_EXPANSIONS_VERSION, 1)
 
     val offlineId by ReactiveStringPreference(KEY_OFFLINE_ID)

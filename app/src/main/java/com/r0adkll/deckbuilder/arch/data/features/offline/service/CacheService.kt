@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.cards.service
+package com.r0adkll.deckbuilder.arch.data.features.offline.service
 
 import android.annotation.TargetApi
 import android.app.IntentService
@@ -13,11 +13,16 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.DeckApp
+import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
-import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.CacheStatus
+import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.offline.CacheManager
+import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
+import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
+import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.util.extensions.retryWithBackoff
 import io.pokemontcg.Pokemon
@@ -30,11 +35,17 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
     @Inject lateinit var api: Pokemon
     @Inject lateinit var preferences: AppPreferences
-    @Inject lateinit var cacheManager: CacheManager
+    @Inject lateinit var offlineStatusConsumer: OfflineStatusConsumer
     @Inject lateinit var cardCache: CardCache
 
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
 
+    private var cacheStatus: Pair<String, CacheStatus>? = null
+        set(value) {
+            if (value != null) {
+                offlineStatusConsumer.status = offlineStatusConsumer.status.set(value)
+            }
+        }
 
     override fun onCreate() {
         super.onCreate()
@@ -43,20 +54,40 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
 
     override fun onHandleIntent(intent: Intent?) {
-        Timber.i("onHandleIntent(${preferences.offlineEnabled})")
-        if (preferences.offlineEnabled) {
-            deleteCardData()
-        } else {
-            cacheCardData()
+        val request = intent?.getParcelableExtra<DownloadRequest>(EXTRA_REQUEST)
+        if (request != null) {
+            Timber.i("onHandleIntent($request)")
+            when (request) {
+                is DownloadRequest.Cards -> cacheCardData(request.expansion)
+                is DownloadRequest.Images -> cacheCardImages(request.expansion)
+            }
         }
     }
 
 
-    private fun deleteCardData() {
-        cacheManager.updateCacheStatus(CacheStatus.Deleting)
-        cardCache.clear()
-        preferences.offlineEnabled = false
-        cacheManager.updateCacheStatus(CacheStatus.Empty)
+    private fun cacheCardData(expansion: Expansion?) {
+        if (expansion == null) {
+            cacheCardData()
+        } else {
+            // Update cache status and notification
+            cacheStatus = expansion.code to CacheStatus.Downloading
+            showExpansionNotification(expansion, CacheStatus.Downloading)
+
+            try {
+                val cardModels = getExpansion(expansion)
+
+                // Store into database
+                cardCache.putCards(cardModels)
+                Timber.i("Expansion(${expansion.code}) inserted into database")
+
+                cacheStatus = expansion.code to CacheStatus.Cached
+                showExpansionNotification(expansion, CacheStatus.Cached)
+            } catch (e: Exception) {
+                Timber.e("Something went wrong when trying to cache ${expansion.name} card data")
+                showExpansionNotification(expansion, null)
+                cacheStatus = expansion.code to CacheStatus.Empty
+            }
+        }
     }
 
 
@@ -66,7 +97,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             var count = 0
 
             showNotification(0, false, false)
-            cacheManager.updateCacheStatus(CacheStatus.Downloading(0))
+            cacheStatus = OfflineStatus.ALL to CacheStatus.Downloading
 
             do {
                 val cardModels = getPage(page)
@@ -80,20 +111,18 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                 page++
 
                 showNotification(count, true, false)
-                cacheManager.updateCacheStatus(CacheStatus.Downloading(count))
 
             } while (cardModels.size == PAGE_SIZE)
 
             Timber.i("$count cards over $page pages inserted into database")
 
-            preferences.offlineEnabled = true
-            cacheManager.updateCacheStatus(CacheStatus.Cached)
+            cacheStatus = OfflineStatus.ALL to CacheStatus.Cached
             showNotification(count, false, true)
 
         } catch(e: Exception) {
             Timber.e(e, "Something went terribly wrong when caching card data")
             showNotification(-1, false, true)
-            cacheManager.updateCacheStatus(CacheStatus.Empty)
+            cacheStatus = OfflineStatus.ALL to CacheStatus.Empty
         }
     }
 
@@ -107,6 +136,23 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                 .observeAll()
                 .retryWithBackoff()
                 .blockingSingle()
+    }
+
+
+    private fun getExpansion(expansion: Expansion): List<Card> {
+        return api.card()
+                .where {
+                    setCode = expansion.code
+                    pageSize = PAGE_SIZE
+                }
+                .observeAll()
+                .retryWithBackoff()
+                .blockingSingle()
+    }
+
+
+    private fun cacheCardImages(expansion: Expansion) {
+
     }
 
 
@@ -162,13 +208,52 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
+    private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?) {
+        createChannel()
+
+        val title = when(status) {
+            CacheStatus.Empty -> getString(R.string.notification_caching_title_start)
+            CacheStatus.Downloading -> getString(R.string.notification_caching_title)
+            CacheStatus.Cached -> getString(R.string.notification_caching_title_finished)
+            else -> getString(R.string.notification_caching_title_error)
+        }
+
+        val text = when (status) {
+            null -> getString(R.string.notification_caching_text_error)
+            CacheStatus.Empty -> getString(R.string.notification_caching_text)
+            else -> getString(R.string.notification_expansion_caching_text_format, expansion.name)
+        }
+
+        val intent = RouteActivity.createIntent(this)
+        val pending = PendingIntent.getActivity(this, 0, intent, 0)
+
+        val isOngoing = status != null && (status == CacheStatus.Downloading || status == CacheStatus.Empty)
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setContentIntent(pending)
+                .setColor(color(R.color.primaryColor))
+                .setOngoing(isOngoing)
+                .setSmallIcon(when(status == CacheStatus.Downloading){
+                    true -> android.R.drawable.stat_sys_download
+                    else -> android.R.drawable.stat_sys_download_done
+                })
+                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                .build()
+
+        notificationManager.notify(NOTIFICATION_ID, notification)
+    }
+
+
     companion object {
+        private const val EXTRA_REQUEST = "CacheService.Request"
         private const val NOTIFICATION_ID = 100
         private const val CHANNEL_ID = "deckbox-notifications"
         private const val PAGE_SIZE = 1000
 
-        fun start(context: Context) {
+        fun start(context: Context, request: DownloadRequest) {
             val intent = Intent(context, CacheService::class.java)
+            intent.putExtra(EXTRA_REQUEST, request)
             context.startService(intent)
         }
     }

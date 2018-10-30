@@ -4,7 +4,7 @@ package com.r0adkll.deckbuilder.internal.di
 import com.r0adkll.deckbuilder.BuildModule
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.DataModule
-import com.r0adkll.deckbuilder.arch.data.features.cards.service.CacheService
+import com.r0adkll.deckbuilder.arch.data.features.offline.service.CacheService
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.arch.ui.ShortcutActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserComponent
@@ -14,7 +14,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckImageComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckImageModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportModule
@@ -25,8 +24,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsComponent
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsModule
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
-import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewComponent
-import com.r0adkll.deckbuilder.arch.ui.features.overview.di.OverviewModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
