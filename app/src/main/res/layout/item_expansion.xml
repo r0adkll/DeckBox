@@ -11,70 +11,90 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.r0adkll.deckbuilder.arch.ui.widgets.AspectRatioImageView
-            android:id="@+id/logo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_gravity="center"
-            tools:src="@drawable/dr_smcs_logo"
-            app:ratioType="width"
-            />
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:layout_margin="16dp"
-            >
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="?android:textColorPrimaryInverse"
-                android:textSize="20sp"
-                android:fontFamily="sans-serif-medium"
-                tools:text="Guardians Rising"
+            <com.r0adkll.deckbuilder.arch.ui.widgets.AspectRatioImageView
+                android:id="@+id/logo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="center"
+                tools:src="@drawable/dr_smcs_logo"
+                app:ratioType="width"
                 />
 
-            <TextView
-                android:id="@+id/series"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                >
 
-                android:textColor="?android:textColorPrimaryInverse"
-                android:textSize="14sp"
-                tools:text="Sun &amp; Moon"
-                />
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimaryInverse"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-medium"
+                    tools:text="Guardians Rising"
+                    />
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/series"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="?android:textColorPrimaryInverse"
+                    android:textSize="14sp"
+                    tools:text="Sun &amp; Moon"
+                    />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="?android:textColorSecondaryInverse"
+                    android:textSize="14sp"
+                    tools:text="Released 11/03/2017"
+                    />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/actionDownload"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:textColor="?android:textColorSecondaryInverse"
-                android:textSize="14sp"
-                tools:text="Released 11/03/2017"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/progress_download"
+                android:tint="@color/black"
                 />
 
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/action_layout"
+            android:id="@+id/downloadLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:paddingBottom="8dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <ProgressBar
                 android:id="@+id/downloadProgress"
@@ -84,18 +104,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:visibility="gone"
-                tools:progress="25"
-                />
-
-            <ImageView
-                android:id="@+id/actionDownload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:padding="8dp"
-                android:src="@drawable/ic_cloud_download_white_24dp"
-                android:tint="@color/black"
+                android:indeterminate="true"
                 />
 
         </FrameLayout>

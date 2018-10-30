@@ -1,17 +1,19 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browser
 
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
+import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.ExpansionRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.browser.di.BrowseModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
@@ -33,6 +35,8 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
 
     private lateinit var adapter: ExpansionRecyclerAdapter
 
+    private val downloadClicks = PublishRelay.create<Expansion>()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browse, container, false)
@@ -42,17 +46,21 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = ExpansionRecyclerAdapter(activity!!)
+        adapter = ExpansionRecyclerAdapter(activity!!, downloadClicks)
         adapter.setEmptyView(emptyView)
         adapter.setOnItemClickListener {
-            Analytics.event(Event.SelectContent.Action("expansion", it.name))
-            val intent = SetBrowserActivity.createIntent(activity!!, it)
-            startActivity(intent)
+            when(it) {
+                is Item.ExpansionSet -> {
+                    Analytics.event(Event.SelectContent.Action("expansion", it.expansion.name))
+                    val intent = SetBrowserActivity.createIntent(activity!!, it.expansion)
+                    startActivity(intent)
+                }
+            }
         }
         recycler.layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            androidx.recyclerview.widget.GridLayoutManager(activity!!, 3)
+            GridLayoutManager(activity!!, 3)
         } else {
-            androidx.recyclerview.widget.LinearLayoutManager(activity!!)
+            LinearLayoutManager(activity!!)
         }
         recycler.adapter = adapter
 
@@ -103,8 +111,8 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     }
 
 
-    override fun setExpansions(expansions: List<Expansion>) {
-        adapter.setExpansions(expansions)
+    override fun setExpansionsItems(items: List<Item>) {
+        adapter.setExpansionItems(items)
     }
 
 

@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
+import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
 import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
@@ -22,7 +23,7 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
 
     interface Actions : BaseActions {
 
-        fun setExpansions(expansions: List<Expansion>)
+        fun setExpansionsItems(items: List<Item>)
     }
 
 
