@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser.adapter
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         private val series by bindView<TextView>(R.id.series)
         private val date by bindView<TextView>(R.id.date)
         private val actionDownload by bindView<ImageView>(R.id.actionDownload)
-        private val downloadProgress by bindView<FrameLayout>(R.id.downloadLayout)
+        private val downloadProgress by bindView<ProgressBar>(R.id.downloadProgress)
 
 
         override fun bind(item: Item.ExpansionSet) {
@@ -39,6 +40,11 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             series.text = item.expansion.series
             date.text = string(R.string.expansion_released_date_format, item.expansion.releaseDate)
             downloadProgress.setVisible(item.offlineStatus == CacheStatus.Downloading)
+            actionDownload.setImageResource(when(item.offlineStatus) {
+                CacheStatus.Downloading -> R.drawable.cloud_sync
+                CacheStatus.Cached -> R.drawable.ic_cloud_done_black_24dp
+                else -> R.drawable.cloud_download_outline
+            })
 
             GlideApp.with(itemView)
                     .load(item.expansion.logoUrl)
@@ -46,7 +52,9 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
                     .into(logo)
 
             actionDownload.setOnClickListener {
-                downloadClicks.accept(item.expansion)
+                if (item.offlineStatus == null || item.offlineStatus == CacheStatus.Empty) {
+                    downloadClicks.accept(item.expansion)
+                }
             }
         }
     }

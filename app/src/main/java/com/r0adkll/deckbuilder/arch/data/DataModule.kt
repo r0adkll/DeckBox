@@ -9,7 +9,6 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountRepository
-import com.r0adkll.deckbuilder.arch.data.features.offline.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
@@ -41,7 +40,6 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultD
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
-import com.r0adkll.deckbuilder.arch.domain.features.offline.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
@@ -139,10 +137,6 @@ class DataModule {
 
     @Provides @AppScope
     fun provideSessionCache(cache: RoomSessionCache): SessionCache = cache
-
-
-    @Provides @AppScope
-    fun provideCacheManager(manager: DefaultCacheManager): CacheManager = manager
 
 
     @Provides @AppScope

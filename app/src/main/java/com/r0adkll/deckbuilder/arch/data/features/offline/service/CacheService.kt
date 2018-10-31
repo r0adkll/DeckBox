@@ -7,19 +7,21 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.DeckApp
-import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
-import com.r0adkll.deckbuilder.arch.domain.features.offline.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
@@ -40,13 +42,6 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
 
-    private var cacheStatus: Pair<String, CacheStatus>? = null
-        set(value) {
-            if (value != null) {
-                offlineStatusConsumer.status = offlineStatusConsumer.status.set(value)
-            }
-        }
-
     override fun onCreate() {
         super.onCreate()
         DeckApp.component.inject(this)
@@ -65,27 +60,46 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
-    private fun cacheCardData(expansion: Expansion?) {
-        if (expansion == null) {
+    private fun updateCacheStatus(value: Pair<String, CacheStatus>) {
+        offlineStatusConsumer.status = offlineStatusConsumer.status.set(value)
+    }
+
+
+    private fun updateCacheStatus(values: Map<String, CacheStatus>) {
+        offlineStatusConsumer.status = offlineStatusConsumer.status.set(values)
+    }
+
+
+    private fun cacheCardData(expansions: List<Expansion>?) {
+        if (expansions == null) {
             cacheCardData()
         } else {
-            // Update cache status and notification
-            cacheStatus = expansion.code to CacheStatus.Downloading
-            showExpansionNotification(expansion, CacheStatus.Downloading)
+            // Update initial state of all expansions
+            updateCacheStatus(expansions.map { it.code to CacheStatus.Downloading }.toMap())
+            for (expansion in expansions){
+                // Update cache status and notification
+                showExpansionNotification(expansion, CacheStatus.Downloading)
 
-            try {
-                val cardModels = getExpansion(expansion)
+                try {
+                    val cardModels = getExpansion(expansion)
 
-                // Store into database
-                cardCache.putCards(cardModels)
-                Timber.i("Expansion(${expansion.code}) inserted into database")
+                    // Store into database
+                    cardCache.putCards(cardModels)
+                    Timber.i("Expansion(${expansion.code}) inserted into database")
 
-                cacheStatus = expansion.code to CacheStatus.Cached
-                showExpansionNotification(expansion, CacheStatus.Cached)
-            } catch (e: Exception) {
-                Timber.e("Something went wrong when trying to cache ${expansion.name} card data")
-                showExpansionNotification(expansion, null)
-                cacheStatus = expansion.code to CacheStatus.Empty
+                    // Update preferences
+                    val prefs = preferences.offlineExpansions.get().toMutableSet()
+                    prefs.add(expansion.code)
+                    preferences.offlineExpansions.set(prefs)
+
+                    // Notify UI and Notification
+                    updateCacheStatus(expansion.code to CacheStatus.Cached)
+                    showExpansionNotification(expansion, CacheStatus.Cached)
+                } catch (e: Exception) {
+                    Timber.e("Something went wrong when trying to cache ${expansion.name} card data")
+                    showExpansionNotification(expansion, null)
+                    updateCacheStatus(expansion.code to CacheStatus.Empty)
+                }
             }
         }
     }
@@ -97,7 +111,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             var count = 0
 
             showNotification(0, false, false)
-            cacheStatus = OfflineStatus.ALL to CacheStatus.Downloading
+            updateCacheStatus(OfflineStatus.ALL to CacheStatus.Downloading)
 
             do {
                 val cardModels = getPage(page)
@@ -116,13 +130,13 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
             Timber.i("$count cards over $page pages inserted into database")
 
-            cacheStatus = OfflineStatus.ALL to CacheStatus.Cached
+            updateCacheStatus(OfflineStatus.ALL to CacheStatus.Cached)
             showNotification(count, false, true)
 
         } catch(e: Exception) {
             Timber.e(e, "Something went terribly wrong when caching card data")
             showNotification(-1, false, true)
-            cacheStatus = OfflineStatus.ALL to CacheStatus.Empty
+            updateCacheStatus(OfflineStatus.ALL to CacheStatus.Empty)
         }
     }
 
@@ -208,7 +222,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
-    private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?) {
+    private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?, largeIcon: Bitmap? = null) {
         createChannel()
 
         val title = when(status) {
@@ -234,6 +248,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                 .setContentIntent(pending)
                 .setColor(color(R.color.primaryColor))
                 .setOngoing(isOngoing)
+                .setLargeIcon(largeIcon)
                 .setSmallIcon(when(status == CacheStatus.Downloading){
                     true -> android.R.drawable.stat_sys_download
                     else -> android.R.drawable.stat_sys_download_done

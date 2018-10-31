@@ -12,7 +12,7 @@ sealed class DownloadRequest : Parcelable{
      * @param expansion the expansion to download, or null for all cards
      */
     @Parcelize
-    data class Cards(val expansion: Expansion?) : DownloadRequest()
+    data class Cards(val expansion: List<Expansion>?) : DownloadRequest()
 
     /**
      * Download the card image data for offline use. Can only request this by the expansion

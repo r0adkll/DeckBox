@@ -8,6 +8,16 @@ import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 
 sealed class Item : RecyclerItem {
 
+    object OfflineOutline : Item() {
+
+        override val layoutId: Int = R.layout.item_expansion_outline
+
+        override fun isItemSame(new: RecyclerItem): Boolean = new is OfflineOutline
+
+        override fun isContentSame(new: RecyclerItem): Boolean = new is OfflineOutline
+    }
+
+
     data class ExpansionSet(val expansion: Expansion, val offlineStatus: CacheStatus?) : Item() {
 
         override val layoutId: Int = R.layout.item_expansion

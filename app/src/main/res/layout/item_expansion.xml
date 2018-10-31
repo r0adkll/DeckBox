@@ -8,7 +8,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:stateListAnimator="@animator/elevation_state_anim">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -79,36 +79,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:padding="8dp"
+                android:alpha=".54"
                 android:src="@drawable/cloud_download_outline"
                 android:tint="@color/black"
                 />
 
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/downloadLayout"
+        <ProgressBar
+            android:id="@+id/downloadProgress"
+            style="?android:progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:indeterminate="true"
+            android:layout_marginBottom="-6.5dp"
             android:visibility="gone"
-            tools:visibility="visible">
+            tools:visibility="visible"
+            />
 
-            <ProgressBar
-                android:id="@+id/downloadProgress"
-                style="?android:progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:indeterminate="true"
-                />
-
-        </FrameLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </androidx.cardview.widget.CardView>

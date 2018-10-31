@@ -17,6 +17,11 @@ data class OfflineStatus(val expansions: Map<String, CacheStatus> = emptyMap()) 
         return copy(expansions = updatedExpansions)
     }
 
+    fun set(statuses: Map<String, CacheStatus>): OfflineStatus {
+        val updatedExpansions = expansions.plus(statuses)
+        return copy(expansions = updatedExpansions)
+    }
+
 
     companion object {
         const val ALL = "all"

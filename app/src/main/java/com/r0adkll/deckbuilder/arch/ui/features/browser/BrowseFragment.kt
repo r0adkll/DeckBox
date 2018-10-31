@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
@@ -63,6 +64,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
             LinearLayoutManager(activity!!)
         }
         recycler.adapter = adapter
+        (recycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
         swipeRefresh.setColorSchemeResources(
                 R.color.poketype_fire,
