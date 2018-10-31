@@ -111,6 +111,11 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     }
 
 
+    override fun downloadExpansion(): Observable<Expansion> {
+        return downloadClicks
+    }
+
+
     override fun setExpansionsItems(items: List<Item>) {
         adapter.setExpansionItems(items)
     }

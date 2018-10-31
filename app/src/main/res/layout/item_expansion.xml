@@ -81,7 +81,7 @@
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp"
-                android:src="@drawable/progress_download"
+                android:src="@drawable/cloud_download_outline"
                 android:tint="@color/black"
                 />
 

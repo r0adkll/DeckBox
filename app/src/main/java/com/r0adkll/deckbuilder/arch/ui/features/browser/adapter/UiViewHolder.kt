@@ -7,11 +7,13 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.ftinc.kit.kotlin.extensions.string
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.util.bindView
 
 
@@ -36,6 +38,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             name.text = item.expansion.name
             series.text = item.expansion.series
             date.text = string(R.string.expansion_released_date_format, item.expansion.releaseDate)
+            downloadProgress.setVisible(item.offlineStatus == CacheStatus.Downloading)
 
             GlideApp.with(itemView)
                     .load(item.expansion.logoUrl)

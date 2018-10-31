@@ -2,6 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
+import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseUi.State.*
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseUi.State
@@ -14,7 +16,8 @@ import javax.inject.Inject
 class BrowsePresenter @Inject constructor(
         val ui: BrowseUi,
         val intentions: BrowseUi.Intentions,
-        val repository: CardRepository
+        val repository: CardRepository,
+        val offlineRepository: OfflineRepository
 ) : Presenter() {
 
     override fun start() {
@@ -34,13 +37,22 @@ class BrowsePresenter @Inject constructor(
                             .onErrorReturn(handleUnknownError)
                 }
 
+        val offlineStatus = offlineRepository.observeStatus()
+                .map { Change.OfflineStatusUpdated(it) as Change }
+
         val merged = loadExpansions
+                .mergeWith(offlineStatus)
                 .mergeWith(refreshExpansions)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
                 .logState()
                 .subscribe { ui.render(it) }
+
+        disposables += intentions.downloadExpansion()
+                .subscribe {
+                    offlineRepository.download(DownloadRequest.Cards(it))
+                }
     }
 
 
