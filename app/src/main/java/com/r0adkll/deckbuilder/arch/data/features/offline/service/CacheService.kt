@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.util.Stopwatch
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
@@ -31,6 +32,7 @@ import com.r0adkll.deckbuilder.util.extensions.retryWithBackoff
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -60,11 +62,6 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
     private fun updateCacheStatus(value: Pair<String, CacheStatus>) {
         offlineStatusConsumer.status = offlineStatusConsumer.status.set(value)
-    }
-
-
-    private fun updateCacheStatus(values: Map<String, CacheStatus>) {
-        offlineStatusConsumer.status = offlineStatusConsumer.status.set(values)
     }
 
 
@@ -123,6 +120,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                     .submit()
         }
 
+        val throttle = Stopwatch.createStarted()
         targets.forEachIndexed { i, target ->
             try {
                 val result = target.get()
@@ -133,8 +131,14 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
             val progress = i.toFloat() / cards.size.toFloat()
             updateCacheStatus(expansion.code to CacheStatus.Downloading(progress))
-            showExpansionNotification(expansion, CacheStatus.Downloading(progress))
+
+            // Throttle notification calls or the system will start filtering us
+            if (throttle.elapsed(TimeUnit.MILLISECONDS) > 200L) {
+                showExpansionNotification(expansion, CacheStatus.Downloading(progress))
+                throttle.reset().start()
+            }
         }
+        throttle.stop()
     }
 
 

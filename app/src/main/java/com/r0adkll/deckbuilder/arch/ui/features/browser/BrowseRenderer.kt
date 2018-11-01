@@ -38,10 +38,12 @@ class BrowseRenderer(
 
         disposables += state
                 .map { s ->
-                    s.expansions.map {
+                    val items = s.expansions.map {
                         val cacheStatus = s.offlineStatus?.expansions?.get(it.code)
-                        Item.ExpansionSet(it, cacheStatus)
-                    }
+                        Item.ExpansionSet(it, cacheStatus) as Item
+                    }.toMutableList()
+                    items.add(0, Item.OfflineOutline as Item)
+                    items
                 }
                 .distinctUntilChanged()
                 .addToLifecycle()

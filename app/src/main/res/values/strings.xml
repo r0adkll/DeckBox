@@ -248,4 +248,6 @@
     <string name="pref_help_quickstart_title">Reshow quick start</string>
     <string name="pref_help_quickstart_summary">Show the get started helper that let\'s you pick a deck template</string>
     <string name="notification_caching_queued_title">Download Queued</string>
+    <string name="action_hide">Hide</string>
+    <string name="expansion_offline_description">Download the Pokémon cards to build and manage your decks without an internet connection.</string>
 </resources>
