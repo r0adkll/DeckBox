@@ -10,8 +10,11 @@ sealed class CacheStatus : Parcelable {
     object Empty : CacheStatus()
 
     @Parcelize
-    object Cached : CacheStatus()
+    object Queued : CacheStatus()
 
     @Parcelize
-    object Downloading : CacheStatus()
+    data class Downloading(val progress: Float? = null) : CacheStatus()
+
+    @Parcelize
+    object Cached : CacheStatus()
 }

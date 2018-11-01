@@ -46,6 +46,16 @@ class DecksRecyclerAdapter(
     }
 
 
+    override fun getItemId(position: Int): Long {
+        val item = items[position]
+        return when(item) {
+            is Item.DeckItem -> item.deck.id.hashCode().toLong()
+            is Item.QuickStart -> 0L
+            is Item.Preview -> 1L
+        }
+    }
+
+
     fun showItems(decks: List<Item>) {
         val diff = calculateDiff(decks, items)
         items = ArrayList(diff.new)

@@ -39,17 +39,25 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             name.text = item.expansion.name
             series.text = item.expansion.series
             date.text = string(R.string.expansion_released_date_format, item.expansion.releaseDate)
-            downloadProgress.setVisible(item.offlineStatus == CacheStatus.Downloading)
+            downloadProgress.setVisible(item.offlineStatus is CacheStatus.Downloading || item.offlineStatus == CacheStatus.Queued)
+            downloadProgress.isIndeterminate = (item.offlineStatus as? CacheStatus.Downloading)?.progress == null
+            downloadProgress.progress = when (item.offlineStatus) {
+                is CacheStatus.Downloading -> item.offlineStatus.progress?.times(100f)?.toInt() ?: 0
+                else -> 0
+            }
             actionDownload.setImageResource(when(item.offlineStatus) {
-                CacheStatus.Downloading -> R.drawable.cloud_sync
+                CacheStatus.Queued -> R.drawable.ic_cloud_queue_24px
+                is CacheStatus.Downloading -> R.drawable.cloud_sync
                 CacheStatus.Cached -> R.drawable.ic_cloud_done_black_24dp
                 else -> R.drawable.cloud_download_outline
             })
 
-            GlideApp.with(itemView)
-                    .load(item.expansion.logoUrl)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(logo)
+            if (logo.drawable == null) {
+                GlideApp.with(itemView)
+                        .load(item.expansion.logoUrl)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(logo)
+            }
 
             actionDownload.setOnClickListener {
                 if (item.offlineStatus == null || item.offlineStatus == CacheStatus.Empty) {

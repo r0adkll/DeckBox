@@ -26,6 +26,14 @@ class ExpansionRecyclerAdapter(
         return items[position].viewType
     }
 
+    override fun getItemId(position: Int): Long {
+        val item = items[position]
+        return when(item) {
+            is Item.ExpansionSet -> item.expansion.code.hashCode().toLong()
+            else -> 0L
+        }
+    }
+
     fun setExpansionItems(newItems: List<Item>) {
         val diff = calculateDiff(newItems, items)
         items = ArrayList(diff.new)

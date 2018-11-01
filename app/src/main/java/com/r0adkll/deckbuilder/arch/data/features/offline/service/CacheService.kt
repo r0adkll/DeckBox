@@ -53,10 +53,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         val request = intent?.getParcelableExtra<DownloadRequest>(EXTRA_REQUEST)
         if (request != null) {
             Timber.i("onHandleIntent($request)")
-            when (request) {
-                is DownloadRequest.Cards -> cacheCardData(request.expansion, request.downloadImages)
-                // is DownloadRequest.Images -> cacheCardImages(request.expansion)
-            }
+            cacheCardData(request.expansion, request.downloadImages)
         }
     }
 
@@ -71,90 +68,38 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
-    private fun cacheCardData(expansions: List<Expansion>?, downloadImages: Boolean) {
-        if (expansions == null) {
-            cacheCardData()
-        } else {
-            // Update initial state of all expansions
-            updateCacheStatus(expansions.map { it.code to CacheStatus.Downloading }.toMap())
-            for (expansion in expansions){
-                // Update cache status and notification
-                showExpansionNotification(expansion, CacheStatus.Downloading)
+    private fun cacheCardData(expansions: List<Expansion>, downloadImages: Boolean) {
+        // Update initial state of all expansions
+        for (expansion in expansions){
+            // Update cache status and notification
+            updateCacheStatus(expansion.code to CacheStatus.Downloading())
+            showExpansionNotification(expansion, CacheStatus.Downloading())
 
-                try {
-                    val cardModels = getExpansion(expansion)
+            try {
+                val cardModels = getExpansion(expansion)
 
-                    // Store into database
-                    cardCache.putCards(cardModels)
-                    Timber.i("Expansion(${expansion.code}) inserted into database")
+                // Store into database
+                cardCache.putCards(cardModels)
+                Timber.i("Expansion(${expansion.code}) inserted into database")
 
-                    if (downloadImages) {
-                        cacheCardImages(cardModels)
-                    }
-
-                    // Update preferences
-                    val prefs = preferences.offlineExpansions.get().toMutableSet()
-                    prefs.add(expansion.code)
-                    preferences.offlineExpansions.set(prefs)
-
-                    // Notify UI and Notification
-                    updateCacheStatus(expansion.code to CacheStatus.Cached)
-                    showExpansionNotification(expansion, CacheStatus.Cached)
-                } catch (e: Exception) {
-                    Timber.e("Something went wrong when trying to cache ${expansion.name} card data")
-                    showExpansionNotification(expansion, null)
-                    updateCacheStatus(expansion.code to CacheStatus.Empty)
+                if (downloadImages) {
+                    cacheCardImages(expansion, cardModels)
                 }
+
+                // Update preferences
+                val prefs = preferences.offlineExpansions.get().toMutableSet()
+                prefs.add(expansion.code)
+                preferences.offlineExpansions.set(prefs)
+
+                // Notify UI and Notification
+                updateCacheStatus(expansion.code to CacheStatus.Cached)
+                showExpansionNotification(expansion, CacheStatus.Cached)
+            } catch (e: Exception) {
+                Timber.e("Something went wrong when trying to cache ${expansion.name} card data")
+                showExpansionNotification(expansion, null)
+                updateCacheStatus(expansion.code to CacheStatus.Empty)
             }
         }
-    }
-
-
-    private fun cacheCardData() {
-        try {
-            var page = 1
-            var count = 0
-
-            showNotification(0, false, false)
-            updateCacheStatus(OfflineStatus.ALL to CacheStatus.Downloading)
-
-            do {
-                val cardModels = getPage(page)
-
-                // Map to DB entities
-                cardCache.putCards(cardModels)
-                count += cardModels.size
-
-                Timber.i("Page of cards inserted into database: ${cardModels.size} cards")
-                // Get next page
-                page++
-
-                showNotification(count, true, false)
-
-            } while (cardModels.size == PAGE_SIZE)
-
-            Timber.i("$count cards over $page pages inserted into database")
-
-            updateCacheStatus(OfflineStatus.ALL to CacheStatus.Cached)
-            showNotification(count, false, true)
-
-        } catch(e: Exception) {
-            Timber.e(e, "Something went terribly wrong when caching card data")
-            showNotification(-1, false, true)
-            updateCacheStatus(OfflineStatus.ALL to CacheStatus.Empty)
-        }
-    }
-
-
-    private fun getPage(pageNumber: Int = 1): List<Card> {
-        return api.card()
-                .where {
-                    page = pageNumber
-                    pageSize = PAGE_SIZE
-                }
-                .observeAll()
-                .retryWithBackoff()
-                .blockingSingle()
     }
 
 
@@ -170,7 +115,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
-    private fun cacheCardImages(cards: List<Card>) {
+    private fun cacheCardImages(expansion: Expansion, cards: List<Card>) {
         val targets = cards.map {
             GlideApp.with(this)
                     .downloadOnly()
@@ -178,13 +123,17 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                     .submit()
         }
 
-        targets.forEach {
+        targets.forEachIndexed { i, target ->
             try {
-                val result = it.get()
+                val result = target.get()
                 Timber.i("Image preloaded (${result.name})")
             } catch (e: Exception) {
                 Timber.e(e, "Error caching card image")
             }
+
+            val progress = i.toFloat() / cards.size.toFloat()
+            updateCacheStatus(expansion.code to CacheStatus.Downloading(progress))
+            showExpansionNotification(expansion, CacheStatus.Downloading(progress))
         }
     }
 
@@ -193,12 +142,11 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.notification_channel_name)
-            val importance = NotificationManager.IMPORTANCE_HIGH
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID, name, importance)
             channel.description = getString(R.string.notification_channel_description)
-            channel.enableLights(true)
-            channel.lightColor = Color.BLUE
             channel.enableVibration(false)
+            channel.setSound(null, null)
 
             val notifMan = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notifMan.createNotificationChannel(channel)
@@ -206,48 +154,13 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
-    private fun showNotification(count: Int, isDownloading: Boolean, isFinished: Boolean) {
-        createChannel()
-
-        val title = when {
-            count >= 0 && !isDownloading && !isFinished -> getString(R.string.notification_caching_title_start)
-            count >= 0 && isDownloading && !isFinished -> getString(R.string.notification_caching_title)
-            count == -1 && isFinished -> getString(R.string.notification_caching_title_error)
-            else -> getString(R.string.notification_caching_title_finished)
-        }
-
-        val text = when (count) {
-            -1 -> getString(R.string.notification_caching_text_error)
-            0 -> getString(R.string.notification_caching_text)
-            else -> getString(R.string.notification_caching_text_format, count)
-        }
-
-        val intent = RouteActivity.createIntent(this)
-        val pending = PendingIntent.getActivity(this, 0, intent, 0)
-
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setContentIntent(pending)
-                .setColor(color(R.color.primaryColor))
-                .setOngoing(isDownloading && count == -1)
-                .setSmallIcon(when(isDownloading){
-                    true -> android.R.drawable.stat_sys_download
-                    else -> android.R.drawable.stat_sys_download_done
-                })
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .build()
-
-        notificationManager.notify(NOTIFICATION_ID, notification)
-    }
-
-
-    private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?, largeIcon: Bitmap? = null) {
+    private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?) {
         createChannel()
 
         val title = when(status) {
             CacheStatus.Empty -> getString(R.string.notification_caching_title_start)
-            CacheStatus.Downloading -> getString(R.string.notification_caching_title)
+            CacheStatus.Queued -> getString(R.string.notification_caching_queued_title)
+            is CacheStatus.Downloading -> getString(R.string.notification_caching_title)
             CacheStatus.Cached -> getString(R.string.notification_caching_title_finished)
             else -> getString(R.string.notification_caching_title_error)
         }
@@ -255,35 +168,44 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         val text = when (status) {
             null -> getString(R.string.notification_caching_text_error)
             CacheStatus.Empty -> getString(R.string.notification_caching_text)
+            CacheStatus.Cached -> getString(R.string.notification_expansion_cached_text_format, expansion.name)
             else -> getString(R.string.notification_expansion_caching_text_format, expansion.name)
         }
 
         val intent = RouteActivity.createIntent(this)
         val pending = PendingIntent.getActivity(this, 0, intent, 0)
 
-        val isOngoing = status != null && (status == CacheStatus.Downloading || status == CacheStatus.Empty)
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        val isOngoing = status != null && (status != CacheStatus.Cached)
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setContentIntent(pending)
                 .setColor(color(R.color.primaryColor))
                 .setOngoing(isOngoing)
-                .setLargeIcon(largeIcon)
-                .setSmallIcon(when(status == CacheStatus.Downloading){
+                .setOnlyAlertOnce(true)
+                .setSound(null)
+                .setSmallIcon(when(status is CacheStatus.Downloading){
                     true -> android.R.drawable.stat_sys_download
                     else -> android.R.drawable.stat_sys_download_done
                 })
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .build()
+                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
 
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        if (status != null && status is CacheStatus.Downloading) {
+            val progress = status.progress?.times(100f)?.toInt() ?: 0
+            builder.setProgress(100, progress, progress == 0)
+        } else {
+            builder.setProgress(0, 0, false)
+        }
+
+        notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
 
     companion object {
         private const val EXTRA_REQUEST = "CacheService.Request"
-        private const val NOTIFICATION_ID = 100
         private const val CHANNEL_ID = "deckbox-notifications"
+        private const val NOTIFICATION_ID = 100
         private const val PAGE_SIZE = 1000
 
         fun start(context: Context, request: DownloadRequest) {

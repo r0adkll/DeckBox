@@ -39,6 +39,14 @@ class DefaultOfflineRepository @Inject constructor(
     }
 
     override fun download(request: DownloadRequest) {
+        // Flag all expansions in request
+        var statusChanges = status
+        request.expansion.forEach {
+            statusChanges = statusChanges.set(it.code to CacheStatus.Queued)
+        }
+        status = statusChanges
+
+        // Start service
         CacheService.start(context, request)
     }
 
