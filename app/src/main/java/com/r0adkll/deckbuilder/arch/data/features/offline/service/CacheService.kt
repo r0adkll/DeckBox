@@ -17,6 +17,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.DeckApp
+import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
@@ -53,8 +54,8 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         if (request != null) {
             Timber.i("onHandleIntent($request)")
             when (request) {
-                is DownloadRequest.Cards -> cacheCardData(request.expansion)
-                is DownloadRequest.Images -> cacheCardImages(request.expansion)
+                is DownloadRequest.Cards -> cacheCardData(request.expansion, request.downloadImages)
+                // is DownloadRequest.Images -> cacheCardImages(request.expansion)
             }
         }
     }
@@ -70,7 +71,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
-    private fun cacheCardData(expansions: List<Expansion>?) {
+    private fun cacheCardData(expansions: List<Expansion>?, downloadImages: Boolean) {
         if (expansions == null) {
             cacheCardData()
         } else {
@@ -86,6 +87,10 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                     // Store into database
                     cardCache.putCards(cardModels)
                     Timber.i("Expansion(${expansion.code}) inserted into database")
+
+                    if (downloadImages) {
+                        cacheCardImages(cardModels)
+                    }
 
                     // Update preferences
                     val prefs = preferences.offlineExpansions.get().toMutableSet()
@@ -165,8 +170,22 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     }
 
 
-    private fun cacheCardImages(expansion: Expansion) {
+    private fun cacheCardImages(cards: List<Card>) {
+        val targets = cards.map {
+            GlideApp.with(this)
+                    .downloadOnly()
+                    .load(it.imageUrl)
+                    .submit()
+        }
 
+        targets.forEach {
+            try {
+                val result = it.get()
+                Timber.i("Image preloaded (${result.name})")
+            } catch (e: Exception) {
+                Timber.e(e, "Error caching card image")
+            }
+        }
     }
 
 
@@ -179,6 +198,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             channel.description = getString(R.string.notification_channel_description)
             channel.enableLights(true)
             channel.lightColor = Color.BLUE
+            channel.enableVibration(false)
 
             val notifMan = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notifMan.createNotificationChannel(channel)
@@ -215,7 +235,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                     true -> android.R.drawable.stat_sys_download
                     else -> android.R.drawable.stat_sys_download_done
                 })
-                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .build()
 
         notificationManager.notify(NOTIFICATION_ID, notification)
@@ -253,7 +273,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                     true -> android.R.drawable.stat_sys_download
                     else -> android.R.drawable.stat_sys_download_done
                 })
-                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .build()
 
         notificationManager.notify(NOTIFICATION_ID, notification)
