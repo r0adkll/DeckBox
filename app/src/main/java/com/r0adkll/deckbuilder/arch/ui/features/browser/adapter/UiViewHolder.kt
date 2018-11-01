@@ -122,11 +122,13 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         fun create(
                 itemView: View,
                 layoutId: Int,
-                downloadClicks: Relay<Expansion>
+                downloadClicks: Relay<Expansion>,
+                dismissClicks: Relay<Unit>,
+                downloadFormat: Relay<Format>
         ): UiViewHolder<Item> {
             val viewType = ViewType.of(layoutId)
             return when(viewType) {
-                ViewType.OUTLINE -> OutlineViewHolder(itemView, PublishRelay.create()/* TODO: Actual implementation */, PublishRelay.create()) as UiViewHolder<Item>
+                ViewType.OUTLINE -> OutlineViewHolder(itemView, dismissClicks, downloadFormat) as UiViewHolder<Item>
                 ViewType.EXPANSION -> ExpansionViewHolder(itemView, downloadClicks) as UiViewHolder<Item>
             }
         }

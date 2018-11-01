@@ -4,17 +4,20 @@ import android.content.Context
 import android.view.ViewGroup
 import com.ftinc.kit.kotlin.adapter.ListRecyclerAdapter
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 
 
 class ExpansionRecyclerAdapter(
         context: Context,
-        private val downloadClicks: Relay<Expansion>
+        private val downloadClicks: Relay<Expansion>,
+        private val dismissClicks: Relay<Unit>,
+        private val downloadFormat: Relay<Format>
 ) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
-        return UiViewHolder.create(itemView, viewType, downloadClicks)
+        return UiViewHolder.create(itemView, viewType, downloadClicks, dismissClicks, downloadFormat)
     }
 
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {

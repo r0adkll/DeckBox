@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
@@ -37,7 +38,8 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     private lateinit var adapter: ExpansionRecyclerAdapter
 
     private val downloadClicks = PublishRelay.create<Expansion>()
-
+    private val dismissClicks = PublishRelay.create<Unit>()
+    private val downloadClicks = PublishRelay.create<Format>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browse, container, false)
