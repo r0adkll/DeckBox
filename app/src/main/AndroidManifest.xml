@@ -74,6 +74,8 @@
             android:theme="@style/Theme.DeckBuilder.Splash"
             />
 
+        <activity android:name=".arch.ui.features.settings.offline.ManageOfflineActivity" />
+
         <service android:name=".arch.data.features.offline.service.CacheService"
                  android:exported="false" />
 

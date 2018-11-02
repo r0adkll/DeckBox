@@ -250,4 +250,5 @@
     <string name="notification_caching_queued_title">Download Queued</string>
     <string name="action_hide">Hide</string>
     <string name="expansion_offline_description">Download the Pokémon cards to build and manage your decks without an internet connection.</string>
+    <string name="activity_manage_offline">Offline data</string>
 </resources>
