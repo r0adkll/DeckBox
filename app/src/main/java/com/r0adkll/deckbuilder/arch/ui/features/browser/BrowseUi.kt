@@ -20,6 +20,7 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
 
         fun refreshExpansions(): Observable<Unit>
         fun downloadExpansion(): Observable<Expansion>
+        fun downloadFormatExpansions(): Observable<List<Expansion>>
     }
 
 

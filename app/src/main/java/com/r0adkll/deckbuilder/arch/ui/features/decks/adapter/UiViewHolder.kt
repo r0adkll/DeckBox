@@ -20,8 +20,10 @@ import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.ui.components.preview.ExpansionPreviewRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.*
+import com.r0adkll.deckbuilder.arch.ui.widgets.BackgroundDrawableWrapper
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
@@ -106,10 +108,10 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.w
                 "tile" -> {
                     val bitmap = spec.data.toBitmap()
                     if (bitmap != null) {
-                        BitmapDrawable(itemView.resources, bitmap).apply {
+                        BackgroundDrawableWrapper(BitmapDrawable(itemView.resources, bitmap).apply {
                             setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-                            setTargetDensity(itemView.resources.displayMetrics.densityDpi * 4)
-                        }
+                            setTargetDensity(itemView.resources.displayMetrics.densityDpi * 3)
+                        })
                     } else {
                         null
                     }
@@ -131,10 +133,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.w
             when(spec.type) {
                 "url" -> {
                     GlideApp.with(imageView)
-                            .`as`(SVG::class.java)
                             .load(spec.data)
-                            .listener(SvgSoftwareLayerSetter())
-                            .into(SvgViewTarget(imageView))
+                            .into(imageView)
                 }
                 "svg" -> {
                     imageView.post {

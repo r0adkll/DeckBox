@@ -39,15 +39,19 @@ class DefaultOfflineRepository @Inject constructor(
     }
 
     override fun download(request: DownloadRequest) {
+        // Filter any expansions that we have marked as cached
+        val cached = preferences.offlineExpansions.get()
+        val filteredExpansions = request.expansion.filter { !cached.contains(it.code) }
+
         // Flag all expansions in request
         var statusChanges = status
-        request.expansion.forEach {
+        filteredExpansions.forEach {
             statusChanges = statusChanges.set(it.code to CacheStatus.Queued)
         }
         status = statusChanges
 
         // Start service
-        CacheService.start(context, request)
+        CacheService.start(context, DownloadRequest(filteredExpansions, request.downloadImages))
     }
 
     override fun observeStatus(): Observable<OfflineStatus> {

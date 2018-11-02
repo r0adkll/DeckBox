@@ -31,6 +31,8 @@ import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImp
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
+import com.r0adkll.deckbuilder.arch.data.features.preview.RemotePreviewRepository
+import com.r0adkll.deckbuilder.arch.data.features.preview.TestPreviewRepository
 import com.r0adkll.deckbuilder.arch.data.features.testing.DefaultDeckTester
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
@@ -49,6 +51,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.Tourname
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
+import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
@@ -185,6 +188,16 @@ class DataModule {
 
     @Provides @AppScope
     fun provideOfflineRepository(repository: DefaultOfflineRepository): OfflineRepository = repository
+
+
+    @Provides @AppScope
+    fun providePreviewRepository(repository: RemotePreviewRepository): PreviewRepository {
+        return if (BuildConfig.DEBUG) {
+            TestPreviewRepository()
+        } else {
+            repository
+        }
+    }
 
 
     /*

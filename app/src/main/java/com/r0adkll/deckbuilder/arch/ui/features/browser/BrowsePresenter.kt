@@ -53,6 +53,11 @@ class BrowsePresenter @Inject constructor(
                 .subscribe {
                     offlineRepository.download(DownloadRequest(listOf(it), true))
                 }
+
+        disposables += intentions.downloadFormatExpansions()
+                .subscribe {
+                    offlineRepository.download(DownloadRequest(it, true))
+                }
     }
 
 
