@@ -23,15 +23,15 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_category_cache">
+    <!--<PreferenceCategory android:title="@string/pref_category_cache">-->
 
-        <Preference
-            android:key="pref_cache_manage"
-            android:title="@string/pref_cache_manage_title"
-            android:summary="@string/pref_cache_manage_summary"
-            />
+        <!--<Preference-->
+            <!--android:key="pref_cache_manage"-->
+            <!--android:title="@string/pref_cache_manage_title"-->
+            <!--android:summary="@string/pref_cache_manage_summary"-->
+            <!--/>-->
 
-    </PreferenceCategory>
+    <!--</PreferenceCategory>-->
 
     <PreferenceCategory android:title="@string/pref_category_help">
 
