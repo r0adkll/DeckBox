@@ -56,6 +56,12 @@ class DecksRecyclerAdapter(
     }
 
 
+    override fun onViewDetachedFromWindow(holder: UiViewHolder<Item>) {
+        super.onViewDetachedFromWindow(holder)
+        holder.dispose()
+    }
+
+
     fun showItems(decks: List<Item>) {
         val diff = calculateDiff(decks, items)
         items = ArrayList(diff.new)

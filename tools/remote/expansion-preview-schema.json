@@ -17,12 +17,13 @@
         "source": {
           "type": "base64|url|svg|color",
           "value": "...",
-          "mime": "image/svg"
+          "density": 3.0
         },
         "tile": {
           "x": "repeat",
           "y": "mirror"
-        }
+        },
+        "alpha": 0.5
       },
       {
         "source": {
@@ -44,8 +45,7 @@
     "foreground": {
       "source": {
         "type": "url",
-        "value": "https://firebasestorage.googleapis.com/v0/b/deck-builder-1b711.appspot.com/o/bg-nav%202.png?alt=media&token=1f1acd39-f45d-49da-93f8-82a104451853",
-        "mime": "image/png"
+        "value": "https://firebasestorage.googleapis.com/v0/b/deck-builder-1b711.appspot.com/o/bg-nav%202.png?alt=media&token=1f1acd39-f45d-49da-93f8-82a104451853"
       },
       "aspectRatio": true,
       "margins": {

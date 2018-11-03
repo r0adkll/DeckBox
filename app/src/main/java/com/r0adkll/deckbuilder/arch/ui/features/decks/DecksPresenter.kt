@@ -109,10 +109,8 @@ class DecksPresenter @Inject constructor(
                 })
 
         disposables += intentions.dismissPreview()
-                .subscribe { _ ->
-                    remote.expansionPreview?.let {
-                        preferences.previewVersion.set(it.version)
-                    }
+                .subscribe {
+                    previewRepository.dismissPreview()
                 }
     }
 

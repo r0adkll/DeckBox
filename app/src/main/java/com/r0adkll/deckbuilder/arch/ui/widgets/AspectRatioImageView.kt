@@ -43,8 +43,8 @@ class AspectRatioImageView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val RATIO_NONE = -1
-        private const val RATIO_WIDTH = 0
-        private const val RATIO_HEIGHT = 1
+        const val RATIO_NONE = -1
+        const val RATIO_WIDTH = 0
+        const val RATIO_HEIGHT = 1
     }
 }

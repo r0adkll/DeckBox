@@ -11,4 +11,9 @@ interface PreviewRepository {
      * if it doesn't
      */
     fun getExpansionPreview(): Observable<ExpansionPreview>
+
+    /**
+     * Dismiss the preview
+     */
+    fun dismissPreview()
 }

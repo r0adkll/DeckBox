@@ -3,15 +3,12 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.Shader
-import android.graphics.drawable.*
-import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.*
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.caverock.androidsvg.SVG
-import com.caverock.androidsvg.SVGParseException
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.ftinc.kit.kotlin.extensions.setVisible
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -23,19 +20,27 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.preview.ExpansionPreviewRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.*
-import com.r0adkll.deckbuilder.arch.ui.widgets.BackgroundDrawableWrapper
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
-import com.r0adkll.deckbuilder.util.extensions.toBitmap
-import com.r0adkll.deckbuilder.util.glide.svg.SvgSoftwareLayerSetter
-import com.r0adkll.deckbuilder.util.glide.svg.SvgViewTarget
-import timber.log.Timber
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 
-sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), Disposable {
 
     abstract fun bind(item: I)
+
+    protected val disposables = CompositeDisposable()
+
+    override fun isDisposed(): Boolean {
+        return disposables.isDisposed
+    }
+
+    override fun dispose() {
+        disposables.clear()
+    }
 
 
     class PreviewViewHolder(
@@ -57,16 +62,14 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.w
             val spec = item.spec.preview
 
             // Load logo
-            GlideApp.with(itemView)
-                    .load(spec.logoUrl)
-                    .into(logo)
+            ExpansionPreviewRenderer.applyLogo(logo, spec.logo)
 
             // Configure Background
-            background.background = createDrawable(spec.background)
+            disposables += ExpansionPreviewRenderer.applyBackground(background, spec.background)
 
             // Configure Foreground
             spec.foreground?.let {
-                applyDrawable(it, foreground)
+                disposables += ExpansionPreviewRenderer.applyForeground(foreground, it)
             }
 
             // Set Title & Description
@@ -84,74 +87,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.w
             // Set action listeners
             actionDismiss.setOnClickListener { dismissPreview.accept(Unit) }
             actionView.setOnClickListener { viewPreview.accept(item.spec) }
-        }
-
-
-        private fun createDrawable(specs: List<ExpansionPreview.PreviewSpec.DrawableSpec>): Drawable {
-            val drawables = ArrayList<Drawable>(specs.size)
-            specs.forEach {
-                val drawable = createDrawable(it)
-                if (drawable != null) {
-                    drawables += drawable
-                }
-            }
-            return LayerDrawable(drawables.toTypedArray())
-        }
-
-
-        private fun createDrawable(spec: ExpansionPreview.PreviewSpec.DrawableSpec): Drawable? {
-            return when(spec.type) {
-                "color" -> {
-                    val color = Color.parseColor(spec.data)
-                    ColorDrawable(color)
-                }
-                "tile" -> {
-                    val bitmap = spec.data.toBitmap()
-                    if (bitmap != null) {
-                        BackgroundDrawableWrapper(BitmapDrawable(itemView.resources, bitmap).apply {
-                            setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.MIRROR)
-                            setTargetDensity(itemView.resources.displayMetrics.densityDpi * 3)
-                        })
-                    } else {
-                        null
-                    }
-                }
-                "base64" -> {
-                    val bitmap = spec.data.toBitmap()
-                    if (bitmap != null) {
-                        Timber.d("Base64 > Bitmap (w: ${bitmap.width}, h: ${bitmap.height})")
-                        BitmapDrawable(itemView.resources, bitmap)
-                    } else {
-                        null
-                    }
-                }
-                else -> null
-            }
-        }
-
-        private fun applyDrawable(spec: ExpansionPreview.PreviewSpec.DrawableSpec, imageView: ImageView) {
-            when(spec.type) {
-                "url" -> {
-                    GlideApp.with(imageView)
-                            .load(spec.data)
-                            .into(imageView)
-                }
-                "svg" -> {
-                    imageView.post {
-                        try {
-                            val svg = SVG.getFromString(spec.data)
-                            val ratio = svg.documentViewBox.height() / svg.documentViewBox.width()
-                            svg.documentWidth = imageView.width.toFloat()
-                            svg.documentHeight = imageView.width.toFloat() * ratio
-                            imageView.setLayerType(ImageView.LAYER_TYPE_SOFTWARE, null)
-                            imageView.setImageDrawable(PictureDrawable(svg.renderToPicture()))
-                        } catch (e: SVGParseException) {
-                            Timber.e(e, "Error parsing SVG data, please check remote config")
-                        }
-                    }
-                }
-                else -> imageView.setImageDrawable(createDrawable(spec))
-            }
         }
     }
 

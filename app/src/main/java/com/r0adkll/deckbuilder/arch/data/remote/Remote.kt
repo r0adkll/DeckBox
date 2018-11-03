@@ -128,7 +128,7 @@ class Remote @Inject constructor(
 
     companion object {
         private const val KEY_EXPANSION_VERSION = "expansion_version"
-        private const val KEY_EXPANSION_PREVIEW = "expansion_preview"
+        private const val KEY_EXPANSION_PREVIEW = "expansion_preview_v2"
         private const val KEY_SEARCH_PROXIES = "search_proxies"
         private const val KEY_REPRINTS = "reprints"
 

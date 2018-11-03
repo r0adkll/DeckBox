@@ -30,4 +30,10 @@ class RemotePreviewRepository @Inject constructor(
                     }
                 }
     }
+
+    override fun dismissPreview() {
+        remote.expansionPreview?.let {
+            preferences.previewVersion.set(it.version)
+        }
+    }
 }

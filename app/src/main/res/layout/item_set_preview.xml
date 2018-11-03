@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/margin_tiny"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    app:cardCornerRadius="4dp">
+    app:cardCornerRadius="@dimen/card_radius">
 
     <LinearLayout
         android:id="@+id/background"
@@ -23,7 +23,7 @@
                 android:id="@+id/foreground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/dr_smfl_header"
+                tools:src="@drawable/dr_smfl_header"
                 />
 
             <com.ftinc.kit.widget.AspectRatioImageView
@@ -35,7 +35,7 @@
                 android:layout_marginEnd="64dp"
                 android:layout_marginBottom="8dp"
                 android:layout_gravity="center"
-                android:src="@drawable/dr_smcs_logo"
+                tools:src="@drawable/dr_smcs_logo"
                 />
 
         </FrameLayout>
