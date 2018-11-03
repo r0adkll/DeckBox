@@ -22,7 +22,7 @@
         <item name="colorPrimaryDark">@color/primaryColor</item>
     </style>
 
-    <style name="Theme.DeckBuilder.OSS" parent="Theme.AppCompat.DayNight.DarkActionBar" >
+    <style name="Theme.DeckBuilder.OSS" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/primaryColor</item>

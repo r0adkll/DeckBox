@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
 
 
 fun View.isVisible(): Boolean = this.visibility == View.VISIBLE
@@ -53,6 +54,18 @@ fun View.margins(left: Int? = null,
         top?.let { params.topMargin = it }
         right?.let { params.rightMargin = it }
         bottom?.let { params.bottomMargin = it }
+        this.layoutParams = lp
+    }
+}
+
+
+fun View.margins(margins: ExpansionPreview.PreviewSpec.Margins?) {
+    val lp = this.layoutParams as? ViewGroup.MarginLayoutParams
+    lp?.let { params ->
+        margins?.start?.let { params.marginStart = it }
+        margins?.top?.let { params.topMargin = it }
+        margins?.end?.let { params.marginEnd = it }
+        margins?.bottom?.let { params.bottomMargin = it }
         this.layoutParams = lp
     }
 }

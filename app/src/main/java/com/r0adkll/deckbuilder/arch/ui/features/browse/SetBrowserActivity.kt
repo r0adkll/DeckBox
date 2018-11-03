@@ -12,7 +12,9 @@ import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
@@ -222,36 +224,53 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             palette?.let { p ->
                 if (expansion.code != "sm5") {
                     p.vibrantSwatch?.rgb?.let {
-                        if (expansion.code != "sm75") {
-                            backdrop.imageTintList = ColorStateList.valueOf(it)
-                            backdrop.imageTintMode = PorterDuff.Mode.ADD
-                        } else {
-                            val background = ColorDrawable(it)
-                            val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
-                            val foreground = BitmapDrawable(resources, pattern).apply {
-                                setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-                                setTargetDensity(resources.displayMetrics.densityDpi * 4)
+                        when(expansion.code) {
+                            "sm75" -> {
+                                val background = ColorDrawable(it)
+                                val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
+                                val foreground = BitmapDrawable(resources, pattern).apply {
+                                    setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
+                                    setTargetDensity(resources.displayMetrics.densityDpi * 4)
+                                }
+                                backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
+                                setNavigationColor(it)
                             }
-                            backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
-                        }
-
-                        // Calculate control color
-                        if (ColorUtils.calculateContrast(Color.WHITE, it) < 3.0) {
-                            val color = color(R.color.black87)
-                            val secondaryColor = color(R.color.black54)
-                            appbar?.navigationIcon?.setTint(color)
-                            tabs.setTabTextColors(secondaryColor, color)
-                            tabs.setSelectedTabIndicatorColor(color)
-
-                        } else {
-                            val color = Color.WHITE
-                            val secondaryColor = color(R.color.white70)
-                            appbar?.navigationIcon?.setTint(color)
-                            tabs.setTabTextColors(secondaryColor, color)
-                            tabs.setSelectedTabIndicatorColor(color)
+                            "sm8" -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    backdrop.setImageResource(R.drawable.dr_smlt_header)
+                                    setNavigationColor(Color.BLACK)
+                                } else {
+                                    backdrop.imageTintList = ColorStateList.valueOf(it)
+                                    backdrop.imageTintMode = PorterDuff.Mode.ADD
+                                    setNavigationColor(it)
+                                }
+                            }
+                            else -> {
+                                backdrop.imageTintList = ColorStateList.valueOf(it)
+                                backdrop.imageTintMode = PorterDuff.Mode.ADD
+                                setNavigationColor(it)
+                            }
                         }
                     }
                 }
+            }
+        }
+
+        fun setNavigationColor(@ColorInt color: Int) {
+            // Calculate control color
+            if (ColorUtils.calculateContrast(Color.WHITE, color) < 3.0) {
+                val color = color(R.color.black87)
+                val secondaryColor = color(R.color.black54)
+                appbar?.navigationIcon?.setTint(color)
+                tabs.setTabTextColors(secondaryColor, color)
+                tabs.setSelectedTabIndicatorColor(color)
+
+            } else {
+                val color = Color.WHITE
+                val secondaryColor = color(R.color.white70)
+                appbar?.navigationIcon?.setTint(color)
+                tabs.setTabTextColors(secondaryColor, color)
+                tabs.setSelectedTabIndicatorColor(color)
             }
         }
     }

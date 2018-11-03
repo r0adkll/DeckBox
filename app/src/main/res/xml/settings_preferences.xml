@@ -23,15 +23,15 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_category_cache">
+    <!--<PreferenceCategory android:title="@string/pref_category_cache">-->
 
-        <Preference
-            android:key="pref_cache_manage"
-            android:title="@string/pref_cache_manage_title"
-            android:summary="@string/pref_cache_manage_summary"
-            />
+        <!--<Preference-->
+            <!--android:key="pref_cache_manage"-->
+            <!--android:title="@string/pref_cache_manage_title"-->
+            <!--android:summary="@string/pref_cache_manage_summary"-->
+            <!--/>-->
 
-    </PreferenceCategory>
+    <!--</PreferenceCategory>-->
 
     <PreferenceCategory android:title="@string/pref_category_help">
 
@@ -45,6 +45,13 @@
             android:key="pref_reset_quickstart"
             android:title="@string/pref_help_quickstart_title"
             android:summary="@string/pref_help_quickstart_summary"
+            android:visible="false"
+            />
+
+        <Preference
+            android:key="pref_reset_offline_outline"
+            android:title="@string/pref_help_offline_outline_title"
+            android:summary="@string/pref_help_offline_outline_summary"
             android:visible="false"
             />
 

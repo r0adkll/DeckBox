@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
+import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
@@ -36,9 +37,18 @@ class BrowseRenderer(
                 }
 
         disposables += state
-                .map { it.expansions }
+                .map { s ->
+                    val items = s.expansions.map {
+                        val cacheStatus = s.offlineStatus?.expansions?.get(it.code)
+                        Item.ExpansionSet(it, cacheStatus) as Item
+                    }.toMutableList()
+                    if (s.offlineOutline) {
+                        items.add(0, Item.OfflineOutline)
+                    }
+                    items
+                }
                 .distinctUntilChanged()
                 .addToLifecycle()
-                .subscribe { actions.setExpansions(it) }
+                .subscribe { actions.setExpansionsItems(it) }
     }
 }

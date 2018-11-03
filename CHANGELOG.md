@@ -1,14 +1,16 @@
 # 1.7.6
-_In Progress_
 * [#40](https://github.com/r0adkll/DeckBox/issues/40) - Added 'Evolves to' related cards row in card detail view
 * [#32](https://github.com/r0adkll/DeckBox/issues/32) - Improved the visualization of deck formats. Added reprint validation.
 * [#7](https://github.com/r0adkll/DeckBox/issues/7) - Improved the import decklist screen with more helpful information and automatic clipboard detection
+* [#6](https://github.com/r0adkll/DeckBox/issues/6) - Added offline caching support and UI
 * Fixed issue where secret rares would not appear in the expansion browser
 * Improved offline and card caching support
 * Added notch support
 * Improved deck > card relation format for better accuracy and a more compact format
 * Migrated all database to Room
 * Added support for local offline, i.e. Decks are stored in the database
+* Improved the expansion preview card format/schema
+* Added some support for Lost Thunder
 
 # 1.7.5
 * Update to include privacy policy from within the app

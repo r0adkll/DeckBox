@@ -6,6 +6,7 @@ import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State.*
@@ -27,6 +28,7 @@ class DecksPresenter @Inject constructor(
         val deckRepository: DeckRepository,
         val communityRepository: CommunityRepository,
         val editRepository: EditRepository,
+        val previewRepository: PreviewRepository,
         val remote: Remote,
         val preferences: AppPreferences
 ) : Presenter() {
@@ -66,18 +68,9 @@ class DecksPresenter @Inject constructor(
         val clearSession = intentions.clearSession()
                 .map { Change.ClearSession as Change }
 
-        val showPreview = preferences.previewVersion
-                .asObservable()
-                .map { version ->
-                    val preview = remote.expansionPreview
-                    if (preview != null && // If preview exists
-                            preview.version > version && // If we haven't dismissed this version
-                            preview.expiresAt.iso8601() > System.currentTimeMillis()) { // If the preview hasn't expired
-                        Change.ShowPreview(preview)
-                    } else {
-                        Change.HidePreview
-                    }
-                }
+        val showPreview = previewRepository.getExpansionPreview()
+                .map { Change.ShowPreview(it) as Change }
+                .onErrorReturnItem(Change.HidePreview as Change)
 
         val showQuickStart = preferences.quickStart
                 .asObservable()
@@ -116,10 +109,8 @@ class DecksPresenter @Inject constructor(
                 })
 
         disposables += intentions.dismissPreview()
-                .subscribe { _ ->
-                    remote.expansionPreview?.let {
-                        preferences.previewVersion.set(it.version)
-                    }
+                .subscribe {
+                    previewRepository.dismissPreview()
                 }
     }
 
