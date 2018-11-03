@@ -50,6 +50,7 @@ class CachingNetworkSearchDataSource(
         return api.card()
                 .where {
                     id = ids.joinToString("|")
+                    pageSize = 1000
                 }
                 .observeAll()
                 .doOnNext { cache.putCards(it) }
