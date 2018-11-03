@@ -1,5 +1,4 @@
 # 1.7.6
-_In Progress_
 * [#40](https://github.com/r0adkll/DeckBox/issues/40) - Added 'Evolves to' related cards row in card detail view
 * [#32](https://github.com/r0adkll/DeckBox/issues/32) - Improved the visualization of deck formats. Added reprint validation.
 * [#7](https://github.com/r0adkll/DeckBox/issues/7) - Improved the import decklist screen with more helpful information and automatic clipboard detection
