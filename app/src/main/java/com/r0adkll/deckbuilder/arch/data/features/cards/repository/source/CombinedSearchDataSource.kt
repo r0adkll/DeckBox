@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.remote.Remote
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
@@ -18,6 +19,7 @@ class CombinedSearchDataSource @Inject constructor(
         val cache: CardCache,
         val source: ExpansionDataSource,
         val remote: Remote,
+        val preferences: AppPreferences,
         val schedulers: Schedulers,
         val connectivity: Connectivity
 ) : SearchDataSource {
@@ -27,7 +29,8 @@ class CombinedSearchDataSource @Inject constructor(
 
 
     override fun search(type: SuperType?, query: String, filter: Filter?): Observable<List<PokemonCard>> {
-        return if (connectivity.isConnected()) {
+        val forceDiskSearch = filter?.expansions?.map { it.code }?.let { preferences.offlineExpansions.get().containsAll(it) } ?: false
+        return if (connectivity.isConnected() && !forceDiskSearch) {
             network.search(type, query, filter)
                     .onErrorResumeNext(disk.search(type, query, filter))
         } else {
