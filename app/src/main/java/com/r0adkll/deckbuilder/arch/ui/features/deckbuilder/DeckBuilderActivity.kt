@@ -180,7 +180,6 @@ class DeckBuilderActivity : BaseActivity(),
                         .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
                             Analytics.event(Event.SelectContent.Action("discarded_changes"))
                             dialog.dismiss()
-                            destroySession()
                             supportFinishAfterTransition()
                         }
                         .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
@@ -190,7 +189,6 @@ class DeckBuilderActivity : BaseActivity(),
                         .show()
             }
             else {
-                destroySession()
                 supportFinishAfterTransition()
             }
         }
@@ -294,6 +292,7 @@ class DeckBuilderActivity : BaseActivity(),
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
+        destroySession()
         super.onDestroy()
     }
 
@@ -311,7 +310,6 @@ class DeckBuilderActivity : BaseActivity(),
                     .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
                         Analytics.event(Event.SelectContent.Action("discarded_changes"))
                         dialog.dismiss()
-                        destroySession()
                         super.onBackPressed()
                     }
                     .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
@@ -321,7 +319,6 @@ class DeckBuilderActivity : BaseActivity(),
                     .show()
         }
         else {
-            destroySession()
             super.onBackPressed()
         }
     }
