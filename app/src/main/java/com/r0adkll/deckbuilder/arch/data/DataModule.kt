@@ -9,7 +9,6 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountRepository
-import com.r0adkll.deckbuilder.arch.data.features.cards.DefaultCacheManager
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
@@ -30,6 +29,10 @@ import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExp
 import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
+import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
+import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
+import com.r0adkll.deckbuilder.arch.data.features.preview.RemotePreviewRepository
+import com.r0adkll.deckbuilder.arch.data.features.preview.TestPreviewRepository
 import com.r0adkll.deckbuilder.arch.data.features.testing.DefaultDeckTester
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
@@ -39,7 +42,6 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultD
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
-import com.r0adkll.deckbuilder.arch.domain.features.cards.CacheManager
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
@@ -48,6 +50,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
+import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
@@ -139,7 +143,7 @@ class DataModule {
 
 
     @Provides @AppScope
-    fun provideCacheManager(manager: DefaultCacheManager): CacheManager = manager
+    fun provideOfflineStatusConsumer(consumer: DefaultOfflineRepository): OfflineStatusConsumer = consumer
 
 
     /*
@@ -180,6 +184,21 @@ class DataModule {
 
     @Provides @AppScope
     fun provideMissingCardRepository(repository: DefaultMissingCardRepository): MissingCardRepository = repository
+
+
+    @Provides @AppScope
+    fun provideOfflineRepository(repository: DefaultOfflineRepository): OfflineRepository = repository
+
+
+    @Provides @AppScope
+    fun providePreviewRepository(repository: RemotePreviewRepository): PreviewRepository {
+        return if (BuildConfig.DEBUG) {
+            TestPreviewRepository()
+        } else {
+            repository
+        }
+    }
+
 
     /*
      * Deck Validation Rules

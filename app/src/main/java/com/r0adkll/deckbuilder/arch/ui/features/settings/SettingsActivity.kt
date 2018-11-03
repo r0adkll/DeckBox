@@ -140,6 +140,10 @@ class SettingsActivity : BaseActivity() {
                     preferences.quickStart.set(true)
                     true
                 }
+                "pref_reset_offline_outline" -> {
+                    preferences.offlineOutline.set(true)
+                    true
+                }
                 "pref_account_link" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "link_account"))
                     signIn()
@@ -201,10 +205,19 @@ class SettingsActivity : BaseActivity() {
             val resetQuickStart = findPreference("pref_reset_quickstart")
             resetQuickStart.isVisible = !preferences.quickStart.get()
 
+            val resetOfflineOutline = findPreference("pref_reset_offline_outline")
+            resetOfflineOutline.isVisible = !preferences.offlineOutline.get()
+
             @SuppressLint("RxSubscribeOnError")
             disposables += preferences.quickStart.asObservable()
                     .subscribe {
                         resetQuickStart.isVisible = !it
+                    }
+
+            @SuppressLint("RxSubscribeOnError")
+            disposables += preferences.offlineOutline.asObservable()
+                    .subscribe {
+                        resetOfflineOutline.isVisible = !it
                     }
 
             /*

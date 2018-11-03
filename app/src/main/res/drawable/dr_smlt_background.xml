@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/black" />
+    <item>
+        <bitmap
+            android:src="@drawable/dr_lt_background_tile"
+            android:tileModeX="repeat"
+            android:tileModeY="mirror"
+            android:alpha=".50"
+            />
+    </item>
+</layer-list>
