@@ -1,3 +1,6 @@
+# 1.7.7
+* Hotfix for issue where decks were missing cards due to find(ids) paging limit
+
 # 1.7.6
 * [#40](https://github.com/r0adkll/DeckBox/issues/40) - Added 'Evolves to' related cards row in card detail view
 * [#32](https://github.com/r0adkll/DeckBox/issues/32) - Improved the visualization of deck formats. Added reprint validation.
