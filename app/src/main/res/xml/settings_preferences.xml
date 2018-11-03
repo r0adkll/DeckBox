@@ -48,6 +48,13 @@
             android:visible="false"
             />
 
+        <Preference
+            android:key="pref_reset_offline_outline"
+            android:title="@string/pref_help_offline_outline_title"
+            android:summary="@string/pref_help_offline_outline_summary"
+            android:visible="false"
+            />
+
 
     </PreferenceCategory>
 

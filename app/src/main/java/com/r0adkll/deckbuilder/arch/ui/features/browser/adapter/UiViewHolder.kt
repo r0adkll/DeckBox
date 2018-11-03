@@ -31,8 +31,8 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             private val downloadFormat: Relay<Format>
     ): UiViewHolder<Item.OfflineOutline>(itemView) {
 
-        private val actionDownloadStandard by bindView<TextView>(R.id.actionDownloadStandard)
-        private val actionDownloadExpanded by bindView<TextView>(R.id.actionDownloadExpanded)
+        private val actionDownloadStandard by bindView<Button>(R.id.actionDownloadStandard)
+        private val actionDownloadExpanded by bindView<Button>(R.id.actionDownloadExpanded)
         private val actionHide by bindView<Button>(R.id.actionHide)
 
 

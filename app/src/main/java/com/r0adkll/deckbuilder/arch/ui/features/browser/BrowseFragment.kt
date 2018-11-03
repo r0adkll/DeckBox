@@ -152,6 +152,10 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     }
 
 
+    override fun hideOfflineOutline(): Observable<Unit> {
+        return dismissClicks
+    }
+
     override fun setExpansionsItems(items: List<Item>) {
         adapter.setExpansionItems(items)
     }

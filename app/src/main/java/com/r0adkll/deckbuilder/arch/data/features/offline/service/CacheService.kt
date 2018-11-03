@@ -173,7 +173,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             null -> getString(R.string.notification_caching_text_error)
             CacheStatus.Empty -> getString(R.string.notification_caching_text)
             CacheStatus.Cached -> getString(R.string.notification_expansion_cached_text_format, expansion.name)
-            else -> getString(R.string.notification_expansion_caching_text_format, expansion.name)
+            else -> expansion.name
         }
 
         val intent = RouteActivity.createIntent(this)

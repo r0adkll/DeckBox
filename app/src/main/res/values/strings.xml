@@ -249,9 +249,11 @@
     <string name="pref_help_quickstart_summary">Show the get started helper that let\'s you pick a deck template</string>
     <string name="notification_caching_queued_title">Download Queued</string>
     <string name="action_hide">Hide</string>
-    <string name="expansion_offline_description">Download the Pokémon cards to build and manage your decks without an internet connection.</string>
+    <string name="expansion_offline_description">Download Pokémon cards to build and manage your decks without an internet connection. Easily download all cards in standard or expanded formats by using the actions below.</string>
     <string name="activity_manage_offline">Offline data</string>
     <string name="dialog_confirm_download_format">Download %1$s Expansions</string>
     <string name="dialog_confirm_download_format_message">Are you sure you want to download all the card and image data of the %1$d expansions in %2$s format?</string>
     <string name="action_download">Download</string>
+    <string name="pref_help_offline_outline_title">Reset offline help</string>
+    <string name="pref_help_offline_outline_summary">Show the offline helper in the Browse section again.</string>
 </resources>
