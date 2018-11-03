@@ -3,9 +3,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,14 +52,18 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var renderer: DecksRenderer
     @Inject lateinit var presenter: DecksPresenter
     @Inject lateinit var preferences: AppPreferences
-    @Inject lateinit var editor: EditRepository
 
-    private val viewPreview: Relay<ExpansionPreview> = PublishRelay.create()
-    private val dismissPreview: Relay<Unit> = PublishRelay.create()
-    private val shareClicks: Relay<Deck> = PublishRelay.create()
-    private val duplicateClicks: Relay<Deck> = PublishRelay.create()
-    private val deleteClicks: Relay<Deck> = PublishRelay.create()
-    private val testClicks: Relay<Deck> = PublishRelay.create()
+    private val viewPreview = PublishRelay.create<ExpansionPreview>()
+    private val dismissPreview = PublishRelay.create<Unit>()
+    private val shareClicks = PublishRelay.create<Deck>()
+    private val duplicateClicks = PublishRelay.create<Deck>()
+    private val deleteClicks = PublishRelay.create<Deck>()
+    private val testClicks = PublishRelay.create<Deck>()
+    private val quickStartClicks = PublishRelay.create<Deck>()
+    private val dismissQuickStart = PublishRelay.create<Unit>()
+    private val createSession = PublishRelay.create<Deck>()
+    private val createNewSession = PublishRelay.create<Unit>()
+    private val clearSession = PublishRelay.create<Unit>()
 
     private lateinit var adapter: DecksRecyclerAdapter
 
@@ -73,7 +77,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         super.onActivityCreated(savedInstanceState)
 
         adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks,
-                testClicks, dismissPreview, viewPreview)
+                testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
         adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Item> {
             override fun onItemClick(v: View, item: Item, position: Int) {
                 if (item is Item.DeckItem) {
@@ -83,31 +87,23 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     Shortcuts.addDeckShortcut(v.context, item.deck)
 
                     // Generate a new session and pass to builder activity
-                    disposables += editor.createSession(item.deck)
-                            .subscribeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-                                startActivity(DeckBuilderActivity.createIntent(activity!!, it))
-                            }, {
-                                Timber.e(it)
-                                snackbar(R.string.error_session_opening_deck)
-                            })
+                    createSession.accept(item.deck)
                 }
             }
         })
 
         adapter.setEmptyView(empty_view)
 
-
-
         val layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) as RecyclerView.LayoutManager
+            androidx.recyclerview.widget.StaggeredGridLayoutManager(6, androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL) as androidx.recyclerview.widget.RecyclerView.LayoutManager
         } else {
-            val lm = GridLayoutManager(activity, 2)
-            lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            val lm = androidx.recyclerview.widget.GridLayoutManager(activity, 2)
+            lm.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     val item = adapter.items[position]
                     return when(item) {
                         is Item.Preview -> 2
+                        is Item.QuickStart -> 2
                         else -> 1
                     }
                 }
@@ -126,26 +122,11 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             Analytics.event(Event.SelectContent.Action("new_deck"))
 
             // Generate a new session and pass to builder activity
-            disposables += editor.createSession()
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        startActivity(DeckBuilderActivity.createIntent(activity!!, it, true))
-                    }, {
-                        Timber.e(it)
-                        snackbar(R.string.error_session_opening_deck)
-                    })
+            createNewSession.accept(Unit)
         }
 
-        if (preferences.quickStart) {
-
-            // Fix for Fabric#212
-            @SuppressLint("RxSubscribeOnError")
-            disposables += Observable.timer(300L, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        quickTip.show(fab, R.string.deck_quickstart_message)
-                    }
-            preferences.quickStart = false
+        if (preferences.quickStart.get()) {
+            state = state.copy(quickStart = DecksUi.QuickStart())
         }
 
         @SuppressLint("RxSubscribeOnError")
@@ -168,6 +149,18 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         disposables += viewPreview
                 .subscribe { preview ->
                     startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
+                }
+
+        @SuppressLint("RxSubscribeOnError")
+        disposables += dismissQuickStart
+                .subscribe {
+                    preferences.quickStart.set(false)
+                }
+
+        @SuppressLint("RxSubscribeOnError")
+        disposables += quickStartClicks
+                .subscribe {
+                    createSession.accept(it)
                 }
 
         renderer.start()
@@ -195,7 +188,10 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
 
-    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview", "Forbidden Light")) }
+    override fun createSession(): Observable<Deck> = createSession
+    override fun createNewSession(): Observable<Unit> = createNewSession
+    override fun clearSession(): Observable<Unit> = clearSession
+    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview")) }
     override fun shareClicks(): Observable<Deck> = shareClicks
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
     override fun deleteClicks(): Observable<Deck> = deleteClicks.flatMap { deck ->
@@ -228,6 +224,11 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
     override fun balanceShortcuts(decks: List<Deck>) {
         Shortcuts.balanceShortcuts(activity!!, decks)
+    }
+
+    override fun openSession(sessionId: Long) {
+        clearSession.accept(Unit)
+        startActivity(DeckBuilderActivity.createIntent(activity!!, sessionId))
     }
 
     companion object {

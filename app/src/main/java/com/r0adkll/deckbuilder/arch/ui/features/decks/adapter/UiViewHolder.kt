@@ -3,14 +3,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.Shader
-import android.graphics.drawable.*
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
-import com.caverock.androidsvg.SVG
-import com.caverock.androidsvg.SVGParseException
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
@@ -18,21 +17,30 @@ import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.ui.components.preview.ExpansionPreviewRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.DECK
-import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.PREVIEW
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.*
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
-import com.r0adkll.deckbuilder.util.extensions.toBitmap
-import com.r0adkll.deckbuilder.util.svg.SvgSoftwareLayerSetter
-import com.r0adkll.deckbuilder.util.svg.SvgViewTarget
-import timber.log.Timber
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 
-sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), Disposable {
 
     abstract fun bind(item: I)
+
+    protected val disposables = CompositeDisposable()
+
+    override fun isDisposed(): Boolean {
+        return disposables.isDisposed
+    }
+
+    override fun dispose() {
+        disposables.clear()
+    }
 
 
     class PreviewViewHolder(
@@ -41,29 +49,27 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             private val viewPreview: Relay<ExpansionPreview>
     ) : UiViewHolder<Item.Preview>(itemView) {
 
-        private val background: LinearLayout by bindView(R.id.background)
-        private val foreground: ImageView by bindView(R.id.foreground)
-        private val logo: ImageView by bindView(R.id.logo)
-        private val title: TextView by bindView(R.id.title)
-        private val description: TextView by bindView(R.id.description)
-        private val actionDismiss: Button by bindView(R.id.actionDismiss)
-        private val actionView: Button by bindView(R.id.actionView)
+        private val background by bindView<LinearLayout>(R.id.background)
+        private val foreground by bindView<ImageView>(R.id.foreground)
+        private val logo by bindView<ImageView>(R.id.logo)
+        private val title by bindView<TextView>(R.id.title)
+        private val description by bindView<TextView>(R.id.description)
+        private val actionDismiss by bindView<Button>(R.id.actionDismiss)
+        private val actionView by bindView<Button>(R.id.actionView)
 
 
         override fun bind(item: Item.Preview) {
             val spec = item.spec.preview
 
             // Load logo
-            GlideApp.with(itemView)
-                    .load(spec.logoUrl)
-                    .into(logo)
+            ExpansionPreviewRenderer.applyLogo(logo, spec.logo)
 
             // Configure Background
-            background.background = createDrawable(spec.background)
+            disposables += ExpansionPreviewRenderer.applyBackground(background, spec.background)
 
             // Configure Foreground
             spec.foreground?.let {
-                applyDrawable(it, foreground)
+                disposables += ExpansionPreviewRenderer.applyForeground(foreground, it)
             }
 
             // Set Title & Description
@@ -82,74 +88,38 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             actionDismiss.setOnClickListener { dismissPreview.accept(Unit) }
             actionView.setOnClickListener { viewPreview.accept(item.spec) }
         }
+    }
 
 
-        private fun createDrawable(specs: List<ExpansionPreview.PreviewSpec.DrawableSpec>): Drawable {
-            val drawables = ArrayList<Drawable>(specs.size)
-            specs.forEach {
-                val drawable = createDrawable(it)
-                if (drawable != null) {
-                    drawables += drawable
-                }
+    class QuickViewHolder(
+            itemView: View,
+            private val quickStart: Relay<Deck>,
+            private val dismissQuickStart: Relay<Unit>
+    ) : UiViewHolder<Item.QuickStart>(itemView) {
+
+        private val recycler by bindView<RecyclerView>(R.id.recycler)
+        private val actionDismiss by bindView<Button>(R.id.actionDismiss)
+
+
+        override fun bind(item: Item.QuickStart) {
+            // Setup recycler
+            var adapter = recycler.adapter as? QuickStartRecyclerAdapter
+            if (adapter == null) {
+                adapter = QuickStartRecyclerAdapter(itemView.context, quickStart)
+                recycler.adapter = adapter
+                recycler.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             }
-            return LayerDrawable(drawables.toTypedArray())
-        }
 
-
-        private fun createDrawable(spec: ExpansionPreview.PreviewSpec.DrawableSpec): Drawable? {
-            return when(spec.type) {
-                "color" -> {
-                    val color = Color.parseColor(spec.data)
-                    ColorDrawable(color)
-                }
-                "tile" -> {
-                    val bitmap = spec.data.toBitmap()
-                    if (bitmap != null) {
-                        BitmapDrawable(itemView.resources, bitmap).apply {
-                            setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-                            setTargetDensity(itemView.resources.displayMetrics.densityDpi * 4)
-                        }
-                    } else {
-                        null
-                    }
-                }
-                "base64" -> {
-                    val bitmap = spec.data.toBitmap()
-                    if (bitmap != null) {
-                        Timber.d("Base64 > Bitmap (w: ${bitmap.width}, h: ${bitmap.height})")
-                        BitmapDrawable(itemView.resources, bitmap)
-                    } else {
-                        null
-                    }
-                }
-                else -> null
+            val items = if (item.quickStart.templates.isNotEmpty()) {
+                item.quickStart.templates.map { QuickStartRecyclerAdapter.Item.Template(it) }
+            } else {
+                (0 until 5).map { QuickStartRecyclerAdapter.Item.Placeholder(it) }
             }
-        }
 
-        private fun applyDrawable(spec: ExpansionPreview.PreviewSpec.DrawableSpec, imageView: ImageView) {
-            when(spec.type) {
-                "url" -> {
-                    GlideApp.with(imageView)
-                            .`as`(SVG::class.java)
-                            .load(spec.data)
-                            .listener(SvgSoftwareLayerSetter())
-                            .into(SvgViewTarget(imageView))
-                }
-                "svg" -> {
-                    imageView.post {
-                        try {
-                            val svg = SVG.getFromString(spec.data)
-                            val ratio = svg.documentViewBox.height() / svg.documentViewBox.width()
-                            svg.documentWidth = imageView.width.toFloat()
-                            svg.documentHeight = imageView.width.toFloat() * ratio
-                            imageView.setLayerType(ImageView.LAYER_TYPE_SOFTWARE, null)
-                            imageView.setImageDrawable(PictureDrawable(svg.renderToPicture()))
-                        } catch (e: SVGParseException) {
-                            Timber.e(e, "Error parsing SVG data, please check remote config")
-                        }
-                    }
-                }
-                else -> imageView.setImageDrawable(createDrawable(spec))
+            adapter.setQuickStartItems(items)
+
+            actionDismiss.setOnClickListener {
+                dismissQuickStart.accept(Unit)
             }
         }
     }
@@ -163,17 +133,23 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             private val deleteClicks: Relay<Deck>
     ) : UiViewHolder<Item.DeckItem>(itemView) {
 
-        private val image: DeckImageView by bindView(R.id.image)
-        private val title: TextView by bindView(R.id.title)
-        private val actionShare: ImageView by bindView(R.id.action_share)
-        private val actionMore: ImageView by bindView(R.id.action_more)
-        private val actionTest: ImageView by bindView(R.id.action_test)
+        private val image by bindView<DeckImageView>(R.id.image)
+        private val title by bindView<TextView>(R.id.title)
+        private val loading by bindView<ProgressBar>(R.id.loading)
+        private val error by bindView<ImageView>(R.id.error)
+        private val actionShare by bindView<ImageView>(R.id.action_share)
+        private val actionMore by bindView<ImageView>(R.id.action_more)
+        private val actionTest by bindView<ImageView>(R.id.action_test)
 
 
         @SuppressLint("ClickableViewAccessibility")
         override fun bind(item: Item.DeckItem) {
+            image.topCropEnabled = true
+
             val deck = item.deck
             title.text = deck.name
+            error.setVisible(item.deck.isMissingCards)
+            loading.setVisible(item.isLoading)
 
             deck.image?.let {
                 when(it) {
@@ -226,6 +202,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         PREVIEW(R.layout.item_set_preview),
+        QUICK_START(R.layout.item_quickstart),
         DECK(R.layout.item_deck);
 
         companion object {
@@ -251,10 +228,13 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                    testClicks: Relay<Deck>,
                    deleteClicks: Relay<Deck>,
                    dismissPreview: Relay<Unit>,
-                   viewPreview: Relay<ExpansionPreview>): UiViewHolder<Item> {
+                   viewPreview: Relay<ExpansionPreview>,
+                   quickStart: Relay<Deck>,
+                   dismissQuickStart: Relay<Unit>): UiViewHolder<Item> {
             val viewType = ViewType.of(layoutId)
             return when(viewType) {
                 PREVIEW -> PreviewViewHolder(itemView, dismissPreview, viewPreview) as UiViewHolder<Item>
+                QUICK_START -> QuickViewHolder(itemView, quickStart, dismissQuickStart) as UiViewHolder<Item>
                 DECK -> DeckViewHolder(itemView, shareClicks, duplicateClicks, testClicks, deleteClicks) as UiViewHolder<Item>
             }
         }

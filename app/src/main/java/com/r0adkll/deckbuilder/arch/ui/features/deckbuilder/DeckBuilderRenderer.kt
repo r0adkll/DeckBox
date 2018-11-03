@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
 import android.annotation.SuppressLint
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.CardUtils.stackCards
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
@@ -19,16 +20,16 @@ class DeckBuilderRenderer(
     override fun start() {
 
         disposables += state
-                .map { it.validation.standard }
+                .map {
+                    when {
+                        it.validation.standard -> Format.STANDARD
+                        it.validation.expanded -> Format.EXPANDED
+                        else -> Format.UNLIMITED
+                    }
+                }
                 .distinctUntilChanged()
                 .addToLifecycle()
-                .subscribe { actions.showIsStandard(it) }
-
-        disposables += state
-                .map { it.validation.expanded }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe { actions.showIsExpanded(it) }
+                .subscribe { actions.showFormat(it) }
 
         disposables += state
                 .map { it.validation.rules }

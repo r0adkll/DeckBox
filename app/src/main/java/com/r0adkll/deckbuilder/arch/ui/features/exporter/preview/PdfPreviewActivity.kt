@@ -10,7 +10,7 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.print.PrintAttributes
 import android.print.PrintManager
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast

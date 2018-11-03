@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_tiny"
     android:stateListAnimator="@animator/elevation_state_anim"
+    app:cardCornerRadius="@dimen/card_radius"
     android:foreground="?attr/selectableItemBackground">
 
     <RelativeLayout
@@ -18,6 +19,29 @@
             android:layout_height="186dp"
             android:scaleType="centerCrop"
             android:background="@color/grey_300"
+            />
+
+        <ImageView
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/margin_small"
+            android:src="@drawable/ic_error_red_24dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/bottom_bar"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            tools:visibility="visible"
             />
 
         <TextView
@@ -99,4 +123,4 @@
 
     </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

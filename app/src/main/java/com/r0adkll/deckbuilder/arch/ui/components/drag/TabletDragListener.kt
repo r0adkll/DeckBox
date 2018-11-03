@@ -3,8 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.components.drag
 
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
-import android.support.v4.view.ViewPager
-import android.support.v4.view.animation.FastOutSlowInInterpolator
+import androidx.viewpager.widget.ViewPager
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.view.DragEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -19,7 +19,7 @@ import io.pokemontcg.model.SuperType
 
 class TabletDragListener(
         val dropZone: View,
-        val pager: ViewPager
+        val pager: androidx.viewpager.widget.ViewPager
 ) : View.OnDragListener {
 
     private val selectedColor by lazy { dropZone.color(R.color.secondaryColor) }
@@ -150,7 +150,7 @@ class TabletDragListener(
          * Attach a new [TabletDragListener] to the target view to handle the
          * Drag n' Drop operation for tablet target
          */
-        fun attach(target: View, pager: ViewPager): TabletDragListener {
+        fun attach(target: View, pager: androidx.viewpager.widget.ViewPager): TabletDragListener {
             val listener = TabletDragListener(target, pager)
             target.setOnDragListener(listener)
             return listener
@@ -161,7 +161,7 @@ class TabletDragListener(
          * Attach a new [TabletDragListener] to the target view to handle the
          * Drag n' Drop operation for tablet target
          */
-        fun attach(target: View, pager: ViewPager, dropListener: (PokemonCard) -> Unit): TabletDragListener {
+        fun attach(target: View, pager: androidx.viewpager.widget.ViewPager, dropListener: (PokemonCard) -> Unit): TabletDragListener {
             val listener = TabletDragListener(target, pager)
             listener.setDropListener(dropListener)
             target.setOnDragListener(listener)

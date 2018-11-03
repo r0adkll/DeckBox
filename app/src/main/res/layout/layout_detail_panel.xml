@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/infoBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,32 +36,15 @@
             tools:visibility="visible"
             />
 
-        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-            android:id="@+id/format_standard"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-
-            android:padding="2dp"
-            app:ringPadding="4dp"
-            app:strokeWidth="2dp"
-            app:format="standard"
-
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-
-        <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-            android:id="@+id/format_expanded"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-
-            android:padding="2dp"
-            app:ringPadding="4dp"
-            app:strokeWidth="2dp"
-            app:format="expanded"
-
-            android:visibility="gone"
-            tools:visibility="visible"
+        <TextView
+            android:id="@+id/deckFormat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="Standard"
             />
 
     </LinearLayout>
@@ -115,7 +98,7 @@
         tools:visibility="visible"
         />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_deck_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -127,7 +110,7 @@
         android:hint="@string/hint_deck_name_input"
         >
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputDeckName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -135,9 +118,9 @@
             android:focusedByDefault="false"
             />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_deck_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -151,7 +134,7 @@
         app:counterOverflowTextAppearance="@style/TextAppearance.Deck.InputOverflow"
         >
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputDeckDescription"
             android:layout_width="match_parent"
             android:layout_height="128dp"
@@ -161,9 +144,9 @@
             android:maxLength="200"
             />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ruleRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

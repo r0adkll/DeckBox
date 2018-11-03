@@ -2,22 +2,38 @@ package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.domain.ExportTask
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State.*
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
 
 class TournamentExportPresenter @Inject constructor(
+        val exportTask: ExportTask,
         val ui: TournamentExportUi,
         val intentions: TournamentExportUi.Intentions,
-        val preferences: AppPreferences
+        val preferences: AppPreferences,
+        val validator: DeckValidator
 ) : Presenter() {
 
     override fun start() {
+
+        val initialFormat = when {
+            exportTask.sessionId != null -> validator.validate(exportTask.sessionId)
+            exportTask.deckId != null -> validator.validate(exportTask.deckId)
+            else -> Observable.empty()
+        }.map { when {
+            it.standard -> Format.STANDARD
+            it.expanded -> Format.EXPANDED
+            else -> Format.EXPANDED
+        } }.map { Change.FormatChange(it) as Change }
 
         val formatChange = intentions.formatChanged()
                 .map { Change.FormatChange(it) as Change }
@@ -37,7 +53,8 @@ class TournamentExportPresenter @Inject constructor(
                 .map { Change.AgeDivisionChange(it) as Change }
 
 
-        val merged = nameChange
+        val merged = initialFormat
+                .mergeWith(nameChange)
                 .mergeWith(idChange)
                 .mergeWith(dobChange)
                 .mergeWith(ageChange)

@@ -68,13 +68,6 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             action_continue.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
         }
 
-        val testLabSetting = Settings.System.getString(contentResolver, "firebase.test.lab")
-        if ("true" == testLabSetting) {
-            @SuppressLint("SetTextI18n")
-            action_continue.text = "Go away bots!!"
-            action_continue.isEnabled = false
-        }
-
         actionPrivacyPolicy.setOnClickListener {
             startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
         }
@@ -148,27 +141,29 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
 
     private fun signInAnonymously() {
-        try {
-            disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
-                    .subscribe({
-                        Analytics.event(Event.Login.Anonymous)
-                        startActivity(HomeActivity.createIntent(this@SetupActivity))
-                        finish()
-                    }, {
-                        Timber.e(it)
-                        Timber.i("Anonymous signin failed, generate an offline device id")
-                        signInOffline()
-                    })
-        } catch (e: Exception) {
-            Timber.e(e)
-            Timber.i("Anonymous signin failed, generate an offline device id")
-            signInOffline()
-        }
+//        try {
+//            disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
+//                    .subscribe({
+//                        Analytics.event(Event.Login.Anonymous)
+//                        startActivity(HomeActivity.createIntent(this@SetupActivity))
+//                        finish()
+//                    }, {
+//                        Timber.e(it)
+//                        Timber.i("Anonymous signin failed, generate an offline device id")
+//                        signInOffline()
+//                    })
+//        } catch (e: Exception) {
+//            Timber.e(e)
+//            Timber.i("Anonymous signin failed, generate an offline device id")
+//            signInOffline()
+//        }
+
+        signInOffline()
     }
 
 
     private fun signInOffline() {
-        preferences.deviceId = UUID.randomUUID().toString()
+        preferences.offlineId.set(UUID.randomUUID().toString())
         Analytics.event(Event.Login.Offline)
         startActivity(HomeActivity.createIntent(this@SetupActivity))
         finish()
@@ -181,13 +176,15 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
                 val acct = result.signInAccount
                 val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
                 firebaseAuth.signInWithCredential(credential)
-                        .addOnCompleteListener {
-                            if (it.isSuccessful) {
+                        .addOnCompleteListener { r ->
+                            if (r.isSuccessful) {
                                 // Auto-grab the user's name from their account
-                                it.result?.user?.displayName?.let {
+                                r.result?.user?.displayName?.let {
                                     preferences.playerName.set(it)
                                 }
-                                Analytics.userId(it.result.user.uid)
+                                r.result?.user?.uid?.let {
+                                    Analytics.userId(it)
+                                }
                                 Analytics.event(Event.Login.Google)
                                 startActivity(HomeActivity.createIntent(this@SetupActivity))
                                 finish()

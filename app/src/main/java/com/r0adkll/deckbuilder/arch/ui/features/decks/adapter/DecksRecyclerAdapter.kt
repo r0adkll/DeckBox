@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
@@ -17,13 +17,15 @@ class DecksRecyclerAdapter(
         private val deleteClicks: Relay<Deck>,
         private val testClicks: Relay<Deck>,
         private val dismissPreview: Relay<Unit>,
-        private val viewPreview: Relay<ExpansionPreview>
+        private val viewPreview: Relay<ExpansionPreview>,
+        private val quickStart: Relay<Deck>,
+        private val dismissQuickStart: Relay<Unit>
 ) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
         return UiViewHolder.create(itemView, viewType, shareClicks, duplicateClicks, testClicks,
-                deleteClicks, dismissPreview, viewPreview)
+                deleteClicks, dismissPreview, viewPreview, quickStart, dismissQuickStart)
     }
 
 
@@ -41,6 +43,22 @@ class DecksRecyclerAdapter(
             return items[position].viewType
         }
         return super.getItemViewType(position)
+    }
+
+
+    override fun getItemId(position: Int): Long {
+        val item = items[position]
+        return when(item) {
+            is Item.DeckItem -> item.deck.id.hashCode().toLong()
+            is Item.QuickStart -> 0L
+            is Item.Preview -> 1L
+        }
+    }
+
+
+    override fun onViewDetachedFromWindow(holder: UiViewHolder<Item>) {
+        super.onViewDetachedFromWindow(holder)
+        holder.dispose()
     }
 
 

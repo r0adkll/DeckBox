@@ -2,8 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
 
 import android.content.res.ColorStateList
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
@@ -31,7 +31,7 @@ import io.pokemontcg.model.Type
 import timber.log.Timber
 
 
-sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
 

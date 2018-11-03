@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.components
 
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 
 
 class DiffCallback<out T : RecyclerItem>(

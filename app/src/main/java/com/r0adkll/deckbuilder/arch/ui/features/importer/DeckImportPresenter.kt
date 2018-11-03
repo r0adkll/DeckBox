@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.importer
 
 
-import com.r0adkll.deckbuilder.arch.domain.features.ptcgo.repository.PTCGOConverter
+import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportUi.State.Change
@@ -14,14 +14,14 @@ import javax.inject.Inject
 class DeckImportPresenter @Inject constructor(
         val ui: DeckImportUi,
         val intentions: DeckImportUi.Intentions,
-        val converter: PTCGOConverter
+        val importer: Importer
 ) : Presenter() {
 
     override fun start() {
 
         val conversion = intentions.importDeckList()
-                .flatMap {
-                    converter.import(it)
+                .flatMap { deckList ->
+                    importer.import(deckList)
                             .map { Change.DeckListConverted(it) as Change }
                             .startWith(Change.IsLoading as Change)
                             .onErrorReturn(handleUnknownError)

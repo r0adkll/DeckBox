@@ -2,4 +2,5 @@
 <resources>
     <item name="glide_tag_id" type="id" />
     <item name="palette_id" type="id" />
+    <item name="tag_expansion_logo" type="id" />
 </resources>

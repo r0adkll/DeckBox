@@ -3,9 +3,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.exporter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
@@ -51,10 +51,10 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
 
     class ExportPagerAdapter(
             val context: Context,
-            fragmentManager: FragmentManager
-    ) : FragmentPagerAdapter(fragmentManager) {
+            fragmentManager: androidx.fragment.app.FragmentManager
+    ) : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
 
-        override fun getItem(position: Int): Fragment = when(position) {
+        override fun getItem(position: Int): androidx.fragment.app.Fragment = when(position) {
             0 -> TournamentExportFragment.newInstance()
             else -> PtcgoExportFragment.newInstance()
         }

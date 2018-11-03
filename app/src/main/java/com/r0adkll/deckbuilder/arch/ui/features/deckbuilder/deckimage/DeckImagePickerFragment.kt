@@ -3,8 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.widget.GridLayoutManager
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +27,7 @@ import javax.inject.Inject
 import kotlin.reflect.KClass
 
 
-class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Intentions, DeckImageUi.Actions {
+class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImageUi, DeckImageUi.Intentions, DeckImageUi.Actions {
 
     override var state: DeckImageUi.State = DeckImageUi.State.DEFAULT
 
@@ -59,7 +59,7 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
         adapter = DeckImageRecyclerAdapter(activity!!)
         adapter.setEmptyView(emptyView)
         recycler.adapter = adapter
-        recycler.layoutManager = GridLayoutManager(activity!!, 3)
+        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 3)
         recycler.itemAnimator = null
 
         adapter.setOnItemClickListener {

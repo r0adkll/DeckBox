@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
@@ -37,16 +38,20 @@ class CardDetailPresenter @Inject constructor(
                 .map { Change.Validated(it) as Change }
                 .onErrorReturn(handleUnknownError)
 
-        val loadVariants = repository.search(ui.state.card!!.supertype, "\"${ui.state.card!!.name}\"")
+        val loadVariants = repository.search(ui.state.card!!.supertype, ui.state.card!!.name)
                 .map { it.filter { it.id != ui.state.card!!.id } }
                 .map { Change.VariantsLoaded(it) as Change }
                 .onErrorReturn(handleUnknownError)
 
         val loadEvolves = ui.state.card!!.evolvesFrom?.let {
-            repository.search(ui.state.card!!.supertype, "\"$it\"")
+            repository.search(ui.state.card!!.supertype, it)
                     .map { Change.EvolvesFromLoaded(it) as Change }
                     .onErrorReturn(handleUnknownError)
         } ?: Observable.empty()
+
+        val loadEvolvesTo = repository.search(ui.state.card!!.supertype, "", Filter(evolvesFrom = ui.state.card!!.name))
+                .map { Change.EvolvesToLoaded(it) as Change }
+                .onErrorReturn(handleUnknownError)
 
         disposables += intentions.addCardClicks()
                 .flatMap { editor.addCards(ui.state.sessionId!!, listOf(ui.state.card!!)) }
@@ -66,6 +71,7 @@ class CardDetailPresenter @Inject constructor(
                 .mergeWith(loadVariants)
                 .mergeWith(loadValidation)
                 .mergeWith(loadEvolves)
+                .mergeWith(loadEvolvesTo)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)

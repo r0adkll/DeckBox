@@ -2,8 +2,8 @@ package com.r0adkll.deckbuilder.util
 
 
 import android.content.Context
-import android.support.annotation.StringRes
-import android.support.v7.app.AlertDialog
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import android.text.InputType
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -21,16 +21,16 @@ object DialogUtils {
         return Observable.create<Boolean> { s ->
             val builder = AlertDialog.Builder(context)
                     .setTitle(title.toText(context))
-                    .setPositiveButton(positiveActionText, { dialog, _ ->
+                    .setPositiveButton(positiveActionText) { dialog, _ ->
                         s.onNext(true)
                         s.onComplete()
                         dialog.dismiss()
-                    })
-                    .setNegativeButton(negativeActionText, { dialog, _ ->
+                    }
+                    .setNegativeButton(negativeActionText) { dialog, _ ->
                         s.onNext(false)
                         s.onComplete()
                         dialog.dismiss()
-                    })
+                    }
 
             message?.let { builder.setMessage(it.toText(context)) }
 
@@ -61,16 +61,16 @@ object DialogUtils {
             val builder = AlertDialog.Builder(context)
                     .setTitle(title)
                     .setView(view)
-                    .setPositiveButton(positiveActionText, { dialog, _ ->
+                    .setPositiveButton(positiveActionText) { dialog, _ ->
                         val text = input.text.toString()
                         s.onNext(text)
                         s.onComplete()
                         dialog.dismiss()
-                    })
-                    .setNegativeButton(android.R.string.cancel, { dialog, _ ->
+                    }
+                    .setNegativeButton(android.R.string.cancel) { dialog, _ ->
                         s.onComplete()
                         dialog.dismiss()
-                    })
+                    }
 
             message?.let { builder.setMessage(it) }
 

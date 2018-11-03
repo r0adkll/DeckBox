@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.repository
 
 
+import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 class DefaultEditRepository @Inject constructor(
         val cache: SessionCache,
+        val cardCache: CardCache,
         val decks: DeckRepository,
         val schedulers: Schedulers
 ) : EditRepository {
@@ -33,9 +35,12 @@ class DefaultEditRepository @Inject constructor(
 
     override fun persistSession(sessionId: Long): Observable<Unit> {
         return cache.getSession(sessionId)
-                .flatMap {
-                    decks.persistDeck(it.deckId, it.cards, it.name, it.description, it.image)
-                            .flatMap { cache.resetSession(sessionId) }
+                .flatMap { deck ->
+                    decks.persistDeck(deck.deckId, deck.cards, deck.name, deck.description, deck.image)
+                            .flatMap {
+                                cache.resetSession(sessionId)
+                                        .subscribeOn(schedulers.database)
+                            }
                 }
                 .subscribeOn(schedulers.database)
     }

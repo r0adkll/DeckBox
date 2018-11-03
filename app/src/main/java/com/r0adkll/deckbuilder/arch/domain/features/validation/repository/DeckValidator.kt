@@ -7,5 +7,7 @@ import io.reactivex.Observable
 
 interface DeckValidator {
 
+    fun validate(sessionId: Long): Observable<Validation>
+    fun validate(deckId: String): Observable<Validation>
     fun validate(cards: List<PokemonCard>): Observable<Validation>
 }

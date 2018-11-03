@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
 import android.graphics.Typeface
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity

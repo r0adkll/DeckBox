@@ -43,5 +43,11 @@ class CardDetailRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showEvolvesFrom(it) }
+
+        disposables += state
+                .map { it.evolvesTo }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.showEvolvesTo(it) }
     }
 }

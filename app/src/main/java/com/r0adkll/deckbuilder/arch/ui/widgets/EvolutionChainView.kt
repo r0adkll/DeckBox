@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -181,10 +181,10 @@ class EvolutionChainView @JvmOverloads constructor(
                     actionLayout.layoutParams = alp
 
                     // Calculate approximate cardWidth
-                    if (this@EvolutionChainView.parent is RecyclerView) {
-                        val p = this@EvolutionChainView.parent as RecyclerView
+                    if (this@EvolutionChainView.parent is androidx.recyclerview.widget.RecyclerView) {
+                        val p = this@EvolutionChainView.parent as androidx.recyclerview.widget.RecyclerView
                         if (p.width > 0) {
-                            val lm = p.layoutManager as GridLayoutManager
+                            val lm = p.layoutManager as androidx.recyclerview.widget.GridLayoutManager
                             cardWidth = (p.width - (2 * stageSpacing + (lm.spanCount - 1) * linkSpacing)) / lm.spanCount
                         }
                     }

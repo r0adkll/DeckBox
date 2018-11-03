@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.ftinc.kit.kotlin.extensions.Preferences
 import com.ftinc.kit.kotlin.extensions.Preferences.*
-import com.r0adkll.deckbuilder.arch.domain.features.tournament.model.AgeDivision
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences.*
 import javax.inject.Inject
@@ -23,24 +23,27 @@ class AppPreferences @Inject constructor(
         const val KEY_DEFAULT_ENERGY_SET = "pref_default_energy_set"
         const val KEY_PLAYER_NAME = "pref_player_name"
         const val KEY_PLAYER_ID = "pref_player_id"
+        const val KEY_OFFLINE_ID = "pref_offline_id"
+        const val KEY_OFFLINE_EXPANSIONS = "pref_offline_expansions"
+        const val KEY_OFFLINE_OUTLINE = "key_offline_outline"
         const val KEY_PLAYER_AGE_DIVISION = "pref_player_age_division"
         const val KEY_PLAYER_DOB = "pref_player_dob"
         const val KEY_PREVIEW_VERSION = "pref_last_preview_version"
 
         const val KEY_LAST_VERSION = "pref_last_version"
         const val KEY_DEVICE_ID = "pref_local_offline_device_id"
-
-        const val KEY_OFFLINE_ENABLED = "pref_offline_enabled"
     }
 
 
     var onboarding by BooleanPreference(KEY_ONBOARDING, false)
-    var quickStart by BooleanPreference(KEY_QUICKSTART, true)
     var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
     var deviceId by StringPreference(KEY_DEVICE_ID)
-    var offlineEnabled by BooleanPreference(KEY_OFFLINE_ENABLED, false)
     var expansionsVersion by IntPreference(KEY_EXPANSIONS_VERSION, 1)
 
+    val offlineId by ReactiveStringPreference(KEY_OFFLINE_ID)
+    val offlineExpansions by ReactiveStringSetPreference(KEY_OFFLINE_EXPANSIONS)
+    val offlineOutline by ReactiveBooleanPreference(KEY_OFFLINE_OUTLINE, true)
+    val quickStart by ReactiveBooleanPreference(KEY_QUICKSTART, true)
     val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
     val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)
 

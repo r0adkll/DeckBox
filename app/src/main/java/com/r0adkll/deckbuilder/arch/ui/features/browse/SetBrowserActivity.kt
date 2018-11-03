@@ -12,13 +12,14 @@ import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
+import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.graphics.ColorUtils
-import android.support.v7.graphics.Palette
-import android.support.v7.widget.GridLayoutManager
+import androidx.annotation.ColorInt
+import androidx.core.graphics.ColorUtils
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.util.UIUtils
+import com.google.android.material.appbar.AppBarLayout
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -41,9 +42,12 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.bindParcelable
+import com.r0adkll.deckbuilder.util.extensions.addLayoutHeight
+import com.r0adkll.deckbuilder.util.extensions.layoutHeight
+import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.palette.PaletteBitmap
-import com.r0adkll.deckbuilder.util.palette.PaletteBitmapViewTarget
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_set_browser.*
 import javax.inject.Inject
@@ -61,13 +65,15 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     private val filterChanges: Relay<SetBrowserUi.BrowseFilter> = PublishRelay.create()
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private lateinit var adapter: PokemonBuilderRecyclerAdapter
+    
+    private var statusBarHeight: Int = 0
+    
 
-    @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_browser)
 
-        state = state.copy(setCode = expansion.code, pageSize = expansion.totalCards)
+        state = state.copy(setCode = expansion.code, pageSize = expansion.totalCards + 100 /* Hack to account for secret rares */)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = " "
@@ -84,9 +90,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             tabs.getTabAt(index)?.tag = browseFilter.name
         }
 
-        tabs.tabMode = if (smallestWidth(TABLET_10)) TabLayout.MODE_FIXED else TabLayout.MODE_SCROLLABLE
-        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
+        tabs.tabMode = if (smallestWidth(TABLET_10)) com.google.android.material.tabs.TabLayout.MODE_FIXED else com.google.android.material.tabs.TabLayout.MODE_SCROLLABLE
+        tabs.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
                 val filter = when(tab.tag as? String) {
                     "ALL" -> BrowseFilter.ALL
                     "POKEMON" -> BrowseFilter.POKEMON
@@ -100,12 +106,18 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 Analytics.event(Event.SelectContent.Action("expansion_filter", filter.name))
             }
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
         })
 
-        appBarLayout.addOnOffsetChangedListener { view, offset ->
-            val height = view.height.toFloat() - ((appbar?.height ?: 0) + dipToPx(24f))
+        statusBarHeight = UIUtils.getStatusBarHeight(this)
+        appBarLayout.addLayoutHeight((statusBarHeight - dipToPx(24f)))
+        appbar?.margins(top = statusBarHeight)
+        logo?.layoutHeight(dipToPx(100f))
+        logo?.margins(top = (statusBarHeight - dipToPx(24f)) / 2)
+
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { view, offset ->
+            val height = view.height.toFloat() - ((appbar?.height ?: 0) + statusBarHeight)
             val percent = offset.toFloat() / height
             val minScale = 0.4f
             val maxScale = 1f
@@ -114,8 +126,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             logo.pivotY = logo.height.toFloat() * 0.9f
             logo.scaleX = scale
             logo.scaleY = scale
-        }
+        })
 
+        @SuppressLint("RxSubscribeOnError")
         disposables += cardClicks
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
@@ -125,7 +138,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         val spanCount = if (smallestWidth(TABLET_10)) 9 else 3
         adapter = PokemonBuilderRecyclerAdapter(this, spanCount, EditCardIntentions(), cardClicks)
         adapter.setEmptyView(emptyView)
-        recycler.layoutManager = GridLayoutManager(this, spanCount)
+        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, spanCount)
         recycler.adapter = adapter
 
         renderer.start()
@@ -181,7 +194,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         }
 
         if (!smallestWidth(TABLET_10) && tabs.tabCount <= 4) {
-            tabs.tabMode = TabLayout.MODE_FIXED
+            tabs.tabMode = com.google.android.material.tabs.TabLayout.MODE_FIXED
         }
     }
 
@@ -207,40 +220,57 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
-        override fun execute(palette: Palette?) {
+        override fun execute(palette: androidx.palette.graphics.Palette?) {
             palette?.let { p ->
                 if (expansion.code != "sm5") {
                     p.vibrantSwatch?.rgb?.let {
-                        if (expansion.code != "sm75") {
-                            backdrop.imageTintList = ColorStateList.valueOf(it)
-                            backdrop.imageTintMode = PorterDuff.Mode.ADD
-                        } else {
-                            val background = ColorDrawable(it)
-                            val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
-                            val foreground = BitmapDrawable(resources, pattern).apply {
-                                setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-                                setTargetDensity(resources.displayMetrics.densityDpi * 4)
+                        when(expansion.code) {
+                            "sm75" -> {
+                                val background = ColorDrawable(it)
+                                val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
+                                val foreground = BitmapDrawable(resources, pattern).apply {
+                                    setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
+                                    setTargetDensity(resources.displayMetrics.densityDpi * 4)
+                                }
+                                backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
+                                setNavigationColor(it)
                             }
-                            backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
-                        }
-
-                        // Calculate control color
-                        if (ColorUtils.calculateContrast(Color.WHITE, it) < 3.0) {
-                            val color = color(R.color.black87)
-                            val secondaryColor = color(R.color.black54)
-                            appbar?.navigationIcon?.setTint(color)
-                            tabs.setTabTextColors(secondaryColor, color)
-                            tabs.setSelectedTabIndicatorColor(color)
-
-                        } else {
-                            val color = Color.WHITE
-                            val secondaryColor = color(R.color.white70)
-                            appbar?.navigationIcon?.setTint(color)
-                            tabs.setTabTextColors(secondaryColor, color)
-                            tabs.setSelectedTabIndicatorColor(color)
+                            "sm8" -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    backdrop.setImageResource(R.drawable.dr_smlt_header)
+                                    setNavigationColor(Color.BLACK)
+                                } else {
+                                    backdrop.imageTintList = ColorStateList.valueOf(it)
+                                    backdrop.imageTintMode = PorterDuff.Mode.ADD
+                                    setNavigationColor(it)
+                                }
+                            }
+                            else -> {
+                                backdrop.imageTintList = ColorStateList.valueOf(it)
+                                backdrop.imageTintMode = PorterDuff.Mode.ADD
+                                setNavigationColor(it)
+                            }
                         }
                     }
                 }
+            }
+        }
+
+        fun setNavigationColor(@ColorInt color: Int) {
+            // Calculate control color
+            if (ColorUtils.calculateContrast(Color.WHITE, color) < 3.0) {
+                val color = color(R.color.black87)
+                val secondaryColor = color(R.color.black54)
+                appbar?.navigationIcon?.setTint(color)
+                tabs.setTabTextColors(secondaryColor, color)
+                tabs.setSelectedTabIndicatorColor(color)
+
+            } else {
+                val color = Color.WHITE
+                val secondaryColor = color(R.color.white70)
+                appbar?.navigationIcon?.setTint(color)
+                tabs.setTabTextColors(secondaryColor, color)
+                tabs.setSelectedTabIndicatorColor(color)
             }
         }
     }
