@@ -109,7 +109,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.w
                     val bitmap = spec.data.toBitmap()
                     if (bitmap != null) {
                         BackgroundDrawableWrapper(BitmapDrawable(itemView.resources, bitmap).apply {
-                            setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
+                            setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.MIRROR)
                             setTargetDensity(itemView.resources.displayMetrics.densityDpi * 3)
                         })
                     } else {

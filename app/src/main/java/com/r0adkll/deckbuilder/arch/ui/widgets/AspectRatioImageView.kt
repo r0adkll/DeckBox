@@ -24,14 +24,18 @@ class AspectRatioImageView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         if (drawable != null) {
-            if (ratioType == RATIO_WIDTH) {
-                val width = MeasureSpec.getSize(widthMeasureSpec)
-                val height = Math.round(width * (drawable.intrinsicHeight.toFloat() / drawable.intrinsicWidth.toFloat()))
-                setMeasuredDimension(width, height)
-            } else if (ratioType == RATIO_HEIGHT) {
-                val height = MeasureSpec.getSize(heightMeasureSpec)
-                val width = Math.round(height * (drawable.intrinsicWidth.toFloat() / drawable.intrinsicHeight.toFloat()))
-                setMeasuredDimension(width, height)
+            when (ratioType) {
+                RATIO_WIDTH -> {
+                    val width = MeasureSpec.getSize(widthMeasureSpec)
+                    val height = Math.round(width * (drawable.intrinsicHeight.toFloat() / drawable.intrinsicWidth.toFloat()))
+                    setMeasuredDimension(width, height)
+                }
+                RATIO_HEIGHT -> {
+                    val height = MeasureSpec.getSize(heightMeasureSpec)
+                    val width = Math.round(height * (drawable.intrinsicWidth.toFloat() / drawable.intrinsicHeight.toFloat()))
+                    setMeasuredDimension(width, height)
+                }
+                else -> super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             }
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -39,6 +43,7 @@ class AspectRatioImageView @JvmOverloads constructor(
     }
 
     companion object {
+        private const val RATIO_NONE = -1
         private const val RATIO_WIDTH = 0
         private const val RATIO_HEIGHT = 1
     }
