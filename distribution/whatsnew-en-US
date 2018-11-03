@@ -1,5 +1,4 @@
 • Hotfix for previous release where cards were missing from decks
----
 • Added 'Evolves to' related cards row in card detail view
 • Improved format validation with reprint support. Improved how the format is displayed
 • Fixed issue where secret rares wouldn't appear in the expansion browser
