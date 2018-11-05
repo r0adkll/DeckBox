@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.domain.features.preview
 
-import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import io.reactivex.Observable
 
 

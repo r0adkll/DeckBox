@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
+import android.os.Parcelable
 import androidx.annotation.StringRes
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
@@ -19,17 +20,16 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.V
 import io.pokemontcg.model.SubType.*
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
-@PaperParcel
-data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
+@Parcelize
+data class FilterSpec(val specs: List<Spec>) : Parcelable {
 
     fun apply(filter: Filter): List<Item> = specs.flatMap { it.apply(filter) }
 
 
-    sealed class Spec : PaperParcelable {
+    sealed class Spec : Parcelable {
 
         /**
          * Take a filter and apply the spec to it to generate a list of UI Items
@@ -44,21 +44,17 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
         }
 
 
-        @PaperParcel
+        @Parcelize
         class FieldSpec : Spec() {
 
             override fun apply(filter: Filter): List<Item> = listOf(
                     Item.Header(R.string.filter_header_search_field),
                     Item.Field(filter.field)
             )
-
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterSpec_Spec_FieldSpec.CREATOR
-            }
         }
 
 
-        @PaperParcel
+        @Parcelize
         class TypeSpec(val key: String, @StringRes val title: Int) : Spec() {
 
             override fun apply(filter: Filter): List<Item> = listOf(
@@ -73,14 +69,10 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                 "resistances" -> filter.resistances
                 else -> emptyList()
             }
-
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterSpec_Spec_TypeSpec.CREATOR
-            }
         }
 
 
-        @PaperParcel
+        @Parcelize
         class AttributeSpec(val attributes: List<FilterAttribute>) : Spec() {
 
             override fun apply(filter: Filter): List<Item> = listOf(
@@ -96,15 +88,10 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                 filter.superType?.let { attrs += SuperTypeAttribute(it) }
                 return attrs
             }
-
-
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterSpec_Spec_AttributeSpec.CREATOR
-            }
         }
 
 
-        @PaperParcel
+        @Parcelize
         class ExpansionSpec(
                 val expansions: List<Expansion>,
                 val visibility: FilterUi.ExpansionVisibility
@@ -155,14 +142,10 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                 }
                 return attrs
             }
-
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterSpec_Spec_ExpansionSpec.CREATOR
-            }
         }
 
 
-        @PaperParcel
+        @Parcelize
         class RaritySpec(val rarities: List<Rarity>) : Spec() {
 
             override fun apply(filter: Filter): List<Item> = listOf(
@@ -175,14 +158,10 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
                     RarityOption("rarity", it, filter.rarity.contains(it))
                 }
             }
-
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterSpec_Spec_RaritySpec.CREATOR
-            }
         }
 
 
-        @PaperParcel
+        @Parcelize
         class ValueRangeSpec(val key: String,
                              @StringRes val title: Int,
                              val min: Int,
@@ -204,7 +183,6 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
 
 
             companion object {
-                @JvmField val CREATOR = PaperParcelFilterSpec_Spec_ValueRangeSpec.CREATOR
 
                 fun parseValue(value: String?): Value {
                     return value?.let {
@@ -233,7 +211,6 @@ data class FilterSpec(val specs: List<Spec>) : PaperParcelable {
 
 
     companion object {
-        @JvmField val CREATOR = PaperParcelFilterSpec.CREATOR
 
         val DEFAULT by lazy {
             createPokemon(emptyList(), STANDARD)

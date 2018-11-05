@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.data.features.preview
 
 import com.google.gson.Gson
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
 import io.reactivex.Observable
 import java.io.IOException

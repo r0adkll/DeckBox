@@ -153,10 +153,10 @@ class DeckImageView @JvmOverloads constructor(
         mBoundsF = RectF(mBounds)
 
         if (mBorderDrawable != null) {
-            mBorderDrawable.bounds = mBounds
+            mBorderDrawable.bounds = mBounds!!
         }
         if (mMaskDrawable != null) {
-            mMaskDrawable.bounds = mBounds
+            mMaskDrawable.bounds = mBounds!!
         }
 
         if (changed) {

@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.onboarding
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -25,10 +26,9 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding_page.*
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
 import javax.inject.Inject
 
 
@@ -122,17 +122,13 @@ class OnboardingActivity : BaseActivity() {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class Page(
             @StringRes val title: Int,
             @StringRes val subtitle: Int,
             @DrawableRes val image: Int,
             val comingSoon: Boolean = false
-    ) : PaperParcelable {
-        companion object {
-            @JvmField val CREATOR = PaperParcelOnboardingActivity_Page.CREATOR
-        }
-    }
+    ) : Parcelable
 
 
     class PageFragment : androidx.fragment.app.Fragment() {

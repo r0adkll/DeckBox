@@ -1,13 +1,13 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface SearchUi : StateRenderer<SearchUi.State> {
@@ -35,14 +35,14 @@ interface SearchUi : StateRenderer<SearchUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val query: String,
             val filter: Filter,
             val isLoading: Boolean,
             val error: String?,
             val results: List<PokemonCard>
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         fun reduce(change: Change): State = when(change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
@@ -71,7 +71,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelSearchUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State("", Filter.DEFAULT, false, null, emptyList())

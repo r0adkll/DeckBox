@@ -1,12 +1,12 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 
@@ -35,14 +35,14 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val playerName: String?,
             val playerId: String?,
             val dob: Date?,
             val ageDivision: AgeDivision?,
             val format: Format?
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         fun reduce(change: Change): State = when(change) {
             is Change.PlayerName -> this.copy(playerName = change.name)
@@ -72,7 +72,6 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelTournamentExportUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(null, null, null, null, null)

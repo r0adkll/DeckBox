@@ -2,20 +2,20 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter
 
 
 import android.net.Uri
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 import com.r0adkll.deckbuilder.util.compact
 import com.r0adkll.deckbuilder.util.type
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
-sealed class DeckImage : PaperParcelable, RecyclerItem {
+sealed class DeckImage : Parcelable, RecyclerItem {
 
     abstract val uri: Uri
 
 
-    @PaperParcel
+    @Parcelize
     data class Pokemon(val imageUrl: String) : DeckImage() {
 
         override val layoutId: Int get() = R.layout.item_deck_image_pokemon
@@ -32,15 +32,10 @@ sealed class DeckImage : PaperParcelable, RecyclerItem {
             is Pokemon -> new.imageUrl == imageUrl
             else -> false
         }
-
-
-        companion object {
-            @JvmField val CREATOR = PaperParcelDeckImage_Pokemon.CREATOR
-        }
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class Type(val type1: io.pokemontcg.model.Type, val type2: io.pokemontcg.model.Type?) : DeckImage() {
 
         override val layoutId: Int get() = R.layout.item_deck_image_types
@@ -66,11 +61,6 @@ sealed class DeckImage : PaperParcelable, RecyclerItem {
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Type -> type1 == new.type1 && type2 == new.type2
             else -> false
-        }
-
-
-        companion object {
-            @JvmField val CREATOR = PaperParcelDeckImage_Type.CREATOR
         }
     }
 

@@ -11,7 +11,7 @@ import android.util.Base64
 import android.view.View
 import android.widget.ImageView
 import com.r0adkll.deckbuilder.GlideApp
-import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview.PreviewSpec
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview.PreviewSpec
 import com.r0adkll.deckbuilder.arch.ui.widgets.AspectRatioImageView
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.AlphaTransformation

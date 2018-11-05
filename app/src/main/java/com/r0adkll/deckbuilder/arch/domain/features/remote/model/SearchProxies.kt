@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.remote.model
+package com.r0adkll.deckbuilder.arch.domain.features.remote.model
 
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event

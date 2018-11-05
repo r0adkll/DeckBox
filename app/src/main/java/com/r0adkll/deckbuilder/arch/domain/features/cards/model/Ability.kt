@@ -1,15 +1,11 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
 
-@PaperParcel
+@Parcelize
 data class Ability(
         val name: String,
         val text: String
-) : PaperParcelable {
-    companion object {
-        @JvmField val CREATOR = PaperParcelAbility.CREATOR
-    }
-}
+) : Parcelable

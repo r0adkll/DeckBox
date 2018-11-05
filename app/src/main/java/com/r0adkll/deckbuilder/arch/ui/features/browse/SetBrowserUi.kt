@@ -1,14 +1,14 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browse
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
@@ -40,7 +40,7 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val setCode: String,
             val isLoading: Boolean,
@@ -48,7 +48,7 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
             val cards: List<PokemonCard>,
             val filter: BrowseFilter,
             val pageSize: Int = 300
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         val searchFilter: Filter
             get() = Filter.DEFAULT.copy(expansions = listOf(Expansion(setCode, null, "", "", 0, false, false, "", "", "")), pageSize = pageSize)
@@ -75,7 +75,6 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
         }
 
         companion object {
-            @JvmField val CREATOR = PaperParcelSetBrowserUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State("sm5", false, null, emptyList(), BrowseFilter.ALL)

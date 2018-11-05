@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.ExpansionCache
-import com.r0adkll.deckbuilder.arch.data.remote.Remote
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import timber.log.Timber
 import javax.inject.Inject
 

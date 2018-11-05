@@ -1,12 +1,8 @@
-package com.r0adkll.deckbuilder.arch.data.remote.model
+package com.r0adkll.deckbuilder.arch.domain.features.remote.model
 
 import android.graphics.Shader
 import android.os.Parcelable
-import androidx.room.Ignore
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
 
 
 @Parcelize

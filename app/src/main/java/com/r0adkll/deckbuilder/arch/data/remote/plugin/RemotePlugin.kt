@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.remote.plugin
 
-import com.r0adkll.deckbuilder.arch.data.remote.Remote
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 
 
 /**

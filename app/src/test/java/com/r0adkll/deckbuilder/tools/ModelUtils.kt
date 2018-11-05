@@ -121,5 +121,17 @@ object ModelUtils {
         return StackedPokemonCard(createPokemonCard(), count)
     }
 
-
+    fun createExpansion(
+            code: String,
+            ptcgoCode: String? = null,
+            name: String = "",
+            series: String = "",
+            totalCards: Int = 0,
+            standardLegal: Boolean = false,
+            expandedLegal: Boolean = false,
+            releaseDate: String = "",
+            symbolUrl: String = "",
+            logoUrl: String? = null
+    ): Expansion = Expansion(code, ptcgoCode, name, series, totalCards, standardLegal,
+            expandedLegal, releaseDate, symbolUrl, logoUrl)
 }

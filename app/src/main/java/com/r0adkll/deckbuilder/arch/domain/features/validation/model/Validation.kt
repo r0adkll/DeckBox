@@ -1,21 +1,15 @@
 package com.r0adkll.deckbuilder.arch.domain.features.validation.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
 
-
-@PaperParcel
+@Parcelize
 data class Validation(
         val standard: Boolean,
         val expanded: Boolean,
         val rules: List<Int>
-) : PaperParcelable {
+) : Parcelable {
 
     val isValid: Boolean get() = rules.isEmpty()
-
-
-    companion object {
-        @JvmField val CREATOR = PaperParcelValidation.CREATOR
-    }
 }
