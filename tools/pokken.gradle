@@ -30,7 +30,7 @@ task pokePrint {
             @Override
             Unit invoke(CardQueryBuilder cardQueryBuilder) {
                 cardQueryBuilder.pageSize = 1000
-                cardQueryBuilder.setCode = "sm35|sm4|sm5|sm6|sm7"
+                cardQueryBuilder.setCode = "sm5|sm6|sm7|sm75|sm8"
                 return null
             }
         }).all()

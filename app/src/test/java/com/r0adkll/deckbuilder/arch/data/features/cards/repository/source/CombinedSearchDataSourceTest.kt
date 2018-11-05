@@ -110,7 +110,6 @@ class CombinedSearchDataSourceTest {
         Verify on diskSource that diskSource.search(null, query, null) was called
     }
 
-
     @Test
     fun testFindWithConnectivity() {
         val cards = listOf(
@@ -128,6 +127,49 @@ class CombinedSearchDataSourceTest {
                 .blockingFirst()
 
         results shouldEqual cards
+        VerifyNotCalled on networkSource that networkSource.find(any())
+    }
+
+    @Test
+    fun testFindIncompleteWithConnectivity() {
+        val cards = listOf(
+                createPokemonCard().copy(id = "sm8-1"),
+                createPokemonCard().copy(id = "sm8-2"),
+                createPokemonCard().copy(id = "sm8-3"),
+                createPokemonCard().copy(id = "sm8-4")
+        )
+        val ids = cards.map { it.id }
+        When calling connectivity.isConnected() itReturns true
+        When calling diskSource.find(any()) itReturns Observable.just(cards.take(3))
+        When calling networkSource.find(any()) itReturns Observable.just(cards.subList(3, 4))
+        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
+
+        val results = combinedSearchDataSource.find(ids)
+                .blockingFirst()
+
+        results shouldContainAll  cards
+        Verify on diskSource that diskSource.find(ids) was called
+        Verify on networkSource that networkSource.find(listOf("sm8-4")) was called
+    }
+
+    @Test
+    fun testFindWithoutConnectivity() {
+        val cards = listOf(
+                createPokemonCard().copy(id = "sm8-1"),
+                createPokemonCard().copy(id = "sm8-2"),
+                createPokemonCard().copy(id = "sm8-3"),
+                createPokemonCard().copy(id = "sm8-4")
+        )
+        val ids = cards.map { it.id }
+        When calling connectivity.isConnected() itReturns false
+        When calling diskSource.find(any()) itReturns Observable.just(cards)
+        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
+
+        val results = combinedSearchDataSource.find(ids)
+                .blockingFirst()
+
+        results shouldEqual cards
+        Verify on diskSource that diskSource.find(ids) was called
         VerifyNotCalled on networkSource that networkSource.find(any())
     }
 }

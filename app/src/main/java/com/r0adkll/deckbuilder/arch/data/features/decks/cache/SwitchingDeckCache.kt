@@ -12,7 +12,7 @@ class SwitchingDeckCache @Inject constructor(
         val roomDeckCache: RoomDeckCache,
         val firestoreDeckCache: FirestoreDeckCache,
         val preferences: AppPreferences
-        ): DeckCache {
+): DeckCache {
 
     override fun getDeck(id: String): Observable<Deck> = when(isOffline()) {
         true -> roomDeckCache.getDeck(id)

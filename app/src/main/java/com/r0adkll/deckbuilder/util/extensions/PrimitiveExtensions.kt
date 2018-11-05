@@ -40,17 +40,6 @@ fun String.rawFromHtml(): String {
 }
 
 
-fun String.toBitmap(): Bitmap? {
-    val bytes = Base64.decode(this, Base64.DEFAULT)
-    try {
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-    } catch (e: OutOfMemoryError) {
-        Timber.e(e, "Error decoding image, no memory")
-    }
-    return null
-}
-
-
 fun Long.avatarPad(): String {
     return String.format("%010d", this)
 }
