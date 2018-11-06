@@ -1,7 +1,4 @@
-• Hotfix for crash on Android 6.x and lower devices
-• Fixed bug where validation warning icon would flash when leaving deckbuilder
-• Fixed UI bug in the headers of some expansion browsers
-• Fixed bug where searching was broken when you've cached sets for offline usuage
-• Fixed bug in Expansion preview card causing frequent crashes
+• Fixed bug with BREAK and MEGA evolutions displaying incorrectly
+
 ---
 • For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md
