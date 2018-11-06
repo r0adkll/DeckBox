@@ -152,5 +152,23 @@ class EvolutionChainTest {
     }
 
 
+    @Test
+    fun testBreakEvolutionChain() {
+        val pokemons = listOf(
+                createPokemonCard().copy(id = "xy11-6", name = "Yanma", nationalPokedexNumber = 193).stack(),
+                createPokemonCard().copy(id = "xy11-8", name = "Yanmega BREAK", nationalPokedexNumber = 469, evolvesFrom = "Yanmega").stack(),
+                createPokemonCard().copy(id = "xy11-7", name = "Yanmega", nationalPokedexNumber = 469, evolvesFrom = "Yanma").stack()
+        )
+
+        val chains = EvolutionChain.build(pokemons)
+
+        chains.size shouldEqualTo 1
+        chains[0].nodes.size shouldEqualTo 3
+        chains[0].nodes[0].name!!.shouldBeEqualTo("Yanma")
+        chains[0].nodes[1].name!!.shouldBeEqualTo("Yanmega")
+        chains[0].nodes[2].name!!.shouldBeEqualTo("Yanmega BREAK")
+    }
+
+
     fun PokemonCard.stack(count: Int = 1): StackedPokemonCard = StackedPokemonCard(this, count)
 }
