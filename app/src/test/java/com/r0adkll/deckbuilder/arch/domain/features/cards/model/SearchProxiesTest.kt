@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 import com.google.gson.Gson
-import com.r0adkll.deckbuilder.arch.data.remote.model.SearchProxies
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Before
 import org.junit.Test

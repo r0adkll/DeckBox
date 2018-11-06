@@ -13,7 +13,7 @@ import com.ftinc.kit.kotlin.extensions.setVisible
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
@@ -68,8 +68,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             disposables += ExpansionPreviewRenderer.applyBackground(background, spec.background)
 
             // Configure Foreground
-            spec.foreground?.let {
-                disposables += ExpansionPreviewRenderer.applyForeground(foreground, it)
+            spec.foreground?.let { s ->
+                ExpansionPreviewRenderer.applyForeground(foreground, s)?.let { disposables += it }
             }
 
             // Set Title & Description

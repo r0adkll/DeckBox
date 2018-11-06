@@ -1,9 +1,6 @@
-• Hotfix for previous release where cards were missing from decks
-• Added 'Evolves to' related cards row in card detail view
-• Improved format validation with reprint support. Improved how the format is displayed
-• Fixed issue where secret rares wouldn't appear in the expansion browser
-• Improved the onboarding experience
-• Added improved offline support
-• Added notch support
-• Added automatic clipboard detection when importing cards
-• Added ability to download cards and images for offline use
+• Fixed bug where validation warning icon would flash when leaving deckbuilder
+• Fixed UI bug in the headers of some expansion browsers
+• Fixed bug where searching was broken when you've cached sets for offline usuage
+• Fixed bug in Expansion preview card causing frequent crashes
+---
+• For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md

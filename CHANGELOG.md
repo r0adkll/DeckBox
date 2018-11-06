@@ -1,3 +1,10 @@
+# 1.7.8
+* [#56](https://github.com/r0adkll/DeckBox/issues/56) - Fixed Glide issue causing recycled bitmap bug
+* [#55](https://github.com/r0adkll/DeckBox/issues/55) - Fixed issue where searching was forced into disk even with connectivity
+* Fixed issue with validation icon flashing
+* Fixed UI bug in expansion browser header
+
+
 # 1.7.7
 * Hotfix for issue where decks were missing cards due to find(ids) paging limit
 

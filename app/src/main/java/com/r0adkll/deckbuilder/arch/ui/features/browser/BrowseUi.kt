@@ -1,14 +1,14 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browser
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface BrowseUi : StateRenderer<BrowseUi.State> {
@@ -31,14 +31,14 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val isLoading: Boolean,
             val error: String?,
             val expansions: List<Expansion>,
             val offlineStatus: OfflineStatus?,
             val offlineOutline: Boolean
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         fun reduce(change: Change): State = when(change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
@@ -64,7 +64,6 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelBrowseUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(false, null, emptyList(), null, true)

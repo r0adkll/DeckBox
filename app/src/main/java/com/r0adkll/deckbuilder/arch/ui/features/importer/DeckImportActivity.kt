@@ -170,8 +170,8 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
         if (clipboardManager.hasPrimaryClip()) {
             clipboardManager.primaryClip?.let { clip ->
                 if (clip.itemCount > 0) {
-                    val lines = clip.getItemAt(0).text.split("\n")
-                    if (lines.any { importLineValidator.validate(it) != null }) {
+                    val lines = clip.getItemAt(0).text?.split("\n")
+                    if (lines?.any { importLineValidator.validate(it) != null } == true) {
                         // Some valid deck format found, suggest paste
                         if (clipboardSnackBar?.isShownOrQueued == false) {
                             clipboardSnackBar?.setText(R.string.import_clipboard_found_message)

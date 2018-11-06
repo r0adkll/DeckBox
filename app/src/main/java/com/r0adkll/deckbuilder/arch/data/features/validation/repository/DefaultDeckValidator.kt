@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 
 
-import com.r0adkll.deckbuilder.arch.data.remote.Remote
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository

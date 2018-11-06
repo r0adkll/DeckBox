@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
 
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
-import com.r0adkll.deckbuilder.arch.data.remote.Remote
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.mappings.CardMapper
 import com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper
@@ -11,7 +11,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.util.Schedulers
-import com.r0adkll.deckbuilder.util.helper.Connectivity
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
 import io.pokemontcg.model.SuperType

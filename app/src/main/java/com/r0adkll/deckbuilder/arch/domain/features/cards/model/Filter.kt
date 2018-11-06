@@ -1,12 +1,12 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 /**
@@ -16,7 +16,7 @@ import paperparcel.PaperParcelable
  * @see com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper
  * @see com.r0adkll.deckbuilder.arch.data.database.util.FilterQueryHelper
  */
-@PaperParcel
+@Parcelize
 data class Filter(
         val field: SearchField = SearchField.NAME,
         val types: List<Type> = emptyList(),
@@ -33,7 +33,7 @@ data class Filter(
         val weaknesses: List<Type> = emptyList(),
         val resistances: List<Type> = emptyList(),
         val pageSize: Int = 1000
-) : PaperParcelable {
+) : Parcelable {
 
     val isEmptyWithoutField: Boolean
         get() {
@@ -48,7 +48,6 @@ data class Filter(
 
 
     companion object {
-        @JvmField val CREATOR = PaperParcelFilter.CREATOR
 
         val DEFAULT by lazy {
             Filter()

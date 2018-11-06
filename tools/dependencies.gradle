@@ -9,7 +9,7 @@ ext {
     espresso_version = '3.1.0-alpha4'
     mockito_version = '1.10.19'
     runner_version = '1.1.0-alpha4'
-    kluent_version = '1.27'
+    kluent_version = '1.42'
 
     // Dependencies
     bottombar_version =      '2.3.1'
@@ -19,7 +19,6 @@ ext {
     ftkit_version =          '0.5.5-SNAPSHOT'
     glide_version =          '4.0.0'
     leakcanary_version =     '1.5.1'
-    paperparcel_version =    '2.0.5'
     play_version =           '15.0.0'
     poketcg_version =        '1.0.15'
     retrofit_version =       '2.3.0'

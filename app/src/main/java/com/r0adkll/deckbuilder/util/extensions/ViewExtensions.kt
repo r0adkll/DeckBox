@@ -6,8 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 
 
 fun View.isVisible(): Boolean = this.visibility == View.VISIBLE

@@ -3,19 +3,14 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.PublishRelay
-import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
@@ -38,10 +33,7 @@ import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_decks.*
-import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 

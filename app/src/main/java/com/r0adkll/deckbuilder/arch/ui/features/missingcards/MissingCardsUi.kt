@@ -1,12 +1,12 @@
 package com.r0adkll.deckbuilder.arch.ui.features.missingcards
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface MissingCardsUi : StateRenderer<MissingCardsUi.State> {
@@ -38,7 +38,7 @@ interface MissingCardsUi : StateRenderer<MissingCardsUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val isLoading: Boolean,
             val error: String?,
@@ -49,7 +49,7 @@ interface MissingCardsUi : StateRenderer<MissingCardsUi.State> {
             val expansion: Expansion?,
             val print: String,
             val reportSubmitted: Boolean
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         val isReportReady: Boolean
             get() = !name.isNullOrBlank()
@@ -80,7 +80,6 @@ interface MissingCardsUi : StateRenderer<MissingCardsUi.State> {
         }
 
         companion object {
-            @JvmField val CREATOR = PaperParcelMissingCardsUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(false, null, emptyList(), null, null, null, null, "Regular Art", false)

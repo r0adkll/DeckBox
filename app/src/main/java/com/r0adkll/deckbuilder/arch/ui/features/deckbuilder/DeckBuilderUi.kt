@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
@@ -11,8 +12,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.SuperType.*
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
@@ -51,7 +51,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State @JvmOverloads constructor(
             val sessionId: Long,
 
@@ -70,7 +70,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @Transient val pokemonCards: List<PokemonCard> = emptyList(),
             @Transient val trainerCards: List<PokemonCard> = emptyList(),
             @Transient val energyCards: List<PokemonCard> = emptyList()
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         val allCards: List<PokemonCard>
             get() = pokemonCards.plus(trainerCards).plus(energyCards)
@@ -151,7 +151,6 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(-1L, false, false, false, false, null, null, null, null,

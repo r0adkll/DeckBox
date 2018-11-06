@@ -1,17 +1,13 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 
+import android.os.Parcelable
 import io.pokemontcg.model.Type
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
-@PaperParcel
+@Parcelize
 data class Effect(
         val type: Type,
         val value: String
-) : PaperParcelable {
-    companion object {
-        @JvmField val CREATOR = PaperParcelEffect.CREATOR
-    }
-}
+) : Parcelable
