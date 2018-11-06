@@ -68,8 +68,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             disposables += ExpansionPreviewRenderer.applyBackground(background, spec.background)
 
             // Configure Foreground
-            spec.foreground?.let {
-                disposables += ExpansionPreviewRenderer.applyForeground(foreground, it)
+            spec.foreground?.let { s ->
+                ExpansionPreviewRenderer.applyForeground(foreground, s)?.let { disposables += it }
             }
 
             // Set Title & Description

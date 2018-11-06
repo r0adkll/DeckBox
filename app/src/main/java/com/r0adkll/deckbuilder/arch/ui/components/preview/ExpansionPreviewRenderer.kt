@@ -48,7 +48,7 @@ object ExpansionPreviewRenderer {
     }
 
 
-    fun applyForeground(imageView: ImageView, spec: PreviewSpec.DrawableSpec): Disposable {
+    fun applyForeground(imageView: ImageView, spec: PreviewSpec.DrawableSpec): Disposable? {
         // Apply options
         imageView.margins(spec.margins)
         spec.alpha?.let { imageView.alpha = it }
@@ -62,14 +62,27 @@ object ExpansionPreviewRenderer {
             }
         }
 
-        // Load Drawable
-        return createDrawable(imageView.context, spec)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    imageView.setImageDrawable(it)
-                }, {
-                    Timber.e(it, "Error loading foreground drawable")
-                })
+        // Due to Issue #56 - If it's an URL shortcut to using glide
+        if (spec.source.type == "url") {
+            var request = GlideApp.with(imageView)
+                    .load(spec.source.value)
+
+            spec.alpha?.let {
+                request = request.transform(AlphaTransformation(it))
+            }
+
+            request.into(imageView)
+
+            return null
+        } else {
+            return createDrawable(imageView.context, spec)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        imageView.setImageDrawable(it)
+                    }, {
+                        Timber.e(it, "Error loading foreground drawable")
+                    })
+        }
     }
 
 
