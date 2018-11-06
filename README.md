@@ -16,6 +16,10 @@ Seamlessly integrate with your Pokémon TCG Online game by importing and exporti
 Sign in with our Google account to build and edit your decks across all of your devices, or just continue without one and link it later.
 
 
+###[Roadmap](https://github.com/r0adkll/DeckBox/projects/1)
+View the progress of upcoming and currently worked on features for this project.
+
+
 ## API
 [![pokemontcg-developers on discord](https://img.shields.io/badge/discord-pokemontcg--developers-738bd7.svg)](https://discord.gg/dpsTCvg)  
 DeckBox is powered by [pokemontcg.io](https://pokemontcg.io) 
