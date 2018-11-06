@@ -39,7 +39,7 @@ class FirestoreDeckCache @Inject constructor(
                         cardRepository.find(cardIds.toList())
                                 .map { EntityMapper.to(deck, it) }
                     }
-                    .doOnNext { Timber.d("Firebase::getDeck($id) - Thread(${Thread.currentThread()?.name})") }
+                    .doOnNext { Timber.d("Firebase::getDeck($id) - Thread(${Thread.currentThread().name})") }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
@@ -60,7 +60,7 @@ class FirestoreDeckCache @Inject constructor(
                                 decks += deckEntity
                             }
 
-                            Timber.d("Firebase::getDecks() - Thread(${Thread.currentThread()?.name})")
+                            Timber.d("Firebase::getDecks() - Thread(${Thread.currentThread().name})")
                             emitter.onNext(decks)
                         })
 

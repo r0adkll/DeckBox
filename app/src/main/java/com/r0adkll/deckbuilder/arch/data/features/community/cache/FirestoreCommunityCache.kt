@@ -69,7 +69,7 @@ class FirestoreCommunityCache @Inject constructor(
     private fun <T : FirebaseEntity> getCollectionItems(query: Query, clazz: KClass<T>): Observable<List<T>> {
         return RxFirebase.from(query.get()/*, schedulers.firebaseExecutor*/)
                 .map { snapshot ->
-                    Timber.d("Firebase::getTemplates() - Thread(${Thread.currentThread()?.name})")
+                    Timber.d("Firebase::getTemplates() - Thread(${Thread.currentThread().name})")
                     if (!snapshot.isEmpty) {
                         val items = ArrayList<T>()
                         snapshot.documents.forEach { document ->

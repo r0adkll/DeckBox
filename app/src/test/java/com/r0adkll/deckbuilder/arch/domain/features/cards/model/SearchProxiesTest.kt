@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 import com.google.gson.Gson
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Before
 import org.junit.Test
@@ -34,8 +35,8 @@ class SearchProxiesTest {
         val lowercaseResult = proxies.apply(input)
         val uppercaseResult = proxies.apply(inputUpper)
 
-        lowercaseResult.shouldEqualTo("\"N\"")
-        uppercaseResult.shouldEqualTo("\"N\"")
+        lowercaseResult.shouldBeEqualTo("\"N\"")
+        uppercaseResult.shouldBeEqualTo("\"N\"")
     }
 
 
@@ -43,7 +44,7 @@ class SearchProxiesTest {
     fun shouldFixElectricEnergyQuery() {
         val input = "Electric Energy"
         val result = proxies.apply(input)
-        result.shouldEqualTo("Lightning Energy")
+        result.shouldBeEqualTo("Lightning Energy")
     }
 
 
@@ -51,7 +52,7 @@ class SearchProxiesTest {
     fun shouldNotFixElectricEnergyQuery() {
         val input = "Electric Memory"
         val result = proxies.apply(input)
-        result.shouldEqualTo(input)
+        result.shouldBeEqualTo(input)
     }
 
 
@@ -59,7 +60,7 @@ class SearchProxiesTest {
     fun shouldFixDarkEnergyQuery() {
         val input = "Dark Energy"
         val result = proxies.apply(input)
-        result.shouldEqualTo("Darkness Energy")
+        result.shouldBeEqualTo("Darkness Energy")
     }
 
 
@@ -67,7 +68,7 @@ class SearchProxiesTest {
     fun shouldNotFixDarkEnergyQuery() {
         val input = "Dark Memory"
         val result = proxies.apply(input)
-        result.shouldEqualTo(input)
+        result.shouldBeEqualTo(input)
     }
 
 
@@ -75,7 +76,7 @@ class SearchProxiesTest {
     fun shouldFixSteelEnergyQuery() {
         val input = "Steel Energy"
         val result = proxies.apply(input)
-        result.shouldEqualTo("Metal Energy")
+        result.shouldBeEqualTo("Metal Energy")
     }
 
 
@@ -83,7 +84,7 @@ class SearchProxiesTest {
     fun shouldNotFixSteelEnergyQuery() {
         val input = "Steel Memory"
         val result = proxies.apply(input)
-        result.shouldEqualTo(input)
+        result.shouldBeEqualTo(input)
     }
 
 
@@ -95,8 +96,8 @@ class SearchProxiesTest {
         val result = proxies.apply(input)
         val result2 = proxies.apply(input2)
 
-        result.shouldEqualTo("Espeon-EX")
-        result2.shouldEqualTo("Alolan Execuggtor-EX")
+        result.shouldBeEqualTo("Espeon-EX")
+        result2.shouldBeEqualTo("Alolan Execuggtor-EX")
     }
 
 
@@ -108,8 +109,8 @@ class SearchProxiesTest {
         val result = proxies.apply(input)
         val result2 = proxies.apply(input2)
 
-        result.shouldEqualTo("Espeon-GX")
-        result2.shouldEqualTo("Alolan Execuggtor-GX")
+        result.shouldBeEqualTo("Espeon-GX")
+        result2.shouldBeEqualTo("Alolan Execuggtor-GX")
     }
 
 
@@ -121,7 +122,7 @@ class SearchProxiesTest {
         val result = proxies.apply(input)
         val result2 = proxies.apply(input2)
 
-        result.shouldEqualTo("M Mewtwo-GX")
-        result2.shouldEqualTo("Mega")
+        result.shouldBeEqualTo("M Mewtwo-GX")
+        result2.shouldBeEqualTo("Mega")
     }
 }

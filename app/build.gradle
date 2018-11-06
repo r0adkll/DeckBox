@@ -80,7 +80,7 @@ androidExtensions {
 dependencies {
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
-    testImplementation "org.amshove.kluent:kluent:$kluent_version"
+    testImplementation "org.amshove.kluent:kluent-android:$kluent_version"
     androidTestImplementation "org.amshove.kluent:kluent-android:$kluent_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
@@ -91,7 +91,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
-    implementation "androidx.appcompat:appcompat:$support_version"
+    implementation "androidx.appcompat:appcompat:1.0.1"
     implementation "androidx.recyclerview:recyclerview:$support_version"
     implementation "androidx.cardview:cardview:$support_version"
     implementation "androidx.preference:preference:$support_version"
