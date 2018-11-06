@@ -13,6 +13,7 @@ import android.widget.ImageView
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview.PreviewSpec
 import com.r0adkll.deckbuilder.arch.ui.widgets.AspectRatioImageView
+import com.r0adkll.deckbuilder.arch.ui.widgets.BackgroundDrawableWrapper
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.AlphaTransformation
 import com.r0adkll.deckbuilder.util.glide.RxGlide.asObservable
@@ -115,6 +116,7 @@ object ExpansionPreviewRenderer {
                         }
                     } as Drawable
                 }
+                .map { BackgroundDrawableWrapper(it) as Drawable }
                 .subscribeOn(Schedulers.computation())
     }
 
