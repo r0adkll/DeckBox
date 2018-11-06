@@ -298,16 +298,23 @@ class SettingsActivity : BaseActivity() {
                                     setupPreferences()
 
                                     // Now we need to migrate any existing local decks to their account
-                                    migrationSnackbar = Snackbar.make(view!!, R.string.account_migration_started, Snackbar.LENGTH_INDEFINITE)
-                                    migrationSnackbar?.show()
+                                    view?.let {
+                                        migrationSnackbar = Snackbar.make(it, R.string.account_migration_started, Snackbar.LENGTH_INDEFINITE)
+                                        migrationSnackbar?.show()
+                                    }
+
                                     disposables += accountRepository.migrateAccount()
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe({
-                                                migrationSnackbar = Snackbar.make(view!!, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
-                                                migrationSnackbar?.show()
-                                            }, {
-                                                migrationSnackbar = Snackbar.make(view!!, it.localizedMessage, Snackbar.LENGTH_SHORT)
-                                                migrationSnackbar?.show()
+                                                view?.let { v ->
+                                                    migrationSnackbar = Snackbar.make(v, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
+                                                    migrationSnackbar?.show()
+                                                }
+                                            }, { e ->
+                                                view?.let { v ->
+                                                    migrationSnackbar = Snackbar.make(v, e.localizedMessage, Snackbar.LENGTH_SHORT)
+                                                    migrationSnackbar?.show()
+                                                }
                                             })
 
 
