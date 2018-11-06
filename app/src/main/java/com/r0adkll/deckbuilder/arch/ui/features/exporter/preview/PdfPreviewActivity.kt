@@ -122,8 +122,8 @@ class PdfPreviewActivity : BaseActivity() {
     private fun openRenderer() {
         fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
         // This is the PdfRenderer we use to render the PDF.
-        if (fileDescriptor != null) {
-            renderer = PdfRenderer(fileDescriptor)
+        fileDescriptor?.let {
+            renderer = PdfRenderer(it)
         }
     }
 

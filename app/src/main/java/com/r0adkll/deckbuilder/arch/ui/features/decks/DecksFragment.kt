@@ -106,14 +106,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
 
-        fab.setOnClickListener { _ ->
-            if (quickTip.isVisible()) {
-                quickTip.hide(fab)
-            }
-
+        fab.setOnClickListener {
             Analytics.event(Event.SelectContent.Action("new_deck"))
-
-            // Generate a new session and pass to builder activity
             createNewSession.accept(Unit)
         }
 

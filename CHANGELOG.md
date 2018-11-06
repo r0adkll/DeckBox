@@ -1,3 +1,6 @@
+# 1.7.9
+* Hotfix for Java 1.8 bug on Android 6.x and lower devices
+
 # 1.7.8
 * [#56](https://github.com/r0adkll/DeckBox/issues/56) - Fixed Glide issue causing recycled bitmap bug
 * [#55](https://github.com/r0adkll/DeckBox/issues/55) - Fixed issue where searching was forced into disk even with connectivity
