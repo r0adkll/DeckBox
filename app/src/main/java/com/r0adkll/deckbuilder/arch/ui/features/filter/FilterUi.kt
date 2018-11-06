@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
@@ -15,8 +16,7 @@ import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface FilterUi : StateRenderer<FilterUi.State> {
@@ -50,48 +50,29 @@ interface FilterUi : StateRenderer<FilterUi.State> {
     }
 
 
-    sealed class FilterAttribute : PaperParcelable {
+    sealed class FilterAttribute : Parcelable {
 
-        @PaperParcel
-        data class SuperTypeAttribute(val superType: SuperType) : FilterAttribute() {
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_SuperTypeAttribute.CREATOR
-            }
-        }
+        @Parcelize
+        data class SuperTypeAttribute(val superType: SuperType) : FilterAttribute()
 
+        @Parcelize
+        data class SubTypeAttribute(val subType: SubType) : FilterAttribute()
 
-        @PaperParcel
-        data class SubTypeAttribute(val subType: SubType) : FilterAttribute() {
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_SubTypeAttribute.CREATOR
-            }
-        }
+        @Parcelize
+        data class ContainsAttribute(val attribute: String) : FilterAttribute()
 
-
-        @PaperParcel
-        data class ContainsAttribute(val attribute: String) : FilterAttribute() {
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_ContainsAttribute.CREATOR
-            }
-        }
-
-
-        @PaperParcel
-        data class ExpansionAttribute(val format: Format, val expansions: List<Expansion>) : FilterAttribute() {
-            companion object {
-                @JvmField val CREATOR = PaperParcelFilterUi_FilterAttribute_ExpansionAttribute.CREATOR
-            }
-        }
+        @Parcelize
+        data class ExpansionAttribute(val format: Format, val expansions: List<Expansion>) : FilterAttribute()
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class FilterState(
             val category: SuperType,
             val spec: FilterSpec,
             val filter: Filter,
             val visibility: ExpansionVisibility
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         fun applySpecification(): List<Item> = spec.apply(filter)
 
@@ -101,7 +82,6 @@ interface FilterUi : StateRenderer<FilterUi.State> {
         }
 
         companion object {
-            @JvmField val CREATOR = PaperParcelFilterUi_FilterState.CREATOR
 
             fun createDefault(superType: SuperType): FilterState {
                 return FilterState(superType, FilterSpec.create(superType, emptyList(), ExpansionVisibility.STANDARD),
@@ -111,12 +91,12 @@ interface FilterUi : StateRenderer<FilterUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val category: SuperType,
             val filters: Map<SuperType, FilterState>,
             val expansions: List<Expansion>
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         fun reduce(change: Change): State = when(change) {
             is ExpansionsLoaded -> {
@@ -224,7 +204,6 @@ interface FilterUi : StateRenderer<FilterUi.State> {
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelFilterUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(SuperType.POKEMON, mapOf(

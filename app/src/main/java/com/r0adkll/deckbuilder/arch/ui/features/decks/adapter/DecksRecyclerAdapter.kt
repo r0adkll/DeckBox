@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
-import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 
@@ -43,6 +43,22 @@ class DecksRecyclerAdapter(
             return items[position].viewType
         }
         return super.getItemViewType(position)
+    }
+
+
+    override fun getItemId(position: Int): Long {
+        val item = items[position]
+        return when(item) {
+            is Item.DeckItem -> item.deck.id.hashCode().toLong()
+            is Item.QuickStart -> 0L
+            is Item.Preview -> 1L
+        }
+    }
+
+
+    override fun onViewDetachedFromWindow(holder: UiViewHolder<Item>) {
+        super.onViewDetachedFromWindow(holder)
+        holder.dispose()
     }
 
 

@@ -8,9 +8,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.remote.Remote
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
-import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import javax.inject.Inject

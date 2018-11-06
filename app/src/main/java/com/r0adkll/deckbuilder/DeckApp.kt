@@ -94,11 +94,6 @@ class DeckApp : Application() {
             }
             Timber.w(ex, "Undeliverable exception received, not sure what to do")
         }
-
-        val s = Observable.just("Bacon")
-                .subscribe({
-
-                })
     }
 
 

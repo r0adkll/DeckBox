@@ -5,101 +5,101 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/padding_tiny"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    app:cardCornerRadius="@dimen/card_radius"
     android:stateListAnimator="@animator/elevation_state_anim">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.r0adkll.deckbuilder.arch.ui.widgets.AspectRatioImageView
-            android:id="@+id/logo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_gravity="center"
-            tools:src="@drawable/dr_smcs_logo"
-            app:ratioType="width"
-            />
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:layout_margin="16dp"
-            >
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="?android:textColorPrimaryInverse"
-                android:textSize="20sp"
-                android:fontFamily="sans-serif-medium"
-                tools:text="Guardians Rising"
-                />
-
-            <TextView
-                android:id="@+id/series"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:textColor="?android:textColorPrimaryInverse"
-                android:textSize="14sp"
-                tools:text="Sun &amp; Moon"
-                />
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:textColor="?android:textColorSecondaryInverse"
-                android:textSize="14sp"
-                tools:text="Released 11/03/2017"
-                />
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/action_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="8dp"
-            android:visibility="gone">
+            android:orientation="horizontal">
 
-            <ProgressBar
-                android:id="@+id/downloadProgress"
-                style="?android:progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:visibility="gone"
-                tools:progress="25"
+            <com.r0adkll.deckbuilder.arch.ui.widgets.AspectRatioImageView
+                android:id="@+id/logo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="center"
+                tools:src="@drawable/dr_smcs_logo"
+                app:ratioType="width"
                 />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-medium"
+                    tools:text="Guardians Rising"
+                    />
+
+                <TextView
+                    android:id="@+id/series"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="Sun &amp; Moon"
+                    />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="14sp"
+                    tools:text="Released 11/03/2017"
+                    />
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/actionDownload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="16dp"
                 android:padding="8dp"
-                android:src="@drawable/ic_cloud_download_white_24dp"
+                android:alpha=".54"
+                android:src="@drawable/cloud_download_outline"
                 android:tint="@color/black"
                 />
 
-        </FrameLayout>
+        </LinearLayout>
 
-    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/downloadProgress"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:indeterminate="true"
+            android:layout_marginBottom="-6.5dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+    </FrameLayout>
 
 </androidx.cardview.widget.CardView>

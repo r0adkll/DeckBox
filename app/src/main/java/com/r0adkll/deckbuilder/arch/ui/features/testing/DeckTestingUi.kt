@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing
 
 
+import android.os.Parcelable
 import com.ftinc.kit.arch.presentation.BaseActions
 import com.ftinc.kit.arch.presentation.state.BaseState
 import com.ftinc.kit.arch.presentation.state.Ui
@@ -8,8 +9,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.testing.TestResults
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
@@ -37,21 +37,17 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class Metadata(
             val name: String,
             val description: String,
             val pokemon: Int,
             val trainer: Int,
             val energy: Int
-    ): PaperParcelable {
-        companion object {
-            @JvmField val CREATOR = PaperParcelDeckTestingUi_Metadata.CREATOR
-        }
-    }
+    ): Parcelable
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             override val isLoading: Boolean,
             override val error: String?,
@@ -63,7 +59,7 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
             val iterations: Int,
             val results: TestResults?,
             val hand: List<PokemonCard>?
-    ) : BaseState<State.Change>(isLoading, error), PaperParcelable {
+    ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
         override fun reduce(change: Change): Ui.State<Change> = when(change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null, hand = null, results = null)
@@ -88,7 +84,6 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelDeckTestingUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(false, null, null, null, null, 1000, null, null)

@@ -1,16 +1,10 @@
 package com.r0adkll.deckbuilder.arch.domain
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
-
-
-@PaperParcel
+@Parcelize
 data class ExportTask(
         val deckId: String?,
         val sessionId: Long?
-) : PaperParcelable {
-    companion object {
-        @JvmField val CREATOR = PaperParcelExportTask.CREATOR
-    }
-}
+) : Parcelable

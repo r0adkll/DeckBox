@@ -1,13 +1,14 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-@PaperParcel
+
+@Parcelize
 data class StackedPokemonCard(
         val card: PokemonCard,
         val count: Int
-): PaperParcelable {
+): Parcelable {
 
     override fun equals(other: Any?): Boolean {
         if (this !== other) {
@@ -19,9 +20,5 @@ data class StackedPokemonCard(
         } else {
             return true
         }
-    }
-
-    companion object {
-        @JvmField val CREATOR = PaperParcelStackedPokemonCard.CREATOR
     }
 }

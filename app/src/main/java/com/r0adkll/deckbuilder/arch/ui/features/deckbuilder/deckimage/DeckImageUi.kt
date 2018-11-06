@@ -1,13 +1,13 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface DeckImageUi : StateRenderer<DeckImageUi.State> {
@@ -30,7 +30,7 @@ interface DeckImageUi : StateRenderer<DeckImageUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val sessionId: Long,
             val isLoading: Boolean,
@@ -38,7 +38,7 @@ interface DeckImageUi : StateRenderer<DeckImageUi.State> {
             val cards: List<PokemonCard>,
             val selectedDeckImage: DeckImage?,
             val isSaved: Boolean
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         fun reduce(change: Change): State = when(change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
@@ -61,7 +61,6 @@ interface DeckImageUi : StateRenderer<DeckImageUi.State> {
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelDeckImageUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(-1L, false, null, emptyList(), null, false)

@@ -1,6 +1,7 @@
-• Added 'Evolves to' related cards row in card detail view
-• Improved format validation with reprint support. Improved how the format is displayed
-• Fixed issue where secret rares wouldn't appear in the expansion browser
-• Improved the onboarding experience
-• Added improved offline support
-• Added notch support
+• Hotfix for crash on Android 6.x and lower devices
+• Fixed bug where validation warning icon would flash when leaving deckbuilder
+• Fixed UI bug in the headers of some expansion browsers
+• Fixed bug where searching was broken when you've cached sets for offline usuage
+• Fixed bug in Expansion preview card causing frequent crashes
+---
+• For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md

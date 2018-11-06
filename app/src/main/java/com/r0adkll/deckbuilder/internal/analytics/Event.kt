@@ -1,6 +1,6 @@
 package com.r0adkll.deckbuilder.internal.analytics
 
-import com.r0adkll.deckbuilder.arch.data.remote.model.SearchProxies
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
 
 
 sealed class Event {

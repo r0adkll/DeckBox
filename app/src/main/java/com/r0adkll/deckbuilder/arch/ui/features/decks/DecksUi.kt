@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 
 import android.os.Parcelable
-import com.r0adkll.deckbuilder.arch.data.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.community.model.DeckTemplate
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions

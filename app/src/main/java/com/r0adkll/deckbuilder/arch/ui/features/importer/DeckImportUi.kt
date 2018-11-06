@@ -1,12 +1,12 @@
 package com.r0adkll.deckbuilder.arch.ui.features.importer
 
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface DeckImportUi : StateRenderer<DeckImportUi.State> {
@@ -26,12 +26,12 @@ interface DeckImportUi : StateRenderer<DeckImportUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val isLoading: Boolean,
             val error: String?,
             val cards: List<PokemonCard>
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         fun reduce(change: Change): State = when(change) {
             Change.IsLoading -> this.copy(isLoading = true)
@@ -53,7 +53,6 @@ interface DeckImportUi : StateRenderer<DeckImportUi.State> {
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelDeckImportUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(false, null, emptyList())

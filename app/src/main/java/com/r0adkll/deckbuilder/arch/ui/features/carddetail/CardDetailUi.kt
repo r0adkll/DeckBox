@@ -1,11 +1,11 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
+import kotlinx.android.parcel.Parcelize
 
 
 interface CardDetailUi : StateRenderer<CardDetailUi.State> {
@@ -31,7 +31,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
     }
 
 
-    @PaperParcel
+    @Parcelize
     data class State(
             val sessionId: Long?,
             val card: PokemonCard?,
@@ -41,7 +41,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             val evolvesFrom: List<PokemonCard>,
             val evolvesTo: List<PokemonCard>,
             val validation: Validation
-    ) : PaperParcelable {
+    ) : Parcelable {
 
         val hasCopies: Boolean
             get() = count?.let { it > 0 } == true
@@ -73,7 +73,6 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
 
         companion object {
-            @JvmField val CREATOR = PaperParcelCardDetailUi_State.CREATOR
 
             val DEFAULT by lazy {
                 CardDetailUi.State(null, null, null, null, emptyList(), emptyList(), emptyList(), Validation(false, false, emptyList()))

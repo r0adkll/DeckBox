@@ -27,6 +27,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.BasePreferenceFragment
+import com.r0adkll.deckbuilder.arch.ui.features.settings.offline.ManageOfflineActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -140,6 +141,10 @@ class SettingsActivity : BaseActivity() {
                     preferences.quickStart.set(true)
                     true
                 }
+                "pref_reset_offline_outline" -> {
+                    preferences.offlineOutline.set(true)
+                    true
+                }
                 "pref_account_link" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "link_account"))
                     signIn()
@@ -147,6 +152,7 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_cache_manage" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "manage_cache"))
+                    startActivity(ManageOfflineActivity.createIntent(activity!!))
                     true
                 }
                 "pref_account_signout" -> {
@@ -201,10 +207,19 @@ class SettingsActivity : BaseActivity() {
             val resetQuickStart = findPreference("pref_reset_quickstart")
             resetQuickStart.isVisible = !preferences.quickStart.get()
 
+            val resetOfflineOutline = findPreference("pref_reset_offline_outline")
+            resetOfflineOutline.isVisible = !preferences.offlineOutline.get()
+
             @SuppressLint("RxSubscribeOnError")
             disposables += preferences.quickStart.asObservable()
                     .subscribe {
                         resetQuickStart.isVisible = !it
+                    }
+
+            @SuppressLint("RxSubscribeOnError")
+            disposables += preferences.offlineOutline.asObservable()
+                    .subscribe {
+                        resetOfflineOutline.isVisible = !it
                     }
 
             /*
@@ -283,16 +298,23 @@ class SettingsActivity : BaseActivity() {
                                     setupPreferences()
 
                                     // Now we need to migrate any existing local decks to their account
-                                    migrationSnackbar = Snackbar.make(view!!, R.string.account_migration_started, Snackbar.LENGTH_INDEFINITE)
-                                    migrationSnackbar?.show()
+                                    view?.let {
+                                        migrationSnackbar = Snackbar.make(it, R.string.account_migration_started, Snackbar.LENGTH_INDEFINITE)
+                                        migrationSnackbar?.show()
+                                    }
+
                                     disposables += accountRepository.migrateAccount()
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe({
-                                                migrationSnackbar = Snackbar.make(view!!, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
-                                                migrationSnackbar?.show()
-                                            }, {
-                                                migrationSnackbar = Snackbar.make(view!!, it.localizedMessage, Snackbar.LENGTH_SHORT)
-                                                migrationSnackbar?.show()
+                                                view?.let { v ->
+                                                    migrationSnackbar = Snackbar.make(v, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
+                                                    migrationSnackbar?.show()
+                                                }
+                                            }, { e ->
+                                                view?.let { v ->
+                                                    migrationSnackbar = Snackbar.make(v, e.localizedMessage, Snackbar.LENGTH_SHORT)
+                                                    migrationSnackbar?.show()
+                                                }
                                             })
 
 

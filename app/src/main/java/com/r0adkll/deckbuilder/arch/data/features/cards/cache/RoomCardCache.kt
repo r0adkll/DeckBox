@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import com.r0adkll.deckbuilder.arch.data.database.util.FilterQueryHelper
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
-import com.r0adkll.deckbuilder.arch.data.remote.Remote
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard

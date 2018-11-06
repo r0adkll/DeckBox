@@ -66,14 +66,34 @@
     <string name="action_export">Export as…</string>
     <string name="section_variants">Variants</string>
     <string name="section_evolves">Evolves from</string>
-
-    <string name="deck_list_example" translatable="false">
-
-    </string>
     <string name="activity_deck_export">Export</string>
+    <string name="activity_deck_import">Import cards</string>
     <string name="action_share">Share</string>
     <string name="action_import">Import</string>
-    <string name="hint_import_field">Paste your decklist from Pokemon Trading Card Game Online here…</string>
+    <string name="hint_import_field"><![CDATA[
+    <p>Paste your decklist from Pokemon Trading Card <br/>Game Online or other sources such as <br/>LimitlessTCG.com here…</p>
+    <p>The items in your decklist must follow this format <br/>to import correctly otherwise it will be ignored.<p>
+    <p><b>[COUNT]</b> <b>[CARD NAME]</b> <b>[SET CODE]</b> <b>[SET NUMBER]</b></p>
+    <br/>
+    <p>For example:</p>
+    <i>Pokemon - 19</i>
+    <p>
+    4 Inkay FLI 50<br/>
+    4 Malamar FLI 51<br/>
+    2 Marshadow-GX BUS 80<br/>
+    2 Deoxys CES 67<br/>
+    1 Necrozma-GX BUS 63<br/>
+    1 Dawn Wings Necrozma-GX UPR 63<br/>
+    1 Mimikyu GRI 58<br/>
+    1 Chimecho CIN 43<br/>
+    1 Tapu Lele-GX GRI 60<br/>
+    1 Marshadow SLG 45<br/>
+    1 Oricorio GRI 55<br/>
+    </p>
+    ]]>
+    </string>
+    <string name="import_clipboard_found_message">Found a decklist in your clipboard. Would you like to paste it in now?</string>
+    <string name="action_paste">Paste</string>
     <string name="invalid_decklist">Your decklist is invalid. Please check and try again.</string>
     <string name="activity_settings">Settings</string>
     <string name="pref_category_about">About</string>
@@ -159,13 +179,15 @@
     <string name="action_view">Browse</string>
     <string name="tab_all">All</string>
     <string name="empty_set_browse_message">No cards found for this set.</string>
-    <string name="notification_caching_title_start">Starting download of card data</string>
+    <string name="notification_caching_title_start">Starting download</string>
     <string name="notification_caching_title_error">Error downloading cards</string>
-    <string name="notification_caching_title">Downloading card data</string>
+    <string name="notification_caching_title">Downloading</string>
     <string name="notification_caching_title_finished">Finished download</string>
     <string name="notification_caching_text_format">%1$d cards downloaded.</string>
     <string name="notification_caching_text">Waiting on server…</string>
     <string name="notification_caching_text_error">Please try again.</string>
+    <string name="notification_expansion_caching_text_format">Downloading %1$s</string>
+    <string name="notification_expansion_cached_text_format">%1$s is now available for offline use</string>
     <string name="pref_offline_cache_delete_title">Delete cached card data</string>
     <string name="pref_offline_cache_delete_summary">Delete all locally stored card data</string>
     <string name="pref_offline_cache_deleting_title">Deleting cached data</string>
@@ -225,5 +247,14 @@
     <string name="deck_quickstart_message_extended">Start building your decks by choosing from this list of recent tournament winners to get an edge on your opponents.</string>
     <string name="pref_help_quickstart_title">Reshow quick start</string>
     <string name="pref_help_quickstart_summary">Show the get started helper that let\'s you pick a deck template</string>
+    <string name="notification_caching_queued_title">Download Queued</string>
+    <string name="action_hide">Hide</string>
+    <string name="expansion_offline_description">Download Pokémon cards to build and manage your decks without an internet connection. Easily download all cards in standard or expanded formats by using the actions below.</string>
+    <string name="activity_manage_offline">Offline data</string>
+    <string name="dialog_confirm_download_format">Download %1$s Expansions</string>
+    <string name="dialog_confirm_download_format_message">Are you sure you want to download all the card and image data of the %1$d expansions in %2$s format?</string>
+    <string name="action_download">Download</string>
+    <string name="pref_help_offline_outline_title">Reset offline help</string>
+    <string name="pref_help_offline_outline_summary">Show the offline helper in the Browse section again.</string>
     <string name="empty_playtest_hand">Empty hand</string>
 </resources>

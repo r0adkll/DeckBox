@@ -1,18 +1,13 @@
 package com.r0adkll.deckbuilder.arch.domain.features.editing.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-import paperparcel.PaperParcel
-import paperparcel.PaperParcelable
 
-
-@PaperParcel
+@Parcelize
 data class Change(
         val id: Long,
         val cardId: String,
         val change: Int,
         val searchSessionId: String?
-) : PaperParcelable {
-    companion object {
-        @JvmField val CREATOR = PaperParcelChange.CREATOR
-    }
-}
+) : Parcelable

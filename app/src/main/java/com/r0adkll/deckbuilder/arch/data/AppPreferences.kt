@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data
 
 import android.content.SharedPreferences
+import androidx.annotation.VisibleForTesting
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.ftinc.kit.kotlin.extensions.Preferences
 import com.ftinc.kit.kotlin.extensions.Preferences.*
@@ -10,7 +11,7 @@ import com.r0adkll.deckbuilder.util.extensions.RxPreferences.*
 import javax.inject.Inject
 
 
-class AppPreferences @Inject constructor(
+open class AppPreferences @Inject constructor(
         override val sharedPreferences: SharedPreferences,
         override val rxSharedPreferences: RxSharedPreferences
 ) : Preferences, RxPreferences{
@@ -24,34 +25,35 @@ class AppPreferences @Inject constructor(
         const val KEY_PLAYER_NAME = "pref_player_name"
         const val KEY_PLAYER_ID = "pref_player_id"
         const val KEY_OFFLINE_ID = "pref_offline_id"
+        const val KEY_OFFLINE_EXPANSIONS = "pref_offline_expansions"
+        const val KEY_OFFLINE_OUTLINE = "key_offline_outline"
         const val KEY_PLAYER_AGE_DIVISION = "pref_player_age_division"
         const val KEY_PLAYER_DOB = "pref_player_dob"
         const val KEY_PREVIEW_VERSION = "pref_last_preview_version"
 
         const val KEY_LAST_VERSION = "pref_last_version"
         const val KEY_DEVICE_ID = "pref_local_offline_device_id"
-
-        const val KEY_OFFLINE_ENABLED = "pref_offline_enabled"
     }
 
 
-    var onboarding by BooleanPreference(KEY_ONBOARDING, false)
-    var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
-    var deviceId by StringPreference(KEY_DEVICE_ID)
-    var offlineEnabled by BooleanPreference(KEY_OFFLINE_ENABLED, false)
-    var expansionsVersion by IntPreference(KEY_EXPANSIONS_VERSION, 1)
+    open var onboarding by BooleanPreference(KEY_ONBOARDING, false)
+    open var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
+    open var deviceId by StringPreference(KEY_DEVICE_ID)
+    open var expansionsVersion by IntPreference(KEY_EXPANSIONS_VERSION, 1)
 
-    val offlineId by ReactiveStringPreference(KEY_OFFLINE_ID)
-    val quickStart by ReactiveBooleanPreference(KEY_QUICKSTART, true)
-    val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
-    val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)
+    open val offlineId by ReactiveStringPreference(KEY_OFFLINE_ID)
+    open val offlineExpansions by ReactiveStringSetPreference(KEY_OFFLINE_EXPANSIONS)
+    open val offlineOutline by ReactiveBooleanPreference(KEY_OFFLINE_OUTLINE, true)
+    open val quickStart by ReactiveBooleanPreference(KEY_QUICKSTART, true)
+    open val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
+    open val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)
 
-    val playerName by ReactiveStringPreference(KEY_PLAYER_NAME)
-    val playerId by ReactiveStringPreference(KEY_PLAYER_ID)
-    val playerDOB by ReactiveDatePreference(KEY_PLAYER_DOB)
-    val playerAgeDivision by ReactiveEnumPreference(KEY_PLAYER_AGE_DIVISION, AgeDivision.MASTERS)
+    open val playerName by ReactiveStringPreference(KEY_PLAYER_NAME)
+    open val playerId by ReactiveStringPreference(KEY_PLAYER_ID)
+    open val playerDOB by ReactiveDatePreference(KEY_PLAYER_DOB)
+    open val playerAgeDivision by ReactiveEnumPreference(KEY_PLAYER_AGE_DIVISION, AgeDivision.MASTERS)
 
-    val previewVersion by ReactiveIntPreference(KEY_PREVIEW_VERSION)
+    open val previewVersion by ReactiveIntPreference(KEY_PREVIEW_VERSION)
 
     fun clear() {
         sharedPreferences.edit()
