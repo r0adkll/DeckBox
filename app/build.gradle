@@ -100,7 +100,7 @@ dependencies {
     implementation "androidx.palette:palette:$support_version"
 
 
-    implementation "com.google.firebase:firebase-core:16.0.4"
+    implementation "com.google.firebase:firebase-core:16.0.5"
     implementation "com.google.firebase:firebase-firestore:17.1.2"
     implementation "com.google.firebase:firebase-auth:16.0.5"
     implementation "com.google.firebase:firebase-config:16.1.0"

@@ -12,6 +12,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.SuperType.*
 import io.reactivex.Observable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 
@@ -67,9 +68,9 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
             val validation: Validation,
 
-            @Transient val pokemonCards: List<PokemonCard> = emptyList(),
-            @Transient val trainerCards: List<PokemonCard> = emptyList(),
-            @Transient val energyCards: List<PokemonCard> = emptyList()
+            @IgnoredOnParcel val pokemonCards: List<PokemonCard> = emptyList(),
+            @IgnoredOnParcel val trainerCards: List<PokemonCard> = emptyList(),
+            @IgnoredOnParcel val energyCards: List<PokemonCard> = emptyList()
     ) : Parcelable {
 
         val allCards: List<PokemonCard>
