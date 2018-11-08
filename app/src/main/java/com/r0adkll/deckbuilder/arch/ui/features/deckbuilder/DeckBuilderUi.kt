@@ -14,6 +14,8 @@ import io.pokemontcg.model.SuperType.*
 import io.reactivex.Observable
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import paperparcel.PaperParcel
+import paperparcel.PaperParcelable
 
 
 interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
@@ -52,7 +54,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
     }
 
 
-    @Parcelize
+    @PaperParcel
     data class State @JvmOverloads constructor(
             val sessionId: Long,
 
@@ -68,10 +70,10 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
             val validation: Validation,
 
-            @IgnoredOnParcel val pokemonCards: List<PokemonCard> = emptyList(),
-            @IgnoredOnParcel val trainerCards: List<PokemonCard> = emptyList(),
-            @IgnoredOnParcel val energyCards: List<PokemonCard> = emptyList()
-    ) : Parcelable {
+            @Transient val pokemonCards: List<PokemonCard> = emptyList(),
+            @Transient val trainerCards: List<PokemonCard> = emptyList(),
+            @Transient val energyCards: List<PokemonCard> = emptyList()
+    ) : PaperParcelable {
 
         val allCards: List<PokemonCard>
             get() = pokemonCards.plus(trainerCards).plus(energyCards)
@@ -152,6 +154,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
 
         companion object {
+            @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(-1L, false, false, false, false, null, null, null, null,

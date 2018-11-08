@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import androidx.core.app.ShareCompat
+import androidx.core.content.IntentCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import com.ftinc.kit.kotlin.extensions.clear
