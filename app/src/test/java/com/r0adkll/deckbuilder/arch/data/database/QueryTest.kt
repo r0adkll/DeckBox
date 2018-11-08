@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.data.database
 
 import com.r0adkll.deckbuilder.arch.data.database.util.*
 import io.pokemontcg.model.SubType
-import org.amshove.kluent.`should equal`
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
 
 class QueryTest {
@@ -10,7 +10,7 @@ class QueryTest {
     @Test
     fun testQuerySingleCondition() {
         val result = Query.select("cards").where("id" eq 100).get()
-        result `should equal` "SELECT * FROM cards WHERE id = 100"
+        result shouldBeEqualTo  "SELECT * FROM cards WHERE id = 100"
     }
 
     @Test
@@ -19,7 +19,7 @@ class QueryTest {
                 .join("attacks").on("cards.id" eq "attacks.cardId")
                 .where("attacks.name" like "%scratch%")
                 .get()
-        result `should equal` "SELECT * FROM cards INNER JOIN attacks ON cards.id = \"attacks.cardId\" WHERE attacks.name LIKE \"%scratch%\""
+        result shouldBeEqualTo  "SELECT * FROM cards INNER JOIN attacks ON cards.id = \"attacks.cardId\" WHERE attacks.name LIKE \"%scratch%\""
     }
 
     @Test
@@ -29,7 +29,7 @@ class QueryTest {
                 .and("subtype" eq SubType.BASIC.displayName)
                 .or("subtype" eq SubType.GX.displayName)
                 .get()
-        result `should equal` "SELECT * FROM cards WHERE hp > 100 AND subtype = \"Basic\" OR subtype = \"GX\""
+        result shouldBeEqualTo "SELECT * FROM cards WHERE hp > 100 AND subtype = \"Basic\" OR subtype = \"GX\""
     }
 
     @Test
@@ -38,7 +38,7 @@ class QueryTest {
                 .where("hp" lt 100)
                 .and(("subtype" eq SubType.GX.displayName) or ("subtype" eq SubType.STAGE_2.displayName))
                 .get()
-        result `should equal` "SELECT * FROM cards WHERE hp < 100 AND (subtype = \"GX\" OR subtype = \"Stage 2\")"
+        result shouldBeEqualTo "SELECT * FROM cards WHERE hp < 100 AND (subtype = \"GX\" OR subtype = \"Stage 2\")"
     }
 
     @Test
@@ -47,6 +47,6 @@ class QueryTest {
                 .where("name" eq "Charizard")
                 .and("text".notNull())
                 .get()
-        result `should equal` "SELECT * FROM cards WHERE name = \"Charizard\" AND text IS NOT NULL"
+        result shouldBeEqualTo "SELECT * FROM cards WHERE name = \"Charizard\" AND text IS NOT NULL"
     }
 }

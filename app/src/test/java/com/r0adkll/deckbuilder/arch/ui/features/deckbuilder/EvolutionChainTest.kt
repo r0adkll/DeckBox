@@ -17,7 +17,7 @@ class EvolutionChainTest {
 
         chain.nodes.size.shouldEqualTo(1)
         chain.contains(pokemon.stack()).shouldBeTrue()
-        chain.nodes[0].name?.shouldEqualTo("Eevee")
+        chain.nodes[0].name?.shouldBeEqualTo("Eevee")
         chain.nodes[0].cards.size.shouldEqualTo(1)
         chain.nodes[0].cards[0].shouldEqual(pokemon.stack())
     }
@@ -34,8 +34,8 @@ class EvolutionChainTest {
         chain.nodes.size.shouldEqualTo(2)
         chain.contains(pokemon.stack()).shouldBeTrue()
         chain.contains(pokemonStage1.stack()).shouldBeTrue()
-        chain.first()!!.name?.shouldEqualTo("Eevee")
-        chain.last()!!.name?.shouldEqualTo("Espeon-GX")
+        chain.first()!!.name?.shouldBeEqualTo("Eevee")
+        chain.last()!!.name?.shouldBeEqualTo("Espeon-GX")
     }
 
 
@@ -51,9 +51,9 @@ class EvolutionChainTest {
         chain.contains(pokemon.stack()).shouldBeTrue()
         chain.contains(pokemonStage1.stack()).shouldBeTrue()
         chain.first().shouldNotBeNull()
-        chain.first()?.name?.shouldEqualTo("Eevee")
+        chain.first()?.name?.shouldBeEqualTo("Eevee")
         chain.last().shouldNotBeNull()
-        chain.last()?.name?.shouldEqualTo("Espeon-GX")
+        chain.last()?.name?.shouldBeEqualTo("Espeon-GX")
     }
 
 
@@ -75,10 +75,10 @@ class EvolutionChainTest {
         chain.contains(pokemon3.stack())
         chain.contains(pokemonStage1.stack())
         chain.first()!!.cards.size.shouldEqualTo(3)
-        chain.first()!!.name?.shouldEqualTo("Eevee")
+        chain.first()!!.name?.shouldBeEqualTo("Eevee")
         chain.last()!!.cards.size.shouldEqualTo(1)
-        chain.last()!!.name?.shouldEqualTo("Espeon-GX")
-        chain.last()!!.evolvesFrom?.shouldEqualTo("Eevee")
+        chain.last()!!.name?.shouldBeEqualTo("Espeon-GX")
+        chain.last()!!.evolvesFrom?.shouldBeEqualTo("Eevee")
     }
 
 
@@ -149,6 +149,24 @@ class EvolutionChainTest {
         chains[0].nodes[0].cards.contains(pokemons[1]).shouldBeTrue()
         chains[0].nodes[1].cards.contains(pokemons[0]).shouldBeTrue()
 
+    }
+
+
+    @Test
+    fun testBreakEvolutionChain() {
+        val pokemons = listOf(
+                createPokemonCard().copy(id = "xy11-6", name = "Yanma", nationalPokedexNumber = 193).stack(),
+                createPokemonCard().copy(id = "xy11-8", name = "Yanmega BREAK", nationalPokedexNumber = 469, evolvesFrom = "Yanmega").stack(),
+                createPokemonCard().copy(id = "xy11-7", name = "Yanmega", nationalPokedexNumber = 469, evolvesFrom = "Yanma").stack()
+        )
+
+        val chains = EvolutionChain.build(pokemons)
+
+        chains.size shouldEqualTo 1
+        chains[0].nodes.size shouldEqualTo 3
+        chains[0].nodes[0].name!!.shouldBeEqualTo("Yanma")
+        chains[0].nodes[1].name!!.shouldBeEqualTo("Yanmega")
+        chains[0].nodes[2].name!!.shouldBeEqualTo("Yanmega BREAK")
     }
 
 

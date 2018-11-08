@@ -34,9 +34,9 @@ class ExpansionSpinnerAdapter(context: Context) : ArrayAdapter<Expansion>(contex
         val icon = view.findViewById<ImageView>(R.id.icon)
         val title = view.findViewById<TextView>(R.id.title)
 
-        title.text = expansion.name
+        title.text = expansion?.name
         Glide.with(context)
-                .load(expansion.symbolUrl)
+                .load(expansion?.symbolUrl)
                 .into(icon)
 
         return view

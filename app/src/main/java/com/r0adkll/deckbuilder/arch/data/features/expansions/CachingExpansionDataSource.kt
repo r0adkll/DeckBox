@@ -57,7 +57,7 @@ class CachingExpansionDataSource @Inject constructor(
                 .doOnNext { diskCache.putExpansions(it) }
                 .doOnNext { memoryCache.putExpansions(it) }
                 .subscribeOn(schedulers.network)
-                .doOnNext { Timber.d("Expansion::Network::getDecks():Thread(${Thread.currentThread()?.name})") }
+                .doOnNext { Timber.d("Expansion::Network::getDecks():Thread(${Thread.currentThread().name})") }
     }
 
 

@@ -256,9 +256,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             }
         }
 
-        fun setNavigationColor(@ColorInt color: Int) {
+        private fun setNavigationColor(@ColorInt navigationColor: Int) {
             // Calculate control color
-            if (ColorUtils.calculateContrast(Color.WHITE, color) < 3.0) {
+            if (ColorUtils.calculateContrast(Color.WHITE, navigationColor) < 3.0) {
                 val color = color(R.color.black87)
                 val secondaryColor = color(R.color.black54)
                 appbar?.navigationIcon?.setTint(color)
