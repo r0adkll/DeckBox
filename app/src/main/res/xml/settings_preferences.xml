@@ -91,6 +91,19 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:key="pref_category_developer"
+        android:title="@string/pref_category_developer">
+
+        <Preference android:key="pref_developer_reset_preview"
+            android:title="@string/pref_developer_resetpreview"
+            />
+
+        <Preference android:key="pref_developer_user_id"
+            android:title="@string/pref_developer_user_id_title"
+            />
+
+    </PreferenceCategory>
+
     <Preference
         android:key="pref_disclaimer"
         android:layout="@layout/layout_disclaimer"

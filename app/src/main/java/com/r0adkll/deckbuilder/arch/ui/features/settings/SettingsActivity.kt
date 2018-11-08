@@ -2,6 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.settings
 
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -36,6 +38,7 @@ import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
+import com.r0adkll.deckbuilder.util.extensions.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_setup.*
@@ -140,10 +143,12 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 "pref_reset_quickstart" -> {
+                    Analytics.event(Event.SelectContent.Action("settings", "reset_quickstart"))
                     preferences.quickStart.set(true)
                     true
                 }
                 "pref_reset_offline_outline" -> {
+                    Analytics.event(Event.SelectContent.Action("settings", "reset_offline_outline"))
                     preferences.offlineOutline.set(true)
                     true
                 }
@@ -155,6 +160,18 @@ class SettingsActivity : BaseActivity() {
                 "pref_cache_manage" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "manage_cache"))
                     startActivity(ManageOfflineActivity.createIntent(activity!!))
+                    true
+                }
+                "pref_developer_reset_preview" -> {
+                    preferences.previewVersion.delete()
+                    true
+                }
+                "pref_developer_user_id" -> {
+                    val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                    clipboardManager?.let { cm ->
+                        cm.primaryClip = ClipData("deckbox user id", arrayOf("text/plain"), ClipData.Item(preference.summary))
+                        toast("User Id copied to clipboard")
+                    }
                     true
                 }
                 "pref_account_signout" -> {
@@ -227,24 +244,14 @@ class SettingsActivity : BaseActivity() {
             /*
              * Debug options
              */
-            if (BuildConfig.DEBUG) {
-                val disclaimer = findPreference("pref_disclaimer")
-                preferenceScreen.removePreference(disclaimer)
 
-                val category = PreferenceCategory(activity)
-                category.title = "Developer"
-                preferenceScreen.addPreference(category)
-                preferenceScreen.addPreference(disclaimer)
+            val category = findPreference("pref_category_developer")
+            category.isVisible = BuildConfig.DEBUG
 
-                val clearPreferencePreview = Preference(activity)
-                clearPreferencePreview.title = "Clear Preview"
-                clearPreferencePreview.summary = "Delete the preview preference flag"
-                clearPreferencePreview.setOnPreferenceClickListener {
-                    preferences.previewVersion.delete()
-                    true
-                }
-                category.addPreference(clearPreferencePreview)
-            }
+            val userId = findPreference("pref_developer_user_id")
+            userId.summary = FirebaseAuth.getInstance().currentUser?.uid
+                    ?: preferences.deviceId
+                    ?: preferences.offlineId.get()
         }
 
 
