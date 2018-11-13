@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-def VERSION_NAME = "1.7.9"
+def VERSION_NAME = "1.8.0"
 
 
 ext.gitVersioner = [
@@ -100,7 +100,7 @@ dependencies {
     implementation "androidx.palette:palette:$support_version"
 
 
-    implementation "com.google.firebase:firebase-core:16.0.4"
+    implementation "com.google.firebase:firebase-core:16.0.5"
     implementation "com.google.firebase:firebase-firestore:17.1.2"
     implementation "com.google.firebase:firebase-auth:16.0.5"
     implementation "com.google.firebase:firebase-config:16.1.0"
@@ -122,6 +122,10 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
+
+    implementation 'nz.bradcampbell:paperparcel:2.0.6'
+    implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.6'
+    kapt 'nz.bradcampbell:paperparcel-compiler:2.0.6'
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"

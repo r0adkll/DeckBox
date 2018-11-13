@@ -27,34 +27,13 @@ object Shortcuts {
 
     const val CREATE_DECK_ID = "create-new-deck"
 
+
     /**
      * Report the usage of a shortcut by it's Id
      */
     fun reportUsage(context: Context, shortcutId: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             context.shortcutManager().reportShortcutUsed(shortcutId)
-        }
-    }
-
-
-    /**
-     * Add the 'Create new deck' shortcut if it doesn't already exist, otherwise don't take any action
-     */
-    fun addNewDeckShortcut(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            val shortcutManager = context.shortcutManager()
-            val createDeckShortcut = shortcutManager.dynamicShortcuts.find { it.id == CREATE_DECK_ID }
-            if (createDeckShortcut == null) {
-                val shortcut = ShortcutInfo.Builder(context, CREATE_DECK_ID)
-                        .setShortLabel(context.getString(R.string.shortcut_create_deck_short_label))
-                        .setLongLabel(context.getString(R.string.shortcut_create_deck_long_label))
-                        .setIcon(Icon.createWithResource(context, R.drawable.dr_shortcut_add))
-                        .setIntent(ShortcutActivity.createNewDeckIntent(context))
-                        .setRank(0)
-                        .build()
-
-                shortcutManager.addDynamicShortcuts(listOf(shortcut))
-            }
         }
     }
 
@@ -107,7 +86,6 @@ object Shortcuts {
 
             // Find any shortcuts that don't exist as decks
             val deadShortcuts = shortcutManager.dynamicShortcuts
-                    .filter { it.id != CREATE_DECK_ID } // We don't want to delete the create deck sc
                     .filter { shortcut -> decks.none { it.id == shortcut.id } }
                     .map { it.id }
             shortcutManager.removeDynamicShortcuts(deadShortcuts)

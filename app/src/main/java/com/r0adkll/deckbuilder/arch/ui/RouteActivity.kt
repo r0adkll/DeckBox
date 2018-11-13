@@ -30,22 +30,24 @@ class RouteActivity : AppCompatActivity() {
         compatibilityCheck()
         remote.check()
 
-        if (firebase.currentUser != null || preferences.deviceId != null
-                || (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())) {
+        if (isSignedIn()) {
             firebase.currentUser?.uid?.let { Analytics.userId(it) }
-            Shortcuts.addNewDeckShortcut(this)
+//            Shortcuts.addNewDeckShortcut(this)
             startActivity(HomeActivity.createIntent(this))
         }
         else {
             Shortcuts.clearShortcuts(this)
-//            if (preferences.onboarding) {
-                startActivity(SetupActivity.createIntent(this))
-//            } else {
-//                startActivity(OnboardingActivity.createIntent(this))
-//            }
+            startActivity(SetupActivity.createIntent(this))
         }
 
         finish()
+    }
+
+
+    private fun isSignedIn(): Boolean {
+        return firebase.currentUser != null
+                || !preferences.deviceId.isNullOrBlank()
+                || (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())
     }
 
 

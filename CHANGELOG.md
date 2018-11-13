@@ -1,3 +1,9 @@
+# 1.8.0
+* [#2](https://github.com/r0adkll/DeckBox/issues/2) - Fixed display issue with BREAK (and MEGA) evolutions
+* Fixed crash with decks that have a high card count
+* Fixed issue with Shortcuts disappearing
+* Misc. Bug fixes
+
 # 1.7.9
 * Hotfix for Java 1.8 bug on Android 6.x and lower devices
 
