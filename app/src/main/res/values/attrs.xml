@@ -83,4 +83,11 @@
         <attr name="cardWidth" format="dimension|reference" />
     </declare-styleable>
 
+    <declare-styleable name="ImageScaleView">
+        <attr name="matrixType" format="enum">
+            <enum name="none" value="-1" />
+            <enum name="top_center" value="0" />
+            <enum name="bottom_center" value="1" />
+        </attr>
+    </declare-styleable>
 </resources>
