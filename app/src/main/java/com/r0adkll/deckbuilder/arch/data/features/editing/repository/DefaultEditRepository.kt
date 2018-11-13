@@ -1,7 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.repository
 
 
-import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
@@ -16,7 +15,6 @@ import javax.inject.Inject
 
 class DefaultEditRepository @Inject constructor(
         val cache: SessionCache,
-        val cardCache: CardCache,
         val decks: DeckRepository,
         val schedulers: Schedulers
 ) : EditRepository {

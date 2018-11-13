@@ -47,13 +47,13 @@ class DefaultDeckValidator @Inject constructor(
                         if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
                             true
                         } else {
-                            if (expansions.find { it.code == card.expansion?.code }?.standardLegal == true) {
-                                true
-                            } else if (reprints != null) {
-                                val hash = card.reprintHash()
-                                reprints.standardHashes.contains(hash)
-                            } else {
-                                false
+                            when {
+                                expansions.find { it.code == card.expansion?.code }?.standardLegal == true -> true
+                                reprints != null -> {
+                                    val hash = card.reprintHash()
+                                    reprints.standardHashes.contains(hash)
+                                }
+                                else -> false
                             }
                         }
                     }
@@ -62,13 +62,13 @@ class DefaultDeckValidator @Inject constructor(
                         if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
                             true
                         } else {
-                            if (expansions.find { it.code == card.expansion?.code }?.expandedLegal == true) {
-                                true
-                            } else if (reprints != null) {
-                                val hash = card.reprintHash()
-                                reprints.expandedHashes.contains(hash)
-                            } else {
-                                false
+                            when {
+                                expansions.find { it.code == card.expansion?.code }?.expandedLegal == true -> true
+                                reprints != null -> {
+                                    val hash = card.reprintHash()
+                                    reprints.expandedHashes.contains(hash)
+                                }
+                                else -> false
                             }
                         }
                     }
