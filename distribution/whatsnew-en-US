@@ -1,4 +1,6 @@
 • Fixed bug with BREAK and MEGA evolutions displaying incorrectly
-
+• Fixed crash with decks that have a high card count
+• Fixed issue with Shortcuts disappearing
+• Misc. Bug fixes
 ---
 • For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md
