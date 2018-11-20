@@ -1,71 +1,59 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RoundRectShape
+import android.content.res.TypedArray
 import android.util.AttributeSet
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.r0adkll.deckbuilder.GlideApp
+import android.util.TypedValue
+import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
+import com.r0adkll.deckbuilder.R
 
 
 class BoardCardView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : BezelImageView(context, attrs, defStyleAttr) {
+) : ViewGroup(context, attrs, defStyleAttr) {
+
 
 
     /**
      * The [Board.Card] State that this view will be rendering
      */
     var card: Board.Card? = null
-        set(value) {
-            field = value
-            inflateCard()
-        }
 
-    // Initialize the mask drawable
+    private val energies = ArrayList<ImageView>()
+    private val tools = ArrayList<ImageView>()
+    private val image = BezelImageView(context)
+    private val damage = TextView(context)
+
     init {
-        val radius = dpToPx(8f)
-        val shape = RoundRectShape(floatArrayOf(
-                radius, radius,
-                radius, radius,
-                radius, radius,
-                radius, radius
-        ), null, null)
-        val dr = ShapeDrawable(shape)
-        dr.paint.color = Color.BLACK
-        maskDrawable = dr
-    }
+        image.maskDrawable = context.getDrawable(R.drawable.dr_mask_round_rect)
+        val imageLp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        addView(image, imageLp)
 
-    private fun inflateCard() {
-        card?.let { c ->
-            // Load the pokemon card image for the card that is on top of the stack
-            GlideApp.with(this)
-                    .load(c.pokemons.peek()?.imageUrl)
-                    .into(this)
+        // setup damage textview
+        damage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+        damage.setTextColor(color(R.color.white))
+        damage.setBackgroundResource(R.drawable.dr_damage_background)
+        val pad = dipToPx(4f)
+        damage.setPaddingRelative(pad, pad, pad, pad)
+        damage.gravity = Gravity.CENTER
 
-            // Draw Energy
-
-            // Draw Tool(s)
-
-            // Draw Damage
-
-            // Draw Conditions
-        }
+        val lp = LayoutParams(LayoutParams.WRAP_CONTENT, dipToPx(36f))
+        addView(damage, lp)
     }
 
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        // Render Card items
-        card?.let { c ->
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
-
-        }
-
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 }

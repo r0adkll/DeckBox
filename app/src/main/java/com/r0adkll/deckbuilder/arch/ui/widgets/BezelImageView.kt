@@ -45,13 +45,13 @@ open class BezelImageView @JvmOverloads constructor(
     private var bounds: Rect? = null
     private var boundsF: RectF? = null
 
-    protected var borderDrawable: Drawable? = null
+    var borderDrawable: Drawable? = null
         set(value) {
             field = value
             field?.callback = this
         }
 
-    protected var maskDrawable: Drawable? = null
+    var maskDrawable: Drawable? = null
         set(value) {
             field = value
             field?.callback = this
