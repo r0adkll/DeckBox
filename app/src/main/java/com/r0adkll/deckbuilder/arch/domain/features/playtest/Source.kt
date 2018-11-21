@@ -100,7 +100,7 @@ sealed class Source<T, B : Source.Builder<T>> {
     class CardBuilder(
             var pokemons: Stack<PokemonCard>,
             var energy: MutableList<PokemonCard>,
-            var tool: PokemonCard?,
+            var tools: List<PokemonCard>,
             var isPoisoned: Boolean,
             var isBurned: Boolean,
             var statusEffect: Board.Card.Status?,
@@ -108,9 +108,9 @@ sealed class Source<T, B : Source.Builder<T>> {
     ): Builder<Board.Card> {
 
         val isEmpty: Boolean
-            get() = pokemons.isEmpty() && energy.isEmpty() && tool == null
+            get() = pokemons.isEmpty() && energy.isEmpty() && tools.isEmpty()
 
-        constructor(card: Board.Card) : this(card.pokemons, card.energy.toMutableList(), card.tool,
+        constructor(card: Board.Card) : this(card.pokemons, card.energy.toMutableList(), card.tools,
                 card.isPoisoned, card.isBurned, card.statusEffect, card.damage)
 
         /**
@@ -120,7 +120,7 @@ sealed class Source<T, B : Source.Builder<T>> {
             return if (isEmpty) {
                 null
             } else {
-                Board.Card(pokemons, energy, tool, isPoisoned, isBurned, statusEffect, damage)
+                Board.Card(pokemons, energy, tools, isPoisoned, isBurned, statusEffect, damage)
             }
         }
     }

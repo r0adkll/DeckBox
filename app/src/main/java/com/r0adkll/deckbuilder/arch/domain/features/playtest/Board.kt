@@ -69,7 +69,7 @@ data class Board(
     data class Card(
             val pokemons: Stack<PokemonCard>,
             val energy: List<PokemonCard>,
-            val tool: PokemonCard?,
+            val tools: List<PokemonCard>,
             val isPoisoned: Boolean,
             val isBurned: Boolean,
             val statusEffect: Status?,
