@@ -16,6 +16,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.util.extensions.drawable
+import com.r0adkll.deckbuilder.util.glide.EnergyCropTransformation
+import com.r0adkll.deckbuilder.util.glide.ToolCropTransformation
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.Type
 
@@ -116,6 +118,10 @@ class BoardCardView @JvmOverloads constructor(
 
         // Apply tool card specifics to this image view, then add it to the view
         // Matrix clip the card image into
+        GlideApp.with(view)
+                .load(tool.imageUrl)
+                .transform(ToolCropTransformation())
+                .into(view)
 
         addView(view, generateToolLayoutParams())
     }
@@ -132,7 +138,10 @@ class BoardCardView @JvmOverloads constructor(
             }
             else -> {
                 // Matrix clip card image....somehow
-
+                GlideApp.with(view)
+                        .load(energy.imageUrl)
+                        .transform(EnergyCropTransformation())
+                        .into(view)
             }
         }
 
