@@ -98,9 +98,9 @@ sealed class Source<T, B : Source.Builder<T>> {
      * back to immutability
      */
     class CardBuilder(
-            var pokemons: Stack<PokemonCard>,
+            var pokemons: Deque<PokemonCard>,
             var energy: MutableList<PokemonCard>,
-            var tools: List<PokemonCard>,
+            var tools: MutableList<PokemonCard>,
             var isPoisoned: Boolean,
             var isBurned: Boolean,
             var statusEffect: Board.Card.Status?,
@@ -110,7 +110,7 @@ sealed class Source<T, B : Source.Builder<T>> {
         val isEmpty: Boolean
             get() = pokemons.isEmpty() && energy.isEmpty() && tools.isEmpty()
 
-        constructor(card: Board.Card) : this(card.pokemons, card.energy.toMutableList(), card.tools,
+        constructor(card: Board.Card) : this(card.pokemons, card.energy.toMutableList(), card.tools.toMutableList(),
                 card.isPoisoned, card.isBurned, card.statusEffect, card.damage)
 
         /**

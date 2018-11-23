@@ -8,6 +8,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.r0adkll.deckbuilder.arch.ui.widgets.BoardCardView
+        android:layout_width="100dp"
+        android:layout_height="140dp"
+        />
+
     <com.r0adkll.deckbuilder.arch.ui.widgets.BoardView
         android:id="@+id/playmat"
         android:layout_width="match_parent"
@@ -16,7 +21,9 @@
         android:elevation="4dp"
         android:outlineProvider="bounds"
         android:background="@color/white"
-        />
+        >
+
+    </com.r0adkll.deckbuilder.arch.ui.widgets.BoardView>
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -45,6 +52,8 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
+
+
 
     </FrameLayout>
 

@@ -16,10 +16,13 @@ import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.util.extensions.drawable
+import com.r0adkll.deckbuilder.util.extensions.pokemon
 import com.r0adkll.deckbuilder.util.glide.EnergyCropTransformation
 import com.r0adkll.deckbuilder.util.glide.ToolCropTransformation
 import io.pokemontcg.model.SubType
+import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
+import java.util.*
 
 
 class BoardCardView @JvmOverloads constructor(
@@ -56,11 +59,65 @@ class BoardCardView @JvmOverloads constructor(
         damage.gravity = Gravity.CENTER
         val damageLp = LayoutParams(LayoutParams.WRAP_CONTENT, dipToPx(36f))
         addView(damage, damageLp)
+
+//        if (isInEditMode) {
+            val poke = pokemon {
+                id = "sm8-205"
+                name = "Alolan Ninetales-GX"
+                nationalPokedexNumber = 38
+                hp = 200
+                imageUrl = "https://images.pokemontcg.io/sm8/205.png"
+                imageUrlHiRes = "https://images.pokemontcg.io/sm8/205_hires.png"
+            }
+
+            val energy = pokemon {
+                id = "sm1-171"
+                name = "Fairy Energy"
+                supertype = SuperType.ENERGY
+                subtype = SubType.BASIC
+                types = listOf(Type.FAIRY)
+            }
+
+            val tool = pokemon {
+                id = "sm8-190"
+                name = "Spell Tag"
+                imageUrl = "https://images.pokemontcg.io/sm8/190.png"
+                imageUrlHiRes = "https://images.pokemontcg.io/sm8/190_hires.png"
+                supertype = SuperType.TRAINER
+                subtype = SubType.POKEMON_TOOL
+            }
+
+
+            card = Board.Card(ArrayDeque(listOf(poke)),
+                    listOf(energy, energy.copy(), energy.copy()),
+                    listOf(tool),
+                    false, false, null, 100)
+//        }
     }
 
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        // Layout image
+        image.layout(l, t, r, b)
 
+        // Layout damage
+        val damageLeft = (r - l) - (damage.measuredWidth / 2)
+        val damageTop = -(damage.measuredHeight / 2)
+        damage.layout(damageLeft, damageTop, damageLeft + damage.measuredWidth, damageTop + damage.measuredHeight)
+
+        // Layout Tools
+        tools.forEachIndexed { index, view ->
+            val toolX = r - (view.measuredWidth / 2)
+            val toolY = t + dipToPx(36f + 8f) + (index * view.measuredHeight) + (index * dipToPx(4f))
+            view.layout(toolX, toolY, toolX + view.measuredWidth, toolY + view.measuredHeight)
+        }
+
+        // Layout Energies
+        energies.forEachIndexed { index, view ->
+            val energyX = l + dipToPx(4f) + (index * view.measuredWidth) + (index * dipToPx(4f))
+            val energyY = b - (view.measuredHeight / 2)
+            view.layout(energyX, energyY, energyX + view.measuredWidth, energyY + view.measuredHeight)
+        }
     }
 
 

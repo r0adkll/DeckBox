@@ -67,7 +67,7 @@ data class Board(
      * damage, and so on
      */
     data class Card(
-            val pokemons: Stack<PokemonCard>,
+            val pokemons: Deque<PokemonCard>,
             val energy: List<PokemonCard>,
             val tools: List<PokemonCard>,
             val isPoisoned: Boolean,

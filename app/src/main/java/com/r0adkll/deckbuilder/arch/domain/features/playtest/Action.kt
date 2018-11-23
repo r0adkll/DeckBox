@@ -102,7 +102,7 @@ sealed class Action {
                 }
                 SuperType.TRAINER -> when(card.subtype) {
                     SubType.POKEMON_TOOL -> {
-                        source.tool = card
+                        source.tools.add(card)
                         true
                     }
                     else -> false
@@ -143,8 +143,7 @@ sealed class Action {
                             }
                         }
                         SuperType.TRAINER -> {
-                            if (card == tool) {
-                                tool = null
+                            if (tools.remove(card)) {
                                 target.apply(actor) { items.add(card) }
                             }
                         }
@@ -184,8 +183,8 @@ sealed class Action {
                     energy.clear()
 
                     // Discard tool
-                    tool?.let { cardsToDiscard += it }
-                    tool = null
+                    cardsToDiscard += tools
+                    tools.clear()
 
                     // Now add cards to target
                     target.apply(actor) {

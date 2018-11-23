@@ -4,7 +4,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
@@ -48,4 +48,44 @@ fun Type.color(): Int = when(this) {
     Type.FAIRY -> R.color.poketype_fairy
     Type.DARKNESS -> R.color.poketype_dark
     else -> R.color.poketype_colorless
+}
+
+
+class PokemonCardBuilder(
+        var id: String = "",
+        var name: String = "",
+        var nationalPokedexNumber: Int? = null,
+        var imageUrl: String = "",
+        var imageUrlHiRes: String = "",
+        var types: List<Type>? = null,
+        var supertype: SuperType = SuperType.POKEMON,
+        var subtype: SubType = SubType.UNKNOWN,
+        var evolvesFrom: String? = null,
+        var hp: Int? = null,
+        var retreatCost: List<Type>? = null,
+        var number: String = "",
+        var artist: String = "",
+        var rarity: String? = null,
+        var series: String = "",
+        var expansion: Expansion? = null,
+        var text: List<String>? = null,
+        var attacks: List<Attack>? = null,
+        var weaknesses: List<Effect>? = null,
+        var resistances: List<Effect>? = null,
+        var ability: Ability? = null,
+        var isCached: Boolean = false
+) {
+
+    fun build(): PokemonCard = PokemonCard(
+            id, name, nationalPokedexNumber, imageUrl, imageUrlHiRes, types, supertype, subtype,
+            evolvesFrom, hp, retreatCost, number, artist, rarity, series, expansion, text, attacks,
+            weaknesses, resistances, ability, isCached
+    )
+}
+
+
+fun pokemon(builder: PokemonCardBuilder.() -> Unit): PokemonCard {
+    val b = PokemonCardBuilder()
+    builder.invoke(b)
+    return b.build()
 }
