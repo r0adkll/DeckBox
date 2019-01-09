@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="create-new-deck"
+        android:enabled="true"
+        android:icon="@drawable/dr_shortcut_add"
+        android:shortcutShortLabel="@string/shortcut_create_deck_short_label"
+        android:shortcutLongLabel="@string/shortcut_create_deck_long_label"
+        tools:targetApi="n_mr1">
+        <intent
+            android:action="com.r0adkll.deckbuilder.intent.ACTION_NEW_DECK"
+            android:targetPackage="com.r0adkll.deckbuilder"
+            android:targetClass="com.r0adkll.deckbuilder.arch.ui.ShortcutActivity"
+            />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

@@ -28,6 +28,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
+import com.r0adkll.deckbuilder.util.extensions.bytes
 import com.r0adkll.deckbuilder.util.extensions.retryWithBackoff
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
@@ -215,6 +216,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         fun start(context: Context, request: DownloadRequest) {
             val intent = Intent(context, CacheService::class.java)
             intent.putExtra(EXTRA_REQUEST, request)
+            Timber.i("Starting download request of ${intent.bytes()} bytes")
             context.startService(intent)
         }
     }

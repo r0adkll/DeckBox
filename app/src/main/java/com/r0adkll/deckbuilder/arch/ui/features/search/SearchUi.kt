@@ -1,14 +1,14 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 
-import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
-import kotlinx.android.parcel.Parcelize
+import paperparcel.PaperParcel
+import paperparcel.PaperParcelable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -44,7 +44,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
     }
 
 
-    @Parcelize
+    @PaperParcel
     data class Result @JvmOverloads constructor(
             val query: String,
             val filter: Filter,
@@ -52,9 +52,10 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             val error: String?,
             val category: SuperType,
             @Transient val results: List<PokemonCard> = emptyList()
-    ) : Parcelable {
+    ) : PaperParcelable {
 
         companion object {
+            @JvmField val CREATOR = PaperParcelSearchUi_Result.CREATOR
 
             fun createDefault(superType: SuperType): Result {
                 return Result("", Filter.DEFAULT, false, null, superType, emptyList())
@@ -68,14 +69,14 @@ interface SearchUi : StateRenderer<SearchUi.State> {
     }
 
 
-    @Parcelize
+    @PaperParcel
     data class State @JvmOverloads constructor(
             val id: String,
             val sessionId: Long,
             val category: SuperType,
             val results: Map<SuperType, Result>,
             @Transient val selected: List<PokemonCard> = emptyList()
-    ) : Parcelable {
+    ) : PaperParcelable {
 
         fun current(): Result? = results[category]
 
@@ -154,6 +155,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         }
 
         companion object {
+            @JvmField val CREATOR = PaperParcelSearchUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(UUID.randomUUID().toString(),

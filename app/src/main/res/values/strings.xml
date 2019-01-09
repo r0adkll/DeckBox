@@ -245,7 +245,7 @@
     <string name="account_migration_finished">Decks uploaded!</string>
     <string name="deck_quickstart_title">Get started!</string>
     <string name="deck_quickstart_message_extended">Start building your decks by choosing from this list of recent tournament winners to get an edge on your opponents.</string>
-    <string name="pref_help_quickstart_title">Reshow quick start</string>
+    <string name="pref_help_quickstart_title">Reset quick start</string>
     <string name="pref_help_quickstart_summary">Show the get started helper that let\'s you pick a deck template</string>
     <string name="notification_caching_queued_title">Download Queued</string>
     <string name="action_hide">Hide</string>
@@ -256,5 +256,8 @@
     <string name="action_download">Download</string>
     <string name="pref_help_offline_outline_title">Reset offline help</string>
     <string name="pref_help_offline_outline_summary">Show the offline helper in the Browse section again.</string>
+    <string name="pref_category_developer">Developer</string>
+    <string name="pref_developer_resetpreview">Reset preview</string>
+    <string name="pref_developer_user_id_title">User Id</string>
     <string name="empty_playtest_hand">Empty hand</string>
 </resources>

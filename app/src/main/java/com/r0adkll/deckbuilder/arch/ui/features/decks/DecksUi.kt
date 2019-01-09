@@ -46,6 +46,7 @@ interface DecksUi : StateRenderer<DecksUi.State> {
     @Parcelize
     data class State(
             val isLoading: Boolean,
+            val hasLoadedOnce: Boolean,
             val error: String?,
             val decks: List<Deck>,
             val preview: ExpansionPreview?,
@@ -63,7 +64,7 @@ interface DecksUi : StateRenderer<DecksUi.State> {
             is Change.ShowPreview -> this.copy(preview = change.preview)
             is Change.ShowQuickStart -> this.copy(quickStart = change.quickStart)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
-            is Change.DecksLoaded -> this.copy(decks = change.decks, isLoading = false, error = null)
+            is Change.DecksLoaded -> this.copy(decks = change.decks, isLoading = false, hasLoadedOnce = true, error = null)
             is Change.IsSessionLoading -> this.copy(isSessionLoading = change.deckId)
             is Change.SessionLoaded -> this.copy(sessionId = change.sessionId, isSessionLoading = null)
         }
@@ -92,7 +93,7 @@ interface DecksUi : StateRenderer<DecksUi.State> {
         companion object {
 
             val DEFAULT by lazy {
-                State(false, null, emptyList(), null, null, null, null)
+                State(false, false, null, emptyList(), null, null, null, null)
             }
         }
     }

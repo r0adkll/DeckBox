@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 import java.util.*
+import kotlin.Comparator
 
 
 /**
@@ -138,6 +139,25 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
     }
 
 
+    private class PokemonComparator : Comparator<StackedPokemonCard> {
+
+        override fun compare(lhs: StackedPokemonCard, rhs: StackedPokemonCard): Int {
+            if (lhs.card.nationalPokedexNumber == null) {
+                return if (rhs.card.nationalPokedexNumber == null) 0 else -1
+            } else if (rhs.card.nationalPokedexNumber == null) {
+                return 1
+            } else {
+                val pokedexNumberResult = lhs.card.nationalPokedexNumber.compareTo(rhs.card.nationalPokedexNumber)
+                return if (pokedexNumberResult == 0) {
+                    lhs.card.id.compareTo(rhs.card.id)
+                } else {
+                    pokedexNumberResult
+                }
+            }
+        }
+    }
+
+
     companion object {
 
         internal fun create(card: StackedPokemonCard): EvolutionChain {
@@ -156,7 +176,7 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
         fun build(cards: List<StackedPokemonCard>): List<EvolutionChain> {
             val chains = ArrayList<EvolutionChain>()
 
-            val sortedCards = cards.sortedBy { pokemonCard -> pokemonCard.card.nationalPokedexNumber }
+            val sortedCards = cards.sortedWith(PokemonComparator())
             sortedCards.forEach { card ->
                 val chain = chains.find { it.isChainFor(card) }
                 if (chain == null) {

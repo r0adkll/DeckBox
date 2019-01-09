@@ -41,6 +41,7 @@ class DecksRenderer(
                 .subscribe { actions.showItems(it) }
 
         disposables += state
+                .filter { it.hasLoadedOnce }
                 .map { it.decks }
                 .distinctUntilChanged()
                 .addToLifecycle()

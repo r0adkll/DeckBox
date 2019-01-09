@@ -5,7 +5,9 @@ import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.google.firebase.auth.FirebaseAuth
 import com.r0adkll.deckbuilder.DeckApp
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
@@ -18,6 +20,7 @@ import javax.inject.Inject
 
 class ShortcutActivity : Activity() {
 
+    @Inject lateinit var preferences: AppPreferences
     @Inject lateinit var deckRepository: DeckRepository
     @Inject lateinit var editor: EditRepository
 
@@ -27,48 +30,55 @@ class ShortcutActivity : Activity() {
         super.onCreate(savedInstanceState)
         DeckApp.component.inject(this)
 
-        val action = intent?.action
-        when(action) {
-            ACTION_NEW_DECK -> {
-                Shortcuts.reportUsage(this, Shortcuts.CREATE_DECK_ID)
-                disposables += editor.createSession()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ sessionId ->
-                            TaskStackBuilder.create(this)
-                                    .addParentStack(DeckBuilderActivity::class.java)
-                                    .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId, true))
-                                    .startActivities()
-                            finish()
-                        }, {
-                            startActivity(HomeActivity.createIntent(this))
-                            finish()
-                        })
-            }
-            ACTION_OPEN_DECK -> {
-                val deckId = intent?.getStringExtra(EXTRA_DECK_ID)
-                if (deckId != null) {
-                    Shortcuts.reportUsage(this, deckId)
-                    disposables += deckRepository.getDeck(deckId)
-                            .flatMap { editor.createSession(it) }
+        if (isSignedIn()) {
+
+            val action = intent?.action
+            when (action) {
+                ACTION_NEW_DECK -> {
+                    Shortcuts.reportUsage(this, Shortcuts.CREATE_DECK_ID)
+                    disposables += editor.createSession()
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ sessionId ->
                                 TaskStackBuilder.create(this)
                                         .addParentStack(DeckBuilderActivity::class.java)
-                                        .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId))
+                                        .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId, true))
                                         .startActivities()
                                 finish()
                             }, {
                                 startActivity(HomeActivity.createIntent(this))
                                 finish()
                             })
-                } else {
+                }
+                ACTION_OPEN_DECK -> {
+                    val deckId = intent?.getStringExtra(EXTRA_DECK_ID)
+                    if (deckId != null) {
+                        Shortcuts.reportUsage(this, deckId)
+                        disposables += deckRepository.getDeck(deckId)
+                                .flatMap { editor.createSession(it) }
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ sessionId ->
+                                    TaskStackBuilder.create(this)
+                                            .addParentStack(DeckBuilderActivity::class.java)
+                                            .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId))
+                                            .startActivities()
+                                    finish()
+                                }, {
+                                    startActivity(HomeActivity.createIntent(this))
+                                    finish()
+                                })
+                    } else {
+                        finish()
+                    }
+                }
+                else -> {
+                    startActivity(HomeActivity.createIntent(this))
                     finish()
                 }
             }
-            else -> {
-                startActivity(HomeActivity.createIntent(this))
-                finish()
-            }
+
+        } else {
+            startActivity(RouteActivity.createIntent(this))
+            finish()
         }
     }
 
@@ -76,6 +86,13 @@ class ShortcutActivity : Activity() {
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()
+    }
+
+
+    private fun isSignedIn(): Boolean {
+        return FirebaseAuth.getInstance().currentUser != null ||
+                !preferences.deviceId.isNullOrBlank()||
+                preferences.offlineId.get().isNotBlank()
     }
 
 

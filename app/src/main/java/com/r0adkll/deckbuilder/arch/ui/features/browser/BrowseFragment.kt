@@ -116,11 +116,17 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
 
     override fun refreshExpansions(): Observable<Unit> {
         return swipeRefresh.refreshes()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Action("refresh_expansions"))
+                }
     }
 
 
     override fun downloadExpansion(): Observable<Expansion> {
         return downloadClicks
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Action("download_expansion", it.name))
+                }
     }
 
 
@@ -137,14 +143,17 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
                             else -> true
                         }
                     }
+                    Analytics.event(Event.SelectContent.Action("download_format", format.name))
                     DialogUtils.confirmDialog(activity!!,
                             Resource(R.string.dialog_confirm_download_format, formatName),
                             Resource(R.string.dialog_confirm_download_format_message, expansions.size, formatName),
                             R.string.action_download, android.R.string.cancel)
                             .flatMap {
                                 if (it) {
+                                    Analytics.event(Event.SelectContent.Action("download_format", "accepted"))
                                     Observable.just(expansions)
                                 } else {
+                                    Analytics.event(Event.SelectContent.Action("download_format", "denied"))
                                     Observable.empty()
                                 }
                             }
@@ -154,6 +163,9 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
 
     override fun hideOfflineOutline(): Observable<Unit> {
         return dismissClicks
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Action("hide_offline_outline"))
+                }
     }
 
     override fun setExpansionsItems(items: List<Item>) {
