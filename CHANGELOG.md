@@ -1,6 +1,6 @@
 # 1.8.1
-_IN PROGRESS_
 * Fix for sorting bug when building the EvolutionChain
+* Misc bug fixes
 
 # 1.8.0
 * [#2](https://github.com/r0adkll/DeckBox/issues/2) - Fixed display issue with BREAK (and MEGA) evolutions 
