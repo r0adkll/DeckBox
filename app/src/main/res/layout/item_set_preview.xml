@@ -35,7 +35,7 @@
                 android:layout_marginEnd="64dp"
                 android:layout_marginBottom="8dp"
                 android:layout_gravity="center"
-                tools:src="@drawable/dr_smcs_logo"
+                tools:src="@drawable/dr_smfl_logo"
                 />
 
         </FrameLayout>
