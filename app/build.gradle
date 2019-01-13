@@ -80,6 +80,7 @@ androidExtensions {
 dependencies {
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
     testImplementation "org.amshove.kluent:kluent-android:$kluent_version"
     androidTestImplementation "org.amshove.kluent:kluent-android:$kluent_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
@@ -99,13 +100,13 @@ dependencies {
     implementation "com.google.android.material:material:$support_version"
     implementation "androidx.palette:palette:$support_version"
 
-    implementation "com.google.firebase:firebase-core:16.0.5"
-    implementation "com.google.firebase:firebase-firestore:17.1.2"
-    implementation "com.google.firebase:firebase-auth:16.0.5"
-    implementation "com.google.firebase:firebase-config:16.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.6"
+    implementation "com.google.firebase:firebase-firestore:17.1.5"
+    implementation "com.google.firebase:firebase-auth:16.1.0"
+    implementation "com.google.firebase:firebase-config:16.1.3"
     implementation "com.google.android.gms:play-services-auth:16.0.1"
     implementation "com.google.android.gms:play-services-oss-licenses:16.0.1"
-    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
+    releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
 
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
