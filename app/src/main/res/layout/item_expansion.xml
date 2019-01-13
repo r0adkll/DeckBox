@@ -27,7 +27,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="center"
-                tools:src="@drawable/dr_smcs_logo"
                 app:ratioType="width"
                 />
 

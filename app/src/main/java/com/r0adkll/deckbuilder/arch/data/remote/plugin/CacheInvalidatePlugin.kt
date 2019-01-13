@@ -5,13 +5,15 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.ExpansionCache
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
+import com.r0adkll.deckbuilder.util.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
 
 class CacheInvalidatePlugin @Inject constructor(
     val expansionDataSource: ExpansionDataSource,
-    val preferences: AppPreferences
+    val preferences: AppPreferences,
+    val schedulers: Schedulers
 ) : RemotePlugin {
 
     @SuppressLint("CheckResult", "RxLeakedSubscription")
@@ -27,6 +29,7 @@ class CacheInvalidatePlugin @Inject constructor(
                 if (versionCode > preferences.expansionsVersion || invalidCache) {
                     Timber.i("Expansion Cache Invalidated, Refreshing from server (version: $versionCode, expansion: $expansionCode)")
                     expansionDataSource.refreshExpansions()
+                            .subscribeOn(schedulers.network)
                             .subscribe({
                                 Timber.d("Expansions refreshed, updating version(${preferences.expansionsVersion} > $versionCode)")
                                 preferences.expansionsVersion = versionCode

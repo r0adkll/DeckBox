@@ -1,9 +1,8 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 
-import com.nhaarman.mockito_kotlin.anyOrNull
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
-import com.r0adkll.deckbuilder.tools.ModelUtils
 import com.r0adkll.deckbuilder.tools.ModelUtils.createExpansion
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
 import com.r0adkll.deckbuilder.tools.mockPreference

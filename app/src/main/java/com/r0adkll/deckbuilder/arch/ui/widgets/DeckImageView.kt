@@ -19,7 +19,7 @@ import io.pokemontcg.model.Type
 
 class DeckImageView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr) {
+) : ImageScaleView(context, attrs, defStyleAttr) {
 
     private val mBlackPaint: Paint
     private val mMaskedPaint: Paint
@@ -49,6 +49,7 @@ class DeckImageView @JvmOverloads constructor(
     var topCropEnabled: Boolean = false
         set(value) {
             field = value
+            matrixType = MatrixCropType.TOP_CENTER
             scaleType = ScaleType.MATRIX
         }
 
@@ -139,15 +140,8 @@ class DeckImageView @JvmOverloads constructor(
         }
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        computeMatrix()
-        super.onLayout(changed, left, top, right, bottom)
-    }
-
 
     override fun setFrame(l: Int, t: Int, r: Int, b: Int): Boolean {
-        computeMatrix()
-
         val changed = super.setFrame(l, t, r, b)
         mBounds = Rect(0, 0, r - l, b - t)
         mBoundsF = RectF(mBounds)
@@ -265,18 +259,6 @@ class DeckImageView @JvmOverloads constructor(
         primaryType = null
         secondaryType = null
         setImageDrawable(null)
-    }
-
-
-    private fun computeMatrix() {
-        if (topCropEnabled && drawable != null) {
-            val padding = dpToPx(8f)
-            val matrix = imageMatrix
-            val scaleFactor = (width + 2*padding) / drawable.intrinsicWidth.toFloat()
-            matrix.setScale(scaleFactor, scaleFactor, 0f, 0f)
-            matrix.postTranslate(-padding, -padding)
-            imageMatrix = matrix
-        }
     }
 
 

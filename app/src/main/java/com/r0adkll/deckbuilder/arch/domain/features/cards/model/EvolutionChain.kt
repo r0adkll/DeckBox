@@ -142,11 +142,17 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
     private class PokemonComparator : Comparator<StackedPokemonCard> {
 
         override fun compare(lhs: StackedPokemonCard, rhs: StackedPokemonCard): Int {
-            val pokedexNumberResult = lhs.card.nationalPokedexNumber?.compareTo(rhs.card.nationalPokedexNumber ?: 0) ?: 0
-            return if (pokedexNumberResult == 0) {
-                lhs.card.id.compareTo(rhs.card.id)
+            if (lhs.card.nationalPokedexNumber == null) {
+                return if (rhs.card.nationalPokedexNumber == null) 0 else -1
+            } else if (rhs.card.nationalPokedexNumber == null) {
+                return 1
             } else {
-                pokedexNumberResult
+                val pokedexNumberResult = lhs.card.nationalPokedexNumber.compareTo(rhs.card.nationalPokedexNumber)
+                return if (pokedexNumberResult == 0) {
+                    lhs.card.id.compareTo(rhs.card.id)
+                } else {
+                    pokedexNumberResult
+                }
             }
         }
     }

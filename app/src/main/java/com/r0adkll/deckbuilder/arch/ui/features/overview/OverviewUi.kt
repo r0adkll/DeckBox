@@ -49,6 +49,10 @@ interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
             class CardsLoaded(val cards: List<PokemonCard>) : Change("network -> cards($cards.size) loaded")
         }
 
+        override fun toString(): String {
+            return "State(isLoading=$isLoading, error=$error, sessionId=$sessionId, cards=${cards.size})"
+        }
+
         companion object {
             @JvmField val CREATOR = PaperParcelOverviewUi_State.CREATOR
 
