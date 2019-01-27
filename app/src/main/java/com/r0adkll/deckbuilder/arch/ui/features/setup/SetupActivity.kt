@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
+import androidx.core.content.IntentCompat
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
@@ -69,7 +70,14 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
         }
 
         actionPrivacyPolicy.setOnClickListener {
-            startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
+            val intent = IntentUtils.openLink(getString(R.string.privacy_policy_url))
+            if (IntentUtils.isIntentAvailable(this, intent)) {
+                startActivity(intent)
+            } else {
+                Intent.createChooser(intent, getString(R.string.intent_chooser_link_title)).apply {
+                    startActivity(this)
+                }
+            }
         }
     }
 

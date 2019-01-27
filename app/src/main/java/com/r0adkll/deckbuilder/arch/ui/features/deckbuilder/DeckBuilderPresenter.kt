@@ -22,6 +22,7 @@ class DeckBuilderPresenter @Inject constructor(
         val validator: DeckValidator
 ) : Presenter() {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         val observeSession = repository.observeSession(ui.state.sessionId)
@@ -71,6 +72,7 @@ class DeckBuilderPresenter @Inject constructor(
                     repository.persistSession(ui.state.sessionId)
                             .map { Change.Saved as Change }
                             .startWith(Change.Saving as Change)
+                            .onErrorReturn(handlePersistError)
                 }
 
         val merged = observeSession
@@ -90,6 +92,11 @@ class DeckBuilderPresenter @Inject constructor(
         private val handleUnknownError: (Throwable) -> Change = { t ->
             Timber.e(t, "Error processing deck")
             Change.Error("Error validating your deck")
+        }
+
+        private val handlePersistError: (Throwable) -> Change = { t ->
+            Timber.e(t, "Error saving deck")
+            Change.Error("Error saving your deck")
         }
     }
 }
