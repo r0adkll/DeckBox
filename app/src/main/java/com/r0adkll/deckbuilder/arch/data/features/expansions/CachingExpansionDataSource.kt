@@ -52,6 +52,9 @@ class CachingExpansionDataSource @Inject constructor(
 
     private fun network(): Observable<List<Expansion>> {
         return api.set()
+                .where {
+                    pageSize = 200
+                }
                 .observeAll()
                 .map { it.map { SetMapper.to(it) } }
                 .doOnNext { diskCache.putExpansions(it) }
