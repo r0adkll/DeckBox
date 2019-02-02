@@ -1,3 +1,6 @@
+# 1.8.3
+* Support for Sun & Moon: Team Up expansion
+
 # 1.8.2
 * Fixed issue with missing sets
 
