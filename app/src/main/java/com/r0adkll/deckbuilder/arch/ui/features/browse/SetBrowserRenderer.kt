@@ -46,9 +46,13 @@ class SetBrowserRenderer(
                         if (number?.let { it >= 5 && it != 35 } != true) {
                             filtersToHide += PRISM
                         }
+                        if (number?.let { it >= 9 && it != 35  } != true) {
+                            filtersToHide += TAG_TEAM
+                        }
                     } else {
                         filtersToHide += GX
                         filtersToHide += PRISM
+                        filtersToHide += TAG_TEAM
                     }
 
                     filtersToHide
@@ -70,6 +74,7 @@ class SetBrowserRenderer(
                                 TRAINER -> it.supertype == SuperType.TRAINER
                                 ENERGY -> it.supertype == SuperType.ENERGY
                                 GX -> it.subtype == SubType.GX
+                                TAG_TEAM -> it.subtype == SubType.TAG_TEAM
                                 PRISM -> it.name.contains("◇")
                             } }
                 }

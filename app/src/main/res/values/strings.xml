@@ -260,4 +260,5 @@
     <string name="pref_developer_resetpreview">Reset preview</string>
     <string name="pref_developer_user_id_title">User Id</string>
     <string name="intent_chooser_link_title">Open link...</string>
+    <string name="tab_tagteam">Tag Team</string>
 </resources>

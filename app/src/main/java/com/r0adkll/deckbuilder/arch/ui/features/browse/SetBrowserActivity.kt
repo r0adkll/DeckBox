@@ -100,6 +100,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                     "ENERGY" -> BrowseFilter.ENERGY
                     "GX" -> BrowseFilter.GX
                     "PRISM" -> BrowseFilter.PRISM
+                    "TAG_TEAM" -> BrowseFilter.TAG_TEAM
                     else -> BrowseFilter.ALL
                 }
                 filterChanges.accept(filter)

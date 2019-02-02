@@ -110,6 +110,14 @@
                     />
 
                 <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabTagTeam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_tagteam"
+                    android:tag="TAG_TEAM"
+                    />
+
+                <com.google.android.material.tabs.TabItem
                     android:id="@+id/tabPrism"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
