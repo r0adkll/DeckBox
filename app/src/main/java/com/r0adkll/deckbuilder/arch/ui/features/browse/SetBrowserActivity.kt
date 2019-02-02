@@ -100,6 +100,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                     "ENERGY" -> BrowseFilter.ENERGY
                     "GX" -> BrowseFilter.GX
                     "PRISM" -> BrowseFilter.PRISM
+                    "TAG_TEAM" -> BrowseFilter.TAG_TEAM
                     else -> BrowseFilter.ALL
                 }
                 filterChanges.accept(filter)
@@ -244,6 +245,10 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                                     backdrop.imageTintMode = PorterDuff.Mode.ADD
                                     setNavigationColor(it)
                                 }
+                            }
+                            "sm9" -> {
+                                backdrop.setImageResource(R.drawable.dr_smtu_background)
+                                setNavigationColor(Color.BLACK)
                             }
                             else -> {
                                 backdrop.imageTintList = ColorStateList.valueOf(it)

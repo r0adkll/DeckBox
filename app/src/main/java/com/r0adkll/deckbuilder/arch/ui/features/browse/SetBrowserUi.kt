@@ -36,6 +36,7 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
         TRAINER,
         ENERGY,
         GX,
+        TAG_TEAM,
         PRISM
     }
 
