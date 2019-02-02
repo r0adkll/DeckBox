@@ -245,6 +245,10 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                                     setNavigationColor(it)
                                 }
                             }
+                            "sm9" -> {
+                                backdrop.setImageResource(R.drawable.dr_smtu_background)
+                                setNavigationColor(Color.BLACK)
+                            }
                             else -> {
                                 backdrop.imageTintList = ColorStateList.valueOf(it)
                                 backdrop.imageTintMode = PorterDuff.Mode.ADD
