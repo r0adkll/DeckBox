@@ -16,6 +16,9 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.Cachin
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskSearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.collection.cache.FirestoreCollectionCache
+import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectionCache
+import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.FirestoreCommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.repository.DefaultCommunityRepository
@@ -46,6 +49,7 @@ import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
@@ -218,6 +222,15 @@ class DataModule {
         } else {
             repository
         }
+    }
+
+    @Provides @AppScope
+    fun provideCollectionRepository(
+            roomCollectionCache: RoomCollectionCache,
+            firestoreCollectionCache: FirestoreCollectionCache,
+            preferences: AppPreferences
+    ): CollectionRepository {
+        return DefaultCollectionRepository(roomCollectionCache, firestoreCollectionCache, preferences)
     }
 
 

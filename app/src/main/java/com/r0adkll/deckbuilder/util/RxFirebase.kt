@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import timber.log.Timber
 import java.util.concurrent.Executor
 import kotlin.reflect.KClass
@@ -12,63 +13,9 @@ import kotlin.reflect.KClass
 
 object RxFirebase {
 
-    /**
-     * Get a single value from a Firebase [DatabaseReference] in an observable manner
-     */
-//    fun <T : Any> getSingleValue(reference: DatabaseReference, clazz: KClass<T>) : Observable<T> {
-//        return Observable.create { emitter ->
-//            val listener = object : ValueEventListener {
-//                override fun onCancelled(p0: DatabaseError?) {
-//                    emitter.onError(p0?.toException() ?: DatabaseException("Error fetching value from Firebase"))
-//                }
-//
-//                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-//                    dataSnapshot?.let {
-//                        val change = it.getChange(clazz.java)
-//                        if(value != null) {
-//                            emitter.onNext(value)
-//                        }
-//                        emitter.onComplete()
-//                    } ?: emitter.onError(DatabaseException("Error parsing value from Firebase"))
-//                }
-//            }
-//
-//            reference.addListenerForSingleValueEvent(listener)
-//
-//            emitter.setCancellable {
-//                reference.removeEventListener(listener)
-//            }
-//        }
-//    }
-//
-//
-//    /**
-//     * Observe changes/updates of a value from a Firebase [DatabaseReference] in an observable manner
-//     */
-//    fun <T : Any> observeValue(reference: DatabaseReference, clazz: KClass<T>) : Observable<T> {
-//        return Observable.create { emitter ->
-//            val listener = object : ValueEventListener {
-//                override fun onCancelled(p0: DatabaseError?) {
-//                    emitter.onError(p0?.toException() ?: DatabaseException("Error fetching value from Firebase"))
-//                }
-//
-//                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-//                    dataSnapshot?.let {
-//                        val change = it.getChange(clazz.java)
-//                        if(value != null) {
-//                            emitter.onNext(value)
-//                        }
-//                    } ?: emitter.onError(DatabaseException("Error parsing value from Firebase"))
-//                }
-//            }
-//
-//            reference.addValueEventListener(listener)
-//
-//            emitter.setCancellable {
-//                reference.removeEventListener(listener)
-//            }
-//        }
-//    }
+    fun <T : Any> Task<T>.toObservable(executor: Executor): Observable<T> {
+        return RxFirebase.from(this, executor)
+    }
 
 
     /**
