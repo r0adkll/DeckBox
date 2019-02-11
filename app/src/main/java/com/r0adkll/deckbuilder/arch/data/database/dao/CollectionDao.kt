@@ -30,14 +30,14 @@ abstract class CollectionDao {
     abstract fun count(id: String): CollectionCountEntity?
 
     @Update
-    abstract fun updateCount(count: CollectionCountEntity): Long
+    abstract fun updateCount(count: CollectionCountEntity): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCount(count: CollectionCountEntity): Long
 
 
     @Transaction
-    fun incrementCount(card: PokemonCard) {
+    open fun incrementCount(card: PokemonCard) {
         val count = count(card.id)
         if (count != null) {
             count.count += 1
@@ -54,7 +54,7 @@ abstract class CollectionDao {
     }
 
     @Transaction
-    fun decrementCount(card: PokemonCard) {
+    open fun decrementCount(card: PokemonCard) {
         val count = count(card.id)
         if (count != null && count.count > 0) {
             count.count -= 1
