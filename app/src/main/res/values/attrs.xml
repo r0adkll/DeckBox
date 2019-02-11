@@ -90,4 +90,12 @@
             <enum name="bottom_center" value="1" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="CollectionProgressBar">
+        <attr name="progressColor" format="color" />
+        <attr name="trackColor" format="color" />
+        <attr name="borderColor" format="color" />
+        <attr name="borderWidth" format="dimension|reference" />
+    </declare-styleable>
+
 </resources>

@@ -2,8 +2,11 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
+import com.r0adkll.deckbuilder.arch.ui.components.ExpansionComparator
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.extensions.fromReleaseDate
+import com.r0adkll.deckbuilder.util.extensions.iso8601
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 
 
@@ -18,7 +21,9 @@ class CollectionRenderer(
         disposables += state
                 .map { s ->
                     val items = ArrayList<Item>()
-                    val series = s.expansions.groupBy { it.series }
+                    val series = s.expansions
+                            .sortedWith(ExpansionComparator())
+                            .groupBy { it.series }
                     series.forEach { (series, expansions) ->
                         val seriesCount = s.counts.filter { it.series == series }.size
                         val seriesTotal = expansions.sumBy { it.totalCards }

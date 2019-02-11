@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
@@ -82,6 +83,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
             override fun onPageSelected(position: Int) {
                 bottomNavigation.selectTabAtPosition(position, false)
+                progressLayout.setVisible(position == 1)
             }
         })
     }
