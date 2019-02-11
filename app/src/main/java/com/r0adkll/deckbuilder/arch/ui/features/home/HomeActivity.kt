@@ -13,6 +13,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseFragment
+import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionFragment
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksFragment
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
@@ -59,9 +60,14 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
                         pager.setCurrentItem(0, true)
                     }
                 }
-                R.id.tab_browser -> {
+                R.id.tab_collection -> {
                     if (pager.currentItem != 1) {
                         pager.setCurrentItem(1, true)
+                    }
+                }
+                R.id.tab_browser -> {
+                    if (pager.currentItem != 2) {
+                        pager.setCurrentItem(2, true)
                     }
                 }
             }
@@ -138,11 +144,12 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
         override fun getItem(position: Int): androidx.fragment.app.Fragment? = when(position) {
             0 -> DecksFragment.newInstance()
-            1 -> BrowseFragment.newInstance()
+            1 -> CollectionFragment.newInstance()
+            2 -> BrowseFragment.newInstance()
             else -> null
         }
 
 
-        override fun getCount(): Int = 2 // TODO: Increase when we add more screens
+        override fun getCount(): Int = 3 // TODO: Increase when we add more screens
     }
 }
