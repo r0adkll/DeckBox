@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import com.ftinc.kit.arch.presentation.BaseFragment
+import com.ftinc.kit.arch.presentation.delegates.PresenterFragmentDelegate
+import com.ftinc.kit.arch.presentation.delegates.RendererFragmentDelegate
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.CollectionRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
@@ -55,21 +57,15 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
                 }
             }
         }
-
-        renderer.start()
-        presenter.start()
     }
 
     override fun setupComponent() {
         getComponent(HomeComponent::class)
                 .plus(CollectionModule(this))
                 .inject(this)
-    }
 
-    override fun onDestroy() {
-        presenter.stop()
-        renderer.stop()
-        super.onDestroy()
+        addDelegate(PresenterFragmentDelegate(presenter))
+        addDelegate(RendererFragmentDelegate(renderer))
     }
 
     override fun render(state: State) {
