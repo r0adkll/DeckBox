@@ -14,6 +14,7 @@
         android:layout_margin="@dimen/margin_tiny"
         android:foreground="@drawable/dr_pokemon_card_ripple"
         android:stateListAnimator="@animator/elevation_state_anim"
+        android:elevation="4dp"
         />
 
     <LinearLayout

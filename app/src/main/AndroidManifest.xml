@@ -80,6 +80,7 @@
             />
 
         <activity android:name=".arch.ui.features.settings.offline.ManageOfflineActivity" />
+        <activity android:name=".arch.ui.features.collection.set.CollectionSetActivity" />
 
         <service android:name=".arch.data.features.offline.service.CacheService"
                  android:exported="false" />
