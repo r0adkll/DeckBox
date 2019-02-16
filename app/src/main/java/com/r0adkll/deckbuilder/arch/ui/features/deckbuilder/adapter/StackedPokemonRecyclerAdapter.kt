@@ -50,7 +50,7 @@ class StackedPokemonRecyclerAdapter(
 
 
     override fun getItemId(position: Int): Long {
-        if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+        if (position != RecyclerView.NO_POSITION) {
             val item = items[position]
             return item.card.hashCode().toLong()
         }

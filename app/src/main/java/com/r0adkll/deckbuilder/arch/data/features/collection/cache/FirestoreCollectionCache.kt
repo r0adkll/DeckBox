@@ -12,6 +12,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.util.RxFirebase
 import com.r0adkll.deckbuilder.util.RxFirebase.toObservable
+import com.r0adkll.deckbuilder.util.RxFirebase.toVoidObservable
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
 import timber.log.Timber
@@ -75,12 +76,33 @@ class FirestoreCollectionCache @Inject constructor(
     }
 
     override fun getCountForSet(set: String): Observable<List<CollectionCount>> {
-        return getUserCardCollection()?.let { collection ->
-            val task = collection.whereEqualTo("set", set).get()
-            RxFirebase.from(task, schedulers.firebaseExecutor)
-                    .map { it.toObjects(CollectionCountEntity::class.java) }
-                    .map { it.map(EntityMapper::to) }
-        } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
+//        return getUserCardCollection()?.let { collection ->
+//            val task = collection.whereEqualTo("set", set).get()
+//            RxFirebase.from(task, schedulers.firebaseExecutor)
+//                    .map { it.toObjects(CollectionCountEntity::class.java) }
+//                    .map { it.map(EntityMapper::to) }
+//        } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
+        return Observable.create<List<CollectionCountEntity>> { emitter ->
+            getUserCardCollection()?.let { collection ->
+                val registration = collection
+                        .whereEqualTo("set", set)
+                        .addSnapshotListener(EventListener { snapshot, exception ->
+                            if (exception != null) {
+                                emitter.onError(exception)
+                                return@EventListener
+                            }
+
+                            val counts = snapshot!!.toObjects(CollectionCountEntity::class.java)
+
+                            Timber.d("Firebase::getCountForSet($set)=(${counts.size}) - Thread(${Thread.currentThread().name})")
+                            emitter.onNext(counts)
+                        })
+
+                emitter.setCancellable {
+                    registration.remove()
+                }
+            } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
+        }.map { it.map(EntityMapper::to) }
     }
 
     override fun getCountForSeries(series: String): Observable<List<CollectionCount>> {
@@ -102,11 +124,10 @@ class FirestoreCollectionCache @Inject constructor(
                             countObject != null -> {
                                 val docId = countObject.id
                                 val count = countObject.toObject(CollectionCountEntity::class.java)
-                                count.count.inc()
+                                count.count += 1
                                 collection.document(docId)
                                         .set(count)
-                                        .toObservable(schedulers.firebaseExecutor)
-                                        .map { Unit }
+                                        .toVoidObservable(schedulers.firebaseExecutor)
                             }
                             card.expansion != null -> collection.add(
                                     CollectionCountEntity(
@@ -131,11 +152,11 @@ class FirestoreCollectionCache @Inject constructor(
                         if (countObject != null) {
                             val docId = countObject.id
                             val count = countObject.toObject(CollectionCountEntity::class.java)
-                            count.count.dec().coerceAtLeast(0)
+                            count.count -= 1
+                            count.count.coerceAtLeast(0)
                             collection.document(docId)
                                     .set(count)
-                                    .toObservable(schedulers.firebaseExecutor)
-                                    .map { Unit }
+                                    .toVoidObservable(schedulers.firebaseExecutor)
                         } else {
                             Observable.error(IllegalArgumentException("Can't find expansion for the provided card"))
                         }

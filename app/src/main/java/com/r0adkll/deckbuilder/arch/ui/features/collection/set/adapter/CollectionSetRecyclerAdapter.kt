@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection.set.adapter
 import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
@@ -26,8 +27,16 @@ class CollectionSetRecyclerAdapter(
         vh.bind(item.card, item.count)
     }
 
+    override fun getItemId(position: Int): Long {
+        if (position != RecyclerView.NO_POSITION) {
+            val item = items[position]
+            return item.card.hashCode().toLong()
+        }
+        return super.getItemId(position)
+    }
+
     fun setCollectionItems(newItems: List<StackedPokemonCard>) {
-        val diff = calculateDiff(newItems, items)
+        val diff = calculateDiff(items, newItems)
         items = ArrayList(diff.new)
         diff.diff.dispatchUpdatesTo(getListUpdateCallback())
     }

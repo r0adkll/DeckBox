@@ -24,7 +24,7 @@ class PokemonCardViewHolder(
         val startDragImmediately: Boolean = false,
         val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
         val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
-): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+): RecyclerView.ViewHolder(itemView) {
 
     val cardView: PokemonCardView by bindView(R.id.card)
     private val actionLayout: LinearLayout? by bindOptionalView(R.id.action_layout)

@@ -1,13 +1,14 @@
-package com.r0adkll.deckbuilder.util
+package com.r0adkll.deckbuilder.arch.ui.components.delegates
 
 import android.os.Bundle
 import com.ftinc.kit.arch.presentation.delegates.ActivityDelegate
-import com.ftinc.kit.arch.presentation.presenter.Presenter
+import com.ftinc.kit.arch.presentation.renderers.DisposableStateRenderer
 
 
-class PresenterActivityDelegate(val presenter: Presenter) : ActivityDelegate {
+class RendererActivityDelegate(val renderer: DisposableStateRenderer<*>) : ActivityDelegate {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -17,11 +18,11 @@ class PresenterActivityDelegate(val presenter: Presenter) : ActivityDelegate {
     }
 
     override fun onStart() {
-        presenter.start()
+        renderer.start()
     }
 
     override fun onStop() {
-        presenter.stop()
+        renderer.stop()
     }
 
     override fun onPause() {

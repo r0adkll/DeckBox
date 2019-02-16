@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 
 abstract class BaseFragment : androidx.fragment.app.Fragment() {
 
-    private val delegates = ArrayList<FragmentDelegate>()
+    protected val delegates = ArrayList<FragmentDelegate>()
     protected val disposables = CompositeDisposable()
 
 
@@ -36,6 +36,15 @@ abstract class BaseFragment : androidx.fragment.app.Fragment() {
         delegates.forEach(FragmentDelegate::onPause)
     }
 
+    override fun onStart() {
+        super.onStart()
+        delegates.forEach(FragmentDelegate::onStart)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        delegates.forEach(FragmentDelegate::onStop)
+    }
 
     override fun onResume() {
         super.onResume()

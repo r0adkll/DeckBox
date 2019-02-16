@@ -3,8 +3,11 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection.set
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.ftinc.kit.arch.util.plusAssign
+import com.google.common.collect.Collections2
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.util.Schedulers
+import io.reactivex.functions.BiPredicate
+import java.util.*
 
 
 class CollectionSetRenderer(
@@ -17,8 +20,8 @@ class CollectionSetRenderer(
 
         disposables += state
                 .map { s ->
-                    val setCount = s.counts.filter { it.set == s.expansion!!.code }
-                    s.expansion!!.totalCards.toFloat() / setCount.size.toFloat()
+                    val setCount = s.counts.filter { it.set == s.expansion!!.code && it.count > 0 }
+                    setCount.size.toFloat() / s.expansion!!.totalCards.toFloat()
                 }
                 .distinctUntilChanged()
                 .addToLifecycle()
@@ -28,12 +31,14 @@ class CollectionSetRenderer(
 
         disposables += state
                 .map { s ->
-                    s.cards.map { card ->
+                    s.cards.sortedBy { it.number.toInt() }.map { card ->
                         val count = s.counts.find { it.id == card.id }
                         StackedPokemonCard(card, count?.count ?: 0)
                     }
                 }
-                .distinctUntilChanged()
+                .distinctUntilChanged(BiPredicate { t1, t2 ->
+                    t1.map { it.card to it.count } == t2.map { it.card to it.count }
+                })
                 .addToLifecycle()
                 .subscribe {
                     actions.showCollection(it)

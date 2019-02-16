@@ -55,6 +55,10 @@ interface CollectionSetUi : Ui<State, Change> {
             class Counts(val counts: List<CollectionCount>) : Change("network -> counts loaded (${counts.size})")
         }
 
+        override fun toString(): String {
+            return "State(isLoading=$isLoading, error=$error, expansion=${expansion?.code}, cards=${cards.size}, counts=${counts.size})"
+        }
+
         companion object {
 
             val DEFAULT by lazy {

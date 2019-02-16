@@ -17,6 +17,10 @@ object RxFirebase {
         return RxFirebase.from(this, executor)
     }
 
+    fun Task<Void>.toVoidObservable(executor: Executor): Observable<Unit> {
+        return RxFirebase.fromVoid(this, executor)
+    }
+
 
     /**
      * Create an observable for any [Task] spawned from Firebase operation

@@ -20,6 +20,8 @@ import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.PresenterActivityDelegate
 import com.ftinc.kit.arch.presentation.delegates.RendererActivityDelegate
 import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.util.UIUtils
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
@@ -35,6 +37,9 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetM
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.bindParcelable
+import com.r0adkll.deckbuilder.util.extensions.addLayoutHeight
+import com.r0adkll.deckbuilder.util.extensions.layoutHeight
+import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
@@ -45,7 +50,7 @@ import kotlin.math.roundToInt
 
 class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.Intentions, CollectionSetUi.Actions {
 
-    private val expansion: Expansion by bindParcelable(SetBrowserActivity.EXTRA_EXPANSION)
+    private val expansion: Expansion by bindParcelable(EXTRA_EXPANSION)
 
     override var state: State = State.DEFAULT
 
@@ -56,14 +61,12 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     private val removeCardClicks = PublishRelay.create<PokemonCard>()
 
     private lateinit var adapter: CollectionSetRecyclerAdapter
+    private var statusBarHeight: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collection_set)
-
-        // Force update state from intent extras
-        state = state.copy(expansion = expansion)
 
         GlideApp.with(this)
                 .`as`(PaletteBitmap::class.java)
@@ -83,11 +86,20 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         val spanCount = if (smallestWidth(ScreenUtils.Config.TABLET_10)) 9 else 3
         recycler.adapter = adapter
         recycler.layoutManager = GridLayoutManager(this, spanCount)
+
+        statusBarHeight = UIUtils.getStatusBarHeight(this)
+//        appBarLayout.addLayoutHeight((statusBarHeight - dipToPx(24f)))
+        appbar?.margins(top = statusBarHeight)
+        logo?.layoutHeight(dipToPx(100f))
+        logo?.margins(top = statusBarHeight + dipToPx(16f))
     }
 
     override fun setupComponent() {
         DeckApp.component.plus(CollectionSetModule(this))
                 .inject(this)
+
+        // Force update state from intent extras
+        state = state.copy(expansion = expansion)
 
         addDelegate(RendererActivityDelegate(renderer))
         addDelegate(PresenterActivityDelegate(presenter))

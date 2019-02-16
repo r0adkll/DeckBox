@@ -1,26 +1,27 @@
 package com.r0adkll.deckbuilder.arch.ui.components.delegates
 
 import android.os.Bundle
-import com.evernote.android.state.StateSaver
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
+import com.ftinc.kit.arch.presentation.delegates.ActivityDelegate
+import com.ftinc.kit.arch.presentation.renderers.DisposableStateRenderer
 
-class StateSaverFragmentDelegate(private val fragment: BaseFragment) : FragmentDelegate {
+
+class RendererFragmentDelegate(val renderer: DisposableStateRenderer<*>) : FragmentDelegate {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        StateSaver.restoreInstanceState(fragment, savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        StateSaver.saveInstanceState(fragment, outState)
     }
 
     override fun onResume() {
     }
 
     override fun onStart() {
+        renderer.start()
     }
 
     override fun onStop() {
+        renderer.stop()
     }
 
     override fun onPause() {
@@ -28,4 +29,5 @@ class StateSaverFragmentDelegate(private val fragment: BaseFragment) : FragmentD
 
     override fun onDestroy() {
     }
+
 }

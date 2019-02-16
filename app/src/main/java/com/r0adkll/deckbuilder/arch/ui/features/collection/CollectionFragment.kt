@@ -5,16 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import com.ftinc.kit.arch.presentation.BaseFragment
-import com.ftinc.kit.arch.presentation.delegates.PresenterFragmentDelegate
-import com.ftinc.kit.arch.presentation.delegates.RendererFragmentDelegate
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.CollectionRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.collection.di.CollectionModule
+import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
-import com.r0adkll.deckbuilder.util.extensions.toast
+import com.r0adkll.deckbuilder.arch.ui.components.delegates.PresenterFragmentDelegate
+import com.r0adkll.deckbuilder.arch.ui.components.delegates.RendererFragmentDelegate
 import kotlinx.android.synthetic.main.fragment_collection.*
 import javax.inject.Inject
 
@@ -40,8 +40,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
         adapter.setEmptyView(collectionEmptyView)
         adapter.setOnItemClickListener {
             if (it is Item.ExpansionSet) {
-                // TODO: Open expansion set collection detail view
-                toast("${it.expansion.name} was clicked")
+                startActivity(CollectionSetActivity.createIntent(requireContext(), it.expansion))
             }
         }
 
@@ -64,8 +63,8 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
                 .plus(CollectionModule(this))
                 .inject(this)
 
-        addDelegate(PresenterFragmentDelegate(presenter))
-        addDelegate(RendererFragmentDelegate(renderer))
+        delegates += PresenterFragmentDelegate(presenter)
+        delegates += RendererFragmentDelegate(renderer)
     }
 
     override fun render(state: State) {
