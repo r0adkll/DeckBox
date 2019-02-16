@@ -29,31 +29,27 @@ class CollectionSetPresenter @Inject constructor(
                 .map { Change.Counts(it) as Change }
                 .onErrorReturn { Change.Error("Unable to load your collection counts") }
 
-        disposables += intentions.addCard()
-                .flatMap {
-                    Observable.fromIterable(it)
+        val addCard = intentions.addCard()
+                .flatMap { addedCard ->
+                    Observable.fromIterable(addedCard)
                             .flatMap { card ->
                                 collectionRepository.incrementCount(card)
                             }
                             .toList()
                             .toObservable()
+                            .map { Change.CountsUpdated(it) as Change }
+                            .onErrorReturn { Change.Error("Unable to add card to collection") }
                 }
-                .subscribe({
-                    Timber.d("Cards added to collection")
-                }, {
-                    Timber.e(it, "Unable to add cards to collection")
-                })
 
-        disposables += intentions.removeCard()
-                .flatMap {
-                    collectionRepository.decrementCount(it)
+        val removeCard = intentions.removeCard()
+                .flatMap { removedCard ->
+                    collectionRepository.decrementCount(removedCard)
+                            .map { Change.CountsUpdated(listOf(it)) as Change }
+                            .onErrorReturn { Change.Error("Unable to add card to collection") }
                 }
-                .subscribe({
-                    Timber.d("Cards added to collection")
-                }, {
-                    Timber.e(it, "Unable to add cards to collection")
-                })
 
         return cards.mergeWith(counts)
+                .mergeWith(addCard)
+                .mergeWith(removeCard)
     }
 }

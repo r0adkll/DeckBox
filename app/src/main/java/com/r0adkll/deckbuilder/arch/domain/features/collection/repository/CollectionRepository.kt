@@ -40,11 +40,11 @@ interface CollectionRepository {
      * Increment the collection count of the provided pokemon card
      * @param card the card to increment the collection count of
      */
-    fun incrementCount(card: PokemonCard): Observable<Unit>
+    fun incrementCount(card: PokemonCard): Observable<CollectionCount>
 
     /**
      * Decrement the collection count of the provided pokemon card
      * @param card the card to decrement the collection count of
      */
-    fun decrementCount(card: PokemonCard): Observable<Unit>
+    fun decrementCount(card: PokemonCard): Observable<CollectionCount>
 }

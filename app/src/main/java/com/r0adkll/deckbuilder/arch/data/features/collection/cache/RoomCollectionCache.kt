@@ -45,15 +45,17 @@ class RoomCollectionCache @Inject constructor(
                 .toObservable()
     }
 
-    override fun incrementCount(card: PokemonCard): Observable<Unit> {
+    override fun incrementCount(card: PokemonCard): Observable<CollectionCount> {
         return Observable.fromCallable {
-            db.collection().incrementCount(card)
+            db.collection().incrementCount(card)!!
         }.subscribeOn(schedulers.database)
+                .map(EntityMapper::to)
     }
 
-    override fun decrementCount(card: PokemonCard): Observable<Unit> {
+    override fun decrementCount(card: PokemonCard): Observable<CollectionCount> {
         return Observable.fromCallable {
-            db.collection().decrementCount(card)
+            db.collection().decrementCount(card)!!
         }.subscribeOn(schedulers.database)
+                .map(EntityMapper::to)
     }
 }

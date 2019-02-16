@@ -46,6 +46,7 @@ interface CollectionSetUi : Ui<State, Change> {
             is Change.Error -> copy(error = change.description, isLoading = false)
             is Change.Cards -> copy(cards = change.cards, isLoading = false)
             is Change.Counts -> copy(counts = change.counts)
+            is Change.CountsUpdated -> copy(counts = updateCounts(change.counts))
         }
 
         sealed class Change(logText: String): Ui.State.Change(logText) {
@@ -53,10 +54,22 @@ interface CollectionSetUi : Ui<State, Change> {
             class Error(val description: String) : Change("error -> $description")
             class Cards(val cards: List<PokemonCard>) : Change("network -> cards loaded (${cards.size})")
             class Counts(val counts: List<CollectionCount>) : Change("network -> counts loaded (${counts.size})")
+            class CountsUpdated(val counts: List<CollectionCount>) : Change("network -> counts updated (${counts.size})")
         }
 
         override fun toString(): String {
             return "State(isLoading=$isLoading, error=$error, expansion=${expansion?.code}, cards=${cards.size}, counts=${counts.size})"
+        }
+
+        private fun updateCounts(updatedCounts: List<CollectionCount>): List<CollectionCount> {
+            val existingCounts = counts.toMutableList()
+            val newCounts = ArrayList<CollectionCount>()
+
+            existingCounts.removeAll { updatedCounts.any { u -> it.id == u.id} }
+            newCounts += updatedCounts
+            newCounts += existingCounts
+
+            return newCounts
         }
 
         companion object {

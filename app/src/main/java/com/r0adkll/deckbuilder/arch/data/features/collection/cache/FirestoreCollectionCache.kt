@@ -114,7 +114,7 @@ class FirestoreCollectionCache @Inject constructor(
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
-    override fun incrementCount(card: PokemonCard): Observable<Unit> {
+    override fun incrementCount(card: PokemonCard): Observable<CollectionCount> {
         return getUserCardCollection()?.let { collection ->
             collection.whereEqualTo("cardId", card.id).get()
                     .toObservable(schedulers.firebaseExecutor)
@@ -128,22 +128,22 @@ class FirestoreCollectionCache @Inject constructor(
                                 collection.document(docId)
                                         .set(count)
                                         .toVoidObservable(schedulers.firebaseExecutor)
+                                        .map {
+                                            EntityMapper.to(count)
+                                        }
                             }
                             card.expansion != null -> collection.add(
-                                    CollectionCountEntity(
-                                            card.id,
-                                            1,
-                                            card.expansion.code,
-                                            card.expansion.series
-                                    )
-                            ).toObservable(schedulers.firebaseExecutor).map { Unit }
+                                    CollectionCountEntity(card.id, 1, card.expansion.code, card.expansion.series)
+                            )
+                                    .toObservable(schedulers.firebaseExecutor)
+                                    .map { CollectionCount(card.id, 1, card.expansion.code, card.expansion.series) }
                             else -> Observable.error(IllegalArgumentException("Can't find expansion for the provided card"))
                         }
                     }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
-    override fun decrementCount(card: PokemonCard): Observable<Unit> {
+    override fun decrementCount(card: PokemonCard): Observable<CollectionCount> {
         return getUserCardCollection()?.let { collection ->
             collection.whereEqualTo("cardId", card.id).get()
                     .toObservable(schedulers.firebaseExecutor)
@@ -157,6 +157,7 @@ class FirestoreCollectionCache @Inject constructor(
                             collection.document(docId)
                                     .set(count)
                                     .toVoidObservable(schedulers.firebaseExecutor)
+                                    .map { EntityMapper.to(count) }
                         } else {
                             Observable.error(IllegalArgumentException("Can't find expansion for the provided card"))
                         }
