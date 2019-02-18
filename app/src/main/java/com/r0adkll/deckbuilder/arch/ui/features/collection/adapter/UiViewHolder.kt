@@ -10,6 +10,7 @@ import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.ProgressLinearLayout
 import com.r0adkll.deckbuilder.util.bindView
+import com.r0adkll.deckbuilder.util.extensions.max
 import kotlin.math.roundToInt
 
 
@@ -46,7 +47,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             val completionProgress = (item.count.toFloat() / item.expansion.totalCards.toFloat())
                     .coerceIn(0f, 1f)
 
-            count.text = itemView.context.getString(R.string.completion_count_format, item.count, item.expansion.totalCards)
+            count.text = itemView.context.getString(R.string.completion_count_format, item.count, item.expansion.totalCards.max(item.count))
             completion.text = itemView.context.getString(R.string.completion_format,
                     completionProgress.times(100f).roundToInt())
             progress.progress = completionProgress

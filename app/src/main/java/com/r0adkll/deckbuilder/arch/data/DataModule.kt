@@ -115,7 +115,7 @@ class DataModule {
 
     @Provides @AppScope
     fun providePokemonApiConfig(): Config {
-        val level = if (BuildConfig.DEBUG) BASIC else NONE
+        val level = if (BuildConfig.DEBUG) BODY else NONE
         return Config(logLevel = level)
     }
 

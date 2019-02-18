@@ -4,6 +4,10 @@ package com.r0adkll.deckbuilder.util
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import timber.log.Timber
@@ -13,12 +17,32 @@ import kotlin.reflect.KClass
 
 object RxFirebase {
 
-    fun <T : Any> Task<T>.toObservable(executor: Executor): Observable<T> {
+    fun <T : Any> Task<T>.asObservable(executor: Executor): Observable<T> {
         return RxFirebase.from(this, executor)
     }
 
-    fun Task<Void>.toVoidObservable(executor: Executor): Observable<Unit> {
+    fun Task<Void>.asVoidObservable(executor: Executor): Observable<Unit> {
         return RxFirebase.fromVoid(this, executor)
+    }
+
+    inline fun <reified T : Any> Query.observeAs(): Flowable<List<T>> {
+        return Flowable.create({ source ->
+
+            val registration = this.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if (firebaseFirestoreException != null) {
+                    source.onError(firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+
+                val items = querySnapshot!!.toObjects(T::class.java)
+                source.onNext(items)
+            }
+
+            source.setCancellable {
+                registration.remove()
+            }
+
+        }, BackpressureStrategy.BUFFER)
     }
 
 
@@ -124,40 +148,4 @@ object RxFirebase {
             task.addOnFailureListener(executor, failureListener)
         }
     }
-
-
-//    fun <T : Any> transaction(reference: DatabaseReference, clazz: KClass<T>, runnable: TransactionRunnable<T>) : Observable<T> {
-//        return Observable.create { emitter ->
-//            reference.runTransaction(object : Transaction.Handler {
-//                override fun doTransaction(mutableData: MutableData): Transaction.Result {
-//                    val existingValue = mutableData.getChange(clazz.java)
-//                    val outputValue = runnable.runTransaction(existingValue)
-//                    if(outputValue != null) {
-//                        mutableData.value = outputValue
-//                    }
-//                    return Transaction.success(mutableData)
-//                }
-//
-//                override fun onComplete(error: DatabaseError?, b: Boolean, dataSnapshot: DataSnapshot?) {
-//                    if(!emitter.isDisposed) {
-//                        if (error != null) {
-//                            emitter.onError(error.toException())
-//                        } else {
-//                            val change = dataSnapshot?.getChange(clazz.java)
-//                            if (value != null) {
-//                                emitter.onNext(value)
-//                            }
-//                            emitter.onComplete()
-//                        }
-//                    }
-//                }
-//            })
-//        }
-//    }
-
-
-    interface TransactionRunnable<T : Any> {
-        fun runTransaction(data: T?) : T?
-    }
-
 }

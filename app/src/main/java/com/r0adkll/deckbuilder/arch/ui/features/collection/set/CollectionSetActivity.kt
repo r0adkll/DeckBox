@@ -13,6 +13,8 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.GridLayoutManager
@@ -94,6 +96,21 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         logo?.margins(top = statusBarHeight + dipToPx(16f))
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_collection_set, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_filter -> {
+                // TODO: Show filter
+                true
+            }
+            else -> false
+        }
+    }
+
     override fun setupComponent() {
         DeckApp.component.plus(CollectionSetModule(this))
                 .inject(this)
@@ -142,41 +159,42 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
         override fun execute(palette: androidx.palette.graphics.Palette?) {
             palette?.let { p ->
-                if (expansion.code != "sm5") {
-                    p.vibrantSwatch?.rgb?.let {
-                        when(expansion.code) {
-                            "sm75" -> {
-                                val background = ColorDrawable(it)
-                                val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
-                                val foreground = BitmapDrawable(resources, pattern).apply {
-                                    setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-                                    setTargetDensity(resources.displayMetrics.densityDpi * 4)
-                                }
-                                backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
-                                setNavigationColor(it)
+                p.vibrantSwatch?.rgb?.let {
+                    when(expansion.code) {
+                        "sm75" -> {
+                            val background = ColorDrawable(it)
+                            val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
+                            val foreground = BitmapDrawable(resources, pattern).apply {
+                                setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
+                                setTargetDensity(resources.displayMetrics.densityDpi * 4)
                             }
-                            "sm8" -> {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    backdrop.setImageResource(R.drawable.dr_smlt_header)
-                                    setNavigationColor(Color.BLACK)
-                                } else {
-                                    backdrop.imageTintList = ColorStateList.valueOf(it)
-                                    backdrop.imageTintMode = PorterDuff.Mode.ADD
-                                    setNavigationColor(it)
-                                }
-                            }
-                            "sm9" -> {
-                                backdrop.setImageResource(R.drawable.dr_smtu_background)
+                            backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
+                            setNavigationColor(it)
+                        }
+                        "sm8" -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                backdrop.setImageResource(R.drawable.dr_smlt_header)
                                 setNavigationColor(Color.BLACK)
-                            }
-                            else -> {
+                            } else {
                                 backdrop.imageTintList = ColorStateList.valueOf(it)
                                 backdrop.imageTintMode = PorterDuff.Mode.ADD
                                 setNavigationColor(it)
                             }
                         }
+                        "sm9" -> {
+                            backdrop.setImageResource(R.drawable.dr_smtu_background)
+                            setNavigationColor(Color.BLACK)
+                        }
+                        "sm5" -> {
+                            setNavigationColor(Color.BLACK)
+                        }
+                        else -> {
+                            backdrop.imageTintList = ColorStateList.valueOf(it)
+                            backdrop.imageTintMode = PorterDuff.Mode.ADD
+                            setNavigationColor(it)
+                        }
                     }
-                }
+                } ?: setNavigationColor(Color.BLACK)
             }
         }
 
@@ -189,6 +207,10 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
                 progressCompletion.setTextColor(color)
                 progressBar.borderColor = color
                 progressBar.trackColor = secondaryColor
+                val size = appbar?.menu?.size() ?: 0
+                (0 until size).forEach {
+                    appbar?.menu?.getItem(it)?.icon?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+                }
             } else {
                 val color = Color.WHITE
                 val secondaryColor = color(R.color.white50)
@@ -196,6 +218,10 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
                 progressCompletion.setTextColor(color)
                 progressBar.borderColor = color
                 progressBar.trackColor = secondaryColor
+                val size = appbar?.menu?.size() ?: 0
+                (0 until size).forEach {
+                    appbar?.menu?.getItem(it)?.icon?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+                }
             }
         }
     }

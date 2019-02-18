@@ -15,6 +15,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepos
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionFragment
+import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionProgressController
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksFragment
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
@@ -31,9 +32,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
-class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
+class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProgressController {
 
     companion object {
 
@@ -132,12 +134,18 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
 
     override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(HomeModule())
+        this.component = component.plus(HomeModule(this))
         this.component.inject(this)
     }
 
 
     override fun getComponent(): HomeComponent = component
+
+
+    override fun setOverallProgress(progress: Float) {
+        progressCompletion.text = getString(R.string.completion_format, (progress.times(100f).roundToInt().coerceIn(0, 100)))
+        progressView.progress = progress
+    }
 
 
     class HomePagerAdapter(

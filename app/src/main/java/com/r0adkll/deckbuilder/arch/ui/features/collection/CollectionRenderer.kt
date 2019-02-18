@@ -12,7 +12,8 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 
 class CollectionRenderer(
         actions: CollectionUi.Actions,
-        schedulers: Schedulers
+        schedulers: Schedulers,
+        private val progressController: CollectionProgressController
 ) : UiBaseStateRenderer<CollectionUi.State, CollectionUi.State.Change, CollectionUi.Actions>(actions, schedulers.main, schedulers.comp) {
 
     @SuppressLint("RxSubscribeOnError")
@@ -27,7 +28,7 @@ class CollectionRenderer(
                     series.forEach { (series, expansions) ->
                         val seriesCount = s.counts.filter { it.series == series }.size
                         val seriesTotal = expansions.sumBy { it.totalCards }
-                        val seriesCompletion = seriesCount.toFloat() / seriesTotal.toFloat()
+                        val seriesCompletion = (seriesCount.toFloat() / seriesTotal.toFloat()).coerceIn(0f, 1f)
                         items += Item.ExpansionSeries(series, seriesCompletion)
                         items += expansions.map { expansion ->
                             val setCount = s.counts.filter { it.set == expansion.code }.size
@@ -40,6 +41,18 @@ class CollectionRenderer(
                 .addToLifecycle()
                 .subscribe {
                     actions.setItems(it)
+                }
+
+        disposables += state
+                .map { s ->
+                    val totalCards = s.expansions.sumBy { it.totalCards }
+                    val progress = s.counts.size
+                    progress.toFloat() / totalCards.toFloat()
+                }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    progressController.setOverallProgress(it)
                 }
 
     }

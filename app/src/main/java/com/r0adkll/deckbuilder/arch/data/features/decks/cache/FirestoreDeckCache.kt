@@ -15,6 +15,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.util.RxFirebase
+import com.r0adkll.deckbuilder.util.RxFirebase.asObservable
+import com.r0adkll.deckbuilder.util.RxFirebase.asVoidObservable
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -31,8 +33,9 @@ class FirestoreDeckCache @Inject constructor(
 
     override fun getDeck(id: String): Observable<Deck> {
         return getUserDeckCollection()?.let { collection ->
-            val task = collection.document(id).get()
-            RxFirebase.from(task, schedulers.firebaseExecutor)
+            collection.document(id)
+                    .get()
+                    .asObservable(schedulers.firebaseExecutor)
                     .map { it.toObject(DeckEntity::class.java) }
                     .flatMap { deck ->
                         val cardIds = deck.metadata().map { it.id }.toHashSet()
@@ -47,7 +50,7 @@ class FirestoreDeckCache @Inject constructor(
     override fun getDecks(): Observable<List<Deck>> {
         return Observable.create<List<DeckEntity>> { emitter ->
                     getUserDeckCollection()?.let { collection ->
-                        val registration = collection.addSnapshotListener(/*schedulers.firebaseExecutor, */EventListener { snapshot, exception ->
+                        val registration = collection.addSnapshotListener(EventListener { snapshot, exception ->
                             if (exception != null) {
                                 emitter.onError(exception)
                                 return@EventListener
@@ -87,14 +90,13 @@ class FirestoreDeckCache @Inject constructor(
             val newDeck = Deck(id ?: "", name, description ?: "", image, cards, false, System.currentTimeMillis())
             val model = EntityMapper.to(newDeck)
             if (id == null) {
-                val task = collection.add(model)
-                RxFirebase.from(task, schedulers.firebaseExecutor)
+                collection.add(model)
+                        .asObservable(schedulers.firebaseExecutor)
                         .map { newDeck.copy(id = it.id) }
-            }
-            else {
-                val task = collection.document(id)
+            } else {
+                collection.document(id)
                         .set(model)
-                RxFirebase.fromVoid(task, schedulers.firebaseExecutor)
+                        .asVoidObservable(schedulers.firebaseExecutor)
                         .map { newDeck }
             }
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
@@ -104,7 +106,8 @@ class FirestoreDeckCache @Inject constructor(
     override fun duplicateDeck(deck: Deck): Observable<Unit> {
         return getUserDeckCollection()?.let { collection ->
             val query = collection.whereEqualTo("name", deck.name)
-            RxFirebase.from(query.get(), schedulers.firebaseExecutor)
+            query.get()
+                    .asObservable(schedulers.firebaseExecutor)
                     .map { it.isEmpty }
                     .flatMap {
                         if (it) {
@@ -130,10 +133,9 @@ class FirestoreDeckCache @Inject constructor(
 
     override fun deleteDeck(deck: Deck): Observable<Unit> {
         return getUserDeckCollection()?.let { collection ->
-            val task = collection
-                    .document(deck.id)
+            collection.document(deck.id)
                     .delete()
-            RxFirebase.fromVoid(task, schedulers.firebaseExecutor)
+                    .asVoidObservable(schedulers.firebaseExecutor)
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
 
@@ -167,9 +169,8 @@ class FirestoreDeckCache @Inject constructor(
                 batch.set(document, it)
             }
 
-            val task = batch.commit()
-
-            return RxFirebase.fromVoid(task, schedulers.firebaseExecutor)
+            return batch.commit()
+                    .asVoidObservable(schedulers.firebaseExecutor)
         } else {
             return Observable.error(FirebaseAuthException("-1", "No current user logged in"))
         }
@@ -192,7 +193,8 @@ class FirestoreDeckCache @Inject constructor(
                     .document(user.uid)
                     .collection(COLLECTION_DECKS)
 
-            return RxFirebase.from(offlineCollection.get(), schedulers.firebaseExecutor)
+            return offlineCollection.get()
+                    .asObservable(schedulers.firebaseExecutor)
                     .map { snapshot ->
                         val decks = ArrayList<DeckEntity>()
                         snapshot.forEach { document ->
@@ -209,8 +211,7 @@ class FirestoreDeckCache @Inject constructor(
                             batch.set(document, it)
                             batch.delete(offlineCollection.document(it.id))
                         }
-                        val task = batch.commit()
-                        RxFirebase.fromVoid(task, schedulers.firebaseExecutor)
+                        batch.commit().asVoidObservable(schedulers.firebaseExecutor)
                     }
                     .subscribeOn(schedulers.firebase)
         } else {

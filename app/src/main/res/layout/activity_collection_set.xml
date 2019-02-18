@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scaleType="fitXY"
-        android:src="@drawable/dr_smtu_background"
+        android:src="@drawable/dr_smfl_background"
         app:layout_constraintBottom_toBottomOf="@+id/progressCompletion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

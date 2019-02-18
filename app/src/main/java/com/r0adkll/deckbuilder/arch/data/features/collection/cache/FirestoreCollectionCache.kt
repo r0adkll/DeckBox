@@ -11,8 +11,9 @@ import com.r0adkll.deckbuilder.arch.data.features.collection.model.CollectionCou
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.util.RxFirebase
-import com.r0adkll.deckbuilder.util.RxFirebase.toObservable
-import com.r0adkll.deckbuilder.util.RxFirebase.toVoidObservable
+import com.r0adkll.deckbuilder.util.RxFirebase.observeAs
+import com.r0adkll.deckbuilder.util.RxFirebase.asObservable
+import com.r0adkll.deckbuilder.util.RxFirebase.asVoidObservable
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
 import timber.log.Timber
@@ -25,34 +26,17 @@ class FirestoreCollectionCache @Inject constructor(
 ) : CollectionCache {
 
     override fun observeAll(): Observable<List<CollectionCount>> {
-        return Observable.create<List<CollectionCountEntity>> { emitter ->
-            getUserCardCollection()?.let { collection ->
-                val registration = collection.addSnapshotListener(/*schedulers.firebaseExecutor, */EventListener { snapshot, exception ->
-                    if (exception != null) {
-                        emitter.onError(exception)
-                        return@EventListener
-                    }
-
-                    val counts = ArrayList<CollectionCountEntity>()
-                    snapshot?.forEach { document ->
-                        counts += document.toObject(CollectionCountEntity::class.java)
-                    }
-
-                    Timber.d("Firebase::getDecks() - Thread(${Thread.currentThread().name})")
-                    emitter.onNext(counts)
-                })
-
-                emitter.setCancellable {
-                    registration.remove()
-                }
-            } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
-        }.map { it.map(EntityMapper::to) }
+        return getUserCardCollection()
+                ?.observeAs<CollectionCountEntity>()
+                ?.toObservable()
+                ?.map { it.map(EntityMapper::to) }
+                ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
 
     override fun getCount(cardId: String): Observable<CollectionCount> {
         return getUserCardCollection()?.let { collection ->
-            val task = collection.whereEqualTo("cardId", cardId).get()
-            RxFirebase.from(task, schedulers.firebaseExecutor)
+            collection.whereEqualTo("cardId", cardId).get()
+                    .asObservable(schedulers.firebaseExecutor)
                     .map { it.firstOrNull()?.toObject(CollectionCountEntity::class.java) ?: throw IllegalStateException("Unable to parse search result") }
                     .map { EntityMapper.to(it) }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
@@ -64,7 +48,7 @@ class FirestoreCollectionCache @Inject constructor(
             val tasks = cardIds
                     .map { collection.whereEqualTo("cardId", it).get() }
                     .map { task ->
-                        RxFirebase.from(task, schedulers.firebaseExecutor)
+                        task.asObservable(schedulers.firebaseExecutor)
                                 .map { it.first().toObject(CollectionCountEntity::class.java) }
                     }
 
@@ -76,39 +60,40 @@ class FirestoreCollectionCache @Inject constructor(
     }
 
     override fun getCountForSet(set: String): Observable<List<CollectionCount>> {
-//        return getUserCardCollection()?.let { collection ->
-//            val task = collection.whereEqualTo("set", set).get()
-//            RxFirebase.from(task, schedulers.firebaseExecutor)
-//                    .map { it.toObjects(CollectionCountEntity::class.java) }
-//                    .map { it.map(EntityMapper::to) }
-//        } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
-        return Observable.create<List<CollectionCountEntity>> { emitter ->
-            getUserCardCollection()?.let { collection ->
-                val registration = collection
-                        .whereEqualTo("set", set)
-                        .addSnapshotListener(EventListener { snapshot, exception ->
-                            if (exception != null) {
-                                emitter.onError(exception)
-                                return@EventListener
-                            }
+        return getUserCardCollection()?.let { collection ->
+            collection.whereEqualTo("set", set).get()
+                    .asObservable(schedulers.firebaseExecutor)
+                    .map { it.toObjects(CollectionCountEntity::class.java) }
+                    .map { it.map(EntityMapper::to) }
+        } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
 
-                            val counts = snapshot!!.toObjects(CollectionCountEntity::class.java)
-
-                            Timber.d("Firebase::getCountForSet($set)=(${counts.size}) - Thread(${Thread.currentThread().name})")
-                            emitter.onNext(counts)
-                        })
-
-                emitter.setCancellable {
-                    registration.remove()
-                }
-            } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
-        }.map { it.map(EntityMapper::to) }
+//        return Observable.create<List<CollectionCountEntity>> { emitter ->
+//            getUserCardCollection()?.let { collection ->
+//                val registration = collection
+//                        .whereEqualTo("set", set)
+//                        .addSnapshotListener(EventListener { snapshot, exception ->
+//                            if (exception != null) {
+//                                emitter.onError(exception)
+//                                return@EventListener
+//                            }
+//
+//                            val counts = snapshot!!.toObjects(CollectionCountEntity::class.java)
+//
+//                            Timber.d("Firebase::getCountForSet($set)=(${counts.size}) - Thread(${Thread.currentThread().name})")
+//                            emitter.onNext(counts)
+//                        })
+//
+//                emitter.setCancellable {
+//                    registration.remove()
+//                }
+//            } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
+//        }.map { it.map(EntityMapper::to) }
     }
 
     override fun getCountForSeries(series: String): Observable<List<CollectionCount>> {
         return getUserCardCollection()?.let { collection ->
-            val task = collection.whereEqualTo("series", series).get()
-            RxFirebase.from(task, schedulers.firebaseExecutor)
+            collection.whereEqualTo("series", series).get()
+                    .asObservable(schedulers.firebaseExecutor)
                     .map { it.toObjects(CollectionCountEntity::class.java) }
                     .map { it.map(EntityMapper::to) }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
@@ -117,7 +102,7 @@ class FirestoreCollectionCache @Inject constructor(
     override fun incrementCount(card: PokemonCard): Observable<CollectionCount> {
         return getUserCardCollection()?.let { collection ->
             collection.whereEqualTo("cardId", card.id).get()
-                    .toObservable(schedulers.firebaseExecutor)
+                    .asObservable(schedulers.firebaseExecutor)
                     .flatMap { result ->
                         val countObject = result.firstOrNull()
                         when {
@@ -127,26 +112,25 @@ class FirestoreCollectionCache @Inject constructor(
                                 count.count += 1
                                 collection.document(docId)
                                         .set(count)
-                                        .toVoidObservable(schedulers.firebaseExecutor)
+                                        .asVoidObservable(schedulers.firebaseExecutor)
                                         .map {
                                             EntityMapper.to(count)
                                         }
                             }
-                            card.expansion != null -> collection.add(
-                                    CollectionCountEntity(card.id, 1, card.expansion.code, card.expansion.series)
-                            )
-                                    .toObservable(schedulers.firebaseExecutor)
+                            card.expansion != null -> collection.add(CollectionCountEntity(card.id, 1, card.expansion.code, card.expansion.series))
+                                    .asObservable(schedulers.firebaseExecutor)
                                     .map { CollectionCount(card.id, 1, card.expansion.code, card.expansion.series) }
                             else -> Observable.error(IllegalArgumentException("Can't find expansion for the provided card"))
                         }
                     }
+                    .subscribeOn(schedulers.firebase)
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
     override fun decrementCount(card: PokemonCard): Observable<CollectionCount> {
         return getUserCardCollection()?.let { collection ->
             collection.whereEqualTo("cardId", card.id).get()
-                    .toObservable(schedulers.firebaseExecutor)
+                    .asObservable(schedulers.firebaseExecutor)
                     .flatMap { result ->
                         val countObject = result.firstOrNull()
                         if (countObject != null) {
@@ -156,7 +140,7 @@ class FirestoreCollectionCache @Inject constructor(
                             count.count.coerceAtLeast(0)
                             collection.document(docId)
                                     .set(count)
-                                    .toVoidObservable(schedulers.firebaseExecutor)
+                                    .asVoidObservable(schedulers.firebaseExecutor)
                                     .map { EntityMapper.to(count) }
                         } else {
                             Observable.error(IllegalArgumentException("Can't find expansion for the provided card"))

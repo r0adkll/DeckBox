@@ -12,6 +12,7 @@ import io.pokemontcg.Pokemon
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import io.reactivex.functions.Function
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -30,6 +31,7 @@ class CombinedSearchDataSource(
         return if (connectivity.isConnected() && !forceDiskSearch) {
             networkSource.search(type, query, filter)
                     .onErrorResumeNext(Function {
+                        Timber.e(it, "Error searching for cards")
                         diskSource.search(type, query, filter)
                     })
         } else {

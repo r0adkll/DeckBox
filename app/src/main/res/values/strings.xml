@@ -266,4 +266,5 @@
     <string name="completion_count_format">%1$d of %2$d</string>
     <string name="collection_progress_all_title">Entire collection</string>
     <string name="empty_collection_set">No cards in your collection</string>
+    <string name="action_filter">Filter</string>
 </resources>

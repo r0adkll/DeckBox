@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.di
 
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionFragment
+import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionProgressController
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
@@ -24,6 +25,7 @@ class CollectionModule(val fragment: CollectionFragment) {
     @Provides @FragmentScope
     fun provideRenderer(
             actions: CollectionUi.Actions,
-            schedulers: Schedulers
-    ): CollectionRenderer = CollectionRenderer(actions, schedulers)
+            schedulers: Schedulers,
+            controller: CollectionProgressController
+    ): CollectionRenderer = CollectionRenderer(actions, schedulers, controller)
 }

@@ -12,7 +12,7 @@
         <!--/>-->
     <tab
         id="@+id/tab_collection"
-        icon="@drawable/ic_cards"
+        icon="@drawable/ic_cards_outline"
         title="@string/tab_collection"
         />
     <tab
