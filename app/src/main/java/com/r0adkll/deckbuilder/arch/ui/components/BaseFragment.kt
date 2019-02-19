@@ -3,14 +3,14 @@ package com.r0adkll.deckbuilder.arch.ui.components
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.r0adkll.deckbuilder.arch.ui.components.delegates.FragmentDelegate
+import com.ftinc.kit.arch.presentation.delegates.FragmentDelegate
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.StateSaverFragmentDelegate
 import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.reactivex.disposables.CompositeDisposable
 import kotlin.reflect.KClass
 
 
-abstract class BaseFragment : androidx.fragment.app.Fragment() {
+abstract class BaseFragment : Fragment() {
 
     private val delegates = ArrayList<FragmentDelegate>()
     protected val disposables = CompositeDisposable()
