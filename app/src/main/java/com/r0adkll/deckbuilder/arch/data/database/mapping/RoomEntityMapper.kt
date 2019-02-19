@@ -133,7 +133,7 @@ object RoomEntityMapper {
                 card.name,
                 card.number,
                 card.text?.joinToString("\n"),
-                card.artist,
+                card.artist ?: "",
                 card.rarity,
                 card.nationalPokedexNumber,
                 card.hp,
