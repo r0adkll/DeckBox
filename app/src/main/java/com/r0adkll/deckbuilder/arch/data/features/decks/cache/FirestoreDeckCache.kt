@@ -85,9 +85,16 @@ class FirestoreDeckCache @Inject constructor(
     }
 
 
-    override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> {
+    override fun putDeck(
+            id: String?,
+            cards: List<PokemonCard>,
+            name: String,
+            description: String?,
+            image: DeckImage?,
+            collectionOnly: Boolean
+    ): Observable<Deck> {
         return getUserDeckCollection()?.let { collection ->
-            val newDeck = Deck(id ?: "", name, description ?: "", image, cards, false, System.currentTimeMillis())
+            val newDeck = Deck(id ?: "", name, description ?: "", image, collectionOnly, cards, false, System.currentTimeMillis())
             val model = EntityMapper.to(newDeck)
             if (id == null) {
                 collection.add(model)
@@ -111,7 +118,7 @@ class FirestoreDeckCache @Inject constructor(
                     .map { it.isEmpty }
                     .flatMap {
                         if (it) {
-                            putDeck(null, deck.cards, deck.name, deck.description, deck.image)
+                            putDeck(null, deck.cards, deck.name, deck.description, deck.image, deck.collectionOnly)
                         }
                         else {
                             val regex = DUPLICATE_REGEX.toRegex()
@@ -122,7 +129,7 @@ class FirestoreDeckCache @Inject constructor(
 
                             val cleanName = deck.name.replace(regex, "").trim()
                             val newName = "$cleanName ($count)"
-                            duplicateDeck(Deck("", newName, deck.description, deck.image, deck.cards, false, deck.timestamp))
+                            duplicateDeck(Deck("", newName, deck.description, deck.image, deck.collectionOnly, deck.cards, deck.isMissingCards, deck.timestamp))
                         }
                     }
                     .map { Unit }

@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -160,9 +161,6 @@ class DeckBuilderActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
 
-        // Set Flags
-        newFeatureDeckImage.setVisible(flags.newFeatureDeckImage)
-
         // Setup AppBar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = null
@@ -273,8 +271,6 @@ class DeckBuilderActivity : BaseActivity(),
         @SuppressLint("RxSubscribeOnError")
         disposables += actionDeckImage.clicks()
                 .subscribe {
-                    flags.newFeatureDeckImage = false
-                    newFeatureDeckImage.gone()
                     DeckImagePickerFragment.newInstance(sessionId, state.image)
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
                 }
@@ -448,6 +444,13 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
 
+    override fun editDeckCollectionOnly(): Observable<Boolean> {
+        return collectionSwitch.checkedChanges()
+                .skipInitialValue()
+                .uiDebounce()
+    }
+
+
     override fun saveDeck(): Observable<Unit> {
         return saveDeck
     }
@@ -526,26 +529,33 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
 
+    override fun showDeckCollectionOnly(collectionOnly: Boolean) {
+        if (collectionSwitch.isChecked != collectionOnly) {
+            collectionSwitch.isChecked = collectionOnly
+        }
+    }
+
+
     override fun showIsSaving(isSaving: Boolean) {
         invalidateOptionsMenu()
         if (isSaving) {
             if (savingSnackBar == null) {
-                savingSnackBar = com.google.android.material.snackbar.Snackbar.make(pager, R.string.deckbuilder_saving_message, com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE)
+                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saving_message, Snackbar.LENGTH_INDEFINITE)
             }
             else {
                 savingSnackBar?.setText(R.string.deckbuilder_saving_message)
-                savingSnackBar?.duration = com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE
+                savingSnackBar?.duration = Snackbar.LENGTH_INDEFINITE
             }
 
             savingSnackBar?.show()
         }
         else {
             if (savingSnackBar == null) {
-                savingSnackBar = com.google.android.material.snackbar.Snackbar.make(pager, R.string.deckbuilder_saved_message, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT)
+                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saved_message, Snackbar.LENGTH_SHORT)
             }
             else {
                 savingSnackBar?.setText(R.string.deckbuilder_saved_message)
-                savingSnackBar?.duration = com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                savingSnackBar?.duration = Snackbar.LENGTH_SHORT
             }
 
             if (savingSnackBar?.isShown == true) {

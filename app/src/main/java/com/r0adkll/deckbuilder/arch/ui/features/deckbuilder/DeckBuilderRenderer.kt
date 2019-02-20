@@ -125,5 +125,11 @@ class DeckBuilderRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showDeckImage(it.value) }
+
+        disposables += state
+                .map { it.collectionOnly }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.showDeckCollectionOnly(it) }
     }
 }

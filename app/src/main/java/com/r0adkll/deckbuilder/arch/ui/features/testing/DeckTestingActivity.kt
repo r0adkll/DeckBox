@@ -11,6 +11,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.arch.util.bindViews
 import com.ftinc.kit.arch.util.uiDebounce
 import com.ftinc.kit.kotlin.extensions.dpToPx
@@ -33,8 +34,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.arch.ui.components.delegates.PresenterActivityDelegate
-import com.r0adkll.deckbuilder.arch.ui.components.delegates.RendererActivityDelegate
 import com.r0adkll.deckbuilder.util.extensions.fromHtml
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -93,8 +92,8 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         DeckApp.component.plus(DeckTestingModule(this))
                 .inject(this)
 
-        addDelegate(RendererActivityDelegate(renderer))
-        addDelegate(PresenterActivityDelegate(presenter))
+        delegates += StatefulActivityDelegate(renderer)
+        delegates += StatefulActivityDelegate(presenter)
     }
 
 

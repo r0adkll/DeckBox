@@ -132,6 +132,7 @@ class DataModule {
     @Provides @AppScope
     fun provideRoomDatabase(context: Context): DeckDatabase {
         return Room.databaseBuilder(context, DeckDatabase::class.java, BuildConfig.DATABASE_NAME)
+                .addMigrations(DeckDatabase.MIGRATION_1_2)
                 .build()
     }
 

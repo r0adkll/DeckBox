@@ -85,19 +85,6 @@
 
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/newFeatureDeckImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="-9dp"
-        android:layout_marginTop="-9dp"
-        android:layout_alignTop="@+id/actionDeckImage"
-        android:layout_alignEnd="@+id/actionDeckImage"
-        android:src="@drawable/ic_new_releases_red_24dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_deck_name"
         android:layout_width="match_parent"
@@ -146,12 +133,47 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <LinearLayout
+        android:id="@+id/collectionSwitchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_input_deck_description"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/black12"-->
+            <!--/>-->
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/collectionSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:text="@string/option_collection_only"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black12"
+            />
+
+    </LinearLayout>
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ruleRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"
-        android:layout_below="@+id/text_input_deck_description"
+        android:layout_below="@+id/collectionSwitchLayout"
         android:paddingBottom="48dp"
         android:clipToPadding="false"
         />

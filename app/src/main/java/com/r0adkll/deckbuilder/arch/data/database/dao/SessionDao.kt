@@ -43,6 +43,9 @@ abstract class SessionDao {
     @Query("UPDATE sessions SET image = :image WHERE uid = :sessionId")
     abstract fun updateImage(sessionId: Long, image: Uri): Int
 
+    @Query("UPDATE sessions SET collectionOnly = :collectionOnly WHERE uid = :sessionId")
+    abstract fun updateCollectionOnly(sessionId: Long, collectionOnly: Boolean): Int
+
     @Query("DELETE FROM sessions WHERE uid = :sessionId")
     abstract fun deleteSession(sessionId: Long): Int
 
@@ -180,6 +183,7 @@ abstract class SessionDao {
             session.originalName = session.name
             session.originalDescription = session.description
             session.originalImage = session.image
+            session.originalCollectionOnly = session.collectionOnly
             updateSession(session)
         }
         deleteChanges(sessionId)

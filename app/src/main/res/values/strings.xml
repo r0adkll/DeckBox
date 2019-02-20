@@ -267,4 +267,5 @@
     <string name="collection_progress_all_title">Entire collection</string>
     <string name="empty_collection_set">No cards in your collection</string>
     <string name="action_filter">Filter</string>
+    <string name="option_collection_only">Collection only</string>
 </resources>

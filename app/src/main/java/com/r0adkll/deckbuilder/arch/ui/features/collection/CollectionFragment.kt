@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi.State
@@ -13,8 +14,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.collection.di.CollectionModule
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
-import com.r0adkll.deckbuilder.arch.ui.components.delegates.PresenterFragmentDelegate
-import com.r0adkll.deckbuilder.arch.ui.components.delegates.RendererFragmentDelegate
 import kotlinx.android.synthetic.main.fragment_collection.*
 import javax.inject.Inject
 
@@ -63,8 +62,8 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
                 .plus(CollectionModule(this))
                 .inject(this)
 
-        delegates += PresenterFragmentDelegate(presenter)
-        delegates += RendererFragmentDelegate(renderer)
+        delegates += StatefulFragmentDelegate(presenter)
+        delegates += StatefulFragmentDelegate(renderer)
     }
 
     override fun render(state: State) {

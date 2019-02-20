@@ -20,6 +20,7 @@ object EntityMapper {
                 deck.name,
                 deck.description,
                 deck.image?.uri?.toString(),
+                deck.collectionOnly,
                 /* Deprecated */ emptyList(),
                 deck.cards.stack().map { to(it) },
                 System.currentTimeMillis()
@@ -33,6 +34,7 @@ object EntityMapper {
                 entity.name,
                 entity.description,
                 entity.image?.let { DeckImage.from(Uri.parse(it)) },
+                entity.collectionOnly ?: false,
                 cards,
                 isMissingCards,
                 entity.timestamp
@@ -133,7 +135,7 @@ object EntityMapper {
 
     fun DeckEntity.migrate(): DeckEntity {
         val metadata = this.metadata()
-        return DeckEntity(this.id, this.name, this.description, this.image, emptyList(), metadata, this.timestamp)
+        return DeckEntity(this.id, this.name, this.description, this.image, this.collectionOnly, emptyList(), metadata, this.timestamp)
     }
 
 

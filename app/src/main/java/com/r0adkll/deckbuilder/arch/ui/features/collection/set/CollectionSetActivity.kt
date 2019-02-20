@@ -19,8 +19,7 @@ import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.arch.presentation.BaseActivity
-import com.ftinc.kit.arch.presentation.delegates.PresenterActivityDelegate
-import com.ftinc.kit.arch.presentation.delegates.RendererActivityDelegate
+import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.util.UIUtils
@@ -31,7 +30,6 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.adapter.CollectionSetRecyclerAdapter
@@ -39,7 +37,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetM
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.bindParcelable
-import com.r0adkll.deckbuilder.util.extensions.addLayoutHeight
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
@@ -118,8 +115,8 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         // Force update state from intent extras
         state = state.copy(expansion = expansion)
 
-        addDelegate(RendererActivityDelegate(renderer))
-        addDelegate(PresenterActivityDelegate(presenter))
+        delegates += StatefulActivityDelegate(renderer)
+        delegates += StatefulActivityDelegate(presenter)
     }
 
     override fun render(state: State) {

@@ -52,10 +52,17 @@ class RoomDeckCache @Inject constructor(
                 }
     }
 
-    override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> {
+    override fun putDeck(
+            id: String?,
+            cards: List<PokemonCard>,
+            name: String,
+            description: String?,
+            image: DeckImage?,
+            collectionOnly: Boolean
+    ): Observable<Deck> {
         return Observable.fromCallable {
-            val entity = db.decks().insertDeckWithCards(id?.toLongOrNull(), cards, name, description, image)
-            Deck(entity.uid.toString(), name, description ?: "", image, cards, false, entity.timestamp)
+            val entity = db.decks().insertDeckWithCards(id?.toLongOrNull(), cards, name, description, image, collectionOnly)
+            Deck(entity.uid.toString(), name, description ?: "", image, collectionOnly, cards, false, entity.timestamp)
         }
     }
 

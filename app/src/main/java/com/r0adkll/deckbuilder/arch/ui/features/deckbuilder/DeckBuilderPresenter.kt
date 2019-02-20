@@ -61,6 +61,13 @@ class DeckBuilderPresenter @Inject constructor(
                     Timber.d("Description changed!")
                 }, { t -> Timber.e(t, "Error changing description name")})
 
+        disposables += intentions.editDeckCollectionOnly()
+                .flatMap { repository.changeCollectionOnly(ui.state.sessionId, it) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Timber.d("Collection Only changed!")
+                }, { t -> Timber.e(t, "Error changing collection only")})
+
         val editDeck = intentions.editDeckClicks()
                 .map { Change.Editing(it) as Change }
 

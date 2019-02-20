@@ -32,6 +32,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun editOverviewClicks(): Observable<Boolean>
         fun editDeckName(): Observable<String>
         fun editDeckDescription(): Observable<String>
+        fun editDeckCollectionOnly(): Observable<Boolean>
     }
 
 
@@ -51,6 +52,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun showDeckName(name: String)
         fun showDeckDescription(description: String)
         fun showDeckImage(image: DeckImage?)
+        fun showDeckCollectionOnly(collectionOnly: Boolean)
     }
 
 
@@ -67,6 +69,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             val name: String?,
             val description: String?,
             val image: DeckImage?,
+            val collectionOnly: Boolean,
 
             val validation: Validation,
 
@@ -89,6 +92,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     name = change.session.name,
                     description = change.session.description,
                     image = change.session.image,
+                    collectionOnly = change.session.collectionOnly,
                     isChanged = change.session.hasChanges,
                     isSaving = false,
                     error = null
@@ -157,7 +161,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(-1L, false, false, false, false, null, null, null, null,
+                State(-1L, false, false, false, false, null, null, null, null, false,
                         Validation(false, false, emptyList()), emptyList(), emptyList(), emptyList())
             }
         }

@@ -10,8 +10,19 @@ import io.reactivex.Observable
 interface DeckCache {
 
     fun getDeck(id: String): Observable<Deck>
+
     fun getDecks(): Observable<List<Deck>>
-    fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?) : Observable<Deck>
+
+    fun putDeck(
+            id: String?,
+            cards: List<PokemonCard>,
+            name: String,
+            description: String?,
+            image: DeckImage?,
+            collectionOnly: Boolean
+    ) : Observable<Deck>
+
     fun deleteDeck(deck: Deck): Observable<Unit>
+
     fun duplicateDeck(deck: Deck): Observable<Unit>
 }
