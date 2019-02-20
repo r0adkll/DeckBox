@@ -4,11 +4,11 @@ package com.r0adkll.deckbuilder.arch.ui.components
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.ftinc.kit.arch.presentation.delegates.ActivityDelegate
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.delegates.ActivityDelegate
 import com.r0adkll.deckbuilder.arch.ui.components.delegates.StateSaverActivityDelegate
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalView

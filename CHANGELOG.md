@@ -1,3 +1,6 @@
+# 1.8.4
+* Hotfix for SDK search error causing empty results and issues finding newer cards
+
 # 1.8.3
 * Support for Sun & Moon: Team Up expansion
 
