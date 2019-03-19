@@ -33,6 +33,7 @@ class EvolutionLineRecyclerAdapter(
     var evolution: EvolutionChain? = null
     var cardViewClickListener: OnPokemonCardViewClickListener? = null
     var isEditing: Boolean = false
+    var isCollectionEnabled: Boolean = false
 
     init {
         setHasStableIds(true)
@@ -65,7 +66,14 @@ class EvolutionLineRecyclerAdapter(
     override fun onBindViewHolder(holder: PokemonCardViewHolder, position: Int) {
         evolution.getItem(position)?.let { card ->
             val evolution = getEvolutionState(position)
-            holder.bind(card.card, card.count, evolution.evolution, isEditing)
+            holder.bind(
+                    card.card,
+                    card.count,
+                    evolution.evolution,
+                    isEditing,
+                    card.collection ?: 0,
+                    isCollectionEnabled
+            )
 
             // Bind click listener
             holder.itemView.setOnClickListener {

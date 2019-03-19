@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 
 fun View.isVisible(): Boolean = this.visibility == View.VISIBLE
@@ -66,5 +69,25 @@ fun View.margins(margins: ExpansionPreview.PreviewSpec.Margins?) {
         margins?.end?.let { params.marginEnd = it }
         margins?.bottom?.let { params.bottomMargin = it }
         this.layoutParams = lp
+    }
+}
+
+/*
+ * Recycler based extensions
+ */
+
+fun <Field : Any> notifyingField(initialValue: Field): NotifyDataSetChanged<Field> = NotifyDataSetChanged(initialValue)
+
+class NotifyDataSetChanged<Field : Any>(initialValue: Field) : ReadWriteProperty<RecyclerView.Adapter<*>, Field> {
+
+    private var backingField: Field = initialValue
+
+    override fun getValue(thisRef: RecyclerView.Adapter<*>, property: KProperty<*>): Field {
+        return backingField
+    }
+
+    override fun setValue(thisRef: RecyclerView.Adapter<*>, property: KProperty<*>, value: Field) {
+        backingField = value
+        thisRef.notifyDataSetChanged()
     }
 }

@@ -35,12 +35,20 @@ class PokemonCardViewHolder(
     fun bind(card: PokemonCard,
              count: Int,
              evolution: PokemonCardView.Evolution = PokemonCardView.Evolution.NONE,
-             isEditMode: Boolean = false) {
+             isEditMode: Boolean = false,
+             collectionCount: Int = 0,
+             isCollectionMode: Boolean = false) {
+
         cardView.displayCountWhenOne = displayWhenOne
         cardView.card = card
         cardView.count = count
         cardView.startDragImmediately = startDragImmediately
         cardView.evolution = evolution
+        cardView.alpha = if (isCollectionMode) {
+            if (collectionCount > 0) 1f else 0.5f
+        } else {
+            1f
+        }
 
         actionLayout?.setVisible((isEditMode && !displayWhenOne) || isEditMode && ((displayWhenOne && count > 0) || count > 1))
         actionRemove?.setOnClickListener { removeCardClicks.accept(card) }

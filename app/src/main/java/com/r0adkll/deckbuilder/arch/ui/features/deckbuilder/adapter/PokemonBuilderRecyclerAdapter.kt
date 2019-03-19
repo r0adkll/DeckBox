@@ -10,6 +10,8 @@ import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.util.extensions.notifyingField
+import kotlin.math.sin
 
 
 class PokemonBuilderRecyclerAdapter(
@@ -19,11 +21,8 @@ class PokemonBuilderRecyclerAdapter(
         private val pokemonCardClicks: Relay<PokemonCardView>
 ) : ListRecyclerAdapter<PokemonItem, androidx.recyclerview.widget.RecyclerView.ViewHolder>(context) {
 
-    var isEditing: Boolean = false
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    var isEditing: Boolean by notifyingField(false)
+    var isCollectionEnabled: Boolean by notifyingField(false)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
@@ -45,11 +44,17 @@ class PokemonBuilderRecyclerAdapter(
         when(vh) {
             is EvolutionChainViewHolder -> {
                 val evolutionChain = item as PokemonItem.Evolution
-                vh.bind(evolutionChain.evolutionChain, isEditing)
+                vh.bind(evolutionChain.evolutionChain, isEditing, isCollectionEnabled)
             }
             is PokemonCardViewHolder -> {
                 val single = (item as PokemonItem.Single).card
-                vh.bind(single.card, single.count, isEditMode = isEditing)
+                vh.bind(
+                        single.card,
+                        single.count,
+                        isEditMode = isEditing,
+                        collectionCount = single.collection ?: 0,
+                        isCollectionMode = isCollectionEnabled
+                )
                 vh.itemView.setOnClickListener {
                     val card = it.findViewById<PokemonCardView>(R.id.card)
                     pokemonCardClicks.accept(card)

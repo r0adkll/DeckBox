@@ -530,6 +530,7 @@ class DeckBuilderActivity : BaseActivity(),
 
 
     override fun showDeckCollectionOnly(collectionOnly: Boolean) {
+        adapter.isCollectionEnabled = collectionOnly
         if (collectionSwitch.isChecked != collectionOnly) {
             collectionSwitch.isChecked = collectionOnly
         }

@@ -29,6 +29,12 @@ class DeckBuilderPagerAdapter(
             viewHolders.forEach { it?.setEditMode(value) }
         }
 
+    var isCollectionEnabled: Boolean = false
+        set(value) {
+            field = value
+            viewHolders.forEach { it?.setCollectionMode(value) }
+        }
+
     private var pokemonCards: List<StackedPokemonCard> = emptyList()
     private var trainerCards: List<StackedPokemonCard> = emptyList()
     private var energyCards: List<StackedPokemonCard> = emptyList()

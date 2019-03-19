@@ -73,23 +73,26 @@ class DeckBuilderRenderer(
                 }
 
         disposables += state
-                .map { it.pokemonCards }
-                .distinctUntilChanged()
-                .map(stackCards())
+                .map { stackCards(it.pokemonCards, it.collectionCounts) }
+                .distinctUntilChanged { t1, t2 ->
+                    t1.hashCode() == t2.hashCode()
+                }
                 .addToLifecycle()
                 .subscribe { actions.showPokemonCards(it) }
 
         disposables += state
-                .map { it.trainerCards }
-                .distinctUntilChanged()
-                .map(stackCards())
+                .map { stackCards(it.trainerCards, it.collectionCounts) }
+                .distinctUntilChanged { t1, t2 ->
+                    t1.hashCode() == t2.hashCode()
+                }
                 .addToLifecycle()
                 .subscribe { actions.showTrainerCards(it) }
 
         disposables += state
-                .map { it.energyCards }
-                .distinctUntilChanged()
-                .map(stackCards())
+                .map { stackCards(it.energyCards, it.collectionCounts) }
+                .distinctUntilChanged { t1, t2 ->
+                    t1.hashCode() == t2.hashCode()
+                }
                 .addToLifecycle()
                 .subscribe { actions.showEnergyCards(it) }
 
