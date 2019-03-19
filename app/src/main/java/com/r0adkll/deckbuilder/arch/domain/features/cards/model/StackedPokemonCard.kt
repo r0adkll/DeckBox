@@ -7,7 +7,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class StackedPokemonCard(
         val card: PokemonCard,
-        val count: Int
+        val count: Int,
+        val collection: Int? = null
 ): Parcelable {
 
     override fun equals(other: Any?): Boolean {
@@ -25,6 +26,7 @@ data class StackedPokemonCard(
     override fun hashCode(): Int {
         var result = card.hashCode()
         result = 31 * result + count
+        result = 31 * result + (collection ?: 0)
         return result
     }
 }

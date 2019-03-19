@@ -1,10 +1,10 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
-import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
@@ -12,8 +12,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.SuperType.*
 import io.reactivex.Observable
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
@@ -75,7 +73,8 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
             @Transient val pokemonCards: List<PokemonCard> = emptyList(),
             @Transient val trainerCards: List<PokemonCard> = emptyList(),
-            @Transient val energyCards: List<PokemonCard> = emptyList()
+            @Transient val energyCards: List<PokemonCard> = emptyList(),
+            @Transient val collectionCounts: List<CollectionCount> = emptyList()
     ) : PaperParcelable {
 
         val allCards: List<PokemonCard>
@@ -121,6 +120,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             is Change.EditName -> this.copy(name = change.name)
             is Change.EditDescription -> this.copy(description = change.description)
             is Change.Validated -> this.copy(validation = change.validation)
+            is Change.CollectionCounts -> this.copy(collectionCounts = change.counts)
         }
 
 
@@ -137,7 +137,8 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     "name=$name, " +
                     "description=$description, " +
                     "image=$image, " +
-                    "validation=$validation)"
+                    "validation=$validation, " +
+                    "collection=${collectionCounts.size})"
         }
 
 
@@ -154,6 +155,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             class EditName(val name: String) : Change("user -> name changed $name")
             class EditDescription(val description: String) : Change ("user -> desc changed $description")
             class Validated(val validation: Validation) : Change("cache -> validated: $validation")
+            class CollectionCounts(val counts: List<CollectionCount>) : Change("cache -> collection count loaded/changed: ${counts.size}")
         }
 
 

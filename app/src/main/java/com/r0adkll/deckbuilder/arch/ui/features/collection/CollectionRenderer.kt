@@ -26,12 +26,12 @@ class CollectionRenderer(
                             .sortedWith(ExpansionComparator())
                             .groupBy { it.series }
                     series.forEach { (series, expansions) ->
-                        val seriesCount = s.counts.filter { it.series == series }.size
+                        val seriesCount = s.counts.filter { it.series == series && it.count > 0}.size
                         val seriesTotal = expansions.sumBy { it.totalCards }
                         val seriesCompletion = (seriesCount.toFloat() / seriesTotal.toFloat()).coerceIn(0f, 1f)
                         items += Item.ExpansionSeries(series, seriesCompletion)
                         items += expansions.map { expansion ->
-                            val setCount = s.counts.filter { it.set == expansion.code }.size
+                            val setCount = s.counts.filter { it.set == expansion.code && it.count > 0 }.size
                             Item.ExpansionSet(expansion, setCount)
                         }
                     }

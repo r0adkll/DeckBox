@@ -31,7 +31,7 @@ class CollectionSetRenderer(
 
         disposables += state
                 .map { s ->
-                    s.cards.sortedBy { it.number.toInt() }.map { card ->
+                    s.cards.sortedBy { it.number.replace("a", "", true).toIntOrNull() ?: 0 }.map { card ->
                         val count = s.counts.find { it.id == card.id }
                         StackedPokemonCard(card, count?.count ?: 0)
                     }

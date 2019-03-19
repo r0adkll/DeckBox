@@ -4,6 +4,7 @@ import android.util.ArrayMap
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import io.pokemontcg.model.Type
 
 
@@ -838,10 +839,26 @@ object CardUtils {
                     .sortedBy { card -> card.card.nationalPokedexNumber }
         }
     }
+
+    fun stackCards(cards: List<PokemonCard>, collection: List<CollectionCount>): List<StackedPokemonCard> {
+        val map = ArrayMap<PokemonCard, Int>(cards.size)
+        val collectionMap = ArrayMap<PokemonCard, Int>(cards.size)
+        cards.forEach { card ->
+            val count = map[card] ?: 0
+            map[card] = count + 1
+            collectionMap[card] = collection.find { it.id == card.id }?.count ?: 0
+        }
+
+        return map.map {
+            val collectionCount = collectionMap[it.key] ?: 0
+            StackedPokemonCard(it.key, it.value, collectionCount)
+        }.sortedBy { card -> card.card.nationalPokedexNumber }
+    }
 }
 
 
 fun List<PokemonCard>.stack(): List<StackedPokemonCard> = CardUtils.stackCards().invoke(this)
+fun List<PokemonCard>.stack(collection: List<CollectionCount>): List<StackedPokemonCard> = CardUtils.stackCards(this, collection)
 
 fun List<StackedPokemonCard>.unstack(): List<PokemonCard> = this.flatMap { stack ->
     (0 until stack.count).map { stack.card.copy() }
