@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.kotlin.extensions.gone
 import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.kotlin.extensions.visible
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -30,6 +33,7 @@ class PokemonCardViewHolder(
     private val actionLayout: LinearLayout? by bindOptionalView(R.id.action_layout)
     private val actionRemove: ImageView? by bindOptionalView(R.id.action_remove)
     private val actionAdd: ImageView? by bindOptionalView(R.id.action_add)
+    private val collectionCounter: TextView? by bindOptionalView(R.id.count)
 
 
     fun bind(card: PokemonCard,
@@ -44,10 +48,14 @@ class PokemonCardViewHolder(
         cardView.count = count
         cardView.startDragImmediately = startDragImmediately
         cardView.evolution = evolution
-        cardView.alpha = if (isCollectionMode) {
-            if (collectionCount > 0) 1f else 0.5f
+
+        if (isCollectionMode) {
+            collectionCounter?.visible()
+            collectionCounter?.text = "$collectionCount"
+            cardView.alpha = if (collectionCount >= count) 1f else 0.4f
         } else {
-            1f
+            collectionCounter?.gone()
+            cardView.alpha = 1f
         }
 
         actionLayout?.setVisible((isEditMode && !displayWhenOne) || isEditMode && ((displayWhenOne && count > 0) || count > 1))
@@ -70,7 +78,7 @@ class PokemonCardViewHolder(
                    startDragImmediately: Boolean = false,
                    removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
                    addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()): PokemonCardViewHolder {
-            val layout = if (startDragImmediately) R.layout.item_pokemon_card else R.layout.item_pokemon_card_editable
+            val layout = if (startDragImmediately) R.layout.item_pokemon_card else R.layout.item_pokemon_card_collection
             val view = inflater.inflate(layout, parent, false)
             return PokemonCardViewHolder(view, displayWhenOne, startDragImmediately,
                     removeCardClicks = removeCardClicks, addCardClicks = addCardClicks)
