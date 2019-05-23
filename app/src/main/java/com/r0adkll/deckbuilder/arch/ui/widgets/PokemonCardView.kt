@@ -49,13 +49,11 @@ class PokemonCardView @JvmOverloads constructor(
     private var lastTouchX: Float = 0f
     private var lastTouchY: Float = 1f
 
-
     var card: PokemonCard? = null
         set(value) {
             field = value
             loadImage()
         }
-
 
     var evolution = Evolution.NONE
         set(value) {

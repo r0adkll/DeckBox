@@ -33,7 +33,7 @@ class PokemonCardViewHolder(
     private val actionLayout: LinearLayout? by bindOptionalView(R.id.action_layout)
     private val actionRemove: ImageView? by bindOptionalView(R.id.action_remove)
     private val actionAdd: ImageView? by bindOptionalView(R.id.action_add)
-    private val collectionCounter: TextView? by bindOptionalView(R.id.count)
+    val collectionCounter: TextView? by bindOptionalView(R.id.count)
 
 
     fun bind(card: PokemonCard,

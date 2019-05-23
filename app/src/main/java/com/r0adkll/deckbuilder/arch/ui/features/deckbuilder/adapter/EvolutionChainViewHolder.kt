@@ -24,7 +24,7 @@ class EvolutionChainViewHolder(
         private val pokemonCardClicks: Relay<PokemonCardView>
 ): RecyclerView.ViewHolder(itemView) {
 
-    private val recyclerView: androidx.recyclerview.widget.RecyclerView by bindView(R.id.recycler)
+    private val recyclerView by bindView<RecyclerView>(R.id.recycler)
 
 
     fun bind(evolutionChain: EvolutionChain, isEditing: Boolean, isCollectionEnabled: Boolean) {

@@ -32,6 +32,13 @@ fun TextView.drawableStart(@DrawableRes resId: Int) {
  */
 
 
+fun View.layoutWidth(width: Int) {
+    val lp = this.layoutParams
+    lp.width = width
+    this.layoutParams = lp
+}
+
+
 fun View.layoutHeight(height: Int) {
     val lp = this.layoutParams
     lp.height = height
@@ -55,6 +62,21 @@ fun View.margins(left: Int? = null,
         left?.let { params.leftMargin = it }
         top?.let { params.topMargin = it }
         right?.let { params.rightMargin = it }
+        bottom?.let { params.bottomMargin = it }
+        this.layoutParams = lp
+    }
+}
+
+
+fun View.marginsRelative(start: Int? = null,
+                         top: Int? = null,
+                         end: Int? = null,
+                         bottom: Int? = null) {
+    val lp = this.layoutParams as? ViewGroup.MarginLayoutParams
+    lp?.let { params ->
+        start?.let { params.marginStart = it }
+        top?.let { params.topMargin = it }
+        end?.let { params.marginEnd = it }
         bottom?.let { params.bottomMargin = it }
         this.layoutParams = lp
     }

@@ -219,11 +219,11 @@ class DataModule {
 
     @Provides @AppScope
     fun providePreviewRepository(repository: RemotePreviewRepository): PreviewRepository {
-        return if (BuildConfig.DEBUG) {
-            TestPreviewRepository()
-        } else {
-            repository
-        }
+//        if (BuildConfig.DEBUG) {
+//            return TestPreviewRepository()
+//        } else {
+            return repository
+//        }
     }
 
     @Provides @AppScope

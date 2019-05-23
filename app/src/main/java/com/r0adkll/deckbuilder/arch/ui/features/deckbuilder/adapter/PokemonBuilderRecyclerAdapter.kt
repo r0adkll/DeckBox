@@ -19,13 +19,13 @@ class PokemonBuilderRecyclerAdapter(
         private val spanCount: Int,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
-) : ListRecyclerAdapter<PokemonItem, androidx.recyclerview.widget.RecyclerView.ViewHolder>(context) {
+) : ListRecyclerAdapter<PokemonItem, RecyclerView.ViewHolder>(context) {
 
     var isEditing: Boolean by notifyingField(false)
     var isCollectionEnabled: Boolean by notifyingField(false)
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.item_evolution_chain -> {
                 EvolutionChainViewHolder.create(inflater, parent, spanCount, editCardIntentions, pokemonCardClicks)
@@ -39,7 +39,7 @@ class PokemonBuilderRecyclerAdapter(
     }
 
 
-    override fun onBindViewHolder(vh: androidx.recyclerview.widget.RecyclerView.ViewHolder, i: Int) {
+    override fun onBindViewHolder(vh: RecyclerView.ViewHolder, i: Int) {
         val item = items[i]
         when(vh) {
             is EvolutionChainViewHolder -> {
@@ -70,7 +70,7 @@ class PokemonBuilderRecyclerAdapter(
 
 
     override fun getItemId(position: Int): Long {
-        if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+        if (position != RecyclerView.NO_POSITION) {
             val item = items[position]
             return when(item) {
                 is PokemonItem.Evolution -> item.evolutionChain.hashCode().toLong()

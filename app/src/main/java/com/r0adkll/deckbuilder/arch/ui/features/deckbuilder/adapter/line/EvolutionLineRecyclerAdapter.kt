@@ -14,6 +14,9 @@ import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.util.extensions.layoutWidth
+import com.r0adkll.deckbuilder.util.extensions.margins
+import com.r0adkll.deckbuilder.util.extensions.marginsRelative
 
 
 /**
@@ -23,7 +26,7 @@ class EvolutionLineRecyclerAdapter(
         val context: Context,
         val editCardIntentions: EditCardIntentions,
         val spanCount: Int
-) : androidx.recyclerview.widget.RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
+) : RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
 
     private val linkSpacing: Int = context.dipToPx(24f)
     private val stageSpacing: Int = context.dipToPx(16f)
@@ -50,14 +53,9 @@ class EvolutionLineRecyclerAdapter(
         }
         val width = (parentWidth - (2 * stageSpacing + (spanCount - 1) * linkSpacing)) / spanCount
 
-        val lp = vh.itemView.layoutParams
-        lp.width = width
-        vh.itemView.layoutParams = lp
-
-        val cardLp = vh.cardView.layoutParams as ViewGroup.MarginLayoutParams
-        cardLp.marginStart = 0
-        cardLp.marginEnd = 0
-        vh.cardView.layoutParams = cardLp
+        vh.itemView.layoutWidth(width)
+        vh.cardView.marginsRelative(start = 0, end = 0)
+        vh.collectionCounter?.marginsRelative(start = 0, end = 0)
 
         return vh
     }
@@ -95,7 +93,7 @@ class EvolutionLineRecyclerAdapter(
 
 
     override fun getItemId(position: Int): Long {
-        return evolution.getItem(position)?.card?.hashCode()?.toLong() ?: androidx.recyclerview.widget.RecyclerView.NO_ID
+        return evolution.getItem(position)?.card?.hashCode()?.toLong() ?: RecyclerView.NO_ID
     }
 
 
