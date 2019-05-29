@@ -2,12 +2,20 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 
 import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
+import com.r0adkll.deckbuilder.util.bindView
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 
 
 class DecksRecyclerAdapter(
@@ -20,7 +28,11 @@ class DecksRecyclerAdapter(
         private val viewPreview: Relay<ExpansionPreview>,
         private val quickStart: Relay<Deck>,
         private val dismissQuickStart: Relay<Unit>
-) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
+) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(ITEM_CALLBACK), StickyRecyclerHeadersAdapter<DecksRecyclerAdapter.HeaderViewHolder> {
+
+    var itemClickListener: (Item) -> Unit = {}
+    private val inflater = LayoutInflater.from(context)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
@@ -30,9 +42,9 @@ class DecksRecyclerAdapter(
 
 
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {
-        val item = items[i]
+        val item = getItem(i)
         if (item is Item.DeckItem) {
-            super.onBindViewHolder(vh, i)
+            itemClickListener(item)
         }
         vh.bind(item)
     }
@@ -40,16 +52,16 @@ class DecksRecyclerAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (position != RecyclerView.NO_POSITION) {
-            return items[position].viewType
+            return getItem(position).viewType
         }
         return super.getItemViewType(position)
     }
 
 
     override fun getItemId(position: Int): Long {
-        val item = items[position]
+        val item = getItem(position)
         return when(item) {
-            is Item.DeckItem -> item.deck.id.hashCode().toLong()
+            is Item.DeckItem -> item.validatedDeck.deck.id.hashCode().toLong()
             is Item.QuickStart -> 0L
             is Item.Preview -> 1L
         }
@@ -61,10 +73,46 @@ class DecksRecyclerAdapter(
         holder.dispose()
     }
 
+    override fun getHeaderId(position: Int): Long {
+        val item = getItem(position)
+        return when(item) {
+            is Item.DeckItem -> {
 
-    fun showItems(decks: List<Item>) {
-        val diff = calculateDiff(decks, items)
-        items = ArrayList(diff.new)
-        diff.diff.dispatchUpdatesTo(getListUpdateCallback())
+                TODO()
+            }
+            else -> RecyclerView.NO_ID
+        }
+    }
+
+    override fun onCreateHeaderViewHolder(parent: ViewGroup?): HeaderViewHolder {
+        val itemView = inflater.inflate(R.layout.layout_sticky_subheader, parent, false)
+        return HeaderViewHolder(itemView)
+    }
+
+    override fun onBindHeaderViewHolder(holder: HeaderViewHolder, position: Int) {
+
+    }
+
+    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val title by bindView<TextView>(R.id.title)
+
+        fun bind(format: Format) {
+
+        }
+    }
+
+    companion object {
+
+        val ITEM_CALLBACK = object : DiffUtil.ItemCallback<Item>() {
+
+            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+                return oldItem.isItemSame(newItem)
+            }
+
+            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+                return oldItem.isContentSame(newItem)
+            }
+        }
     }
 }

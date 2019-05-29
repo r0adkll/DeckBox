@@ -3,9 +3,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
@@ -29,7 +30,6 @@ import com.r0adkll.deckbuilder.util.DialogUtils
 import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.*
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
-import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
@@ -60,6 +60,10 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     private lateinit var adapter: DecksRecyclerAdapter
 
 
+    init {
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_decks, container, false)
     }
@@ -70,29 +74,26 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks,
                 testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
-        adapter.setOnItemClickListener(object : ListRecyclerAdapter.OnItemClickListener<Item> {
-            override fun onItemClick(v: View, item: Item, position: Int) {
-                if (item is Item.DeckItem) {
-                    Analytics.event(Event.SelectContent.Deck(item.deck.id))
+        adapter.itemClickListener = { item ->
+            if (item is Item.DeckItem) {
+                Analytics.event(Event.SelectContent.Deck(item.validatedDeck.deck.id))
 
-                    // Update shortcuts
-                    Shortcuts.addDeckShortcut(v.context, item.deck)
+                // Update shortcuts
+                Shortcuts.addDeckShortcut(requireContext(), item.validatedDeck.deck)
 
-                    // Generate a new session and pass to builder activity
-                    createSession.accept(item.deck)
-                }
+                // Generate a new session and pass to builder activity
+                createSession.accept(item.validatedDeck.deck)
             }
-        })
-
-        adapter.setEmptyView(empty_view)
+        }
+        adapter.emptyView = empty_view
 
         val layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            androidx.recyclerview.widget.StaggeredGridLayoutManager(6, androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL) as androidx.recyclerview.widget.RecyclerView.LayoutManager
+            StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) as RecyclerView.LayoutManager
         } else {
-            val lm = androidx.recyclerview.widget.GridLayoutManager(activity, 2)
-            lm.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+            val lm = GridLayoutManager(activity, 2)
+            lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    val item = adapter.items[position]
+                    val item = adapter.currentList[position]
                     return when(item) {
                         is Item.Preview -> 2
                         is Item.QuickStart -> 2
@@ -149,17 +150,31 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     createSession.accept(it)
                 }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.fragment_decks, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
         renderer.start()
         presenter.start()
     }
 
-
-    override fun onDestroy() {
+    override fun onStop() {
+        super.onStop()
         renderer.stop()
         presenter.stop()
-        super.onDestroy()
     }
-
 
     override fun setupComponent() {
         getComponent(HomeComponent::class)
@@ -167,12 +182,10 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 .inject(this)
     }
 
-
     override fun render(state: State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun createSession(): Observable<Deck> = createSession
     override fun createNewSession(): Observable<Unit> = createNewSession
@@ -189,23 +202,19 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 .flatMap { if (it) Observable.just(deck) else Observable.empty() }
     }
 
-
     override fun showLoading(isLoading: Boolean) {
         empty_view.setLoading(isLoading)
     }
-
 
     override fun showError(description: String) {
         snackbar(description)
     }
 
-
     override fun hideError() {
     }
 
-
     override fun showItems(items: List<Item>) {
-        adapter.showItems(items)
+        adapter.submitList(items)
     }
 
     override fun balanceShortcuts(decks: List<Deck>) {
