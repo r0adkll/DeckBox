@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.ValidatedDeck
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi
 
@@ -39,15 +39,15 @@ sealed class Item : RecyclerItem{
     }
 
 
-    data class DeckItem(val deck: Deck, val isLoading: Boolean) : Item() {
+    data class DeckItem(val validatedDeck: ValidatedDeck, val isLoading: Boolean) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
-            is DeckItem -> new.deck.id == deck.id
+            is DeckItem -> new.validatedDeck.deck.id == validatedDeck.deck.id
             else -> false
         }
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
-            is DeckItem -> new.deck == deck && new.isLoading == isLoading
+            is DeckItem -> new.validatedDeck == validatedDeck && new.isLoading == isLoading
             else -> false
         }
 
