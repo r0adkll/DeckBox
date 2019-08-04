@@ -24,6 +24,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.Tourname
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.PlayerInfo
+import com.r0adkll.deckbuilder.util.AgeDivisionUtils
 import com.r0adkll.deckbuilder.util.CardUtils
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
@@ -98,12 +99,19 @@ class DefaultTournamentExporter @Inject constructor(
         val ageJunior = view.findViewById<ImageView>(R.id.optionAgeDivisionJunior)
         val ageSenior = view.findViewById<ImageView>(R.id.optionAgeDivisionSenior)
         val ageMaster = view.findViewById<ImageView>(R.id.optionAgeDivisionMasters)
+        val ageJuniorLabel = view.findViewById<TextView>(R.id.optionAgeDivisionJuniorLabel)
+        val ageSeniorLabel = view.findViewById<TextView>(R.id.optionAgeDivisionSeniorLabel)
+        val ageMasterLabel = view.findViewById<TextView>(R.id.optionAgeDivisionMastersLabel)
         val extraColumn = view.findViewById<LinearLayout>(R.id.extraColumn)
         val tablePokemon = view.findViewById<TableLayout>(R.id.tablePokemon)
         val tablePokemon2 = view.findViewById<TableLayout>(R.id.tablePokemon2)
         val tablePokemon2Title = view.findViewById<TextView>(R.id.tablePokemon2Title)
         val tableTrainer= view.findViewById<TableLayout>(R.id.tableTrainer)
         val tableEnergy = view.findViewById<TableLayout>(R.id.tableEnergy)
+
+        ageJuniorLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.JUNIOR)
+        ageSeniorLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.SENIOR)
+        ageMasterLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.MASTERS)
 
         when(playerInfo.format) {
             Format.STANDARD -> formatStandard.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
