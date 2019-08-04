@@ -56,6 +56,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
 
         adapter = HomePagerAdapter(supportFragmentManager)
         pager.adapter = adapter
+        pager.offscreenPageLimit = 2
 
         bottomNavigation.setOnTabSelectListener({
             when(it) {
@@ -77,7 +78,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
             }
         }, false)
 
-        pager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
