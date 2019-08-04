@@ -14,6 +14,7 @@ data class Session(
         val name: String,
         val description: String,
         val image: DeckImage?,
+        val collectionOnly: Boolean,
         val cards: List<PokemonCard>,
         val hasChanges: Boolean,
         val changes: List<Change>
@@ -21,7 +22,8 @@ data class Session(
 
     override fun toString(): String {
         return "Session(id=$id, deckId=$deckId, name='$name', description='$description', " +
-                "cards=${cards.size}, hasChanges=$hasChanges, changes=${changes.size})"
+                "image=$image, collectionOnly=$collectionOnly, cards=${cards.size}, " +
+                "hasChanges=$hasChanges, changes=${changes.size})"
     }
 
     companion object {

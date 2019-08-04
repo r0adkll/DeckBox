@@ -13,9 +13,9 @@ import java.util.ArrayList
 import java.util.Collections
 
 
-abstract class ListRecyclerAdapter<M, VH : androidx.recyclerview.widget.RecyclerView.ViewHolder>(
+abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         protected val context: Context
-) : androidx.recyclerview.widget.RecyclerView.Adapter<VH>() {
+) : RecyclerView.Adapter<VH>() {
 
     /**
      * Used to inflate the layouts of all the items
@@ -175,7 +175,7 @@ abstract class ListRecyclerAdapter<M, VH : androidx.recyclerview.widget.Recycler
      */
     private val mEmptyObserver = EmptyObserver()
 
-    inner class EmptyObserver : androidx.recyclerview.widget.RecyclerView.AdapterDataObserver() {
+    inner class EmptyObserver : RecyclerView.AdapterDataObserver() {
         override fun onChanged() {
             checkIfEmpty()
         }
@@ -251,7 +251,7 @@ abstract class ListRecyclerAdapter<M, VH : androidx.recyclerview.widget.Recycler
         if (itemClickListener != null) {
             vh.itemView.setOnClickListener { v ->
                 val position = vh.adapterPosition
-                if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                if (position != RecyclerView.NO_POSITION) {
                     itemClickListener!!.onItemClick(v, items[position], position)
                 }
             }
@@ -261,7 +261,7 @@ abstract class ListRecyclerAdapter<M, VH : androidx.recyclerview.widget.Recycler
         if (itemLongClickListener != null) {
             vh.itemView.setOnLongClickListener { v ->
                 val position = vh.adapterPosition
-                if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                if (position != RecyclerView.NO_POSITION) {
                     itemLongClickListener!!.onItemLongClick(v, items[position], position)
                 } else {
                     false
@@ -282,7 +282,7 @@ abstract class ListRecyclerAdapter<M, VH : androidx.recyclerview.widget.Recycler
             if (item != null) return item.hashCode().toLong()
             return position.toLong()
         }
-        return androidx.recyclerview.widget.RecyclerView.NO_ID
+        return RecyclerView.NO_ID
     }
 
 

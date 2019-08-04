@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="156dp"
+    android:layout_margin="4dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:stateListAnimator="@animator/elevation_state_anim"
+    app:cardCornerRadius="8dp"
+    >
+
+    <com.r0adkll.deckbuilder.arch.ui.widgets.ProgressLinearLayout
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            tools:src="@drawable/dr_smfl_logo"
+            />
+
+        <TextView
+            android:id="@+id/completion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            tools:text="43%"
+            />
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            tools:text="100 of 247"
+            />
+
+    </com.r0adkll.deckbuilder.arch.ui.widgets.ProgressLinearLayout>
+
+</androidx.cardview.widget.CardView>

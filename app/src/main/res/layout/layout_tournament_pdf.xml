@@ -195,6 +195,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/optionAgeDivisionJuniorLabel"
                         android:text="@string/age_division_junior"
                         style="@style/TextAppearance.Deck.Pdf.RadioOption"
                         android:layout_marginStart="8dp"
@@ -216,6 +217,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/optionAgeDivisionSeniorLabel"
                         android:text="@string/age_division_senior"
                         style="@style/TextAppearance.Deck.Pdf.RadioOption"
                         android:layout_marginStart="8dp"
@@ -237,6 +239,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/optionAgeDivisionMastersLabel"
                         android:text="@string/age_division_masters"
                         style="@style/TextAppearance.Deck.Pdf.RadioOption"
                         android:layout_marginStart="8dp"

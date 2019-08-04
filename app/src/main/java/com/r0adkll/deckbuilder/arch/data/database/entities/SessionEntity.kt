@@ -19,8 +19,10 @@ class SessionEntity(
         var originalName: String?,
         var originalDescription: String?,
         var originalImage: Uri?,
+        var originalCollectionOnly: Boolean?,
 
         var name: String?,
         var description: String?,
-        var image: Uri?
+        var image: Uri?,
+        var collectionOnly: Boolean?
 )

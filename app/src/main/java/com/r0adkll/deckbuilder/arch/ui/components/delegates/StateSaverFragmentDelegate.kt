@@ -18,6 +18,12 @@ class StateSaverFragmentDelegate(private val fragment: BaseFragment) : FragmentD
     override fun onResume() {
     }
 
+    override fun onStart() {
+    }
+
+    override fun onStop() {
+    }
+
     override fun onPause() {
     }
 

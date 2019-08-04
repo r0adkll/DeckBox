@@ -11,6 +11,30 @@ import org.junit.Test
 class EvolutionChainTest {
 
     @Test
+    fun testListEquality() {
+        val chain1 = EvolutionChain.build(listOf(
+                createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
+        ))
+        val chain2 = EvolutionChain.build(listOf(
+                createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
+        ))
+
+        chain1 shouldEqual chain2
+    }
+
+    @Test
+    fun testListInequalityViaCollectionCount() {
+        val chain1 = EvolutionChain.build(listOf(
+                createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
+        ))
+        val chain2 = EvolutionChain.build(listOf(
+                createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 4)
+        ))
+
+        chain1 shouldNotEqual chain2
+    }
+
+    @Test
     fun testAddBasicPokemon() {
         val pokemon = createPokemonCard().copy(id = "sm1-5", name = "Eevee")
         val chain = EvolutionChain.create(pokemon.stack())
@@ -170,5 +194,5 @@ class EvolutionChainTest {
     }
 
 
-    fun PokemonCard.stack(count: Int = 1): StackedPokemonCard = StackedPokemonCard(this, count)
+    fun PokemonCard.stack(count: Int = 1, collection: Int? = null): StackedPokemonCard = StackedPokemonCard(this, count, collection)
 }

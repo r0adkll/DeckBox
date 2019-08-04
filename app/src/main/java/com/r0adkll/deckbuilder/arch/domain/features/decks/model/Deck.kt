@@ -14,6 +14,7 @@ data class Deck(
         val name: String,
         val description: String,
         val image: DeckImage?,
+        val collectionOnly: Boolean,
         val cards: List<PokemonCard>,
         val isMissingCards: Boolean,
         val timestamp: Long
@@ -24,6 +25,7 @@ data class Deck(
     val energyCount: Int get() = cards.count { it.supertype == SuperType.ENERGY }
 
     override fun toString(): String {
-        return "Deck(id='$id', name='$name', description='$description', cards=${cards.size}, isMissingCards=$isMissingCards, timestamp=$timestamp)"
+        return "Deck(id='$id', name='$name', description='$description', cards=${cards.size}, " +
+                "collectionOnly=$collectionOnly, isMissingCards=$isMissingCards, timestamp=$timestamp)"
     }
 }

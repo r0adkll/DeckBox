@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -153,15 +154,12 @@ class DeckBuilderActivity : BaseActivity(),
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
-    private var savingSnackBar: com.google.android.material.snackbar.Snackbar? = null
+    private var savingSnackBar: Snackbar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
-
-        // Set Flags
-        newFeatureDeckImage.setVisible(flags.newFeatureDeckImage)
 
         // Setup AppBar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -196,7 +194,7 @@ class DeckBuilderActivity : BaseActivity(),
         // Setup pager
 
         ruleAdapter = RuleRecyclerAdapter(this)
-        ruleRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        ruleRecycler.layoutManager = LinearLayoutManager(this)
         ruleRecycler.adapter = ruleAdapter
 
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
@@ -260,9 +258,6 @@ class DeckBuilderActivity : BaseActivity(),
 
         state = state.copy(sessionId = sessionId)
 
-        renderer.start()
-        presenter.start()
-
         @SuppressLint("RxSubscribeOnError")
         disposables += pokemonCardClicks
                 .subscribe {
@@ -273,8 +268,6 @@ class DeckBuilderActivity : BaseActivity(),
         @SuppressLint("RxSubscribeOnError")
         disposables += actionDeckImage.clicks()
                 .subscribe {
-                    flags.newFeatureDeckImage = false
-                    newFeatureDeckImage.gone()
                     DeckImagePickerFragment.newInstance(sessionId, state.image)
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
                 }
@@ -283,15 +276,24 @@ class DeckBuilderActivity : BaseActivity(),
 
         }
 
-        if (slidingLayout.panelState != SlidingUpPanelLayout.PanelState.COLLAPSED) {
-            slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        if (slidingLayout.panelState != COLLAPSED) {
+            slidingLayout.panelState = COLLAPSED
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        renderer.start()
+        presenter.start()
+    }
 
-    override fun onDestroy() {
+    override fun onStop() {
+        super.onStop()
         presenter.stop()
         renderer.stop()
+    }
+
+    override fun onDestroy() {
         destroySession()
         super.onDestroy()
     }
@@ -448,6 +450,13 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
 
+    override fun editDeckCollectionOnly(): Observable<Boolean> {
+        return collectionSwitch.checkedChanges()
+                .skipInitialValue()
+                .uiDebounce()
+    }
+
+
     override fun saveDeck(): Observable<Unit> {
         return saveDeck
     }
@@ -526,26 +535,34 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
 
+    override fun showDeckCollectionOnly(collectionOnly: Boolean) {
+        adapter.isCollectionEnabled = collectionOnly
+        if (collectionSwitch.isChecked != collectionOnly) {
+            collectionSwitch.isChecked = collectionOnly
+        }
+    }
+
+
     override fun showIsSaving(isSaving: Boolean) {
         invalidateOptionsMenu()
         if (isSaving) {
             if (savingSnackBar == null) {
-                savingSnackBar = com.google.android.material.snackbar.Snackbar.make(pager, R.string.deckbuilder_saving_message, com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE)
+                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saving_message, Snackbar.LENGTH_INDEFINITE)
             }
             else {
                 savingSnackBar?.setText(R.string.deckbuilder_saving_message)
-                savingSnackBar?.duration = com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE
+                savingSnackBar?.duration = Snackbar.LENGTH_INDEFINITE
             }
 
             savingSnackBar?.show()
         }
         else {
             if (savingSnackBar == null) {
-                savingSnackBar = com.google.android.material.snackbar.Snackbar.make(pager, R.string.deckbuilder_saved_message, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT)
+                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saved_message, Snackbar.LENGTH_SHORT)
             }
             else {
                 savingSnackBar?.setText(R.string.deckbuilder_saved_message)
-                savingSnackBar?.duration = com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                savingSnackBar?.duration = Snackbar.LENGTH_SHORT
             }
 
             if (savingSnackBar?.isShown == true) {

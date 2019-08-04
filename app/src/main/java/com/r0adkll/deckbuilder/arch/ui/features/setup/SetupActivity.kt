@@ -197,10 +197,12 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
                                 startActivity(HomeActivity.createIntent(this@SetupActivity))
                                 finish()
                             } else {
+                                Timber.e(r.exception, "Authentication Failed: ${r.result}")
                                 snackbar("Authentication failed")
                             }
                         }
             } else {
+                Timber.e("Authentication Failed: ${result.status}")
                 snackbar("Authenticated failed")
             }
         } catch (e: Exception) {

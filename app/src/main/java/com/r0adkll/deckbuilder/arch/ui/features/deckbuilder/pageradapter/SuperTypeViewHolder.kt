@@ -53,6 +53,7 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
     abstract fun bind(cards: List<StackedPokemonCard>)
     abstract fun wiggleCard(card: PokemonCard)
     abstract fun setEditMode(isEditing: Boolean)
+    abstract fun setCollectionMode(isCollectionEnabled: Boolean)
 
 
     open fun setup() {
@@ -106,7 +107,6 @@ class PokemonViewHolder(
         }
     }
 
-
     override fun bind(cards: List<StackedPokemonCard>) {
         val evolutions = EvolutionChain.build(cards)
                 .sortedByDescending { chain -> chain.nodes.size }
@@ -126,14 +126,16 @@ class PokemonViewHolder(
         adapter.setPokemon(items)
     }
 
-
     override fun wiggleCard(card: PokemonCard) {
 
     }
 
-
     override fun setEditMode(isEditing: Boolean) {
         adapter.isEditing = isEditing
+    }
+
+    override fun setCollectionMode(isCollectionEnabled: Boolean) {
+        adapter.isCollectionEnabled = isCollectionEnabled
     }
 }
 
@@ -182,7 +184,6 @@ class TrainerEnergyViewHolder(
         }
     }
 
-
     override fun wiggleCard(card: PokemonCard) {
         val adapterPosition = adapter.items.indexOfFirst { it.card.id == card.id }
         if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
@@ -210,8 +211,11 @@ class TrainerEnergyViewHolder(
         }
     }
 
-
     override fun setEditMode(isEditing: Boolean) {
         adapter.isEditing = isEditing
+    }
+
+    override fun setCollectionMode(isCollectionEnabled: Boolean) {
+        adapter.isCollectionEnabled = isCollectionEnabled
     }
 }

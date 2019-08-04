@@ -28,8 +28,15 @@ class DefaultDeckRepository @Inject constructor(
     }
 
 
-    override fun persistDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> {
-        return cache.putDeck(id, cards, name, description, image)
+    override fun persistDeck(
+            id: String?,
+            cards: List<PokemonCard>,
+            name: String,
+            description: String?,
+            image: DeckImage?,
+            collectionOnly: Boolean
+    ): Observable<Deck> {
+        return cache.putDeck(id, cards, name, description, image, collectionOnly)
                 .subscribeOn(schedulers.firebase)
     }
 

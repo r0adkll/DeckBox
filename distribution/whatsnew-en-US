@@ -1,4 +1,7 @@
-• Fixed issue with being unable to search for certain cards and promos making them harder to find.
+• NEW FEATURE: Collection tracking
+    • You can now track your cards in your collection and view what's missing from your deck lists
+• Fixed incorrect age division years on tournament exports
+• Misc. bug fixes and improvements
 
 ---
 • For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md

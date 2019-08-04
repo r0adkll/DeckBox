@@ -26,9 +26,16 @@ class SwitchingDeckCache @Inject constructor(
         }
     }
 
-    override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> = when(isOffline()) {
-        true -> roomDeckCache.putDeck(id, cards, name, description, image)
-        else -> firestoreDeckCache.putDeck(id, cards, name, description, image)
+    override fun putDeck(
+            id: String?,
+            cards: List<PokemonCard>,
+            name: String,
+            description: String?,
+            image: DeckImage?,
+            collectionOnly: Boolean
+    ): Observable<Deck> = when(isOffline()) {
+        true -> roomDeckCache.putDeck(id, cards, name, description, image, collectionOnly)
+        else -> firestoreDeckCache.putDeck(id, cards, name, description, image, collectionOnly)
     }
 
     override fun deleteDeck(deck: Deck): Observable<Unit> = when(isOffline()) {

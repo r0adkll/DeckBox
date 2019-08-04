@@ -24,6 +24,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentEx
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.TournamentExportModule
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
+import com.r0adkll.deckbuilder.util.AgeDivisionUtils
 import com.r0adkll.deckbuilder.util.extensions.*
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tournament_export.*
@@ -89,6 +90,11 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                                 snackbar("Error exporting your deck")
                             })
                 }
+
+
+        optionAgeDivisionJunior.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.JUNIOR)
+        optionAgeDivisionSenior.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.SENIOR)
+        optionAgeDivisionMasters.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.MASTERS)
 
         renderer.start()
         presenter.start()

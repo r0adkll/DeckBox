@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.util.CardUtils.stackCards
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
+import timber.log.Timber
 
 
 class DeckBuilderRenderer(
@@ -73,23 +74,26 @@ class DeckBuilderRenderer(
                 }
 
         disposables += state
-                .map { it.pokemonCards }
-                .distinctUntilChanged()
-                .map(stackCards())
+                .map { stackCards(it.pokemonCards, it.collectionCounts) }
+                .distinctUntilChanged { t1, t2 ->
+                    t1.hashCode() == t2.hashCode()
+                }
                 .addToLifecycle()
                 .subscribe { actions.showPokemonCards(it) }
 
         disposables += state
-                .map { it.trainerCards }
-                .distinctUntilChanged()
-                .map(stackCards())
+                .map { stackCards(it.trainerCards, it.collectionCounts) }
+                .distinctUntilChanged { t1, t2 ->
+                    t1.hashCode() == t2.hashCode()
+                }
                 .addToLifecycle()
                 .subscribe { actions.showTrainerCards(it) }
 
         disposables += state
-                .map { it.energyCards }
-                .distinctUntilChanged()
-                .map(stackCards())
+                .map { stackCards(it.energyCards, it.collectionCounts) }
+                .distinctUntilChanged { t1, t2 ->
+                    t1.hashCode() == t2.hashCode()
+                }
                 .addToLifecycle()
                 .subscribe { actions.showEnergyCards(it) }
 
@@ -125,5 +129,11 @@ class DeckBuilderRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showDeckImage(it.value) }
+
+        disposables += state
+                .map { it.collectionOnly }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { actions.showDeckCollectionOnly(it) }
     }
 }

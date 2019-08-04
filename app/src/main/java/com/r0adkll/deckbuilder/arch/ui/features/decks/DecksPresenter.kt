@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.ValidatedDeck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
+import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State.*
@@ -28,14 +30,26 @@ class DecksPresenter @Inject constructor(
         val communityRepository: CommunityRepository,
         val editRepository: EditRepository,
         val previewRepository: PreviewRepository,
+        val validator: DeckValidator,
         val remote: Remote,
         val preferences: AppPreferences
 ) : Presenter() {
 
-    @SuppressLint("CheckResult")
+    @SuppressLint("CheckResult", "RxSubscribeOnError")
     override fun start() {
 
         val loadDecks = deckRepository.getDecks()
+                .flatMap {
+                    Observable.fromIterable(it)
+                            .flatMap { deck ->
+                                validator.validate(deck.cards)
+                                        .map { validation ->
+                                            ValidatedDeck(deck, validation)
+                                        }
+                            }
+                            .toList()
+                            .toObservable()
+                }
                 .map { Change.DecksLoaded(it) as Change }
 //                .startWith(Change.IsLoading as Change)
                 .onErrorReturn(handleUnknownError)

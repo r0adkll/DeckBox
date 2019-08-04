@@ -9,10 +9,15 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
+import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.FlagPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseFragment
+import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionFragment
+import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionProgressController
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksFragment
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
@@ -28,10 +33,12 @@ import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import timber.log.Timber
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
-class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
+class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProgressController {
 
     companion object {
 
@@ -40,6 +47,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
 
     @Inject lateinit var editor: EditRepository
+    @Inject lateinit var featureFlags: FlagPreferences
 
     private lateinit var component: HomeComponent
     private lateinit var adapter: HomePagerAdapter
@@ -51,6 +59,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
         adapter = HomePagerAdapter(supportFragmentManager)
         pager.adapter = adapter
+        pager.offscreenPageLimit = 2
 
         bottomNavigation.setOnTabSelectListener({
             when(it) {
@@ -59,15 +68,28 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
                         pager.setCurrentItem(0, true)
                     }
                 }
-                R.id.tab_browser -> {
+                R.id.tab_collection -> {
+                    featureFlags.collections = false
+                    bottomNavigation.getTabWithId(R.id.tab_collection)
+                            .removeBadge()
                     if (pager.currentItem != 1) {
                         pager.setCurrentItem(1, true)
+                    }
+                }
+                R.id.tab_browser -> {
+                    if (pager.currentItem != 2) {
+                        pager.setCurrentItem(2, true)
                     }
                 }
             }
         }, false)
 
-        pager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+        if (featureFlags.collections) {
+            bottomNavigation.getTabWithId(R.id.tab_collection)
+                    .setBadgeCount(1)
+        }
+
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
@@ -76,6 +98,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
             override fun onPageSelected(position: Int) {
                 bottomNavigation.selectTabAtPosition(position, false)
+                progressLayout.setVisible(position == 1)
             }
         })
     }
@@ -124,7 +147,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
 
 
     override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(HomeModule())
+        this.component = component.plus(HomeModule(this))
         this.component.inject(this)
     }
 
@@ -132,17 +155,24 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent> {
     override fun getComponent(): HomeComponent = component
 
 
-    class HomePagerAdapter(
-            fragmentManager: androidx.fragment.app.FragmentManager
-    ) : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
+    override fun setOverallProgress(progress: Float) {
+        progressCompletion.text = getString(R.string.completion_format, (progress.times(100f).roundToInt().coerceIn(0, 100)))
+        progressView.progress = progress
+    }
 
-        override fun getItem(position: Int): androidx.fragment.app.Fragment? = when(position) {
+
+    class HomePagerAdapter(
+            fragmentManager: FragmentManager
+    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
+        override fun getItem(position: Int): Fragment = when(position) {
             0 -> DecksFragment.newInstance()
-            1 -> BrowseFragment.newInstance()
-            else -> null
+            1 -> CollectionFragment.newInstance()
+            2 -> BrowseFragment.newInstance()
+            else -> throw IllegalArgumentException("Invalid pager position")
         }
 
 
-        override fun getCount(): Int = 2 // TODO: Increase when we add more screens
+        override fun getCount(): Int = 3 // TODO: Increase when we add more screens
     }
 }

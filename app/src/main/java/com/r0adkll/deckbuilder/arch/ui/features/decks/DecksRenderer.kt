@@ -31,8 +31,8 @@ class DecksRenderer(
                     }
 
                     items += s.decks
-                            .sortedByDescending { it.timestamp }
-                            .map { Item.DeckItem(it, s.isSessionLoading == it.id) }
+                            .sortedByDescending { it.deck.timestamp }
+                            .map { Item.DeckItem(it, s.isSessionLoading == it.deck.id) }
 
                     items
                 }
@@ -45,7 +45,7 @@ class DecksRenderer(
                 .map { it.decks }
                 .distinctUntilChanged()
                 .addToLifecycle()
-                .subscribe { actions.balanceShortcuts(it) }
+                .subscribe { actions.balanceShortcuts(it.map { it.deck }) }
 
         disposables += state
                 .mapNullable { it.sessionId }

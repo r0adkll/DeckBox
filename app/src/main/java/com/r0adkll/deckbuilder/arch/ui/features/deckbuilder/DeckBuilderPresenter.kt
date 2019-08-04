@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
 import android.annotation.SuppressLint
+import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
@@ -19,6 +20,7 @@ class DeckBuilderPresenter @Inject constructor(
         val ui: DeckBuilderUi,
         val intentions: DeckBuilderUi.Intentions,
         val repository: EditRepository,
+        val collectionRepository: CollectionRepository,
         val validator: DeckValidator
 ) : Presenter() {
 
@@ -32,6 +34,10 @@ class DeckBuilderPresenter @Inject constructor(
                             .startWith(Change.SessionUpdated(session) as Change)
                             .onErrorReturn(handleUnknownError)
                 }
+
+        val observeCollection = collectionRepository.observeAll()
+                .map { Change.CollectionCounts(it) as Change }
+                .onErrorReturn(handleUnknownError)
 
         disposables += intentions.addCards()
                 .flatMap { repository.addCards(ui.state.sessionId, it) }
@@ -61,6 +67,13 @@ class DeckBuilderPresenter @Inject constructor(
                     Timber.d("Description changed!")
                 }, { t -> Timber.e(t, "Error changing description name")})
 
+        disposables += intentions.editDeckCollectionOnly()
+                .flatMap { repository.changeCollectionOnly(ui.state.sessionId, it) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Timber.d("Collection Only changed!")
+                }, { t -> Timber.e(t, "Error changing collection only")})
+
         val editDeck = intentions.editDeckClicks()
                 .map { Change.Editing(it) as Change }
 
@@ -76,6 +89,7 @@ class DeckBuilderPresenter @Inject constructor(
                 }
 
         val merged = observeSession
+                .mergeWith(observeCollection)
                 .mergeWith(editDeck)
                 .mergeWith(editOverview)
                 .mergeWith(saveDeck)

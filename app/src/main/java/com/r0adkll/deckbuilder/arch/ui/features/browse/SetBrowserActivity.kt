@@ -269,7 +269,6 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 appbar?.navigationIcon?.setTint(color)
                 tabs.setTabTextColors(secondaryColor, color)
                 tabs.setSelectedTabIndicatorColor(color)
-
             } else {
                 val color = Color.WHITE
                 val secondaryColor = color(R.color.white70)

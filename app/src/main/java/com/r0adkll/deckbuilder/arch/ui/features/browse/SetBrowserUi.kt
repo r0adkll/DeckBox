@@ -48,7 +48,7 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
             val error: String?,
             val cards: List<PokemonCard>,
             val filter: BrowseFilter,
-            val pageSize: Int = 300
+            val pageSize: Int = 1000
     ) : Parcelable {
 
         val searchFilter: Filter

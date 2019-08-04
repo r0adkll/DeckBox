@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 
 import android.annotation.SuppressLint
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -28,8 +29,19 @@ class CardDetailRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe {
-                    actions.showStandardValidation(it.standard)
-                    actions.showExpandedValidation(it.expanded)
+                    actions.showValidation(when{
+                        it.standard -> Format.STANDARD
+                        it.expanded -> Format.EXPANDED
+                        else -> Format.UNLIMITED
+                    })
+                }
+
+        disposables += state
+                .map { it.collectionCount }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    actions.showCollectionCount(it)
                 }
 
         disposables += state
