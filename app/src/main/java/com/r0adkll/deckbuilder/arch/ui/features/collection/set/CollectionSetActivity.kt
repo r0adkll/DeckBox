@@ -79,7 +79,12 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         adapter = CollectionSetRecyclerAdapter(this, removeCardClicks, addCardClicks)
         adapter.setEmptyView(emptyView)
         adapter.setOnItemClickListener {
-            startActivity(CardDetailActivity.createIntent(this, it.card))
+            addCardClicks.accept(listOf(it.card))
+        }
+
+        adapter.setOnItemLongClickListener { _, stackedPokemonCard ->
+            startActivity(CardDetailActivity.createIntent(this, stackedPokemonCard.card))
+            true
         }
 
         val spanCount = if (smallestWidth(ScreenUtils.Config.TABLET_10)) 9 else 3
