@@ -9,8 +9,10 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
+import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.setVisible
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.FlagPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseFragment
@@ -45,6 +47,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
 
 
     @Inject lateinit var editor: EditRepository
+    @Inject lateinit var featureFlags: FlagPreferences
 
     private lateinit var component: HomeComponent
     private lateinit var adapter: HomePagerAdapter
@@ -66,6 +69,9 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
                     }
                 }
                 R.id.tab_collection -> {
+                    featureFlags.collections = false
+                    bottomNavigation.getTabWithId(R.id.tab_collection)
+                            .removeBadge()
                     if (pager.currentItem != 1) {
                         pager.setCurrentItem(1, true)
                     }
@@ -77,6 +83,11 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
                 }
             }
         }, false)
+
+        if (featureFlags.collections) {
+            bottomNavigation.getTabWithId(R.id.tab_collection)
+                    .setBadgeCount(1)
+        }
 
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
