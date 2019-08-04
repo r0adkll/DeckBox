@@ -1,3 +1,9 @@
+# 1.9.0
+* [#47](https://github.com/r0adkll/DeckBox/issues/47) - Collection tracking
+* [#66](https://github.com/r0adkll/DeckBox/issues/66)
+* Fixed incorrect age division years on tournament exports
+* Fixed some visual issues with deck images on decks screen
+
 # 1.8.4
 * Hotfix for SDK search error causing empty results and issues finding newer cards
 
