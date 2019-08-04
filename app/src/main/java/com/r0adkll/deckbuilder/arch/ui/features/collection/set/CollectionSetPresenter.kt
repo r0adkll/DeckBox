@@ -37,14 +37,20 @@ class CollectionSetPresenter @Inject constructor(
                             }
                             .toList()
                             .toObservable()
-                            .map { Change.CountsUpdated(it) as Change }
+                            .map { Change.CountsUpdated(emptyList()) as Change }
+                            .startWith(
+                                    addedCard.map {
+                                        Change.CountChanged(it, 1)
+                                    }
+                            )
                             .onErrorReturn { Change.Error("Unable to add card to collection") }
                 }
 
         val removeCard = intentions.removeCard()
                 .flatMap { removedCard ->
                     collectionRepository.decrementCount(removedCard)
-                            .map { Change.CountsUpdated(listOf(it)) as Change }
+                            .map { Change.CountsUpdated(emptyList()/*listOf(it)*/) as Change }
+                            .startWith(Change.CountChanged(removedCard, -1))
                             .onErrorReturn { Change.Error("Unable to add card to collection") }
                 }
 

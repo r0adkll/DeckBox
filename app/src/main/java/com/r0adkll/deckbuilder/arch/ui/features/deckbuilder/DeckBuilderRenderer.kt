@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.util.CardUtils.stackCards
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
+import timber.log.Timber
 
 
 class DeckBuilderRenderer(

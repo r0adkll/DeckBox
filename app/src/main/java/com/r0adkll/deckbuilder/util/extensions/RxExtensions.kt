@@ -30,7 +30,6 @@ fun <T, R> Observable<T>.scanMap(initialValue: T, func2: (T, T) -> R): Observabl
             .map { func2.invoke(it[0], it[1]) }
 }
 
-
 data class Nullable<out T> constructor(val value: T?) {
     constructor() : this(null)
 

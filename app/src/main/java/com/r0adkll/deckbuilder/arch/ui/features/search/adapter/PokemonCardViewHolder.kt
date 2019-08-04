@@ -19,6 +19,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.bindOptionalView
 import com.r0adkll.deckbuilder.util.bindView
+import timber.log.Timber
 
 
 class PokemonCardViewHolder(
@@ -52,7 +53,8 @@ class PokemonCardViewHolder(
         if (isCollectionMode) {
             collectionCounter?.visible()
             collectionCounter?.text = "$collectionCount"
-            cardView.alpha = if (collectionCount >= count) 1f else 0.4f
+            cardView.imageAlpha = if (collectionCount >= count) 255 else 102
+            Timber.v("Binding(id=${card.id}, collection=$collectionCount, count=$count, resultAlpha=${cardView.alpha}")
         } else {
             collectionCounter?.gone()
             cardView.alpha = 1f

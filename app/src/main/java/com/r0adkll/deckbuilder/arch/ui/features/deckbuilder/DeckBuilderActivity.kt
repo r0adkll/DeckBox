@@ -154,7 +154,7 @@ class DeckBuilderActivity : BaseActivity(),
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
-    private var savingSnackBar: com.google.android.material.snackbar.Snackbar? = null
+    private var savingSnackBar: Snackbar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -194,7 +194,7 @@ class DeckBuilderActivity : BaseActivity(),
         // Setup pager
 
         ruleAdapter = RuleRecyclerAdapter(this)
-        ruleRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        ruleRecycler.layoutManager = LinearLayoutManager(this)
         ruleRecycler.adapter = ruleAdapter
 
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
@@ -258,9 +258,6 @@ class DeckBuilderActivity : BaseActivity(),
 
         state = state.copy(sessionId = sessionId)
 
-        renderer.start()
-        presenter.start()
-
         @SuppressLint("RxSubscribeOnError")
         disposables += pokemonCardClicks
                 .subscribe {
@@ -279,15 +276,24 @@ class DeckBuilderActivity : BaseActivity(),
 
         }
 
-        if (slidingLayout.panelState != SlidingUpPanelLayout.PanelState.COLLAPSED) {
-            slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        if (slidingLayout.panelState != COLLAPSED) {
+            slidingLayout.panelState = COLLAPSED
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        renderer.start()
+        presenter.start()
+    }
 
-    override fun onDestroy() {
+    override fun onStop() {
+        super.onStop()
         presenter.stop()
         renderer.stop()
+    }
+
+    override fun onDestroy() {
         destroySession()
         super.onDestroy()
     }

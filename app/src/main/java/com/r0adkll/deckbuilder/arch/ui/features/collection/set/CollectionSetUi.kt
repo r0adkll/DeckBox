@@ -11,6 +11,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi.State.Change
+import com.r0adkll.deckbuilder.util.extensions.findAndReplace
+import com.r0adkll.deckbuilder.util.extensions.findAndUpdate
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
@@ -47,6 +49,16 @@ interface CollectionSetUi : Ui<State, Change> {
             is Change.Cards -> copy(cards = change.cards, isLoading = false)
             is Change.Counts -> copy(counts = change.counts)
             is Change.CountsUpdated -> copy(counts = updateCounts(change.counts))
+            is Change.CountChanged -> copy(counts = counts.findAndUpdate(
+                    { it.id == change.card.id },
+                    {
+                        CollectionCount(
+                                change.card.id,
+                                (it?.count ?: 0) + change.count,
+                                change.card.expansion?.code ?: it?.set ?: "",
+                                change.card.expansion?.series ?: it?.series ?: ""
+                        )
+                    }))
         }
 
         sealed class Change(logText: String): Ui.State.Change(logText) {
@@ -55,6 +67,7 @@ interface CollectionSetUi : Ui<State, Change> {
             class Cards(val cards: List<PokemonCard>) : Change("network -> cards loaded (${cards.size})")
             class Counts(val counts: List<CollectionCount>) : Change("network -> counts loaded (${counts.size})")
             class CountsUpdated(val counts: List<CollectionCount>) : Change("network -> counts updated (${counts.size})")
+            class CountChanged(val card: PokemonCard, val count: Int): Change("user -> count changed ($count)")
         }
 
         override fun toString(): String {

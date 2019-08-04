@@ -267,8 +267,8 @@
     <string name="collection_progress_all_title">Entire collection</string>
     <string name="empty_collection_set">No cards in your collection</string>
     <string name="action_filter">Filter</string>
-    <string name="option_collection_only">Collection mode</string>
-    <string name="action_sort">Sort</string>
-    <string name="action_sort_format">By format</string>
-    <string name="action_sort_none">None</string>
+    <string name="option_collection_only">Only show cards in collection</string>
+    <string name="card_detail_collection_count_format">%d in Collection</string>
+    <string name="format_unlimited">Unlimited</string>
+    <string name="card_detail_collection_count">Collection amount</string>
 </resources>

@@ -25,8 +25,8 @@ data class StackedPokemonCard(
 
     override fun hashCode(): Int {
         var result = card.hashCode()
-        result = 31 * result + count
-        result = 31 * result + (collection ?: 0)
+        result = 31 * result + count.hashCode()
+        result = 31 * result + (collection?.hashCode() ?: 0)
         return result
     }
 }

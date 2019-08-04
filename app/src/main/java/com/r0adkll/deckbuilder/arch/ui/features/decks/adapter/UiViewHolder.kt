@@ -146,9 +146,9 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         override fun bind(item: Item.DeckItem) {
             image.topCropEnabled = true
 
-            val deck = item.validatedDeck
+            val deck = item.validatedDeck.deck
             title.text = deck.name
-            error.setVisible(item.validatedDeck.isMissingCards)
+            error.setVisible(deck.isMissingCards)
             loading.setVisible(item.isLoading)
 
             deck.image?.let {

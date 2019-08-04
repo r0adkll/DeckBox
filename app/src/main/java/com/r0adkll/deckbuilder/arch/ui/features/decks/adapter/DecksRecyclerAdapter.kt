@@ -3,19 +3,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxrelay2.Relay
-import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.Format
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-import com.r0adkll.deckbuilder.util.bindView
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 
 
 class DecksRecyclerAdapter(
@@ -28,7 +22,7 @@ class DecksRecyclerAdapter(
         private val viewPreview: Relay<ExpansionPreview>,
         private val quickStart: Relay<Deck>,
         private val dismissQuickStart: Relay<Unit>
-) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(ITEM_CALLBACK), StickyRecyclerHeadersAdapter<DecksRecyclerAdapter.HeaderViewHolder> {
+) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(ITEM_CALLBACK) {
 
     var itemClickListener: (Item) -> Unit = {}
     private val inflater = LayoutInflater.from(context)
@@ -44,7 +38,9 @@ class DecksRecyclerAdapter(
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {
         val item = getItem(i)
         if (item is Item.DeckItem) {
-            itemClickListener(item)
+            vh.itemView.setOnClickListener {
+                itemClickListener(item)
+            }
         }
         vh.bind(item)
     }
@@ -71,35 +67,6 @@ class DecksRecyclerAdapter(
     override fun onViewDetachedFromWindow(holder: UiViewHolder<Item>) {
         super.onViewDetachedFromWindow(holder)
         holder.dispose()
-    }
-
-    override fun getHeaderId(position: Int): Long {
-        val item = getItem(position)
-        return when(item) {
-            is Item.DeckItem -> {
-
-                TODO()
-            }
-            else -> RecyclerView.NO_ID
-        }
-    }
-
-    override fun onCreateHeaderViewHolder(parent: ViewGroup?): HeaderViewHolder {
-        val itemView = inflater.inflate(R.layout.layout_sticky_subheader, parent, false)
-        return HeaderViewHolder(itemView)
-    }
-
-    override fun onBindHeaderViewHolder(holder: HeaderViewHolder, position: Int) {
-
-    }
-
-    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val title by bindView<TextView>(R.id.title)
-
-        fun bind(format: Format) {
-
-        }
     }
 
     companion object {

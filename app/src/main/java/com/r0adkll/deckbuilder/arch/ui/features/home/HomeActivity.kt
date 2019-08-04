@@ -31,6 +31,7 @@ import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import timber.log.Timber
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -149,14 +150,14 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
 
 
     class HomePagerAdapter(
-            fragmentManager: androidx.fragment.app.FragmentManager
-    ) : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
+            fragmentManager: FragmentManager
+    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-        override fun getItem(position: Int): androidx.fragment.app.Fragment? = when(position) {
+        override fun getItem(position: Int): Fragment = when(position) {
             0 -> DecksFragment.newInstance()
             1 -> CollectionFragment.newInstance()
             2 -> BrowseFragment.newInstance()
-            else -> null
+            else -> throw IllegalArgumentException("Invalid pager position")
         }
 
 

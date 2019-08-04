@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.collection.mapper.EntityMapper
@@ -111,7 +112,7 @@ class FirestoreCollectionCache @Inject constructor(
                                 val count = countObject.toObject(CollectionCountEntity::class.java)
                                 count.count += 1
                                 collection.document(docId)
-                                        .set(count)
+                                        .update("count", FieldValue.increment(1))
                                         .asVoidObservable(schedulers.firebaseExecutor)
                                         .map {
                                             EntityMapper.to(count)
@@ -139,7 +140,7 @@ class FirestoreCollectionCache @Inject constructor(
                             count.count -= 1
                             count.count.coerceAtLeast(0)
                             collection.document(docId)
-                                    .set(count)
+                                    .update("count", FieldValue.increment(-1))
                                     .asVoidObservable(schedulers.firebaseExecutor)
                                     .map { EntityMapper.to(count) }
                         } else {

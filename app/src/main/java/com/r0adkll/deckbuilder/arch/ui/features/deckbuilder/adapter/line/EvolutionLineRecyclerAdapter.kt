@@ -73,7 +73,6 @@ class EvolutionLineRecyclerAdapter(
                     isCollectionEnabled
             )
 
-            // Bind click listener
             holder.itemView.setOnClickListener {
                 cardViewClickListener?.onClick(holder.cardView)
             }
@@ -192,7 +191,9 @@ class EvolutionLineRecyclerAdapter(
                     return old?.let { oldChain ->
                         val oldItem = oldChain.getItem(oldItemPosition)!!
                         val newItem = new.getItem(newItemPosition)!!
-                        oldItem == newItem && oldItem.count == newItem.count
+                        oldItem == newItem
+                                && oldItem.count == newItem.count
+                                && oldItem.collection == newItem.collection
                     } ?: false
                 }
 
