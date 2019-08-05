@@ -93,6 +93,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                     return when(item) {
                         is Item.Preview -> 2
                         is Item.QuickStart -> 2
+                        is Item.Header -> 2
                         else -> 1
                     }
                 }
