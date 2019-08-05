@@ -81,6 +81,8 @@
             />
 
         <activity android:name=".arch.ui.features.settings.offline.ManageOfflineActivity" />
+        <activity android:name=".arch.ui.features.collection.set.CollectionSetActivity"
+            android:theme="@style/Theme.DeckBuilder.Translucent" />
 
         <service android:name=".arch.data.features.offline.service.CacheService"
                  android:exported="false" />

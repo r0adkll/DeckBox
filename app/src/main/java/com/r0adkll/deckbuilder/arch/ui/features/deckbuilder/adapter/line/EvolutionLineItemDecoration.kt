@@ -17,7 +17,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 class EvolutionLineItemDecoration(
         val context: Context,
         val adapter: EvolutionLineAdapter
-) : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
+) : RecyclerView.ItemDecoration() {
 
     private val linkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val linkBarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -37,7 +37,7 @@ class EvolutionLineItemDecoration(
     }
 
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val adapterPosition = parent.getChildAdapterPosition(view)
         val evolutionState = adapter.getEvolutionState(adapterPosition)
 
@@ -53,7 +53,7 @@ class EvolutionLineItemDecoration(
     }
 
 
-    override fun onDrawOver(c: Canvas, parent: androidx.recyclerview.widget.RecyclerView, s: androidx.recyclerview.widget.RecyclerView.State) {
+    override fun onDrawOver(c: Canvas, parent: RecyclerView, s: RecyclerView.State) {
         val adapter = parent.adapter
         adapter?.let { it ->
             (0 until it.itemCount).forEach { index ->

@@ -23,7 +23,7 @@ class DeckTestingRenderer(
 
         disposables += state
                 .mapNullable {
-                    it.results?.let { result ->
+                        it.results?.let { result ->
                         val testResults = ArrayList<TestResult>()
 
                         val cumulativeResultCount = result.startingHand.values.sum().toFloat()

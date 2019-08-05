@@ -124,6 +124,17 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         }
     }
 
+    class HeaderViewHolder(
+            itemView: View
+    ) : UiViewHolder<Item.Header>(itemView) {
+
+        private val text by bindView<TextView>(R.id.title)
+
+
+        override fun bind(item: Item.Header) {
+            text.text = item.text
+        }
+    }
 
     class DeckViewHolder(
             itemView: View,
@@ -146,9 +157,9 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         override fun bind(item: Item.DeckItem) {
             image.topCropEnabled = true
 
-            val deck = item.deck
+            val deck = item.validatedDeck.deck
             title.text = deck.name
-            error.setVisible(item.deck.isMissingCards)
+            error.setVisible(deck.isMissingCards)
             loading.setVisible(item.isLoading)
 
             deck.image?.let {
@@ -203,6 +214,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         PREVIEW(R.layout.item_set_preview),
         QUICK_START(R.layout.item_quickstart),
+        HEADER(R.layout.item_deck_format_header),
         DECK(R.layout.item_deck);
 
         companion object {
@@ -231,10 +243,10 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
                    viewPreview: Relay<ExpansionPreview>,
                    quickStart: Relay<Deck>,
                    dismissQuickStart: Relay<Unit>): UiViewHolder<Item> {
-            val viewType = ViewType.of(layoutId)
-            return when(viewType) {
+            return when(ViewType.of(layoutId)) {
                 PREVIEW -> PreviewViewHolder(itemView, dismissPreview, viewPreview) as UiViewHolder<Item>
                 QUICK_START -> QuickViewHolder(itemView, quickStart, dismissQuickStart) as UiViewHolder<Item>
+                HEADER -> HeaderViewHolder(itemView) as UiViewHolder<Item>
                 DECK -> DeckViewHolder(itemView, shareClicks, duplicateClicks, testClicks, deleteClicks) as UiViewHolder<Item>
             }
         }

@@ -11,6 +11,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserComponent
 import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailComponent
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
+import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetComponent
+import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckImageComponent
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckImageModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
@@ -59,6 +61,7 @@ interface AppComponent {
     fun plus(module: DeckImageModule): DeckImageComponent
     fun plus(module: DeckTestingModule): DeckTestingComponent
     fun plus(module: PlaytestModule): PlaytestComponent
+    fun plus(module: CollectionSetModule): CollectionSetComponent
 
     fun searchComponentBuilder(): SearchComponent.Builder
     fun deckBuilderComponentBuilder(): DeckBuilderComponent.Builder

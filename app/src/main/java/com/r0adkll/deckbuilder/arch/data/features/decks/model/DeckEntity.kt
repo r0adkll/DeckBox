@@ -8,6 +8,7 @@ class DeckEntity(
         val name: String = "",
         val description: String = "",
         val image: String? = null,
+        val collectionOnly: Boolean? = false,
 
         @Deprecated("No longer used", replaceWith = ReplaceWith("cardMetadata"))
         val cards: List<PokemonCardEntity> = emptyList(),

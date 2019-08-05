@@ -2,12 +2,15 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jakewharton.rxrelay2.Relay
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
 
 
 class DecksRecyclerAdapter(
@@ -20,7 +23,11 @@ class DecksRecyclerAdapter(
         private val viewPreview: Relay<ExpansionPreview>,
         private val quickStart: Relay<Deck>,
         private val dismissQuickStart: Relay<Unit>
-) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
+) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(ITEM_CALLBACK) {
+
+    var itemClickListener: (Item) -> Unit = {}
+    private val inflater = LayoutInflater.from(context)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
@@ -30,28 +37,37 @@ class DecksRecyclerAdapter(
 
 
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {
-        val item = items[i]
+        val item = getItem(i)
         if (item is Item.DeckItem) {
-            super.onBindViewHolder(vh, i)
+            vh.itemView.setOnClickListener {
+                itemClickListener(item)
+            }
         }
         vh.bind(item)
+
+        if (item is Item.Header) {
+            (vh.itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams)?.apply {
+                this.isFullSpan = true
+            }
+        }
     }
 
 
     override fun getItemViewType(position: Int): Int {
         if (position != RecyclerView.NO_POSITION) {
-            return items[position].viewType
+            return getItem(position).viewType
         }
         return super.getItemViewType(position)
     }
 
 
     override fun getItemId(position: Int): Long {
-        val item = items[position]
+        val item = getItem(position)
         return when(item) {
-            is Item.DeckItem -> item.deck.id.hashCode().toLong()
+            is Item.DeckItem -> item.validatedDeck.deck.id.hashCode().toLong()
             is Item.QuickStart -> 0L
             is Item.Preview -> 1L
+            is Item.Header -> item.text.hashCode().toLong()
         }
     }
 
@@ -61,10 +77,17 @@ class DecksRecyclerAdapter(
         holder.dispose()
     }
 
+    companion object {
 
-    fun showItems(decks: List<Item>) {
-        val diff = calculateDiff(decks, items)
-        items = ArrayList(diff.new)
-        diff.diff.dispatchUpdatesTo(getListUpdateCallback())
+        val ITEM_CALLBACK = object : DiffUtil.ItemCallback<Item>() {
+
+            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+                return oldItem.isItemSame(newItem)
+            }
+
+            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+                return oldItem.isContentSame(newItem)
+            }
+        }
     }
 }

@@ -110,6 +110,20 @@ class RoomSessionCache @Inject constructor(
         }
     }
 
+    override fun changeCollectionOnly(sessionId: Long, collectionOnly: Boolean): Observable<Unit> {
+        return Observable.create {
+            val result = db.sessions().updateCollectionOnly(sessionId, collectionOnly)
+            if (!it.isDisposed) {
+                if (result == 1) {
+                    it.onNext(Unit)
+                    it.onComplete()
+                } else {
+                    it.onError(IOException("No rows affected"))
+                }
+            }
+        }
+    }
+
     override fun addCards(sessionId: Long, cards: List<PokemonCard>, searchSessionId: String?): Observable<Unit> {
         val cardsToCache = cards.filter { !it.isCached }.map { RoomEntityMapper.to(it) }
         val changes = cards.map { RoomEntityMapper.createAddChange(sessionId, it, searchSessionId) }
@@ -140,9 +154,11 @@ class RoomSessionCache @Inject constructor(
                 deck?.name ?: "",
                 deck?.description ?: "",
                 deck?.image?.uri,
+                deck?.collectionOnly,
                 deck?.name ?: "",
                 deck?.description ?: "",
-                deck?.image?.uri
+                deck?.image?.uri,
+                deck?.collectionOnly
         )
     }
 }

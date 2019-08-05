@@ -10,11 +10,11 @@
         <!--icon="@drawable/ic_forum_black_24dp"-->
         <!--title="@string/tab_community"-->
         <!--/>-->
-    <!--<tab-->
-        <!--id="@+id/tab_collection"-->
-        <!--icon="@drawable/ic_cards"-->
-        <!--title="@string/tab_collection"-->
-        <!--/>-->
+    <tab
+        id="@+id/tab_collection"
+        icon="@drawable/ic_cards_outline"
+        title="@string/tab_collection"
+        />
     <tab
         id="@+id/tab_browser"
         icon="@drawable/ic_feature_search_outline"

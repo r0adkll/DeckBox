@@ -18,13 +18,12 @@ class FlagPreferences @Inject constructor(
 
     override val sharedPreferences: SharedPreferences = context.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 
-
-    var newFeatureDeckImage by BooleanPreference(KEY_NEWFEATURE_DECK_IMAGE, false) // feature has been out long enough
-
+    var collections by BooleanPreference(KEY_NEWFEATURE_COLLECTIONS, true)
 
     companion object {
         private const val NAME = "com.r0adkll.deckbuilder.FlagPreferences"
 
         private const val KEY_NEWFEATURE_DECK_IMAGE = "key_newfeature_deck_image"
+        private const val KEY_NEWFEATURE_COLLECTIONS = "key_newfeature_collections"
     }
 }

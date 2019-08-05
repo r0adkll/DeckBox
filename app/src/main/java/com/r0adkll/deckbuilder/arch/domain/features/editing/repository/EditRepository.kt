@@ -52,6 +52,12 @@ interface EditRepository {
 
 
     /**
+     * Chagne the deck's collection only flag
+     */
+    fun changeCollectionOnly(sessionId: Long, collectionOnly: Boolean): Observable<Unit>
+
+
+    /**
      * Change the name of an editing session
      */
     fun changeName(sessionId: Long, name: String): Observable<String>

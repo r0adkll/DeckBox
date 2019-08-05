@@ -3,4 +3,8 @@
     <item name="glide_tag_id" type="id" />
     <item name="palette_id" type="id" />
     <item name="tag_expansion_logo" type="id" />
+
+    <item name="tab_decks" type="id" />
+    <item name="tab_collection" type="id" />
+    <item name="tab_browser" type="id" />
 </resources>

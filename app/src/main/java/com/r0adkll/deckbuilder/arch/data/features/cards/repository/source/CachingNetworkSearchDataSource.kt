@@ -16,6 +16,7 @@ import io.pokemontcg.model.Card
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.requests.CardQueryBuilder
 import io.reactivex.Observable
+import timber.log.Timber
 
 
 @Suppress("UNCHECKED_CAST")
@@ -32,7 +33,10 @@ class CachingNetworkSearchDataSource(
             val expansions = t[0] as List<Expansion>
             val cards = t[1] as List<Card>
             cards.map { CardMapper.to(it, expansions) }
-        }.onErrorResumeNext(Observable.just(emptyList()))
+        }.onErrorResumeNext { throwable: Throwable ->
+            Timber.e(throwable, "Search Error")
+            Observable.just(emptyList())
+        }
     }
 
 

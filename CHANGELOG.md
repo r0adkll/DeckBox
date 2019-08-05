@@ -1,3 +1,19 @@
+# 1.9.0
+* [#47](https://github.com/r0adkll/DeckBox/issues/47) - Collection tracking
+* [#66](https://github.com/r0adkll/DeckBox/issues/66) - Removed old format symbols on card detail screen
+* [#70](https://github.com/r0adkll/DeckBox/issues/70) - Added deck format sorting / grouping in decklist
+* Fixed incorrect age division years on tournament exports
+* Fixed some visual issues with deck images on decks screen
+
+# 1.8.4
+* Hotfix for SDK search error causing empty results and issues finding newer cards
+
+# 1.8.3
+* Support for Sun & Moon: Team Up expansion
+
+# 1.8.2
+* Fixed issue with missing sets
+
 # 1.8.1
 * Fix for sorting bug when building the EvolutionChain
 * Misc bug fixes

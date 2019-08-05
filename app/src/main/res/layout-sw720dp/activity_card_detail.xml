@@ -109,27 +109,18 @@
             android:orientation="horizontal"
             android:paddingStart="@dimen/padding_normal">
 
-            <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-                android:id="@+id/formatStandard"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="start|center_vertical"
-                android:padding="4dp"
-                app:fillColor="@color/white"
-                app:format="standard"
-                app:strokeColor="@color/black"
-                app:strokeWidth="2dp" />
-
-            <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-                android:id="@+id/formatExpanded"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="start|center_vertical"
-                android:padding="4dp"
-                app:fillColor="@color/white"
-                app:format="expanded"
-                app:strokeColor="@color/black"
-                app:strokeWidth="2dp" />
+            <TextView
+                android:id="@+id/deckFormat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginEnd="8dp"
+                android:textAllCaps="true"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="Standard"
+                />
 
             <ImageView
                 android:id="@+id/expansionSymbol"
@@ -141,6 +132,9 @@
                 android:scaleType="fitCenter" />
 
         </LinearLayout>
+
+        <include layout="@layout/layout_collection_count_adjuster"
+            />
 
         <ScrollView
             android:layout_width="match_parent"

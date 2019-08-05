@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:gravity="start|center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="16dp"
+        android:text="@string/card_detail_collection_count"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
+
+    <ImageView
+        android:id="@+id/actionRemoveCollection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:src="@drawable/ic_remove_white_24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        tools:tint="?attr/colorControlNormal"
+        />
+
+    <TextView
+        android:id="@+id/collectionCount"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="16sp"
+        android:gravity="center"
+        tools:text="100"
+        />
+
+    <ImageView
+        android:id="@+id/actionAddCollection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:src="@drawable/ic_add_white_24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        tools:tint="?attr/colorControlNormal"
+        />
+
+</LinearLayout>

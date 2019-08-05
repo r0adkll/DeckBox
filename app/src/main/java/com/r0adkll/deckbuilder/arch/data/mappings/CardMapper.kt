@@ -21,7 +21,7 @@ object CardMapper {
                 card.hp,
                 card.retreatCost,
                 card.number,
-                card.artist,
+                card.artist ?: "",
                 card.rarity,
                 card.series,
                 expansions.find { it.code == card.setCode },

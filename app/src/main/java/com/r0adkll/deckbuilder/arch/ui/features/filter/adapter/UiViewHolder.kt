@@ -31,7 +31,7 @@ import io.pokemontcg.model.Type
 import timber.log.Timber
 
 
-sealed class UiViewHolder<in I : Item>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
 
