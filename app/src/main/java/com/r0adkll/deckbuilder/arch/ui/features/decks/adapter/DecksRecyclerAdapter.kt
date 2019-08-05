@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
@@ -43,6 +44,12 @@ class DecksRecyclerAdapter(
             }
         }
         vh.bind(item)
+
+        if (item is Item.Header) {
+            (vh.itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams)?.apply {
+                this.isFullSpan = true
+            }
+        }
     }
 
 
@@ -60,6 +67,7 @@ class DecksRecyclerAdapter(
             is Item.DeckItem -> item.validatedDeck.deck.id.hashCode().toLong()
             is Item.QuickStart -> 0L
             is Item.Preview -> 1L
+            is Item.Header -> item.text.hashCode().toLong()
         }
     }
 

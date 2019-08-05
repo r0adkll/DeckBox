@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.lifecycle.Lifecycle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.arch.util.bindViews
@@ -92,8 +93,8 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         DeckApp.component.plus(DeckTestingModule(this))
                 .inject(this)
 
-        delegates += StatefulActivityDelegate(renderer)
-        delegates += StatefulActivityDelegate(presenter)
+        delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
 

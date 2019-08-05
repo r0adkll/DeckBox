@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
+import com.ftinc.kit.kotlin.utils.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi.State
@@ -14,6 +15,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.collection.di.CollectionModule
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.util.ScreenUtils
 import kotlinx.android.synthetic.main.fragment_collection.*
 import javax.inject.Inject
 
@@ -45,6 +47,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
 
         collectionRecycler.adapter = adapter
         (collectionRecycler.layoutManager as? GridLayoutManager)?.apply {
+            spanCount = if (smallestWidth(requireContext().resources, com.ftinc.kit.kotlin.utils.ScreenUtils.Config.TABLET_10)) 6 else 3
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     val item = adapter.items[position]
