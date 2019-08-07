@@ -38,7 +38,7 @@ class CollectionCardViewHolder(
             cardCount.gone()
         }
 
-        actionRemove.setVisibleWeak(count > 0)
+        actionRemove.isEnabled = count > 0
         actionRemove.setOnClickListener { removeCardClicks.accept(card) }
         actionAdd.setOnClickListener { addCardClicks.accept(listOf(card)) }
     }

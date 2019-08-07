@@ -21,9 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:src="@drawable/ic_remove_white_24dp"
+        android:src="@drawable/ic_action_remove_card"
         android:background="?attr/selectableItemBackgroundBorderless"
-        tools:tint="?attr/colorControlNormal"
+        android:tint="?attr/collectionAdjusterTint"
         />
 
     <TextView
@@ -42,9 +42,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:src="@drawable/ic_add_white_24dp"
+        android:src="@drawable/ic_action_add_card"
         android:background="?attr/selectableItemBackgroundBorderless"
-        tools:tint="?attr/colorControlNormal"
+        android:tint="?attr/collectionAdjusterTint"
         />
 
 </LinearLayout>
