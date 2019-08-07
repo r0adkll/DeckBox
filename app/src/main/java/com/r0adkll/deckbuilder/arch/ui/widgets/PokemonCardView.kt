@@ -51,8 +51,10 @@ class PokemonCardView @JvmOverloads constructor(
 
     var card: PokemonCard? = null
         set(value) {
-            field = value
-            loadImage()
+            if (field?.id != value?.id) {
+                field = value
+                loadImage()
+            }
         }
 
     var evolution = Evolution.NONE

@@ -67,28 +67,6 @@ class FirestoreCollectionCache @Inject constructor(
                     .map { it.toObjects(CollectionCountEntity::class.java) }
                     .map { it.map(EntityMapper::to) }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
-
-//        return Observable.create<List<CollectionCountEntity>> { emitter ->
-//            getUserCardCollection()?.let { collection ->
-//                val registration = collection
-//                        .whereEqualTo("set", set)
-//                        .addSnapshotListener(EventListener { snapshot, exception ->
-//                            if (exception != null) {
-//                                emitter.onError(exception)
-//                                return@EventListener
-//                            }
-//
-//                            val counts = snapshot!!.toObjects(CollectionCountEntity::class.java)
-//
-//                            Timber.d("Firebase::getCountForSet($set)=(${counts.size}) - Thread(${Thread.currentThread().name})")
-//                            emitter.onNext(counts)
-//                        })
-//
-//                emitter.setCancellable {
-//                    registration.remove()
-//                }
-//            } ?: emitter.onError(FirebaseAuthException("-1", "No current user logged in"))
-//        }.map { it.map(EntityMapper::to) }
     }
 
     override fun getCountForSeries(series: String): Observable<List<CollectionCount>> {
@@ -110,9 +88,10 @@ class FirestoreCollectionCache @Inject constructor(
                             countObject != null -> {
                                 val docId = countObject.id
                                 val count = countObject.toObject(CollectionCountEntity::class.java)
-                                count.count += 1
+                                val difference = (0 - count.count).coerceAtLeast(0) + 1
+                                count.count += difference
                                 collection.document(docId)
-                                        .update("count", FieldValue.increment(1))
+                                        .update("count", FieldValue.increment(difference.toLong()))
                                         .asVoidObservable(schedulers.firebaseExecutor)
                                         .map {
                                             EntityMapper.to(count)
@@ -137,10 +116,12 @@ class FirestoreCollectionCache @Inject constructor(
                         if (countObject != null) {
                             val docId = countObject.id
                             val count = countObject.toObject(CollectionCountEntity::class.java)
+                            val isNegative = count.count <= 0
+                            val difference = (0 - count.count).coerceAtLeast(0).toLong()
                             count.count -= 1
                             count.count.coerceAtLeast(0)
                             collection.document(docId)
-                                    .update("count", FieldValue.increment(-1))
+                                    .update("count", FieldValue.increment(if (isNegative) difference else -1))
                                     .asVoidObservable(schedulers.firebaseExecutor)
                                     .map { EntityMapper.to(count) }
                         } else {

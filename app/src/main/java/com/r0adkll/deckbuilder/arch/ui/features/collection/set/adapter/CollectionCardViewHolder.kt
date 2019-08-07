@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.gone
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.visible
+import com.ftinc.kit.kotlin.extensions.*
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -41,6 +38,7 @@ class CollectionCardViewHolder(
             cardCount.gone()
         }
 
+        actionRemove.setVisibleWeak(count > 0)
         actionRemove.setOnClickListener { removeCardClicks.accept(card) }
         actionAdd.setOnClickListener { addCardClicks.accept(listOf(card)) }
     }
