@@ -18,6 +18,7 @@ import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.kotlin.extensions.color
@@ -90,6 +91,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         val spanCount = if (smallestWidth(ScreenUtils.Config.TABLET_10)) 9 else 3
         recycler.adapter = adapter
         recycler.layoutManager = GridLayoutManager(this, spanCount)
+        (recycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
         statusBarHeight = UIUtils.getStatusBarHeight(this)
 //        appBarLayout.addLayoutHeight((statusBarHeight - dipToPx(24f)))

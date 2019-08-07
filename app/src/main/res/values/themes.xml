@@ -9,6 +9,8 @@
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/primaryColor</item>
 
+        <item name="collectionAdjusterTint">@color/collectionAdjusterTint</item>
+
         <item name="android:windowBackground">@color/backgroundColor</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
@@ -20,12 +22,14 @@
     <style name="Theme.DeckBuilder.Splash">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="colorPrimaryDark">@color/primaryColor</item>
+        <item name="collectionAdjusterTint">@color/collectionAdjusterTint</item>
     </style>
 
     <style name="Theme.DeckBuilder.OSS" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/primaryColor</item>
+        <item name="collectionAdjusterTint">@color/collectionAdjusterTint</item>
     </style>
 
     <style name="Theme.DeckBuilder.Detail">

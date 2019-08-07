@@ -20,10 +20,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.evernote.android.state.State
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.gone
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.visible
+import com.ftinc.kit.kotlin.extensions.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -216,6 +213,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun showCollectionCount(count: Int) {
+        actionRemoveCollection.setVisibleWeak(count > 0)
         collectionCount.text = count.toString() //getString(R.string.card_detail_collection_count_format, count)
     }
 
