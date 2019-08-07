@@ -272,5 +272,4 @@
     <string name="format_unlimited">Unlimited</string>
     <string name="card_detail_collection_count">Collection amount</string>
     <string name="empty_playtest_hand">Empty hand</string>
-    <string name="intent_chooser_link_title">Open link...</string>
 </resources>

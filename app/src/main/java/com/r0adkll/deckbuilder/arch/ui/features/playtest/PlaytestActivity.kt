@@ -9,8 +9,6 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.di.PlaytestModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.BoardView
-import com.r0adkll.deckbuilder.util.PresenterActivityDelegate
-import com.r0adkll.deckbuilder.util.RendererActivityDelegate
 import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.activity_playtest_simulator.*
 import javax.inject.Inject
@@ -50,8 +48,8 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
         this.state = state
         renderer.render(state)
 
-        addDelegate(RendererActivityDelegate(renderer))
-        addDelegate(PresenterActivityDelegate(presenter))
+//        addDelegate(RendererActivityDelegate(renderer))
+//        addDelegate(PresenterActivityDelegate(presenter))
     }
 
 
