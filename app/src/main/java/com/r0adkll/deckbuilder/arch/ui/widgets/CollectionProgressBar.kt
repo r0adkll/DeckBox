@@ -43,7 +43,7 @@ class CollectionProgressBar @JvmOverloads constructor(
 
     var progress: Float = 0f
         set(value) {
-            field = value
+            field = value.coerceIn(0f, 1f)
             invalidate()
         }
 

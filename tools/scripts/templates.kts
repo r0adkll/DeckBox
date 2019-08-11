@@ -49,6 +49,9 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.StringReader
 import java.net.URL
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import kotlin.math.min
 import kotlin.system.exitProcess
 
@@ -382,6 +385,7 @@ rankingTable.forEach { row ->
  */
 
 @Suppress("ConvertCallChainIntoSequence")
+val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yy")
 val tournamentDeckTemplates = tournaments
         .filter { it.players.isNotEmpty() }
         .filter { it.format == "Standard" || it.format == "Expanded" }
@@ -390,6 +394,7 @@ val tournamentDeckTemplates = tournaments
                 // Parse decklist
                 val deckName = "${tournament.name} - Winner"
                 val deckListCards = importDeckList(player.deckList)
+                val dateTime = LocalDate.parse(tournament.date, dateFormatter)
                 TournamentDeckTemplateEntity(
                         player.place,
                         deckName,
@@ -400,7 +405,7 @@ val tournamentDeckTemplates = tournaments
                         player.deckInfo,
                         deckListCards,
                         TournamentEntity(tournament.name, tournament.date, tournament.country, tournament.format, tournament.playerCount),
-                        0L
+                        dateTime.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000L
                 )
             }
         }

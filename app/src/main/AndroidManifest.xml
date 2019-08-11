@@ -85,6 +85,7 @@
 
         <service android:name=".arch.data.features.offline.service.CacheService"
                  android:exported="false" />
+        <service android:name=".arch.data.features.collection.service.FirebaseCollectionMigrationService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

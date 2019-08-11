@@ -6,6 +6,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 
 
@@ -27,12 +28,6 @@ class RoomCollectionCache @Inject constructor(
                 .toObservable()
     }
 
-    override fun getCounts(cardIds: List<String>): Observable<List<CollectionCount>> {
-        return db.collection().getCounts(cardIds)
-                .map { it.map(EntityMapper::to) }
-                .toObservable()
-    }
-
     override fun getCountForSet(set: String): Observable<List<CollectionCount>> {
         return db.collection().getCountForSet(set)
                 .map { it.map(EntityMapper::to) }
@@ -45,17 +40,27 @@ class RoomCollectionCache @Inject constructor(
                 .toObservable()
     }
 
-    override fun incrementCount(card: PokemonCard): Observable<CollectionCount> {
+    override fun incrementCount(card: PokemonCard): Observable<Unit> {
         return Observable.fromCallable {
             db.collection().incrementCount(card)!!
         }.subscribeOn(schedulers.database)
-                .map(EntityMapper::to)
+                .map { Unit }
     }
 
-    override fun decrementCount(card: PokemonCard): Observable<CollectionCount> {
+    override fun decrementCount(card: PokemonCard): Observable<Unit> {
         return Observable.fromCallable {
             db.collection().decrementCount(card)!!
         }.subscribeOn(schedulers.database)
-                .map(EntityMapper::to)
+                .map { Unit }
+    }
+
+    fun getAll(): Single<List<CollectionCount>> {
+        return db.collection().getAll()
+                .map { it.map(EntityMapper::to) }
+
+    }
+
+    fun deleteAll() {
+        db.collection().deleteAll()
     }
 }

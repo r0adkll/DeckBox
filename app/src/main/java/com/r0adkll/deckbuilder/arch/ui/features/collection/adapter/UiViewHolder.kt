@@ -1,10 +1,13 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.adapter
 
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.kotlin.extensions.setVisible
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
@@ -17,6 +20,43 @@ import kotlin.math.roundToInt
 sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
+
+
+    class MigrationViewHolder(
+            itemView: View,
+            private val migrateClicks: Relay<Unit>,
+            private val dismissClicks: () -> Unit
+    ) : UiViewHolder<Item.Migration>(itemView) {
+
+        private val message by bindView<TextView>(R.id.message)
+        private val loadingIndicator by bindView<LinearLayout>(R.id.loadingIndicator)
+        private val errorMessage by bindView<TextView>(R.id.errorMessage)
+        private val actionLayout by bindView<LinearLayout>(R.id.actionLayout)
+
+        private val actionMigrate by bindView<Button>(R.id.actionMigrate)
+        private val actionDismiss by bindView<Button>(R.id.actionDismiss)
+
+
+        override fun bind(item: Item.Migration) {
+            message.setVisible(!item.isLoading)
+            loadingIndicator.setVisible(item.isLoading)
+            errorMessage.setVisible(item.error != null)
+            errorMessage.text = item.error
+            actionLayout.setVisible(!item.isLoading)
+
+            actionMigrate.setText(when(item.error) {
+                null -> R.string.action_migrate
+                else -> R.string.action_retry
+            })
+
+            actionMigrate.setOnClickListener {
+                migrateClicks.accept(Unit)
+            }
+            actionDismiss.setOnClickListener {
+                dismissClicks()
+            }
+        }
+    }
 
     class ExpansionSeriesViewHolder(itemView: View) : UiViewHolder<Item.ExpansionSeries>(itemView) {
 
@@ -55,6 +95,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
     }
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
+        MIGRATE(R.layout.item_collection_migration),
         SERIES(R.layout.item_collection_series),
         SET(R.layout.item_collection_expansion);
 
@@ -76,10 +117,12 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         @Suppress("UNCHECKED_CAST")
         fun create(
                 itemView: View,
-                layoutId: Int
+                layoutId: Int,
+                migrateClicks: Relay<Unit>,
+                dismissClicks: () -> Unit
         ): UiViewHolder<Item> {
-            val viewType = ViewType.of(layoutId)
-            return when(viewType) {
+            return when(ViewType.of(layoutId)) {
+                ViewType.MIGRATE -> MigrationViewHolder(itemView, migrateClicks, dismissClicks) as UiViewHolder<Item>
                 ViewType.SERIES -> ExpansionSeriesViewHolder(itemView) as UiViewHolder<Item>
                 ViewType.SET -> ExpansionSetViewHolder(itemView) as UiViewHolder<Item>
             }

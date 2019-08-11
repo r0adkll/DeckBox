@@ -20,7 +20,7 @@ class CollectionSetRenderer(
 
         disposables += state
                 .map { s ->
-                    val setCount = s.counts.filter { it.set == s.expansion!!.code && it.count > 0 }
+                    val setCount = s.counts.filter { it.set == s.expansion!!.code && it.count > 0 && !it.isSourceOld }
                     setCount.size.toFloat() / s.expansion!!.totalCards.toFloat()
                 }
                 .distinctUntilChanged()
@@ -32,7 +32,7 @@ class CollectionSetRenderer(
         disposables += state
                 .map { s ->
                     s.cards.sortedBy { it.number.replace("a", "", true).toIntOrNull() ?: 0 }.map { card ->
-                        val count = s.counts.find { it.id == card.id }
+                        val count = s.counts.find { it.id == card.id && !it.isSourceOld }
                         StackedPokemonCard(card, count?.count ?: 0)
                     }
                 }

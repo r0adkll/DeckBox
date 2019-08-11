@@ -4,6 +4,7 @@
 * [#70](https://github.com/r0adkll/DeckBox/issues/70) - Added deck format sorting / grouping in decklist
 * Fixed incorrect age division years on tournament exports
 * Fixed some visual issues with deck images on decks screen
+* Fixed order of tournament decks in quick start card
 
 # 1.8.4
 * Hotfix for SDK search error causing empty results and issues finding newer cards

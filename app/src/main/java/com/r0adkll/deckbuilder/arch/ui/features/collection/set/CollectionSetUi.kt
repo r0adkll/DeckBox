@@ -50,7 +50,7 @@ interface CollectionSetUi : Ui<State, Change> {
             is Change.Counts -> copy(counts = change.counts)
             is Change.CountsUpdated -> copy(counts = updateCounts(change.counts))
             is Change.CountChanged -> copy(counts = counts.findAndUpdate(
-                    { it.id == change.card.id },
+                    { it.id == change.card.id && !it.isSourceOld },
                     {
                         CollectionCount(
                                 change.card.id,
