@@ -10,7 +10,6 @@ import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import com.r0adkll.deckbuilder.arch.data.database.relations.DeckStackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
-import com.r0adkll.deckbuilder.arch.data.features.decks.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
@@ -47,7 +46,7 @@ abstract class DeckDao {
     abstract fun deleteDeckJoins(deckId: Long)
 
     @Query("DELETE FROM decks")
-    abstract fun deleteDecks()
+    abstract fun deleteAll()
 
     @Insert
     abstract fun insertDeck(deck: DeckEntity): Long

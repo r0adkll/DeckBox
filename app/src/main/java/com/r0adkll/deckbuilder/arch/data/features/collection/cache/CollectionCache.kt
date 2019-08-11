@@ -10,10 +10,9 @@ interface CollectionCache {
     fun observeAll(): Observable<List<CollectionCount>>
 
     fun getCount(cardId: String): Observable<CollectionCount>
-    fun getCounts(cardIds: List<String>): Observable<List<CollectionCount>>
     fun getCountForSet(set: String): Observable<List<CollectionCount>>
     fun getCountForSeries(series: String): Observable<List<CollectionCount>>
 
-    fun incrementCount(card: PokemonCard): Observable<CollectionCount>
-    fun decrementCount(card: PokemonCard): Observable<CollectionCount>
+    fun incrementCount(card: PokemonCard): Observable<Unit>
+    fun decrementCount(card: PokemonCard): Observable<Unit>
 }

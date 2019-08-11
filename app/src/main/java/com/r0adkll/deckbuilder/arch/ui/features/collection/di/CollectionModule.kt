@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.di
 
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionProgressController
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionRenderer

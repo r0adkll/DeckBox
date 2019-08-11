@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="BaseTheme">
+        <attr name="collectionAdjusterTint" format="color" />
+    </declare-styleable>
+
     <declare-styleable name="AspectRatioImageView">
         <attr name="ratioType" format="enum">
             <enum name="width" value="0" />

@@ -2,14 +2,19 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection.adapter
 
 import android.content.Context
 import android.view.ViewGroup
+import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 
 
-class CollectionRecyclerAdapter(context: Context) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
+class CollectionRecyclerAdapter(
+        context: Context,
+        private val migrateClicks: Relay<Unit>,
+        private val dismissClicks: () -> Unit
+) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
-        return UiViewHolder.create(itemView, viewType)
+        return UiViewHolder.create(itemView, viewType, migrateClicks, dismissClicks)
     }
 
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {

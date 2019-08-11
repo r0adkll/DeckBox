@@ -30,7 +30,7 @@ class CollectionSetRecyclerAdapter(
     override fun getItemId(position: Int): Long {
         if (position != RecyclerView.NO_POSITION) {
             val item = items[position]
-            return item.card.hashCode().toLong()
+            return item.card.id.hashCode().toLong()
         }
         return super.getItemId(position)
     }

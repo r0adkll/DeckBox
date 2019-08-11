@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.data.database.dao
 import androidx.room.*
 import com.r0adkll.deckbuilder.arch.data.database.entities.CollectionCountEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -11,20 +12,19 @@ import io.reactivex.Single
 abstract class CollectionDao {
 
     @Query("SELECT * FROM collection")
+    abstract fun getAll(): Single<List<CollectionCountEntity>>
+
+    @Query("SELECT * FROM collection")
     abstract fun observeAll(): Flowable<List<CollectionCountEntity>>
 
     @Query("SELECT * FROM collection WHERE cardId = :id")
     abstract fun getCount(id: String): Flowable<CollectionCountEntity>
-
-    @Query("SELECT * FROM collection WHERE cardId IN(:ids)")
-    abstract fun getCounts(ids: List<String>): Flowable<List<CollectionCountEntity>>
 
     @Query("SELECT * FROM collection WHERE `set` = :set")
     abstract fun getCountForSet(set: String): Flowable<List<CollectionCountEntity>>
 
     @Query("SELECT * FROM collection WHERE series = :series")
     abstract fun getCountForSeries(series: String): Flowable<List<CollectionCountEntity>>
-
 
     @Query("SELECT * FROM collection WHERE cardId = :id")
     abstract fun count(id: String): CollectionCountEntity?
@@ -34,6 +34,9 @@ abstract class CollectionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCount(count: CollectionCountEntity): Long
+
+    @Query("DELETE FROM collection")
+    abstract fun deleteAll()
 
 
     @Transaction

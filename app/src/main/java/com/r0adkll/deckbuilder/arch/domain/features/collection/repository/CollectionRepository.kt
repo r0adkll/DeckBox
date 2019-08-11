@@ -19,12 +19,6 @@ interface CollectionRepository {
     fun getCount(cardId: String): Observable<CollectionCount>
 
     /**
-     * Get a list collection counts for multiple cards by their ids
-     * @param cardIds the list of card ids to get counts for
-     */
-    fun getCounts(cardIds: List<String>): Observable<List<CollectionCount>>
-
-    /**
      * Get a list of collection counts for an entire expansion set
      * @param set the expansion set code, i.e. sm9, that you want counts for
      */
@@ -40,11 +34,11 @@ interface CollectionRepository {
      * Increment the collection count of the provided pokemon card
      * @param card the card to increment the collection count of
      */
-    fun incrementCount(card: PokemonCard): Observable<CollectionCount>
+    fun incrementCount(card: PokemonCard): Observable<Unit>
 
     /**
      * Decrement the collection count of the provided pokemon card
      * @param card the card to decrement the collection count of
      */
-    fun decrementCount(card: PokemonCard): Observable<CollectionCount>
+    fun decrementCount(card: PokemonCard): Observable<Unit>
 }
