@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.ftinc.kit.kotlin.utils.ScreenUtils.smallestWidth
@@ -74,8 +75,8 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
                 .plus(CollectionModule(this))
                 .inject(this)
 
-        delegates += StatefulFragmentDelegate(presenter)
-        delegates += StatefulFragmentDelegate(renderer)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_RESUME)
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_RESUME)
     }
 
     override fun render(state: State) {
