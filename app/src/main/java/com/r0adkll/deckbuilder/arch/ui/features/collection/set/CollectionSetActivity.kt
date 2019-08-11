@@ -35,6 +35,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.adapter.CollectionSetRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetModule
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.bindParcelable
@@ -84,6 +86,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         }
 
         adapter.setOnItemLongClickListener { _, stackedPokemonCard ->
+            Analytics.event(Event.SelectContent.PokemonCard(stackedPokemonCard.card.id))
             startActivity(CardDetailActivity.createIntent(this, stackedPokemonCard.card))
             true
         }
@@ -133,10 +136,18 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     override fun addCard(): Observable<List<PokemonCard>> {
         return addCardClicks
+                .doOnNext {
+                    it.forEach { card ->
+                        Analytics.event(Event.SelectContent.Collection.Increment(card.id))
+                    }
+                }
     }
 
     override fun removeCard(): Observable<PokemonCard> {
         return removeCardClicks
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Collection.Decrement(it.id))
+                }
     }
 
     override fun showOverallProgress(progress: Float) {
@@ -185,7 +196,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
                                 setNavigationColor(it)
                             }
                         }
-                        "sm9" -> {
+                        "sm9", "sm10", "sm11" -> {
                             backdrop.setImageResource(R.drawable.dr_smtu_background)
                             setNavigationColor(Color.BLACK)
                         }
