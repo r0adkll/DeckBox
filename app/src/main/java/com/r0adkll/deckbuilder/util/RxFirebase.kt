@@ -6,6 +6,8 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -36,6 +38,31 @@ object RxFirebase {
 
                 val items = querySnapshot!!.toObjects(T::class.java)
                 source.onNext(items)
+            }
+
+            source.setCancellable {
+                registration.remove()
+            }
+
+        }, BackpressureStrategy.BUFFER)
+    }
+
+    inline fun <reified T : Any> Query.observeAs(crossinline mapper: (QueryDocumentSnapshot) -> T): Flowable<List<T>> {
+        return Flowable.create({ source ->
+
+            val registration = this.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if (firebaseFirestoreException != null) {
+                    source.onError(firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+
+                val items = querySnapshot?.map { queryDocumentSnapshot ->
+                    mapper(queryDocumentSnapshot)
+                }
+
+                if (!items.isNullOrEmpty()) {
+                    source.onNext(items)
+                }
             }
 
             source.setCancellable {

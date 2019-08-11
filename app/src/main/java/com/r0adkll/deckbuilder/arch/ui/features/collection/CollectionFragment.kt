@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.ftinc.kit.kotlin.utils.ScreenUtils.smallestWidth
+import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.CollectionRecyclerAdapter
@@ -15,7 +17,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.collection.di.CollectionModule
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
-import com.r0adkll.deckbuilder.util.ScreenUtils
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_collection.*
 import javax.inject.Inject
 
@@ -26,7 +28,9 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
 
     @Inject lateinit var presenter: CollectionPresenter
     @Inject lateinit var renderer: CollectionRenderer
+    @Inject lateinit var preferences: AppPreferences
 
+    private val migrateClicks = PublishRelay.create<Unit>()
     private lateinit var adapter: CollectionRecyclerAdapter
 
 
@@ -37,7 +41,11 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = CollectionRecyclerAdapter(requireContext())
+        adapter = CollectionRecyclerAdapter(requireContext(), migrateClicks,
+                dismissClicks = {
+                    preferences.showCollectionMigration.set(false)
+                }
+        )
         adapter.setEmptyView(collectionEmptyView)
         adapter.setOnItemClickListener {
             if (it is Item.ExpansionSet) {
@@ -52,6 +60,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
                 override fun getSpanSize(position: Int): Int {
                     val item = adapter.items[position]
                     return when (item) {
+                        is Item.Migration -> spanCount
                         is Item.ExpansionSeries -> spanCount
                         else -> 1
                     }
@@ -72,6 +81,10 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
     override fun render(state: State) {
         this.state = state
         renderer.render(state)
+    }
+
+    override fun migrateClicks(): Observable<Unit> {
+        return migrateClicks
     }
 
     override fun setItems(items: List<Item>) {

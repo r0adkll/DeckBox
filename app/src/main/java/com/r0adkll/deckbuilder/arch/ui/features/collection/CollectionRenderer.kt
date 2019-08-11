@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.ExpansionComparator
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.util.Schedulers
@@ -22,16 +23,25 @@ class CollectionRenderer(
         disposables += state
                 .map { s ->
                     val items = ArrayList<Item>()
+
+                    if (s.counts.any { it.isSourceOld } && s.isMigrationNeeded) {
+                        items += Item.Migration(s.isMigrationInProgress, s.migrationError)
+                    }
+
                     val series = s.expansions
                             .sortedWith(ExpansionComparator())
                             .groupBy { it.series }
                     series.forEach { (series, expansions) ->
-                        val seriesCount = s.counts.filter { it.series == series && it.count > 0}.size
+                        val seriesCount = s.counts.filter { it.series == series && it.count > 0 && !it.isSourceOld }.size
                         val seriesTotal = expansions.sumBy { it.totalCards }
                         val seriesCompletion = (seriesCount.toFloat() / seriesTotal.toFloat()).coerceIn(0f, 1f)
                         items += Item.ExpansionSeries(series, seriesCompletion)
                         items += expansions.map { expansion ->
-                            val setCount = s.counts.filter { it.set == expansion.code && it.count > 0 }.size
+                            val setCount = s.counts.filter {
+                                it.set == expansion.code
+                                        && it.count > 0
+                                        && !it.isSourceOld
+                            }.size
                             Item.ExpansionSet(expansion, setCount)
                         }
                     }
@@ -46,7 +56,7 @@ class CollectionRenderer(
         disposables += state
                 .map { s ->
                     val totalCards = s.expansions.sumBy { it.totalCards }
-                    val progress = s.counts.size
+                    val progress = s.counts.filter { !it.isSourceOld && it.count > 0 }.size
                     progress.toFloat() / totalCards.toFloat()
                 }
                 .distinctUntilChanged()

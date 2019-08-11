@@ -242,7 +242,7 @@
     <string name="pref_cache_manage_title">Offline data</string>
     <string name="pref_cache_manage_summary">Manage your cached card and image data</string>
     <string name="account_migration_started">Uploading decks…</string>
-    <string name="account_migration_finished">Decks uploaded!</string>
+    <string name="account_migration_finished">Account migrated!</string>
     <string name="deck_quickstart_title">Get started!</string>
     <string name="deck_quickstart_message_extended">Start building your decks by choosing from this list of recent tournament winners to get an edge on your opponents.</string>
     <string name="pref_help_quickstart_title">Reset quick start</string>
@@ -271,4 +271,9 @@
     <string name="card_detail_collection_count_format">%d in Collection</string>
     <string name="format_unlimited">Unlimited</string>
     <string name="card_detail_collection_count">Collection amount</string>
+    <string name="collection_migration_title">Migration needed</string>
+    <string name="collection_migration_message">Due to a change in how your collection counts are stored and you\'ll need to migrate to the new format to keep your collection intact.</string>
+    <string name="action_migrate">Migrate</string>
+    <string name="collection_migration_loading_message">Migrating your collection…</string>
+    <string name="action_retry">Retry</string>
 </resources>

@@ -25,11 +25,6 @@ class DefaultCollectionRepository(
         else -> firestoreCollectionCache.getCount(cardId)
     }
 
-    override fun getCounts(cardIds: List<String>): Observable<List<CollectionCount>> = when(isOffline()) {
-        true -> roomCollectionCache.getCounts(cardIds)
-        else -> firestoreCollectionCache.getCounts(cardIds)
-    }
-
     override fun getCountForSet(set: String): Observable<List<CollectionCount>> = when(isOffline()) {
         true -> roomCollectionCache.getCountForSet(set)
         else -> firestoreCollectionCache.getCountForSet(set)
@@ -40,12 +35,12 @@ class DefaultCollectionRepository(
         else -> firestoreCollectionCache.getCountForSeries(series)
     }
 
-    override fun incrementCount(card: PokemonCard): Observable<CollectionCount> = when(isOffline()) {
+    override fun incrementCount(card: PokemonCard): Observable<Unit> = when(isOffline()) {
         true -> roomCollectionCache.incrementCount(card)
         else -> firestoreCollectionCache.incrementCount(card)
     }
 
-    override fun decrementCount(card: PokemonCard): Observable<CollectionCount> = when(isOffline()) {
+    override fun decrementCount(card: PokemonCard): Observable<Unit> = when(isOffline()) {
         true -> roomCollectionCache.decrementCount(card)
         else -> firestoreCollectionCache.decrementCount(card)
     }

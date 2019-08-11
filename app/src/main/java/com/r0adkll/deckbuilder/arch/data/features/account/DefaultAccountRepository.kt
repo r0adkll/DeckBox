@@ -1,18 +1,23 @@
 package com.r0adkll.deckbuilder.arch.data.features.account
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.features.collection.cache.FirestoreCollectionCache
+import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectionCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.RoomDeckCache
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
 
 class DefaultAccountRepository @Inject constructor(
         val roomDeckCache: RoomDeckCache,
+        val roomCollectionCache: RoomCollectionCache,
         val firestoreDeckCache: FirestoreDeckCache,
+        val firestoreCollectionCache: FirestoreCollectionCache,
         val preferences: AppPreferences,
         val schedulers: Schedulers
 ): AccountRepository {
@@ -26,6 +31,9 @@ class DefaultAccountRepository @Inject constructor(
         }
     }
 
+    override fun migrateLegacyCollectionCounts(): Observable<Unit> {
+        return firestoreCollectionCache.migrateLegacyCounts()
+    }
 
     private fun migrateLegacyOfflineAccount(): Observable<Unit> {
         return firestoreDeckCache.migrateOfflineDecks()
@@ -33,17 +41,36 @@ class DefaultAccountRepository @Inject constructor(
                 .subscribeOn(schedulers.firebase)
     }
 
-
     private fun migrateOfflineAccount(): Observable<Unit> {
+        val migrateDecks = migrateOfflineDecks()
+        val migrateCollectionCounts = migrateOfflineCollectionCounts()
+        return Observable.zip(migrateDecks, migrateCollectionCounts, BiFunction { _, _ ->
+            preferences.offlineId.delete()
+        })
+    }
+
+    private fun migrateOfflineDecks(): Observable<Unit> {
         return roomDeckCache.getDecks()
                 .take(1)
                 .flatMap {
                     firestoreDeckCache.putDecks(it)
                             .subscribeOn(schedulers.firebase)
                             .observeOn(schedulers.database)
-                            .doOnNext { _ ->
-                                roomDeckCache.deleteAllDecks()
-                                preferences.offlineId.delete()
+                            .doOnNext {
+                                roomDeckCache.deleteAll()
+                            }
+                }
+                .subscribeOn(schedulers.database)
+    }
+
+    private fun migrateOfflineCollectionCounts(): Observable<Unit> {
+        return roomCollectionCache.getAll()
+                .flatMapObservable {
+                    firestoreCollectionCache.putCounts(it)
+                            .subscribeOn(schedulers.firebase)
+                            .observeOn(schedulers.database)
+                            .doOnNext {
+                                roomCollectionCache.deleteAll()
                             }
                 }
                 .subscribeOn(schedulers.database)

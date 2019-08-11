@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.data
 import android.content.SharedPreferences
 import androidx.annotation.VisibleForTesting
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.f2prateek.rx.preferences2.Preference as RxPreference
 import com.ftinc.kit.kotlin.extensions.Preferences
 import com.ftinc.kit.kotlin.extensions.Preferences.*
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
@@ -30,6 +31,7 @@ open class AppPreferences @Inject constructor(
         const val KEY_PLAYER_AGE_DIVISION = "pref_player_age_division"
         const val KEY_PLAYER_DOB = "pref_player_dob"
         const val KEY_PREVIEW_VERSION = "pref_last_preview_version"
+        const val KEY_COLLECTION_MIGRATION = "pref_collection_migration"
 
         const val KEY_LAST_VERSION = "pref_last_version"
         const val KEY_DEVICE_ID = "pref_local_offline_device_id"
@@ -45,6 +47,7 @@ open class AppPreferences @Inject constructor(
     open val offlineExpansions by ReactiveStringSetPreference(KEY_OFFLINE_EXPANSIONS)
     open val offlineOutline by ReactiveBooleanPreference(KEY_OFFLINE_OUTLINE, true)
     open val quickStart by ReactiveBooleanPreference(KEY_QUICKSTART, true)
+    open val showCollectionMigration by ReactiveBooleanPreference(KEY_COLLECTION_MIGRATION, true)
     open val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
     open val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)
 
