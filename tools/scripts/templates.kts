@@ -6,7 +6,7 @@
 
 @file:DependsOn("org.jsoup:jsoup:1.11.3")
 @file:DependsOn("com.google.code.gson:gson:2.8.5")
-@file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.15")
+@file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.19")
 @file:DependsOn("com.google.firebase:firebase-admin:6.5.0")
 @file:MavenRepository("maven-central","http://central.maven.org/maven2/")
 
