@@ -45,5 +45,10 @@ class DefaultCollectionRepository(
         else -> firestoreCollectionCache.decrementCount(card)
     }
 
+    override fun incrementCounts(cards: List<PokemonCard>): Observable<Unit> = when(isOffline()) {
+        true -> roomCollectionCache.incrementCounts(cards)
+        else -> firestoreCollectionCache.incrementCounts(cards)
+    }
+
     private fun isOffline(): Boolean = preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank()
 }

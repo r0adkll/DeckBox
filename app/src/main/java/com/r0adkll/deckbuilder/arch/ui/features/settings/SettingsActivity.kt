@@ -27,6 +27,7 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectionCache
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
@@ -41,6 +42,7 @@ import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -68,6 +70,7 @@ class SettingsActivity : BaseActivity() {
 
         @Inject lateinit var preferences: AppPreferences
         @Inject lateinit var accountRepository: AccountRepository
+        @Inject lateinit var roomCollectionCache: RoomCollectionCache
 
         private val disposables = CompositeDisposable()
         private var migrationSnackbar: Snackbar? = null
@@ -106,6 +109,28 @@ class SettingsActivity : BaseActivity() {
         override fun onPreferenceTreeClick(preference: Preference): Boolean {
             return when(preference.key) {
                 "pref_account_profile" -> {
+                    true
+                }
+                "pref_account_migrate_collection" -> {
+                    // Now we need to migrate any existing local decks to their account
+                    view?.let {
+                        migrationSnackbar = Snackbar.make(it, R.string.account_migration_started, Snackbar.LENGTH_INDEFINITE)
+                        migrationSnackbar?.show()
+                    }
+
+                    disposables += accountRepository.migrateCollections()
+                            .subscribe({
+                                setupPreferences()
+                                view?.let { v ->
+                                    migrationSnackbar = Snackbar.make(v, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
+                                    migrationSnackbar?.show()
+                                }
+                            }, { e ->
+                                view?.let { v ->
+                                    migrationSnackbar = Snackbar.make(v, e.localizedMessage, Snackbar.LENGTH_SHORT)
+                                    migrationSnackbar?.show()
+                                }
+                            })
                     true
                 }
                 "pref_about_privacy_policy" -> {
@@ -200,6 +225,7 @@ class SettingsActivity : BaseActivity() {
 
         private fun setupPreferences() {
             val profilePref = findPreference("pref_account_profile") as ProfilePreference
+            val migrateCollectionPref = findPreference("pref_account_migrate_collection")
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
                 if (user.isAnonymous) {
@@ -209,6 +235,15 @@ class SettingsActivity : BaseActivity() {
                     profilePref.avatarUrl = user.photoUrl
                     profilePref.title = user.displayName
                     profilePref.summary = user.email
+
+                    disposables += roomCollectionCache.getAll()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                migrateCollectionPref.isVisible = it.isNotEmpty()
+                            }, {
+                                Timber.e(it, "Error checking room collection cache")
+                            })
                 }
 
                 val linkAccount = findPreference("pref_account_link")
@@ -315,6 +350,7 @@ class SettingsActivity : BaseActivity() {
                                     disposables += accountRepository.migrateAccount()
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe({
+                                                setupPreferences()
                                                 view?.let { v ->
                                                     migrationSnackbar = Snackbar.make(v, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
                                                     migrationSnackbar?.show()

@@ -61,6 +61,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     private val addCardClicks = PublishRelay.create<List<PokemonCard>>()
     private val removeCardClicks = PublishRelay.create<PokemonCard>()
+    private val incrementSetClicks = PublishRelay.create<Unit>()
 
     private lateinit var adapter: CollectionSetRecyclerAdapter
     private var statusBarHeight: Int = 0
@@ -110,8 +111,8 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
-            R.id.action_filter -> {
-                // TODO: Show filter
+            R.id.action_add_all -> {
+                incrementSetClicks.accept(Unit)
                 true
             }
             else -> false
@@ -148,6 +149,10 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
                 .doOnNext {
                     Analytics.event(Event.SelectContent.Collection.Decrement(it.id))
                 }
+    }
+
+    override fun addSet(): Observable<Unit> {
+        return incrementSetClicks
     }
 
     override fun showOverallProgress(progress: Float) {

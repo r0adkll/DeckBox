@@ -54,6 +54,12 @@ class RoomCollectionCache @Inject constructor(
                 .map { Unit }
     }
 
+    override fun incrementCounts(cards: List<PokemonCard>): Observable<Unit> {
+        return Observable.fromCallable {
+            db.collection().incrementCounts(cards)
+        }.subscribeOn(schedulers.database)
+    }
+
     fun getAll(): Single<List<CollectionCount>> {
         return db.collection().getAll()
                 .map { it.map(EntityMapper::to) }
