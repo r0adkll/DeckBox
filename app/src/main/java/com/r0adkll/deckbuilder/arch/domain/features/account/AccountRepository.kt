@@ -6,5 +6,6 @@ import io.reactivex.Observable
 interface AccountRepository {
 
     fun migrateAccount(): Observable<Unit>
+    fun migrateCollections(): Observable<Unit>
     fun migrateLegacyCollectionCounts(): Observable<Unit>
 }

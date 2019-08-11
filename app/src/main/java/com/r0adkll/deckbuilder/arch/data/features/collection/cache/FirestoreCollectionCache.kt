@@ -9,6 +9,7 @@ import com.google.firebase.firestore.core.FirestoreClient
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.collection.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.data.features.collection.model.CollectionCountEntity
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.util.RxFirebase
@@ -121,6 +122,41 @@ class FirestoreCollectionCache @Inject constructor(
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
+    override fun incrementCounts(cards: List<PokemonCard>): Observable<Unit> {
+        return getUserCardCollection()?.let { collection ->
+            FirebaseFirestore.getInstance().runTransaction { transaction ->
+                val entities = ArrayList<CollectionCountEntity>()
+
+                cards.forEach { card ->
+                    try {
+                        val document = transaction.get(collection.document(card.id))
+                        val entity = document.toObject(CollectionCountEntity::class.java)
+                        if (entity != null) {
+                            entity.count += 1
+                            entities += entity
+                        } else {
+                            entities += CollectionCountEntity(
+                                    card.id, 1, card.expansion!!.code, card.expansion.series
+                            )
+                        }
+                    } catch (e: Exception) {
+                        if (e is FirebaseFirestoreException) {
+                            if (e.code == Code.NOT_FOUND) {
+                                entities += CollectionCountEntity(
+                                        card.id, 1, card.expansion!!.code, card.expansion.series
+                                )
+                            }
+                        }
+                    }
+                }
+
+                entities.forEach { entity ->
+                    transaction.set(collection.document(entity.cardId), entity)
+                }
+            }.asObservable(schedulers.firebaseExecutor)
+        } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
+    }
+
     fun migrateLegacyCounts(): Observable<Unit> {
         return getUserCardCollection()?.let { collection ->
             collection.get()
@@ -183,7 +219,7 @@ class FirestoreCollectionCache @Inject constructor(
             val batches = ArrayList<WriteBatch>(batchCount)
 
             for (i in 0 until batchCount) {
-                Timber.i("Legacy collection counts(${counts.size}) found! Migrating...")
+                Timber.i("Collection counts(${counts.size}) found! Migrating...")
                 val batch = FirebaseFirestore.getInstance().batch()
 
                 val start = i * 500

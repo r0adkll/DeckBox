@@ -41,4 +41,10 @@ interface CollectionRepository {
      * @param card the card to decrement the collection count of
      */
     fun decrementCount(card: PokemonCard): Observable<Unit>
+
+    /**
+     * Mass increment a list of cards
+     * @param cards the list of cards to increment
+     */
+    fun incrementCounts(cards: List<PokemonCard>): Observable<Unit>
 }

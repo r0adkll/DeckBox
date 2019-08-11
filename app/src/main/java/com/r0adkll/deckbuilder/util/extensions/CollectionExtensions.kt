@@ -53,7 +53,6 @@ fun <Item> List<Item>.findAndUpdate(selector: (Item) -> Boolean, updater: (Item?
         if (selector(items[index])) {
             items[index] = updater(items[index])
             didReplace = true
-            break
         }
     }
 
