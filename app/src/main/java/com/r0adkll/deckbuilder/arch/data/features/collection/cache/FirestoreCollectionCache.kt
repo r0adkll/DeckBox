@@ -21,6 +21,8 @@ import io.reactivex.functions.Function
 import org.w3c.dom.Entity
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 
 class FirestoreCollectionCache @Inject constructor(
@@ -132,14 +134,14 @@ class FirestoreCollectionCache @Inject constructor(
 
                         val legacyCounts = counts.filter { count -> count.second.isSourceOld }
                         if (legacyCounts.isNotEmpty()) {
-                            val batchCount = legacyCounts.size / 250 // Since we are writing and deleting each count
+                            val batchCount = ceil(legacyCounts.size.toFloat() / 250f).toInt() // Since we are writing and deleting each count
                             val batches = ArrayList<WriteBatch>(batchCount)
                             for (i in 0 until batchCount) {
-                                Timber.i("Legacy collection counts found! Migrating...")
+                                Timber.i("Legacy collection counts(${legacyCounts.size}) found! Migrating...")
                                 val batch = FirebaseFirestore.getInstance().batch()
 
                                 val start = i * 250
-                                val end = start + 250
+                                val end = start + (legacyCounts.size - start).coerceAtMost(250)
                                 for (index in start until end) {
                                     val legacyCountPair = legacyCounts[index]
                                     Timber.d("Migrating Id(${legacyCountPair.first}) to /collection/${legacyCountPair.second.id}")
@@ -157,10 +159,13 @@ class FirestoreCollectionCache @Inject constructor(
                                 batches += batch
                             }
 
-                            val commits = batches.map { it.commit().asVoidObservable(schedulers.firebaseExecutor) }
-                            Observable.zip(commits, Function<Array<Any>, Unit> {
-                                Unit
-                            })
+                            if (batches.isNotEmpty()) {
+                                val commits = batches.map { it.commit().asVoidObservable(schedulers.firebaseExecutor) }
+                                Observable.zip(commits) { Unit }
+                            } else {
+                                Timber.i("No batch changes made, Aborting...")
+                                Observable.just(Unit)
+                            }
                         } else {
                             Timber.i("No legacy count objects found. Aborting...")
                             Observable.just(Unit)
@@ -174,19 +179,36 @@ class FirestoreCollectionCache @Inject constructor(
      */
     fun putCounts(counts: List<CollectionCount>): Observable<Unit> {
         return getUserCardCollection()?.let { collection ->
-            val batch = FirebaseFirestore.getInstance().batch()
+            val batchCount = ceil(counts.size.toFloat() / 500f).toInt()
+            val batches = ArrayList<WriteBatch>(batchCount)
 
-            counts.forEach { count ->
-                val documentRef = collection.document(count.id)
-                batch.set(documentRef, CollectionCountEntity(
-                        count.id,
-                        count.count,
-                        count.set,
-                        count.series
-                ))
+            for (i in 0 until batchCount) {
+                Timber.i("Legacy collection counts(${counts.size}) found! Migrating...")
+                val batch = FirebaseFirestore.getInstance().batch()
+
+                val start = i * 500
+                val end = start + (counts.size - start).coerceAtMost(500)
+                for (index in start until end) {
+                    val count = counts[index]
+                    val documentRef = collection.document(count.id)
+                    batch.set(documentRef, CollectionCountEntity(
+                            count.id,
+                            count.count,
+                            count.set,
+                            count.series
+                    ))
+                }
+
+                batches += batch
             }
 
-            batch.commit().asVoidObservable(schedulers.firebaseExecutor)
+            if (batches.isNotEmpty()) {
+                val commits = batches.map { it.commit().asVoidObservable(schedulers.firebaseExecutor) }
+                Observable.zip(commits) { Unit }
+            } else {
+                Timber.i("No batch changes made, Aborting...")
+                Observable.just(Unit)
+            }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 

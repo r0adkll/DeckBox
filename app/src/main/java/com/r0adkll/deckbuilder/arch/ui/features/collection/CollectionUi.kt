@@ -40,7 +40,7 @@ interface CollectionUi : Ui<CollectionUi.State, CollectionUi.State.Change> {
             is Change.Error -> copy(error = change.description, isLoading = false)
             is Change.Expansions -> copy(expansions = change.expansions, isLoading = false)
             is Change.Counts -> copy(counts = change.counts, isLoading = false)
-            is Change.MigrationNeeded -> copy(isMigrationNeeded = change.isMigrationNeeded)
+            is Change.MigrationNeeded -> copy(isMigrationNeeded = change.isMigrationNeeded, isMigrationInProgress = if (!change.isMigrationNeeded) false else isMigrationInProgress)
             Change.IsMigrationInProgress -> copy(isMigrationInProgress = true)
             is Change.MigrationError -> copy(migrationError = change.description, isMigrationInProgress = false)
         }
