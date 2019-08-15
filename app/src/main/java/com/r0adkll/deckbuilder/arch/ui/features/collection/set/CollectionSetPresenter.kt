@@ -54,8 +54,17 @@ class CollectionSetPresenter @Inject constructor(
                             .onErrorReturn { Change.Error("Unable to add card to collection") }
                 }
 
+        val addSet = intentions.addSet()
+                .flatMap {
+                    collectionRepository.incrementCounts(ui.state.cards)
+                            .map { Change.CountsUpdated(emptyList()) as Change }
+                            .startWith(Change.CountsChanged(ui.state.cards, 1))
+                            .onErrorReturn { Change.Error("Something went wrong incrementing set in collection") }
+                }
+
         return cards.mergeWith(counts)
                 .mergeWith(addCard)
                 .mergeWith(removeCard)
+                .mergeWith(addSet)
     }
 }

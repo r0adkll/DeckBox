@@ -23,6 +23,7 @@ interface CollectionSetUi : Ui<State, Change> {
 
         fun addCard(): Observable<List<PokemonCard>>
         fun removeCard(): Observable<PokemonCard>
+        fun addSet(): Observable<Unit>
     }
 
     interface Actions : BaseActions {
@@ -59,6 +60,22 @@ interface CollectionSetUi : Ui<State, Change> {
                                 change.card.expansion?.series ?: it?.series ?: ""
                         )
                     }))
+            is Change.CountsChanged -> {
+                var changedCounts = counts
+                change.cards.forEach { changedCard ->
+                    changedCounts = counts.findAndUpdate(
+                            { it.id == changedCard.id && !it.isSourceOld },
+                            {
+                                CollectionCount(
+                                        changedCard.id,
+                                        (it?.count ?: 0) + change.count,
+                                        changedCard.expansion?.code ?: it?.set ?: "",
+                                        changedCard.expansion?.series ?: it?.series ?: ""
+                                )
+                            })
+                }
+                copy(counts = changedCounts)
+            }
         }
 
         sealed class Change(logText: String): Ui.State.Change(logText) {
@@ -68,6 +85,7 @@ interface CollectionSetUi : Ui<State, Change> {
             class Counts(val counts: List<CollectionCount>) : Change("network -> counts loaded (${counts.size})")
             class CountsUpdated(val counts: List<CollectionCount>) : Change("network -> counts updated (${counts.size})")
             class CountChanged(val card: PokemonCard, val count: Int): Change("user -> count changed ($count)")
+            class CountsChanged(val cards: List<PokemonCard>, val count: Int): Change("user -> counts changed(${cards.size}, count=$count)")
         }
 
         override fun toString(): String {

@@ -18,6 +18,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.collection.di.CollectionModule
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_collection.*
 import javax.inject.Inject
@@ -50,6 +52,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
         adapter.setEmptyView(collectionEmptyView)
         adapter.setOnItemClickListener {
             if (it is Item.ExpansionSet) {
+                Analytics.event(Event.SelectContent.CollectionExpansionSet(it.expansion.code))
                 startActivity(CollectionSetActivity.createIntent(requireContext(), it.expansion))
             }
         }

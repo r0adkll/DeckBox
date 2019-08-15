@@ -58,7 +58,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
         adapter.setOnItemClickListener {
             when(it) {
                 is Item.ExpansionSet -> {
-                    Analytics.event(Event.SelectContent.Action("expansion", it.expansion.name))
+                    Analytics.event(Event.SelectContent.BrowseExpansionSet(it.expansion.code))
                     val intent = SetBrowserActivity.createIntent(activity!!, it.expansion)
                     startActivity(intent)
                 }

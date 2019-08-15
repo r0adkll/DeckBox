@@ -19,6 +19,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImageRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckImageModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
+import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.reactivex.Observable
@@ -93,6 +95,9 @@ class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImag
 
     override val selectDeckImageClicks: Observable<Unit>
         get() = actionSelect.clicks().uiDebounce()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Deck.EditImage)
+                }
 
 
     override fun setDeckImages(images: List<DeckImage>) {

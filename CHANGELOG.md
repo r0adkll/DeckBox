@@ -5,6 +5,7 @@
 * Fixed incorrect age division years on tournament exports
 * Fixed some visual issues with deck images on decks screen
 * Fixed order of tournament decks in quick start card
+* Changed / Updated Deck analytic instrumentation
 
 # 1.8.4
 * Hotfix for SDK search error causing empty results and issues finding newer cards

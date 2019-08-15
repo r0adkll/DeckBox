@@ -440,6 +440,9 @@ class DeckBuilderActivity : BaseActivity(),
         return inputDeckName.textChanges()
                 .map { it.toString() }
                 .uiDebounce()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Deck.EditName)
+                }
     }
 
 
@@ -447,6 +450,9 @@ class DeckBuilderActivity : BaseActivity(),
         return inputDeckDescription.textChanges()
                 .map { it.toString() }
                 .uiDebounce()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Deck.EditDescription)
+                }
     }
 
 
@@ -454,6 +460,9 @@ class DeckBuilderActivity : BaseActivity(),
         return collectionSwitch.checkedChanges()
                 .skipInitialValue()
                 .uiDebounce()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Deck.EditCollectionOnly(it))
+                }
     }
 
 

@@ -191,10 +191,16 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     override fun incrementCollectionCount(): Observable<Unit> {
         return actionAddCollection.clicks()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Collection.Increment(card?.id ?: ""))
+                }
     }
 
     override fun decrementCollectionCount(): Observable<Unit> {
         return actionRemoveCollection.clicks()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Collection.Decrement(card?.id ?: ""))
+                }
     }
 
     override fun showCopies(count: Int?) {

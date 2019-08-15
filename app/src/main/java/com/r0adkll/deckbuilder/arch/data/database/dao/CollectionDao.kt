@@ -69,4 +69,11 @@ abstract class CollectionDao {
         }
         return count
     }
+
+    @Transaction
+    open fun incrementCounts(cards: List<PokemonCard>) {
+        cards.forEach { card ->
+            incrementCount(card)
+        }
+    }
 }

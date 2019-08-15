@@ -73,7 +73,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
         adapter.itemClickListener = { item ->
             if (item is Item.DeckItem) {
-                Analytics.event(Event.SelectContent.Deck(item.validatedDeck.deck.id))
+                Analytics.event(Event.SelectContent.Deck.Opened)
 
                 // Update shortcuts
                 Shortcuts.addDeckShortcut(requireContext(), item.validatedDeck.deck)

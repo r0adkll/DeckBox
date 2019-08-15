@@ -31,6 +31,10 @@ class DefaultAccountRepository @Inject constructor(
         }
     }
 
+    override fun migrateCollections(): Observable<Unit> {
+        return migrateOfflineCollectionCounts()
+    }
+
     override fun migrateLegacyCollectionCounts(): Observable<Unit> {
         return firestoreCollectionCache.migrateLegacyCounts()
     }
