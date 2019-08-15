@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.community.model.DeckTemplate
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.ValidatedDeck
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
@@ -48,7 +49,7 @@ interface DecksUi : StateRenderer<DecksUi.State> {
             val isLoading: Boolean,
             val hasLoadedOnce: Boolean,
             val error: String?,
-            val decks: List<Deck>,
+            val decks: List<ValidatedDeck>,
             val preview: ExpansionPreview?,
             val quickStart: QuickStart?,
             val isSessionLoading: String?,
@@ -73,11 +74,11 @@ interface DecksUi : StateRenderer<DecksUi.State> {
         sealed class Change(val logText: String) {
             object IsLoading : Change("network -> loading decks")
             class Error(val description: String) : Change("error -> $description")
-            class DecksLoaded(val decks: List<Deck>) : Change("network -> decks loaded ${decks.size}")
+            class DecksLoaded(val decks: List<ValidatedDeck>) : Change("network -> decks loaded ${decks.size}")
             class ShowPreview(val preview: ExpansionPreview) : Change("user -> show preview (version: ${preview.version}, expansion: ${preview.code})")
             class IsSessionLoading(val deckId: String) : Change("user -> creating session for ($deckId)")
             class SessionLoaded(val sessionId: Long) : Change("user -> session loaded $sessionId")
-            class ShowQuickStart(val quickStart: DecksUi.QuickStart) : Change("network -> show quickstart templates: ${quickStart.templates.size}")
+            class ShowQuickStart(val quickStart: QuickStart) : Change("network -> show quickstart templates: ${quickStart.templates.size}")
             object ClearSession : Change("self -> clearing session")
             object HideQuickStart : Change("user -> hide quickstart")
             object HidePreview : Change("user -> hide preview")

@@ -3,6 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.home.di
 
 import com.r0adkll.deckbuilder.arch.ui.features.browser.di.BrowseComponent
 import com.r0adkll.deckbuilder.arch.ui.features.browser.di.BrowseModule
+import com.r0adkll.deckbuilder.arch.ui.features.collection.di.CollectionComponent
+import com.r0adkll.deckbuilder.arch.ui.features.collection.di.CollectionModule
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksComponent
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
@@ -18,4 +20,5 @@ interface HomeComponent {
 
     fun plus(module: DecksModule): DecksComponent
     fun plus(module: BrowseModule): BrowseComponent
+    fun plus(module: CollectionModule): CollectionComponent
 }

@@ -15,6 +15,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.util.extensions.notifyingField
 
 
 class StackedPokemonRecyclerAdapter(
@@ -23,11 +24,8 @@ class StackedPokemonRecyclerAdapter(
         val removeCardClicks: Relay<PokemonCard> = PublishRelay.create()
 ) : ListRecyclerAdapter<StackedPokemonCard, PokemonCardViewHolder>(context) {
 
-    var isEditing: Boolean = false
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    var isEditing: Boolean by notifyingField(false)
+    var isCollectionEnabled: Boolean by notifyingField(false)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
@@ -40,7 +38,13 @@ class StackedPokemonRecyclerAdapter(
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         super.onBindViewHolder(vh, i)
         val card = items[i]
-        vh.bind(card.card, card.count, isEditMode = isEditing)
+        vh.bind(
+                card.card,
+                card.count,
+                isEditMode = isEditing,
+                isCollectionMode = isCollectionEnabled,
+                collectionCount = card.collection ?: 0
+        )
         vh.itemView.setOnLongClickListener { v ->
             val c = v.findViewById<PokemonCardView>(R.id.card)
             c.startDrag(true)
@@ -50,7 +54,7 @@ class StackedPokemonRecyclerAdapter(
 
 
     override fun getItemId(position: Int): Long {
-        if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+        if (position != RecyclerView.NO_POSITION) {
             val item = items[position]
             return item.card.hashCode().toLong()
         }

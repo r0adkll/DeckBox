@@ -40,3 +40,8 @@ fun Calendar.setDate(year: Int, month: Int, dayOfMonth: Int): Calendar {
 fun String.iso8601(): Long {
     return ISO8601Utils.parse(this, ParsePosition(0)).time
 }
+
+fun String.fromReleaseDate(): Long {
+    val df = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+    return df.parse(this).time
+}

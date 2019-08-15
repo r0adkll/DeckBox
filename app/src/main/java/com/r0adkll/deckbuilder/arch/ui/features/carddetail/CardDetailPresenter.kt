@@ -1,7 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
@@ -19,10 +21,12 @@ class CardDetailPresenter @Inject constructor(
         val ui: CardDetailUi,
         val intentions: CardDetailUi.Intentions,
         val repository: CardRepository,
+        val collectionRepository: CollectionRepository,
         val editor: EditRepository,
         val validator: DeckValidator
 ) : Presenter() {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         val observeSession = ui.state.sessionId?.let {
@@ -36,6 +40,10 @@ class CardDetailPresenter @Inject constructor(
 
         val loadValidation = validator.validate(listOf(ui.state.card!!))
                 .map { Change.Validated(it) as Change }
+                .onErrorReturn(handleUnknownError)
+
+        val loadCollectionCount = collectionRepository.getCount(ui.state.card!!.id)
+                .map { Change.CollectionCountChanged(it.count) as Change }
                 .onErrorReturn(handleUnknownError)
 
         val loadVariants = repository.search(ui.state.card!!.supertype, ui.state.card!!.name)
@@ -52,6 +60,22 @@ class CardDetailPresenter @Inject constructor(
         val loadEvolvesTo = repository.search(ui.state.card!!.supertype, "", Filter(evolvesFrom = ui.state.card!!.name))
                 .map { Change.EvolvesToLoaded(it) as Change }
                 .onErrorReturn(handleUnknownError)
+
+        val incrementCollectionCount = intentions.incrementCollectionCount()
+                .flatMap {
+                    collectionRepository.incrementCount(ui.state.card!!)
+                            .map { Change.CollectionCountUpdated(0) as Change }
+                            .startWith(Change.CollectionCountUpdated(1))
+                            .onErrorReturn { Change.CollectionCountUpdated(-1) }
+                }
+
+        val decrementCollectionCount = intentions.decrementCollectionCount()
+                .flatMap {
+                    collectionRepository.decrementCount(ui.state.card!!)
+                            .map { Change.CollectionCountUpdated(0) as Change }
+                            .startWith(Change.CollectionCountUpdated(-1))
+                            .onErrorReturn { Change.CollectionCountUpdated(1) }
+                }
 
         disposables += intentions.addCardClicks()
                 .flatMap { editor.addCards(ui.state.sessionId!!, listOf(ui.state.card!!)) }
@@ -70,8 +94,11 @@ class CardDetailPresenter @Inject constructor(
         val merged = observeSession
                 .mergeWith(loadVariants)
                 .mergeWith(loadValidation)
+                .mergeWith(loadCollectionCount)
                 .mergeWith(loadEvolves)
                 .mergeWith(loadEvolvesTo)
+                .mergeWith(incrementCollectionCount)
+                .mergeWith(decrementCollectionCount)
                 .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)

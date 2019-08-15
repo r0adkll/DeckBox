@@ -246,7 +246,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                                     setNavigationColor(it)
                                 }
                             }
-                            "sm9" -> {
+                            "sm9", "sm10", "sm11" -> {
                                 backdrop.setImageResource(R.drawable.dr_smtu_background)
                                 setNavigationColor(Color.BLACK)
                             }
@@ -269,7 +269,6 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 appbar?.navigationIcon?.setTint(color)
                 tabs.setTabTextColors(secondaryColor, color)
                 tabs.setSelectedTabIndicatorColor(color)
-
             } else {
                 val color = Color.WHITE
                 val secondaryColor = color(R.color.white70)

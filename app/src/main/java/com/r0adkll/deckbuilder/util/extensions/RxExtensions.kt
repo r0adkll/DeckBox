@@ -30,7 +30,6 @@ fun <T, R> Observable<T>.scanMap(initialValue: T, func2: (T, T) -> R): Observabl
             .map { func2.invoke(it[0], it[1]) }
 }
 
-
 data class Nullable<out T> constructor(val value: T?) {
     constructor() : this(null)
 
@@ -68,12 +67,12 @@ fun <T : Any, R : Any?> Observable<T>.mapNullable(func: (T) -> R?): Observable<N
 
 
 fun <T : Any> Observable<T>.uiDebounce(): Observable<T> {
-    return this.debounce(300, java.util.concurrent.TimeUnit.MILLISECONDS)
+    return this.debounce(300, TimeUnit.MILLISECONDS)
 }
 
 
 fun <T : Any> Observable<T>.uiDebounce(delayInMilliseconds: Long): Observable<T> {
-    return this.debounce(delayInMilliseconds, java.util.concurrent.TimeUnit.MILLISECONDS)
+    return this.debounce(delayInMilliseconds, TimeUnit.MILLISECONDS)
 }
 
 

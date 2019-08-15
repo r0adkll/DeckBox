@@ -34,7 +34,7 @@ class DefaultEditRepository @Inject constructor(
     override fun persistSession(sessionId: Long): Observable<Unit> {
         return cache.getSession(sessionId)
                 .flatMap { deck ->
-                    decks.persistDeck(deck.deckId, deck.cards, deck.name, deck.description, deck.image)
+                    decks.persistDeck(deck.deckId, deck.cards, deck.name, deck.description, deck.image, deck.collectionOnly)
                             .flatMap {
                                 cache.resetSession(sessionId)
                                         .subscribeOn(schedulers.database)
@@ -70,6 +70,12 @@ class DefaultEditRepository @Inject constructor(
 
     override fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit> {
         return cache.changeDeckImage(sessionId, image)
+                .subscribeOn(schedulers.database)
+    }
+
+
+    override fun changeCollectionOnly(sessionId: Long, collectionOnly: Boolean): Observable<Unit> {
+        return cache.changeCollectionOnly(sessionId, collectionOnly)
                 .subscribeOn(schedulers.database)
     }
 

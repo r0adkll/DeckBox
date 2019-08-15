@@ -10,7 +10,6 @@ import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import com.r0adkll.deckbuilder.arch.data.database.relations.DeckStackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
-import com.r0adkll.deckbuilder.arch.data.features.decks.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
@@ -47,7 +46,7 @@ abstract class DeckDao {
     abstract fun deleteDeckJoins(deckId: Long)
 
     @Query("DELETE FROM decks")
-    abstract fun deleteDecks()
+    abstract fun deleteAll()
 
     @Insert
     abstract fun insertDeck(deck: DeckEntity): Long
@@ -67,7 +66,8 @@ abstract class DeckDao {
                                  cards: List<PokemonCard>,
                                  name: String,
                                  description: String?,
-                                 image: DeckImage?): DeckEntity {
+                                 image: DeckImage?,
+                                 collectionOnly: Boolean): DeckEntity {
         // Insert Cards
         val cardsWithAttacks = cards.map { RoomEntityMapper.to(it) }
         insertCardsWithAttacks(cardsWithAttacks)
@@ -76,10 +76,10 @@ abstract class DeckDao {
         val deck: DeckEntity?
         if (id != null) {
             updateDeck(id, name, description, image?.uri)
-            deck = DeckEntity(id, name, description, image?.uri, System.currentTimeMillis())
+            deck = DeckEntity(id, name, description, image?.uri, collectionOnly, System.currentTimeMillis())
             deleteDeckJoins(id)
         } else {
-            deck = DeckEntity(0L, name, description, image?.uri, System.currentTimeMillis())
+            deck = DeckEntity(0L, name, description, image?.uri, collectionOnly, System.currentTimeMillis())
             deck.uid = insertDeck(deck)
         }
 
@@ -100,7 +100,7 @@ abstract class DeckDao {
     private fun duplicate(deck: Deck) {
         val existing = getDeck(deck.name)
         if (existing == null) {
-            val entity = DeckEntity(0L, deck.name, deck.description, deck.image?.uri, System.currentTimeMillis())
+            val entity = DeckEntity(0L, deck.name, deck.description, deck.image?.uri, deck.collectionOnly, System.currentTimeMillis())
             val id = insertDeck(entity)
             val joins = deck.cards.stack().map { DeckCardJoin(id, it.card.id, it.count) }
             insertJoins(joins)
@@ -113,7 +113,7 @@ abstract class DeckDao {
 
             val cleanName = deck.name.replace(regex, "").trim()
             val newName = "$cleanName ($count)"
-            duplicate(Deck("", newName, deck.description, deck.image, deck.cards, false, deck.timestamp))
+            duplicate(Deck("", newName, deck.description, deck.image, deck.collectionOnly, deck.cards, false, deck.timestamp))
         }
     }
 

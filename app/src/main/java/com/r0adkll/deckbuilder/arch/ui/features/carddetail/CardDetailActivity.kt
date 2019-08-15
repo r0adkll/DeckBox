@@ -20,14 +20,13 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.evernote.android.state.State
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.gone
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.visible
+import com.ftinc.kit.kotlin.extensions.*
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
@@ -42,6 +41,7 @@ import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
+import kotlinx.android.synthetic.main.layout_collection_count_adjuster.*
 import javax.inject.Inject
 
 
@@ -122,13 +122,11 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         presenter.start()
     }
 
-
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
         super.onDestroy()
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return if (slidingLayout != null) {
@@ -138,7 +136,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             false
         }
     }
-
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         if (slidingLayout != null) {
@@ -158,7 +155,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         return super.onPrepareOptionsMenu(menu)
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_add -> {
@@ -175,28 +171,37 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         }
     }
 
-
     override fun setupComponent(component: AppComponent) {
         component.plus(CardDetailModule(this))
                 .inject(this)
     }
-
 
     override fun render(state: CardDetailUi.State) {
         this.state = state
         renderer.render(state)
     }
 
-
     override fun addCardClicks(): Observable<Unit> {
         return addCardClicks
     }
-
 
     override fun removeCardClicks(): Observable<Unit> {
         return removeCardClicks
     }
 
+    override fun incrementCollectionCount(): Observable<Unit> {
+        return actionAddCollection.clicks()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Collection.Increment(card?.id ?: ""))
+                }
+    }
+
+    override fun decrementCollectionCount(): Observable<Unit> {
+        return actionRemoveCollection.clicks()
+                .doOnNext {
+                    Analytics.event(Event.SelectContent.Collection.Decrement(card?.id ?: ""))
+                }
+    }
 
     override fun showCopies(count: Int?) {
         supportActionBar?.title = count?.let {
@@ -205,16 +210,18 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         invalidateOptionsMenu()
     }
 
-
-    override fun showStandardValidation(isValid: Boolean) {
-        formatStandard.setVisible(isValid)
+    override fun showValidation(format: Format) {
+        deckFormat.setText(when(format) {
+            Format.STANDARD -> R.string.format_standard
+            Format.EXPANDED -> R.string.format_expanded
+            else -> R.string.format_unlimited
+        })
     }
 
-
-    override fun showExpandedValidation(isValid: Boolean) {
-        formatExpanded.setVisible(isValid)
+    override fun showCollectionCount(count: Int) {
+        actionRemoveCollection.setVisibleWeak(count > 0)
+        collectionCount.text = count.toString() //getString(R.string.card_detail_collection_count_format, count)
     }
-
 
     override fun showVariants(cards: List<PokemonCard>) {
         variantsAdapter.setCards(cards)
@@ -222,20 +229,17 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         variantsRecycler.setVisible(cards.isNotEmpty())
     }
 
-
     override fun showEvolvesFrom(cards: List<PokemonCard>) {
         evolvesFromAdapter.setCards(cards)
         evolvesHeader.setVisible(cards.isNotEmpty())
         evolvesRecycler.setVisible(cards.isNotEmpty())
     }
 
-
     override fun showEvolvesTo(cards: List<PokemonCard>) {
         evolvesToAdapter.setCards(cards)
         evolvesToHeader.setVisible(cards.isNotEmpty())
         evolvesToRecycler.setVisible(cards.isNotEmpty())
     }
-
 
     private fun bindCard() {
         card?.let { card ->
@@ -298,7 +302,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             sessionId?.let { if (it != Session.NO_ID) intent.putExtra(EXTRA_SESSION_ID, it) }
             return intent
         }
-
 
         fun show(context: Activity,
                  view: PokemonCardView,

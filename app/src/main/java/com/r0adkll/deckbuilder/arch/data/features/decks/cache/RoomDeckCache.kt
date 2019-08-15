@@ -1,7 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.cache
 
 import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
-import com.r0adkll.deckbuilder.arch.data.database.entities.DeckCardJoin
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckEntity
 import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.data.database.relations.DeckStackedCard
@@ -10,7 +9,6 @@ import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import java.security.InvalidParameterException
@@ -54,10 +52,17 @@ class RoomDeckCache @Inject constructor(
                 }
     }
 
-    override fun putDeck(id: String?, cards: List<PokemonCard>, name: String, description: String?, image: DeckImage?): Observable<Deck> {
+    override fun putDeck(
+            id: String?,
+            cards: List<PokemonCard>,
+            name: String,
+            description: String?,
+            image: DeckImage?,
+            collectionOnly: Boolean
+    ): Observable<Deck> {
         return Observable.fromCallable {
-            val entity = db.decks().insertDeckWithCards(id?.toLongOrNull(), cards, name, description, image)
-            Deck(entity.uid.toString(), name, description ?: "", image, cards, false, entity.timestamp)
+            val entity = db.decks().insertDeckWithCards(id?.toLongOrNull(), cards, name, description, image, collectionOnly)
+            Deck(entity.uid.toString(), name, description ?: "", image, collectionOnly, cards, false, entity.timestamp)
         }
     }
 
@@ -73,7 +78,7 @@ class RoomDeckCache @Inject constructor(
         }
     }
 
-    fun deleteAllDecks(){
-        db.decks().deleteDecks()
+    fun deleteAll(){
+        db.decks().deleteAll()
     }
 }

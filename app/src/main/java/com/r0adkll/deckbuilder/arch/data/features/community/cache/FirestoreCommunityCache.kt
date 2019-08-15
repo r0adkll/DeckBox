@@ -36,7 +36,7 @@ class FirestoreCommunityCache @Inject constructor(
 
                     cardRepository.find(cardIds.toList())
                             .map { cards ->
-                                decks.map {
+                                decks.sortedByDescending { it.timestamp }.map {
                                     EntityMapper.to(it, cards)
                                 }
                             }

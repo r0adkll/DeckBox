@@ -35,6 +35,7 @@ object RoomEntityMapper {
                 entity.name,
                 entity.description ?: "",
                 entity.image?.let { DeckImage.from(it) },
+                entity.collectionOnly,
                 from(expansions, cards).unstack(),
                 false,
                 entity.timestamp
@@ -48,6 +49,7 @@ object RoomEntityMapper {
                 entity.name,
                 entity.description ?: "",
                 entity.image?.let { DeckImage.from(it) },
+                entity.collectionOnly,
                 fromDeck(expansions, cards).unstack(),
                 false,
                 entity.timestamp
@@ -62,6 +64,7 @@ object RoomEntityMapper {
                 entity.session.name ?: "",
                 entity.session.description ?: "",
                 entity.session.image?.let { DeckImage.from(it) },
+                entity.session.collectionOnly ?: false,
                 from(expansions, cards).unstack(),
                 calculateChanges(entity),
                 entity.changes.map { to(it) }
@@ -301,5 +304,6 @@ object RoomEntityMapper {
                 || entity.session.originalName != entity.session.name
                 || entity.session.originalDescription != entity.session.description
                 || entity.session.originalImage != entity.session.image
+                || entity.session.originalCollectionOnly != entity.session.collectionOnly
     }
 }

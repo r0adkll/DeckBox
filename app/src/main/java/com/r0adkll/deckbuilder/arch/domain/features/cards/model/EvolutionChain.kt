@@ -19,11 +19,9 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
     fun first(): Node? = nodes.find { it.previous == null }
     fun last(): Node? = nodes.find { it.next == null }
 
-
     fun contains(card: StackedPokemonCard): Boolean {
         return nodes.find { it.cards.contains(card) } != null
     }
-
 
     fun isChainFor(card: StackedPokemonCard): Boolean {
         return if (card.isBasic()) {
@@ -37,7 +35,6 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
             } != null
         }
     }
-
 
     fun addCard(card: StackedPokemonCard) {
 
@@ -104,9 +101,11 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
 
 
         override fun hashCode(): Int {
-            return ((this.name?.hashCode() ?: 0 * 31) +
-                    (this.evolvesFrom?.hashCode() ?: 0 * 31) +
-                    this.cards.hashCode() * 31)
+            var result = 0
+            result = 31 * result + (this.name?.hashCode() ?: 0)
+            result = 31 * result + (this.evolvesFrom?.hashCode() ?: 0)
+            result = 31 * result + this.cards.hashCode()
+            return result
         }
 
         override fun equals(other: Any?): Boolean {
@@ -131,7 +130,7 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
             while (e1.hasNext() && e2.hasNext()) {
                 val o1 = e1.next()
                 val o2 = e2.next()
-                if (o1.card != o2.card || o1.count != o2.count)
+                if (o1.card != o2.card || o1.count != o2.count || o1.collection != o2.collection)
                     return false
             }
             return !(e1.hasNext() || e2.hasNext())

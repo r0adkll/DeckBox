@@ -7,6 +7,8 @@ import com.r0adkll.deckbuilder.R
 
 import androidx.appcompat.widget.AppCompatImageView
 
+
+
 /**
  * Scale to center top or scale to center bottom
  *
@@ -36,7 +38,7 @@ open class ImageScaleView @JvmOverloads constructor(
                 }
 
                 // default
-                return MatrixCropType.NONE
+                return NONE
             }
         }
     }
@@ -54,6 +56,11 @@ open class ImageScaleView @JvmOverloads constructor(
         }
     }
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        recomputeImgMatrix()
+    }
+
     override fun setFrame(frameLeft: Int, frameTop: Int, frameRight: Int, frameBottom: Int): Boolean {
 
         val drawable = drawable
@@ -67,7 +74,7 @@ open class ImageScaleView @JvmOverloads constructor(
 
             var usedScaleFactor = 1f
 
-            if (frameWidth > originalImageWidth || frameHeight > originalImageHeight) {
+//            if (frameWidth > originalImageWidth || frameHeight > originalImageHeight) {
                 // If frame is bigger than image
                 // => Crop it, keep aspect ratio and position it at the bottom
                 // and
@@ -76,7 +83,10 @@ open class ImageScaleView @JvmOverloads constructor(
                 val fitVerticallyScaleFactor = frameHeight / originalImageHeight
 
                 usedScaleFactor = Math.max(fitHorizontallyScaleFactor, fitVerticallyScaleFactor)
-            }
+//            } else {
+//                val fitHorizontallyScaleFactor = originalImageWidth / frameWidth
+//
+//            }
 
             val newImageWidth = originalImageWidth * usedScaleFactor
             val newImageHeight = originalImageHeight * usedScaleFactor
@@ -85,8 +95,8 @@ open class ImageScaleView @JvmOverloads constructor(
             matrix.setScale(usedScaleFactor, usedScaleFactor, 0f, 0f)
 
             when (matrixType) {
-                ImageScaleView.MatrixCropType.TOP_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, 0f)
-                ImageScaleView.MatrixCropType.BOTTOM_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, frameHeight - newImageHeight)
+                MatrixCropType.TOP_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, 0f)
+                MatrixCropType.BOTTOM_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, frameHeight - newImageHeight)
 
                 else -> {
                 }
@@ -95,6 +105,47 @@ open class ImageScaleView @JvmOverloads constructor(
             imageMatrix = matrix
         }
         return super.setFrame(frameLeft, frameTop, frameRight, frameBottom)
+    }
+
+    private fun recomputeImgMatrix() {
+        val drawable = drawable
+        if (drawable != null && matrixType != MatrixCropType.NONE) {
+
+            val frameWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+            val frameHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+
+            val originalImageWidth = getDrawable().intrinsicWidth.toFloat()
+            val originalImageHeight = getDrawable().intrinsicHeight.toFloat()
+
+            var usedScaleFactor = 1f
+
+//            if (frameWidth > originalImageWidth || frameHeight > originalImageHeight) {
+                // If frame is bigger than image
+                // => Crop it, keep aspect ratio and position it at the bottom
+                // and
+                // center horizontally
+                val fitHorizontallyScaleFactor = frameWidth / originalImageWidth
+                val fitVerticallyScaleFactor = frameHeight / originalImageHeight
+
+                usedScaleFactor = Math.max(fitHorizontallyScaleFactor, fitVerticallyScaleFactor)
+//            }
+
+            val newImageWidth = originalImageWidth * usedScaleFactor
+            val newImageHeight = originalImageHeight * usedScaleFactor
+
+            val matrix = imageMatrix
+            matrix.setScale(usedScaleFactor, usedScaleFactor, 0f, 0f)
+
+            when (matrixType) {
+                MatrixCropType.TOP_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, 0f)
+                MatrixCropType.BOTTOM_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, frameHeight - newImageHeight)
+
+                else -> {
+                }
+            }
+
+            imageMatrix = matrix
+        }
     }
 
 }

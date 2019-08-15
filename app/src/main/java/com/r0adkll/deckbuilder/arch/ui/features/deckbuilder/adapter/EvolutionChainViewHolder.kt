@@ -1,12 +1,12 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
@@ -22,28 +22,30 @@ class EvolutionChainViewHolder(
         private val spanCount: Int,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
-): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+): RecyclerView.ViewHolder(itemView) {
 
-    private val recyclerView: androidx.recyclerview.widget.RecyclerView by bindView(R.id.recycler)
+    private val recyclerView by bindView<RecyclerView>(R.id.recycler)
 
 
-    fun bind(evolutionChain: EvolutionChain, isEditing: Boolean) {
+    fun bind(evolutionChain: EvolutionChain, isEditing: Boolean, isCollectionEnabled: Boolean) {
 
         if (recyclerView.adapter == null) {
             val adapter = EvolutionLineRecyclerAdapter(itemView.context, editCardIntentions, spanCount)
             adapter.setOnPokemonCardViewClickListener { pokemonCardClicks.accept(it) }
-            recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(itemView.context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = adapter
-            (recyclerView.itemAnimator as androidx.recyclerview.widget.SimpleItemAnimator).supportsChangeAnimations = false
+            (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
             (0 until recyclerView.itemDecorationCount).forEach { recyclerView.removeItemDecorationAt(it) }
             recyclerView.addItemDecoration(EvolutionLineItemDecoration(itemView.context, adapter))
         }
 
         val adapter = recyclerView.adapter as EvolutionLineRecyclerAdapter
         val forceChange = adapter.isEditing != isEditing
+                || adapter.isCollectionEnabled != isCollectionEnabled
         if (forceChange) {
             adapter.evolution = evolutionChain
             adapter.isEditing = isEditing
+            adapter.isCollectionEnabled = isCollectionEnabled
             adapter.notifyDataSetChanged()
         } else {
             adapter.setEvolutionChain(evolutionChain)

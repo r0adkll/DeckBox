@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="BaseTheme">
+        <attr name="collectionAdjusterTint" format="color" />
+    </declare-styleable>
+
     <declare-styleable name="AspectRatioImageView">
         <attr name="ratioType" format="enum">
             <enum name="width" value="0" />
@@ -90,4 +94,12 @@
             <enum name="bottom_center" value="1" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="CollectionProgressBar">
+        <attr name="progressColor" format="color" />
+        <attr name="trackColor" format="color" />
+        <attr name="borderColor" format="color" />
+        <attr name="borderWidth" format="dimension|reference" />
+    </declare-styleable>
+
 </resources>

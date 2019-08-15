@@ -61,36 +61,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:orientation="horizontal"
-                android:paddingStart="12dp">
+                android:orientation="horizontal">
 
-                <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-                    android:id="@+id/formatStandard"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:padding="4dp"
-                    app:format="standard"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/white"
-                    app:fillColor="@color/black"
-                    />
-
-                <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonFormatView
-                    android:id="@+id/formatExpanded"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:padding="4dp"
-                    app:format="expanded"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/white"
-                    app:fillColor="@color/black"
+                <TextView
+                    android:id="@+id/deckFormat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:textAllCaps="true"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    tools:text="Standard"
                     />
 
                 <ImageView
@@ -98,8 +88,6 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="start|center_vertical"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
                     android:scaleType="fitCenter"
                     />
 
@@ -128,7 +116,7 @@
                 android:layout_marginTop="8dp"
                 android:paddingStart="@dimen/padding_normal"
                 android:paddingEnd="@dimen/padding_normal"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textSize="@dimen/display_1"
                 />
 
@@ -141,6 +129,9 @@
                 android:textSize="20sp"
                 android:textColor="@color/white70"
                 android:drawablePadding="8dp"
+                />
+
+            <include layout="@layout/layout_collection_count_adjuster"
                 />
 
             <TextView

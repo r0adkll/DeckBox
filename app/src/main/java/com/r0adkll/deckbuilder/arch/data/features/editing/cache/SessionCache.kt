@@ -18,6 +18,7 @@ interface SessionCache {
     fun changeName(sessionId: Long, name: String): Observable<String>
     fun changeDescription(sessionId: Long, description: String): Observable<String>
     fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit>
+    fun changeCollectionOnly(sessionId: Long, collectionOnly: Boolean): Observable<Unit>
     fun addCards(sessionId: Long, cards: List<PokemonCard>, searchSessionId: String? = null): Observable<Unit>
     fun removeCard(sessionId: Long, card: PokemonCard, searchSessionId: String? = null): Observable<Unit>
     fun clearSearchSession(sessionId: Long, searchSessionId: String): Observable<Unit>

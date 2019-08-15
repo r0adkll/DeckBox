@@ -17,6 +17,13 @@
             />
 
         <Preference
+            android:key="pref_account_migrate_collection"
+            android:title="@string/pref_account_migrate_collection_title"
+            android:summary="@string/pref_account_migrate_collection_summary"
+            app:isPreferenceVisible="false"
+            />
+
+        <Preference
             android:key="pref_account_signout"
             android:title="@string/pref_account_signout"
             />

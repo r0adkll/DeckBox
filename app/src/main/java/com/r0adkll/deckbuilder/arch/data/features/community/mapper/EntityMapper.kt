@@ -73,6 +73,7 @@ object EntityMapper {
                 deckName,
                 deckDescription,
                 deckImage,
+                false,
                 cards,
                 isMissingCards,
                 entity.timestamp
@@ -99,6 +100,7 @@ object EntityMapper {
                 entity.name,
                 entity.description,
                 entity.image?.let { DeckImage.from(Uri.parse(it)) },
+                false,
                 cards,
                 isMissingCards,
                 0L

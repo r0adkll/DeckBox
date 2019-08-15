@@ -1,0 +1,79 @@
+package com.r0adkll.deckbuilder.arch.data.database.dao
+
+import androidx.room.*
+import com.r0adkll.deckbuilder.arch.data.database.entities.CollectionCountEntity
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
+import io.reactivex.Flowable
+import io.reactivex.Single
+
+
+@Dao
+abstract class CollectionDao {
+
+    @Query("SELECT * FROM collection")
+    abstract fun getAll(): Single<List<CollectionCountEntity>>
+
+    @Query("SELECT * FROM collection")
+    abstract fun observeAll(): Flowable<List<CollectionCountEntity>>
+
+    @Query("SELECT * FROM collection WHERE cardId = :id")
+    abstract fun getCount(id: String): Flowable<CollectionCountEntity>
+
+    @Query("SELECT * FROM collection WHERE `set` = :set")
+    abstract fun getCountForSet(set: String): Flowable<List<CollectionCountEntity>>
+
+    @Query("SELECT * FROM collection WHERE series = :series")
+    abstract fun getCountForSeries(series: String): Flowable<List<CollectionCountEntity>>
+
+    @Query("SELECT * FROM collection WHERE cardId = :id")
+    abstract fun count(id: String): CollectionCountEntity?
+
+    @Update
+    abstract fun updateCount(count: CollectionCountEntity): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertCount(count: CollectionCountEntity): Long
+
+    @Query("DELETE FROM collection")
+    abstract fun deleteAll()
+
+
+    @Transaction
+    open fun incrementCount(card: PokemonCard): CollectionCountEntity? {
+        val count = count(card.id)
+        if (count != null) {
+            count.count += 1
+            updateCount(count)
+            return count
+        } else if (card.expansion != null){
+            val newCount = CollectionCountEntity(
+                    card.id,
+                    1,
+                    card.expansion.code,
+                    card.expansion.series
+            )
+            insertCount(newCount)
+            return newCount
+        }
+
+        return null
+    }
+
+    @Transaction
+    open fun decrementCount(card: PokemonCard): CollectionCountEntity? {
+        val count = count(card.id)
+        if (count != null && count.count > 0) {
+            count.count -= 1
+            updateCount(count)
+        }
+        return count
+    }
+
+    @Transaction
+    open fun incrementCounts(cards: List<PokemonCard>) {
+        cards.forEach { card ->
+            incrementCount(card)
+        }
+    }
+}

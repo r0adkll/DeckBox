@@ -3,7 +3,7 @@
 /*
  * Dependencies
  */
-@file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.15")
+@file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.18")
 @file:DependsOn("me.xdrop:fuzzywuzzy:1.1.10")
 @file:DependsOn("com.google.code.gson:gson:2.8.5")
 
@@ -55,18 +55,23 @@ val standardCards = ArrayList<Card>()
 val expandedCards = ArrayList<Card>()
 val unlimitedCards = ArrayList<Card>()
 sets.forEach { set ->
-    val cards = pokemon.card().where {
-        setCode = set.code
-        supertype = SuperType.TRAINER.displayName.or(SuperType.ENERGY.displayName)
-    }.all().filter { it.supertype == SuperType.TRAINER || (it.supertype == SuperType.ENERGY && it.subtype == SubType.SPECIAL) }
+    try {
+        val cards = pokemon.card().where {
+            setCode = set.code
+            supertype = SuperType.TRAINER.displayName.or(SuperType.ENERGY.displayName)
+        }.all().filter { it.supertype == SuperType.TRAINER || (it.supertype == SuperType.ENERGY && it.subtype == SubType.SPECIAL) }
 
-    when {
-        set.standardLegal -> standardCards += cards
-        set.expandedLegal -> expandedCards += cards
-        else -> unlimitedCards += cards
+        when {
+            set.standardLegal -> standardCards += cards
+            set.expandedLegal -> expandedCards += cards
+            else -> unlimitedCards += cards
+        }
+
+        println("${set.name} cards fetched.")
+    } catch (e: Exception) {
+        println("ERRROR FETCHING: ${set.name}")
+        e.printStackTrace()
     }
-
-    println("${set.name} cards fetched.")
 }
 
 println("All trainer cards collected, Analyzing...")

@@ -85,8 +85,8 @@ class PtcgoExportFragment : BaseFragment() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.activity_export_ptcgo, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.activity_export_ptcgo, menu)
     }
 
 
