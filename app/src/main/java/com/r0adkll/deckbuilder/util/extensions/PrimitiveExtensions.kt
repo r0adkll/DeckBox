@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.util.extensions
 
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
@@ -9,6 +10,8 @@ import android.text.Html
 import android.text.Spanned
 import android.text.TextUtils
 import android.util.Base64
+import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.kotlin.extensions.dpToPx
 import timber.log.Timber
 
 
@@ -46,3 +49,7 @@ fun Long.avatarPad(): String {
 
 
 fun Int.max(other: Int): Int = Math.max(this, other)
+
+
+fun Float.dip(context: Context): Int = context.dipToPx(this)
+fun Float.dp(context: Context): Float = context.dpToPx(this)

@@ -6,55 +6,56 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
 
-    <com.r0adkll.deckbuilder.arch.ui.widgets.BoardCardView
+    <com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardCardView
         android:layout_width="100dp"
-        android:layout_height="140dp"
+        android:layout_height="wrap_content"
         />
 
-    <com.r0adkll.deckbuilder.arch.ui.widgets.BoardView
-        android:id="@+id/playmat"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:elevation="4dp"
-        android:outlineProvider="bounds"
-        android:background="@color/white"
-        >
+<!--    <com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardView-->
+<!--        android:id="@+id/playmat"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:elevation="4dp"-->
+<!--        android:outlineProvider="bounds"-->
+<!--        android:background="@color/white"-->
+<!--        >-->
 
-    </com.r0adkll.deckbuilder.arch.ui.widgets.BoardView>
+<!--    </com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardView>-->
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:background="@color/windowBackground">
+<!--    <FrameLayout-->
+<!--        android:id="@+id/frameLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="128dp"-->
+<!--        android:background="@color/windowBackground">-->
 
-        <TextView
-            android:id="@+id/emptyView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:alpha=".26"
-            android:drawableStart="@drawable/ic_cards"
-            android:drawablePadding="8dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/empty_playtest_hand"
-            android:textAllCaps="true"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+<!--        <TextView-->
+<!--            android:id="@+id/emptyView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:alpha=".26"-->
+<!--            android:drawableStart="@drawable/ic_cards"-->
+<!--            android:drawablePadding="8dp"-->
+<!--            android:fontFamily="sans-serif-medium"-->
+<!--            android:text="@string/empty_playtest_hand"-->
+<!--            android:textAllCaps="true"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="16sp" />-->
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/handRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            />
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/handRecycler"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--            />-->
 
 
 
-    </FrameLayout>
+<!--    </FrameLayout>-->
 
 </LinearLayout>

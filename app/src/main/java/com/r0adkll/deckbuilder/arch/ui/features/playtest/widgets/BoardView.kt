@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.widgets
+package com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,6 +15,7 @@ import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.kotlin.extensions.spToPx
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 /**
  * This is the view that renders and manages the board for a Playtest simulator session renderering
@@ -31,10 +32,11 @@ class BoardView @JvmOverloads constructor(
 
     private val boardPadding: Float = dpToPx(24f)
     private val elementMargin: Float = dpToPx(16f)
-    private var elementWidth: Float = 0f
-    private var elementHeight: Float = 0f
     private val cardRadius = dpToPx(4f)
     private val cardPunchPadding = dpToPx(2f)
+
+    var elementWidth: Float = 0f; private set
+    var elementHeight: Float = 0f; private set
 
     private val gestureDetector: GestureDetector
     private var listener: BoardListener? = null
@@ -48,6 +50,7 @@ class BoardView @JvmOverloads constructor(
 
 
     init {
+        clipChildren = false
         setWillNotDraw(false)
         paint.color = color(R.color.playmat)
         paint.style = Paint.Style.STROKE

@@ -1,13 +1,18 @@
 package com.r0adkll.deckbuilder.util.extensions
 
 
+import android.graphics.Rect
+import android.graphics.RectF
 import androidx.annotation.DrawableRes
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
+import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -17,6 +22,16 @@ fun View.isVisible(): Boolean = this.visibility == View.VISIBLE
 fun EditText.moveCursorToEnd() {
     this.setSelection(this.text.length)
 }
+
+/**
+ * Set a rect to the bounds of a [View]
+ * @param view the view to apply the bounds of
+ */
+fun Rect.set(view: View): Rect {
+    set(view.left, view.top, view.right, view.bottom)
+    return this
+}
+
 
 /*
  * TextView
@@ -92,6 +107,19 @@ fun View.margins(margins: ExpansionPreview.PreviewSpec.Margins?) {
         margins?.bottom?.let { params.bottomMargin = it }
         this.layoutParams = lp
     }
+}
+
+/*
+ * Padding
+ */
+
+fun View.updatePadding(
+        left: Int? = null,
+        top: Int? = null,
+        right: Int? = null,
+        bottom: Int? = null
+) {
+    setPadding(left ?: paddingLeft, top ?: paddingTop, right ?: paddingRight, bottom ?: paddingBottom)
 }
 
 /*
