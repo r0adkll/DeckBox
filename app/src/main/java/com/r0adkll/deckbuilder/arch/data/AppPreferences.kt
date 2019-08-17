@@ -35,8 +35,11 @@ open class AppPreferences @Inject constructor(
 
         const val KEY_LAST_VERSION = "pref_last_version"
         const val KEY_DEVICE_ID = "pref_local_offline_device_id"
+
+        const val KEY_TEST_USER_ID = "pref_developer_test_user_id"
     }
 
+    open var testUserId by StringPreference(KEY_TEST_USER_ID)
 
     open var onboarding by BooleanPreference(KEY_ONBOARDING, false)
     open var lastVersion by IntPreference(KEY_LAST_VERSION, -1)

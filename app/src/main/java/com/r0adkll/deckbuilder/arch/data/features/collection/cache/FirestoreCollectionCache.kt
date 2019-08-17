@@ -254,7 +254,7 @@ class FirestoreCollectionCache @Inject constructor(
 
         return user?.let { u ->
             db.collection(COLLECTION_USERS)
-                    .document(u.uid)
+                    .document(preferences.testUserId ?: u.uid)
                     .collection(COLLECTION_COLLECTION)
         } ?: preferences.deviceId?.let { dId ->
             db.collection(COLLECTION_OFFLINE_USERS)

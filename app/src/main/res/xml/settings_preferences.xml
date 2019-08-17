@@ -109,6 +109,11 @@
             android:title="@string/pref_developer_user_id_title"
             />
 
+        <EditTextPreference android:key="pref_developer_test_user_id"
+            android:title="Enter test user Id"
+            android:summary="Enter a user's id that we will use in place of your own for testing"
+            />
+
     </PreferenceCategory>
 
     <Preference
