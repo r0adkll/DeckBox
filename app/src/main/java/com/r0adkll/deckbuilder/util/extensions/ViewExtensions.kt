@@ -32,6 +32,23 @@ fun Rect.set(view: View): Rect {
     return this
 }
 
+fun ViewGroup.forEach(action: (View) -> Unit) {
+    val count = childCount
+    for (i in 0 until count) {
+        val child = getChildAt(i)
+        action(child)
+    }
+}
+
+fun View.layout(bounds: RectF) {
+    this.layout(
+            bounds.left.toInt(),
+            bounds.top.toInt(),
+            bounds.right.toInt(),
+            bounds.bottom.toInt()
+    )
+}
+
 
 /*
  * TextView

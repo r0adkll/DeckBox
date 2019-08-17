@@ -37,7 +37,11 @@ import kotlin.math.roundToInt
 
 
 class BoardCardView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, cardSize: Size = Size.SMALL
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+        cardSize: Size = Size.SMALL,
+        card: Board.Card? = null
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
     enum class Size(
@@ -116,7 +120,7 @@ class BoardCardView @JvmOverloads constructor(
             /**
              * Special value for the height or width requested by a View.
              * [RATIO] means that the view wants to be a ratio of it's parent's measured dimensions
-             * by applying [ratioWidth] and [ratioHeight]
+             * by applying [widthRatio] and [heightRatio]
              */
             const val RATIO = -3
 
@@ -133,7 +137,7 @@ class BoardCardView @JvmOverloads constructor(
     /**
      * The [Board.Card] State that this view will be rendering
      */
-    var card: Board.Card? = null
+    var card: Board.Card? = card
         set(value) {
             field = value
             balanceAttachmentViews()
