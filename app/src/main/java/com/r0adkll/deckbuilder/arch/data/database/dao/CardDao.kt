@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import io.reactivex.Single
+import io.reactivex.functions.Function
 
 
 @Dao
@@ -30,6 +31,18 @@ abstract class CardDao {
     @Query("DELETE FROM cards")
     abstract fun clear()
 
+    @Suppress("UNCHECKED_CAST")
+    open fun getCardsSplit(ids: List<String>): Single<List<CardWithAttacks>> {
+        return if (ids.size > 900) {
+            val chunkedIds = ids.chunked(900)
+            Single.zip(chunkedIds.map { getCards(it) }) {
+                it.map { cards -> cards as List<CardWithAttacks> }
+                        .flatten()
+            }
+        } else {
+            getCards(ids)
+        }
+    }
 
     @Transaction
     open fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {

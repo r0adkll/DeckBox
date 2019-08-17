@@ -192,6 +192,10 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 "pref_developer_user_id" -> {
+                    preferenceManager.sharedPreferences.edit()
+                            .remove("pref_developer_test_user_id")
+                            .apply()
+
                     val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                     clipboardManager?.let { cm ->
                         cm.primaryClip = ClipData("deckbox user id", arrayOf("text/plain"), ClipData.Item(preference.summary))
@@ -287,6 +291,10 @@ class SettingsActivity : BaseActivity() {
             userId.summary = FirebaseAuth.getInstance().currentUser?.uid
                     ?: preferences.deviceId
                     ?: preferences.offlineId.get()
+
+            val testUserId = findPreference("pref_developer_test_user_id")
+            testUserId.summary = preferenceManager.sharedPreferences
+                    .getString("pref_developer_test_user_id", null) ?: "Enter a user's id to test with"
         }
 
 
