@@ -28,7 +28,7 @@ class RoomCardCache @Inject constructor(
     }
 
     override fun findCards(ids: List<String>): Observable<List<PokemonCard>> {
-        return Observable.combineLatest(db.cards().getCards(ids).toObservable(), cache.getExpansions(),
+        return Observable.combineLatest(db.cards().getCardsSplit(ids).toObservable(), cache.getExpansions(),
                 BiFunction<List<CardWithAttacks>, List<Expansion>, List<PokemonCard>> { cards, expansions ->
                     RoomEntityMapper.fromCards(expansions, cards)
                 })

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.ftinc.kit.kotlin.utils.ScreenUtils.smallestWidth
 import com.jakewharton.rxrelay2.PublishRelay
@@ -58,6 +59,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
         }
 
         collectionRecycler.adapter = adapter
+        (collectionRecycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         (collectionRecycler.layoutManager as? GridLayoutManager)?.apply {
             spanCount = if (smallestWidth(requireContext().resources, com.ftinc.kit.kotlin.utils.ScreenUtils.Config.TABLET_10)) 6 else 3
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -78,8 +80,8 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
                 .plus(CollectionModule(this))
                 .inject(this)
 
-        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_RESUME)
         delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_RESUME)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_RESUME)
     }
 
     override fun render(state: State) {

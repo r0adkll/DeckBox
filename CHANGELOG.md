@@ -1,3 +1,8 @@
+# 1.9.1
+* Fixed issue where user's deck was exceeding the SQLite variable limit of 999 when pulling cards from cache
+* Fixed visual updating of the collection view to be smoother
+* Fixed issue with collection view not rendering if you don't have any collection items in your storage.
+
 # 1.9.0
 * [#47](https://github.com/r0adkll/DeckBox/issues/47) - Collection tracking
 * [#66](https://github.com/r0adkll/DeckBox/issues/66) - Removed old format symbols on card detail screen
