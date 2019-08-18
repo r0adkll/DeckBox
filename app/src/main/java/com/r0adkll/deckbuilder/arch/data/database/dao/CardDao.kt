@@ -7,7 +7,6 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import io.reactivex.Single
-import io.reactivex.functions.Function
 
 
 @Dao

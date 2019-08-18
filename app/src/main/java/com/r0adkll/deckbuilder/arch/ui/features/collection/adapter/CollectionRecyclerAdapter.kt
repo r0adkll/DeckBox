@@ -29,6 +29,10 @@ class CollectionRecyclerAdapter(
         return items[position].viewType
     }
 
+    override fun getItemId(position: Int): Long {
+        return items[position].itemId
+    }
+
     fun setCollectionItems(newItems: List<Item>) {
         val diff = calculateDiff(newItems, items)
         items.clear()
