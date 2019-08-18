@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-def VERSION_NAME = "1.9.0"
+def VERSION_NAME = "1.9.1"
 
 
 ext.gitVersioner = [
@@ -98,7 +98,7 @@ dependencies {
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
     implementation "androidx.appcompat:appcompat:1.1.0-rc01"
-    implementation "androidx.recyclerview:recyclerview:1.1.0-beta01"
+    implementation "androidx.recyclerview:recyclerview:1.1.0-beta02"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.preference:preference:1.0.0"
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
@@ -147,9 +147,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     implementation("com.52inc:52Kit-core:$ftkit_version") {
-        exclude group: 'io.reactivex'
-    }
-    implementation("com.52inc:52Kit-winds:$ftkit_version") {
         exclude group: 'io.reactivex'
     }
     implementation("com.52inc:52Kit-kotlin:$ftkit_version") {

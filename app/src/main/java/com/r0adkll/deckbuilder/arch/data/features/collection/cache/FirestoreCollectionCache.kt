@@ -1,29 +1,22 @@
 package com.r0adkll.deckbuilder.arch.data.features.collection.cache
 
-import com.google.android.gms.common.api.Batch
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.FirebaseFirestoreException.*
-import com.google.firebase.firestore.core.FirestoreClient
+import com.google.firebase.firestore.FirebaseFirestoreException.Code
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.collection.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.data.features.collection.model.CollectionCountEntity
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
-import com.r0adkll.deckbuilder.util.RxFirebase
-import com.r0adkll.deckbuilder.util.RxFirebase.observeAs
 import com.r0adkll.deckbuilder.util.RxFirebase.asObservable
 import com.r0adkll.deckbuilder.util.RxFirebase.asVoidObservable
+import com.r0adkll.deckbuilder.util.RxFirebase.observeAs
 import com.r0adkll.deckbuilder.util.Schedulers
 import io.reactivex.Observable
-import io.reactivex.functions.Function
-import org.w3c.dom.Entity
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.ceil
-import kotlin.math.roundToInt
 
 
 class FirestoreCollectionCache @Inject constructor(
