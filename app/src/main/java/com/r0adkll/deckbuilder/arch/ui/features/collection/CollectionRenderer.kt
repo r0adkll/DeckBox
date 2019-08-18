@@ -2,12 +2,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
-import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.components.ExpansionComparator
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.util.Schedulers
-import com.r0adkll.deckbuilder.util.extensions.fromReleaseDate
-import com.r0adkll.deckbuilder.util.extensions.iso8601
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 
 
@@ -57,7 +54,11 @@ class CollectionRenderer(
                 .map { s ->
                     val totalCards = s.expansions.sumBy { it.totalCards }
                     val progress = s.counts.filter { !it.isSourceOld && it.count > 0 }.size
-                    progress.toFloat() / totalCards.toFloat()
+                    if (totalCards > 0) {
+                        progress.toFloat() / totalCards.toFloat()
+                    } else {
+                        0f
+                    }
                 }
                 .distinctUntilChanged()
                 .addToLifecycle()
