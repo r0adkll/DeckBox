@@ -3,8 +3,11 @@ package com.r0adkll.deckbuilder.util.extensions
 import java.util.*
 
 
+fun <T> arrayDequeOf(vararg item: T): ArrayDeque<T> = ArrayDeque(listOf(*item))
+
+
 fun <T1, T2> Collection<T1>.combine(other: Iterable<T2>): List<Pair<T1, T2>> {
-    return combine(other, {thisItem: T1, otherItem: T2 -> Pair(thisItem, otherItem) })
+    return combine(other) { thisItem: T1, otherItem: T2 -> Pair(thisItem, otherItem) }
 }
 
 

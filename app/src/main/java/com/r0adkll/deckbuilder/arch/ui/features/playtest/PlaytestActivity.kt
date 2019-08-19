@@ -8,9 +8,12 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.di.PlaytestModule
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardCardView
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardView
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.CardStackView
 import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.activity_playtest_simulator.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -26,15 +29,31 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playtest_simulator)
 
-//        playmat.setBoardListener(object : BoardView.BoardListener {
-//            override fun onBoardElementClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
-//                toast("Element Clicked ($playerType, $elementType, $element)")
-//            }
-//
-//            override fun onBoardElementLongClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
-//                toast("Element Long Clicked ($playerType, $elementType, $element)")
-//            }
-//        })
+        playmat.setBoardListener(object : BoardView.BoardListener {
+
+            override fun onCardStackClicked(view: CardStackView) {
+                view.debug = false
+                val lp = view.layoutParams as? BoardView.LayoutParams
+                toast("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards}")
+                Timber.i("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards}")
+            }
+
+            override fun onCardClicked(view: BoardCardView) {
+                val lp = view.layoutParams as? BoardView.LayoutParams
+                toast("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+                Timber.i("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+            }
+
+            override fun onBoardElementClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
+                toast("Element Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
+                Timber.i("Element Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
+            }
+
+            override fun onBoardElementLongClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
+                toast("Element Long Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
+                Timber.i("Element Long Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
+            }
+        })
     }
 
 

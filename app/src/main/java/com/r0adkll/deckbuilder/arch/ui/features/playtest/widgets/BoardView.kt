@@ -15,11 +15,20 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.kotlin.extensions.spToPx
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player
+import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player.Type.*
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardView.BoardElement.*
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.util.extensions.arrayDequeOf
 import com.r0adkll.deckbuilder.util.extensions.forEach
 import com.r0adkll.deckbuilder.util.extensions.layout
+import com.r0adkll.deckbuilder.util.extensions.pokemon
+import io.pokemontcg.model.SubType
+import io.pokemontcg.model.SuperType
+import io.pokemontcg.model.Type
+import kotlinx.android.synthetic.main.item_deck_image_pokemon.view.*
 import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -33,9 +42,8 @@ class BoardView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr), GestureDetector.OnGestureListener {
 
-
     class LayoutParams(
-            var playerType: Player.Type,
+            var playerType: Player.Type? = null,
             var element: BoardElement,
             var benchPosition: Int = 0
     ) : ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT) {
@@ -73,6 +81,12 @@ class BoardView @JvmOverloads constructor(
 
     private val gestureDetector: GestureDetector
     private var listener: BoardListener? = null
+    private val cardViewClickListener = OnClickListener {
+        when(it) {
+            is BoardCardView -> listener?.onCardClicked(it)
+            is CardStackView -> listener?.onCardStackClicked(it)
+        }
+    }
 
     /**
      * A Map of Maps to contain all the positional element components of a playmat board
@@ -108,27 +122,105 @@ class BoardView @JvmOverloads constructor(
         // Pre-Allocate all board elements
         val stadium = Element.Card()
         val player = HashMap<BoardElement, Element>()
-        player[BoardElement.BENCH] = Element.Bench((0 until 5).map { Element.Card() }.toMutableList())
-        player[BoardElement.DECK] = Element.Card()
-        player[BoardElement.DISCARD] = Element.Card()
-        player[BoardElement.PRIZES] = Element.Card()
-        player[BoardElement.ACTIVE] = Element.Card()
-        player[BoardElement.LOST_ZONE] = Element.Card()
-        player[BoardElement.STADIUM] = stadium
+        player[BENCH] = Element.Bench((0 until 5).map { Element.Card() }.toMutableList())
+        player[DECK] = Element.Card()
+        player[DISCARD] = Element.Card()
+        player[PRIZES] = Element.Card()
+        player[ACTIVE] = Element.Card()
+        player[LOST_ZONE] = Element.Card()
+        player[STADIUM] = stadium
 
         val opponent = HashMap<BoardElement, Element>()
-        opponent[BoardElement.BENCH] = Element.Bench((0 until 5).map { Element.Card() }.toMutableList())
-        opponent[BoardElement.DECK] = Element.Card()
-        opponent[BoardElement.DISCARD] = Element.Card()
-        opponent[BoardElement.PRIZES] = Element.Card()
-        opponent[BoardElement.ACTIVE] = Element.Card()
-        opponent[BoardElement.LOST_ZONE] = Element.Card()
-        opponent[BoardElement.STADIUM] = stadium
+        opponent[BENCH] = Element.Bench((0 until 5).map { Element.Card() }.toMutableList())
+        opponent[DECK] = Element.Card()
+        opponent[DISCARD] = Element.Card()
+        opponent[PRIZES] = Element.Card()
+        opponent[ACTIVE] = Element.Card()
+        opponent[LOST_ZONE] = Element.Card()
+        opponent[STADIUM] = stadium
 
-        boardElements[Player.Type.PLAYER] = player
-        boardElements[Player.Type.OPPONENT] = opponent
+        boardElements[PLAYER] = player
+        boardElements[OPPONENT] = opponent
 
         gestureDetector = GestureDetector(context, this)
+
+        /*
+         * FIXME: TESTING
+         */
+        val poke = pokemon {
+            id = "sm8-205"
+            name = "Alolan Ninetales-GX"
+            nationalPokedexNumber = 38
+            hp = 200
+            imageUrl = "https://images.pokemontcg.io/sm8/205.png"
+            imageUrlHiRes = "https://images.pokemontcg.io/sm8/205_hires.png"
+        }
+        val poke2 = pokemon {
+            id = "sm8-53"
+            name = "Alolan Vulpix"
+            nationalPokedexNumber = 37
+            hp = 260
+            imageUrl = "https://images.pokemontcg.io/sm8/53.png"
+            imageUrlHiRes = "https://images.pokemontcg.io/sm8/53_hires.png"
+        }
+
+        val energy = pokemon {
+            id = "sm1-171"
+            name = "Fairy Energy"
+            supertype = SuperType.ENERGY
+            subtype = SubType.BASIC
+            types = listOf(Type.FAIRY)
+        }
+
+        val tool = pokemon {
+            id = "sm8-190"
+            name = "Spell Tag"
+            imageUrl = "https://images.pokemontcg.io/sm8/190.png"
+            imageUrlHiRes = "https://images.pokemontcg.io/sm8/190_hires.png"
+            supertype = SuperType.TRAINER
+            subtype = SubType.POKEMON_TOOL
+        }
+
+        val pokeCard = Board.Card(
+                arrayDequeOf(poke),
+                listOf(energy, energy.copy(), energy.copy()),
+                listOf(tool),
+                isPoisoned = false,
+                isBurned = false,
+                statusEffect = null,
+                damage = 50
+        )
+
+        val poke2Card = Board.Card(
+                arrayDequeOf(poke2),
+                listOf(energy.copy())
+        )
+
+        board = Board(
+                Player(
+                        listOf(poke, poke.copy(), poke.copy(), poke.copy(), poke.copy(), poke.copy(), poke.copy()),
+                        mapOf(
+                                0 to poke.copy(),
+                                1 to energy.copy(),
+                                2 to energy.copy(),
+                                3 to tool.copy(),
+                                4 to poke.copy(),
+                                5 to poke.copy()
+                        ),
+                        ArrayDeque((0..45).map { poke.copy() }),
+                        listOf(energy.copy(), tool.copy()),
+                        emptyList(),
+                        Board.Bench(mapOf(
+                                0 to pokeCard.copy(),
+                                2 to poke2Card.copy(),
+                                3 to poke2Card.copy()
+                        )),
+                        pokeCard.copy(statusEffect = Board.Card.Status.CONFUSED),
+                        null
+                ),
+                Player(emptyList(), emptyMap(), ArrayDeque(0), emptyList(), emptyList(), Board.Bench(), null, null),
+                Board.Turn(0, PLAYER)
+        )
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -151,7 +243,7 @@ class BoardView @JvmOverloads constructor(
              */
             val baseX = boardPadding
             val baseY = measuredHeight - (boardPadding + elementHeight)
-            val benchElement = boardElements[Player.Type.PLAYER]!![BoardElement.BENCH] as Element.Bench
+            val benchElement = boardElements[PLAYER]!![BENCH] as Element.Bench
             (0 until 5).forEach {
                 val card = benchElement.cards[it]
                 val offsetX = (it * elementWidth) + (it * elementMargin)
@@ -161,8 +253,8 @@ class BoardView @JvmOverloads constructor(
             /*
              * Player Discard & Deck
              */
-            val deckElement = boardElements[Player.Type.PLAYER]!![BoardElement.DECK] as Element.Card
-            val discardElement = boardElements[Player.Type.PLAYER]!![BoardElement.DISCARD] as Element.Card
+            val deckElement = boardElements[PLAYER]!![DECK] as Element.Card
+            val discardElement = boardElements[PLAYER]!![DISCARD] as Element.Card
 
             val deckX = baseX + (4 * elementWidth) + (4 * elementMargin)
             val deckY = baseY - ((elementHeight + elementMargin) * 2) + (elementMargin / 2)
@@ -174,7 +266,7 @@ class BoardView @JvmOverloads constructor(
             /*
              * Player Active
              */
-            val activeElement = boardElements[Player.Type.PLAYER]!![BoardElement.ACTIVE] as Element.Card
+            val activeElement = boardElements[PLAYER]!![ACTIVE] as Element.Card
             val centerX = measuredWidth / 2f
             val centerY = measuredHeight / 2f
             val radius = measuredWidth / 5f
@@ -186,7 +278,7 @@ class BoardView @JvmOverloads constructor(
             /*
              * Player Prizes
              */
-            val prizesElement = boardElements[Player.Type.PLAYER]!![BoardElement.PRIZES] as Element.Card
+            val prizesElement = boardElements[PLAYER]!![PRIZES] as Element.Card
             val prizesX = baseX
             val prizesY = discardY
             prizesElement.bounds.set(prizesX, prizesY, prizesX + elementWidth, prizesY + elementHeight)
@@ -194,7 +286,7 @@ class BoardView @JvmOverloads constructor(
             /*
              * Player Lost Zone
              */
-            val lostZoneElement = boardElements[Player.Type.PLAYER]!![BoardElement.LOST_ZONE] as Element.Card
+            val lostZoneElement = boardElements[PLAYER]!![LOST_ZONE] as Element.Card
             val lostZoneX = deckX - (elementWidth + elementMargin)
             val lostZoneY = discardY
             lostZoneElement.bounds.set(lostZoneX, lostZoneY, lostZoneX + elementWidth, lostZoneY + elementHeight)
@@ -202,7 +294,7 @@ class BoardView @JvmOverloads constructor(
             /*
              * Agnostic Stadium Position
              */
-            val stadiumElement = boardElements[Player.Type.PLAYER]!![BoardElement.STADIUM] as Element.Card
+            val stadiumElement = boardElements[PLAYER]!![STADIUM] as Element.Card
             val stadiumX = activeX - (elementWidth + elementMargin)
             val stadiumY = centerY - (elementHeight / 2f)
             stadiumElement.bounds.set(stadiumX, stadiumY, stadiumX + elementWidth, stadiumY + elementHeight)
@@ -213,7 +305,7 @@ class BoardView @JvmOverloads constructor(
             /*
              * Opponent Bench
              */
-            val benchElement = boardElements[Player.Type.OPPONENT]!![BoardElement.BENCH] as Element.Bench
+            val benchElement = boardElements[OPPONENT]!![BENCH] as Element.Bench
             (1 until 6).forEach {
                 val card = benchElement.cards[it - 1]
                 val offsetX = measuredWidth - ((it * elementWidth) + ((it - 1) * elementMargin))
@@ -225,8 +317,8 @@ class BoardView @JvmOverloads constructor(
             /*
              * Opponent Discard & Deck
              */
-            val deckElement = boardElements[Player.Type.OPPONENT]!![BoardElement.DECK] as Element.Card
-            val discardElement = boardElements[Player.Type.OPPONENT]!![BoardElement.DISCARD] as Element.Card
+            val deckElement = boardElements[OPPONENT]!![DECK] as Element.Card
+            val discardElement = boardElements[OPPONENT]!![DISCARD] as Element.Card
 
             val deckX = boardPadding
             val deckY = boardPadding + elementHeight + elementMargin + elementHeight + (elementMargin / 2f)
@@ -238,7 +330,7 @@ class BoardView @JvmOverloads constructor(
             /*
              * Opponent Active
              */
-            val activeElement = boardElements[Player.Type.OPPONENT]!![BoardElement.ACTIVE] as Element.Card
+            val activeElement = boardElements[OPPONENT]!![ACTIVE] as Element.Card
             val centerX = measuredWidth / 2f
             val centerY = measuredHeight / 2f
             val radius = measuredWidth / 5f
@@ -250,7 +342,7 @@ class BoardView @JvmOverloads constructor(
             /*
              * Opponent Prizes
              */
-            val prizesElement = boardElements[Player.Type.OPPONENT]!![BoardElement.PRIZES] as Element.Card
+            val prizesElement = boardElements[OPPONENT]!![PRIZES] as Element.Card
             val baseY = boardPadding + elementHeight + elementMargin
             val prizesX = measuredWidth - (boardPadding + elementWidth)
             val prizesY = discardY
@@ -259,7 +351,7 @@ class BoardView @JvmOverloads constructor(
             /*
              * Opponent Lost Zone
              */
-            val lostZoneElement = boardElements[Player.Type.OPPONENT]!![BoardElement.LOST_ZONE] as Element.Card
+            val lostZoneElement = boardElements[OPPONENT]!![LOST_ZONE] as Element.Card
             val lostZoneX = deckX + elementWidth + elementMargin
             val lostZoneY = discardY
             lostZoneElement.bounds.set(lostZoneX, lostZoneY, lostZoneX + elementWidth, lostZoneY + elementHeight)
@@ -277,9 +369,16 @@ class BoardView @JvmOverloads constructor(
             val element = boardElements[lp.playerType]?.get(lp.element)
             if (element != null) {
                 when(element) {
-                    is Element.Card -> child.layout(element.bounds)
+                    is Element.Card -> child.layout(
+                            element.bounds.left.toInt(),
+                            element.bounds.top.toInt() - child.paddingTop
+                    )
                     is Element.Bench -> {
-                        child.layout(element.cards[lp.benchPosition].bounds)
+                        val bounds = element.cards[lp.benchPosition].bounds
+                        child.layout(
+                                bounds.left.toInt(),
+                                bounds.top.toInt() - child.paddingTop
+                        )
                     }
                 }
             }
@@ -292,9 +391,9 @@ class BoardView @JvmOverloads constructor(
 
         // Draw Elements
         BoardElement.values().forEach { element ->
-            if (element == BoardElement.BENCH) {
-                val player = boardElements[Player.Type.PLAYER]!![element] as Element.Bench
-                val opponent = boardElements[Player.Type.OPPONENT]!![element] as Element.Bench
+            if (element == BENCH) {
+                val player = boardElements[PLAYER]!![element] as Element.Bench
+                val opponent = boardElements[OPPONENT]!![element] as Element.Bench
 
                 player.cards.forEach { drawCard(canvas, it.bounds, null, false) }
                 opponent.cards.forEach { drawCard(canvas, it.bounds, null, false) }
@@ -348,21 +447,17 @@ class BoardView @JvmOverloads constructor(
         return false
     }
 
-
     override fun onDown(e: MotionEvent?): Boolean {
         return false
     }
-
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         return false
     }
 
-
     override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
         return false
     }
-
 
     override fun onLongPress(e: MotionEvent) {
         val x = e.x
@@ -381,39 +476,108 @@ class BoardView @JvmOverloads constructor(
 
     private fun updateBoardView() {
         board?.let { b ->
-            b.player.also { player ->
 
-                /*
-                 * Find & Update the Player, Active card if exists
-                 */
-                player.active?.let { active ->
-                    var activeViewChild = findChild<BoardCardView>(Player.Type.PLAYER, BoardElement.ACTIVE)
-                    if (activeViewChild == null) {
-                        activeViewChild = BoardCardView(context)
-                        val lp = LayoutParams(Player.Type.PLAYER, BoardElement.ACTIVE)
-                        addView(activeViewChild, lp)
-                    }
-
-                    activeViewChild.card = active
+            /*
+             * Find and update the stadium
+             */
+            b.stadium?.let { s ->
+                var stadiumViewChild = findChild<BoardCardView>(null, STADIUM)
+                if (stadiumViewChild == null) {
+                    stadiumViewChild = BoardCardView(context)
+                    val lp = LayoutParams(null, STADIUM)
+                    addView(stadiumViewChild, lp)
                 }
 
-                /*
-                 * Find and Update the bench cards
-                 */
-                player.bench.cards.forEach { (position, card) ->
-                    var benchView = findChild<BoardCardView>(Player.Type.PLAYER, BoardElement.BENCH, position)
+                stadiumViewChild.card = Board.Card(arrayDequeOf(s))
+            } ?: removeChild(null, STADIUM)
 
-                    if (benchView == null) {
-                        benchView = BoardCardView(context)
-                        val lp = LayoutParams(Player.Type.PLAYER, BoardElement.BENCH, position)
-                        addView(benchView, lp)
-                    }
+            /**
+             * Find and update the player and opponent board positions
+             */
+            updatePlayer(PLAYER, b.player)
+            updatePlayer(OPPONENT, b.opponent)
+        }
+    }
 
-                    benchView.card = card
-                }
-
-
+    private fun updatePlayer(type: Player.Type, player: Player) {
+        /*
+         * Find & Update the Player, Active card if exists
+         */
+        player.active?.let { active ->
+            var activeViewChild = findChild<BoardCardView>(type, ACTIVE)
+            if (activeViewChild == null) {
+                activeViewChild = BoardCardView(context)
+                activeViewChild.setOnClickListener(cardViewClickListener)
+                val lp = LayoutParams(type, ACTIVE)
+                addView(activeViewChild, lp)
             }
+
+            activeViewChild.card = active
+        } ?: removeChild(type, ACTIVE)
+
+        /*
+         * Find and Update the bench cards
+         */
+        player.bench.cards.forEach { (position, card) ->
+            var benchView = findChild<BoardCardView>(type, BENCH, position)
+
+            if (benchView == null) {
+                benchView = BoardCardView(context)
+                benchView.setOnClickListener(cardViewClickListener)
+                val lp = LayoutParams(type, BENCH, position)
+                addView(benchView, lp)
+            }
+
+            benchView.card = card
+        }
+
+        // Remove any bench children that aren't in the board state
+        removeChildren(type, player.bench.cards.keys)
+
+        /*
+         * Find & Update a Player's deck
+         */
+        findAndUpdateCardStackView(type, DECK, player.deck, true)
+
+        /*
+         * Find & Update a Player's discard stack
+         */
+        findAndUpdateCardStackView(type, DISCARD, player.discard)
+
+        /*
+         * Find & Update a Player's lostZone stack
+         */
+        findAndUpdateCardStackView(type, LOST_ZONE, player.lostZone)
+
+        /*
+         * Find & Update a Player's Prize card stack
+         */
+        findAndUpdateCardStackView(type, PRIZES, player.prizes.values, true)
+    }
+
+    private fun findAndUpdateCardStackView(
+            playerType: Player.Type,
+            boardElement: BoardElement,
+            elements: Collection<PokemonCard>,
+            startFaceDown: Boolean = false
+    ) {
+        if (elements.isNotEmpty()) {
+            var stackView = findChild<CardStackView>(playerType, boardElement)
+
+            if (stackView == null) {
+                stackView = CardStackView(
+                        context,
+                        cards = elements.map { Board.Card(arrayDequeOf(it)) },
+                        startFaceDown = startFaceDown
+                )
+                stackView.setOnClickListener(cardViewClickListener)
+                val lp = LayoutParams(playerType, boardElement)
+                addView(stackView, lp)
+            } else {
+                stackView.cards = elements.map { Board.Card(arrayDequeOf(it)) }
+            }
+        } else {
+            removeChild(playerType, boardElement)
         }
     }
 
@@ -442,17 +606,17 @@ class BoardView @JvmOverloads constructor(
 
 
     private fun drawCard(canvas: Canvas, element: BoardElement) {
-        val border = element == BoardElement.ACTIVE || element == BoardElement.STADIUM || element == BoardElement.LOST_ZONE
+        val border = element == ACTIVE || element == STADIUM || element == LOST_ZONE
         val text = when(element) {
-            BoardElement.DECK -> "DECK"
-            BoardElement.DISCARD -> "DISC."
-            BoardElement.LOST_ZONE -> "LOST\nZONE"
-            BoardElement.PRIZES -> "PRIZES"
+            DECK -> "DECK"
+            DISCARD -> "DISC."
+            LOST_ZONE -> "LOST\nZONE"
+            PRIZES -> "PRIZES"
             else -> null
         }
 
-        val player = boardElements[Player.Type.PLAYER]!![element]
-        val opponent = boardElements[Player.Type.OPPONENT]!![element]
+        val player = boardElements[PLAYER]!![element]
+        val opponent = boardElements[OPPONENT]!![element]
         player?.bounds?.let { drawCard(canvas, it, text, border) }
         opponent?.bounds?.let { drawCard(canvas, it, text, border) }
     }
@@ -492,8 +656,44 @@ class BoardView @JvmOverloads constructor(
         canvas.drawLine(centerX + innerRadius, centerY, centerX + radius, centerY, paint)
     }
 
+    private fun removeChild(
+            type: Player.Type?,
+            element: BoardElement,
+            benchPosition: Int = 0
+    ) {
+        val view = findChild<View>(type, element, benchPosition)
+        if (view != null) {
+            removeView(view)
+        }
+    }
+
+    private fun removeChildren(
+            type: Player.Type?,
+            excludeBenchPositions: Iterable<Int>
+    ) {
+        val childrenToRemove = ArrayList<View>()
+
+        forEach { child ->
+            val lp = child.layoutParams as? LayoutParams
+            if (lp != null
+                    && lp.playerType == type
+                    && lp.element == BENCH
+                    && !excludeBenchPositions.contains(lp.benchPosition)) {
+                childrenToRemove += child
+            }
+        }
+
+        childrenToRemove.forEach {
+            removeView(it)
+        }
+    }
+
     @Suppress("UNCHECKED_CAST")
-    private fun <T : View> findChild(type: Player.Type, element: BoardElement, benchPosition: Int = 0): T? {
+    private fun <T : View> findChild(
+            type: Player.Type?,
+            element: BoardElement,
+            benchPosition: Int = 0
+    ): T? {
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             val childLp = child.layoutParams
@@ -509,6 +709,8 @@ class BoardView @JvmOverloads constructor(
 
     interface BoardListener {
 
+        fun onCardClicked(view: BoardCardView)
+        fun onCardStackClicked(view: CardStackView)
         fun onBoardElementClicked(playerType: Player.Type, elementType: BoardElement, element: Element)
         fun onBoardElementLongClicked(playerType: Player.Type, elementType: BoardElement, element: Element)
     }

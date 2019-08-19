@@ -40,12 +40,39 @@ fun ViewGroup.forEach(action: (View) -> Unit) {
     }
 }
 
+inline fun <reified T : View> ViewGroup.forEachAs(action: (T) -> Unit) {
+    val count = childCount
+    for (i in 0 until count) {
+        val child = getChildAt(i)
+        if (child is T) {
+            action(child)
+        }
+    }
+}
+
+fun ViewGroup.forEachIndexed(action: (Int, View) -> Unit) {
+    val count = childCount
+    for (i in 0 until count) {
+        val child = getChildAt(i)
+        action(i, child)
+    }
+}
+
 fun View.layout(bounds: RectF) {
     this.layout(
             bounds.left.toInt(),
             bounds.top.toInt(),
             bounds.right.toInt(),
             bounds.bottom.toInt()
+    )
+}
+
+fun View.layout(x: Int, y: Int) {
+    this.layout(
+            x,
+            y,
+            x + measuredWidth,
+            y + measuredHeight
     )
 }
 
@@ -137,6 +164,10 @@ fun View.updatePadding(
         bottom: Int? = null
 ) {
     setPadding(left ?: paddingLeft, top ?: paddingTop, right ?: paddingRight, bottom ?: paddingBottom)
+}
+
+fun View.setPadding(size: Int) {
+    setPadding(size, size, size, size)
 }
 
 /*

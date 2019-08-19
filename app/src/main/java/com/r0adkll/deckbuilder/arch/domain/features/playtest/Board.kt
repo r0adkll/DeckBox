@@ -68,12 +68,12 @@ data class Board(
      */
     data class Card(
             val pokemons: Deque<PokemonCard>,
-            val energy: List<PokemonCard>,
-            val tools: List<PokemonCard>,
-            val isPoisoned: Boolean,
-            val isBurned: Boolean,
-            val statusEffect: Status?,
-            val damage: Int
+            val energy: List<PokemonCard> = emptyList(),
+            val tools: List<PokemonCard> = emptyList(),
+            val isPoisoned: Boolean = false,
+            val isBurned: Boolean = false,
+            val statusEffect: Status? = null,
+            val damage: Int = 0
     ) {
 
         /**

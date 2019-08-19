@@ -1,9 +1,13 @@
 package com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.LevelListDrawable
 import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.RoundRectShape
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -13,10 +17,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.util.Pools
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.kotlin.extensions.*
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
@@ -31,7 +32,6 @@ import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import timber.log.Timber
-import java.lang.IllegalStateException
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -41,7 +41,8 @@ class BoardCardView @JvmOverloads constructor(
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0,
         cardSize: Size = Size.SMALL,
-        card: Board.Card? = null
+        card: Board.Card? = null,
+        startFaceDown: Boolean = false
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
     enum class Size(
@@ -50,7 +51,7 @@ class BoardCardView @JvmOverloads constructor(
             val toolStrokeDp: Float,
             val energyPaddingDp: Float
     ) {
-        SMALL(8f, 2f, 1f, 2f),
+        SMALL(4f, 2f, 1f, 2f),
         LARGE(16f, 4f, 2f, 4f);
 
         fun toolMaskDrawable(context: Context): ShapeDrawable {
@@ -139,8 +140,10 @@ class BoardCardView @JvmOverloads constructor(
      */
     var card: Board.Card? = card
         set(value) {
-            field = value
-            balanceAttachmentViews()
+            if (value != field) {
+                field = value
+                balanceAttachmentViews()
+            }
         }
 
     /**
@@ -162,7 +165,16 @@ class BoardCardView @JvmOverloads constructor(
             requestLayout()
         }
 
-    var debug = BuildConfig.DEBUG
+    var isFaceDown: Boolean = startFaceDown
+        set(value) {
+            if (field != value) {
+                field = value
+                requestLayout()
+                balanceAttachmentViews()
+            }
+        }
+
+    var debug = false
 
     private val debugRect = Rect()
     private val debugPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -180,6 +192,7 @@ class BoardCardView @JvmOverloads constructor(
     private val tools = ArrayList<BezelImageView>()
     private val image = BezelImageView(context)
     private val damage = TextView(context)
+    private val status = ImageView(context)
 
     private val paddingRightExtra by lazy { dipToPx(4f) }
     private val paddingBottomExtra by lazy { dipToPx(4f) }
@@ -195,65 +208,37 @@ class BoardCardView @JvmOverloads constructor(
         toolStrokeDrawable = size.toolStrokeDrawable(context)
         energyStrokeDrawable = context.getDrawable(R.drawable.dr_mask_energy_card_stroke)
 
-
         image.maskDrawable = size.cardMaskDrawable(context)
         val imageLp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         addView(image, imageLp)
 
         // setup damage textview
-        damage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+        damage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
         damage.setTextColor(color(R.color.white))
         damage.setBackgroundResource(R.drawable.dr_damage_background)
-        val padLR = dipToPx(4f)
+        val padLR = dipToPx(8f)
         val padTB = dipToPx(2f)
         damage.setPaddingRelative(padLR, padTB, padLR, padTB)
         damage.gravity = Gravity.CENTER
         val damageLp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         addView(damage, damageLp)
 
-//        if (isInEditMode) {
-            val poke = pokemon {
-                id = "sm8-205"
-                name = "Alolan Ninetales-GX"
-                nationalPokedexNumber = 38
-                hp = 200
-                imageUrl = "https://images.pokemontcg.io/sm8/205.png"
-                imageUrlHiRes = "https://images.pokemontcg.io/sm8/205_hires.png"
-            }
-
-            val energy = pokemon {
-                id = "sm1-171"
-                name = "Fairy Energy"
-                supertype = SuperType.ENERGY
-                subtype = SubType.BASIC
-                types = listOf(Type.FAIRY)
-            }
-
-            val tool = pokemon {
-                id = "sm8-190"
-                name = "Spell Tag"
-                imageUrl = "https://images.pokemontcg.io/sm8/190.png"
-                imageUrlHiRes = "https://images.pokemontcg.io/sm8/190_hires.png"
-                supertype = SuperType.TRAINER
-                subtype = SubType.POKEMON_TOOL
-            }
-
-
-            card = Board.Card(ArrayDeque(listOf(poke)),
-                    listOf(energy, energy.copy(), energy.copy(), energy.copy(), energy.copy(), energy.copy()),
-                    listOf(tool, tool.copy()),
-                    false, false, null, 100)
-//        }
-
-        // FIXME: For testing, remove
-        image.setOnClickListener {
-//            debug = !debug
-            this@BoardCardView.invalidate()
-            size = when(size) {
-                Size.SMALL -> Size.LARGE
-                Size.LARGE -> Size.SMALL
-            }
+        // Setup status marker
+        status.gone()
+        status.setPadding(dipToPx(3f))
+        status.imageTintList = ColorStateList.valueOf(Color.WHITE)
+        val fillDrawable = ShapeDrawable(OvalShape()).apply {
+            paint.style = Paint.Style.FILL
         }
+        val borderDrawable = ShapeDrawable(OvalShape()).apply {
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = dpToPx(1f)
+        }
+        status.background = LayerDrawable(arrayOf(fillDrawable, borderDrawable))
+        val statusLp = LayoutParams(dipToPx(24f), dipToPx(24f))
+        addView(status, statusLp)
+
+        balanceAttachmentViews()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -272,60 +257,75 @@ class BoardCardView @JvmOverloads constructor(
             specHeight = (specWidth * PokemonCardView.RATIO).roundToInt() /* Parent Height */
         }
 
-        Timber.i("onMeasure(specWidth=$specWidth, specHeight=$specHeight")
+        if (debug) Timber.i("onMeasure(specWidth=$specWidth, specHeight=$specHeight")
 
-        /*
-         * Measure the root image to essentially 'MATCH_PARENT' as it will take up the entire
-         * space of this view
-         */
-        image.measure(
-                MeasureSpec.makeMeasureSpec(specWidth, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(specHeight, MeasureSpec.EXACTLY)
-        )
+        if (!isFaceDown) {
 
-        Timber.i("imageMeasure(w=${image.measuredWidth}, h=${image.measuredHeight}")
+            /*
+             * Measure the root image to essentially 'MATCH_PARENT' as it will take up the entire
+             * space of this view
+             */
+            image.measure(
+                    MeasureSpec.makeMeasureSpec(specWidth, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(specHeight, MeasureSpec.EXACTLY)
+            )
 
-        /*
-         * Calculate required padding on LRTB
-         */
-        val padRight = ((specWidth * TOOL_WIDTH_RATIO) / 2f).roundToInt() + paddingRightExtra
-        val padBottom = ((specWidth * ENERGY_SIZE_RATIO) / 2f).roundToInt() + paddingBottomExtra
+            if (debug) Timber.i("imageMeasure(w=${image.measuredWidth}, h=${image.measuredHeight}")
 
-        // Update the padding for future child measurements
-        updatePadding(right = padRight, bottom = padBottom)
+            /*
+             * Calculate required padding on LRTB
+             */
+            val padRight = ((specWidth * TOOL_WIDTH_RATIO) / 2f).roundToInt() + paddingRightExtra
+            val padBottom = ((specWidth * ENERGY_SIZE_RATIO) / 2f).roundToInt() + paddingBottomExtra
 
-        var parentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth + padRight, MeasureSpec.EXACTLY)
-        var parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight + padBottom, MeasureSpec.EXACTLY)
+            // Update the padding for future child measurements
+            updatePadding(right = padRight, bottom = padBottom)
 
-        /*
-         * Let the damage text view measure it self to account for the custom text and spacing
-         */
-        measureChild(damage, parentWidthMeasureSpec, parentHeightMeasureSpec)
+            var parentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth + padRight, MeasureSpec.EXACTLY)
+            var parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight + padBottom, MeasureSpec.EXACTLY)
 
-        Timber.i("damageMeasure(w=${damage.measuredWidth}, h=${damage.measuredHeight}")
+            /*
+             * Let the damage text view measure it self to account for the custom text and spacing
+             */
+            if (card?.damage?.let { it > 0 } == true) {
+                measureChild(damage, parentWidthMeasureSpec, parentHeightMeasureSpec)
+            }
 
-        // Update the top padding for our damage counter view
-        val padTop = damage.measuredHeight / 2
-        updatePadding(top = padTop)
+            if (debug) Timber.i("damageMeasure(w=${damage.measuredWidth}, h=${damage.measuredHeight}")
 
-        // Update our parent measure spec with updating paddings
-        parentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth + padRight, MeasureSpec.EXACTLY)
-        parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight + padBottom + padTop, MeasureSpec.EXACTLY)
+            // Update the top padding for our damage counter view
+            val padTop = damage.measuredHeight / 2
+            updatePadding(top = padTop)
 
-        /*
-         * Measure each tool taking into account the custom LayoutParams object for this ViewGroup
-         */
-        tools.forEach {
-            measureChildAttachment(it, parentWidthMeasureSpec, parentHeightMeasureSpec)
-            Timber.i("toolMeasure(w=${it.measuredWidth}, h=${it.measuredHeight})")
-        }
+            /*
+             * Measure status marker
+             */
+            if (status.visibility != View.GONE) {
+                measureChild(status, parentWidthMeasureSpec, parentHeightMeasureSpec)
+            }
 
-        /*
-         * Measure each tool taking into account the custom LayoutParams object for this ViewGroup
-         */
-        energies.forEach {
-            measureChildAttachment(it, parentWidthMeasureSpec, parentHeightMeasureSpec)
-            Timber.i("energyMeasure(w=${it.measuredWidth}, h=${it.measuredHeight})")
+            // Update our parent measure spec with updating paddings
+            parentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth + padRight, MeasureSpec.EXACTLY)
+            parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight + padBottom + padTop, MeasureSpec.EXACTLY)
+
+            /*
+             * Measure each tool taking into account the custom LayoutParams object for this ViewGroup
+             */
+            tools.forEach {
+                measureChildAttachment(it, parentWidthMeasureSpec, parentHeightMeasureSpec)
+                if (debug) Timber.i("toolMeasure(w=${it.measuredWidth}, h=${it.measuredHeight})")
+            }
+
+            /*
+             * Measure each tool taking into account the custom LayoutParams object for this ViewGroup
+             */
+            energies.forEach {
+                measureChildAttachment(it, parentWidthMeasureSpec, parentHeightMeasureSpec)
+                if (debug) Timber.i("energyMeasure(w=${it.measuredWidth}, h=${it.measuredHeight})")
+            }
+
+        } else {
+            setPadding(0, 0, 0, 0)
         }
 
         setMeasuredDimension(specWidth + paddingLeft + paddingRight, specHeight + paddingTop + paddingBottom)
@@ -339,30 +339,39 @@ class BoardCardView @JvmOverloads constructor(
 
         // Layout image
         image.layout(leftPos, topPos, rightPos, bottomPos)
-        Timber.i("Image Layout(l=$leftPos, t=$topPos, r=$rightPos, b=$bottomPos)")
+        if (debug) Timber.i("Image Layout(l=$leftPos, t=$topPos, r=$rightPos, b=$bottomPos)")
 
-        // Layout damage
-        val damageLeft = ((rightPos - leftPos) / 2) - (damage.measuredWidth / 2)
-        val damageTop = 0
-        damage.layout(damageLeft, damageTop, damageLeft + damage.measuredWidth, damageTop + damage.measuredHeight)
-        Timber.i("Damage Layout(l=$damageLeft, t=$damageTop, r=${damageLeft + damage.measuredWidth}, b=${damageTop + damage.measuredHeight})")
+        if (!isFaceDown) {
 
-        // Layout Tools
-        val toolOffsetY = ((bottomPos - topPos) * TOOL_OFFSET_Y_RATIO).roundToInt()
-        tools.forEachIndexed { index, view ->
-            val toolX = rightPos - (view.measuredWidth / 2)
-            val toolY = topPos + toolOffsetY + (index * view.measuredHeight) + (index * dipToPx(4f))
-            view.layout(toolX, toolY, toolX + view.measuredWidth, toolY + view.measuredHeight)
-            Timber.i("Tool($index) Layout(l=$toolX, t=$toolY, r=${toolX + view.measuredWidth}, b=${toolY + view.measuredHeight})")
-        }
+            // Layout damage
+            val damageLeft = ((rightPos - leftPos) / 2) - (damage.measuredWidth / 2)
+            val damageTop = 0
+            damage.layout(damageLeft, damageTop, damageLeft + damage.measuredWidth, damageTop + damage.measuredHeight)
+            if (debug) Timber.i("Damage Layout(l=$damageLeft, t=$damageTop, r=${damageLeft + damage.measuredWidth}, b=${damageTop + damage.measuredHeight})")
 
-        // Layout Energies
-        val energyPadding = size.energyPaddingDp.dip(context)
-        energies.forEachIndexed { index, view ->
-            val energyX = leftPos + energyPadding + (index * view.measuredWidth) + (index * energyPadding)
-            val energyY = bottomPos - (view.measuredHeight / 2)
-            view.layout(energyX, energyY, energyX + view.measuredWidth, energyY + view.measuredHeight)
-            Timber.i("Energy($index) Layout(l=$energyX, t=$energyY, r=${energyX + view.measuredWidth}, b=${energyY + view.measuredHeight})")
+            val statusLeft = ((rightPos - leftPos) / 2) - (status.measuredWidth / 2)
+            val statusTop = ((bottomPos - topPos) / 2) - (status.measuredHeight / 2)
+            status.layout(statusLeft, statusTop, statusLeft + status.measuredWidth, statusTop + status.measuredHeight)
+            if (debug) Timber.i("Status Layout(l=$statusLeft, t=$statusTop, r=${statusLeft + status.measuredWidth}, b=${statusTop + status.measuredHeight})")
+
+            // Layout Tools
+            val toolOffsetY = ((bottomPos - topPos) * TOOL_OFFSET_Y_RATIO).roundToInt()
+            tools.forEachIndexed { index, view ->
+                val toolX = rightPos - (view.measuredWidth / 2)
+                val toolY = topPos + toolOffsetY + (index * view.measuredHeight) + (index * dipToPx(4f))
+                view.layout(toolX, toolY, toolX + view.measuredWidth, toolY + view.measuredHeight)
+                if (debug) Timber.i("Tool($index) Layout(l=$toolX, t=$toolY, r=${toolX + view.measuredWidth}, b=${toolY + view.measuredHeight})")
+            }
+
+            // Layout Energies
+            val energyPadding = size.energyPaddingDp.dip(context)
+            energies.forEachIndexed { index, view ->
+                val energyX = leftPos + energyPadding + (index * view.measuredWidth) + (index * energyPadding)
+                val energyY = bottomPos - (view.measuredHeight / 2)
+                view.layout(energyX, energyY, energyX + view.measuredWidth, energyY + view.measuredHeight)
+                if (debug) Timber.i("Energy($index) Layout(l=$energyX, t=$energyY, r=${energyX + view.measuredWidth}, b=${energyY + view.measuredHeight})")
+            }
+
         }
     }
 
@@ -407,37 +416,70 @@ class BoardCardView @JvmOverloads constructor(
 
 
     private fun balanceAttachmentViews() {
-        card?.let { c ->
+        if (card != null) {
+            val c = card!!
             // Load pokemon on top of stack's image into the image view
-            GlideApp.with(this)
-                    .load(c.pokemons.peek()?.imageUrl)
-                    .into(image)
-
-            // Balance tools
-            trimViews(c.tools.size, tools)
-            c.tools.forEachIndexed { index, pokemonCard ->
-                if (index < tools.size) {
-                    val oldImage = tools[index]
-                    applyToolCard(pokemonCard, oldImage)
-                } else {
-                    applyToolCard(pokemonCard)
-                }
+            if (!isFaceDown) {
+                GlideApp.with(this)
+                        .load(c.pokemons.peek()?.imageUrl)
+                        .placeholder(R.drawable.pokemon_card_back)
+                        .into(image)
+            } else {
+                image.setImageResource(R.drawable.pokemon_card_back)
             }
 
-            // Balance energy cards
-            trimViews(c.energy.size, energies)
-            c.energy.forEachIndexed { index, pokemonCard ->
-                if (index < energies.size) {
-                    val oldImage = energies[index]
-                    applyEnergyCard(pokemonCard, oldImage)
-                } else {
-                    applyEnergyCard(pokemonCard)
-                }
-            }
+            if (!isFaceDown) {
 
-            // Damage
-            damage.setVisible(c.damage > 0)
-            damage.text = "${c.damage}"
+                // Balance tools
+                trimViews(c.tools.size, tools)
+                c.tools.forEachIndexed { index, pokemonCard ->
+                    if (index < tools.size) {
+                        val oldImage = tools[index]
+                        applyToolCard(pokemonCard, oldImage)
+                    } else {
+                        applyToolCard(pokemonCard)
+                    }
+                }
+
+                // Balance energy cards
+                trimViews(c.energy.size, energies)
+                c.energy.forEachIndexed { index, pokemonCard ->
+                    if (index < energies.size) {
+                        val oldImage = energies[index]
+                        applyEnergyCard(pokemonCard, oldImage)
+                    } else {
+                        applyEnergyCard(pokemonCard)
+                    }
+                }
+
+                // Damage
+                damage.setVisible(c.damage > 0)
+                damage.text = "${c.damage}"
+
+                // Status
+                status.setVisible(c.isBurned || c.isPoisoned)
+                (status.background as LayerDrawable).apply {
+                    (getDrawable(0) as ShapeDrawable).paint.apply {
+                        color = if (c.isPoisoned) color(R.color.green_400) else color(R.color.red_400)
+                    }
+                    (getDrawable(1) as ShapeDrawable).paint.apply {
+                        color = if (c.isPoisoned) color(R.color.green_300) else color(R.color.red_300)
+                    }
+                }
+
+                // TODO: Replace this with a configurable status marker system that users can
+                // TODO: change and configure
+                status.setImageResource(when {
+                    c.isPoisoned -> R.drawable.ic_poison_small
+                    else -> R.drawable.ic_burn_small
+                })
+
+            } else {
+                damage.gone()
+            }
+        } else {
+            image.setImageResource(R.drawable.pokemon_card_back)
+            damage.gone()
         }
     }
 
@@ -518,6 +560,6 @@ class BoardCardView @JvmOverloads constructor(
         const val TOOL_WIDTH_RATIO = 0.2302158273f
         const val TOOL_HEIGHT_RATIO = 0.1053984576f
         const val TOOL_OFFSET_Y_RATIO = 0.265060241f
-        const val ENERGY_SIZE_RATIO = 0.1151079137f
+        const val ENERGY_SIZE_RATIO = 0.1445783133f //0.1151079137f
     }
 }
