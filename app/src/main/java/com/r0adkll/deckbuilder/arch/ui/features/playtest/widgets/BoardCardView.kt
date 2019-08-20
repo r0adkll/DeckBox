@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.util.Pools
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.ftinc.kit.kotlin.extensions.*
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.GlideApp
@@ -43,7 +44,7 @@ class BoardCardView @JvmOverloads constructor(
         cardSize: Size = Size.SMALL,
         card: Board.Card? = null,
         startFaceDown: Boolean = false
-) : ViewGroup(context, attrs, defStyleAttr) {
+) : ViewGroup(context, attrs, defStyleAttr), BoardView.Draggable {
 
     enum class Size(
             val cardRadiusDp: Float,
@@ -134,6 +135,11 @@ class BoardCardView @JvmOverloads constructor(
         }
     }
 
+    override val cardType: SuperType
+        get() = card?.pokemons?.first?.supertype ?: SuperType.UNKNOWN
+
+    override val cardSubtype: SubType
+        get() = card?.pokemons?.first?.subtype ?: SubType.UNKNOWN
 
     /**
      * The [Board.Card] State that this view will be rendering
@@ -174,6 +180,9 @@ class BoardCardView @JvmOverloads constructor(
             }
         }
 
+    /**
+     * Enable or disable debugging mode to print log statements and debug renderering
+     */
     var debug = false
 
     private val debugRect = Rect()
@@ -273,16 +282,25 @@ class BoardCardView @JvmOverloads constructor(
             if (debug) Timber.i("imageMeasure(w=${image.measuredWidth}, h=${image.measuredHeight}")
 
             /*
-             * Calculate required padding on LRTB
+             * Calculate right padding if tools are attached
              */
-            val padRight = ((specWidth * TOOL_WIDTH_RATIO) / 2f).roundToInt() + paddingRightExtra
-            val padBottom = ((specWidth * ENERGY_SIZE_RATIO) / 2f).roundToInt() + paddingBottomExtra
+            if (tools.isNotEmpty()) {
+                val padRight = ((specWidth * TOOL_WIDTH_RATIO) / 2f).roundToInt() + paddingRightExtra
+                updatePadding(right = padRight)
+            }
 
-            // Update the padding for future child measurements
-            updatePadding(right = padRight, bottom = padBottom)
+            /*
+             * Calculate bottom padding if energy is attached
+             */
+            if (energies.isNotEmpty()) {
+                val padBottom = ((specWidth * ENERGY_SIZE_RATIO) / 2f).roundToInt() + paddingBottomExtra
 
-            var parentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth + padRight, MeasureSpec.EXACTLY)
-            var parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight + padBottom, MeasureSpec.EXACTLY)
+                // Update the padding for future child measurements
+                updatePadding(bottom = padBottom)
+            }
+
+            var parentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth + paddingRight, MeasureSpec.EXACTLY)
+            var parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight + paddingBottom, MeasureSpec.EXACTLY)
 
             /*
              * Let the damage text view measure it self to account for the custom text and spacing
@@ -305,8 +323,8 @@ class BoardCardView @JvmOverloads constructor(
             }
 
             // Update our parent measure spec with updating paddings
-            parentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth + padRight, MeasureSpec.EXACTLY)
-            parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight + padBottom + padTop, MeasureSpec.EXACTLY)
+            parentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth + paddingRight, MeasureSpec.EXACTLY)
+            parentHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight + paddingBottom + padTop, MeasureSpec.EXACTLY)
 
             /*
              * Measure each tool taking into account the custom LayoutParams object for this ViewGroup
@@ -329,6 +347,9 @@ class BoardCardView @JvmOverloads constructor(
         }
 
         setMeasuredDimension(specWidth + paddingLeft + paddingRight, specHeight + paddingTop + paddingBottom)
+
+        pivotX = paddingLeft + (specWidth / 2f)
+        pivotY = paddingTop + (specHeight / 2f)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -378,6 +399,8 @@ class BoardCardView @JvmOverloads constructor(
     override fun onDrawForeground(canvas: Canvas) {
         super.onDrawForeground(canvas)
         if (debug) {
+            debugPaint.color = Color.RED
+
             canvas.drawRoundRect(RectF(debugRect.set(image)), dpToPx(8f), dpToPx(8f), debugPaint)
             canvas.drawRect(debugRect.set(damage), debugPaint)
 
@@ -390,6 +413,30 @@ class BoardCardView @JvmOverloads constructor(
             }
 
             canvas.drawRect(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat(), debugPaint)
+
+            debugPaint.color = Color.GREEN
+            val radius = dpToPx(2f)
+            canvas.drawCircle(pivotX, pivotY, radius, debugPaint)
+        }
+    }
+
+    override fun onDragStart() {
+        translationZ = dpToPx(2f)
+        if (rotation != 0f) {
+            animate().rotation(0f)
+                    .setDuration(200L)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .start()
+        }
+    }
+
+    override fun onDragStopped() {
+        translationZ = dpToPx(0f)
+        if (!isFaceDown && card?.statusEffect != null) {
+            animate().rotation(getStatusEffectRotation())
+                    .setDuration(200L)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .start()
         }
     }
 
@@ -400,12 +447,12 @@ class BoardCardView @JvmOverloads constructor(
     ) {
         (child.layoutParams as? LayoutParams)?.let { lp ->
             val widthSpec = when(lp.width) {
-                LayoutParams.RATIO -> MeasureSpec.makeMeasureSpec(((lp.widthRatio ?: 0f) * measuredWidth).roundToInt(), MeasureSpec.EXACTLY)
+                LayoutParams.RATIO -> MeasureSpec.makeMeasureSpec(((lp.widthRatio ?: 0f) * image.measuredWidth).roundToInt(), MeasureSpec.EXACTLY)
                 else -> getChildMeasureSpec(parentWidthMeasureSpec, paddingLeft + paddingRight, lp.width)
             }
 
             val heightSpec = when(lp.height) {
-                LayoutParams.RATIO -> MeasureSpec.makeMeasureSpec(((lp.heightRatio ?: 0f) * measuredHeight).roundToInt(), MeasureSpec.EXACTLY)
+                LayoutParams.RATIO -> MeasureSpec.makeMeasureSpec(((lp.heightRatio ?: 0f) * image.measuredHeight).roundToInt(), MeasureSpec.EXACTLY)
                 LayoutParams.SQUARE -> widthSpec
                 else -> getChildMeasureSpec(parentHeightMeasureSpec, paddingTop + paddingBottom, lp.height)
             }
@@ -474,12 +521,17 @@ class BoardCardView @JvmOverloads constructor(
                     else -> R.drawable.ic_burn_small
                 })
 
+                // TODO: Potentially add some other visual effects to this state
+                rotation = getStatusEffectRotation()
+
             } else {
                 damage.gone()
+                rotation = 0f
             }
         } else {
             image.setImageResource(R.drawable.pokemon_card_back)
             damage.gone()
+            rotation = 0f
         }
     }
 
@@ -555,6 +607,12 @@ class BoardCardView @JvmOverloads constructor(
         return LayoutParams(ENERGY_SIZE_RATIO)
     }
 
+    private fun getStatusEffectRotation(): Float = when(card?.statusEffect) {
+        Board.Card.Status.CONFUSED -> 180f
+        Board.Card.Status.PARALYZED -> 90f
+        Board.Card.Status.SLEEPING ->  -90f
+        else -> 0f
+    }
 
     companion object {
         const val TOOL_WIDTH_RATIO = 0.2302158273f

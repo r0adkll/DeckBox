@@ -7,6 +7,8 @@ import com.ftinc.kit.arch.presentation.BaseActivity
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionBottomSheetFragment
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionSheet
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.di.PlaytestModule
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardCardView
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardView
@@ -34,14 +36,27 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
             override fun onCardStackClicked(view: CardStackView) {
                 view.debug = false
                 val lp = view.layoutParams as? BoardView.LayoutParams
-                toast("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards}")
-                Timber.i("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards}")
+                toast("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards.size}")
+                Timber.i("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards.size}")
+                if (lp?.element == BoardView.BoardElement.DECK) {
+                    ActionBottomSheetFragment.show(supportFragmentManager, ActionSheet.DECK)
+                }
             }
 
             override fun onCardClicked(view: BoardCardView) {
                 val lp = view.layoutParams as? BoardView.LayoutParams
                 toast("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
                 Timber.i("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+                if (lp?.element == BoardView.BoardElement.ACTIVE) {
+                    ActionBottomSheetFragment.show(supportFragmentManager, ActionSheet.ACTIVE)
+                }
+            }
+
+            override fun onCardDropped(view: BoardCardView, targetType: BoardView.BoardElement, targetElement: BoardView.Element): Boolean {
+                val lp = view.layoutParams as? BoardView.LayoutParams
+                toast("Card Dropped on (${targetType.name}, element=${targetElement::class.java.simpleName}) - (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+                Timber.i("Card Dropped on (${targetType.name}, element=${targetElement::class.java.simpleName}) - (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+                return false
             }
 
             override fun onBoardElementClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {

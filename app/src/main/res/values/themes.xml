@@ -13,7 +13,7 @@
 
         <item name="android:windowBackground">@color/backgroundColor</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-
+        <item name="bottomSheetDialogTheme">@style/Theme.DeckBuilder.BottomSheetDialog</item>
     </style>
 
     <style name="Theme.DeckBuilder" parent="Base.Theme.DeckBuilder">
@@ -30,6 +30,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/primaryColor</item>
         <item name="collectionAdjusterTint">@color/collectionAdjusterTint</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.DeckBuilder.BottomSheetDialog</item>
     </style>
 
     <style name="Theme.DeckBuilder.Detail">

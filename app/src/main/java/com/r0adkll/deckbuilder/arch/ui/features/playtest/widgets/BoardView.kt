@@ -3,14 +3,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.os.Vibrator
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.animation.DecelerateInterpolator
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.kotlin.extensions.spToPx
@@ -21,18 +20,19 @@ import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board.Player.Type.*
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardView.BoardElement.*
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.util.extensions.arrayDequeOf
-import com.r0adkll.deckbuilder.util.extensions.forEach
-import com.r0adkll.deckbuilder.util.extensions.layout
-import com.r0adkll.deckbuilder.util.extensions.pokemon
+import com.r0adkll.deckbuilder.util.extensions.*
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
-import kotlinx.android.synthetic.main.item_deck_image_pokemon.view.*
+import timber.log.Timber
 import java.lang.IllegalArgumentException
+import java.lang.annotation.ElementType
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * This is the view that renders and manages the board for a Playtest simulator session renderering
@@ -42,6 +42,10 @@ class BoardView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr), GestureDetector.OnGestureListener {
 
+    /**
+     * Custom layout parameters that define how the children of this view are layed out
+     * and searchable.
+     */
     class LayoutParams(
             var playerType: Player.Type? = null,
             var element: BoardElement,
@@ -57,6 +61,129 @@ class BoardView @JvmOverloads constructor(
              */
             const val WRAP_CONTENT = -2
         }
+    }
+
+    /**
+     * An interface to define draggable behavior by the children of this view
+     */
+    interface Draggable {
+
+        /**
+         * The type of card that we are dragging
+         */
+        val cardType: SuperType
+
+        /**
+         * The subtype of the card that we are dragging
+         */
+        val cardSubtype: SubType
+
+        /**
+         * Notify implementation that this element has started to be dragged
+         */
+        fun onDragStart()
+
+        /**
+         * Notify implementation that it's drag has stopped
+         */
+        fun onDragStopped()
+    }
+
+    /**
+     * The board action listener that defines callback behavior for user based events in this
+     * view
+     */
+    interface BoardListener {
+
+        /**
+         * Called on a card view clicked on the board by the user
+         * @param view the [BoardCardView] that was clicked. Information can be gleaned of it's layout-params
+         */
+        fun onCardClicked(view: BoardCardView)
+
+        /**
+         * Called when one of the [CardStackView]s are clicked on the board. This includes the
+         * deck, discard, lost zone, or prizes
+         * @param view the [CardStackView] that was clicked
+         */
+        fun onCardStackClicked(view: CardStackView)
+
+        /**
+         * Called when a user dragged and dropped a card view onto one of the valid drop targets on the
+         * board.
+         * @param view the card view that was dragged and dropped
+         * @param targetType the element type of the target that the card was dropped on
+         * @param targetElement the target element itself that the card was dropped on. important for [BENCH] types in determining which card on the bench it was dropped on.
+         */
+        fun onCardDropped(view: BoardCardView, targetType: BoardElement, targetElement: Element): Boolean
+
+        /**
+         * Called when an empty board element was clicked.
+         * @param playerType the [Player.Type] side of the board that was clicked
+         * @param elementType the type of board element that was clicked
+         * @param element the board element itself that was clicked
+         */
+        fun onBoardElementClicked(playerType: Player.Type, elementType: BoardElement, element: Element)
+
+        /**
+         * Called when an empty board element was long clicked.
+         * @param playerType the [Player.Type] side of the board that was clicked
+         * @param elementType the type of board element that was clicked
+         * @param element the board element itself that was clicked
+         */
+        fun onBoardElementLongClicked(playerType: Player.Type, elementType: BoardElement, element: Element)
+    }
+
+    /**
+     * Per-Player board elements to be represented as [Element]s
+     */
+    enum class BoardElement {
+        BENCH,
+        DECK,
+        DISCARD,
+        ACTIVE,
+        PRIZES,
+        LOST_ZONE,
+        STADIUM
+    }
+
+    /**
+     * Represents the elements of the board/playmat for use in associated location and behavior
+     * for the cards on the board and user behavior
+     */
+    sealed class Element {
+
+        abstract val bounds: RectF
+
+        class Card(override var bounds: RectF = RectF()) : Element()
+
+        class Bench(val cards: MutableList<Card> = ArrayList() /* 5 - 8 Single Elements */) : Element() {
+
+            override val bounds: RectF
+                get() {
+                    val left = cards.minBy { it.bounds.left }?.bounds?.left ?: 0f
+                    val right = cards.maxBy { it.bounds.right }?.bounds?.right ?: 0f
+                    val top = cards.minBy { it.bounds.top }?.bounds?.top ?: 0f
+                    val bottom = cards.maxBy { it.bounds.bottom }?.bounds?.bottom ?: 0f
+                    return RectF(left, top, right, bottom)
+                }
+        }
+    }
+
+    private data class Result(
+            val type: Player.Type,
+            val elementType: BoardElement,
+            val element: Element
+    )
+
+    /**
+     * Object that represents a current touch & drag session intiated by the user to track where
+     * the drag began, the child it's dragging, and other useful state information
+     */
+    private class TouchSession(val downX: Float, val downY: Float) {
+
+        var draggedChild: WeakReference<View>? = null
+        var lastHoverResult: Result? = null
     }
 
 
@@ -79,6 +206,7 @@ class BoardView @JvmOverloads constructor(
     var elementWidth: Float = 0f; private set
     var elementHeight: Float = 0f; private set
 
+    private val vibrator by systemService<Vibrator>(context, Context.VIBRATOR_SERVICE)
     private val gestureDetector: GestureDetector
     private var listener: BoardListener? = null
     private val cardViewClickListener = OnClickListener {
@@ -87,6 +215,9 @@ class BoardView @JvmOverloads constructor(
             is CardStackView -> listener?.onCardStackClicked(it)
         }
     }
+
+    private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+    private var touchSession: TouchSession? = null
 
     /**
      * A Map of Maps to contain all the positional element components of a playmat board
@@ -98,6 +229,7 @@ class BoardView @JvmOverloads constructor(
 
     init {
         clipChildren = false
+        clipToOutline = false
         setWillNotDraw(false)
 
         paint.color = color(R.color.playmat)
@@ -215,7 +347,7 @@ class BoardView @JvmOverloads constructor(
                                 2 to poke2Card.copy(),
                                 3 to poke2Card.copy()
                         )),
-                        pokeCard.copy(statusEffect = Board.Card.Status.CONFUSED),
+                        pokeCard.copy(statusEffect = Board.Card.Status.SLEEPING),
                         null
                 ),
                 Player(emptyList(), emptyMap(), ArrayDeque(0), emptyList(), emptyList(), Board.Bench(), null, null),
@@ -404,25 +536,170 @@ class BoardView @JvmOverloads constructor(
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        val x = ev.x.toInt()
-        val y = ev.y.toInt()
+        val x = ev.x
+        val y = ev.y
 
-        // Check if any of the children can intercept
-        val hitRect = Rect()
-        for (index in 0 until childCount) {
-            val child = getChildAt(index)
-            child.getHitRect(hitRect)
-            if (hitRect.contains(x, y)) {
-                return false
+        when(ev.action) {
+            MotionEvent.ACTION_DOWN -> {
+                Timber.i("Touch session started @ (x=$x, y=$y)")
+                touchSession = TouchSession(x, y)
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (touchSession != null && touchSession?.draggedChild?.get() == null) {
+                    val distance = sqrt((x - touchSession!!.downX).pow(2) + (y - touchSession!!.downY).pow(2))
+                    if (distance > touchSlop) {
+                        val draggedChild = findChild(touchSession!!.downX, touchSession!!.downY)
+                        if (draggedChild != null && draggedChild is Draggable) {
+                            Timber.i("Threshold for dragging has been reached and child found, start drag mode")
+                            touchSession?.draggedChild = WeakReference(draggedChild)
+
+                            draggedChild.translationX = x - touchSession!!.downX
+                            draggedChild.translationY = y - touchSession!!.downY
+
+                            (draggedChild as? Draggable)?.onDragStart()
+                            return true
+                        } else if (draggedChild != null && draggedChild !is Draggable) {
+                            Timber.i("Touched child can NEVER be dragged, terminate the touch session")
+                            touchSession = null
+                        }
+                    }
+                }
             }
         }
 
-        return true
+        // Check if any of the children can intercept
+        return findChild(x, y) == null
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return gestureDetector.onTouchEvent(event)
+        if (touchSession == null || touchSession?.draggedChild?.get() == null) {
+            return gestureDetector.onTouchEvent(event)
+        } else {
+            val x = event.x
+            val y = event.y
+
+            when(event.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    touchSession?.draggedChild?.get()?.let { child ->
+                        child.translationX = x - touchSession!!.downX
+                        child.translationY = y - touchSession!!.downY
+
+                        // Check if we have moved over a drop target
+                        val cardType = (child as Draggable).cardType
+                        val cardSubtype = (child as Draggable).cardSubtype
+                        val childParams = child.layoutParams as LayoutParams
+                        touchSession?.lastHoverResult = findBoardElements(x, y)?.also { result ->
+                            if (result.type == childParams.playerType && result != touchSession?.lastHoverResult) {
+                                when (result.elementType) {
+                                    BENCH -> {
+                                        // We don't want to vibrate when its the bench collection element
+                                        if (cardType == SuperType.POKEMON && result.element !is Element.Bench) {
+                                            performHoverHapticFeedback(child)
+                                        }
+                                    }
+                                    DECK -> {
+                                        performHoverHapticFeedback(child)
+                                    }
+                                    DISCARD -> {
+                                        performHoverHapticFeedback(child)
+                                    }
+                                    ACTIVE -> {
+                                        if (childParams.element == BENCH) {
+                                            performHoverHapticFeedback(child)
+                                        }
+                                    }
+                                    //PRIZES -> // Do Nothing()
+                                    LOST_ZONE -> {
+                                        performHoverHapticFeedback(child)
+                                    }
+                                    STADIUM -> {
+                                        if (cardType == SuperType.TRAINER
+                                                && cardSubtype == SubType.STADIUM) {
+                                            performHoverHapticFeedback(child)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    (touchSession?.draggedChild?.get() as? Draggable)?.onDragStopped()
+                    touchSession?.draggedChild?.get()?.let { child ->
+                        val result = findBoardElements(event.x, event.y)
+                        if (result != null) {
+                            val cardType = (child as Draggable).cardType
+                            val cardSubtype = (child as Draggable).cardSubtype
+                            val childParams = child.layoutParams as LayoutParams
+                            if (result.type == childParams.playerType) {
+                                when (result.elementType) {
+                                    BENCH -> {
+                                        // We don't want\" to vibrate when its the bench collection element
+                                        if (cardType == SuperType.POKEMON && result.element !is Element.Bench) {
+                                            performHoverHapticFeedback(child, 16)
+                                            if (listener?.onCardDropped(child as BoardCardView, result.elementType, result.element) != true) {
+                                                child.resetChildCardView()
+                                            }
+                                        }
+                                    }
+                                    DECK -> {
+                                        performHoverHapticFeedback(child, 16)
+                                        if (listener?.onCardDropped(child as BoardCardView, result.elementType, result.element) != true) {
+                                            child.resetChildCardView()
+                                        }
+                                    }
+                                    DISCARD -> {
+                                        performHoverHapticFeedback(child, 16)
+                                        if (listener?.onCardDropped(child as BoardCardView, result.elementType, result.element) != true) {
+                                            child.resetChildCardView()
+                                        }
+                                    }
+                                    ACTIVE -> {
+                                        if (childParams.element == BENCH) {
+                                            performHoverHapticFeedback(child, 16)
+                                            if (listener?.onCardDropped(child as BoardCardView, result.elementType, result.element) != true) {
+                                                child.resetChildCardView()
+                                            }
+                                        }
+                                    }
+                                    //PRIZES -> // Do Nothing()
+                                    LOST_ZONE -> {
+                                        performHoverHapticFeedback(child, 16)
+                                        if (listener?.onCardDropped(child as BoardCardView, result.elementType, result.element) != true) {
+                                            child.resetChildCardView()
+                                        }
+                                    }
+                                    STADIUM -> {
+                                        if (cardType == SuperType.TRAINER
+                                                && cardSubtype == SubType.STADIUM) {
+                                            performHoverHapticFeedback(child, 16)
+                                            if (listener?.onCardDropped(child as BoardCardView, result.elementType, result.element) != true) {
+                                                child.resetChildCardView()
+                                            }
+                                        }
+                                    }
+                                    else -> child.resetChildCardView()
+                                }
+                            } else {
+                                child.resetChildCardView()
+                            }
+                        } else {
+                            child.resetChildCardView()
+                        }
+                    }
+                    touchSession = null
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    (touchSession?.draggedChild?.get() as? Draggable)?.onDragStopped()
+                    touchSession?.draggedChild?.get()?.let { child ->
+                        child.resetChildCardView()
+                    }
+                    touchSession = null
+                }
+            }
+            return true
+        }
     }
 
     override fun addView(child: View?, params: ViewGroup.LayoutParams?) {
@@ -707,51 +984,28 @@ class BoardView @JvmOverloads constructor(
         return null
     }
 
-    interface BoardListener {
-
-        fun onCardClicked(view: BoardCardView)
-        fun onCardStackClicked(view: CardStackView)
-        fun onBoardElementClicked(playerType: Player.Type, elementType: BoardElement, element: Element)
-        fun onBoardElementLongClicked(playerType: Player.Type, elementType: BoardElement, element: Element)
-    }
-
-
-    /**
-     * Per-Player board elements to be represented as [Element]s
-     */
-    enum class BoardElement {
-        BENCH,
-        DECK,
-        DISCARD,
-        ACTIVE,
-        PRIZES,
-        LOST_ZONE,
-        STADIUM
-    }
-
-
-    sealed class Element {
-
-        abstract val bounds: RectF
-
-        class Card(override var bounds: RectF = RectF()) : Element()
-
-        class Bench(val cards: MutableList<Card> = ArrayList() /* 5 - 8 Single Elements */) : Element() {
-
-            override val bounds: RectF
-                get() {
-                    val left = cards.minBy { it.bounds.left }?.bounds?.left ?: 0f
-                    val right = cards.maxBy { it.bounds.right }?.bounds?.right ?: 0f
-                    val top = cards.minBy { it.bounds.top }?.bounds?.top ?: 0f
-                    val bottom = cards.maxBy { it.bounds.bottom }?.bounds?.bottom ?: 0f
-                    return RectF(left, top, right, bottom)
-                }
+    private fun findChild(x: Float, y: Float): View? {
+        val hitRect = Rect()
+        for (index in 0 until childCount) {
+            val child = getChildAt(index)
+            child.getHitRect(hitRect)
+            if (hitRect.contains(x.toInt(), y.toInt())) {
+                return child
+            }
         }
+        return null
     }
 
-    private data class Result(
-            val type: Player.Type,
-            val elementType: BoardElement,
-            val element: Element
-    )
+    private fun performHoverHapticFeedback(view: View, feedbackConstant: Int? = null) {
+        view.performHapticFeedback(feedbackConstant ?: 11)
+    }
+
+    private fun View.resetChildCardView() {
+        this.animate()
+                .translationX(0f)
+                .translationY(0f)
+                .setDuration(300L)
+                .setInterpolator(DecelerateInterpolator(2f))
+                .start()
+    }
 }

@@ -1,6 +1,15 @@
 <resources>
+
     <style name="Theme.DeckBuilder.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.DeckBuilder.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.DeckBuilder.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.DeckBuilder.BottomSheet.Modal</item>
+    </style>
+
+    <style name="Widget.DeckBuilder.BottomSheet.Modal" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/dr_action_sheet_background</item>
+    </style>
 
     <style name="Widget.DeckBuilder.SearchView" parent="android:style/Widget.Material.SearchView">
         <item name="android:searchIcon">@android:color/transparent</item>

@@ -25,5 +25,12 @@
         <item>Expanded</item>
         <item>Unlimited</item>
     </string-array>
+    
+    <string-array name="status_effects">
+        <item>None</item>
+        <item>Sleep</item>
+        <item>Confused</item>
+        <item>Paralyzed</item>
+    </string-array>
 
 </resources>

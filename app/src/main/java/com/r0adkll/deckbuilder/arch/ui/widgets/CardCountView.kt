@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import androidx.annotation.DrawableRes
 import android.util.AttributeSet
@@ -8,6 +9,8 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.widget.TextViewCompat
 import com.ftinc.kit.kotlin.extensions.*
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -95,13 +98,14 @@ class CardCountView @JvmOverloads constructor(
 
 
     private fun createCountView(@DrawableRes icon: Int): TextView {
-        val view = TextView(context)
+        val view = AppCompatTextView(context)
         view.gravity = Gravity.CENTER
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
         view.setTextColor(color(R.color.black56))
         view.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         view.compoundDrawablePadding = dipToPx(4f)
-        view.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, icon, 0)
+        TextViewCompat.setCompoundDrawableTintList(view, ColorStateList.valueOf(color(R.color.black54)))
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(view, 0, 0, icon, 0)
         return view
     }
 

@@ -280,4 +280,22 @@
     <string name="pref_account_migrate_collection_summary">Move your collection counts to your online account</string>
     <string name="action_add_all">Add entire set</string>
     <string name="empty_playtest_hand">Empty hand</string>
+    <string name="action_playtest_burned">Burned</string>
+    <string name="action_playtest_poisoned">Poisoned</string>
+    <string name="action_playtest_attack">Attack</string>
+    <string name="action_playtest_damage">Damage</string>
+    <string name="action_playtest_retreat">Retreat</string>
+    <string name="action_playtest_shuffle_to_deck">Shuffle into Deck</string>
+    <string name="action_playtest_devolve">Devolve</string>
+    <string name="action_playtest_remove_attachments"><![CDATA[Remove Tools & Energy]]></string>
+    <string name="action_playtest_discard">Discard</string>
+    <string name="playtest_title">Actions - </string>
+    <string name="playtest_title_active">Active</string>
+    <string name="playtest_title_deck">Deck</string>
+    <string name="action_playtest_shuffle">Shuffle</string>
+    <string name="action_playtest_draw_from_top">Draw # from top</string>
+    <string name="action_playtest_draw_from_bottom">Draw # from bottom</string>
+    <string name="action_playtest_search_draw"><![CDATA[Search & draw]]></string>
+    <string name="action_playtest_search_place"><![CDATA[Search & place]]></string>
+    <string name="action_playtest_shuffle_hand">Shuffle hand</string>
 </resources>
