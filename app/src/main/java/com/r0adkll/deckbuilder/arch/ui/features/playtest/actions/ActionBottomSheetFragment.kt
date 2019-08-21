@@ -1,15 +1,13 @@
 package com.r0adkll.deckbuilder.arch.ui.features.playtest.actions
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.FragmentManager
@@ -24,7 +22,15 @@ import kotlinx.android.synthetic.main.fragment_playtest_actionsheet.*
 
 class ActionBottomSheetFragment : BottomSheetDialogFragment() {
 
+    interface MenuItemListener {
+
+        fun onMenuItemActionClicked(item: MenuItem)
+        fun onMenuItemSwitchChanged(item: MenuItem, isChecked: Boolean)
+        fun onMenuItemSpinnerSelected(item: MenuItem, option: String, position: Int)
+    }
+
     private val sheet by bindParcelable<ActionSheet>(KEY_ACTION_SHEET)
+    var menuItemListener: MenuItemListener? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,7 +42,7 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
 
         subheader.text = spannable {
             span(getString(R.string.playtest_title), ForegroundColorSpan(requireContext().color(R.color.black54)))
-            span(getString(sheet.title), ForegroundColorSpan(requireContext().color(R.color.primaryColor)))
+            span(getString(sheet.title), ForegroundColorSpan(requireContext().color(sheet.titleTint)))
         }.build()
 
         // Inflate menu items into container
@@ -44,17 +50,25 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
             when(menuItem) {
                 is MenuItem.Action -> {
                     val view = layoutInflater.inflate(R.layout.item_playtest_action, actionContainer, false) as TextView
+                    view.tag = menuItem
                     view.setText(menuItem.textResourceId)
                     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(view, menuItem.iconResourceId, 0, 0, 0)
                     TextViewCompat.setCompoundDrawableTintList(view, ColorStateList.valueOf(requireContext().color(R.color.black54)))
+                    view.setOnClickListener {
+                        menuItemListener?.onMenuItemActionClicked(it.tag as MenuItem)
+                    }
                     actionContainer.addView(view)
                 }
                 is MenuItem.Switch -> {
                     val view = layoutInflater.inflate(R.layout.item_playtest_action_switch, actionContainer, false) as SwitchCompat
+                    view.tag = menuItem
                     view.setText(menuItem.textResourceId)
                     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(view, menuItem.iconResourceId, 0, 0, 0)
                     TextViewCompat.setCompoundDrawableTintList(view, ColorStateList.valueOf(requireContext().color(R.color.black54)))
                     view.isChecked = menuItem.isChecked
+                    view.setOnCheckedChangeListener { v, isChecked ->
+                        menuItemListener?.onMenuItemSwitchChanged(v.tag as MenuItem, isChecked)
+                    }
                     actionContainer.addView(view)
                 }
                 is MenuItem.Spinner -> {
@@ -67,6 +81,15 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
                     adapter.setDropDownViewResource(R.layout.item_playtest_action)
                     spinner.adapter = adapter
                     spinner.setSelection(menuItem.currentEntry)
+                    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+                        }
+
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            val item = adapter.getItem(position)
+                            menuItemListener?.onMenuItemSpinnerSelected(menuItem, item ?: "", position)
+                        }
+                    }
 
                     actionContainer.addView(view)
                 }
@@ -79,6 +102,13 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
 
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MenuItemListener) {
+            menuItemListener = context
+        }
+    }
+
 
     companion object {
         const val TAG = "ActionBottomSheetFragment"
@@ -87,12 +117,18 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
         /**
          * Show the action sheet with the passed configuration
          */
-        fun show(fragmentManager: FragmentManager, actionSheet: ActionSheet) {
+        fun show(fragmentManager: FragmentManager, actionSheet: ActionSheet): ActionBottomSheetFragment {
             val fragment = ActionBottomSheetFragment()
             fragment.arguments = bundle {
                 KEY_ACTION_SHEET to actionSheet
             }
             fragment.show(fragmentManager, TAG)
+            return fragment
+        }
+
+        fun FragmentManager.dismissActionSheet() {
+            (this.findFragmentByTag(TAG) as? ActionBottomSheetFragment)
+                    ?.dismiss()
         }
     }
 }

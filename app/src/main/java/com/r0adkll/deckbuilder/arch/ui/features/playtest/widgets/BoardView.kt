@@ -747,7 +747,7 @@ class BoardView @JvmOverloads constructor(
         }
     }
 
-    fun setBoardListener(listener: BoardListener) {
+    fun setBoardListener(listener: BoardListener?) {
         this.listener = listener
     }
 

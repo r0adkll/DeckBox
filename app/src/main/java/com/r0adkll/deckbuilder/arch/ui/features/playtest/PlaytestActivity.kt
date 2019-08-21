@@ -8,7 +8,9 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionBottomSheetFragment
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionBottomSheetFragment.Companion.dismissActionSheet
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionSheet
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.MenuItem
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.di.PlaytestModule
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardCardView
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardView
@@ -19,7 +21,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, PlaytestUi.Actions {
+class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, PlaytestUi.Actions,
+        ActionBottomSheetFragment.MenuItemListener, BoardView.BoardListener {
 
     override var state: PlaytestUi.State = PlaytestUi.State.DEFAULT
 
@@ -31,44 +34,7 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playtest_simulator)
 
-        playmat.setBoardListener(object : BoardView.BoardListener {
-
-            override fun onCardStackClicked(view: CardStackView) {
-                view.debug = false
-                val lp = view.layoutParams as? BoardView.LayoutParams
-                toast("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards.size}")
-                Timber.i("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards.size}")
-                if (lp?.element == BoardView.BoardElement.DECK) {
-                    ActionBottomSheetFragment.show(supportFragmentManager, ActionSheet.DECK)
-                }
-            }
-
-            override fun onCardClicked(view: BoardCardView) {
-                val lp = view.layoutParams as? BoardView.LayoutParams
-                toast("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
-                Timber.i("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
-                if (lp?.element == BoardView.BoardElement.ACTIVE) {
-                    ActionBottomSheetFragment.show(supportFragmentManager, ActionSheet.ACTIVE)
-                }
-            }
-
-            override fun onCardDropped(view: BoardCardView, targetType: BoardView.BoardElement, targetElement: BoardView.Element): Boolean {
-                val lp = view.layoutParams as? BoardView.LayoutParams
-                toast("Card Dropped on (${targetType.name}, element=${targetElement::class.java.simpleName}) - (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
-                Timber.i("Card Dropped on (${targetType.name}, element=${targetElement::class.java.simpleName}) - (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
-                return false
-            }
-
-            override fun onBoardElementClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
-                toast("Element Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
-                Timber.i("Element Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
-            }
-
-            override fun onBoardElementLongClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
-                toast("Element Long Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
-                Timber.i("Element Long Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
-            }
-        })
+        playmat.setBoardListener(this)
     }
 
 
@@ -101,6 +67,58 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    /*
+     * Board and UI element listeners surrounding the gameplay
+     */
+
+    override fun onCardStackClicked(view: CardStackView) {
+        view.debug = false
+        val lp = view.layoutParams as? BoardView.LayoutParams
+        toast("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards.size}")
+        Timber.i("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards.size}")
+        if (lp?.element == BoardView.BoardElement.DECK) {
+            ActionBottomSheetFragment.show(supportFragmentManager, ActionSheet.DECK)
+        }
+    }
+
+    override fun onCardClicked(view: BoardCardView) {
+        val lp = view.layoutParams as? BoardView.LayoutParams
+        toast("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+        Timber.i("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+        if (lp?.element == BoardView.BoardElement.ACTIVE) {
+            ActionBottomSheetFragment.show(supportFragmentManager, ActionSheet.ACTIVE)
+        }
+    }
+
+    override fun onCardDropped(view: BoardCardView, targetType: BoardView.BoardElement, targetElement: BoardView.Element): Boolean {
+        val lp = view.layoutParams as? BoardView.LayoutParams
+        toast("Card Dropped on (${targetType.name}, element=${targetElement::class.java.simpleName}) - (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+        Timber.i("Card Dropped on (${targetType.name}, element=${targetElement::class.java.simpleName}) - (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
+        return false
+    }
+
+    override fun onBoardElementClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
+        toast("Element Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
+        Timber.i("Element Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
+    }
+
+    override fun onBoardElementLongClicked(playerType: Board.Player.Type, elementType: BoardView.BoardElement, element: BoardView.Element) {
+        toast("Element Long Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
+        Timber.i("Element Long Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
+    }
+
+    override fun onMenuItemActionClicked(item: MenuItem) {
+        toast("Menu Action Clicked(${item.id})")
+        supportFragmentManager.dismissActionSheet()
+    }
+
+    override fun onMenuItemSwitchChanged(item: MenuItem, isChecked: Boolean) {
+        toast("Menu Switch Changed (${item.id}, isChecked=$isChecked)")
+    }
+
+    override fun onMenuItemSpinnerSelected(item: MenuItem, option: String, position: Int) {
+        toast("Menu Spinner Item Selected(${item.id}, option=$option, position=$position)")
+    }
 
     companion object {
 
