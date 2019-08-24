@@ -105,10 +105,10 @@ dependencies {
     implementation "com.google.android.material:material:1.1.0-alpha09"
     implementation "androidx.palette:palette:1.0.0"
 
-    implementation "com.google.firebase:firebase-core:17.0.1"
-    implementation "com.google.firebase:firebase-firestore:20.2.0"
-    implementation "com.google.firebase:firebase-auth:18.1.0"
-    implementation "com.google.firebase:firebase-config:18.0.0"
+    implementation "com.google.firebase:firebase-core:17.1.0"
+    implementation "com.google.firebase:firebase-firestore:21.0.0"
+    implementation "com.google.firebase:firebase-auth:19.0.0"
+    implementation "com.google.firebase:firebase-config:19.0.0"
     implementation "com.google.android.gms:play-services-auth:17.0.0"
     implementation "com.google.android.gms:play-services-oss-licenses:17.0.0"
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
