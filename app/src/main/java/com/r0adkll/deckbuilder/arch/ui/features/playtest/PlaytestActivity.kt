@@ -10,6 +10,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionBottomSheetFragment
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionBottomSheetFragment.Companion.dismissActionSheet
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionSheet
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.CounterBottomSheetFragment
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.MenuItem
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.di.PlaytestModule
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardCardView
@@ -22,7 +23,9 @@ import javax.inject.Inject
 
 
 class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, PlaytestUi.Actions,
-        ActionBottomSheetFragment.MenuItemListener, BoardView.BoardListener {
+        ActionBottomSheetFragment.MenuItemListener,
+        BoardView.BoardListener,
+        CounterBottomSheetFragment.CounterListener {
 
     override var state: PlaytestUi.State = PlaytestUi.State.DEFAULT
 
@@ -74,7 +77,6 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
     override fun onCardStackClicked(view: CardStackView) {
         view.debug = false
         val lp = view.layoutParams as? BoardView.LayoutParams
-        toast("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards.size}")
         Timber.i("Card Stack Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.cards.size}")
         if (lp?.element == BoardView.BoardElement.DECK) {
             ActionBottomSheetFragment.show(supportFragmentManager, ActionSheet.DECK)
@@ -83,7 +85,6 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
 
     override fun onCardClicked(view: BoardCardView) {
         val lp = view.layoutParams as? BoardView.LayoutParams
-        toast("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
         Timber.i("Card Clicked (${lp?.playerType?.name}, ${lp?.element?.name}) = ${view.card?.pokemons?.firstOrNull()?.id}")
         if (lp?.element == BoardView.BoardElement.ACTIVE) {
             ActionBottomSheetFragment.show(supportFragmentManager, ActionSheet.ACTIVE)
@@ -107,17 +108,28 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
         Timber.i("Element Long Clicked (${playerType.name}, ${elementType.name}, ${element::class.java.simpleName})")
     }
 
-    override fun onMenuItemActionClicked(item: MenuItem) {
-        toast("Menu Action Clicked(${item.id})")
+    override fun onMenuItemActionClicked(sheet: ActionSheet, item: MenuItem) {
         supportFragmentManager.dismissActionSheet()
+        if (item.id == 4 && sheet.id == ActionSheet.ACTIVE_ID) {
+            CounterBottomSheetFragment.show(
+                    supportFragmentManager,
+                    R.string.dialog_counter_title_damage,
+                    R.string.action_apply,
+                    android.R.string.cancel
+            )
+        }
     }
 
-    override fun onMenuItemSwitchChanged(item: MenuItem, isChecked: Boolean) {
+    override fun onMenuItemSwitchChanged(sheet: ActionSheet, item: MenuItem, isChecked: Boolean) {
         toast("Menu Switch Changed (${item.id}, isChecked=$isChecked)")
     }
 
-    override fun onMenuItemSpinnerSelected(item: MenuItem, option: String, position: Int) {
+    override fun onMenuItemSpinnerSelected(sheet: ActionSheet, item: MenuItem, option: String, position: Int) {
         toast("Menu Spinner Item Selected(${item.id}, option=$option, position=$position)")
+    }
+
+    override fun onCountAccepted(count: Int) {
+        toast("Count accepted: $count")
     }
 
     companion object {

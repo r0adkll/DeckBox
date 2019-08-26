@@ -24,9 +24,9 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
 
     interface MenuItemListener {
 
-        fun onMenuItemActionClicked(item: MenuItem)
-        fun onMenuItemSwitchChanged(item: MenuItem, isChecked: Boolean)
-        fun onMenuItemSpinnerSelected(item: MenuItem, option: String, position: Int)
+        fun onMenuItemActionClicked(sheet: ActionSheet, item: MenuItem)
+        fun onMenuItemSwitchChanged(sheet: ActionSheet, item: MenuItem, isChecked: Boolean)
+        fun onMenuItemSpinnerSelected(sheet: ActionSheet, item: MenuItem, option: String, position: Int)
     }
 
     private val sheet by bindParcelable<ActionSheet>(KEY_ACTION_SHEET)
@@ -55,7 +55,7 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
                     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(view, menuItem.iconResourceId, 0, 0, 0)
                     TextViewCompat.setCompoundDrawableTintList(view, ColorStateList.valueOf(requireContext().color(R.color.black54)))
                     view.setOnClickListener {
-                        menuItemListener?.onMenuItemActionClicked(it.tag as MenuItem)
+                        menuItemListener?.onMenuItemActionClicked(sheet, it.tag as MenuItem)
                     }
                     actionContainer.addView(view)
                 }
@@ -67,7 +67,7 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
                     TextViewCompat.setCompoundDrawableTintList(view, ColorStateList.valueOf(requireContext().color(R.color.black54)))
                     view.isChecked = menuItem.isChecked
                     view.setOnCheckedChangeListener { v, isChecked ->
-                        menuItemListener?.onMenuItemSwitchChanged(v.tag as MenuItem, isChecked)
+                        menuItemListener?.onMenuItemSwitchChanged(sheet, v.tag as MenuItem, isChecked)
                     }
                     actionContainer.addView(view)
                 }
@@ -87,7 +87,7 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
 
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                             val item = adapter.getItem(position)
-                            menuItemListener?.onMenuItemSpinnerSelected(menuItem, item ?: "", position)
+                            menuItemListener?.onMenuItemSpinnerSelected(sheet, menuItem, item ?: "", position)
                         }
                     }
 

@@ -298,4 +298,6 @@
     <string name="action_playtest_search_draw"><![CDATA[Search & draw]]></string>
     <string name="action_playtest_search_place"><![CDATA[Search & place]]></string>
     <string name="action_playtest_shuffle_hand">Shuffle hand</string>
+    <string name="action_apply">Apply</string>
+    <string name="dialog_counter_title_damage">Apply damage</string>
 </resources>

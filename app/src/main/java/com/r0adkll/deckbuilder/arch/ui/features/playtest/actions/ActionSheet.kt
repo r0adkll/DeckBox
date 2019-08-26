@@ -9,14 +9,19 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class ActionSheet(
+        val id: Long,
         @StringRes val title: Int,
         @ColorRes val titleTint: Int,
         val menuItems: List<MenuItem>
 ) : Parcelable {
+
     companion object {
+        const val ACTIVE_ID = 0L
+        const val DECK_ID = 1L
 
         val ACTIVE: ActionSheet
             get() = ActionSheet(
+                    ACTIVE_ID,
                     R.string.playtest_title_active,
                     R.color.primaryColor,
                     listOf(
@@ -36,6 +41,7 @@ class ActionSheet(
 
         val DECK: ActionSheet
             get() = ActionSheet(
+                    DECK_ID,
                     R.string.playtest_title_deck,
                     R.color.primaryColor,
                     listOf(
