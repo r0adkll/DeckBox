@@ -19,6 +19,14 @@
     <style name="Theme.DeckBuilder" parent="Base.Theme.DeckBuilder">
     </style>
 
+    <style name="Theme.DeckBuilder.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/primaryColor</item>
+        <item name="collectionAdjusterTint">@color/collectionAdjusterTint</item>
+        <item name="android:windowBackground">@color/backgroundColor</item>
+    </style>
+
     <style name="Theme.DeckBuilder.Splash">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="colorPrimaryDark">@color/primaryColor</item>

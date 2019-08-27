@@ -14,7 +14,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.util.extensions.coerceScaleFlip
 import kotlinx.android.synthetic.main.fragment_playtest_actionsheet_coinflip.*
-import kotlin.math.roundToInt
 import kotlin.random.Random
 
 class CoinFlipBottomSheetFragment : BottomSheetDialogFragment() {

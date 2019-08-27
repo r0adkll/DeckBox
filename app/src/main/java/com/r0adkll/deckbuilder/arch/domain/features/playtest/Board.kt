@@ -1,6 +1,8 @@
 package com.r0adkll.deckbuilder.arch.domain.features.playtest
 
+import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 
@@ -35,7 +37,9 @@ data class Board(
     /**
      * Represents a player's board state in the game
      */
+    @Parcelize
     data class Player(
+            val type: Type,
             val hand: List<PokemonCard>,
             val prizes: Map<Int, PokemonCard>,
             val deck: ArrayDeque<PokemonCard>,
@@ -44,7 +48,7 @@ data class Board(
             val bench: Bench,
             val active: Card?,
             val stadium: PokemonCard?
-    ) {
+    ) : Parcelable {
 
         enum class Type {
             PLAYER,
@@ -56,25 +60,27 @@ data class Board(
      * Represents a bench state on the board with a default size of 5, and possible expansion
      * of up to 8 via SkyField
      */
+    @Parcelize
     data class Bench(
             val cards: Map<Int, Card> = HashMap(),
             val size: Int = 5
-    )
+    ) : Parcelable
 
 
     /**
      * Represents a card on the board, including it's evolutions, energy, tools, status effects,
      * damage, and so on
      */
+    @Parcelize
     data class Card(
-            val pokemons: Deque<PokemonCard>,
+            val pokemons: ArrayDeque<PokemonCard>,
             val energy: List<PokemonCard> = emptyList(),
             val tools: List<PokemonCard> = emptyList(),
             val isPoisoned: Boolean = false,
             val isBurned: Boolean = false,
             val statusEffect: Status? = null,
             val damage: Int = 0
-    ) {
+    ): Parcelable {
 
         /**
          * Conditional status effects

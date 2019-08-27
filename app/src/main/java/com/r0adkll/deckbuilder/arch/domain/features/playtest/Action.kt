@@ -425,7 +425,7 @@ sealed class Action {
              * @param status the status (condition) to apply
              * @see Board.Card.Status
              */
-            class Status(player: Player.Type, val status: Board.Card.Status) : Active(player) {
+            class Status(player: Player.Type, val status: Board.Card.Status?) : Active(player) {
 
                 override fun apply(board: Board, actor: Player): Player {
                     val active = actor.active

@@ -330,6 +330,7 @@ class BoardView @JvmOverloads constructor(
 
         board = Board(
                 Player(
+                        PLAYER,
                         listOf(poke, poke.copy(), poke.copy(), poke.copy(), poke.copy(), poke.copy(), poke.copy()),
                         mapOf(
                                 0 to poke.copy(),
@@ -350,7 +351,7 @@ class BoardView @JvmOverloads constructor(
                         pokeCard.copy(statusEffect = Board.Card.Status.SLEEPING),
                         null
                 ),
-                Player(emptyList(), emptyMap(), ArrayDeque(0), emptyList(), emptyList(), Board.Bench(), null, null),
+                Player(OPPONENT, emptyList(), emptyMap(), ArrayDeque(0), emptyList(), emptyList(), Board.Bench(), null, null),
                 Board.Turn(0, PLAYER)
         )
     }

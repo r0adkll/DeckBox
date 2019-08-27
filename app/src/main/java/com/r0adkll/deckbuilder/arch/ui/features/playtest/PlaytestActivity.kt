@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.features.playtest.Action
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.*
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionBottomSheetFragment.Companion.dismissActionSheet
@@ -115,7 +116,13 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
                     android.R.string.cancel
             )
         } else if (item.id == 3 && sheet.id == ActionSheet.ACTIVE_ID) {
-            CoinFlipBottomSheetFragment.show(supportFragmentManager)
+            //CoinFlipBottomSheetFragment.show(supportFragmentManager)
+            val dialog = AttackDialogFragment.show(supportFragmentManager, playmat.board!!.player)
+            dialog.attackListener = object : AttackDialogFragment.AttackListener {
+                override fun onAttack(actions: List<Action>) {
+
+                }
+            }
         }
     }
 

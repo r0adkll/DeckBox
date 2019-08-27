@@ -98,7 +98,7 @@ sealed class Source<T, B : Source.Builder<T>> {
      * back to immutability
      */
     class CardBuilder(
-            var pokemons: Deque<PokemonCard>,
+            var pokemons: ArrayDeque<PokemonCard>,
             var energy: MutableList<PokemonCard>,
             var tools: MutableList<PokemonCard>,
             var isPoisoned: Boolean,

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:minHeight="56dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical|start"
+    >
+    
+    <com.ftinc.kit.widget.BezelImageView
+        android:id="@+id/image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:scaleType="centerCrop"
+        app:maskDrawable="@drawable/dr_mask_round_rect"
+        android:src="@drawable/pokemon_card_back"
+        />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:maxLines="2"
+
+        tools:text="Alolan Ninetales-GX"
+        />
+
+    <ImageView
+        android:id="@+id/actionSubtract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:src="@drawable/ic_remove_white_24dp"
+        android:tint="@color/black"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        />
+
+    <TextView
+        android:id="@+id/attackDamage"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="16sp"
+        android:text="0"
+        tools:text="0"
+        />
+
+    <ImageView
+        android:id="@+id/actionAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_add_white_24dp"
+        android:tint="@color/black"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        />
+
+</LinearLayout>
