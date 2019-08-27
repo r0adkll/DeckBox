@@ -300,4 +300,8 @@
     <string name="action_playtest_shuffle_hand">Shuffle hand</string>
     <string name="action_apply">Apply</string>
     <string name="dialog_counter_title_damage">Apply damage</string>
+    <string name="coin_flip_label_heads">Heads</string>
+    <string name="coin_flip_label_tails">Tails</string>
+    <string name="action_flip">Flip</string>
+    <string name="action_done">Done</string>
 </resources>

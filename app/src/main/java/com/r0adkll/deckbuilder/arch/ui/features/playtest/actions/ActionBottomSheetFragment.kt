@@ -31,6 +31,7 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
 
     private val sheet by bindParcelable<ActionSheet>(KEY_ACTION_SHEET)
     var menuItemListener: MenuItemListener? = null
+    private var callSelectedListener = false
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -86,8 +87,13 @@ class ActionBottomSheetFragment : BottomSheetDialogFragment() {
                         }
 
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            val item = adapter.getItem(position)
-                            menuItemListener?.onMenuItemSpinnerSelected(sheet, menuItem, item ?: "", position)
+                            if (callSelectedListener) {
+                                val item = adapter.getItem(position)
+                                menuItemListener?.onMenuItemSpinnerSelected(sheet, menuItem, item
+                                        ?: "", position)
+                            } else {
+                                callSelectedListener = true
+                            }
                         }
                     }
 

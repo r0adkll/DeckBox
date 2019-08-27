@@ -53,3 +53,7 @@ fun Int.max(other: Int): Int = Math.max(this, other)
 
 fun Float.dip(context: Context): Int = context.dipToPx(this)
 fun Float.dp(context: Context): Float = context.dpToPx(this)
+
+fun Float.coerceScaleFlip(): Float {
+    return if (this > 0) 1f else -1f
+}

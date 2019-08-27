@@ -7,11 +7,8 @@ import com.ftinc.kit.arch.presentation.BaseActivity
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.playtest.Board
-import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionBottomSheetFragment
+import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.*
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionBottomSheetFragment.Companion.dismissActionSheet
-import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.ActionSheet
-import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.CounterBottomSheetFragment
-import com.r0adkll.deckbuilder.arch.ui.features.playtest.actions.MenuItem
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.di.PlaytestModule
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardCardView
 import com.r0adkll.deckbuilder.arch.ui.features.playtest.widgets.BoardView
@@ -117,6 +114,8 @@ class PlaytestActivity : BaseActivity(), PlaytestUi, PlaytestUi.Intentions, Play
                     R.string.action_apply,
                     android.R.string.cancel
             )
+        } else if (item.id == 3 && sheet.id == ActionSheet.ACTIVE_ID) {
+            CoinFlipBottomSheetFragment.show(supportFragmentManager)
         }
     }
 
