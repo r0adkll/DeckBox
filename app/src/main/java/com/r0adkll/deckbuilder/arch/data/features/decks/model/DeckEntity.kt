@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.model
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Exclude
 
 
@@ -12,7 +13,9 @@ class DeckEntity(
 
         @Deprecated("No longer used", replaceWith = ReplaceWith("cardMetadata"))
         val cards: List<PokemonCardEntity> = emptyList(),
-
         val cardMetadata: List<CardMetadataEntity>? = null,
-        val timestamp: Long = 0L
+
+        @Deprecated("See Issue#86: Migrating to [Timestamp] object in firebase")
+        val timestamp: Long? = null,
+        val updatedAt: Timestamp? = null
 )

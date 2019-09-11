@@ -45,29 +45,20 @@ class DeckApp : Application() {
         ViewTarget.setTagId(R.id.glide_tag_id)
     }
 
-
     private fun installAnalytics() {
         Analytics.add(LoggingAnalyticInterface())
     }
-
 
     private fun installDelegates() {
         delegates.forEach { it.onCreate(this) }
     }
 
-
     private fun installLeakCanary() {
         refWatcher = LeakCanary.install(this)
     }
 
-
     private fun installFirestore() {
         FirebaseApp.initializeApp(this)
-        val firestore = FirebaseFirestore.getInstance()
-        val settings = FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build()
-        firestore.firestoreSettings = settings
     }
 
     private fun installRxErrorHandler() {
@@ -95,7 +86,6 @@ class DeckApp : Application() {
             Timber.w(ex, "Undeliverable exception received, not sure what to do")
         }
     }
-
 
     @Suppress("NON_FINAL_MEMBER_IN_FINAL_CLASS")
     open fun installDagger(): AppComponent {
