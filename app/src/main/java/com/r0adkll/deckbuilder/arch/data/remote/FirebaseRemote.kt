@@ -59,6 +59,12 @@ class FirebaseRemote @Inject constructor(
     override val banList by RemoteObject(KEY_BAN_LIST, BanList::class)
 
     /**
+     * This is a list of legality overrides for promo sets and individual cards that my have special
+     * legal rules outside the bounds of the set they are in, i.e. Shiny Vault
+     */
+    override val legalOverrides by RemoteObject(KEY_LEGAL_OVERRIDES, LegalOverrides::class)
+
+    /**
      * Check for update remote config values and update them if needed. Also set
      * remote configuration settings if needed
      */
@@ -78,6 +84,7 @@ class FirebaseRemote @Inject constructor(
                     Timber.i("> Preview: (version: ${expansionPreview?.version}, code: ${expansionPreview?.code})")
                     Timber.i("> Reprints: Standard(${reprints?.standardHashes?.size}), Expanded(${reprints?.expandedHashes?.size})")
                     Timber.i("> BanList: $banList")
+                    Timber.i("> Legal Overrides: $legalOverrides")
                     plugins.forEach { it.onFetchActivated(this@FirebaseRemote) }
                 }
     }
@@ -88,6 +95,7 @@ class FirebaseRemote @Inject constructor(
         private const val KEY_SEARCH_PROXIES = "search_proxies"
         private const val KEY_REPRINTS = "reprints"
         private const val KEY_BAN_LIST = "ban_list"
+        private const val KEY_LEGAL_OVERRIDES = "legal_overrides"
         private const val CACHE_EXPIRATION = 3600L
     }
 }

@@ -42,6 +42,13 @@ interface Remote {
     val banList: BanList?
 
     /**
+     * This is a set of format legality overrides for special use cases. Such when a promo set is only partially legal, or
+     * special subsets are released in sets that don't follow the set's legality, such as the Shiny Vault
+     * collection in Hidden Fates
+     */
+    val legalOverrides: LegalOverrides?
+
+    /**
      * Check for update remote config values and update them if needed. Also set
      * remote configuration settings if needed
      */
