@@ -4,6 +4,7 @@
 * [#85](https://github.com/r0adkll/DeckBox/issues/85) - Fixed issue with incorrect sorting of promo cards and special sets
 * [#86](https://github.com/r0adkll/DeckBox/issues/86) - Fixed issue with timestamp storing in Firestore
 * [#87](https://github.com/r0adkll/DeckBox/issues/87) - Added ban list support to deck validation
+* [#88](https://github.com/r0adkll/DeckBox/issues/88) - Added legal overrides support for special collections and promo sets based on rotation
 
 ## 1.9.1
 * Fixed issue where user's deck was exceeding the SQLite variable limit of 999 when pulling cards from cache
