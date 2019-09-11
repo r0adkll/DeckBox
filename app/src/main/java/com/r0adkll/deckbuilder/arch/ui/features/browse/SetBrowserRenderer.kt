@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRende
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.BrowseFilter.*
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.extensions.sortableNumber
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
@@ -67,7 +68,7 @@ class SetBrowserRenderer(
 
         disposables += state
                 .map { s ->
-                    s.cards.sortedBy { it.number.replace("a", "").toIntOrNull() ?: 0 }
+                    s.cards.sortedBy { it.sortableNumber }
                             .filter { when(s.filter) {
                                 ALL -> true
                                 POKEMON -> it.supertype == SuperType.POKEMON

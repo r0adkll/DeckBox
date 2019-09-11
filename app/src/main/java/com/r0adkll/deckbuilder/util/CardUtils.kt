@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.util
 
+import android.annotation.SuppressLint
 import android.util.ArrayMap
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -9,6 +10,7 @@ import io.pokemontcg.model.Type
 
 
 object CardUtils {
+
     val CARDS: Array<String> = arrayOf(
             "https://images.pokemontcg.io/sm7/162.png",
             "https://images.pokemontcg.io/sm5/33.png",
@@ -827,7 +829,6 @@ object CardUtils {
             "https://images.pokemontcg.io/sm7/105.png"
     )
 
-
     fun stackCards(): (List<PokemonCard>) -> List<StackedPokemonCard> {
         return {
             val map = ArrayMap<PokemonCard, Int>(it.size)
@@ -856,14 +857,13 @@ object CardUtils {
     }
 }
 
-
 fun List<PokemonCard>.stack(): List<StackedPokemonCard> = CardUtils.stackCards().invoke(this)
+
 fun List<PokemonCard>.stack(collection: List<CollectionCount>): List<StackedPokemonCard> = CardUtils.stackCards(this, collection)
 
 fun List<StackedPokemonCard>.unstack(): List<PokemonCard> = this.flatMap { stack ->
     (0 until stack.count).map { stack.card.copy() }
 }
-
 
 /**
     [C] olorless (Normal, Flying, older cards also Dragon)
@@ -893,7 +893,7 @@ fun Type.compact(): String = when(this) {
     Type.UNKNOWN -> ""
 }
 
-
+@SuppressLint("DefaultLocale")
 fun String.type(): Type = when(this.toUpperCase()) {
     "C" -> Type.COLORLESS
     "D" -> Type.DARKNESS
@@ -909,13 +909,11 @@ fun String.type(): Type = when(this.toUpperCase()) {
     else -> Type.UNKNOWN
 }
 
-
 fun String.deserializeTypes(): List<Type> {
     return this.map {
         it.toString().type()
     }
 }
-
 
 fun List<Type>.compactTypes(): String {
     return this.fold("") { acc, type ->
@@ -923,14 +921,12 @@ fun List<Type>.compactTypes(): String {
     }
 }
 
-
 fun String.deserializeEffects(): List<Effect> {
     return this.split(",").map {
         val parts = it.replace("[", "").replace("]", "").split("|")
-        com.r0adkll.deckbuilder.arch.domain.features.cards.model.Effect(parts[0].type(), parts[1])
+        Effect(parts[0].type(), parts[1])
     }
 }
-
 
 fun List<Effect>.compactEffects(): String {
     return this.foldIndexed("") { index, acc, effect ->
@@ -943,14 +939,12 @@ fun List<Effect>.compactEffects(): String {
     }
 }
 
-
 fun String.deserializeCardEffects(): List<io.pokemontcg.model.Effect> {
     return this.split(",").map {
         val parts = it.replace("[", "").replace("]", "").split("|")
         io.pokemontcg.model.Effect(parts[0].type(), parts[1])
     }
 }
-
 
 fun List<io.pokemontcg.model.Effect>.compactCardEffects(): String {
     return this.foldIndexed("") { index, acc, effect ->

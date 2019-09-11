@@ -11,3 +11,17 @@ fun Iterable<PokemonCard>.isMulligan(): Boolean {
                 && (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank())
     }
 }
+
+internal val sortableNumberRegex by lazy {
+    "\\d+".toRegex()
+}
+/**
+ * Get a sortable number
+ */
+val PokemonCard.sortableNumber: Int
+    get() = sortableNumberRegex.find(number)?.value?.toIntOrNull()
+            ?: number.replace("a", "", true)
+                    .replace("sm", "", true)
+                    .replace("sv", "", true)
+                    .replace("rc", "", true)
+                    .toIntOrNull() ?: -1
