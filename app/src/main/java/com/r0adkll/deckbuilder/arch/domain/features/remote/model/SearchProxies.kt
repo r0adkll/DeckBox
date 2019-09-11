@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.remote.model
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 
-
 data class SearchProxies(private val proxies: List<Proxy>) {
 
     fun apply(query: String): String {

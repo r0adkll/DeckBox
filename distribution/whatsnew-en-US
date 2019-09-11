@@ -1,6 +1,5 @@
-Hotfix
-• Fixed issue with some users decks not loading after a certain card size
-• Other small fixes n' stuff
+• Fixed crash with updating/creating decks on certain devices
+• Fixed issue where promo and other special set cards where not sorting properly in browse/collection screens
 
 ---
 • For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md

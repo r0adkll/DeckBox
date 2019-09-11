@@ -1,11 +1,13 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.BanList
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
@@ -36,11 +38,13 @@ class DefaultDeckValidator @Inject constructor(
     }
 
 
+    @SuppressLint("DefaultLocale")
     override fun validate(cards: List<PokemonCard>): Observable<Validation> {
         return cardRepository.getExpansions()
                 .onErrorReturnItem(emptyList())
                 .map { expansions ->
                     val reprints = remote.reprints
+                    val banList = remote.banList ?: BanList()
 
                     // Validate for standard format
                     val standardLegal = cards.isNotEmpty() && cards.all { card ->
@@ -54,7 +58,7 @@ class DefaultDeckValidator @Inject constructor(
                                     reprints.standardHashes.contains(hash)
                                 }
                                 else -> false
-                            }
+                            } && !banList.standard.contains(card.id.toLowerCase())
                         }
                     }
 
@@ -69,7 +73,7 @@ class DefaultDeckValidator @Inject constructor(
                                     reprints.expandedHashes.contains(hash)
                                 }
                                 else -> false
-                            }
+                            } && !banList.expanded.contains(card.id.toLowerCase())
                         }
                     }
 

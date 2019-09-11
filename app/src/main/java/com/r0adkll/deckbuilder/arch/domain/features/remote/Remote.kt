@@ -1,10 +1,7 @@
 package com.r0adkll.deckbuilder.arch.domain.features.remote
 
 
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersion
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.Reprints
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.*
 
 
 /**
@@ -21,7 +18,6 @@ interface Remote {
      */
     val expansionVersion: ExpansionVersion?
 
-
     /**
      * This is the spec for an expansion preview card that appears on the deck list screen to tell
      * users about a new expansion that has been added and other information about it. It also attempts
@@ -29,12 +25,10 @@ interface Remote {
      */
     val expansionPreview: ExpansionPreview?
 
-
     /**
      * This is a list of search proxy/aliases that better improve the search experience for the user
      */
     val searchProxies: SearchProxies?
-
 
     /**
      * This is a list of hashes for cards that are not in standard or expanded formats but have been
@@ -42,6 +36,10 @@ interface Remote {
      */
     val reprints: Reprints?
 
+    /**
+     * This is a list of all the banned cards by format, specified as a list of card ids to check
+     */
+    val banList: BanList?
 
     /**
      * Check for update remote config values and update them if needed. Also set
