@@ -46,7 +46,6 @@ class FirestoreDeckCache @Inject constructor(
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
-
     override fun getDecks(): Observable<List<Deck>> {
         return Observable.create<List<DeckEntity>> { emitter ->
                     getUserDeckCollection()?.let { collection ->
@@ -84,7 +83,6 @@ class FirestoreDeckCache @Inject constructor(
                 }
     }
 
-
     override fun putDeck(
             id: String?,
             cards: List<PokemonCard>,
@@ -108,7 +106,6 @@ class FirestoreDeckCache @Inject constructor(
             }
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
-
 
     override fun duplicateDeck(deck: Deck): Observable<Unit> {
         return getUserDeckCollection()?.let { collection ->
@@ -137,7 +134,6 @@ class FirestoreDeckCache @Inject constructor(
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
 
-
     override fun deleteDeck(deck: Deck): Observable<Unit> {
         return getUserDeckCollection()?.let { collection ->
             collection.document(deck.id)
@@ -145,7 +141,6 @@ class FirestoreDeckCache @Inject constructor(
                     .asVoidObservable(schedulers.firebaseExecutor)
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
-
 
     /**
      * Batch insert a list of decks into an authed account
@@ -155,7 +150,6 @@ class FirestoreDeckCache @Inject constructor(
         val models = decks.map { EntityMapper.to(it) }
         return putDeckEntities(models)
     }
-
 
     /**
      * Batch insert a list of decks into an authed account
@@ -182,7 +176,6 @@ class FirestoreDeckCache @Inject constructor(
             return Observable.error(FirebaseAuthException("-1", "No current user logged in"))
         }
     }
-
 
     /**
      * Batch insert a list of decks into an authed account
@@ -226,7 +219,6 @@ class FirestoreDeckCache @Inject constructor(
         }
     }
 
-
     private fun getUserDeckCollection(): CollectionReference? {
         val user = FirebaseAuth.getInstance().currentUser
         val db = FirebaseFirestore.getInstance()
@@ -241,7 +233,6 @@ class FirestoreDeckCache @Inject constructor(
                     .collection(COLLECTION_DECKS)
         }
     }
-
 
     companion object {
         private const val DUPLICATE_REGEX = "\\(\\d+\\)"

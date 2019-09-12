@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks
 
-
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
@@ -36,7 +35,6 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_decks.*
 import javax.inject.Inject
 
-
 class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actions {
 
     override var state: State = State.DEFAULT
@@ -59,11 +57,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
     private lateinit var adapter: DecksRecyclerAdapter
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_decks, container, false)
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -146,7 +142,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 .subscribe {
                     createSession.accept(it)
                 }
-
     }
 
     override fun onResume() {

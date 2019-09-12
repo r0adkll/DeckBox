@@ -1,12 +1,10 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.model
 
-
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
-
 
 class DuplicateRule : Rule {
 
@@ -21,7 +19,6 @@ class DuplicateRule : Rule {
             R.string.validation_rule_four_of_a_kind
         }
     }
-
 
     companion object {
         private const val MAX_COUNT = 4

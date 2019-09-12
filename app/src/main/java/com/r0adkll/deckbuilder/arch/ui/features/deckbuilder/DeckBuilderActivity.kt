@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.Lifecycle
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
@@ -121,7 +122,6 @@ class DeckBuilderActivity : BaseActivity(),
             formats.translationY = offset * (panel.height - formats.height)
         }
 
-
         private fun interpolatePanelIndicator(offset: Float) {
             val transY = mainContent.height * offset
             panelIndicator.translationY = -transY
@@ -155,7 +155,7 @@ class DeckBuilderActivity : BaseActivity(),
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
     private var savingSnackBar: Snackbar? = null
-
+    private var pendingImport: List<PokemonCard>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -192,7 +192,6 @@ class DeckBuilderActivity : BaseActivity(),
         }
 
         // Setup pager
-
         ruleAdapter = RuleRecyclerAdapter(this)
         ruleRecycler.layoutManager = LinearLayoutManager(this)
         ruleRecycler.adapter = ruleAdapter
@@ -202,9 +201,7 @@ class DeckBuilderActivity : BaseActivity(),
         pager.offscreenPageLimit = 3
         tabs.setupWithViewPager(pager)
 
-
         // Setup Listeners
-
         fab.setOnClickListener {
             if (fragmentSwitcher == null) {
                 val superType = when (tabs.selectedTabPosition) {
@@ -273,7 +270,6 @@ class DeckBuilderActivity : BaseActivity(),
                 }
 
         deckFormat.setOnClickListener {
-
         }
 
         if (slidingLayout.panelState != COLLAPSED) {
@@ -285,6 +281,12 @@ class DeckBuilderActivity : BaseActivity(),
         super.onStart()
         renderer.start()
         presenter.start()
+
+        // Add pending import if exists
+        if (pendingImport != null) {
+            editCardIntentions.addCardClicks.accept(pendingImport)
+            pendingImport = null
+        }
     }
 
     override fun onStop() {
@@ -297,7 +299,6 @@ class DeckBuilderActivity : BaseActivity(),
         destroySession()
         super.onDestroy()
     }
-
 
     override fun onBackPressed() {
         if (fragmentSwitcher != null && fragmentSwitcher!!.displayedChild == 1) {
@@ -325,23 +326,26 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Timber.i("onActivityResult($requestCode, $resultCode)")
 
         val importResult = DeckImportActivity.parseResults(resultCode, requestCode, data)
         importResult?.let {
             Analytics.event(Event.SelectContent.Action("import_cards"))
             editCardIntentions.addCardClicks.accept(it)
+
+            // if the lifecycle isn't at a point where the presenter isn't started, store for when it is
+            if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                pendingImport = it
+            }
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_deck_builder, menu)
         return true
     }
-
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val saveItem = menu.findItem(R.id.action_save)
@@ -357,7 +361,6 @@ class DeckBuilderActivity : BaseActivity(),
         testItem.isEnabled = state.validation.isValid
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -393,11 +396,9 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
-
     override fun getComponent(): DeckBuilderComponent {
         return component
     }
-
 
     override fun setupComponent(component: AppComponent) {
         this.component = component.deckBuilderComponentBuilder()
@@ -407,34 +408,28 @@ class DeckBuilderActivity : BaseActivity(),
         this.component.inject(this)
     }
 
-
     override fun render(state: DeckBuilderUi.State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
                 .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
     }
 
-
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
                 .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
     }
 
-
     override fun editDeckClicks(): Observable<Boolean> {
         return editDeckClicks
     }
 
-
     override fun editOverviewClicks(): Observable<Boolean> {
         return editOverviewClicks
     }
-
 
     override fun editDeckName(): Observable<String> {
         return inputDeckName.textChanges()
@@ -445,7 +440,6 @@ class DeckBuilderActivity : BaseActivity(),
                 }
     }
 
-
     override fun editDeckDescription(): Observable<String> {
         return inputDeckDescription.textChanges()
                 .map { it.toString() }
@@ -454,7 +448,6 @@ class DeckBuilderActivity : BaseActivity(),
                     Analytics.event(Event.SelectContent.Deck.EditDescription)
                 }
     }
-
 
     override fun editDeckCollectionOnly(): Observable<Boolean> {
         return collectionSwitch.checkedChanges()
@@ -465,39 +458,32 @@ class DeckBuilderActivity : BaseActivity(),
                 }
     }
 
-
     override fun saveDeck(): Observable<Unit> {
         return saveDeck
     }
-
 
     override fun showSaveAction(hasChanges: Boolean) {
         invalidateOptionsMenu()
     }
 
-
     override fun showCardCount(count: Int) {
         cardCount.totalCount(count)
     }
-
 
     override fun showPokemonCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.POKEMON, cards)
         cardCount.countStacks(SuperType.POKEMON, cards)
     }
 
-
     override fun showTrainerCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.TRAINER, cards)
         cardCount.countStacks(SuperType.TRAINER, cards)
     }
 
-
     override fun showEnergyCards(cards: List<StackedPokemonCard>) {
         adapter.setCards(SuperType.ENERGY, cards)
         cardCount.countStacks(SuperType.ENERGY, cards)
     }
-
 
     override fun showDeckName(name: String) {
         if(name.isBlank()) {
@@ -512,14 +498,12 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
-
     override fun showDeckDescription(description: String) {
         if (inputDeckDescription.text.isNullOrBlank()) {
             inputDeckDescription.setText(description)
             inputDeckDescription.setSelection(description.length)
         }
     }
-
 
     override fun showDeckImage(image: DeckImage?) {
         when(image) {
@@ -543,14 +527,12 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
-
     override fun showDeckCollectionOnly(collectionOnly: Boolean) {
         adapter.isCollectionEnabled = collectionOnly
         if (collectionSwitch.isChecked != collectionOnly) {
             collectionSwitch.isChecked = collectionOnly
         }
     }
-
 
     override fun showIsSaving(isSaving: Boolean) {
         invalidateOptionsMenu()
@@ -580,12 +562,10 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
-
     override fun showIsEditing(isEditing: Boolean) {
         invalidateOptionsMenu()
         adapter.isEditing = isEditing
     }
-
 
     override fun showIsOverview(isOverview: Boolean) {
         if (fragmentSwitcher != null) {
@@ -613,22 +593,18 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
-
     override fun showError(description: String) {
         snackbar(description)
     }
-
 
     override fun showFormat(format: Format) {
         deckFormat.text = format.name.toLowerCase().capitalize()
     }
 
-
     override fun showBrokenRules(errors: List<Int>) {
         deckError.setVisible(errors.isNotEmpty())
         ruleAdapter.setRuleErrors(errors)
     }
-
 
     @SuppressLint("CheckResult", "RxLeakedSubscription")
     private fun destroySession() {
@@ -638,14 +614,11 @@ class DeckBuilderActivity : BaseActivity(),
                 }, { t -> Timber.e(t, "Error deleting Session[$sessionId]")})
     }
 
-
     companion object {
         private const val EXTRA_IS_NEW = "DeckBuilderActivity.IsNew"
         private const val EXTRA_SESSION_ID = "DeckBuilderActivity.SessionId"
 
-
         private fun createIntent(context: Context): Intent = Intent(context, DeckBuilderActivity::class.java)
-
 
         fun createIntent(context: Context, sessionId: Long, isNew: Boolean = false): Intent {
             val intent = createIntent(context)

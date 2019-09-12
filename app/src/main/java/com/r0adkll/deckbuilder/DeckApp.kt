@@ -1,11 +1,8 @@
 package com.r0adkll.deckbuilder
 
-
 import android.app.Application
 import com.bumptech.glide.request.target.ViewTarget
 import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.r0adkll.deckbuilder.internal.AppDelegate
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.LoggingAnalyticInterface
@@ -14,14 +11,12 @@ import com.r0adkll.deckbuilder.internal.di.AppModule
 import com.r0adkll.deckbuilder.internal.di.DaggerAppComponent
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
-import io.reactivex.Observable
-import javax.inject.Inject
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketException
-
+import javax.inject.Inject
 
 class DeckApp : Application() {
 
@@ -45,29 +40,20 @@ class DeckApp : Application() {
         ViewTarget.setTagId(R.id.glide_tag_id)
     }
 
-
     private fun installAnalytics() {
         Analytics.add(LoggingAnalyticInterface())
     }
-
 
     private fun installDelegates() {
         delegates.forEach { it.onCreate(this) }
     }
 
-
     private fun installLeakCanary() {
         refWatcher = LeakCanary.install(this)
     }
 
-
     private fun installFirestore() {
         FirebaseApp.initializeApp(this)
-        val firestore = FirebaseFirestore.getInstance()
-        val settings = FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build()
-        firestore.firestoreSettings = settings
     }
 
     private fun installRxErrorHandler() {
@@ -95,7 +81,6 @@ class DeckApp : Application() {
             Timber.w(ex, "Undeliverable exception received, not sure what to do")
         }
     }
-
 
     @Suppress("NON_FINAL_MEMBER_IN_FINAL_CLASS")
     open fun installDagger(): AppComponent {

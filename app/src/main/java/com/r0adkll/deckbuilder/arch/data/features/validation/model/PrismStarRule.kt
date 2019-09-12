@@ -1,10 +1,8 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.model
 
-
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
-
 
 class PrismStarRule : Rule {
 
@@ -18,7 +16,6 @@ class PrismStarRule : Rule {
             R.string.validation_rule_prism_star
         }
     }
-
 
     companion object {
         private const val MAX_COUNT = 1

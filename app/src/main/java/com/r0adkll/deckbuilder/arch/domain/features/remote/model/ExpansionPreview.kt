@@ -4,7 +4,6 @@ import android.graphics.Shader
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-
 @Parcelize
 data class ExpansionPreview(
         val version: Int,
@@ -62,7 +61,6 @@ data class ExpansionPreview(
                 }
             }
         }
-
 
         @Parcelize
         data class Margins(

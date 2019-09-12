@@ -1,13 +1,17 @@
+@file:Suppress("DEPRECATION")
+
 package com.r0adkll.deckbuilder.arch.data.features.decks.mapper
 
 
 import android.net.Uri
 import android.util.ArrayMap
+import com.google.firebase.Timestamp
 import com.r0adkll.deckbuilder.arch.data.features.decks.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.*
+import com.r0adkll.deckbuilder.util.extensions.milliseconds
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
@@ -23,7 +27,8 @@ object EntityMapper {
                 deck.collectionOnly,
                 /* Deprecated */ emptyList(),
                 deck.cards.stack().map { to(it) },
-                System.currentTimeMillis()
+                /* Deprecated */ null,
+                Timestamp.now()
         )
     }
 
@@ -37,7 +42,7 @@ object EntityMapper {
                 entity.collectionOnly ?: false,
                 cards,
                 isMissingCards,
-                entity.timestamp
+                entity.updatedAt?.milliseconds ?: entity.timestamp ?: System.currentTimeMillis()
         )
     }
 
@@ -57,7 +62,7 @@ object EntityMapper {
             }
         }
 
-        return EntityMapper.to(entity, stackedCards.unstack(), isMissingCards)
+        return to(entity, stackedCards.unstack(), isMissingCards)
     }
 
 
@@ -132,20 +137,12 @@ object EntityMapper {
         return CardMetadataEntity(entity.id, entity.supertype, entity.imageUrl, entity.imageUrlHiRes, count)
     }
 
-
-    fun DeckEntity.migrate(): DeckEntity {
-        val metadata = this.metadata()
-        return DeckEntity(this.id, this.name, this.description, this.image, this.collectionOnly, emptyList(), metadata, this.timestamp)
-    }
-
-
     fun DeckEntity.metadata(): List<CardMetadataEntity> {
         return this.cardMetadata
                 ?: this.cards.stackCards().map {
-                    EntityMapper.to(it.first, it.second)
+                    to(it.first, it.second)
                 }
     }
-
 
     fun List<PokemonCardEntity>.stackCards(): List<Pair<PokemonCardEntity, Int>> {
         val map = ArrayMap<PokemonCardEntity, Int>(this.size)

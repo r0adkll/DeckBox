@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.importer
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportUi.State
@@ -17,6 +18,7 @@ class DeckImportPresenter @Inject constructor(
         val importer: Importer
 ) : Presenter() {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
         val conversion = intentions.importDeckList()

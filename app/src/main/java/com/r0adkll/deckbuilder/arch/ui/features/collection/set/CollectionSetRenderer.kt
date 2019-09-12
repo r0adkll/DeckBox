@@ -3,11 +3,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection.set
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.ftinc.kit.arch.util.plusAssign
-import com.google.common.collect.Collections2
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.extensions.sortableNumber
 import io.reactivex.functions.BiPredicate
-import java.util.*
 
 
 class CollectionSetRenderer(
@@ -31,7 +30,7 @@ class CollectionSetRenderer(
 
         disposables += state
                 .map { s ->
-                    s.cards.sortedBy { it.number.replace("a", "", true).toIntOrNull() ?: 0 }.map { card ->
+                    s.cards.sortedBy { it.sortableNumber }.map { card ->
                         val count = s.counts.find { it.id == card.id && !it.isSourceOld }
                         StackedPokemonCard(card, count?.count ?: 0)
                     }

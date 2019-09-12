@@ -51,9 +51,9 @@ class DefaultImporter @Inject constructor(
                                     // Determine if any are energy cards
                                     val missingEnergy = missing.filter(filterEnergy())
                                     if (missingEnergy.isNotEmpty()) {
-                                        val missingEnergyCards = missingEnergy.map(mapEnergy())
-                                                .filter { it != null }
-                                                .map { it!! }
+                                        val missingEnergyCards = missingEnergy
+                                                .mapNotNull(mapEnergy())
+                                                .map { it }
 
                                         val energyIds = missingEnergyCards.map { it.second }
 

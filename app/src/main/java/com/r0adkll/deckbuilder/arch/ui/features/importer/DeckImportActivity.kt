@@ -11,6 +11,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.Fragment
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.gone
 import com.ftinc.kit.kotlin.extensions.setVisible
@@ -198,12 +199,10 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
         private const val RC_IMPORT = 200
         private const val KEY_RESULTS = "DeckImportActivity.Results"
 
-
         fun show(activity: Activity) {
             val intent = Intent(activity, DeckImportActivity::class.java)
             activity.startActivityForResult(intent, RC_IMPORT)
         }
-
 
         fun parseResults(resultCode: Int, requestCode: Int, data: Intent?): List<PokemonCard>? {
             if (resultCode == Activity.RESULT_OK && requestCode == RC_IMPORT) {
