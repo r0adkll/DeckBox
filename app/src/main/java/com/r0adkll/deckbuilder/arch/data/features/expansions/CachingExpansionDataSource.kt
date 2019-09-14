@@ -26,7 +26,7 @@ class CachingExpansionDataSource @Inject constructor(
     private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences)
 
 
-    override fun getExpansions(source: ExpansionCache.Source): Observable<List<Expansion>> {
+    override fun getExpansions(source: Source): Observable<List<Expansion>> {
         return when(source) {
             Source.ALL -> Observable.concat(memory(), disk(), network())
             Source.LOCAL -> Observable.concat(memory(), disk())

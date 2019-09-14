@@ -57,7 +57,7 @@ class DefaultDeckValidator @Inject constructor(
     @SuppressLint("DefaultLocale")
     private fun checkStandardLegal(expansions: List<Expansion>, cards: List<PokemonCard>): Boolean {
         val reprints = remote.reprints
-        val banList = remote.banList ?: BanList()
+        val banList = remote.banList
         val legalOverrides = remote.legalOverrides
         val legalPromoOverride = legalOverrides?.promos
         return cards.isNotEmpty() && cards.all { card ->
@@ -79,14 +79,15 @@ class DefaultDeckValidator @Inject constructor(
                         reprints.standardHashes.contains(hash)
                     }
                     else -> false
-                } && !banList.standard.contains(cardId.toLowerCase())
+                } && banList?.standard?.contains(cardId.toLowerCase()) != true
             }
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun checkExpandedLegal(expansions: List<Expansion>, cards: List<PokemonCard>): Boolean {
         val reprints = remote.reprints
-        val banList = remote.banList ?: BanList()
+        val banList = remote.banList
         val legalOverrides = remote.legalOverrides
         val legalPromoOverride = legalOverrides?.promos
         return cards.isNotEmpty() && cards.all { card ->
@@ -108,7 +109,7 @@ class DefaultDeckValidator @Inject constructor(
                         reprints.expandedHashes.contains(hash)
                     }
                     else -> false
-                } && !banList.expanded.contains(cardId.toLowerCase())
+                } && banList?.expanded?.contains(cardId.toLowerCase()) != true
             }
         }
     }
