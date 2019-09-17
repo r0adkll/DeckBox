@@ -6,7 +6,7 @@ import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectio
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.RoomDeckCache
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import java.security.InvalidParameterException
@@ -19,7 +19,7 @@ class DefaultAccountRepository @Inject constructor(
         val firestoreDeckCache: FirestoreDeckCache,
         val firestoreCollectionCache: FirestoreCollectionCache,
         val preferences: AppPreferences,
-        val schedulers: Schedulers
+        val schedulers: AppSchedulers
 ): AccountRepository {
 
     override fun migrateAccount(): Observable<Unit> {

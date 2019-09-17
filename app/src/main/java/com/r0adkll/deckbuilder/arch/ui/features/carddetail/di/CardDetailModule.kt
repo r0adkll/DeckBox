@@ -4,7 +4,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi
 import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -27,7 +27,7 @@ class CardDetailModule(val activity: CardDetailActivity) {
     @Provides @ActivityScope
     fun provideRenderer(
             actions: CardDetailUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ) : CardDetailRenderer = CardDetailRenderer(actions, schedulers.comp, schedulers.main)
 
 }

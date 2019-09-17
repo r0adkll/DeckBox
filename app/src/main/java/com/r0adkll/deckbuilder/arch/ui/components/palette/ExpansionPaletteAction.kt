@@ -3,7 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.components.palette
 import android.graphics.Color
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.ExpansionAction
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 

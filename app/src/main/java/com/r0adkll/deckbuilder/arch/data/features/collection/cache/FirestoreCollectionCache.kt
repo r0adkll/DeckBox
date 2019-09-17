@@ -12,7 +12,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionC
 import com.r0adkll.deckbuilder.util.RxFirebase.asObservable
 import com.r0adkll.deckbuilder.util.RxFirebase.asVoidObservable
 import com.r0adkll.deckbuilder.util.RxFirebase.observeAs
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,7 +21,7 @@ import kotlin.math.ceil
 
 class FirestoreCollectionCache @Inject constructor(
         val preferences: AppPreferences,
-        val schedulers: Schedulers
+        val schedulers: AppSchedulers
 ) : CollectionCache {
 
     override fun observeAll(): Observable<List<CollectionCount>> {

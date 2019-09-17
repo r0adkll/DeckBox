@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.adapter
 
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 
 

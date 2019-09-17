@@ -2,8 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 
 import com.r0adkll.deckbuilder.arch.domain.Rarity
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
-import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.*
@@ -17,13 +17,13 @@ import javax.inject.Inject
 class FilterPresenter @Inject constructor(
         val ui: FilterUi,
         val intentions: FilterUi.Intentions,
-        val repository: CardRepository,
+        val expansionRepository: ExpansionRepository,
         val categoryIntentions: FilterIntentions
 ) : Presenter() {
 
     override fun start() {
 
-        val loadExpansions = repository.getExpansions()
+        val loadExpansions = expansionRepository.getExpansions()
                 .onErrorReturnItem(emptyList())
                 .map { it.asReversed() }
                 .map { Change.ExpansionsLoaded(it) as Change }

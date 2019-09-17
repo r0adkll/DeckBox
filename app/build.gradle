@@ -41,6 +41,7 @@ android {
         buildConfigField "String", "GIT_SHA", "\"$GIT_SHA\""
         buildConfigField "String", "GIT_TAG", "\"$GIT_TAG\""
         buildConfigField "String", "DATABASE_NAME", "\"deckbox.db\""
+        buildConfigField "String", "PREVIEW_API_URL", "\"https://deckboxtcg.app/api/v1/\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

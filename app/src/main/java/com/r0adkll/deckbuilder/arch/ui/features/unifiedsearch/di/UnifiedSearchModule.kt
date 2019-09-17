@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchFragment
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -28,6 +28,6 @@ class UnifiedSearchModule(val fragment: SearchFragment) {
     @Provides @FragmentScope
     fun provideRenderer(
             actions: SearchUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ): SearchRenderer = SearchRenderer(actions, schedulers.main, schedulers.comp)
 }

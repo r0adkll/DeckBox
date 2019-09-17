@@ -19,7 +19,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.fragment_ptcgo_export.*
@@ -33,7 +33,7 @@ class PtcgoExportFragment : BaseFragment() {
         activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
 
-    @Inject lateinit var schedulers: Schedulers
+    @Inject lateinit var schedulers: AppSchedulers
     @Inject lateinit var deckRepository: DeckRepository
     @Inject lateinit var editRepository: EditRepository
     @Inject lateinit var exporter: PtcgoExporter

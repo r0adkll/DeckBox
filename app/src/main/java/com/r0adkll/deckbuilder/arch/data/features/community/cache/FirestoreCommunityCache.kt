@@ -5,14 +5,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.r0adkll.deckbuilder.arch.data.features.community.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.data.features.community.model.FirebaseEntity
-import com.r0adkll.deckbuilder.arch.data.features.community.model.ThemeDeckTemplateEntity
 import com.r0adkll.deckbuilder.arch.data.features.community.model.TournamentDeckTemplateEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.community.model.DeckTemplate
 import com.r0adkll.deckbuilder.util.RxFirebase
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -20,7 +18,7 @@ import kotlin.reflect.KClass
 
 class FirestoreCommunityCache @Inject constructor(
         val cardRepository: CardRepository,
-        val schedulers: Schedulers
+        val schedulers: AppSchedulers
 ) : CommunityCache {
 
     override fun getDeckTemplates(): Observable<List<DeckTemplate>> {

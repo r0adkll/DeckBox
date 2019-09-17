@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageP
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageUi
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -28,6 +28,6 @@ class DeckImageModule(val fragment: DeckImagePickerFragment) {
     @Provides @FragmentScope
     fun provideRenderer(
             actions: DeckImageUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ) : DeckImageRenderer = DeckImageRenderer(actions, schedulers.main, schedulers.comp)
 }

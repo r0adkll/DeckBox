@@ -3,8 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
-import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi.State.Change
 import io.reactivex.Observable
@@ -18,12 +18,12 @@ class CollectionPresenter @Inject constructor(
         val preferences: AppPreferences,
         val accountRepository: AccountRepository,
         val collectionRepository: CollectionRepository,
-        val cardRepository: CardRepository
+        val expansionRepository: ExpansionRepository
 ) : UiPresenter<State, Change>(ui) {
 
     override fun smashObservables(): Observable<Change> {
 
-        val expansions = cardRepository.getExpansions()
+        val expansions = expansionRepository.getExpansions()
                 .map { Change.Expansions(it) as Change }
                 .onErrorReturn(handleUnknownError)
 

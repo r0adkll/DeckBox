@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.settings
 
-
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -47,7 +46,6 @@ import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,11 +56,8 @@ class SettingsActivity : BaseActivity() {
         appbar?.setNavigationOnClickListener { finish() }
     }
 
-
     override fun setupComponent(component: AppComponent) {
     }
-
-
 
     class SettingsFragment : BasePreferenceFragment(), GoogleApiClient.OnConnectionFailedListener {
 
@@ -75,12 +70,10 @@ class SettingsActivity : BaseActivity() {
         private val disposables = CompositeDisposable()
         private var migrationSnackbar: Snackbar? = null
 
-
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
             setupClient()
         }
-
 
         override fun onDestroy() {
             super.onDestroy()
@@ -88,7 +81,6 @@ class SettingsActivity : BaseActivity() {
             migrationSnackbar?.dismiss()
             migrationSnackbar = null
         }
-
 
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             super.onActivityResult(requestCode, resultCode, data)
@@ -98,13 +90,11 @@ class SettingsActivity : BaseActivity() {
             }
         }
 
-
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             DeckApp.component.inject(this)
             addPreferencesFromResource(R.xml.settings_preferences)
             setupPreferences()
         }
-
 
         override fun onPreferenceTreeClick(preference: Preference): Boolean {
             return when(preference.key) {

@@ -8,7 +8,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckReposit
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class DefaultEditRepository @Inject constructor(
         val cache: SessionCache,
         val decks: DeckRepository,
-        val schedulers: Schedulers
+        val schedulers: AppSchedulers
 ) : EditRepository {
 
     override fun createSession(deck: Deck?, imports: List<PokemonCard>?): Observable<Long> {

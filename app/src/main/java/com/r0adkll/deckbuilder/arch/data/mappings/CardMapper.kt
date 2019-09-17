@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.data.mappings
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import io.pokemontcg.model.Card
 
 

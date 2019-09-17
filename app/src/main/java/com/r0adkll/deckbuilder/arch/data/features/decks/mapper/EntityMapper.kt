@@ -9,6 +9,7 @@ import com.google.firebase.Timestamp
 import com.r0adkll.deckbuilder.arch.data.features.decks.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.*
 import com.r0adkll.deckbuilder.util.extensions.milliseconds

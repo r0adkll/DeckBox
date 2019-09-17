@@ -6,7 +6,7 @@ import androidx.annotation.StringRes
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.Rarity
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterSpec.Spec.AttributeSpec
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.ExpansionVisibility.*

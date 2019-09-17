@@ -2,18 +2,16 @@ package com.r0adkll.deckbuilder.arch.data.remote.plugin
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.ExpansionCache
+import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import timber.log.Timber
-import javax.inject.Inject
 
-
-class CacheInvalidatePlugin @Inject constructor(
-    val expansionDataSource: ExpansionDataSource,
-    val preferences: AppPreferences,
-    val schedulers: Schedulers
+class CacheInvalidatePlugin(
+        val expansionDataSource: ExpansionDataSource,
+        val preferences: AppPreferences,
+        val schedulers: AppSchedulers
 ) : RemotePlugin {
 
     @SuppressLint("CheckResult", "RxLeakedSubscription")

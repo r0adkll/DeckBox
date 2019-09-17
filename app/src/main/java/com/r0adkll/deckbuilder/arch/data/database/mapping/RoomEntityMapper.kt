@@ -9,6 +9,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Change
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.*
 import io.pokemontcg.model.Card
@@ -16,18 +17,15 @@ import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
-
 object RoomEntityMapper {
 
     fun createAddChange(sessionId: Long, card: PokemonCard, searchSessionId: String?): SessionChangeEntity {
         return SessionChangeEntity(0L, sessionId, card.id, 1, searchSessionId)
     }
 
-
     fun createRemoveChange(sessionId: Long, card: PokemonCard, searchSessionId: String?): SessionChangeEntity {
         return SessionChangeEntity(0L, sessionId, card.id, -1, searchSessionId)
     }
-
 
     fun to(entity: DeckEntity, cards: List<StackedCard>, expansions: List<Expansion>): Deck {
         return Deck(
@@ -42,7 +40,6 @@ object RoomEntityMapper {
         )
     }
 
-
     fun toDeck(entity: DeckEntity, cards: List<DeckStackedCard>, expansions: List<Expansion>): Deck {
         return Deck(
                 entity.uid.toString(),
@@ -55,7 +52,6 @@ object RoomEntityMapper {
                 entity.timestamp
         )
     }
-
 
     fun to(entity: SessionWithChanges, cards: List<StackedCard>, expansions: List<Expansion>): Session {
         return Session(
@@ -71,7 +67,6 @@ object RoomEntityMapper {
         )
     }
 
-
     fun to(entity: SessionChangeEntity): Change {
         return Change(
                 entity.uid,
@@ -80,7 +75,6 @@ object RoomEntityMapper {
                 entity.searchSessionId
         )
     }
-
 
     fun to(card: PokemonCard): CardWithAttacks {
         val cardEntity = CardEntity(
@@ -112,7 +106,6 @@ object RoomEntityMapper {
         return CardWithAttacks(cardEntity, attacks)
     }
 
-
     fun to(cardId: String, attack: Attack): AttackEntity {
         return AttackEntity(
                 0L,
@@ -128,7 +121,6 @@ object RoomEntityMapper {
                         ?.toIntOrNull() ?: 0
         )
     }
-
 
     fun to(card: Card): CardWithAttacks {
         val cardEntity = CardEntity(
@@ -160,7 +152,6 @@ object RoomEntityMapper {
         return CardWithAttacks(cardEntity, attacks)
     }
 
-
     fun to(cardId: String, attack: io.pokemontcg.model.Attack): AttackEntity {
         return AttackEntity(
                 0L,
@@ -177,11 +168,9 @@ object RoomEntityMapper {
         )
     }
 
-
     fun to(sessionId: Long, stack: StackedPokemonCard): SessionCardJoin {
         return SessionCardJoin(sessionId, stack.card.id, stack.count)
     }
-
 
     fun from(expansions: List<Expansion>, entities: List<StackedCard>): List<StackedPokemonCard> {
         return entities.map { e ->
@@ -216,7 +205,6 @@ object RoomEntityMapper {
         }
     }
 
-
     fun fromDeck(expansions: List<Expansion>, entities: List<DeckStackedCard>): List<StackedPokemonCard> {
         return entities.map { e ->
             StackedPokemonCard(
@@ -250,7 +238,6 @@ object RoomEntityMapper {
         }
     }
 
-
     fun fromCards(expansions: List<Expansion>, entities: List<CardWithAttacks>): List<PokemonCard> {
         return entities.map { e ->
                 PokemonCard(
@@ -281,7 +268,6 @@ object RoomEntityMapper {
         }
     }
 
-
     fun from(entity: AttackEntity): Attack {
         return Attack(
                 entity.cost?.deserializeTypes(),
@@ -291,7 +277,6 @@ object RoomEntityMapper {
                 entity.convertedEnergyCost
         )
     }
-
 
     private fun calculateChanges(entity: SessionWithChanges): Boolean {
         var anyCardChange = false

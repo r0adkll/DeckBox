@@ -5,15 +5,14 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
-import timber.log.Timber
 import javax.inject.Inject
 
 
 class DefaultDeckRepository @Inject constructor(
         val cache: DeckCache,
-        val schedulers: Schedulers
+        val schedulers: AppSchedulers
 ) : DeckRepository {
 
     override fun getDeck(id: String): Observable<Deck> {

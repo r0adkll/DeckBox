@@ -4,8 +4,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetActi
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi
 import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
-import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -24,6 +23,6 @@ class CollectionSetModule(val activity: CollectionSetActivity) {
     @Provides @ActivityScope
     fun provideRenderer(
             actions: CollectionSetUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ): CollectionSetRenderer = CollectionSetRenderer(actions, schedulers)
 }

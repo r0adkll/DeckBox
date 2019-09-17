@@ -4,7 +4,7 @@ import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.collection.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class RoomCollectionCache @Inject constructor(
         val db: DeckDatabase,
-        val schedulers: Schedulers
+        val schedulers: AppSchedulers
 ) : CollectionCache {
 
     override fun observeAll(): Observable<List<CollectionCount>> {

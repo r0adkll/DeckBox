@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseUi
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -28,6 +28,6 @@ class BrowseModule(val fragment: BrowseFragment) {
     @Provides @FragmentScope
     fun provideRenderer(
             actions: BrowseUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ) : BrowseRenderer = BrowseRenderer(actions, schedulers.main, schedulers.comp)
 }

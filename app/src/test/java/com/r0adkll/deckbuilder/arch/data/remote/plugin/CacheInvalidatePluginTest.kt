@@ -2,16 +2,14 @@ package com.r0adkll.deckbuilder.arch.data.remote.plugin
 
 import com.nhaarman.mockitokotlin2.verify
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersion
 import com.r0adkll.deckbuilder.tools.ModelUtils.EXPANSIONS
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
 import org.amshove.kluent.*
 import org.junit.Before
-
-import org.junit.Assert.*
 import org.junit.Test
 
 class CacheInvalidatePluginTest {
@@ -19,16 +17,15 @@ class CacheInvalidatePluginTest {
     lateinit var preferences: AppPreferences
     lateinit var expansionDataSource: ExpansionDataSource
     lateinit var remote: Remote
-    lateinit var schedulers: Schedulers
+    lateinit var schedulers: AppSchedulers
 
     @Before
     fun setUp() {
         preferences = mock()
         expansionDataSource = mock()
         remote = mock()
-        schedulers = Schedulers.createTrampoline(false)
+        schedulers = AppSchedulers.createTrampoline(false)
     }
-
 
     @Test
     fun testInvalidateByVersionCode() {
@@ -43,7 +40,6 @@ class CacheInvalidatePluginTest {
         Verify on expansionDataSource that expansionDataSource.refreshExpansions() was called
         verify(preferences).expansionsVersion = 2
     }
-
 
     @Test
     fun testInvalidateByMissingExpansion() {

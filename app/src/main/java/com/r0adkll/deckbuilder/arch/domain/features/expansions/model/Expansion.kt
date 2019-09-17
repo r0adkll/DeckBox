@@ -1,9 +1,7 @@
-package com.r0adkll.deckbuilder.arch.domain.features.cards.model
-
+package com.r0adkll.deckbuilder.arch.domain.features.expansions.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-
 
 @Parcelize
 data class Expansion(
@@ -16,5 +14,6 @@ data class Expansion(
         val expandedLegal: Boolean,
         val releaseDate: String,
         val symbolUrl: String,
-        val logoUrl: String?
+        val logoUrl: String?,
+        val isPreview: Boolean = false
 ) : Parcelable

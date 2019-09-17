@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksFragment
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -28,7 +28,7 @@ class DecksModule(val fragment: DecksFragment) {
     @Provides @FragmentScope
     fun provideRenderer(
             actions: DecksUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ) : DecksRenderer = DecksRenderer(actions, schedulers.main, schedulers.comp)
 
 }

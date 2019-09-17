@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentEx
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -28,6 +28,6 @@ class TournamentExportModule(val fragment: TournamentExportFragment) {
     @Provides @FragmentScope
     fun providRenderer(
         actions: TournamentExportUi.Actions,
-        schedulers: Schedulers
+        schedulers: AppSchedulers
     ) : TournamentExportRenderer = TournamentExportRenderer(actions, schedulers.main, schedulers.comp)
 }

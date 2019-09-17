@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterFragment
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi
 import com.r0adkll.deckbuilder.internal.di.scopes.FilterScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -28,6 +28,6 @@ class FilterModule(val fragment: FilterFragment) {
     @Provides @FilterScope
     fun provideRenderer(
             actions: FilterUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ) : FilterRenderer = FilterRenderer(actions, schedulers.main, schedulers.comp)
 }

@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.r0adkll.deckbuilder.arch.ui.components.ExpansionComparator
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 
 
 class CollectionRenderer(
         actions: CollectionUi.Actions,
-        schedulers: Schedulers,
+        schedulers: AppSchedulers,
         private val progressController: CollectionProgressController
 ) : UiBaseStateRenderer<CollectionUi.State, CollectionUi.State.Change, CollectionUi.Actions>(actions, schedulers.main, schedulers.comp) {
 

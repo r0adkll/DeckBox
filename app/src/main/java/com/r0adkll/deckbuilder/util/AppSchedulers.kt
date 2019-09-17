@@ -6,7 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.Executor
 
 
-class Schedulers(
+class AppSchedulers(
         val main: Scheduler,
         val disk: Scheduler,
         val comp: Scheduler,
@@ -19,8 +19,8 @@ class Schedulers(
     val database: Scheduler = io.reactivex.schedulers.Schedulers.from(databaseExecutor)
 
     companion object {
-        fun createTrampoline(useMain: Boolean = false): Schedulers {
-            return Schedulers(
+        fun createTrampoline(useMain: Boolean = false): AppSchedulers {
+            return AppSchedulers(
                     main = if (useMain) AndroidSchedulers.mainThread() else io.reactivex.schedulers.Schedulers.trampoline(),
                     disk = io.reactivex.schedulers.Schedulers.trampoline(),
                     comp = io.reactivex.schedulers.Schedulers.trampoline(),

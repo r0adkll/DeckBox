@@ -4,14 +4,13 @@ import android.os.Parcelable
 import com.ftinc.kit.arch.presentation.BaseActions
 import com.ftinc.kit.arch.presentation.state.BaseState
 import com.ftinc.kit.arch.presentation.state.Ui
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi.State.Change
-import com.r0adkll.deckbuilder.util.extensions.findAndReplace
 import com.r0adkll.deckbuilder.util.extensions.findAndUpdate
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
