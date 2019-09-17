@@ -6,6 +6,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.BanList
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.LegalOverrides
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.Reprints
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.tools.ModelUtils.EXPANSIONS
@@ -15,7 +17,6 @@ import org.amshove.kluent.*
 import org.junit.Before
 import org.junit.Test
 
-
 class DefaultDeckValidatorTest {
 
     lateinit var cardRepository: CardRepository
@@ -23,7 +24,6 @@ class DefaultDeckValidatorTest {
     lateinit var editRepository: EditRepository
     lateinit var remote: Remote
     lateinit var validator: DefaultDeckValidator
-
 
     @Before
     fun setUp() {
@@ -35,7 +35,6 @@ class DefaultDeckValidatorTest {
         val rules = emptySet<Rule>()
         validator = DefaultDeckValidator(rules, cardRepository, deckRepository, editRepository, remote)
     }
-
 
     @Test
     fun testValidateStandard() {
@@ -50,7 +49,6 @@ class DefaultDeckValidatorTest {
         result.rules.shouldBeEmpty()
     }
 
-
     @Test
     fun testValidateExpandedOnly() {
         setupExpansionMock(EXPANSIONS.toList())
@@ -63,7 +61,6 @@ class DefaultDeckValidatorTest {
         result.expanded.shouldBeTrue()
         result.rules.shouldBeEmpty()
     }
-
 
     @Test
     fun testValidateStandardWithReprint() {
@@ -81,7 +78,6 @@ class DefaultDeckValidatorTest {
         result.rules.shouldBeEmpty()
     }
 
-
     @Test
     fun testValidateExpandedWithReprint() {
         setupExpansionMock(EXPANSIONS.toList())
@@ -98,11 +94,90 @@ class DefaultDeckValidatorTest {
         result.rules.shouldBeEmpty()
     }
 
+    @Test
+    fun testValidateBanListWithStandard() {
+        setupExpansionMock(EXPANSIONS.toList())
+        val pokemon = createPokemonCard(name = "Charmander", expansionCode = "sm8").copy(id = "sm8-45")
+        When calling remote.banList itReturns BanList(listOf("sm8-45"))
+
+        val result = validator.validate(listOf(pokemon)).blockingFirst()
+
+        result.shouldNotBeNull()
+        result.standard.shouldBeFalse()
+        result.expanded.shouldBeTrue()
+    }
+
+    @Test
+    fun testValidateBanListWithExpanded() {
+        setupExpansionMock(EXPANSIONS.toList())
+        val pokemon = createPokemonCard(name = "Charmander", expansionCode = "xy7").copy(id = "xy7-45")
+        When calling remote.banList itReturns BanList(emptyList(), listOf("xy7-45"))
+
+        val result = validator.validate(listOf(pokemon)).blockingFirst()
+
+        result.shouldNotBeNull()
+        result.standard.shouldBeFalse()
+        result.expanded.shouldBeFalse()
+    }
+
+    @Test
+    fun testValidateBanListExpandedWithUpperCase() {
+        setupExpansionMock(EXPANSIONS.toList())
+        val pokemon = createPokemonCard(name = "Charmander", expansionCode = "xy7").copy(id = "XY7-45")
+        When calling remote.banList itReturns BanList(emptyList(), listOf("xy7-45"))
+
+        val result = validator.validate(listOf(pokemon)).blockingFirst()
+
+        result.shouldNotBeNull()
+        result.standard.shouldBeFalse()
+        result.expanded.shouldBeFalse()
+    }
+
+    @Test
+    fun testValidateLegalPromoOverrideLegal() {
+        setupExpansionMock(EXPANSIONS.toList())
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "smp").copy(id = "smp-sm100", number = "SM100")
+        val override = LegalOverrides(LegalOverrides.Promo("smp", 94), emptyList())
+        When calling remote.legalOverrides itReturns override
+
+        val result = validator.validate(listOf(pokemon)).blockingFirst()
+
+        result.shouldNotBeNull()
+        result.standard.shouldBeTrue()
+        result.expanded.shouldBeTrue()
+    }
+
+    @Test
+    fun testValidateLegalPromoOverrideLegalFail() {
+        setupExpansionMock(EXPANSIONS.toList())
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "smp").copy(id = "smp-sm54", number = "SM54")
+        val override = LegalOverrides(LegalOverrides.Promo("smp", 94), emptyList())
+        When calling remote.legalOverrides itReturns override
+
+        val result = validator.validate(listOf(pokemon)).blockingFirst()
+
+        result.shouldNotBeNull()
+        result.standard.shouldBeFalse()
+        result.expanded.shouldBeFalse()
+    }
+
+    @Test
+    fun testValidateLegalOverrideSingles() {
+        setupExpansionMock(EXPANSIONS.toList())
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "sm115").copy(id = "sm115-SV5")
+        val override = LegalOverrides(null, listOf(LegalOverrides.Single("sm115-SV5", "sm5-15", "sm5")))
+        When calling remote.legalOverrides itReturns override
+
+        val result = validator.validate(listOf(pokemon)).blockingFirst()
+
+        result.shouldNotBeNull()
+        result.standard.shouldBeTrue()
+        result.expanded.shouldBeTrue()
+    }
 
     private fun setupExpansionMock(items: List<Expansion>) {
         When calling cardRepository.getExpansions() itReturns Observable.just(items)
     }
-
 
     private fun PokemonCard.reprintHash(): Long {
         return (this.name.hashCode().toLong() * 31L) +
