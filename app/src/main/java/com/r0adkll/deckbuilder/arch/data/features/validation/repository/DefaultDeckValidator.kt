@@ -46,9 +46,8 @@ class DefaultDeckValidator @Inject constructor(
 
                     // Validate rules
                     val ruleResults = rules
-                            .map { it.check(cards) }
-                            .filter { it != null }
-                            .map { it!! }
+                            .mapNotNull { it.check(cards) }
+                            .map { it }
 
                     Validation(standardLegal, expandedLegal, ruleResults)
                 }
