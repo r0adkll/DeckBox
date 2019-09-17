@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 
 import android.annotation.SuppressLint
+import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -18,6 +19,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 import kotlin.math.exp
 
+@SuppressLint("DefaultLocale")
 class DefaultDeckValidator @Inject constructor(
         val rules: Set<@JvmSuppressWildcards Rule>,
         val cardRepository: CardRepository,
@@ -48,12 +50,12 @@ class DefaultDeckValidator @Inject constructor(
                     val ruleResults = rules
                             .mapNotNull { it.check(cards) }
                             .map { it }
+                            .toMutableList()
 
                     Validation(standardLegal, expandedLegal, ruleResults)
                 }
     }
 
-    @SuppressLint("DefaultLocale")
     private fun checkStandardLegal(expansions: List<Expansion>, cards: List<PokemonCard>): Boolean {
         val reprints = remote.reprints
         val banList = remote.banList
@@ -83,7 +85,6 @@ class DefaultDeckValidator @Inject constructor(
         }
     }
 
-    @SuppressLint("DefaultLocale")
     private fun checkExpandedLegal(expansions: List<Expansion>, cards: List<PokemonCard>): Boolean {
         val reprints = remote.reprints
         val banList = remote.banList
