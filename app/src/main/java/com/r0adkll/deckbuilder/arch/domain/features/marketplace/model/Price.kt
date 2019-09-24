@@ -10,5 +10,6 @@ data class Price(
         val low: Double?,
         val mid: Double?,
         val high: Double?,
-        val market: Double?
+        val market: Double?,
+        val recordedAt: Long
 ) : Parcelable

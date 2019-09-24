@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,13 +9,17 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/infoBar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:visibility="invisible"
         tools:visibility="visible"
         app:navigationIcon="@drawable/ic_close_black_24dp"
         app:title="@string/deckbuilder_infobar_title"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
     <LinearLayout
@@ -24,7 +28,11 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/infoBar"
+        >
 
         <ImageView
             android:id="@+id/deckError"
@@ -53,18 +61,22 @@
         android:id="@+id/cardCount"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/infoBar"
         />
-    
+
     <FrameLayout
         android:id="@+id/actionDeckImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
-        android:layout_alignTop="@+id/text_input_deck_name"
-        android:layout_alignBottom="@+id/text_input_deck_name"
         android:foreground="?attr/selectableItemBackground"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_input_deck_name"
+        app:layout_constraintBottom_toBottomOf="@id/text_input_deck_name"
         >
 
         <com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
@@ -87,14 +99,17 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_deck_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/infoBar"
-        android:layout_toEndOf="@+id/actionDeckImage"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
         android:hint="@string/hint_deck_name_input"
+
+        app:layout_constraintTop_toBottomOf="@id/infoBar"
+        app:layout_constraintStart_toEndOf="@id/actionDeckImage"
+        app:layout_constraintEnd_toEndOf="parent"
         >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -103,15 +118,15 @@
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
             android:focusedByDefault="false"
+            tools:ignore="UnusedAttribute"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_deck_description"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_input_deck_name"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
@@ -119,6 +134,10 @@
         app:counterEnabled="true"
         app:counterMaxLength="200"
         app:counterOverflowTextAppearance="@style/TextAppearance.Deck.InputOverflow"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_input_deck_name"
         >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -133,48 +152,84 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/collectionSwitch"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="16dp"
+        android:text="@string/option_collection_only"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintTop_toBottomOf="@id/text_input_deck_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
     <LinearLayout
-        android:id="@+id/collectionSwitchLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_input_deck_description"
-        android:orientation="vertical"
-        android:layout_marginTop="8dp">
+        android:id="@+id/costsLayout"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|start"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/collectionSwitch"
+        >
 
-        <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="@color/black12"-->
-            <!--/>-->
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/collectionSwitch"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="16dp"
-            android:text="@string/option_collection_only"
+        <TextView
+            android:id="@+id/deckCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/dr_price_wrapper"
+            tools:text="$212.45"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black12"
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/actionBuy"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buy"
             />
 
     </LinearLayout>
 
-
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/black12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/costsLayout"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ruleRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_below="@+id/collectionSwitchLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingTop="8dp"
         android:paddingBottom="48dp"
         android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
