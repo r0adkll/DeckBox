@@ -193,6 +193,24 @@ class EvolutionChainTest {
         chains[0].nodes[2].name!!.shouldBeEqualTo("Yanmega BREAK")
     }
 
+    @Test
+    fun testCommonFossilChains() {
+        val pokemons = listOf(
+                createPokemonCard("Omanyte").copy(id = "sm5-100", nationalPokedexNumber = 138, evolvesFrom = "Unidentified Fossil").stack(),
+                createPokemonCard("Aerodactyl-GX").copy(id = "sm11-106", nationalPokedexNumber = 142, evolvesFrom = "Unidentified Fossil").stack(),
+                createPokemonCard("Cranidos").copy(id = "sm5-64", nationalPokedexNumber = 408, evolvesFrom = "Unidentified Fossil").stack(),
+                createPokemonCard("Omastar").copy(id = "sm9-76", nationalPokedexNumber = 139, evolvesFrom = "Omanyte").stack()
+        )
+
+        val chains = EvolutionChain.build(pokemons)
+
+        chains.size shouldEqualTo 3
+        chains[0].nodes.size shouldEqualTo 2
+        chains[1].nodes.size shouldEqualTo 1
+        chains[2].nodes.size shouldEqualTo 1
+        chains[0].nodes[0].name!!.shouldBeEqualTo("Omanyte")
+        chains[0].nodes[1].name!!.shouldBeEqualTo("Omastar")
+    }
 
     fun PokemonCard.stack(count: Int = 1, collection: Int? = null): StackedPokemonCard = StackedPokemonCard(this, count, collection)
 }

@@ -31,7 +31,9 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
         }
         else {
             nodes.find {
-                it.name == card.card.evolvesFrom || it.evolvesFrom == card.card.evolvesFrom || it.evolvesFrom == card.card.name
+                it.name == card.card.evolvesFrom ||
+                        (it.evolvesFrom == card.card.evolvesFrom && it.name == card.card.name) ||
+                        it.evolvesFrom == card.card.name
             } != null
         }
     }
