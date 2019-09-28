@@ -6,6 +6,8 @@
 * [#87](https://github.com/r0adkll/DeckBox/issues/87) - Added ban list support to deck validation
 * [#88](https://github.com/r0adkll/DeckBox/issues/88) - Added legal overrides support for special collections and promo sets based on rotation
 * [#90](https://github.com/r0adkll/DeckBox/issues/90) - Fixed issue with importing decklist into the deck builder interface
+* [#92](https://github.com/r0adkll/DeckBox/issues/92) - Fixed evolution lines with pokemon that evolve from 'Unidentified Fossil'
+* [#93](https://github.com/r0adkll/DeckBox/issues/93) - Fixed issue where multiple instances of one deck would persist during one new deck create session 
 
 ## 1.9.1
 * Fixed issue where user's deck was exceeding the SQLite variable limit of 999 when pulling cards from cache
