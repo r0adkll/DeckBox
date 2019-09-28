@@ -14,7 +14,7 @@ interface SessionCache {
     fun getSession(sessionId: Long): Observable<Session>
     fun observeSession(sessionId: Long): Observable<Session>
     fun deleteSession(sessionId: Long): Observable<Int>
-    fun resetSession(sessionId: Long): Observable<Unit>
+    fun resetSession(sessionId: Long, deckId: String? = null): Observable<Unit>
     fun changeName(sessionId: Long, name: String): Observable<String>
     fun changeDescription(sessionId: Long, description: String): Observable<String>
     fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit>

@@ -62,9 +62,9 @@ class RoomSessionCache @Inject constructor(
         }
     }
 
-    override fun resetSession(sessionId: Long): Observable<Unit> {
+    override fun resetSession(sessionId: Long, deckId: String?): Observable<Unit> {
         return Observable.fromCallable {
-            db.sessions().resetSession(sessionId)
+            db.sessions().resetSession(sessionId, deckId)
         }
     }
 
