@@ -58,6 +58,7 @@ val gson = GsonBuilder()
 val pokemon = Pokemon(Config(logLevel = HttpLoggingInterceptor.Level.NONE))
 
 println("Fetching all expansions...")
+val shinyVaultSetPrefix = "sma"
 
 // Get all the available expansions
 val sets = pokemon.set().all()
@@ -114,10 +115,10 @@ val shinyMappings = shinyPokemon.subList(1, shinyPokemon.size - 1)
                 }
             }
 
-            println("Pokemon($name, id=sm115-$number) found Source(${set?.code}-${if (set?.code == "smp") "sm" else ""}$sourceNumber) for ($sourceExpansion - $sourceNumber)")
+            println("Pokemon($name, id=$shinyVaultSetPrefix-$number) found Source(${set?.code}-${if (set?.code == "smp") "sm" else ""}$sourceNumber) for ($sourceExpansion - $sourceNumber)")
 
             OverrideCard(
-                    "sm115-$number",
+                    "$shinyVaultSetPrefix-$number",
                     "${set?.code}-${if (set?.code == "smp") "sm" else ""}$sourceNumber",
                     set?.code ?: "Unknown"
             )
@@ -137,10 +138,3 @@ outputFile.outputStream().bufferedWriter()
             it.flush()
         }
 
-
-//outputFile.sink()
-//        .buffer()
-//        .use {
-//            it.writeUtf8(overrideJson)
-//            it.flush()
-//        }

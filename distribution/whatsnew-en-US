@@ -1,7 +1,8 @@
 • Added support for checking the official banlist when validating decks
 • Added support for properly validating Shiny Vault cards for when they are added
+• Fixed evolution line issue with 'Unidentified Fossil' Pokemon
 • Fixed crash with updating/creating decks on certain devices
-• Fixed issue where promo and other special set cards where not sorting properly in browse/collection screens
+• Fixed issue with sorting in browse/collections
 • Fixed issue with importing deck lists
 
 ---
