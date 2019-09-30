@@ -45,6 +45,16 @@ class CardDetailRenderer(
                 }
 
         disposables += state
+                .mapNullable { it.price?.market }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    if (it.isNonNull()) {
+                        actions.showPrice(it.value!!)
+                    }
+                }
+
+        disposables += state
                 .map { it.variants }
                 .distinctUntilChanged()
                 .addToLifecycle()

@@ -33,6 +33,7 @@ import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExporter
 import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.MockMarketplaceRepository
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
@@ -56,6 +57,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepos
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
@@ -224,6 +226,11 @@ class DataModule {
 //        } else {
             return repository
 //        }
+    }
+
+    @Provides @AppScope
+    fun provideMarketplaceRepository(): MarketplaceRepository {
+        return MockMarketplaceRepository()
     }
 
     @Provides @AppScope

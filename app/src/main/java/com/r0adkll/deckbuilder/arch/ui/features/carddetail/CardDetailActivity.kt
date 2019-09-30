@@ -41,7 +41,10 @@ import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
+import kotlinx.android.synthetic.main.activity_card_detail.deckFormat
 import kotlinx.android.synthetic.main.layout_collection_count_adjuster.*
+import java.text.NumberFormat
+import java.util.*
 import javax.inject.Inject
 
 
@@ -189,6 +192,10 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         return removeCardClicks
     }
 
+    override fun buyCardClicks(): Observable<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun incrementCollectionCount(): Observable<Unit> {
         return actionAddCollection.clicks()
                 .doOnNext {
@@ -221,6 +228,11 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     override fun showCollectionCount(count: Int) {
         actionRemoveCollection.setVisibleWeak(count > 0)
         collectionCount.text = count.toString() //getString(R.string.card_detail_collection_count_format, count)
+    }
+
+    override fun showPrice(price: Double) {
+        costsLayout.visible()
+        deckCost.text = NumberFormat.getCurrencyInstance().format(price)
     }
 
     override fun showVariants(cards: List<PokemonCard>) {

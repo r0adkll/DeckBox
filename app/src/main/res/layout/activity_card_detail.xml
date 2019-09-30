@@ -131,6 +131,41 @@
                 android:drawablePadding="8dp"
                 />
 
+            <LinearLayout
+                android:id="@+id/costsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical|start"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                >
+
+                <TextView
+                    android:id="@+id/deckCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="?android:textColorPrimaryInverse"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:background="@drawable/dr_price_wrapper"
+                    tools:text="$212.45"
+                    />
+
+                <Button
+                    android:id="@+id/actionBuy"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_buy"
+                    />
+
+            </LinearLayout>
+
             <include layout="@layout/layout_collection_count_adjuster"
                 />
 

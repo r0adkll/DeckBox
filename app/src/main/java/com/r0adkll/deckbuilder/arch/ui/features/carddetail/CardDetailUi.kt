@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Price
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
@@ -18,6 +19,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
         fun addCardClicks(): Observable<Unit>
         fun removeCardClicks(): Observable<Unit>
+        fun buyCardClicks(): Observable<Unit>
 
         fun incrementCollectionCount(): Observable<Unit>
         fun decrementCollectionCount(): Observable<Unit>
@@ -32,6 +34,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
         fun showEvolvesTo(cards: List<PokemonCard>)
         fun showValidation(format: Format)
         fun showCollectionCount(count: Int)
+        fun showPrice(price: Double)
     }
 
 
@@ -45,7 +48,8 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             val evolvesFrom: List<PokemonCard>,
             val evolvesTo: List<PokemonCard>,
             val validation: Validation,
-            val collectionCount: Int
+            val collectionCount: Int,
+            val price: Price?
     ) : Parcelable {
 
         val hasCopies: Boolean
@@ -61,6 +65,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             is Change.EvolvesToLoaded -> this.copy(evolvesTo = change.cards)
             is Change.CollectionCountChanged -> this.copy(collectionCount = change.count)
             is Change.CollectionCountUpdated -> this.copy(collectionCount = collectionCount + change.change)
+            is Change.PriceUpdated -> this.copy(price = change.price)
         }
 
 
@@ -73,19 +78,21 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             class Validated(val validation: Validation) : Change("network -> card validated: $validation")
             class CollectionCountChanged(val count: Int) : Change("network -> collection count changed: $count")
             class CollectionCountUpdated(val change: Int) : Change("user -> collection count updated: $change")
+            class PriceUpdated(val price: Price): Change("network -> price updated: $price")
         }
 
 
         override fun toString(): String {
             return "State(sessionId=$sessionId, card=${card?.id}, count=$count, variants=${variants.size}, " +
-                    "evolvesFrom=${evolvesFrom.size}, evolvesTo=${evolvesTo.size}, validation=$validation, collection=$collectionCount)"
+                    "evolvesFrom=${evolvesFrom.size}, evolvesTo=${evolvesTo.size}, validation=$validation, " +
+                    "collection=$collectionCount, price=$price)"
         }
 
 
         companion object {
 
             val DEFAULT by lazy {
-                State(null, null, null, null, emptyList(), emptyList(), emptyList(), Validation(false, false, emptyList()), 0)
+                State(null, null, null, null, emptyList(), emptyList(), emptyList(), Validation(false, false, emptyList()), 0, null)
             }
         }
     }
