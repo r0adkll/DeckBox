@@ -87,27 +87,27 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         variantsAdapter = PokemonCardsRecyclerAdapter(this)
         variantsAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view, sessionId)
+            show(this, view, sessionId)
         }
-        variantsRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
 
         // Setup evolves from adapter
         evolvesFromAdapter = PokemonCardsRecyclerAdapter(this)
         evolvesFromAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view, sessionId)
+            show(this, view, sessionId)
         }
-        evolvesRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesRecycler.adapter = evolvesFromAdapter
 
         // Setup evolves to adapter
         evolvesToAdapter = PokemonCardsRecyclerAdapter(this)
         evolvesToAdapter.setOnViewItemClickListener { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
-            CardDetailActivity.show(this, view, sessionId)
+            show(this, view, sessionId)
         }
-        evolvesToRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        evolvesToRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesToRecycler.adapter = evolvesToAdapter
 
         actionClose?.setOnClickListener { finish() }
@@ -230,9 +230,11 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         collectionCount.text = count.toString() //getString(R.string.card_detail_collection_count_format, count)
     }
 
-    override fun showPrice(price: Double) {
-        costsLayout.visible()
-        deckCost.text = NumberFormat.getCurrencyInstance().format(price)
+    override fun showPrice(price: Double?) {
+        costsLayout.setVisible(price != null)
+        if (price != null) {
+            deckCost.text = NumberFormat.getCurrencyInstance().format(price)
+        }
     }
 
     override fun showVariants(cards: List<PokemonCard>) {

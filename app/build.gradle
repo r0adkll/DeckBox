@@ -97,18 +97,18 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
-    implementation "androidx.appcompat:appcompat:1.1.0-rc01"
-    implementation "androidx.recyclerview:recyclerview:1.1.0-beta03"
+    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0-beta04"
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation "androidx.preference:preference:1.0.0"
+    implementation "androidx.preference:preference:1.1.0"
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
-    implementation "com.google.android.material:material:1.1.0-alpha09"
+    implementation "com.google.android.material:material:1.1.0-alpha10"
     implementation "androidx.palette:palette:1.0.0"
 
-    implementation "com.google.firebase:firebase-core:17.0.1"
-    implementation "com.google.firebase:firebase-firestore:20.2.0"
-    implementation "com.google.firebase:firebase-auth:18.1.0"
-    implementation "com.google.firebase:firebase-config:18.0.0"
+    implementation "com.google.firebase:firebase-core:17.2.0"
+    implementation "com.google.firebase:firebase-firestore:21.1.1"
+    implementation "com.google.firebase:firebase-auth:19.1.0"
+    implementation "com.google.firebase:firebase-config:19.0.2"
     implementation "com.google.android.gms:play-services-auth:17.0.0"
     implementation "com.google.android.gms:play-services-oss-licenses:17.0.0"
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
@@ -160,7 +160,7 @@ dependencies {
     implementation "com.roughike:bottom-bar:$bottombar_version"
     implementation 'com.nex3z:flow-layout:1.2.2'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
-    implementation 'com.github.chrisbanes:PhotoView:2.2.0'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     debugImplementation "com.facebook.stetho:stetho:$stetho_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'nl.littlerobots.rxlint:rxlint:1.6.1'

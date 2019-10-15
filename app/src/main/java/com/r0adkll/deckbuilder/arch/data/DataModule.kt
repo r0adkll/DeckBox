@@ -33,12 +33,13 @@ import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExporter
 import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
-import com.r0adkll.deckbuilder.arch.data.features.marketplace.MockMarketplaceRepository
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.CachingMarketplaceRepository
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.FirestoreMarketplaceSource
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.MarketplaceSource
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
 import com.r0adkll.deckbuilder.arch.data.features.preview.RemotePreviewRepository
-import com.r0adkll.deckbuilder.arch.data.features.preview.TestPreviewRepository
 import com.r0adkll.deckbuilder.arch.data.features.testing.DefaultDeckTester
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
@@ -76,7 +77,6 @@ import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
-import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import java.util.concurrent.Executors
 
@@ -229,8 +229,11 @@ class DataModule {
     }
 
     @Provides @AppScope
-    fun provideMarketplaceRepository(): MarketplaceRepository {
-        return MockMarketplaceRepository()
+    fun provideMarketplaceRepository(schedulers: Schedulers): MarketplaceRepository {
+        return CachingMarketplaceRepository(
+                FirestoreMarketplaceSource(MarketplaceSource.Source.CACHE, schedulers),
+                FirestoreMarketplaceSource(MarketplaceSource.Source.NETWORK, schedulers)
+        )
     }
 
     @Provides @AppScope

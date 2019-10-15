@@ -45,13 +45,11 @@ class CardDetailRenderer(
                 }
 
         disposables += state
-                .mapNullable { it.price?.market }
+                .mapNullable { it.products?.maxBy { it.recordedAt }?.marketPrice }
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe {
-                    if (it.isNonNull()) {
-                        actions.showPrice(it.value!!)
-                    }
+                    actions.showPrice(it.value)
                 }
 
         disposables += state
