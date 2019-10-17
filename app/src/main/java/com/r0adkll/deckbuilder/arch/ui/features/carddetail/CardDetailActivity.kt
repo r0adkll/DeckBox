@@ -4,13 +4,17 @@ package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.DashPathEffect
+import android.graphics.PathDashPathEffect
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.SpannableString
+import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
+import android.text.style.RelativeSizeSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -21,6 +25,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
+import com.ftinc.kit.kotlin.utils.spannable
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -29,22 +34,25 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
+import com.r0adkll.deckbuilder.arch.ui.features.marketplace.ProductSparkAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
+import com.r0adkll.deckbuilder.util.extensions.isVisible
+import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
-import kotlinx.android.synthetic.main.activity_card_detail.deckFormat
+import kotlinx.android.synthetic.main.layout_card_details.*
 import kotlinx.android.synthetic.main.layout_collection_count_adjuster.*
 import java.text.NumberFormat
-import java.util.*
 import javax.inject.Inject
 
 
@@ -111,15 +119,17 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         evolvesToRecycler.adapter = evolvesToAdapter
 
         actionClose?.setOnClickListener { finish() }
-        slidingLayout?.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
-            override fun onPanelSlide(panel: View?, slideOffset: Float) {
-                val rotation = 180f * slideOffset
-                panelArrow?.rotation = rotation
-            }
 
-            override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
+        costSparkline.baseLinePaint.pathEffect = DashPathEffect(floatArrayOf(dpToPx(4f), dpToPx(4f)), 0f)
+        costSparkline.setScrubListener {
+            val product = it as? Product
+            if (product != null) {
+                costSparklineScrubText.text = NumberFormat.getCurrencyInstance().format(product.marketPrice
+                        ?: 0.0)
+            } else {
+                costSparklineScrubText.text = null
             }
-        })
+        }
 
         renderer.start()
         presenter.start()
@@ -193,7 +203,8 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun buyCardClicks(): Observable<Unit> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return actionBuy.clicks()
+                .uiDebounce()
     }
 
     override fun incrementCollectionCount(): Observable<Unit> {
@@ -230,11 +241,16 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         collectionCount.text = count.toString() //getString(R.string.card_detail_collection_count_format, count)
     }
 
-    override fun showPrice(price: Double?) {
+    override fun showMarketPrice(price: Double?) {
         costsLayout.setVisible(price != null)
         if (price != null) {
             deckCost.text = NumberFormat.getCurrencyInstance().format(price)
         }
+    }
+
+    override fun showMarketPriceHistory(products: List<Product>) {
+        costSparkline.setVisible(products.isNotEmpty())
+        costSparkline.adapter = ProductSparkAdapter(products)
     }
 
     override fun showVariants(cards: List<PokemonCard>) {
@@ -257,21 +273,26 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     private fun bindCard() {
         card?.let { card ->
-            val number = "#${card.number}"
-            val name = " ${card.name}"
-            val spannable = SpannableString("$number$name")
-            val color = if (slidingLayout == null) color(R.color.black56) else color(R.color.white70)
-            spannable.setSpan(ForegroundColorSpan(color), 0, number.length, 0)
-
-            val prismIndex = name.indexOf("◇")
+            // Set title + Subtitle
+            val spannable = SpannableString(card.name)
+            val prismIndex = card.name.indexOf("◇")
             if (prismIndex != -1) {
-                val startIndex = number.length + prismIndex
-                spannable.setSpan(ImageSpan(this@CardDetailActivity, R.drawable.ic_prism_star), startIndex, startIndex + 1, 0)
+                spannable.setSpan(ImageSpan(this@CardDetailActivity, R.drawable.ic_prism_star), prismIndex, prismIndex + 1, 0)
             }
-
             cardTitle.text = spannable
             cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
 
+            // Set card number
+            cardNumber.text = if (ONLY_NUMBER_REGEX.containsMatchIn(card.number)) {
+                SpannableString("${card.number} of ${card.expansion?.totalCards}").apply {
+                    setSpan(AbsoluteSizeSpan(spToPx(12f).toInt()), card.number.length, card.number.length + 3, 0)
+                    setSpan(ForegroundColorSpan(color(R.color.black54)), card.number.length, card.number.length + 3, 0)
+                }
+            } else {
+                card.number
+            }
+
+            // Load card image
             emptyView.visible()
             emptyView.setLoading(true)
             var request = GlideApp.with(this)
@@ -295,6 +316,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
             request.into(image ?: tabletImage)
 
+            // Load expansion symbol
             GlideApp.with(this)
                     .load(card.expansion?.symbolUrl)
                     .transition(withCrossFade())
@@ -306,6 +328,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     companion object {
         const val EXTRA_CARD = "CardDetailActivity.Card"
         const val EXTRA_SESSION_ID = "CardDetailActivity.SessionId"
+        private val ONLY_NUMBER_REGEX by lazy { "^[0-9]+".toRegex() }
 
 
         fun createIntent(context: Context,

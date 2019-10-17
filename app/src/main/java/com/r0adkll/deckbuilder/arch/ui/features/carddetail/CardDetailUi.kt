@@ -34,7 +34,8 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
         fun showEvolvesTo(cards: List<PokemonCard>)
         fun showValidation(format: Format)
         fun showCollectionCount(count: Int)
-        fun showPrice(price: Double?)
+        fun showMarketPrice(price: Double?)
+        fun showMarketPriceHistory(products: List<Product>)
     }
 
 

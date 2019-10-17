@@ -49,7 +49,15 @@ class CardDetailRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe {
-                    actions.showPrice(it.value)
+                    actions.showMarketPrice(it.value)
+                }
+
+        disposables += state
+                .mapNullable { it.products?.sortedBy { it.recordedAt } }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    actions.showMarketPriceHistory(it.value ?: emptyList())
                 }
 
         disposables += state

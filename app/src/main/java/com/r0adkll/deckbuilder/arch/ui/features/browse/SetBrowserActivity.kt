@@ -20,6 +20,7 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.util.UIUtils
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -50,6 +51,7 @@ import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_set_browser.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -90,9 +92,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             tabs.getTabAt(index)?.tag = browseFilter.name
         }
 
-        tabs.tabMode = if (smallestWidth(TABLET_10)) com.google.android.material.tabs.TabLayout.MODE_FIXED else com.google.android.material.tabs.TabLayout.MODE_SCROLLABLE
-        tabs.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
+        tabs.tabMode = if (smallestWidth(TABLET_10)) TabLayout.MODE_FIXED else TabLayout.MODE_SCROLLABLE
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
                 val filter = when(tab.tag as? String) {
                     "ALL" -> BrowseFilter.ALL
                     "POKEMON" -> BrowseFilter.POKEMON
@@ -107,8 +109,8 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 Analytics.event(Event.SelectContent.Action("expansion_filter", filter.name))
             }
 
-            override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
-            override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
 
         statusBarHeight = UIUtils.getStatusBarHeight(this)
@@ -195,7 +197,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         }
 
         if (!smallestWidth(TABLET_10) && tabs.tabCount <= 4) {
-            tabs.tabMode = com.google.android.material.tabs.TabLayout.MODE_FIXED
+            tabs.tabMode = TabLayout.MODE_FIXED
         }
     }
 

@@ -16,7 +16,6 @@
     <color name="dropzone_green_selected">#64dd17</color>
     <color name="format_stroke">#6F6F6F</color>
     <color name="windowBackground">#EDEDED</color>
-    <color name="collectionAdjusterTint">@color/white</color>
 
     <color name="poketype_colorless">#E7E3D4</color>
     <color name="poketype_fire">#E11119</color>

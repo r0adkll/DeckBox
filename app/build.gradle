@@ -82,6 +82,37 @@ androidExtensions {
     experimental = true
 }
 
+ext {
+    junit_version = '4.12'
+    espresso_version = '3.1.0-alpha4'
+    mockito_version = '1.10.19'
+    runner_version = '1.1.0-alpha4'
+    kluent_version = '1.42'
+
+    // Dependencies
+    bottombar_version = '2.3.1'
+    butterknife_version = '8.8.1'
+    canvas_version = '1.0.2'
+    dagger_version = '2.11'
+    ftkit_version = '0.6.1'
+    glide_version = '4.0.0'
+    leakcanary_version = '1.5.1'
+    play_version = '15.0.0'
+    poketcg_version = '1.0.18'
+    retrofit_version = '2.3.0'
+    room_version = '2.2.0'
+    rxjava_version = '2.1.3'
+    rxandroid_version = '2.0.1'
+    rxbinding_version = '2.2.0'
+    rxpref_version = '2.0.0'
+    rxrelay_version = '2.0.0'
+    support_version = '1.0.0'
+    state_version = '1.4.1'
+    stetho_version = '1.5.1'
+    timber_version = '4.7.0'
+    okhttp_version = '3.8.1'
+}
+
 dependencies {
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
@@ -98,17 +129,17 @@ dependencies {
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
     implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "androidx.recyclerview:recyclerview:1.1.0-beta04"
+    implementation "androidx.recyclerview:recyclerview:1.1.0-beta05"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.preference:preference:1.1.0"
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
-    implementation "com.google.android.material:material:1.1.0-alpha10"
+    implementation "com.google.android.material:material:1.1.0-beta01"
     implementation "androidx.palette:palette:1.0.0"
 
     implementation "com.google.firebase:firebase-core:17.2.0"
-    implementation "com.google.firebase:firebase-firestore:21.1.1"
+    implementation "com.google.firebase:firebase-firestore:21.2.0"
     implementation "com.google.firebase:firebase-auth:19.1.0"
-    implementation "com.google.firebase:firebase-config:19.0.2"
+    implementation "com.google.firebase:firebase-config:19.0.3"
     implementation "com.google.android.gms:play-services-auth:17.0.0"
     implementation "com.google.android.gms:play-services-oss-licenses:17.0.0"
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
@@ -165,6 +196,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'nl.littlerobots.rxlint:rxlint:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.robinhood.spark:spark:1.2.0'
 
 }
 

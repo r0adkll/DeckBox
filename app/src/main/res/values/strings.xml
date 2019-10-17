@@ -279,5 +279,5 @@
     <string name="pref_account_migrate_collection_title">Migrate your Collection</string>
     <string name="pref_account_migrate_collection_summary">Move your collection counts to your online account</string>
     <string name="action_add_all">Add entire set</string>
-    <string name="action_buy">Buy</string>
+    <string name="action_buy">Buy now @ TCGPlayer</string>
 </resources>

@@ -23,7 +23,7 @@
         android:padding="16dp"
         android:src="@drawable/ic_action_remove_card"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:tint="?attr/collectionAdjusterTint"
+        android:tint="?android:textColorPrimary"
         />
 
     <TextView
@@ -44,7 +44,7 @@
         android:padding="16dp"
         android:src="@drawable/ic_action_add_card"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:tint="?attr/collectionAdjusterTint"
+        android:tint="?android:textColorPrimary"
         />
 
 </LinearLayout>
