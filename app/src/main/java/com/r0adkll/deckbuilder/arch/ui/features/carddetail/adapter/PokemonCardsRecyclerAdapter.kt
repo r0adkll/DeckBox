@@ -16,20 +16,17 @@ class PokemonCardsRecyclerAdapter(
         return PokemonCardViewHolder.createHorizontal(inflater, parent, false)
     }
 
-
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         super.onBindViewHolder(vh, i)
         val card = items[i]
         vh.bind(card, 0)
     }
 
-
     fun setCards(cards: List<PokemonCard>) {
         val diff = calculateDiff(items, cards)
         items = ArrayList(diff.new)
         diff.diff.dispatchUpdatesTo(DiffUpdateCallback())
     }
-
 
     companion object {
         private fun calculateDiff(old: List<PokemonCard>, new: List<PokemonCard>): RecyclerViewBinding<PokemonCard> {

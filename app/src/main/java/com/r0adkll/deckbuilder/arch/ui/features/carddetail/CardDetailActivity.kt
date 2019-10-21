@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.DashPathEffect
 import android.graphics.PathDashPathEffect
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,8 +44,11 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.CustomTabBrowser
+import com.r0adkll.deckbuilder.util.MarketplaceHelper
 import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
+import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -52,6 +56,7 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
 import kotlinx.android.synthetic.main.layout_card_details.*
 import kotlinx.android.synthetic.main.layout_collection_count_adjuster.*
+import kotlinx.android.synthetic.main.layout_marketplace.*
 import java.text.NumberFormat
 import javax.inject.Inject
 
@@ -69,6 +74,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     @Inject lateinit var renderer: CardDetailRenderer
     @Inject lateinit var presenter: CardDetailPresenter
 
+    private lateinit var customTabBrowser: CustomTabBrowser
     private lateinit var variantsAdapter: PokemonCardsRecyclerAdapter
     private lateinit var evolvesFromAdapter: PokemonCardsRecyclerAdapter
     private lateinit var evolvesToAdapter: PokemonCardsRecyclerAdapter
@@ -77,6 +83,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card_detail)
+        customTabBrowser = CustomTabBrowser(this)
 
         // Odd state hack to pass in passed values
         state = state.copy(card = card)
@@ -120,15 +127,32 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
         actionClose?.setOnClickListener { finish() }
 
-        costSparkline.baseLinePaint.pathEffect = DashPathEffect(floatArrayOf(dpToPx(4f), dpToPx(4f)), 0f)
-        costSparkline.setScrubListener {
+        priceSparkline.baseLinePaint.pathEffect = DashPathEffect(floatArrayOf(dpToPx(4f), dpToPx(4f)), 0f)
+        priceSparkline.setScrubListener {
             val product = it as? Product
             if (product != null) {
-                costSparklineScrubText.text = NumberFormat.getCurrencyInstance().format(product.marketPrice
-                        ?: 0.0)
+                slidingLayout?.isTouchEnabled = false
+                showPrices(product.price?.low, product.price?.market, product.price?.high)
             } else {
-                costSparklineScrubText.text = null
+                slidingLayout?.isTouchEnabled = true
+
+                // DRAGONS: this is dubious because we are manipulating the view state outside of MVI
+                val latestProduct = state.products?.maxBy { it.recordedAt }
+                showPrices(latestProduct?.price?.low, latestProduct?.price?.market,
+                        latestProduct?.price?.high)
             }
+        }
+
+        actionBuy.setOnClickListener {
+            val product = state.products?.maxBy { it.recordedAt }
+            if (product != null) {
+                val url = MarketplaceHelper.buildAffiliateLink(product)
+                customTabBrowser.launch(url)
+            }
+        }
+
+        priceMarketLayout.setOnClickListener {
+            MarketplaceHelper.showMarketPriceExplanationDialog(this)
         }
 
         renderer.start()
@@ -202,11 +226,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         return removeCardClicks
     }
 
-    override fun buyCardClicks(): Observable<Unit> {
-        return actionBuy.clicks()
-                .uiDebounce()
-    }
-
     override fun incrementCollectionCount(): Observable<Unit> {
         return actionAddCollection.clicks()
                 .doOnNext {
@@ -241,32 +260,42 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         collectionCount.text = count.toString() //getString(R.string.card_detail_collection_count_format, count)
     }
 
-    override fun showMarketPrice(price: Double?) {
-        costsLayout.setVisible(price != null)
-        if (price != null) {
-            deckCost.text = NumberFormat.getCurrencyInstance().format(price)
-        }
+    override fun showPrices(lowPrice: Double?, marketPrice: Double?, highPrice: Double?) {
+        costsLayout.setVisible(lowPrice != null || marketPrice != null || highPrice != null)
+        priceLow.text = lowPrice?.formatPrice() ?: "n/a"
+        priceMarket.text = marketPrice?.formatPrice() ?: "n/a"
+        priceHigh.text = highPrice?.formatPrice() ?: "n/a"
     }
 
-    override fun showMarketPriceHistory(products: List<Product>) {
-        costSparkline.setVisible(products.isNotEmpty())
-        costSparkline.adapter = ProductSparkAdapter(products)
+    override fun showPriceHistory(products: List<Product>) {
+        priceSparkline.setVisible(products.isNotEmpty())
+        priceSparkline.adapter = ProductSparkAdapter(products)
+
+        // Prepare our product url to load
+        val product = products.maxBy { it.recordedAt }
+        if (product != null) {
+            val url = MarketplaceHelper.buildAffiliateLink(product)
+            customTabBrowser.prepare(url)
+        }
     }
 
     override fun showVariants(cards: List<PokemonCard>) {
         variantsAdapter.setCards(cards)
+        variantsDivider?.setVisible(cards.isNotEmpty())
         variantsHeader.setVisible(cards.isNotEmpty())
         variantsRecycler.setVisible(cards.isNotEmpty())
     }
 
     override fun showEvolvesFrom(cards: List<PokemonCard>) {
         evolvesFromAdapter.setCards(cards)
+        evolvesDivider?.setVisible(cards.isNotEmpty())
         evolvesHeader.setVisible(cards.isNotEmpty())
         evolvesRecycler.setVisible(cards.isNotEmpty())
     }
 
     override fun showEvolvesTo(cards: List<PokemonCard>) {
         evolvesToAdapter.setCards(cards)
+        evolvesToDivider?.setVisible(cards.isNotEmpty())
         evolvesToHeader.setVisible(cards.isNotEmpty())
         evolvesToRecycler.setVisible(cards.isNotEmpty())
     }

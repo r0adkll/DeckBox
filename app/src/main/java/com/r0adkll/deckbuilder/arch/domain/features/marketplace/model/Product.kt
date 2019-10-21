@@ -9,15 +9,19 @@ data class Product(
         val setCode: String,
         val groupId: Int,
         val productId: Int,
+        val productName: String,
         val url: String,
         val prices: List<Price>,
         val recordedAt: Long
 ) : Parcelable {
 
-    val marketPrice: Double?
+    val price: Price?
         get() = (prices.find { it.rarity == "Normal" }
                 ?: prices.find { it.rarity == "Holofoil" }
                 ?: prices.find { it.rarity == "Reverse Holofoil" }
                 ?: prices.find { it.rarity == "1st Edition Normal" }
-                ?: prices.find { it.rarity == "1st Edition Holofoil" })?.market
+                ?: prices.find { it.rarity == "1st Edition Holofoil" })
+
+    val marketPrice: Double?
+        get() = price?.market
 }

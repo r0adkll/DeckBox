@@ -29,6 +29,7 @@ import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
@@ -54,13 +55,16 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
 import com.r0adkll.deckbuilder.internal.di.HasComponent
+import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import com.r0adkll.deckbuilder.util.extensions.isVisible
+import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_builder.*
 import kotlinx.android.synthetic.main.layout_detail_panel.*
+import kotlinx.android.synthetic.main.layout_marketplace.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -73,8 +77,7 @@ class DeckBuilderActivity : BaseActivity(),
 
     inner class DeckBuilderPanelSlideListener : SlidingUpPanelLayout.PanelSlideListener {
         override fun onPanelSlide(panel: View, slideOffset: Float) {
-            interpolateCardCounter(panel, slideOffset)
-            interpolateFormats(panel, slideOffset)
+            interpolateBottomBar(panel, slideOffset)
             interpolatePanelIndicator(slideOffset)
             interpolateErrorMarker(panel, slideOffset)
 
@@ -113,13 +116,8 @@ class DeckBuilderActivity : BaseActivity(),
             }
         }
 
-        private fun interpolateCardCounter(panel: View, offset: Float) {
-            cardCount.translationY = offset * (panel.height - cardCount.height)
-        }
-
-
-        private fun interpolateFormats(panel: View, offset: Float) {
-            formats.translationY = offset * (panel.height - formats.height)
+        private fun interpolateBottomBar(panel: View, offset: Float) {
+            infoBottomBar.translationY = offset * (panel.height - infoBottomBar.height)
         }
 
         private fun interpolatePanelIndicator(offset: Float) {
@@ -140,6 +138,7 @@ class DeckBuilderActivity : BaseActivity(),
     @Inject lateinit var presenter: DeckBuilderPresenter
     @Inject lateinit var editRepository: EditRepository
     @Inject lateinit var flags: FlagPreferences
+    @Inject lateinit var remote: Remote
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
@@ -154,12 +153,14 @@ class DeckBuilderActivity : BaseActivity(),
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
+    private lateinit var customTabBrowser: CustomTabBrowser
     private var savingSnackBar: Snackbar? = null
     private var pendingImport: List<PokemonCard>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
+        customTabBrowser = CustomTabBrowser(this)
 
         // Setup AppBar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -270,6 +271,16 @@ class DeckBuilderActivity : BaseActivity(),
                 }
 
         deckFormat.setOnClickListener {
+        }
+
+        actionBuy.setVisible(remote.marketplaceMassEntryEnabled)
+        actionBuy.setOnClickListener {
+            val link = MarketplaceHelper.buildAffiliateLink(state.allCards, state.products)
+            customTabBrowser.launch(link)
+        }
+
+        priceMarketLayout.setOnClickListener {
+            MarketplaceHelper.showMarketPriceExplanationDialog(this)
         }
 
         if (slidingLayout.panelState != COLLAPSED) {
@@ -532,6 +543,24 @@ class DeckBuilderActivity : BaseActivity(),
         if (collectionSwitch.isChecked != collectionOnly) {
             collectionSwitch.isChecked = collectionOnly
         }
+    }
+
+    override fun showPrices(low: Double?, market: Double?, high: Double?) {
+        val isVisible = low != null || market != null || high != null
+        divider.margins(top = if (isVisible) dipToPx(16f) else dipToPx(8f))
+        costsLayout.setVisible(isVisible)
+        priceLow.text = low?.formatPrice() ?: "n/a"
+        priceMarket.text = market?.formatPrice() ?: "n/a"
+        priceHigh.text = high?.formatPrice() ?: "n/a"
+    }
+
+    override fun showCollectionPrices(low: Double?, market: Double?, high: Double?) {
+        val isVisible = low != null || market != null || high != null
+        collectionPriceDivider.setVisible(isVisible)
+        collectionPricesRow.setVisible(isVisible)
+        collectionPriceLow.text = low?.times(-1.0)?.formatPrice() ?: "n/a"
+        collectionPriceMarket.text = market?.times(-1.0)?.formatPrice() ?: "n/a"
+        collectionPriceHigh.text = high?.times(-1.0)?.formatPrice() ?: "n/a"
     }
 
     override fun showIsSaving(isSaving: Boolean) {

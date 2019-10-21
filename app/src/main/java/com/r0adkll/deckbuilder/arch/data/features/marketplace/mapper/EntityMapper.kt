@@ -14,6 +14,7 @@ object EntityMapper {
                 entity.setCode,
                 entity.groupId,
                 entity.productId,
+                entity.productName,
                 entity.url,
                 entity.prices.map { from(it) },
                 entity.updatedAt.milliseconds

@@ -26,16 +26,17 @@ class CachingMarketplaceRepository(
                 .switchIfEmpty(networkSource.getPrice(cardId))
     }
 
-    override fun getPrices(cardIds: List<String>): Observable<Map<String, Product>> {
-        return cacheSource.getPrices(cardIds)
-                .flatMap { products ->
-                    if (products.values.any { !it.recordedAt.isToday() }) {
-                        throw IllegalStateException("One of the prices appears to be out of date, force network pull")
-                    } else {
-                        Observable.just(products)
-                    }
-                }
-                .onErrorResumeNext(networkSource.getPrices(cardIds))
-                .switchIfEmpty(networkSource.getPrices(cardIds))
+    override fun getPrices(cardIds: Set<String>): Observable<Map<String, Product>> {
+        return networkSource.getPrices(cardIds)
+//        return cacheSource.getPrices(cardIds)
+//                .flatMap { products ->
+//                    if (products.values.any { !it.recordedAt.isToday() }) {
+//                        throw IllegalStateException("One of the prices appears to be out of date, force network pull")
+//                    } else {
+//                        Observable.just(products)
+//                    }
+//                }
+//                .onErrorResumeNext(networkSource.getPrices(cardIds))
+//                .switchIfEmpty(networkSource.getPrices(cardIds))
     }
 }

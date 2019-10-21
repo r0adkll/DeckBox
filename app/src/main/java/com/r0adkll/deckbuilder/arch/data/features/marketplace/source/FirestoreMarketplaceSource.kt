@@ -31,7 +31,7 @@ class FirestoreMarketplaceSource(
                 }
     }
 
-    override fun getPrices(cardIds: List<String>): Observable<Map<String, Product>> {
+    override fun getPrices(cardIds: Set<String>): Observable<Map<String, Product>> {
         val queries = cardIds.map { cardId ->
             FirebaseFirestore.getInstance()
                     .collectionGroup("prices")

@@ -19,7 +19,6 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
         fun addCardClicks(): Observable<Unit>
         fun removeCardClicks(): Observable<Unit>
-        fun buyCardClicks(): Observable<Unit>
 
         fun incrementCollectionCount(): Observable<Unit>
         fun decrementCollectionCount(): Observable<Unit>
@@ -34,8 +33,8 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
         fun showEvolvesTo(cards: List<PokemonCard>)
         fun showValidation(format: Format)
         fun showCollectionCount(count: Int)
-        fun showMarketPrice(price: Double?)
-        fun showMarketPriceHistory(products: List<Product>)
+        fun showPrices(lowPrice: Double?, marketPrice: Double?, highPrice: Double?)
+        fun showPriceHistory(products: List<Product>)
     }
 
 

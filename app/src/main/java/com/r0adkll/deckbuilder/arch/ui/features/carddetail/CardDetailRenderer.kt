@@ -3,7 +3,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.Format
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
+import com.r0adkll.deckbuilder.util.extensions.fromReleaseDate
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
@@ -45,11 +47,12 @@ class CardDetailRenderer(
                 }
 
         disposables += state
-                .mapNullable { it.products?.maxBy { it.recordedAt }?.marketPrice }
+                .mapNullable { it.products?.maxBy { it.recordedAt } }
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe {
-                    actions.showMarketPrice(it.value)
+                    actions.showPrices(it.value?.price?.low, it.value?.price?.market,
+                            it.value?.price?.high)
                 }
 
         disposables += state
@@ -57,25 +60,29 @@ class CardDetailRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe {
-                    actions.showMarketPriceHistory(it.value ?: emptyList())
+                    actions.showPriceHistory(it.value ?: emptyList())
                 }
 
         disposables += state
-                .map { it.variants }
+                .map { it.variants.sortByExpansionReleaseDate() }
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showVariants(it) }
 
         disposables += state
-                .map { it.evolvesFrom }
+                .map { it.evolvesFrom.sortByExpansionReleaseDate() }
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showEvolvesFrom(it) }
 
         disposables += state
-                .map { it.evolvesTo }
+                .map { it.evolvesTo.sortByExpansionReleaseDate() }
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showEvolvesTo(it) }
+    }
+
+    fun List<PokemonCard>.sortByExpansionReleaseDate(): List<PokemonCard> = this.sortedByDescending {
+        it.expansion?.releaseDate?.fromReleaseDate() ?: 0L
     }
 }
