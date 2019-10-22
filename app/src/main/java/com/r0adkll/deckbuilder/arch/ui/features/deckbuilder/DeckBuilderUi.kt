@@ -6,9 +6,11 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
+import com.r0adkll.deckbuilder.util.stack
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.SuperType.*
 import io.reactivex.Observable
@@ -51,6 +53,8 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun showDeckDescription(description: String)
         fun showDeckImage(image: DeckImage?)
         fun showDeckCollectionOnly(collectionOnly: Boolean)
+        fun showPrices(low: Double?, market: Double?, high: Double?)
+        fun showCollectionPrices(low: Double?, market: Double?, high: Double?)
     }
 
 
@@ -70,6 +74,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             val collectionOnly: Boolean,
 
             val validation: Validation,
+            val products: Map<String, Product>,
 
             @Transient val pokemonCards: List<PokemonCard> = emptyList(),
             @Transient val trainerCards: List<PokemonCard> = emptyList(),
@@ -80,14 +85,16 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         val allCards: List<PokemonCard>
             get() = pokemonCards.plus(trainerCards).plus(energyCards)
 
+        val allCardsStackedWithCollection: List<StackedPokemonCard>
+            get() = allCards.stack(collectionCounts)
 
         fun reduce(change: Change): State = when(change) {
-            Change.Saving -> this.copy(isSaving = true, error = null)
-            Change.Saved -> this.copy(isSaving = false)
-            is Change.SessionUpdated -> this.copy(
-                    pokemonCards = change.session.cards.filter { it.supertype == SuperType.POKEMON },
-                    trainerCards = change.session.cards.filter { it.supertype == SuperType.TRAINER },
-                    energyCards = change.session.cards.filter { it.supertype == SuperType.ENERGY },
+            Change.Saving -> copy(isSaving = true, error = null)
+            Change.Saved -> copy(isSaving = false)
+            is Change.SessionUpdated -> copy(
+                    pokemonCards = change.session.cards.filter { it.supertype == POKEMON },
+                    trainerCards = change.session.cards.filter { it.supertype == TRAINER },
+                    energyCards = change.session.cards.filter { it.supertype == ENERGY },
                     name = change.session.name,
                     description = change.session.description,
                     image = change.session.image,
@@ -96,31 +103,32 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     isSaving = false,
                     error = null
             )
-            is Change.Editing -> this.copy(isEditing = change.isEditing)
-            is Change.Overview -> this.copy(isOverview = change.isOverview)
-            is Change.Error -> this.copy(error = change.description)
+            is Change.Editing -> copy(isEditing = change.isEditing)
+            is Change.Overview -> copy(isOverview = change.isOverview)
+            is Change.Error -> copy(error = change.description)
             is Change.AddCards -> {
                 val pokemons = change.cards.filter { it.supertype == POKEMON }
                 val trainers = change.cards.filter { it.supertype == TRAINER }
                 val energies = change.cards.filter { it.supertype == ENERGY }
-                this.copy(pokemonCards = pokemonCards.plus(pokemons),
+                copy(pokemonCards = pokemonCards.plus(pokemons),
                         trainerCards = trainerCards.plus(trainers),
                         energyCards = energyCards.plus(energies))
             }
             is Change.RemoveCard -> when(change.card.supertype) {
-                POKEMON -> this.copy(pokemonCards = pokemonCards.minus(change.card))
-                TRAINER -> this.copy(trainerCards = trainerCards.minus(change.card))
-                ENERGY -> this.copy(energyCards = energyCards.minus(change.card))
+                POKEMON -> copy(pokemonCards = pokemonCards.minus(change.card))
+                TRAINER -> copy(trainerCards = trainerCards.minus(change.card))
+                ENERGY -> copy(energyCards = energyCards.minus(change.card))
                 UNKNOWN -> this
             }
-            is Change.EditCards -> this.copy(
+            is Change.EditCards -> copy(
                     pokemonCards = change.cards.filter { it.supertype == POKEMON },
                     trainerCards = change.cards.filter { it.supertype == TRAINER },
                     energyCards = change.cards.filter { it.supertype == ENERGY })
-            is Change.EditName -> this.copy(name = change.name)
-            is Change.EditDescription -> this.copy(description = change.description)
-            is Change.Validated -> this.copy(validation = change.validation)
-            is Change.CollectionCounts -> this.copy(collectionCounts = change.counts)
+            is Change.EditName -> copy(name = change.name)
+            is Change.EditDescription -> copy(description = change.description)
+            is Change.Validated -> copy(validation = change.validation)
+            is Change.CollectionCounts -> copy(collectionCounts = change.counts)
+            is Change.PriceProducts -> copy(products = change.products)
         }
 
 
@@ -138,7 +146,8 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     "description=$description, " +
                     "image=$image, " +
                     "validation=$validation, " +
-                    "collection=${collectionCounts.size})"
+                    "collection=${collectionCounts.size}, " +
+                    "products=${products.size})"
         }
 
 
@@ -156,6 +165,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             class EditDescription(val description: String) : Change ("user -> desc changed $description")
             class Validated(val validation: Validation) : Change("cache -> validated: $validation")
             class CollectionCounts(val counts: List<CollectionCount>) : Change("cache -> collection count loaded/changed: ${counts.size}")
+            class PriceProducts(val products: Map<String, Product>) : Change("cache -> price products loaded: ${products.size}")
         }
 
 
@@ -163,8 +173,27 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(-1L, false, false, false, false, null, null, null, null, false,
-                        Validation(false, false, emptyList()), emptyList(), emptyList(), emptyList())
+                State(
+                        sessionId = -1L,
+                        isSaving = false,
+                        isEditing = false,
+                        isChanged = false,
+                        isOverview = false,
+                        error = null,
+                        name = null,
+                        description = null,
+                        image = null,
+                        collectionOnly = false,
+                        validation = Validation(
+                                standard = false,
+                                expanded = false,
+                                rules = emptyList()
+                        ),
+                        products = emptyMap(),
+                        pokemonCards = emptyList(),
+                        trainerCards = emptyList(),
+                        energyCards = emptyList()
+                )
             }
         }
     }

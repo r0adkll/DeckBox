@@ -2,14 +2,18 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 
 import android.annotation.SuppressLint
+import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.*
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.stack
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,6 +25,7 @@ class DeckBuilderPresenter @Inject constructor(
         val intentions: DeckBuilderUi.Intentions,
         val repository: EditRepository,
         val collectionRepository: CollectionRepository,
+        val marketplaceRepository: MarketplaceRepository,
         val validator: DeckValidator
 ) : Presenter() {
 
@@ -29,10 +34,22 @@ class DeckBuilderPresenter @Inject constructor(
 
         val observeSession = repository.observeSession(ui.state.sessionId)
                 .flatMap { session ->
-                    validator.validate(session.cards)
+                    val validation = validator.validate(session.cards)
                             .map { Change.Validated(it) as Change }
                             .startWith(Change.SessionUpdated(session) as Change)
                             .onErrorReturn(handleUnknownError)
+
+                    // We don't want to load pricing information for invalid decks
+                    val marketplace = if (session.cards.size <= SizeRule.MAX_SIZE) {
+                        val cardIds = session.cards.map { it.id }.toSet()
+                        marketplaceRepository.getPrices(cardIds)
+                                .map { Change.PriceProducts(it) as Change }
+                                .onErrorReturn(handleMarketplaceError)
+                    } else {
+                        Observable.empty()
+                    }
+
+                    Observable.merge(validation, marketplace)
                 }
 
         val observeCollection = collectionRepository.observeAll()
@@ -111,6 +128,11 @@ class DeckBuilderPresenter @Inject constructor(
         private val handlePersistError: (Throwable) -> Change = { t ->
             Timber.e(t, "Error saving deck")
             Change.Error("Error saving your deck")
+        }
+
+        private val handleMarketplaceError: (Throwable) -> Change = { t ->
+            Timber.e(t, "Error loading marketplace information")
+            Change.PriceProducts(emptyMap())
         }
     }
 }

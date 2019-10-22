@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State.Change
@@ -22,6 +23,7 @@ class CardDetailPresenter @Inject constructor(
         val intentions: CardDetailUi.Intentions,
         val repository: CardRepository,
         val collectionRepository: CollectionRepository,
+        val marketplaceRepository: MarketplaceRepository,
         val editor: EditRepository,
         val validator: DeckValidator
 ) : Presenter() {
@@ -44,6 +46,10 @@ class CardDetailPresenter @Inject constructor(
 
         val loadCollectionCount = collectionRepository.getCount(ui.state.card!!.id)
                 .map { Change.CollectionCountChanged(it.count) as Change }
+                .onErrorReturn(handleUnknownError)
+
+        val loadPrice = marketplaceRepository.getPrice(ui.state.card!!.id)
+                .map { Change.PriceUpdated(it) as Change }
                 .onErrorReturn(handleUnknownError)
 
         val loadVariants = repository.search(ui.state.card!!.supertype, ui.state.card!!.name)
@@ -95,6 +101,7 @@ class CardDetailPresenter @Inject constructor(
                 .mergeWith(loadVariants)
                 .mergeWith(loadValidation)
                 .mergeWith(loadCollectionCount)
+                .mergeWith(loadPrice)
                 .mergeWith(loadEvolves)
                 .mergeWith(loadEvolvesTo)
                 .mergeWith(incrementCollectionCount)

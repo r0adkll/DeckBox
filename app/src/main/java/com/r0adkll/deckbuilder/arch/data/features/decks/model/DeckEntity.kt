@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.data.features.decks.model
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Exclude
 
-
 class DeckEntity(
         @Exclude var id: String = "",
         val name: String = "",

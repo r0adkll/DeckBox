@@ -15,6 +15,6 @@ class SizeRule : Rule {
     }
 
     companion object {
-        private const val MAX_SIZE = 60
+        const val MAX_SIZE = 60
     }
 }

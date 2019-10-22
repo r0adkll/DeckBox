@@ -11,6 +11,7 @@ fun Long.toCalendar(): Calendar {
     return cal
 }
 
+fun Long.isToday(): Boolean = toCalendar().isToday()
 
 fun Long.get(field: Int): Int = this.toCalendar().get(field)
 

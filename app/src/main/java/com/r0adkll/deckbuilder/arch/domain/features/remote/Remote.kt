@@ -49,6 +49,11 @@ interface Remote {
     val legalOverrides: LegalOverrides?
 
     /**
+     * This indicates whether or not TCGPlayer massentry works for Pokémon
+     */
+    val marketplaceMassEntryEnabled: Boolean
+
+    /**
      * Check for update remote config values and update them if needed. Also set
      * remote configuration settings if needed
      */

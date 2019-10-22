@@ -33,7 +33,8 @@
         <activity android:name=".arch.ui.features.home.HomeActivity" />
 
         <activity android:name=".arch.ui.features.deckbuilder.DeckBuilderActivity"
-            android:parentActivityName=".arch.ui.features.home.HomeActivity">
+            android:parentActivityName=".arch.ui.features.home.HomeActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity"

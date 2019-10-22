@@ -279,4 +279,15 @@
     <string name="pref_account_migrate_collection_title">Migrate your Collection</string>
     <string name="pref_account_migrate_collection_summary">Move your collection counts to your online account</string>
     <string name="action_add_all">Add entire set</string>
+    <string name="action_buy">Buy now @ TCGPlayer</string>
+    <string name="activity_marketplace_tcgplayer">TCGPlayer.com</string>
+    <string name="marketplace_price_low">Low</string>
+    <string name="marketplace_price_market">Market</string>
+    <string name="marketplace_price_high">High</string>
+    <string name="marketplace_history_filter_7day">7d</string>
+    <string name="marketplace_history_filter_30day">30d</string>
+    <string name="marketplace_history_filter_90day">90d</string>
+    <string name="dialog_market_price_title">Market price</string>
+    <string name="dialog_market_price_message">This price point is compiled from recent sales completed on TCGplayer.com. TCG Market Price is updated as transactions complete and reflects the best suggested retail price of a product.</string>
+    <string name="action_view_more">More info</string>
 </resources>

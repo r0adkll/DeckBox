@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     android:gravity="bottom"
     app:umanoOverlay="true"
-    app:umanoPanelHeight="48dp"
+    app:umanoPanelHeight="56dp"
     app:umanoScrollableView="@+id/contentScrollView"
     >
 
@@ -56,158 +56,11 @@
         android:id="@+id/contentScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black75">
+        android:background="@drawable/dr_bottom_sheet">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/deckFormat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_gravity="center_vertical|start"
-                    android:textAllCaps="true"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    tools:text="Standard"
-                    />
-
-                <ImageView
-                    android:id="@+id/expansionSymbol"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:scaleType="fitCenter"
-                    />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    />
-
-                <ImageView
-                    android:id="@+id/panelArrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_gravity="start|center_vertical"
-                    android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
-                    />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/cardTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingStart="@dimen/padding_normal"
-                android:paddingEnd="@dimen/padding_normal"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textSize="@dimen/display_1"
-                />
-
-            <TextView
-                android:id="@+id/cardSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_normal"
-                android:paddingEnd="@dimen/padding_normal"
-                android:textSize="20sp"
-                android:textColor="@color/white70"
-                android:drawablePadding="8dp"
-                />
-
-            <include layout="@layout/layout_collection_count_adjuster"
-                />
-
-            <TextView
-                android:id="@+id/variantsHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
-                android:paddingStart="@dimen/padding_normal"
-                android:paddingEnd="@dimen/padding_normal"
-                android:text="@string/section_variants"
-                android:textSize="14sp"
-                android:textColor="@color/white70"
-                android:fontFamily="sans-serif-medium"
-                android:visibility="gone"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/variantsRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:clipToPadding="false"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/evolvesToHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="@dimen/padding_normal"
-                android:paddingEnd="@dimen/padding_normal"
-                android:text="@string/section_evolves_to"
-                android:textSize="14sp"
-                android:textColor="@color/white70"
-                android:fontFamily="sans-serif-medium"
-                android:visibility="gone"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/evolvesToRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:clipToPadding="false"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/evolvesHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="@dimen/padding_normal"
-                android:paddingEnd="@dimen/padding_normal"
-                android:text="@string/section_evolves"
-                android:textSize="14sp"
-                android:textColor="@color/white70"
-                android:fontFamily="sans-serif-medium"
-                android:visibility="gone"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/evolvesRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:clipToPadding="false"
-                android:visibility="gone"
-                />
-
-        </LinearLayout>
+        <include layout="@layout/layout_card_details"
+            android:id="@+id/cardDetails"
+            />
 
     </ScrollView>
 

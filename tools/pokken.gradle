@@ -3,8 +3,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.14'
-        classpath 'com.squareup:kotlinpoet:1.0.0-RC1'
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.18'
+        classpath 'com.squareup:kotlinpoet:1.1.0'
     }
 }
 
@@ -17,6 +17,8 @@ import io.pokemontcg.requests.CardSetQueryBuilder
 import kotlin.Unit
 import kotlin.jvm.functions.Function1
 
+import java.text.SimpleDateFormat
+import java.util.function.Consumer
 
 
 /**
@@ -39,6 +41,45 @@ task pokePrint {
         for (Card card : cards) {
             println "\"${card.imageUrl}\","
         }
+    }
+}
+
+task countExpansionGroups {
+    doLast {
+        def poke = new Pokemon()
+        def sets = poke.set().where(new Function1<CardSetQueryBuilder, Unit>() {
+            @Override
+            Unit invoke(CardSetQueryBuilder cardSetQueryBuilder) {
+                cardSetQueryBuilder.pageSize = 1000
+                return null
+            }
+        }).all()
+
+        println("Sets loaded: ${sets.size()}")
+
+        def df = new SimpleDateFormat("MM/dd/yyyy", Locale.US)
+
+        def firstCutoffDate = df.parse("02/09/2011")
+        def secondCutoffDate = df.parse("11/02/2016")
+
+        def sumPart1 = 0
+        def sumPart2 = 0
+        def sumPart3 = 0
+
+        for (CardSet set: sets) {
+            def setRD = df.parse(set.releaseDate)
+            if (setRD.before(firstCutoffDate) || setRD == firstCutoffDate) {
+                sumPart1 += set.totalCards
+            } else if (setRD.after(firstCutoffDate) && (setRD.before(secondCutoffDate) || setRD == secondCutoffDate)){
+                sumPart2 += set.totalCards
+            } else {
+                sumPart3 += set.totalCards
+            }
+        }
+
+        println("Part 1 == $sumPart1")
+        println("Part 2 == $sumPart2")
+        println("Part 3 == $sumPart3")
     }
 }
 
