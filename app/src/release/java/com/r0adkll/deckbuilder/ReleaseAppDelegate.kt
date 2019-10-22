@@ -37,7 +37,6 @@ class ReleaseAppDelegate : AppDelegate {
 
     private fun installCrashlytics() {
         Crashlytics.setString("GIT_HASH", BuildConfig.GIT_SHA)
-        Crashlytics.setString("GIT_TAG", BuildConfig.GIT_TAG)
         Crashlytics.setString("FLAVOR", BuildConfig.FLAVOR)
         Timber.plant(CrashlyticsTree())
     }
