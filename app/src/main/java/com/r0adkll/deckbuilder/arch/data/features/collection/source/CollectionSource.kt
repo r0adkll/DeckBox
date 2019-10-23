@@ -14,5 +14,5 @@ interface CollectionSource {
 
     fun incrementCount(card: PokemonCard): Observable<Unit>
     fun decrementCount(card: PokemonCard): Observable<Unit>
-    fun incrementCounts(cards: List<PokemonCard>): Observable<Unit>
+    fun incrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>>
 }

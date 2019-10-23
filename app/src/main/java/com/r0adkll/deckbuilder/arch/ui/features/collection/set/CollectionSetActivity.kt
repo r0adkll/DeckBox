@@ -111,10 +111,15 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val size = appbar?.menu?.size() ?: 0
+        (0 until size).forEach {
+            appbar?.menu?.getItem(it)?.let {
+                MenuItemCompat.setIconTintList(it, ColorStateList.valueOf(progressBar.borderColor))
+            }
+        }
         return menu?.findItem(R.id.action_toggle_missing_cards)?.let { toggleMissingCards ->
             toggleMissingCards.isChecked = state.onlyMissingCards
             toggleMissingCards.setIcon(if (state.onlyMissingCards) R.drawable.toggle_switch else R.drawable.toggle_switch_off)
-            MenuItemCompat.setIconTintList(toggleMissingCards, ColorStateList.valueOf(progressBar.borderColor))
             true
         } ?: false
     }
@@ -223,9 +228,15 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
                                 setNavigationColor(it)
                             }
                         }
-                        "sm9", "sm10", "sm11" -> {
+                        "sm9" -> {
                             backdrop.setImageResource(R.drawable.dr_smtu_background)
                             setNavigationColor(Color.BLACK)
+                        }
+                        "sm10", "sm11", "sm115", "sma", "sm12", "det1" -> {
+                            backdrop.setImageResource(R.drawable.dr_smtu_background)
+                            backdrop.imageTintList = ColorStateList.valueOf(it)
+                            backdrop.imageTintMode = PorterDuff.Mode.ADD
+                            setNavigationColor(it)
                         }
                         "sm5" -> {
                             setNavigationColor(Color.BLACK)

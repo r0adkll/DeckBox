@@ -54,9 +54,11 @@ class RoomCollectionSource @Inject constructor(
                 .map { Unit }
     }
 
-    override fun incrementCounts(cards: List<PokemonCard>): Observable<Unit> {
+    override fun incrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>> {
         return Observable.fromCallable {
-            db.collection().incrementCounts(cards)
+            db.collection()
+                    .incrementSet(set, cards)
+                    .map(EntityMapper::to)
         }.subscribeOn(schedulers.database)
     }
 

@@ -29,15 +29,23 @@ abstract class CollectionDao {
     @Query("SELECT * FROM collection WHERE cardId = :id")
     abstract fun count(id: String): CollectionCountEntity?
 
+    @Query("SELECT * FROM collection WHERE `set` = :set")
+    abstract fun counts(set: String): List<CollectionCountEntity>
+
     @Update
     abstract fun updateCount(count: CollectionCountEntity): Int
+
+    @Update
+    abstract fun updateCounts(counts: List<CollectionCountEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCount(count: CollectionCountEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertCounts(count: List<CollectionCountEntity>)
+
     @Query("DELETE FROM collection")
     abstract fun deleteAll()
-
 
     @Transaction
     open fun incrementCount(card: PokemonCard): CollectionCountEntity? {
@@ -71,9 +79,22 @@ abstract class CollectionDao {
     }
 
     @Transaction
-    open fun incrementCounts(cards: List<PokemonCard>) {
-        cards.forEach { card ->
-            incrementCount(card)
+    open fun incrementSet(set: String, cards: List<PokemonCard>): List<CollectionCountEntity> {
+        val existingCards = counts(set)
+        existingCards.forEach { it.count++ }
+        updateCounts(existingCards)
+
+        val missingCards = cards.filter { card -> existingCards.none { existing -> existing.cardId == card.id } }
+        val newCountEntities = missingCards.map { card ->
+            CollectionCountEntity(
+                    card.id,
+                    1,
+                    card.expansion!!.code,
+                    card.expansion!!.series
+            )
         }
+        insertCounts(newCountEntities)
+
+        return existingCards + newCountEntities
     }
 }

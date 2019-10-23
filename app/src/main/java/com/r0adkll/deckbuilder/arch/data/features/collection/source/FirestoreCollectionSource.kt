@@ -117,38 +117,40 @@ class FirestoreCollectionSource @Inject constructor(
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
-    override fun incrementCounts(cards: List<PokemonCard>): Observable<Unit> {
+    override fun incrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>> {
         return getUserCardCollection()?.let { collection ->
-            FirebaseFirestore.getInstance().runTransaction { transaction ->
-                val entities = ArrayList<CollectionCountEntity>()
+            collection.whereEqualTo("set", set)
+                    .get()
+                    .asObservable(schedulers.firebaseExecutor)
+                    .flatMap {
+                        val batch = FirebaseFirestore.getInstance().batch()
+                        val entities = it.toObjects(CollectionCountEntity::class.java)
+                        entities.forEach { entity ->
+                            batch.update(collection.document(entity.cardId), "count", entity.count + 1)
+                        }
 
-                cards.forEach { card ->
-                    try {
-                        val document = transaction.get(collection.document(card.id))
-                        val entity = document.toObject(CollectionCountEntity::class.java)
-                        if (entity != null) {
-                            entity.count += 1
-                            entities += entity
-                        } else {
-                            entities += CollectionCountEntity(
-                                    card.id, 1, card.expansion!!.code, card.expansion.series
+                        val missingCards = cards.filter { card ->
+                            entities.none { entity ->
+                                entity.cardId == card.id
+                            }
+                        }.map { card ->
+                            CollectionCountEntity(
+                                card.id, 1, card.expansion!!.code, card.expansion.series
                             )
                         }
-                    } catch (e: Exception) {
-                        if (e is FirebaseFirestoreException) {
-                            if (e.code == Code.NOT_FOUND) {
-                                entities += CollectionCountEntity(
-                                        card.id, 1, card.expansion!!.code, card.expansion.series
-                                )
-                            }
-                        }
-                    }
-                }
 
-                entities.forEach { entity ->
-                    transaction.set(collection.document(entity.cardId), entity)
-                }
-            }.asObservable(schedulers.firebaseExecutor)
+                        missingCards.forEach { count ->
+                            batch.set(collection.document(count.cardId), count)
+                        }
+
+                        batch.commit()
+                                .asVoidObservable(schedulers.firebaseExecutor)
+                                .map {
+                                    entities.forEach { it.count++ }
+                                    entities.plus(missingCards)
+                                            .map(EntityMapper::to)
+                                }
+                    }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
