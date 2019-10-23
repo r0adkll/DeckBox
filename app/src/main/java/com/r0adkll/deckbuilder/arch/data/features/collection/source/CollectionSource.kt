@@ -1,12 +1,10 @@
-package com.r0adkll.deckbuilder.arch.data.features.collection.cache
+package com.r0adkll.deckbuilder.arch.data.features.collection.source
 
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import io.reactivex.Observable
 
-
-interface CollectionCache {
+interface CollectionSource {
 
     fun observeAll(): Observable<List<CollectionCount>>
 

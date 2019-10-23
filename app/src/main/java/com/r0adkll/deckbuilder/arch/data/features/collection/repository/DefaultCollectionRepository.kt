@@ -1,8 +1,8 @@
 package com.r0adkll.deckbuilder.arch.data.features.collection.repository
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.FirestoreCollectionCache
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectionCache
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.FirestoreCollectionSource
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
@@ -10,44 +10,44 @@ import io.reactivex.Observable
 
 
 class DefaultCollectionRepository(
-        private val roomCollectionCache: RoomCollectionCache,
-        private val firestoreCollectionCache: FirestoreCollectionCache,
+        private val roomCollectionSource: RoomCollectionSource,
+        private val firestoreCollectionSource: FirestoreCollectionSource,
         private val preferences: AppPreferences
 ) : CollectionRepository {
 
     override fun observeAll(): Observable<List<CollectionCount>> = when(isOffline()) {
-        true -> roomCollectionCache.observeAll()
-        else -> firestoreCollectionCache.observeAll()
+        true -> roomCollectionSource.observeAll()
+        else -> firestoreCollectionSource.observeAll()
     }
 
     override fun getCount(cardId: String): Observable<CollectionCount> = when(isOffline()) {
-        true -> roomCollectionCache.getCount(cardId)
-        else -> firestoreCollectionCache.getCount(cardId)
+        true -> roomCollectionSource.getCount(cardId)
+        else -> firestoreCollectionSource.getCount(cardId)
     }
 
     override fun getCountForSet(set: String): Observable<List<CollectionCount>> = when(isOffline()) {
-        true -> roomCollectionCache.getCountForSet(set)
-        else -> firestoreCollectionCache.getCountForSet(set)
+        true -> roomCollectionSource.getCountForSet(set)
+        else -> firestoreCollectionSource.getCountForSet(set)
     }
 
     override fun getCountForSeries(series: String): Observable<List<CollectionCount>> = when(isOffline()) {
-        true -> roomCollectionCache.getCountForSeries(series)
-        else -> firestoreCollectionCache.getCountForSeries(series)
+        true -> roomCollectionSource.getCountForSeries(series)
+        else -> firestoreCollectionSource.getCountForSeries(series)
     }
 
     override fun incrementCount(card: PokemonCard): Observable<Unit> = when(isOffline()) {
-        true -> roomCollectionCache.incrementCount(card)
-        else -> firestoreCollectionCache.incrementCount(card)
+        true -> roomCollectionSource.incrementCount(card)
+        else -> firestoreCollectionSource.incrementCount(card)
     }
 
     override fun decrementCount(card: PokemonCard): Observable<Unit> = when(isOffline()) {
-        true -> roomCollectionCache.decrementCount(card)
-        else -> firestoreCollectionCache.decrementCount(card)
+        true -> roomCollectionSource.decrementCount(card)
+        else -> firestoreCollectionSource.decrementCount(card)
     }
 
     override fun incrementCounts(cards: List<PokemonCard>): Observable<Unit> = when(isOffline()) {
-        true -> roomCollectionCache.incrementCounts(cards)
-        else -> firestoreCollectionCache.incrementCounts(cards)
+        true -> roomCollectionSource.incrementCounts(cards)
+        else -> firestoreCollectionSource.incrementCounts(cards)
     }
 
     private fun isOffline(): Boolean = preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank()

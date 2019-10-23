@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.collection.cache
+package com.r0adkll.deckbuilder.arch.data.features.collection.source
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -19,20 +19,22 @@ import javax.inject.Inject
 import kotlin.math.ceil
 
 
-class FirestoreCollectionCache @Inject constructor(
+class FirestoreCollectionSource @Inject constructor(
         val preferences: AppPreferences,
         val schedulers: Schedulers
-) : CollectionCache {
+) : CollectionSource {
 
     override fun observeAll(): Observable<List<CollectionCount>> {
-        return getUserCardCollection()
-                ?.observeAs {
-                    val documentId = it.id
-                    val entity = it.toObject(CollectionCountEntity::class.java)
-                    EntityMapper.to(entity, documentId)
-                }
-                ?.toObservable()
-                ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
+        return getUserCardCollection()?.let { collection ->
+            collection
+                    .observeAs {
+                        val documentId = it.id
+                        val entity = it.toObject(CollectionCountEntity::class.java)
+                        EntityMapper.to(entity, documentId)
+                    }
+                    .toObservable()
+                    .doOnNext { Timber.i("Collection All from Network: ${it.size}") }
+        } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
 
     override fun getCount(cardId: String): Observable<CollectionCount> {

@@ -258,6 +258,7 @@ class DeckBuilderActivity : BaseActivity(),
 
         @SuppressLint("RxSubscribeOnError")
         disposables += pokemonCardClicks
+                .uiDebounce()
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it, sessionId)
@@ -265,6 +266,7 @@ class DeckBuilderActivity : BaseActivity(),
 
         @SuppressLint("RxSubscribeOnError")
         disposables += actionDeckImage.clicks()
+                .uiDebounce()
                 .subscribe {
                     DeckImagePickerFragment.newInstance(sessionId, state.image)
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)

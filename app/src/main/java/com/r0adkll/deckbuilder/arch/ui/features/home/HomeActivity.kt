@@ -84,11 +84,6 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
             }
         }, false)
 
-        if (featureFlags.collections) {
-            bottomNavigation.getTabWithId(R.id.tab_collection)
-                    .setBadgeCount(1)
-        }
-
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }

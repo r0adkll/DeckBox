@@ -16,8 +16,8 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.Cachin
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskSearchDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.FirestoreCollectionCache
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectionCache
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.FirestoreCollectionSource
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.FirestoreCommunityCache
@@ -238,8 +238,8 @@ class DataModule {
 
     @Provides @AppScope
     fun provideCollectionRepository(
-            roomCollectionCache: RoomCollectionCache,
-            firestoreCollectionCache: FirestoreCollectionCache,
+            roomCollectionCache: RoomCollectionSource,
+            firestoreCollectionCache: FirestoreCollectionSource,
             preferences: AppPreferences
     ): CollectionRepository {
         return DefaultCollectionRepository(roomCollectionCache, firestoreCollectionCache, preferences)
