@@ -3,6 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
@@ -11,8 +13,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.notifyingField
@@ -21,8 +22,11 @@ import com.r0adkll.deckbuilder.util.extensions.notifyingField
 class StackedPokemonRecyclerAdapter(
         context: Context,
         val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create(),
-        val removeCardClicks: Relay<PokemonCard> = PublishRelay.create()
-) : ListRecyclerAdapter<StackedPokemonCard, PokemonCardViewHolder>(context) {
+        val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
+        var itemViewClickListener: (View, StackedPokemonCard) -> Unit = { _, _ -> }
+) : EmptyViewListAdapter<StackedPokemonCard, PokemonCardViewHolder>(ITEM_CALLBACK) {
+
+    private val inflater = LayoutInflater.from(context)
 
     var isEditing: Boolean by notifyingField(false)
     var isCollectionEnabled: Boolean by notifyingField(false)
@@ -36,8 +40,7 @@ class StackedPokemonRecyclerAdapter(
 
     @SuppressLint("NewApi")
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
-        super.onBindViewHolder(vh, i)
-        val card = items[i]
+        val card = getItem(i)
         vh.bind(
                 card.card,
                 card.count,
@@ -50,45 +53,30 @@ class StackedPokemonRecyclerAdapter(
             c.startDrag(true)
             true
         }
+        vh.itemView.setOnClickListener {
+            itemViewClickListener(it, card)
+        }
     }
 
 
     override fun getItemId(position: Int): Long {
         if (position != RecyclerView.NO_POSITION) {
-            val item = items[position]
+            val item = getItem(position)
             return item.card.hashCode().toLong()
         }
         return super.getItemId(position)
     }
 
-
-    fun setCards(cards: List<StackedPokemonCard>) {
-        val diff = calculateDiff(items, cards)
-        items = ArrayList(diff.new)
-        diff.diff.dispatchUpdatesTo(DiffUpdateCallback())
-    }
-
-
     companion object {
-        private fun calculateDiff(old: List<StackedPokemonCard>, new: List<StackedPokemonCard>): RecyclerViewBinding<StackedPokemonCard> {
-            val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val oldItem = old[oldItemPosition]
-                    val newItem = new[newItemPosition]
-                    return oldItem.card.id == newItem.card.id
-                }
+        val ITEM_CALLBACK = object : DiffUtil.ItemCallback<StackedPokemonCard>() {
 
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val oldItem = old[oldItemPosition]
-                    val newItem = new[newItemPosition]
-                    return oldItem.hashCode() == newItem.hashCode()
-                }
+            override fun areItemsTheSame(oldItem: StackedPokemonCard, newItem: StackedPokemonCard): Boolean {
+                return oldItem.card.id == newItem.card.id
+            }
 
-                override fun getOldListSize(): Int = old.size
-                override fun getNewListSize(): Int = new.size
-            })
-
-            return RecyclerViewBinding(new = new, diff = diff)
+            override fun areContentsTheSame(oldItem: StackedPokemonCard, newItem: StackedPokemonCard): Boolean {
+                return oldItem.hashCode() == newItem.hashCode()
+            }
         }
     }
 }

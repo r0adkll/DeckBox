@@ -140,7 +140,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
         val spanCount = if (smallestWidth(TABLET_10)) 9 else 3
         adapter = PokemonBuilderRecyclerAdapter(this, spanCount, EditCardIntentions(), cardClicks)
-        adapter.setEmptyView(emptyView)
+        adapter.emptyView = emptyView
         recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, spanCount)
         recycler.adapter = adapter
 
@@ -203,7 +203,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
 
     override fun setCards(cards: List<PokemonCard>) {
-        adapter.setPokemon(cards.map { PokemonItem.Single(StackedPokemonCard(it, 1)) })
+        adapter.submitList(cards.map { PokemonItem.Single(StackedPokemonCard(it, 1)) })
     }
 
 

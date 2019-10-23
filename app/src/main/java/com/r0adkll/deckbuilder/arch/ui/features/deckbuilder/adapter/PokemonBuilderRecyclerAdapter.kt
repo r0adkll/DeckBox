@@ -2,12 +2,15 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 
 import android.content.Context
+import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItemCallback
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.notifyingField
@@ -19,11 +22,12 @@ class PokemonBuilderRecyclerAdapter(
         private val spanCount: Int,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
-) : ListRecyclerAdapter<PokemonItem, RecyclerView.ViewHolder>(context) {
+) : EmptyViewListAdapter<PokemonItem, RecyclerView.ViewHolder>(RecyclerItemCallback()) {
+
+    private val inflater = LayoutInflater.from(context)
 
     var isEditing: Boolean by notifyingField(false)
     var isCollectionEnabled: Boolean by notifyingField(false)
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -38,9 +42,8 @@ class PokemonBuilderRecyclerAdapter(
         }
     }
 
-
     override fun onBindViewHolder(vh: RecyclerView.ViewHolder, i: Int) {
-        val item = items[i]
+        val item = getItem(i)
         when(vh) {
             is EvolutionChainViewHolder -> {
                 val evolutionChain = item as PokemonItem.Evolution
@@ -68,10 +71,9 @@ class PokemonBuilderRecyclerAdapter(
         }
     }
 
-
     override fun getItemId(position: Int): Long {
         if (position != RecyclerView.NO_POSITION) {
-            val item = items[position]
+            val item = getItem(position)
             return when(item) {
                 is PokemonItem.Evolution -> item.evolutionChain.hashCode().toLong()
                 is PokemonItem.Single -> item.card.card.hashCode().toLong()
@@ -80,15 +82,7 @@ class PokemonBuilderRecyclerAdapter(
         return super.getItemId(position)
     }
 
-
     override fun getItemViewType(position: Int): Int {
-        return items[position].viewType
-    }
-
-
-    fun setPokemon(pokemon: List<PokemonItem>) {
-        val diff = calculateDiff(pokemon, items)
-        items = ArrayList(pokemon)
-        diff.diff.dispatchUpdatesTo(getListUpdateCallback())
+        return getItem(position).viewType
     }
 }
