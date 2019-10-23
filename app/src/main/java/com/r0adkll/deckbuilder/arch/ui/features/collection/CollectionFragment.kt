@@ -64,8 +64,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
             spanCount = if (smallestWidth(requireContext().resources, com.ftinc.kit.kotlin.utils.ScreenUtils.Config.TABLET_10)) 6 else 3
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    val item = adapter.items[position]
-                    return when (item) {
+                    return when (adapter.items[position]) {
                         is Item.Migration -> spanCount
                         is Item.ExpansionSeries -> spanCount
                         else -> 1

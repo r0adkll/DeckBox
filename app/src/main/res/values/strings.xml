@@ -290,4 +290,5 @@
     <string name="dialog_market_price_title">Market price</string>
     <string name="dialog_market_price_message">This price point is compiled from recent sales completed on TCGplayer.com. TCG Market Price is updated as transactions complete and reflects the best suggested retail price of a product.</string>
     <string name="action_view_more">More info</string>
+    <string name="action_toggle_missing_cards">Toggle missing cards</string>
 </resources>

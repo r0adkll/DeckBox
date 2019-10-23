@@ -62,9 +62,13 @@ class CollectionSetPresenter @Inject constructor(
                             .onErrorReturn { Change.Error("Something went wrong incrementing set in collection") }
                 }
 
+        val toggleMissingCards = intentions.toggleMissingCards()
+                .map { Change.ToggleMissingCards as Change }
+
         return cards.mergeWith(counts)
                 .mergeWith(addCard)
                 .mergeWith(removeCard)
                 .mergeWith(addSet)
+                .mergeWith(toggleMissingCards)
     }
 }

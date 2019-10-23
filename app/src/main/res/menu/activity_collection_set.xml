@@ -9,4 +9,13 @@
         app:showAsAction="always"
         android:visible="false"
         />
+
+    <item
+        android:id="@+id/action_toggle_missing_cards"
+        android:icon="@drawable/toggle_switch_off"
+        android:title="@string/action_toggle_missing_cards"
+        android:checkable="true"
+        app:showAsAction="always"
+        />
+
 </menu>
