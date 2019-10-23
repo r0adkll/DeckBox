@@ -10,7 +10,9 @@ import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.kotlin.extensions.setVisibleWeak
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
@@ -29,6 +31,8 @@ import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.internal.di.HasComponent
+import com.r0adkll.deckbuilder.util.extensions.isVisible
+import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
@@ -40,18 +44,11 @@ import kotlin.math.roundToInt
 
 class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProgressController {
 
-    companion object {
-
-        fun createIntent(context: Context): Intent = Intent(context, HomeActivity::class.java)
-    }
-
-
     @Inject lateinit var editor: EditRepository
     @Inject lateinit var featureFlags: FlagPreferences
 
     private lateinit var component: HomeComponent
     private lateinit var adapter: HomePagerAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,9 +66,6 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
                     }
                 }
                 R.id.tab_collection -> {
-                    featureFlags.collections = false
-                    bottomNavigation.getTabWithId(R.id.tab_collection)
-                            .removeBadge()
                     if (pager.currentItem != 1) {
                         pager.setCurrentItem(1, true)
                     }
@@ -89,15 +83,18 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                if (position == 0) {
+                    interpolateProgressLayout(positionOffset)
+                } else if (position == 1) {
+                    interpolateProgressLayout(1 - positionOffset)
+                }
             }
 
             override fun onPageSelected(position: Int) {
                 bottomNavigation.selectTabAtPosition(position, false)
-                progressLayout.setVisible(position == 1)
             }
         })
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -117,12 +114,10 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
         }
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_home, menu)
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
@@ -140,25 +135,31 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
         }
     }
 
-
     override fun setupComponent(component: AppComponent) {
         this.component = component.plus(HomeModule(this))
         this.component.inject(this)
     }
 
-
     override fun getComponent(): HomeComponent = component
-
 
     override fun setOverallProgress(progress: Float) {
         progressCompletion.text = getString(R.string.completion_format, (progress.times(100f).roundToInt().coerceIn(0, 100)))
         progressView.progress = progress
     }
 
+    private fun interpolateProgressLayout(progress: Float) {
+        // 0: hidden, 1: shown
+        progressLayout.alpha = (progress - .8f).coerceAtLeast(0f) / .2f
+
+        val translationY = (progress * progressLayout.height)
+        val height = dipToPx(56f) + translationY
+        appBarLayout.layoutHeight(height.toInt())
+        progressLayout.translationY = translationY
+    }
 
     class HomePagerAdapter(
             fragmentManager: FragmentManager
-    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_SET_USER_VISIBLE_HINT) {
 
         override fun getItem(position: Int): Fragment = when(position) {
             0 -> DecksFragment.newInstance()
@@ -167,7 +168,11 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
             else -> throw IllegalArgumentException("Invalid pager position")
         }
 
-
         override fun getCount(): Int = 3 // TODO: Increase when we add more screens
+    }
+
+    companion object {
+
+        fun createIntent(context: Context): Intent = Intent(context, HomeActivity::class.java)
     }
 }
