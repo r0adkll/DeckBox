@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.app.SharedElementCallback
 import androidx.lifecycle.Lifecycle
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.evernote.android.state.State
@@ -62,6 +63,7 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_deck_builder.*
 import kotlinx.android.synthetic.main.layout_detail_panel.*
 import kotlinx.android.synthetic.main.layout_marketplace.*
@@ -259,6 +261,7 @@ class DeckBuilderActivity : BaseActivity(),
         @SuppressLint("RxSubscribeOnError")
         disposables += pokemonCardClicks
                 .uiDebounce()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it, sessionId)
@@ -267,6 +270,7 @@ class DeckBuilderActivity : BaseActivity(),
         @SuppressLint("RxSubscribeOnError")
         disposables += actionDeckImage.clicks()
                 .uiDebounce()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     DeckImagePickerFragment.newInstance(sessionId, state.image)
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
