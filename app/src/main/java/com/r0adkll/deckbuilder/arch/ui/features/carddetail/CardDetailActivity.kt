@@ -99,27 +99,24 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         bindCard()
 
         // Setup variants recycler
-        variantsAdapter = PokemonCardsRecyclerAdapter(this)
-        variantsAdapter.setOnViewItemClickListener { view, _ ->
-            Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
+        variantsAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
+            Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
             show(this, view, sessionId)
         }
         variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
 
         // Setup evolves from adapter
-        evolvesFromAdapter = PokemonCardsRecyclerAdapter(this)
-        evolvesFromAdapter.setOnViewItemClickListener { view, _ ->
-            Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
+        evolvesFromAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
+            Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
             show(this, view, sessionId)
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesRecycler.adapter = evolvesFromAdapter
 
         // Setup evolves to adapter
-        evolvesToAdapter = PokemonCardsRecyclerAdapter(this)
-        evolvesToAdapter.setOnViewItemClickListener { view, _ ->
-            Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
+        evolvesToAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
+            Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
             show(this, view, sessionId)
         }
         evolvesToRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -280,21 +277,21 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun showVariants(cards: List<PokemonCard>) {
-        variantsAdapter.setCards(cards)
+        variantsAdapter.submitList(cards)
         variantsDivider?.setVisible(cards.isNotEmpty())
         variantsHeader.setVisible(cards.isNotEmpty())
         variantsRecycler.setVisible(cards.isNotEmpty())
     }
 
     override fun showEvolvesFrom(cards: List<PokemonCard>) {
-        evolvesFromAdapter.setCards(cards)
+        evolvesFromAdapter.submitList(cards)
         evolvesDivider?.setVisible(cards.isNotEmpty())
         evolvesHeader.setVisible(cards.isNotEmpty())
         evolvesRecycler.setVisible(cards.isNotEmpty())
     }
 
     override fun showEvolvesTo(cards: List<PokemonCard>) {
-        evolvesToAdapter.setCards(cards)
+        evolvesToAdapter.submitList(cards)
         evolvesToDivider?.setVisible(cards.isNotEmpty())
         evolvesToHeader.setVisible(cards.isNotEmpty())
         evolvesToRecycler.setVisible(cards.isNotEmpty())

@@ -82,17 +82,20 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         supportActionBar?.title = " "
         appbar?.setNavigationOnClickListener { finish() }
 
-        adapter = CollectionSetRecyclerAdapter(this, removeCardClicks, addCardClicks)
-        adapter.setEmptyView(emptyView)
-        adapter.setOnItemClickListener {
-            addCardClicks.accept(listOf(it.card))
-        }
-
-        adapter.setOnItemLongClickListener { _, stackedPokemonCard ->
-            Analytics.event(Event.SelectContent.PokemonCard(stackedPokemonCard.card.id))
-            startActivity(CardDetailActivity.createIntent(this, stackedPokemonCard.card))
-            true
-        }
+        adapter = CollectionSetRecyclerAdapter(
+                this,
+                removeCardClicks,
+                addCardClicks,
+                {
+                    addCardClicks.accept(listOf(it.card))
+                },
+                { _, stackedPokemonCard ->
+                    Analytics.event(Event.SelectContent.PokemonCard(stackedPokemonCard.card.id))
+                    startActivity(CardDetailActivity.createIntent(this, stackedPokemonCard.card))
+                    true
+                }
+        )
+        adapter.emptyView = emptyView
 
         val spanCount = if (smallestWidth(ScreenUtils.Config.TABLET_10)) 9 else 3
         recycler.adapter = adapter
@@ -113,8 +116,8 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val size = appbar?.menu?.size() ?: 0
         (0 until size).forEach {
-            appbar?.menu?.getItem(it)?.let {
-                MenuItemCompat.setIconTintList(it, ColorStateList.valueOf(progressBar.borderColor))
+            appbar?.menu?.getItem(it)?.let { item ->
+                MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(progressBar.borderColor))
             }
         }
         return menu?.findItem(R.id.action_toggle_missing_cards)?.let { toggleMissingCards ->
@@ -184,7 +187,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     }
 
     override fun showCollection(cards: List<StackedPokemonCard>) {
-        adapter.setCollectionItems(cards)
+        adapter.submitList(cards)
     }
 
     override fun showOnlyMissingCards(visible: Boolean) {

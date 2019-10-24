@@ -1,14 +1,12 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.adapter
 
+import com.ftinc.kit.kotlin.adapter.RecyclerItem
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
-
 
 sealed class Item : RecyclerItem {
 
     abstract val itemId: Long
-
 
     data class Migration(val isLoading: Boolean, val error: String?) : Item() {
 

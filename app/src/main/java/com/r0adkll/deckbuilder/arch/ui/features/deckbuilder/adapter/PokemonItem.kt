@@ -1,10 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
+import com.ftinc.kit.kotlin.adapter.RecyclerItem
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
-
 
 sealed class PokemonItem : RecyclerItem {
 

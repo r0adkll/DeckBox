@@ -1,21 +1,17 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
-
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItemCallback
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.notifyingField
-import kotlin.math.sin
-
 
 class PokemonBuilderRecyclerAdapter(
         context: Context,
@@ -28,6 +24,10 @@ class PokemonBuilderRecyclerAdapter(
 
     var isEditing: Boolean by notifyingField(false)
     var isCollectionEnabled: Boolean by notifyingField(false)
+
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {

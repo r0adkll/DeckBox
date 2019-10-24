@@ -638,7 +638,7 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun showBrokenRules(errors: List<Int>) {
         deckError.setVisible(errors.isNotEmpty())
-        ruleAdapter.setRuleErrors(errors)
+        ruleAdapter.submitList(errors)
     }
 
     @SuppressLint("CheckResult", "RxLeakedSubscription")
