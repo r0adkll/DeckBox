@@ -17,7 +17,7 @@
     <string name="tab_community">Community</string>
     <string name="tab_collection">Collection</string>
     <string name="tab_browse">Browse</string>
-    <string name="empty_decks_message">You don\'t have any decks</string>
+    <string name="empty_decks_message">You don\'t have any decks. Try creating one using the button below.</string>
     <string name="activity_deck_builder">New deck</string>
     <string name="tab_pokemon">Pokémon</string>
     <string name="tab_trainer">Trainer</string>

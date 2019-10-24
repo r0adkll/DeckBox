@@ -22,7 +22,8 @@
         android:paddingStart="@dimen/padding_large"
         android:paddingEnd="@dimen/padding_large"
         app:emptyMessage="@string/empty_decks_message"
-        app:emptyIcon="@drawable/ic_empty_cards"
+        app:emptyIcon="@drawable/ic_empty_deck"
+        app:emptyMessageTextSize="20sp"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

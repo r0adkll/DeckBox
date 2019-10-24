@@ -22,7 +22,6 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     val state: State
 
-
     interface Intentions {
 
         fun saveDeck(): Observable<Unit>
