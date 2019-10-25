@@ -2,7 +2,12 @@
 
 ## 1.10.0
 * [#5](https://github.com/r0adkll/DeckBox/issues/5) - Added pricing data from TCGPlayer API via Cloud Function + Firestore
-
+* [#94](https://github.com/r0adkll/DeckBox/issues/94) - Updated support contact url
+* [#99](https://github.com/r0adkll/DeckBox/issues/99) - Several improvements around Collection feature
+* [#100](https://github.com/r0adkll/DeckBox/issues/100) - Fixed issue with promo legal overrides that belong to expanded showing as unlimited
+* [#101](https://github.com/r0adkll/DeckBox/issues/101) - Fixed rapid clicking cards in builder interface issue
+* [#102](https://github.com/r0adkll/DeckBox/issues/102) - Fixed model issues with API causing some expansion set's to not load cards
+* [#106](https://github.com/r0adkll/DeckBox/issues/106) - Updated Privacy Policy URL
 
 ## 1.9.2
 * [#85](https://github.com/r0adkll/DeckBox/issues/85) - Fixed issue with incorrect sorting of promo cards and special sets

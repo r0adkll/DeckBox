@@ -1,4 +1,7 @@
 • Added TCGPlayer marketplace pricing data so you can view the costs of your decks and cards
+• Added ability to toggle non-collected cards in collection
+• Added ability to add entire collection at once
+• Several bug fixes and improvements
 
 ---
 • For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md
