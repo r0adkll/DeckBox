@@ -3,6 +3,7 @@
 ## 1.10.0
 * [#5](https://github.com/r0adkll/DeckBox/issues/5) - Added pricing data from TCGPlayer API via Cloud Function + Firestore
 
+
 ## 1.9.2
 * [#85](https://github.com/r0adkll/DeckBox/issues/85) - Fixed issue with incorrect sorting of promo cards and special sets
 * [#86](https://github.com/r0adkll/DeckBox/issues/86) - Fixed issue with timestamp storing in Firestore
