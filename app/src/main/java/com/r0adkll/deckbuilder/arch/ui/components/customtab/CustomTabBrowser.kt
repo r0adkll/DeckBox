@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.components.customtab
 
 import android.app.Activity
 import android.content.ComponentName
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsClient
@@ -87,6 +88,9 @@ class CustomTabBrowser(
                     .build()
                     .apply {
                         intent.setPackage(packageName)
+                        intent.putExtra(Intent.EXTRA_REFERRER,
+                                        Uri.parse("android-app://" + context.packageName))
+
                     }
                     .launchUrl(context, uri)
         }

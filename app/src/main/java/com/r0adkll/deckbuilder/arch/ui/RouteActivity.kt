@@ -12,6 +12,11 @@ import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
+import com.r0adkll.deckbuilder.internal.analytics.UserProperty
+import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL
+import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_GOOGLE
+import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_LOCAL
+import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_OFFLINE_LEGACY
 import javax.inject.Inject
 
 
@@ -31,8 +36,12 @@ class RouteActivity : AppCompatActivity() {
         remote.check()
 
         if (isSignedIn()) {
-            firebase.currentUser?.uid?.let { Analytics.userId(it) }
-//            Shortcuts.addNewDeckShortcut(this)
+            setUserLevelProperty()
+
+            firebase.currentUser?.uid?.let {
+                Analytics.userId(it)
+            }
+
             startActivity(HomeActivity.createIntent(this))
         }
         else {
@@ -50,6 +59,16 @@ class RouteActivity : AppCompatActivity() {
                 || (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())
     }
 
+    private fun setUserLevelProperty() {
+        when {
+            firebase.currentUser != null ->
+                Analytics.userProperty(LEVEL, LEVEL_GOOGLE)
+            !preferences.deviceId.isNullOrBlank() ->
+                Analytics.userProperty(LEVEL, LEVEL_LOCAL)
+            (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank()) ->
+                Analytics.userProperty(LEVEL, LEVEL_OFFLINE_LEGACY)
+        }
+    }
 
     private fun compatibilityCheck() {
         if (preferences.lastVersion == -1 && preferences.onboarding) {
