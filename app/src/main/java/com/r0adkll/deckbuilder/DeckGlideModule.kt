@@ -23,7 +23,7 @@ class DeckGlideModule : AppGlideModule() {
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         builder.setResizeExecutor(GlideExecutor.newSourceExecutor(4, "glide-multi-executor", GlideExecutor.UncaughtThrowableStrategy.IGNORE))
 
-        val diskCacheSize = 1024 * 1024 * 500
+        val diskCacheSize = 1024L * 1024L * 500L
         builder.setDiskCache(InternalCacheDiskCacheFactory(context, diskCacheSize))
     }
 

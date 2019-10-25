@@ -91,19 +91,12 @@ ext {
     bottombar_version = '2.3.1'
     butterknife_version = '8.8.1'
     canvas_version = '1.0.2'
-    dagger_version = '2.11'
     ftkit_version = '0.6.1'
-    glide_version = '4.0.0'
     leakcanary_version = '1.5.1'
     play_version = '15.0.0'
     poketcg_version = '1.0.19'
     retrofit_version = '2.3.0'
     room_version = '2.2.1'
-    rxjava_version = '2.1.3'
-    rxandroid_version = '2.0.1'
-    rxbinding_version = '2.2.0'
-    rxpref_version = '2.0.0'
-    rxrelay_version = '2.0.0'
     support_version = '1.0.0'
     state_version = '1.4.1'
     stetho_version = '1.5.1'
@@ -143,11 +136,11 @@ dependencies {
     implementation "com.google.android.gms:play-services-oss-licenses:17.0.0"
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "com.google.dagger:dagger:2.23.1"
+    kapt "com.google.dagger:dagger-compiler:2.23.1"
 
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    implementation "com.github.bumptech.glide:glide:4.9.0"
+    kapt "com.github.bumptech.glide:compiler:4.9.0"
     implementation 'com.caverock:androidsvg-aar:1.3'
 
     implementation "com.evernote:android-state:$state_version"
@@ -162,13 +155,13 @@ dependencies {
     implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.6'
     kapt 'nz.bradcampbell:paperparcel-compiler:2.0.6'
 
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
-    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:$rxbinding_version"
-    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:$rxbinding_version"
-    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rxbinding_version"
-    implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
-    implementation "com.f2prateek.rx.preferences2:rx-preferences:$rxpref_version"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.9"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:2.2.0"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:2.2.0"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:2.2.0"
+    implementation "com.jakewharton.rxrelay2:rxrelay:2.1.0"
+    implementation "com.f2prateek.rx.preferences2:rx-preferences:2.0.0"
 
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"

@@ -5,10 +5,13 @@ import android.content.Context
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.annotation.RequiresApi
 import android.view.View
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ftinc.kit.kotlin.extensions.dipToPx
@@ -124,12 +127,13 @@ object Shortcuts {
                             .asBitmap()
                             .load(image.imageUrl)
                             .circleCrop()
-                            .into(object : SimpleTarget<Bitmap>(size, size) {
-                                override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
-                                    if (resource != null) {
-                                        Timber.i("Pokemon Deck Image loaded")
-                                        updateDeckShortcutIcon(context, deck, resource)
-                                    }
+                            .into(object : CustomTarget<Bitmap>(size, size) {
+                                override fun onLoadCleared(placeholder: Drawable?) {
+                                }
+
+                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                    Timber.i("Pokemon Deck Image loaded")
+                                    updateDeckShortcutIcon(context, deck, resource)
                                 }
                             })
                 }
