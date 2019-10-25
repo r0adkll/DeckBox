@@ -118,7 +118,7 @@ class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImag
 
     private fun <C : Any> getComponent(componentType: KClass<C>): C {
         if (parentFragment is HasComponent<*>) {
-            return componentType.java.cast((parentFragment as HasComponent<*>).getComponent())
+            return componentType.java.cast((parentFragment as HasComponent<*>).getComponent())!!
         } else if (activity is HasComponent<*>) {
             return componentType.java.cast((activity as HasComponent<*>).getComponent())!!
         }

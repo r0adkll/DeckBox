@@ -23,14 +23,14 @@ apply from: 'https://raw.githubusercontent.com/passsy/gradle-GitVersioner/master
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.r0adkll.deckbuilder"
         buildToolsVersion "28.0.3"
 
         minSdkVersion 22
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         versionCode gitVersion.version
         versionName "$VERSION_NAME.${gitVersion.version}"
@@ -98,7 +98,7 @@ ext {
     play_version = '15.0.0'
     poketcg_version = '1.0.19'
     retrofit_version = '2.3.0'
-    room_version = '2.2.0'
+    room_version = '2.2.1'
     rxjava_version = '2.1.3'
     rxandroid_version = '2.0.1'
     rxbinding_version = '2.2.0'

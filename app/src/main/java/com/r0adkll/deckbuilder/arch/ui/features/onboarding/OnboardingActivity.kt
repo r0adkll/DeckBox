@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.onboarding
 
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +16,7 @@ import android.view.ViewGroup
 import com.ftinc.kit.kotlin.extensions.gone
 import com.ftinc.kit.kotlin.extensions.setVisible
 import com.ftinc.kit.kotlin.extensions.visible
+import com.ftinc.kit.kotlin.utils.bindParcelable
 import com.ftinc.kit.kotlin.utils.bundle
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
@@ -31,11 +31,9 @@ import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding_page.*
 import javax.inject.Inject
 
-
 class OnboardingActivity : BaseActivity() {
 
     @Inject lateinit var preferences: AppPreferences
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,11 +57,9 @@ class OnboardingActivity : BaseActivity() {
         Analytics.event(Event.TutorialBegin)
     }
 
-
     override fun setupComponent(component: AppComponent) {
         component.inject(this)
     }
-
 
     private fun launchSetup() {
         Analytics.event(Event.TutorialComplete)
@@ -72,8 +68,7 @@ class OnboardingActivity : BaseActivity() {
         preferences.onboarding = true
     }
 
-
-    inner class IndicatorPageChangeListener : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+    inner class IndicatorPageChangeListener : ViewPager.OnPageChangeListener {
 
         override fun onPageScrollStateChanged(state: Int) {
 
@@ -106,21 +101,18 @@ class OnboardingActivity : BaseActivity() {
         }
     }
 
-
     class OnboardingPagerAdapter(
-            val pages: List<Page>,
-            fragmentManager: androidx.fragment.app.FragmentManager
-    ) : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
+            private val pages: List<Page>,
+            fragmentManager: FragmentManager
+    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-        override fun getItem(position: Int): androidx.fragment.app.Fragment {
+        override fun getItem(position: Int): Fragment {
             val page = pages[position]
             return PageFragment.newInstance(page)
         }
 
-
         override fun getCount(): Int = pages.size
     }
-
 
     @Parcelize
     data class Page(
@@ -130,16 +122,13 @@ class OnboardingActivity : BaseActivity() {
             val comingSoon: Boolean = false
     ) : Parcelable
 
+    class PageFragment : Fragment() {
 
-    class PageFragment : androidx.fragment.app.Fragment() {
-
-        val page: Page by bindOptionalParcelable(KEY_PAGE)
-
+        val page by bindParcelable<Page>(KEY_PAGE)
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             return inflater.inflate(R.layout.fragment_onboarding_page, container, false)
         }
-
 
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
@@ -148,7 +137,6 @@ class OnboardingActivity : BaseActivity() {
             image.setImageResource(page.image)
             comingSoon.setVisible(page.comingSoon)
         }
-
 
         companion object {
             const val KEY_PAGE = "PageFragment.Page"
@@ -160,7 +148,6 @@ class OnboardingActivity : BaseActivity() {
             }
         }
     }
-
 
     companion object {
         val PAGES = listOf(

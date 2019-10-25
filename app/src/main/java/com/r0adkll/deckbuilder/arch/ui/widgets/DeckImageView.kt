@@ -188,7 +188,7 @@ class DeckImageView @JvmOverloads constructor(
                 mCachedHeight = height
             }
 
-            val cacheCanvas = Canvas(mCacheBitmap)
+            val cacheCanvas = Canvas(mCacheBitmap!!)
             if (mMaskDrawable != null) {
                 val sc = cacheCanvas.save()
                 mMaskDrawable.draw(cacheCanvas)
@@ -220,7 +220,7 @@ class DeckImageView @JvmOverloads constructor(
         }
 
         // Draw from cache
-        canvas.drawBitmap(mCacheBitmap,
+        canvas.drawBitmap(mCacheBitmap!!,
                 mBounds?.left?.toFloat() ?: 0f,
                 mBounds?.top?.toFloat() ?: 0f,
                 null)
