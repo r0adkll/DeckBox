@@ -151,9 +151,9 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
 
-    implementation 'nz.bradcampbell:paperparcel:2.0.6'
-    implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.6'
-    kapt 'nz.bradcampbell:paperparcel-compiler:2.0.6'
+    implementation 'nz.bradcampbell:paperparcel:2.0.8'
+    implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.8'
+    kapt 'nz.bradcampbell:paperparcel-compiler:2.0.8'
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.9"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
