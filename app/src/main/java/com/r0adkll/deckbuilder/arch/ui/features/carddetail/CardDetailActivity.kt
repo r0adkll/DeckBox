@@ -5,9 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.DashPathEffect
-import android.graphics.PathDashPathEffect
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,10 +13,8 @@ import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
-import android.text.style.RelativeSizeSpan
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -26,7 +22,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.evernote.android.state.State
 import com.ftinc.kit.kotlin.extensions.*
-import com.ftinc.kit.kotlin.utils.spannable
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -44,20 +39,16 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.CustomTabBrowser
+import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
 import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
-import com.r0adkll.deckbuilder.util.extensions.isVisible
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
 import kotlinx.android.synthetic.main.layout_card_details.*
 import kotlinx.android.synthetic.main.layout_collection_count_adjuster.*
 import kotlinx.android.synthetic.main.layout_marketplace.*
-import java.text.NumberFormat
 import javax.inject.Inject
 
 
@@ -99,27 +90,24 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         bindCard()
 
         // Setup variants recycler
-        variantsAdapter = PokemonCardsRecyclerAdapter(this)
-        variantsAdapter.setOnViewItemClickListener { view, _ ->
-            Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
+        variantsAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
+            Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
             show(this, view, sessionId)
         }
         variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
 
         // Setup evolves from adapter
-        evolvesFromAdapter = PokemonCardsRecyclerAdapter(this)
-        evolvesFromAdapter.setOnViewItemClickListener { view, _ ->
-            Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
+        evolvesFromAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
+            Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
             show(this, view, sessionId)
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesRecycler.adapter = evolvesFromAdapter
 
         // Setup evolves to adapter
-        evolvesToAdapter = PokemonCardsRecyclerAdapter(this)
-        evolvesToAdapter.setOnViewItemClickListener { view, _ ->
-            Analytics.event(Event.SelectContent.PokemonCard((view as PokemonCardView).card?.id ?: "unknown"))
+        evolvesToAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
+            Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
             show(this, view, sessionId)
         }
         evolvesToRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -146,12 +134,14 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         actionBuy.setOnClickListener {
             val product = state.products?.maxBy { it.recordedAt }
             if (product != null) {
+                Analytics.event(Event.ViewItem.MarketplaceLink(product.cardId))
                 val url = MarketplaceHelper.buildAffiliateLink(product)
                 customTabBrowser.launch(url)
             }
         }
 
         priceMarketLayout.setOnClickListener {
+            Analytics.event(Event.SelectContent.Action("market_price_info"))
             MarketplaceHelper.showMarketPriceExplanationDialog(this)
         }
 
@@ -280,21 +270,21 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun showVariants(cards: List<PokemonCard>) {
-        variantsAdapter.setCards(cards)
+        variantsAdapter.submitList(cards)
         variantsDivider?.setVisible(cards.isNotEmpty())
         variantsHeader.setVisible(cards.isNotEmpty())
         variantsRecycler.setVisible(cards.isNotEmpty())
     }
 
     override fun showEvolvesFrom(cards: List<PokemonCard>) {
-        evolvesFromAdapter.setCards(cards)
+        evolvesFromAdapter.submitList(cards)
         evolvesDivider?.setVisible(cards.isNotEmpty())
         evolvesHeader.setVisible(cards.isNotEmpty())
         evolvesRecycler.setVisible(cards.isNotEmpty())
     }
 
     override fun showEvolvesTo(cards: List<PokemonCard>) {
-        evolvesToAdapter.setCards(cards)
+        evolvesToAdapter.submitList(cards)
         evolvesToDivider?.setVisible(cards.isNotEmpty())
         evolvesToHeader.setVisible(cards.isNotEmpty())
         evolvesToRecycler.setVisible(cards.isNotEmpty())

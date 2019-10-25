@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import android.view.View
 import android.view.animation.*
+import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
@@ -13,8 +14,8 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokemonRecyclerAdapter
@@ -28,7 +29,7 @@ import kotlin.math.min
  * A ViewHolder interface for each [io.pokemontcg.model.SuperType] in the main deckbuilding interface
  * that dictates how that list of [io.pokemontcg.model.SuperType]'s cards are displayed
  */
-abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
+abstract class SuperTypeViewHolder<out A : EmptyViewListAdapter<*, *>>(
         val itemView: View,
         @DrawableRes val emptyIcon: Int,
         @StringRes val emptyMessage: Int,
@@ -60,7 +61,7 @@ abstract class SuperTypeViewHolder<out A : ListRecyclerAdapter<*, *>>(
         emptyView.setIcon(emptyIcon)
         emptyView.setEmptyMessage(emptyMessage)
 
-        adapter.setEmptyView(emptyView)
+        adapter.emptyView = emptyView
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
         (recycler.itemAnimator as androidx.recyclerview.widget.SimpleItemAnimator).supportsChangeAnimations = false
@@ -79,7 +80,7 @@ class PokemonViewHolder(
         editCardIntentions: EditCardIntentions
 ) : SuperTypeViewHolder<PokemonBuilderRecyclerAdapter>(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions) {
 
-    class PokemonSpanSizeLookup(private val lookup: (Int) -> Int) : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+    class PokemonSpanSizeLookup(private val lookup: (Int) -> Int) : GridLayoutManager.SpanSizeLookup() {
 
         override fun getSpanSize(position: Int): Int {
             return lookup.invoke(position)
@@ -88,15 +89,15 @@ class PokemonViewHolder(
 
 
     override val adapter: PokemonBuilderRecyclerAdapter = PokemonBuilderRecyclerAdapter(itemView.context, spanSize, editCardIntentions, pokemonCardClicks)
-    override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.GridLayoutManager(itemView.context, spanSize)
+    override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
 
 
     override fun setup() {
         super.setup()
-        (layoutManager as androidx.recyclerview.widget.GridLayoutManager).apply {
+        (layoutManager as GridLayoutManager).apply {
             spanCount = spanSize
             spanSizeLookup = PokemonSpanSizeLookup {
-                val item = adapter.items[it]
+                val item = adapter.currentList[it]
                 when(item) {
                     is PokemonItem.Evolution -> {
                         min(layoutManager.spanCount, spanSize) // We really, really want to make sure the correct span size is being returned here
@@ -123,7 +124,7 @@ class PokemonViewHolder(
             }
         }
 
-        adapter.setPokemon(items)
+        adapter.submitList(items)
     }
 
     override fun wiggleCard(card: PokemonCard) {
@@ -154,7 +155,7 @@ class TrainerEnergyViewHolder(
 
     override val adapter: StackedPokemonRecyclerAdapter = StackedPokemonRecyclerAdapter(itemView.context,
             editCardIntentions.addCardClicks, editCardIntentions.removeCardClicks)
-    override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = androidx.recyclerview.widget.GridLayoutManager(itemView.context, spanSize)
+    override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
 
     init {
         recycler.setHasFixedSize(true)
@@ -162,7 +163,7 @@ class TrainerEnergyViewHolder(
 
     override fun setup() {
         super.setup()
-        (layoutManager as androidx.recyclerview.widget.GridLayoutManager).spanCount = spanSize
+        (layoutManager as GridLayoutManager).spanCount = spanSize
     }
 
     override fun bind(cards: List<StackedPokemonCard>) {
@@ -176,8 +177,8 @@ class TrainerEnergyViewHolder(
                 else -> 10
             }
         }
-        adapter.setCards(sorted)
-        adapter.setOnViewItemClickListener { view, _ ->
+        adapter.submitList(sorted)
+        adapter.itemViewClickListener = { view, _ ->
             // FIXME: Do something about this atrocity
             val card = view.findViewById<PokemonCardView>(R.id.card)
             pokemonCardClicks.accept(card)
@@ -185,9 +186,9 @@ class TrainerEnergyViewHolder(
     }
 
     override fun wiggleCard(card: PokemonCard) {
-        val adapterPosition = adapter.items.indexOfFirst { it.card.id == card.id }
+        val adapterPosition = adapter.currentList.indexOfFirst { it.card.id == card.id }
         if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
-            val layoutManager = recycler.layoutManager as androidx.recyclerview.widget.GridLayoutManager
+            val layoutManager = recycler.layoutManager as GridLayoutManager
             val childIndex = adapterPosition - layoutManager.findFirstVisibleItemPosition()
             val child = layoutManager.getChildAt(childIndex)
             child?.let {

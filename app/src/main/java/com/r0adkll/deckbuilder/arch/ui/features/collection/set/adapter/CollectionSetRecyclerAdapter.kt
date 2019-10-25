@@ -1,67 +1,50 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.set.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
-
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
+import com.r0adkll.deckbuilder.arch.ui.components.StackedPokemonCardItemCallback
 
 class CollectionSetRecyclerAdapter(
         context: Context,
         private val removeCardClicks: Relay<PokemonCard>,
-        private val addCardClicks: Relay<List<PokemonCard>>
-): ListRecyclerAdapter<StackedPokemonCard, CollectionCardViewHolder>(context) {
+        private val addCardClicks: Relay<List<PokemonCard>>,
+        private val itemClickListener: (StackedPokemonCard) -> Unit = { },
+        private val itemLongClickListener: (View, StackedPokemonCard) -> Boolean = { _, _ -> false }
+): EmptyViewListAdapter<StackedPokemonCard, CollectionCardViewHolder>(StackedPokemonCardItemCallback()) {
+
+    private val inflater = LayoutInflater.from(context)
+
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionCardViewHolder {
         return CollectionCardViewHolder.create(inflater, parent, removeCardClicks, addCardClicks)
     }
 
     override fun onBindViewHolder(vh: CollectionCardViewHolder, i: Int) {
-        super.onBindViewHolder(vh, i)
-        val item = items[i]
+        val item = getItem(i)
         vh.bind(item.card, item.count)
+        vh.itemView.setOnClickListener {
+            itemClickListener(item)
+        }
+        vh.itemView.setOnLongClickListener {
+            itemLongClickListener(it, item)
+        }
     }
 
     override fun getItemId(position: Int): Long {
         if (position != RecyclerView.NO_POSITION) {
-            val item = items[position]
+            val item = getItem(position)
             return item.card.id.hashCode().toLong()
         }
         return super.getItemId(position)
-    }
-
-    fun setCollectionItems(newItems: List<StackedPokemonCard>) {
-        val diff = calculateDiff(items, newItems)
-        items = ArrayList(diff.new)
-        diff.diff.dispatchUpdatesTo(getListUpdateCallback())
-    }
-
-    companion object {
-
-        private fun calculateDiff(old: List<StackedPokemonCard>, new: List<StackedPokemonCard>): RecyclerViewBinding<StackedPokemonCard> {
-            val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val oldItem = old[oldItemPosition]
-                    val newItem = new[newItemPosition]
-                    return oldItem.card.id == newItem.card.id
-                }
-
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val oldItem = old[oldItemPosition]
-                    val newItem = new[newItemPosition]
-                    return oldItem.hashCode() == newItem.hashCode()
-                }
-
-                override fun getOldListSize(): Int = old.size
-                override fun getNewListSize(): Int = new.size
-            })
-
-            return RecyclerViewBinding(new = new, diff = diff)
-        }
     }
 }

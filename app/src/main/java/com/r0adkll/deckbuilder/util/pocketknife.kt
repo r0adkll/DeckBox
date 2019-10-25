@@ -11,17 +11,18 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 
 
-fun <P : Parcelable> androidx.fragment.app.Fragment.bindOptionalParcelable(key: String): ReadOnlyProperty<androidx.fragment.app.Fragment, P> = Lazy { fragment, _ ->
-    fragment.arguments!!.getParcelable(key)
+fun <P : Parcelable> Fragment.bindOptionalParcelable(key: String): ReadOnlyProperty<Fragment, P?> = Lazy { fragment, _ ->
+    fragment.arguments?.getParcelable(key)
 }
 
 
-fun androidx.fragment.app.Fragment.bindLong(key: String, default: Long = 0L): ReadOnlyProperty<androidx.fragment.app.Fragment, Long> = Lazy { fragment, _ ->
+fun Fragment.bindLong(key: String, default: Long = 0L): ReadOnlyProperty<Fragment, Long> = Lazy { fragment, _ ->
     fragment.arguments!!.getLong(key, default)
 }
 
-fun androidx.fragment.app.Fragment.bindString(key: String): ReadOnlyProperty<androidx.fragment.app.Fragment, String?> = Lazy { fragment, _ ->
+fun Fragment.bindString(key: String): ReadOnlyProperty<Fragment, String?> = Lazy { fragment, _ ->
     fragment.arguments?.getString(key)
+
 }
 
 fun <P : Parcelable> Activity.bindOptionalParcelable(key: String): ReadOnlyProperty<Activity, P?> = Lazy { activity, _ ->

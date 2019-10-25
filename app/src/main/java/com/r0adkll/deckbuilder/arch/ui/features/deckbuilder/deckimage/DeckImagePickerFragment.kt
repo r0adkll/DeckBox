@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
-
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
@@ -28,7 +27,6 @@ import kotlinx.android.synthetic.main.fragment_deck_image_picker.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-
 class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImageUi, DeckImageUi.Intentions, DeckImageUi.Actions {
 
     override var state: DeckImageUi.State = DeckImageUi.State.DEFAULT
@@ -42,11 +40,9 @@ class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImag
     @Inject lateinit var renderer: DeckImageRenderer
     @Inject lateinit var presenter: DeckImagePresenter
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_deck_image_picker, container, false)
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -58,15 +54,14 @@ class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImag
                 .plus(DeckImageModule(this))
                 .inject(this)
 
-        adapter = DeckImageRecyclerAdapter(activity!!)
-        adapter.setEmptyView(emptyView)
-        recycler.adapter = adapter
-        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 3)
-        recycler.itemAnimator = null
-
-        adapter.setOnItemClickListener {
+        adapter = DeckImageRecyclerAdapter(requireContext()) {
             deckImageClicks.accept(it)
         }
+
+        adapter.emptyView = emptyView
+        recycler.adapter = adapter
+        recycler.layoutManager = GridLayoutManager(requireContext(), 3)
+        recycler.itemAnimator = null
 
         renderer.start()
         presenter.start()
@@ -82,16 +77,13 @@ class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImag
         super.onDestroy()
     }
 
-
     override fun render(state: DeckImageUi.State) {
         this.state = state
         renderer.render(state)
     }
 
-
     override val pickedDeckImage: Observable<DeckImage>
         get() = deckImageClicks
-
 
     override val selectDeckImageClicks: Observable<Unit>
         get() = actionSelect.clicks().uiDebounce()
@@ -99,53 +91,44 @@ class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImag
                     Analytics.event(Event.SelectContent.Deck.EditImage)
                 }
 
-
     override fun setDeckImages(images: List<DeckImage>) {
-        adapter.setDeckImages(images)
+        adapter.submitList(images)
     }
-
 
     override fun setSelectedDeckImage(image: DeckImage?) {
         adapter.selectedDeckImage = image
         actionSelect.isEnabled = image != null
     }
 
-
     override fun close() {
         dismiss()
     }
-
 
     override fun showLoading(isLoading: Boolean) {
         emptyView.setLoading(isLoading)
     }
 
-
     override fun showError(description: String) {
         emptyView.emptyMessage = description
     }
-
 
     override fun hideError() {
         emptyView.setEmptyMessage(R.string.empty_deck_image_message)
     }
 
-
     private fun <C : Any> getComponent(componentType: KClass<C>): C {
         if (parentFragment is HasComponent<*>) {
-            return componentType.java.cast((parentFragment as HasComponent<*>).getComponent())
+            return componentType.java.cast((parentFragment as HasComponent<*>).getComponent())!!
         } else if (activity is HasComponent<*>) {
             return componentType.java.cast((activity as HasComponent<*>).getComponent())!!
         }
         return componentType.java.cast((activity as HasComponent<*>).getComponent())!!
     }
 
-
     companion object {
         const val TAG = "DeckImagePicker"
         private const val EXTRA_SESSION_ID = "DeckImagePickerFragment.SessionId"
         private const val EXTRA_DECK_IMAGE = "DeckImagePickerFragment.DeckImage"
-
 
         fun newInstance(sessionId: Long, image: DeckImage? = null): DeckImagePickerFragment {
             val fragment = DeckImagePickerFragment()

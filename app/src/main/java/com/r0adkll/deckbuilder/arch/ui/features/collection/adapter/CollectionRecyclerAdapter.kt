@@ -1,16 +1,24 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.jakewharton.rxrelay2.Relay
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
-
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItemCallback
 
 class CollectionRecyclerAdapter(
         context: Context,
         private val migrateClicks: Relay<Unit>,
-        private val dismissClicks: () -> Unit
-) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
+        private val dismissClicks: () -> Unit,
+        private val onItemClickListener: (Item) -> Unit = { }
+) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerItemCallback()) {
+
+    private val inflater = LayoutInflater.from(context)
+
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
@@ -18,25 +26,22 @@ class CollectionRecyclerAdapter(
     }
 
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {
-        val item = items[i]
+        val item = getItem(i)
         if (item is Item.ExpansionSet) {
-            super.onBindViewHolder(vh, i)
+            vh.itemView.setOnClickListener {
+                onItemClickListener(item)
+            }
+        } else {
+            vh.itemView.setOnClickListener(null)
         }
         vh.bind(item)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].viewType
+        return getItem(position).viewType
     }
 
     override fun getItemId(position: Int): Long {
-        return items[position].itemId
-    }
-
-    fun setCollectionItems(newItems: List<Item>) {
-        val diff = calculateDiff(newItems, items)
-        items.clear()
-        items.addAll(diff.new)
-        diff.diff.dispatchUpdatesTo(getListUpdateCallback())
+        return getItem(position).itemId
     }
 }

@@ -25,21 +25,17 @@ class FirebaseAnalyticInterface(
         }
     }
 
-
     override fun setUserId(id: String) {
         firebaseAnalytics.setUserId(id)
     }
-
 
     override fun setUserProperty(key: String, value: String?) {
         firebaseAnalytics.setUserProperty(key, value)
     }
 
-
     override fun postEvent(event: Event) {
         firebaseAnalytics.logEvent(getEvent(event), getBundle(event))
     }
-
 
     private fun getEvent(event: Event): String = when(event) {
         is Event.Login -> FirebaseAnalytics.Event.LOGIN
@@ -48,16 +44,21 @@ class FirebaseAnalyticInterface(
         is Event.Search -> FirebaseAnalytics.Event.SEARCH
         is Event.SearchProxy -> FirebaseAnalytics.Event.SEARCH
         is Event.Share -> FirebaseAnalytics.Event.SHARE
+        is Event.ViewItem -> FirebaseAnalytics.Event.VIEW_ITEM
         Event.Logout -> "logout"
         Event.TutorialBegin -> FirebaseAnalytics.Event.TUTORIAL_BEGIN
         Event.TutorialComplete -> FirebaseAnalytics.Event.TUTORIAL_COMPLETE
     }
 
-
     private fun getBundle(event: Event): Bundle = when(event) {
         Event.Login.Google -> bundle { METHOD to "google" }
         Event.Login.Anonymous -> bundle { METHOD to "anonymous" }
         Event.SignUp.Google -> bundle { METHOD to "google" }
+        is Event.ViewItem -> bundle {
+            ITEM_ID to event.id
+            ITEM_NAME to event.name
+            ITEM_CATEGORY to event.category
+        }
         is Event.Search -> bundle { SEARCH_TERM to event.term }
         is Event.SearchProxy -> bundle {
             ITEM_ID to event.proxy.replacement

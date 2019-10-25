@@ -25,7 +25,6 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_collection.*
 import javax.inject.Inject
 
-
 class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions, CollectionUi.Actions {
 
     override var state: State = State.DEFAULT
@@ -36,7 +35,6 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
 
     private val migrateClicks = PublishRelay.create<Unit>()
     private lateinit var adapter: CollectionRecyclerAdapter
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_collection, container, false)
@@ -49,14 +47,13 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
                 dismissClicks = {
                     preferences.showCollectionMigration.set(false)
                 }
-        )
-        adapter.setEmptyView(collectionEmptyView)
-        adapter.setOnItemClickListener {
+        ) {
             if (it is Item.ExpansionSet) {
                 Analytics.event(Event.SelectContent.CollectionExpansionSet(it.expansion.code))
                 startActivity(CollectionSetActivity.createIntent(requireContext(), it.expansion))
             }
         }
+        adapter.emptyView = collectionEmptyView
 
         collectionRecycler.adapter = adapter
         (collectionRecycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
@@ -64,8 +61,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
             spanCount = if (smallestWidth(requireContext().resources, com.ftinc.kit.kotlin.utils.ScreenUtils.Config.TABLET_10)) 6 else 3
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    val item = adapter.items[position]
-                    return when (item) {
+                    return when (adapter.currentList[position]) {
                         is Item.Migration -> spanCount
                         is Item.ExpansionSeries -> spanCount
                         else -> 1
@@ -94,7 +90,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
     }
 
     override fun setItems(items: List<Item>) {
-        adapter.setCollectionItems(items)
+        adapter.submitList(items)
     }
 
     override fun hideError() {

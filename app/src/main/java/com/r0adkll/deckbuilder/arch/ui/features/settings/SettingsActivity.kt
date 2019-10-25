@@ -6,12 +6,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
-import androidx.core.app.ShareCompat
-import androidx.core.content.IntentCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceFragmentCompat
 import com.ftinc.kit.kotlin.extensions.clear
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.Auth
@@ -27,11 +26,11 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectionCache
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
-import com.r0adkll.deckbuilder.arch.ui.components.BasePreferenceFragment
+import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.features.settings.offline.ManageOfflineActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
@@ -43,7 +42,6 @@ import com.r0adkll.deckbuilder.util.extensions.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -58,26 +56,26 @@ class SettingsActivity : BaseActivity() {
         appbar?.setNavigationOnClickListener { finish() }
     }
 
-
     override fun setupComponent(component: AppComponent) {
     }
 
-
-
-    class SettingsFragment : BasePreferenceFragment(), GoogleApiClient.OnConnectionFailedListener {
+    class SettingsFragment : PreferenceFragmentCompat(), GoogleApiClient.OnConnectionFailedListener {
 
         private var googleClient: GoogleApiClient? = null
 
         @Inject lateinit var preferences: AppPreferences
         @Inject lateinit var accountRepository: AccountRepository
-        @Inject lateinit var roomCollectionCache: RoomCollectionCache
+        @Inject lateinit var roomCollectionCache: RoomCollectionSource
 
         private val disposables = CompositeDisposable()
         private var migrationSnackbar: Snackbar? = null
+        private lateinit var customTabBrowser: CustomTabBrowser
 
 
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
+            customTabBrowser = CustomTabBrowser(requireActivity() as AppCompatActivity)
+            customTabBrowser.prepare(Uri.parse(getString(R.string.privacy_policy_url)))
             setupClient()
         }
 
@@ -135,7 +133,7 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_about_privacy_policy" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "privacy_policy"))
-                    startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
+                    customTabBrowser.launch(Uri.parse(getString(R.string.privacy_policy_url)))
                     true
                 }
                 "pref_about_developer" -> {
@@ -198,7 +196,7 @@ class SettingsActivity : BaseActivity() {
 
                     val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                     clipboardManager?.let { cm ->
-                        cm.primaryClip = ClipData("deckbox user id", arrayOf("text/plain"), ClipData.Item(preference.summary))
+                        cm.setPrimaryClip(ClipData("deckbox user id", arrayOf("text/plain"), ClipData.Item(preference.summary)))
                         toast("User Id copied to clipboard")
                     }
                     true

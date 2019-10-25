@@ -23,11 +23,10 @@ class CollectionCardViewHolder(
         val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
 ): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
-    val cardView: PokemonCardView by bindView(R.id.card)
+    private val cardView: PokemonCardView by bindView(R.id.card)
     private val cardCount: TextView by bindView(R.id.count)
     private val actionRemove: ImageView by bindView(R.id.action_remove)
     private val actionAdd: ImageView by bindView(R.id.action_add)
-
 
     fun bind(card: PokemonCard, count: Int) {
         cardView.card = card

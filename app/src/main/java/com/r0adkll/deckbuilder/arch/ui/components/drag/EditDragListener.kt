@@ -9,43 +9,42 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
-
 class EditDragListener(
-        val dropZone: View,
+        private val dropZone: View,
         dropListener: DropListener
 ) : View.OnDragListener {
 
     private val actionAdd: TextView by lazy { dropZone.findViewById<TextView>(R.id.dropZoneAdd) }
     private val actionRemove: TextView by lazy { dropZone.findViewById<TextView>(R.id.dropZoneRemove) }
 
-
     init {
         AddDragListener.attach(actionAdd, dropListener)
         RemoveDragListener.attach(actionRemove, dropListener)
     }
 
-
     override fun onDrag(v: View, event: DragEvent): Boolean {
-        val state = event.localState as PokemonCardView.DragState
-        val card = state.view.card
-
-        return if (state.isEdit && card != null) {
-            when(event.action) {
-                DragEvent.ACTION_DRAG_STARTED -> {
-                    showDropZone()
-                    true
+        val state = event.localState as? PokemonCardView.DragState
+        if (state != null) {
+            val card = state.view.card
+            return if (state.isEdit && card != null) {
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        showDropZone()
+                        true
+                    }
+                    DragEvent.ACTION_DRAG_ENDED -> {
+                        hideDropZone()
+                        true
+                    }
+                    else -> false
                 }
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    hideDropZone()
-                    true
-                }
-                else -> false
+            } else {
+                false
             }
         } else {
-            false
+            return false
         }
     }
-
 
     private fun showDropZone() {
         dropZone.animate()
@@ -55,7 +54,6 @@ class EditDragListener(
                 .start()
     }
 
-
     private fun hideDropZone() {
         dropZone.animate()
                 .translationY(dropZone.resources.getDimension(R.dimen.dropzone_height_inverse))
@@ -63,7 +61,6 @@ class EditDragListener(
                 .setInterpolator(FastOutLinearInInterpolator())
                 .start()
     }
-
 
     private class AddDragListener(
             val actionAdd: View,
@@ -74,34 +71,33 @@ class EditDragListener(
         private val unselectedColor by lazy { actionAdd.color(R.color.dropzone_green) }
 
         override fun onDrag(v: View, event: DragEvent): Boolean {
-            val state = event.localState as PokemonCardView.DragState
-            val card = state.view.card
-
-            if (state.isEdit && card != null) {
-                return when(event.action) {
-                    DragEvent.ACTION_DRAG_ENTERED -> {
-                        v.setBackgroundColor(selectedColor)
-                        true
+            val state = event.localState as? PokemonCardView.DragState
+            if (state != null) {
+                val card = state.view.card
+                if (state.isEdit && card != null) {
+                    return when (event.action) {
+                        DragEvent.ACTION_DRAG_ENTERED -> {
+                            v.setBackgroundColor(selectedColor)
+                            true
+                        }
+                        DragEvent.ACTION_DRAG_EXITED -> {
+                            v.setBackgroundColor(unselectedColor)
+                            true
+                        }
+                        DragEvent.ACTION_DROP -> {
+                            listener.onAddCard(card)
+                            true
+                        }
+                        DragEvent.ACTION_DRAG_ENDED -> {
+                            v.setBackgroundColor(unselectedColor)
+                            true
+                        }
+                        else -> true
                     }
-                    DragEvent.ACTION_DRAG_EXITED -> {
-                        v.setBackgroundColor(unselectedColor)
-                        true
-                    }
-                    DragEvent.ACTION_DROP -> {
-                        listener.onAddCard(card)
-                        true
-                    }
-                    DragEvent.ACTION_DRAG_ENDED -> {
-                        v.setBackgroundColor(unselectedColor)
-                        true
-                    }
-                    else -> true
                 }
-            } else {
-                return false
             }
+            return false
         }
-
 
         companion object {
 
@@ -113,7 +109,6 @@ class EditDragListener(
         }
     }
 
-
     private class RemoveDragListener(
             val actionRemove: View,
             val listener: DropListener
@@ -123,34 +118,33 @@ class EditDragListener(
         private val unselectedColor by lazy { actionRemove.color(R.color.dropzone_red) }
 
         override fun onDrag(v: View, event: DragEvent): Boolean {
-            val state = event.localState as PokemonCardView.DragState
-            val card = state.view.card
-
-            if (state.isEdit && card != null) {
-                return when(event.action) {
-                    DragEvent.ACTION_DRAG_ENTERED -> {
-                        v.setBackgroundColor(selectedColor)
-                        true
+            val state = event.localState as? PokemonCardView.DragState
+            if (state != null) {
+                val card = state.view.card
+                if (state.isEdit && card != null) {
+                    return when (event.action) {
+                        DragEvent.ACTION_DRAG_ENTERED -> {
+                            v.setBackgroundColor(selectedColor)
+                            true
+                        }
+                        DragEvent.ACTION_DRAG_EXITED -> {
+                            v.setBackgroundColor(unselectedColor)
+                            true
+                        }
+                        DragEvent.ACTION_DROP -> {
+                            listener.onRemoveCard(card)
+                            true
+                        }
+                        DragEvent.ACTION_DRAG_ENDED -> {
+                            v.setBackgroundColor(unselectedColor)
+                            true
+                        }
+                        else -> true
                     }
-                    DragEvent.ACTION_DRAG_EXITED -> {
-                        v.setBackgroundColor(unselectedColor)
-                        true
-                    }
-                    DragEvent.ACTION_DROP -> {
-                        listener.onRemoveCard(card)
-                        true
-                    }
-                    DragEvent.ACTION_DRAG_ENDED -> {
-                        v.setBackgroundColor(unselectedColor)
-                        true
-                    }
-                    else -> true
                 }
-            } else {
-                return false
             }
+            return false
         }
-
 
         companion object {
 
@@ -162,13 +156,11 @@ class EditDragListener(
         }
     }
 
-
     interface DropListener {
 
         fun onAddCard(card: PokemonCard)
         fun onRemoveCard(card: PokemonCard)
     }
-
 
     companion object {
         private const val ANIM_DURATION = 150L

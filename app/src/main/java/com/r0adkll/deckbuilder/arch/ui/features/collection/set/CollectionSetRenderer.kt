@@ -29,11 +29,27 @@ class CollectionSetRenderer(
                 }
 
         disposables += state
+                .map { it.onlyMissingCards }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    actions.showOnlyMissingCards(it)
+                }
+
+        disposables += state
                 .map { s ->
-                    s.cards.sortedBy { it.sortableNumber }.map { card ->
-                        val count = s.counts.find { it.id == card.id && !it.isSourceOld }
-                        StackedPokemonCard(card, count?.count ?: 0)
-                    }
+                    s.cards
+                            .sortedBy { it.sortableNumber }.map { card ->
+                                val count = s.counts.find { it.id == card.id && !it.isSourceOld }
+                                StackedPokemonCard(card, count?.count ?: 0)
+                            }
+                            .filter { stackedCard ->
+                                if (s.onlyMissingCards) {
+                                    stackedCard.count == 0
+                                } else {
+                                    true
+                                }
+                            }
                 }
                 .distinctUntilChanged(BiPredicate { t1, t2 ->
                     t1.map { it.card to it.count } == t2.map { it.card to it.count }

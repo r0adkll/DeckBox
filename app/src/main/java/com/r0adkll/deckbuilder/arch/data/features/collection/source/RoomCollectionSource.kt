@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.collection.cache
+package com.r0adkll.deckbuilder.arch.data.features.collection.source
 
 import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.collection.mapper.EntityMapper
@@ -10,10 +10,10 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 
-class RoomCollectionCache @Inject constructor(
+class RoomCollectionSource @Inject constructor(
         val db: DeckDatabase,
         val schedulers: Schedulers
-) : CollectionCache {
+) : CollectionSource {
 
     override fun observeAll(): Observable<List<CollectionCount>> {
         return db.collection().observeAll()
@@ -54,9 +54,11 @@ class RoomCollectionCache @Inject constructor(
                 .map { Unit }
     }
 
-    override fun incrementCounts(cards: List<PokemonCard>): Observable<Unit> {
+    override fun incrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>> {
         return Observable.fromCallable {
-            db.collection().incrementCounts(cards)
+            db.collection()
+                    .incrementSet(set, cards)
+                    .map(EntityMapper::to)
         }.subscribeOn(schedulers.database)
     }
 

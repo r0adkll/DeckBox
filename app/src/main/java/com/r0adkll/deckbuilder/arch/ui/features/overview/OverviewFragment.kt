@@ -60,13 +60,13 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
         state = state.copy(sessionId = sessionId)
 
-        adapter = OverviewRecyclerAdapter(activity!!, cardClicks, editCardIntentions)
-        adapter.setEmptyView(emptyView)
+        adapter = OverviewRecyclerAdapter(requireContext(), cardClicks, editCardIntentions)
+        adapter.emptyView = emptyView
         val spanCount = if (orientation(ORIENTATION_LANDSCAPE)) 7 else 4
-        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, spanCount)
-        layoutManager.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+        val layoutManager = GridLayoutManager(requireContext(), spanCount)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                val item = adapter.items[position]
+                val item = adapter.currentList[position]
                 return item.size
             }
         }
@@ -74,7 +74,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         recycler.adapter = adapter
 
         disposables += cardClicks.subscribe {
-            CardDetailActivity.show(activity!!, it, sessionId)
+            CardDetailActivity.show(requireActivity(), it, sessionId)
         }
     }
 
@@ -126,7 +126,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
 
     override fun showCards(cards: List<EvolutionChain>) {
-        adapter.setCards(cards)
+        adapter.submitList(cards)
     }
 
 

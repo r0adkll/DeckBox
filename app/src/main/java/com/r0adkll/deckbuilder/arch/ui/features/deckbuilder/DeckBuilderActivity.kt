@@ -32,6 +32,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepos
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
 import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
@@ -62,6 +63,7 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_deck_builder.*
 import kotlinx.android.synthetic.main.layout_detail_panel.*
 import kotlinx.android.synthetic.main.layout_marketplace.*
@@ -258,6 +260,8 @@ class DeckBuilderActivity : BaseActivity(),
 
         @SuppressLint("RxSubscribeOnError")
         disposables += pokemonCardClicks
+                .uiDebounce()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                     CardDetailActivity.show(this, it, sessionId)
@@ -265,6 +269,8 @@ class DeckBuilderActivity : BaseActivity(),
 
         @SuppressLint("RxSubscribeOnError")
         disposables += actionDeckImage.clicks()
+                .uiDebounce()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     DeckImagePickerFragment.newInstance(sessionId, state.image)
                             .show(supportFragmentManager, DeckImagePickerFragment.TAG)
@@ -280,6 +286,7 @@ class DeckBuilderActivity : BaseActivity(),
         }
 
         priceMarketLayout.setOnClickListener {
+            Analytics.event(Event.SelectContent.Action("market_price_info"))
             MarketplaceHelper.showMarketPriceExplanationDialog(this)
         }
 
@@ -632,7 +639,7 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun showBrokenRules(errors: List<Int>) {
         deckError.setVisible(errors.isNotEmpty())
-        ruleAdapter.setRuleErrors(errors)
+        ruleAdapter.submitList(errors)
     }
 
     @SuppressLint("CheckResult", "RxLeakedSubscription")

@@ -1,8 +1,8 @@
 package com.r0adkll.deckbuilder.arch.data.features.account
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.FirestoreCollectionCache
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectionCache
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.FirestoreCollectionSource
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.FirestoreDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.RoomDeckCache
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
@@ -15,9 +15,9 @@ import javax.inject.Inject
 
 class DefaultAccountRepository @Inject constructor(
         val roomDeckCache: RoomDeckCache,
-        val roomCollectionCache: RoomCollectionCache,
+        val roomCollectionCache: RoomCollectionSource,
         val firestoreDeckCache: FirestoreDeckCache,
-        val firestoreCollectionCache: FirestoreCollectionCache,
+        val firestoreCollectionCache: FirestoreCollectionSource,
         val preferences: AppPreferences,
         val schedulers: Schedulers
 ): AccountRepository {

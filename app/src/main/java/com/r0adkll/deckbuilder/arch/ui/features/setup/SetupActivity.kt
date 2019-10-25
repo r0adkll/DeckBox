@@ -32,7 +32,6 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-
 class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
@@ -184,6 +183,10 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
                 val acct = result.signInAccount
                 val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
                 firebaseAuth.signInWithCredential(credential)
+                        .addOnFailureListener {
+                            Timber.e(it, "Some critical error occurred when trying to sign in")
+                            snackbar("Uh-oh! Something happened, unable to sign-in")
+                        }
                         .addOnCompleteListener { r ->
                             if (r.isSuccessful) {
                                 // Auto-grab the user's name from their account

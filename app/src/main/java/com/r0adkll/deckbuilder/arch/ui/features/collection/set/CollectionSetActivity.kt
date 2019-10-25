@@ -17,6 +17,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.ftinc.kit.arch.presentation.BaseActivity
@@ -62,6 +63,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     private val addCardClicks = PublishRelay.create<List<PokemonCard>>()
     private val removeCardClicks = PublishRelay.create<PokemonCard>()
     private val incrementSetClicks = PublishRelay.create<Unit>()
+    private val toggleMissingCardsClicks = PublishRelay.create<Unit>()
 
     private lateinit var adapter: CollectionSetRecyclerAdapter
     private var statusBarHeight: Int = 0
@@ -80,17 +82,20 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         supportActionBar?.title = " "
         appbar?.setNavigationOnClickListener { finish() }
 
-        adapter = CollectionSetRecyclerAdapter(this, removeCardClicks, addCardClicks)
-        adapter.setEmptyView(emptyView)
-        adapter.setOnItemClickListener {
-            addCardClicks.accept(listOf(it.card))
-        }
-
-        adapter.setOnItemLongClickListener { _, stackedPokemonCard ->
-            Analytics.event(Event.SelectContent.PokemonCard(stackedPokemonCard.card.id))
-            startActivity(CardDetailActivity.createIntent(this, stackedPokemonCard.card))
-            true
-        }
+        adapter = CollectionSetRecyclerAdapter(
+                this,
+                removeCardClicks,
+                addCardClicks,
+                {
+                    addCardClicks.accept(listOf(it.card))
+                },
+                { _, stackedPokemonCard ->
+                    Analytics.event(Event.SelectContent.PokemonCard(stackedPokemonCard.card.id))
+                    startActivity(CardDetailActivity.createIntent(this, stackedPokemonCard.card))
+                    true
+                }
+        )
+        adapter.emptyView = emptyView
 
         val spanCount = if (smallestWidth(ScreenUtils.Config.TABLET_10)) 9 else 3
         recycler.adapter = adapter
@@ -98,7 +103,6 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         (recycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
         statusBarHeight = UIUtils.getStatusBarHeight(this)
-//        appBarLayout.addLayoutHeight((statusBarHeight - dipToPx(24f)))
         appbar?.margins(top = statusBarHeight)
         logo?.layoutHeight(dipToPx(100f))
         logo?.margins(top = statusBarHeight + dipToPx(16f))
@@ -109,10 +113,30 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val size = appbar?.menu?.size() ?: 0
+        (0 until size).forEach {
+            appbar?.menu?.getItem(it)?.let { item ->
+                MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(progressBar.borderColor))
+            }
+        }
+        return menu?.findItem(R.id.action_toggle_missing_cards)?.let { toggleMissingCards ->
+            toggleMissingCards.isChecked = state.onlyMissingCards
+            toggleMissingCards.setIcon(if (state.onlyMissingCards) R.drawable.toggle_switch else R.drawable.toggle_switch_off)
+            true
+        } ?: false
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_add_all -> {
+                Analytics.event(Event.SelectContent.MenuAction("collection_add_all"))
                 incrementSetClicks.accept(Unit)
+                true
+            }
+            R.id.action_toggle_missing_cards -> {
+                Analytics.event(Event.SelectContent.MenuAction("toggle_missing_cards"))
+                toggleMissingCardsClicks.accept(Unit)
                 true
             }
             else -> false
@@ -155,13 +179,21 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         return incrementSetClicks
     }
 
+    override fun toggleMissingCards(): Observable<Unit> {
+        return toggleMissingCardsClicks
+    }
+
     override fun showOverallProgress(progress: Float) {
         progressBar.progress = progress
         progressCompletion.text = getString(R.string.completion_format, progress.times(100f).roundToInt().coerceIn(0, 100))
     }
 
     override fun showCollection(cards: List<StackedPokemonCard>) {
-        adapter.setCollectionItems(cards)
+        adapter.submitList(cards)
+    }
+
+    override fun showOnlyMissingCards(visible: Boolean) {
+        invalidateOptionsMenu()
     }
 
     override fun hideError() {
@@ -201,9 +233,15 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
                                 setNavigationColor(it)
                             }
                         }
-                        "sm9", "sm10", "sm11" -> {
+                        "sm9" -> {
                             backdrop.setImageResource(R.drawable.dr_smtu_background)
                             setNavigationColor(Color.BLACK)
+                        }
+                        "sm10", "sm11", "sm115", "sma", "sm12", "det1" -> {
+                            backdrop.setImageResource(R.drawable.dr_smtu_background)
+                            backdrop.imageTintList = ColorStateList.valueOf(it)
+                            backdrop.imageTintMode = PorterDuff.Mode.ADD
+                            setNavigationColor(it)
                         }
                         "sm5" -> {
                             setNavigationColor(Color.BLACK)
