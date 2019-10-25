@@ -130,10 +130,12 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_add_all -> {
+                Analytics.event(Event.SelectContent.MenuAction("collection_add_all"))
                 incrementSetClicks.accept(Unit)
                 true
             }
             R.id.action_toggle_missing_cards -> {
+                Analytics.event(Event.SelectContent.MenuAction("toggle_missing_cards"))
                 toggleMissingCardsClicks.accept(Unit)
                 true
             }

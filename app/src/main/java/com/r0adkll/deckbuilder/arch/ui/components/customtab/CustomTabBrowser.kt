@@ -1,5 +1,6 @@
-package com.r0adkll.deckbuilder.util
+package com.r0adkll.deckbuilder.arch.ui.components.customtab
 
+import android.app.Activity
 import android.content.ComponentName
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +18,14 @@ import com.r0adkll.deckbuilder.R
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
-class CustomTabBrowser(private val context: AppCompatActivity) : CustomTabsServiceConnection() {
+class CustomTabBrowser(
+        private val context: AppCompatActivity,
+        private val fallback: Fallback = IntentViewFallback()
+) : CustomTabsServiceConnection() {
+
+    interface Fallback {
+        fun openUri(activity: Activity, uri: Uri)
+    }
 
     private val disposables = CompositeDisposable()
     private val session = MutableLiveData<CustomTabsSession>()
@@ -70,9 +78,17 @@ class CustomTabBrowser(private val context: AppCompatActivity) : CustomTabsServi
     }
 
     fun launch(uri: Uri) {
-        return CustomTabsIntent.Builder(session.value)
-                .setToolbarColor(context.color(R.color.primaryColor))
-                .build()
-                .launchUrl(context, uri)
+        val packageName = CustomTabsHelper.getPackageNameToUse(context)
+        if (packageName == null) {
+            fallback.openUri(context, uri)
+        } else {
+            CustomTabsIntent.Builder(session.value)
+                    .setToolbarColor(context.color(R.color.primaryColor))
+                    .build()
+                    .apply {
+                        intent.setPackage(packageName)
+                    }
+                    .launchUrl(context, uri)
+        }
     }
 }

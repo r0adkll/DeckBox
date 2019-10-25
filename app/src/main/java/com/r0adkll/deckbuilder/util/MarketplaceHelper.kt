@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
+import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 
 object MarketplaceHelper {
 
