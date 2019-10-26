@@ -1,11 +1,6 @@
 <p align="center">
-<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="200px" />
+<img src="art/github_preview.png" width="100%" />
 </p> 
-<p align="center">
-<a href="https://play.google.com/store/apps/details?id=com.r0adkll.deckbuilder"><img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" width="300px" align="center"/>
-</a>
-<h1 align="center">DeckBox for Pokémon TCG</h1> 
-</p>
 
 [![Build Status](https://app.bitrise.io/app/5d3a8885ec39a72b/status.svg?token=H8Sqp47-k-Ed-tkOkBFSSA&branch=development)](https://app.bitrise.io/app/5d3a8885ec39a72b)
 
@@ -15,9 +10,13 @@ Seamlessly integrate with your Pokémon TCG Online game by importing and exporti
 
 Sign in with our Google account to build and edit your decks across all of your devices, or just continue without one and link it later.
 
-
-### [Roadmap](https://github.com/r0adkll/DeckBox/projects/1)
+### [Roadmap](https://github.com/r0adkll/DeckBox/projects/1) 
 View the progress of upcoming and currently worked on features for this project.
+
+<p align="center">
+<a href="https://play.google.com/store/apps/details?id=com.r0adkll.deckbuilder"><img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" width="300px" align="center"/>
+</a>
+</p>
 
 
 ## API

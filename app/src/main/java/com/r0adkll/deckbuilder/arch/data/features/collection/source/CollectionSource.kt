@@ -1,11 +1,10 @@
-package com.r0adkll.deckbuilder.arch.data.features.collection.cache
+package com.r0adkll.deckbuilder.arch.data.features.collection.source
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import io.reactivex.Observable
 
-
-interface CollectionCache {
+interface CollectionSource {
 
     fun observeAll(): Observable<List<CollectionCount>>
 
@@ -15,5 +14,5 @@ interface CollectionCache {
 
     fun incrementCount(card: PokemonCard): Observable<Unit>
     fun decrementCount(card: PokemonCard): Observable<Unit>
-    fun incrementCounts(cards: List<PokemonCard>): Observable<Unit>
+    fun incrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>>
 }

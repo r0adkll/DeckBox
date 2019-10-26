@@ -56,15 +56,19 @@ class CollectionSetPresenter @Inject constructor(
 
         val addSet = intentions.addSet()
                 .flatMap {
-                    collectionRepository.incrementCounts(ui.state.cards)
-                            .map { Change.CountsUpdated(emptyList()) as Change }
-                            .startWith(Change.CountsChanged(ui.state.cards, 1))
+                    collectionRepository.incrementSet(ui.state.expansion!!.code, ui.state.cards)
+                            .map { Change.CountsUpdated(it) as Change }
+                            //.startWith(Change.CountsChanged(ui.state.cards, 1))
                             .onErrorReturn { Change.Error("Something went wrong incrementing set in collection") }
                 }
+
+        val toggleMissingCards = intentions.toggleMissingCards()
+                .map { Change.ToggleMissingCards as Change }
 
         return cards.mergeWith(counts)
                 .mergeWith(addCard)
                 .mergeWith(removeCard)
                 .mergeWith(addSet)
+                .mergeWith(toggleMissingCards)
     }
 }

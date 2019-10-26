@@ -33,10 +33,11 @@ class DefaultEditRepository @Inject constructor(
 
     override fun persistSession(sessionId: Long): Observable<Unit> {
         return cache.getSession(sessionId)
-                .flatMap { deck ->
-                    decks.persistDeck(deck.deckId, deck.cards, deck.name, deck.description, deck.image, deck.collectionOnly)
+                .flatMap { session ->
+                    decks.persistDeck(session.deckId, session.cards, session.name, session.description, session.image, session.collectionOnly)
                             .flatMap {
-                                cache.resetSession(sessionId)
+                                // Be sure to pass the deck id to the session for when a new deck is created
+                                cache.resetSession(sessionId, it.id)
                                         .subscribeOn(schedulers.database)
                             }
                 }

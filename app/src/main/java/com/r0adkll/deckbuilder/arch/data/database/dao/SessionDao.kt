@@ -177,9 +177,12 @@ abstract class SessionDao {
      */
 
     @Transaction
-    open fun resetSession(sessionId: Long) {
+    open fun resetSession(sessionId: Long, deckId: String? = null) {
         val session = getSession(sessionId)
         if (session != null) {
+            if (session.deckId != deckId) {
+                session.deckId = deckId
+            }
             session.originalName = session.name
             session.originalDescription = session.description
             session.originalImage = session.image

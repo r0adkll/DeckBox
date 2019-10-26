@@ -3,12 +3,16 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.Format
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.SumType.EXCLUDE_COLLECTION
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.SumType.NO_COLLECTION
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.SumType.ONLY_COLLECTION
 import com.r0adkll.deckbuilder.util.CardUtils.stackCards
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
-import timber.log.Timber
 
 
 class DeckBuilderRenderer(
@@ -135,5 +139,72 @@ class DeckBuilderRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showDeckCollectionOnly(it) }
+
+        disposables += state
+                .mapNullable { s ->
+                    if (s.products.isNotEmpty()) {
+                        val sumType = if (s.collectionOnly) EXCLUDE_COLLECTION else NO_COLLECTION
+                        val allCards = s.allCardsStackedWithCollection
+
+                        val low = allCards.computeSum(s.products, sumType) { it.price?.low }
+                        val market = allCards.computeSum(s.products, sumType) { it.price?.market }
+                        val high = allCards.computeSum(s.products, sumType) { it.price?.high }
+
+                        val lowCollection = if (s.collectionOnly) allCards.computeSum(s.products, ONLY_COLLECTION) { it.price?.low } else null
+                        val marketCollection = if (s.collectionOnly) allCards.computeSum(s.products, ONLY_COLLECTION) { it.price?.market } else null
+                        val highCollection = if (s.collectionOnly) allCards.computeSum(s.products, ONLY_COLLECTION) { it.price?.high } else null
+
+                        MarketPrices(low, market, high,
+                                lowCollection, marketCollection, highCollection)
+                    } else {
+                        null
+                    }
+                }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe { marketPrice ->
+                    actions.showPrices(
+                            marketPrice.value?.low,
+                            marketPrice.value?.market,
+                            marketPrice.value?.high
+                    )
+                    actions.showCollectionPrices(
+                            marketPrice.value?.collectionLow,
+                            marketPrice.value?.collectionMarket,
+                            marketPrice.value?.collectionHigh
+                    )
+                }
+    }
+
+    private enum class SumType {
+        NO_COLLECTION,
+        EXCLUDE_COLLECTION,
+        ONLY_COLLECTION
+    }
+
+    private class MarketPrices(
+            val low: Double?,
+            val market: Double?,
+            val high: Double?,
+            val collectionLow: Double? = null,
+            val collectionMarket: Double? = null,
+            val collectionHigh: Double? = null
+    )
+
+    private fun List<StackedPokemonCard>.computeSum(
+            products: Map<String, Product>,
+            sumType: SumType = NO_COLLECTION,
+            selector: (Product) -> Double?
+    ): Double {
+        return sumByDouble {
+            val count = when (sumType) {
+                NO_COLLECTION -> it.count
+                EXCLUDE_COLLECTION -> (it.count - (it.collection ?: 0)).coerceAtLeast(0)
+                ONLY_COLLECTION -> it.collection?.coerceIn(0, it.count) ?: 0
+            }
+            val product = products[it.card.id]
+            val price = product?.let(selector) ?: 0.0
+            price * count
+        }
     }
 }

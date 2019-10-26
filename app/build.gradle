@@ -6,10 +6,8 @@ apply plugin: 'com.google.gms.oss.licenses.plugin'
 apply plugin: 'io.fabric'
 
 def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-def GIT_TAG =  'git describe --tags'.execute([], project.rootDir).text.trim()
 
-def VERSION_NAME = "1.9.2"
-
+def VERSION_NAME = "1.10.0"
 
 ext.gitVersioner = [
         defaultBranch           : "master",
@@ -25,22 +23,22 @@ apply from: 'https://raw.githubusercontent.com/passsy/gradle-GitVersioner/master
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.r0adkll.deckbuilder"
         buildToolsVersion "28.0.3"
 
         minSdkVersion 22
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         versionCode gitVersion.version
         versionName "$VERSION_NAME.${gitVersion.version}"
         multiDexEnabled true
 
         buildConfigField "String", "GIT_SHA", "\"$GIT_SHA\""
-        buildConfigField "String", "GIT_TAG", "\"$GIT_TAG\""
         buildConfigField "String", "DATABASE_NAME", "\"deckbox.db\""
+        buildConfigField "String", "AFFILIATE_CODE", "\"DeckBox\""
         buildConfigField "String", "PREVIEW_API_URL", "\"https://deckboxtcg.app/api/v1/\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -83,6 +81,30 @@ androidExtensions {
     experimental = true
 }
 
+ext {
+    junit_version = '4.12'
+    espresso_version = '3.1.0-alpha4'
+    mockito_version = '1.10.19'
+    runner_version = '1.1.0-alpha4'
+    kluent_version = '1.42'
+
+    // Dependencies
+    bottombar_version = '2.3.1'
+    butterknife_version = '8.8.1'
+    canvas_version = '1.0.2'
+    ftkit_version = '0.6.1'
+    leakcanary_version = '1.5.1'
+    play_version = '15.0.0'
+    poketcg_version = '1.0.19'
+    retrofit_version = '2.3.0'
+    room_version = '2.2.1'
+    support_version = '1.0.0'
+    state_version = '1.4.1'
+    stetho_version = '1.5.1'
+    timber_version = '4.7.0'
+    okhttp_version = '3.8.1'
+}
+
 dependencies {
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
@@ -98,27 +120,28 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
-    implementation "androidx.appcompat:appcompat:1.1.0-rc01"
-    implementation "androidx.recyclerview:recyclerview:1.1.0-beta03"
+    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0-beta05"
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation "androidx.preference:preference:1.0.0"
+    implementation "androidx.preference:preference:1.1.0"
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
-    implementation "com.google.android.material:material:1.1.0-alpha09"
+    implementation "com.google.android.material:material:1.1.0-beta01"
     implementation "androidx.palette:palette:1.0.0"
+    implementation "androidx.browser:browser:1.2.0-alpha08"
 
-    implementation "com.google.firebase:firebase-core:17.0.1"
-    implementation "com.google.firebase:firebase-firestore:20.2.0"
-    implementation "com.google.firebase:firebase-auth:18.1.0"
-    implementation "com.google.firebase:firebase-config:18.0.0"
+    implementation "com.google.firebase:firebase-core:17.2.0"
+    implementation "com.google.firebase:firebase-firestore:21.2.0"
+    implementation "com.google.firebase:firebase-auth:19.1.0"
+    implementation "com.google.firebase:firebase-config:19.0.3"
     implementation "com.google.android.gms:play-services-auth:17.0.0"
     implementation "com.google.android.gms:play-services-oss-licenses:17.0.0"
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "com.google.dagger:dagger:2.23.1"
+    kapt "com.google.dagger:dagger-compiler:2.23.1"
 
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    implementation "com.github.bumptech.glide:glide:4.9.0"
+    kapt "com.github.bumptech.glide:compiler:4.9.0"
     implementation 'com.caverock:androidsvg-aar:1.3'
 
     implementation "com.evernote:android-state:$state_version"
@@ -129,17 +152,17 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
 
-    implementation 'nz.bradcampbell:paperparcel:2.0.6'
-    implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.6'
-    kapt 'nz.bradcampbell:paperparcel-compiler:2.0.6'
+    implementation 'nz.bradcampbell:paperparcel:2.0.8'
+    implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.8'
+    kapt 'nz.bradcampbell:paperparcel-compiler:2.0.8'
 
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
-    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:$rxbinding_version"
-    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:$rxbinding_version"
-    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rxbinding_version"
-    implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
-    implementation "com.f2prateek.rx.preferences2:rx-preferences:$rxpref_version"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.9"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:2.2.0"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:2.2.0"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:2.2.0"
+    implementation "com.jakewharton.rxrelay2:rxrelay:2.1.0"
+    implementation "com.f2prateek.rx.preferences2:rx-preferences:2.0.0"
 
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
@@ -161,11 +184,12 @@ dependencies {
     implementation "com.roughike:bottom-bar:$bottombar_version"
     implementation 'com.nex3z:flow-layout:1.2.2'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
-    implementation 'com.github.chrisbanes:PhotoView:2.2.0'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     debugImplementation "com.facebook.stetho:stetho:$stetho_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'nl.littlerobots.rxlint:rxlint:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.robinhood.spark:spark:1.2.0'
 
 }
 

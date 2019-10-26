@@ -11,13 +11,12 @@ import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountReposito
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.NetworkCardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DefaultCardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskCardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.PreviewCardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.FirestoreCollectionCache
-import com.r0adkll.deckbuilder.arch.data.features.collection.cache.RoomCollectionCache
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingNetworkSearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskSearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.FirestoreCollectionSource
+import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.FirestoreCommunityCache
@@ -34,6 +33,9 @@ import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.P
 import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExporter
 import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.CachingMarketplaceRepository
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.FirestoreMarketplaceSource
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.MarketplaceSource
 import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
@@ -58,6 +60,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.Expans
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
@@ -224,9 +227,17 @@ class DataModule {
     }
 
     @Provides @AppScope
+    fun provideMarketplaceRepository(schedulers: Schedulers): MarketplaceRepository {
+        return CachingMarketplaceRepository(
+                FirestoreMarketplaceSource(MarketplaceSource.Source.CACHE, schedulers),
+                FirestoreMarketplaceSource(MarketplaceSource.Source.NETWORK, schedulers)
+        )
+    }
+
+    @Provides @AppScope
     fun provideCollectionRepository(
-            roomCollectionCache: RoomCollectionCache,
-            firestoreCollectionCache: FirestoreCollectionCache,
+            roomCollectionCache: RoomCollectionSource,
+            firestoreCollectionCache: FirestoreCollectionSource,
             preferences: AppPreferences
     ): CollectionRepository {
         return DefaultCollectionRepository(roomCollectionCache, firestoreCollectionCache, preferences)

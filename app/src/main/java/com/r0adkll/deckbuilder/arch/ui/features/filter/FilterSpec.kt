@@ -216,7 +216,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
             createPokemon(emptyList(), STANDARD)
         }
 
-
         fun create(superType: SuperType,
                    expansions: List<Expansion> = emptyList(),
                    visibility: FilterUi.ExpansionVisibility): FilterSpec = when(superType) {
@@ -225,7 +224,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
             SuperType.ENERGY -> createEnergy(expansions, visibility)
             SuperType.UNKNOWN -> createAll(expansions, visibility)
         }
-
 
         fun createAll(expansions: List<Expansion>,
                       visibility: FilterUi.ExpansionVisibility): FilterSpec {

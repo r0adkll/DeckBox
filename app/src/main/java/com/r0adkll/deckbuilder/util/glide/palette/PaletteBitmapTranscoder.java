@@ -1,9 +1,12 @@
 package com.r0adkll.deckbuilder.util.glide.palette;
 
 import android.graphics.Bitmap;
+
+import androidx.annotation.NonNull;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.transcode.ResourceTranscoder;
@@ -45,7 +48,7 @@ public class PaletteBitmapTranscoder implements ResourceTranscoder<Bitmap, Palet
     }
 
     @Override
-    public Resource<PaletteBitmap> transcode(Resource<Bitmap> toTranscode) {
+    public Resource<PaletteBitmap> transcode(@NonNull Resource<Bitmap> toTranscode, @NonNull Options options) {
         Palette palette = generator.generate(toTranscode.get());
         PaletteBitmap result = new PaletteBitmap(toTranscode.get(), palette);
         return new PaletteBitmapResource(result, bitmapPool);

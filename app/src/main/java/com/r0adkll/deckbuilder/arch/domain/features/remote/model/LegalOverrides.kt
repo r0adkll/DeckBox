@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.domain.features.remote.model
 
 data class LegalOverrides(
     val promos: Promo?,
+    val expandedPromos: Promo?,
     val singles: List<Single>
 ) {
 

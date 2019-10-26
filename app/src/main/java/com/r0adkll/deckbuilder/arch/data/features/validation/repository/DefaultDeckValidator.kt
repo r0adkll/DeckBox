@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
@@ -16,6 +17,7 @@ import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import javax.inject.Inject
 
+@SuppressLint("DefaultLocale")
 class DefaultDeckValidator @Inject constructor(
         val rules: Set<@JvmSuppressWildcards Rule>,
         val expansionRepository: ExpansionRepository,
@@ -44,15 +46,14 @@ class DefaultDeckValidator @Inject constructor(
 
                     // Validate rules
                     val ruleResults = rules
-                            .map { it.check(cards) }
-                            .filter { it != null }
-                            .map { it!! }
+                            .mapNotNull { it.check(cards) }
+                            .map { it }
+                            .toMutableList()
 
                     Validation(standardLegal, expandedLegal, ruleResults)
                 }
     }
 
-    @SuppressLint("DefaultLocale")
     private fun checkStandardLegal(expansions: List<Expansion>, cards: List<PokemonCard>): Boolean {
         val reprints = remote.reprints
         val banList = remote.banList
@@ -87,7 +88,7 @@ class DefaultDeckValidator @Inject constructor(
         val reprints = remote.reprints
         val banList = remote.banList
         val legalOverrides = remote.legalOverrides
-        val legalPromoOverride = legalOverrides?.promos
+        val legalPromoOverride = legalOverrides?.expandedPromos
         return cards.isNotEmpty() && cards.all { card ->
             if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
                 true
@@ -97,7 +98,7 @@ class DefaultDeckValidator @Inject constructor(
                 val cardsExpansionCode = singlesOverride?.sourceSetCode ?: card.expansion?.code
                 when {
                     legalPromoOverride != null && cardsExpansionCode == legalPromoOverride.setCode -> {
-                        card.sortableNumber >= legalOverrides.promos.startNumber
+                        card.sortableNumber >= legalOverrides.expandedPromos.startNumber
                     }
                     expansions.find { it.code == cardsExpansionCode }?.expandedLegal == true -> {
                         true

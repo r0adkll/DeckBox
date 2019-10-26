@@ -65,7 +65,6 @@ interface FilterUi : StateRenderer<FilterUi.State> {
         data class ExpansionAttribute(val format: Format, val expansions: List<Expansion>) : FilterAttribute()
     }
 
-
     @Parcelize
     data class FilterState(
             val category: SuperType,
@@ -75,7 +74,6 @@ interface FilterUi : StateRenderer<FilterUi.State> {
     ) : Parcelable {
 
         fun applySpecification(): List<Item> = spec.apply(filter)
-
 
         override fun toString(): String {
             return "FilterState(category=$category, spec=$spec, filter=$filter, visibility=$visibility)"
@@ -89,7 +87,6 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             }
         }
     }
-
 
     @Parcelize
     data class State(

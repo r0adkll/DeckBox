@@ -137,7 +137,7 @@ class DefaultDeckValidatorTest {
     fun testValidateLegalPromoOverrideLegal() {
         setupExpansionMock(EXPANSIONS.toList())
         val pokemon = createPokemonCard(name = "Charizard", expansionCode = "smp").copy(id = "smp-sm100", number = "SM100")
-        val override = LegalOverrides(LegalOverrides.Promo("smp", 94), emptyList())
+        val override = LegalOverrides(LegalOverrides.Promo("smp", 94), null, emptyList())
         When calling remote.legalOverrides itReturns override
 
         val result = validator.validate(listOf(pokemon)).blockingFirst()
@@ -151,7 +151,35 @@ class DefaultDeckValidatorTest {
     fun testValidateLegalPromoOverrideLegalFail() {
         setupExpansionMock(EXPANSIONS.toList())
         val pokemon = createPokemonCard(name = "Charizard", expansionCode = "smp").copy(id = "smp-sm54", number = "SM54")
-        val override = LegalOverrides(LegalOverrides.Promo("smp", 94), emptyList())
+        val override = LegalOverrides(LegalOverrides.Promo("smp", 94), null, emptyList())
+        When calling remote.legalOverrides itReturns override
+
+        val result = validator.validate(listOf(pokemon)).blockingFirst()
+
+        result.shouldNotBeNull()
+        result.standard.shouldBeFalse()
+        result.expanded.shouldBeTrue()
+    }
+
+    @Test
+    fun testValidateLegalExpandedPromoOverrideLegal() {
+        setupExpansionMock(EXPANSIONS.toList())
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "xy9").copy(id = "xy9-sm100", number = "SM100")
+        val override = LegalOverrides(null, LegalOverrides.Promo("xy9", 94), emptyList())
+        When calling remote.legalOverrides itReturns override
+
+        val result = validator.validate(listOf(pokemon)).blockingFirst()
+
+        result.shouldNotBeNull()
+        result.standard.shouldBeFalse()
+        result.expanded.shouldBeTrue()
+    }
+
+    @Test
+    fun testValidateLegalExpandedPromoOverrideLegalFail() {
+        setupExpansionMock(EXPANSIONS.toList())
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "xy9").copy(id = "xy9-sm54", number = "SM54")
+        val override = LegalOverrides(null, LegalOverrides.Promo("xy9", 94), emptyList())
         When calling remote.legalOverrides itReturns override
 
         val result = validator.validate(listOf(pokemon)).blockingFirst()
@@ -165,7 +193,7 @@ class DefaultDeckValidatorTest {
     fun testValidateLegalOverrideSingles() {
         setupExpansionMock(EXPANSIONS.toList())
         val pokemon = createPokemonCard(name = "Charizard", expansionCode = "sm115").copy(id = "sm115-SV5")
-        val override = LegalOverrides(null, listOf(LegalOverrides.Single("sm115-SV5", "sm5-15", "sm5")))
+        val override = LegalOverrides(null, null, listOf(LegalOverrides.Single("sm115-SV5", "sm5-15", "sm5")))
         When calling remote.legalOverrides itReturns override
 
         val result = validator.validate(listOf(pokemon)).blockingFirst()

@@ -24,12 +24,25 @@ sealed class Event {
     object TutorialBegin : Event()
     object TutorialComplete : Event()
 
+    sealed class ViewItem(
+            open val id: String,
+            open val name: String,
+            open val category: String
+    ) : Event() {
+
+        data class MarketplaceLink(
+                override val id: String,
+                override val name: String = "TCGPlayer"
+        ) : ViewItem(id, name, "marketplace")
+    }
+
     sealed class SelectContent(
             val type: String,
             open val id: String,
             open val name: String? = null,
             open val value: Long? = null
     ) : Event() {
+
         data class PokemonCard(override val id: String) : SelectContent("pokemon_card", id)
 
         sealed class Deck(override val id: String, override val name: String? = null) : SelectContent("deck", id) {

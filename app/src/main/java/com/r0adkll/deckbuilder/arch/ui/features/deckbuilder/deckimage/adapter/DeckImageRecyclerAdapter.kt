@@ -1,14 +1,18 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter
 
-
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
-
+import androidx.recyclerview.widget.RecyclerView
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItemCallback
 
 class DeckImageRecyclerAdapter(
-        context: Context
-) : ListRecyclerAdapter<DeckImage, UiViewHolder<DeckImage>>(context) {
+        context: Context,
+        private val itemClickListener: (DeckImage) -> Unit = {}
+) : EmptyViewListAdapter<DeckImage, UiViewHolder<DeckImage>>(RecyclerItemCallback()) {
+
+    private val inflater = LayoutInflater.from(context)
 
     var selectedDeckImage: DeckImage? = null
         set(value) {
@@ -16,29 +20,20 @@ class DeckImageRecyclerAdapter(
             notifyDataSetChanged()
         }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<DeckImage> {
         val itemView = inflater.inflate(viewType, parent, false)
         return UiViewHolder.create(itemView, viewType)
     }
 
-
     override fun onBindViewHolder(vh: UiViewHolder<DeckImage>, i: Int) {
-        super.onBindViewHolder(vh, i)
-        val item = items[i]
+        val item = getItem(i)
         vh.bind(item, selectedDeckImage?.let { item.isItemSame(it) })
+        vh.itemView.setOnClickListener {
+            itemClickListener(item)
+        }
     }
-
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].viewType
-    }
-
-
-    fun setDeckImages(images: List<DeckImage>) {
-        val diff = calculateDiff(images, items)
-        items.clear()
-        items.addAll(diff.new)
-        diff.diff.dispatchUpdatesTo(getListUpdateCallback())
+        return getItem(position).viewType
     }
 }

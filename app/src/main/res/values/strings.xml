@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">DeckBox</string>
     <string name="app_description">Create and edit Pokémon Trading Card Game decks to share and compare with others in the community.</string>
-    <string name="privacy_policy_url">http://r0adkll.com/deckbox/privacy_policy.html</string>
+    <string name="privacy_policy_url">https://deckboxtcg.app/privacy_policy.html</string>
 
     <string name="action_continue">or continue here</string>
     <string name="action_skip">Skip</string>
@@ -17,7 +17,7 @@
     <string name="tab_community">Community</string>
     <string name="tab_collection">Collection</string>
     <string name="tab_browse">Browse</string>
-    <string name="empty_decks_message">You don\'t have any decks</string>
+    <string name="empty_decks_message">You don\'t have any decks. Try creating one using the button below.</string>
     <string name="activity_deck_builder">New deck</string>
     <string name="tab_pokemon">Pokémon</string>
     <string name="tab_trainer">Trainer</string>
@@ -106,7 +106,7 @@
     <string name="pref_help_suggestions_title">Suggestions</string>
     <string name="pref_help_suggestions_summary">Submit any suggestions or improvements you might have</string>
     <string name="disclaimer">This application is not produced, endorsed, supported, or affiliated with Nintendo or The Pokémon Company.</string>
-    <string name="support_email_address">veedubusc+deckbox@gmail.com</string>
+    <string name="support_email_address">support@deckboxtcg.app</string>
     <string name="developer_website_url">https://github.com/R0ADKLL</string>
     <string name="dropzone_add_message">Add Card</string>
     <string name="pref_category_account">Account</string>
@@ -282,4 +282,16 @@
     <string name="pref_category_preview">Preview</string>
     <string name="pref_preview_expansions_title">Preview expansions</string>
     <string name="pref_preview_expansions_summary">Enable access to the preview expansions for unreleased sets</string>
+    <string name="action_buy">Buy now @ TCGPlayer</string>
+    <string name="activity_marketplace_tcgplayer">TCGPlayer.com</string>
+    <string name="marketplace_price_low">Low</string>
+    <string name="marketplace_price_market">Market</string>
+    <string name="marketplace_price_high">High</string>
+    <string name="marketplace_history_filter_7day">7d</string>
+    <string name="marketplace_history_filter_30day">30d</string>
+    <string name="marketplace_history_filter_90day">90d</string>
+    <string name="dialog_market_price_title">Market price</string>
+    <string name="dialog_market_price_message">This price point is compiled from recent sales completed on TCGplayer.com. TCG Market Price is updated as transactions complete and reflects the best suggested retail price of a product.</string>
+    <string name="action_view_more">More info</string>
+    <string name="action_toggle_missing_cards">Toggle missing cards</string>
 </resources>

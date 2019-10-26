@@ -10,7 +10,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface CollectionUi : Ui<CollectionUi.State, CollectionUi.State.Change> {
 
     interface Intentions {

@@ -20,6 +20,8 @@ import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import timber.log.Timber
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 
 class PokemonCardView @JvmOverloads constructor(
@@ -32,8 +34,8 @@ class PokemonCardView @JvmOverloads constructor(
     private val countPaint: Paint = Paint()
     private val countTextPaint: TextPaint = TextPaint(TextPaint.LINEAR_TEXT_FLAG)
 
-    private var bounds: Rect? = null
-    private var boundsF: RectF? = null
+    private val bounds = Rect()
+    private val boundsF = RectF()
 
     private var desaturateColorFilter: ColorMatrixColorFilter? = null
 
@@ -109,19 +111,17 @@ class PokemonCardView @JvmOverloads constructor(
         outlineProvider = CardOutlineProvider(radius)
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = Math.round(width * RATIO)
+        val height = (width * RATIO).roundToInt()
         setMeasuredDimension(width, height)
     }
 
-
     override fun setFrame(l: Int, t: Int, r: Int, b: Int): Boolean {
         val changed = super.setFrame(l, t, r, b)
-        bounds = Rect(0, 0, r - l, b - t)
-        boundsF = RectF(bounds)
+        bounds.set(0, 0, r - l, b - t)
+        boundsF.set(bounds)
 
         if (changed) {
             cacheValid = false
@@ -130,15 +130,10 @@ class PokemonCardView @JvmOverloads constructor(
         return changed
     }
 
-
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
-        if (bounds == null) {
-            return
-        }
-
-        val width = bounds!!.width()
-        val height = bounds!!.height()
+        val width = bounds.width()
+        val height = bounds.height()
 
         if (width == 0 || height == 0) {
             return
@@ -148,10 +143,12 @@ class PokemonCardView @JvmOverloads constructor(
             // Need to redraw the cache
             if (width == cachedWidth && height == cachedHeight) {
                 // Have a correct-sized bitmap cache already allocated. Just erase it.
-                cacheBitmap!!.eraseColor(0)
+                if (cacheBitmap?.isRecycled == false) {
+                    cacheBitmap?.eraseColor(0)
+                }
             } else {
                 // Allocate a new bitmap with the correct dimensions.
-                cacheBitmap!!.recycle()
+                cacheBitmap?.recycle()
 
                 try {
                     cacheBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -185,16 +182,14 @@ class PokemonCardView @JvmOverloads constructor(
         canvas.drawBitmap(cacheBitmap!!, bounds!!.left.toFloat(), bounds!!.top.toFloat(), null)
     }
 
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
-
         val dX = event.x - lastTouchX
         val dY = event.y - lastTouchY
 
         if (startDragImmediately) {
             when (event.action) {
                 MotionEvent.ACTION_MOVE -> {
-                    if (Math.abs(dX) > Math.abs(dY)) {
+                    if (abs(dX) > abs(dY)) {
                         // Trigger drag in 'new' mode, i.e. we plan to add this card, new, to a deck
                         startDrag(false)
                     }
@@ -208,14 +203,12 @@ class PokemonCardView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-
     override fun drawableStateChanged() {
         super.drawableStateChanged()
         if (isDuplicateParentStateEnabled) {
             postInvalidateOnAnimation()
         }
     }
-
 
     @Suppress("DEPRECATION")
     fun startDrag(isEdit: Boolean) {
@@ -232,19 +225,16 @@ class PokemonCardView @JvmOverloads constructor(
         imageAlpha = (255f * 54f).toInt()
     }
 
-
     private fun loadImage() {
         GlideApp.with(this)
                 .load(card?.imageUrl)
                 .placeholder(R.drawable.pokemon_card_back)
-//                .transition(withCrossFade())
                 .into(this)
     }
 
-
     @Suppress("NON_EXHAUSTIVE_WHEN")
     private fun drawEvolutionNotches(canvas: Canvas) {
-        val y = boundsF?.centerY() ?: 0f / 2f
+        val y = boundsF.centerY()
         when(evolution) {
             Evolution.START -> {
                 val x = 0f
@@ -252,28 +242,36 @@ class PokemonCardView @JvmOverloads constructor(
             }
             Evolution.MIDDLE -> {
                 val x1 = 0f
-                val x2 = boundsF?.right ?: 0f
+                val x2 = boundsF.right
                 canvas.drawCircle(x1, y, punchRadius, punchPaint)
                 canvas.drawCircle(x2, y, punchRadius, punchPaint)
             }
             Evolution.END -> {
-                val x = boundsF?.right ?: 0f
+                val x = boundsF.right
                 canvas.drawCircle(x, y, punchRadius, punchPaint)
             }
         }
     }
 
-
     private fun drawCount(canvas: Canvas) {
         if (count > 1 || (displayCountWhenOne && count > 0)) {
             // Draw background
-            val x = boundsF?.centerX() ?: 0f
-            val y = boundsF?.bottom ?: 0f
+            val x = boundsF.centerX()
+            val y = boundsF.bottom
             canvas.drawCircle(x, y, countRadius, countPaint)
 
             // Draw Text
-            val text = StaticLayout(count.toString(), countTextPaint, (countRadius * 2).toInt(),
-                    Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+            val text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                StaticLayout.Builder.obtain(count.toString(), 0, count.toString().length, countTextPaint, (countRadius * 2).toInt())
+                        .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                        .setLineSpacing(0f, 1f)
+                        .setIncludePad(false)
+                        .build()
+            } else {
+                @Suppress("DEPRECATION")
+                StaticLayout(count.toString(), countTextPaint, (countRadius * 2).toInt(),
+                        Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+            }
 
             canvas.save()
             canvas.translate(x - countRadius, y - countTextPaint.textSize - dpToPx(2f))
@@ -282,7 +280,6 @@ class PokemonCardView @JvmOverloads constructor(
         }
     }
 
-
     enum class Evolution {
         START,
         MIDDLE,
@@ -290,13 +287,11 @@ class PokemonCardView @JvmOverloads constructor(
         NONE
     }
 
-
     class CardOutlineProvider(private val radius: Float) : ViewOutlineProvider() {
         override fun getOutline(view: View, outline: Outline) {
             outline.setRoundRect(0, 0, view.width, view.height, radius)
         }
     }
-
 
     class CardShadowBuilder(view: View, private val lastTouch: PointF) : DragShadowBuilder(view) {
 
@@ -320,12 +315,12 @@ class PokemonCardView @JvmOverloads constructor(
             view?.let {
                 if (bitmapCache == null) {
                     bitmapCache = Bitmap.createBitmap(it.width, it.height, Bitmap.Config.ARGB_8888)
-                    canvasCache = Canvas(bitmapCache)
+                    canvasCache = Canvas(bitmapCache!!)
                     it.draw(canvasCache)
                 }
 
                 destRect.set(0, 0, canvas.width, canvas.height)
-                canvas.drawBitmap(bitmapCache, null, destRect, null)
+                canvas.drawBitmap(bitmapCache!!, null, destRect, null)
             }
         }
 
@@ -335,7 +330,6 @@ class PokemonCardView @JvmOverloads constructor(
         }
     }
 
-
     /**
      * Represents the state of a pokemon card drag and drop operation
      */
@@ -343,7 +337,6 @@ class PokemonCardView @JvmOverloads constructor(
             val view: PokemonCardView,
             val isEdit: Boolean
     )
-
 
     companion object {
         private const val KEY_CARD = "PokemonCardView.Card"

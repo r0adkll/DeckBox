@@ -23,12 +23,14 @@ interface CollectionSetUi : Ui<State, Change> {
         fun addCard(): Observable<List<PokemonCard>>
         fun removeCard(): Observable<PokemonCard>
         fun addSet(): Observable<Unit>
+        fun toggleMissingCards(): Observable<Unit>
     }
 
     interface Actions : BaseActions {
 
         fun showOverallProgress(progress: Float)
         fun showCollection(cards: List<StackedPokemonCard>)
+        fun showOnlyMissingCards(visible: Boolean)
     }
 
     @Parcelize
@@ -37,7 +39,8 @@ interface CollectionSetUi : Ui<State, Change> {
             override val error: String?,
             val expansion: Expansion?,
             val cards: List<PokemonCard>,
-            val counts: List<CollectionCount>
+            val counts: List<CollectionCount>,
+            val onlyMissingCards: Boolean
     ): BaseState<Change>(isLoading, error), Parcelable {
 
         val searchFilter: Filter
@@ -75,6 +78,7 @@ interface CollectionSetUi : Ui<State, Change> {
                 }
                 copy(counts = changedCounts)
             }
+            Change.ToggleMissingCards -> copy(onlyMissingCards = !onlyMissingCards)
         }
 
         sealed class Change(logText: String): Ui.State.Change(logText) {
@@ -85,6 +89,7 @@ interface CollectionSetUi : Ui<State, Change> {
             class CountsUpdated(val counts: List<CollectionCount>) : Change("network -> counts updated (${counts.size})")
             class CountChanged(val card: PokemonCard, val count: Int): Change("user -> count changed ($count)")
             class CountsChanged(val cards: List<PokemonCard>, val count: Int): Change("user -> counts changed(${cards.size}, count=$count)")
+            object ToggleMissingCards : Change("user -> toggled missing card visibility")
         }
 
         override fun toString(): String {
@@ -105,7 +110,7 @@ interface CollectionSetUi : Ui<State, Change> {
         companion object {
 
             val DEFAULT by lazy {
-                State(false, null, null, emptyList(), emptyList())
+                State(false, null, null, emptyList(), emptyList(), false)
             }
         }
     }

@@ -1,11 +1,22 @@
 # Changelog
 
+## 1.10.0
+* [#5](https://github.com/r0adkll/DeckBox/issues/5) - Added pricing data from TCGPlayer API via Cloud Function + Firestore
+* [#94](https://github.com/r0adkll/DeckBox/issues/94) - Updated support contact url
+* [#99](https://github.com/r0adkll/DeckBox/issues/99) - Several improvements around Collection feature
+* [#100](https://github.com/r0adkll/DeckBox/issues/100) - Fixed issue with promo legal overrides that belong to expanded showing as unlimited
+* [#101](https://github.com/r0adkll/DeckBox/issues/101) - Fixed rapid clicking cards in builder interface issue
+* [#102](https://github.com/r0adkll/DeckBox/issues/102) - Fixed model issues with API causing some expansion set's to not load cards
+* [#106](https://github.com/r0adkll/DeckBox/issues/106) - Updated Privacy Policy URL
+
 ## 1.9.2
 * [#85](https://github.com/r0adkll/DeckBox/issues/85) - Fixed issue with incorrect sorting of promo cards and special sets
 * [#86](https://github.com/r0adkll/DeckBox/issues/86) - Fixed issue with timestamp storing in Firestore
 * [#87](https://github.com/r0adkll/DeckBox/issues/87) - Added ban list support to deck validation
 * [#88](https://github.com/r0adkll/DeckBox/issues/88) - Added legal overrides support for special collections and promo sets based on rotation
 * [#90](https://github.com/r0adkll/DeckBox/issues/90) - Fixed issue with importing decklist into the deck builder interface
+* [#92](https://github.com/r0adkll/DeckBox/issues/92) - Fixed evolution lines with pokemon that evolve from 'Unidentified Fossil'
+* [#93](https://github.com/r0adkll/DeckBox/issues/93) - Fixed issue where multiple instances of one deck would persist during one new deck create session 
 
 ## 1.9.1
 * Fixed issue where user's deck was exceeding the SQLite variable limit of 999 when pulling cards from cache

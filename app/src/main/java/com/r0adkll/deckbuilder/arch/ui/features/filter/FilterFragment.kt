@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +24,6 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_filter.*
 import javax.inject.Inject
 
-
 class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.Actions {
 
     @com.evernote.android.state.State
@@ -38,11 +36,9 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
     private lateinit var adapter: FilterRecyclerAdapter
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_filter, container, false)
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,9 +55,9 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         }
 
         adapter = FilterRecyclerAdapter(activity!!, filterIntentions)
-        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        recycler.layoutManager = LinearLayoutManager(activity)
         recycler.adapter = adapter
-        (recycler.itemAnimator as androidx.recyclerview.widget.SimpleItemAnimator).supportsChangeAnimations = false
+        (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         if (activity is SearchActivity) {
             val type = (activity as SearchActivity).superType
@@ -72,13 +68,11 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         presenter.start()
     }
 
-
     override fun setupComponent() {
         getComponent(FilterableComponent::class)
                 .plus(FilterModule(this))
                 .inject(this)
     }
-
 
     override fun onDestroy() {
         presenter.stop()
@@ -86,22 +80,18 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         super.onDestroy()
     }
 
-
-    override fun render(state: FilterUi.State) {
+    override fun render(state: State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun fieldChanges(): Observable<SearchField> = filterIntentions.fieldChanges.doOnNext {
         Analytics.event(Event.SelectContent.FilterOption("search_field", it.name))
     }
 
-
     override fun typeClicks(): Observable<Pair<String, Type>> = filterIntentions.typeClicks.doOnNext {
         Analytics.event(Event.SelectContent.FilterOption(it.first, it.second.displayName))
     }
-
 
     override fun attributeClicks(): Observable<FilterAttribute> = filterIntentions.attributeClicks.doOnNext { attr ->
         Analytics.event(Event.SelectContent.FilterOption("attribute", when(attr) {
@@ -112,7 +102,6 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         }))
     }
 
-
     override fun optionClicks(): Observable<Pair<String, Any>> = filterIntentions.optionClicks.doOnNext { opt ->
         val option = opt.second
         Analytics.event(Event.SelectContent.FilterOption("option", when(option) {
@@ -122,9 +111,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         }))
     }
 
-
     override fun viewMoreClicks(): Observable<Unit> = filterIntentions.viewMoreClicks
-
 
     override fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>> = filterIntentions.valueRangeChanges.doOnNext {
         Analytics.event(Event.SelectContent.FilterOption(it.first, it.second.modifier.name, it.second.value.toLong()))
@@ -134,13 +121,11 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         Analytics.event(Event.SelectContent.MenuAction("clear_filter"))
     }
 
-
     override fun setIsEmpty(isEmpty: Boolean) {
         toolbar.menu.findItem(R.id.action_clear_filter)?.isVisible = !isEmpty
     }
 
-
     override fun setItems(items: List<Item>) {
-        adapter.setFilterItems(items)
+        adapter.submitList(items)
     }
 }

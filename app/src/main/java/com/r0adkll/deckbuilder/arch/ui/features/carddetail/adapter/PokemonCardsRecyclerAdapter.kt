@@ -1,56 +1,58 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class PokemonCardsRecyclerAdapter(
-        context: Context
-) : ListRecyclerAdapter<PokemonCard, PokemonCardViewHolder>(context) {
+        context: Context,
+        private val onViewItemClickListener: (PokemonCardView, PokemonCard) -> Unit = { _, _ -> }
+) : EmptyViewListAdapter<PokemonCard, PokemonCardViewHolder>(ITEM_CALLBACK) {
+
+    private val inflater = LayoutInflater.from(context)
+
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
         return PokemonCardViewHolder.createHorizontal(inflater, parent, false)
     }
 
-
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
-        super.onBindViewHolder(vh, i)
-        val card = items[i]
+        val card = getItem(i)
         vh.bind(card, 0)
+        vh.cardView.setOnClickListener {
+            onViewItemClickListener(it as PokemonCardView, card)
+        }
     }
 
-
-    fun setCards(cards: List<PokemonCard>) {
-        val diff = calculateDiff(items, cards)
-        items = ArrayList(diff.new)
-        diff.diff.dispatchUpdatesTo(DiffUpdateCallback())
+    override fun getItemId(position: Int): Long {
+        return if (position != RecyclerView.NO_POSITION) {
+            getItem(position).id.hashCode().toLong()
+        } else RecyclerView.NO_ID
     }
-
 
     companion object {
-        private fun calculateDiff(old: List<PokemonCard>, new: List<PokemonCard>): RecyclerViewBinding<PokemonCard> {
-            val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val oldItem = old[oldItemPosition]
-                    val newItem = new[newItemPosition]
-                    return oldItem.id == newItem.id
-                }
 
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val oldItem = old[oldItemPosition]
-                    val newItem = new[newItemPosition]
-                    return oldItem == newItem
-                }
+        val ITEM_CALLBACK = object : DiffUtil.ItemCallback<PokemonCard>() {
 
-                override fun getOldListSize(): Int = old.size
-                override fun getNewListSize(): Int = new.size
-            })
+            override fun areItemsTheSame(oldItem: PokemonCard, newItem: PokemonCard): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-            return RecyclerViewBinding(new = new, diff = diff)
+            override fun areContentsTheSame(oldItem: PokemonCard, newItem: PokemonCard): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }

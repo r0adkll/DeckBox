@@ -79,7 +79,7 @@ class PtcgoExportFragment : BaseFragment() {
                     Analytics.event(Event.SelectContent.Action("copy_decklist"))
                     val text = deckList.text.toString()
                     val clip = ClipData.newPlainText("Deckbox Deck", text)
-                    clipboard.primaryClip = clip
+                    clipboard.setPrimaryClip(clip)
                     toast(getString(R.string.deck_copied_format, "Deck"))
                 }
     }

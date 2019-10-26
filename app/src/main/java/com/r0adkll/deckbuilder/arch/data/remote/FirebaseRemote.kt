@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.*
 import com.r0adkll.deckbuilder.util.extensions.FirebaseRemotePreferences
+import com.r0adkll.deckbuilder.util.extensions.FirebaseRemotePreferences.RemoteBoolean
 import com.r0adkll.deckbuilder.util.extensions.FirebaseRemotePreferences.RemoteObject
 import timber.log.Timber
 import javax.inject.Inject
@@ -61,6 +62,11 @@ class FirebaseRemote @Inject constructor(
     override val legalOverrides by RemoteObject(KEY_LEGAL_OVERRIDES, LegalOverrides::class)
 
     /**
+     * Remote value to re-enable mass entry of deck cards
+     */
+    override val marketplaceMassEntryEnabled by RemoteBoolean(KEY_MARKETPLACE_MASS_ENTRY)
+
+    /**
      * Check for update remote config values and update them if needed. Also set
      * remote configuration settings if needed
      */
@@ -70,7 +76,10 @@ class FirebaseRemote @Inject constructor(
                 .setMinimumFetchIntervalInSeconds(CACHE_EXPIRATION)
                 .build()
         remote.setConfigSettingsAsync(settings)
-        remote.setDefaults(R.xml.remote_config_defaults)
+        remote.setDefaultsAsync(R.xml.remote_config_defaults)
+                .addOnCompleteListener {
+                    Timber.i("Remote Defaults Set!")
+                }
 
         remote.fetchAndActivate()
                 .addOnCompleteListener { _ ->
@@ -80,7 +89,8 @@ class FirebaseRemote @Inject constructor(
                     Timber.i("> Preview: (version: ${expansionPreview?.version}, code: ${expansionPreview?.code})")
                     Timber.i("> Reprints: Standard(${reprints?.standardHashes?.size}), Expanded(${reprints?.expandedHashes?.size})")
                     Timber.i("> BanList: $banList")
-                    Timber.i("> Legal Overrides: $legalOverrides")
+                    Timber.i("> Legal Overrides: ${legalOverrides?.singles?.size}")
+                    Timber.i("> TCGPlayer Mass Entry: $marketplaceMassEntryEnabled")
                     plugins.forEach { it.onFetchActivated(this@FirebaseRemote) }
                 }
     }
@@ -93,6 +103,7 @@ class FirebaseRemote @Inject constructor(
         private const val KEY_REPRINTS = "reprints"
         private const val KEY_BAN_LIST = "ban_list"
         private const val KEY_LEGAL_OVERRIDES = "legal_overrides"
+        private const val KEY_MARKETPLACE_MASS_ENTRY = "tcgplayer_mass_entry_enabled"
         private const val CACHE_EXPIRATION = 3600L
     }
 }

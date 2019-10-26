@@ -1,19 +1,16 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter
 
-
 import android.net.Uri
 import android.os.Parcelable
+import com.ftinc.kit.kotlin.adapter.RecyclerItem
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 import com.r0adkll.deckbuilder.util.compact
 import com.r0adkll.deckbuilder.util.type
 import kotlinx.android.parcel.Parcelize
 
-
 sealed class DeckImage : Parcelable, RecyclerItem {
 
     abstract val uri: Uri
-
 
     @Parcelize
     data class Pokemon(val imageUrl: String) : DeckImage() {
@@ -33,7 +30,6 @@ sealed class DeckImage : Parcelable, RecyclerItem {
             else -> false
         }
     }
-
 
     @Parcelize
     data class Type(val type1: io.pokemontcg.model.Type, val type2: io.pokemontcg.model.Type?) : DeckImage() {
@@ -63,7 +59,6 @@ sealed class DeckImage : Parcelable, RecyclerItem {
             else -> false
         }
     }
-
 
     companion object {
 

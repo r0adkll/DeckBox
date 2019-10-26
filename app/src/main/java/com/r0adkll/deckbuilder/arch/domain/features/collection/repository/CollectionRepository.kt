@@ -43,8 +43,8 @@ interface CollectionRepository {
     fun decrementCount(card: PokemonCard): Observable<Unit>
 
     /**
-     * Mass increment a list of cards
-     * @param cards the list of cards to increment
+     * Mass increment an entire set
+     * @param set the expansion set code, i.e. sm9, that you want counts for
      */
-    fun incrementCounts(cards: List<PokemonCard>): Observable<Unit>
+    fun incrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>>
 }

@@ -144,7 +144,7 @@ class ResultsPagerAdapter(
             editCardIntentions: EditCardIntentions
     ) {
 
-        private val recycler: androidx.recyclerview.widget.RecyclerView = itemView.findViewById(R.id.recycler)
+        private val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
         private val emptyView: EmptyView = itemView.findViewById(R.id.empty_view)
         private val adapter: SearchResultsRecyclerAdapter = SearchResultsRecyclerAdapter(itemView.context,
                 editCardIntentions = editCardIntentions)
@@ -173,7 +173,7 @@ class ResultsPagerAdapter(
                 }
             }
 
-            recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(itemView.context, 3)
+            recycler.layoutManager = GridLayoutManager(itemView.context, 3)
             recycler.adapter = adapter
             recycler.setHasFixedSize(true)
 
@@ -233,8 +233,8 @@ class ResultsPagerAdapter(
 
         fun wiggleCard(card: PokemonCard) {
             val adapterPosition = adapter.indexOf(card)
-            if (adapterPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
-                val layoutManager = recycler.layoutManager as androidx.recyclerview.widget.GridLayoutManager
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                val layoutManager = recycler.layoutManager as GridLayoutManager
                 val childIndex = adapterPosition - layoutManager.findFirstVisibleItemPosition()
                 val child = layoutManager.getChildAt(childIndex)
                 child?.let {

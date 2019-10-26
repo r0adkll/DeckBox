@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseApp
 import com.r0adkll.deckbuilder.internal.AppDelegate
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.LoggingAnalyticInterface
+import com.r0adkll.deckbuilder.internal.analytics.UserProperty
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.internal.di.AppModule
 import com.r0adkll.deckbuilder.internal.di.DaggerAppComponent
@@ -42,6 +43,7 @@ class DeckApp : Application() {
 
     private fun installAnalytics() {
         Analytics.add(LoggingAnalyticInterface())
+//        Analytics.userProperty(UserProperty.FLAVOR, BuildConfig.FLAVOR)
     }
 
     private fun installDelegates() {

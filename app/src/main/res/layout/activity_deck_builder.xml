@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    app:umanoPanelHeight="48dp"
+    app:umanoPanelHeight="56dp"
     app:umanoShadowHeight="2dp"
     app:umanoFadeColor="@color/transparent"
     >

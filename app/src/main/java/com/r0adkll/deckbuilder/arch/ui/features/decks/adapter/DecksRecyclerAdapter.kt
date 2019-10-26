@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-
 
 class DecksRecyclerAdapter(
         context: Context,
@@ -28,13 +26,15 @@ class DecksRecyclerAdapter(
     var itemClickListener: (Item) -> Unit = {}
     private val inflater = LayoutInflater.from(context)
 
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
         return UiViewHolder.create(itemView, viewType, shareClicks, duplicateClicks, testClicks,
                 deleteClicks, dismissPreview, viewPreview, quickStart, dismissQuickStart)
     }
-
 
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {
         val item = getItem(i)
@@ -52,14 +52,12 @@ class DecksRecyclerAdapter(
         }
     }
 
-
     override fun getItemViewType(position: Int): Int {
         if (position != RecyclerView.NO_POSITION) {
             return getItem(position).viewType
         }
         return super.getItemViewType(position)
     }
-
 
     override fun getItemId(position: Int): Long {
         val item = getItem(position)
@@ -70,7 +68,6 @@ class DecksRecyclerAdapter(
             is Item.Header -> item.text.hashCode().toLong()
         }
     }
-
 
     override fun onViewDetachedFromWindow(holder: UiViewHolder<Item>) {
         super.onViewDetachedFromWindow(holder)

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
-
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
@@ -12,7 +11,6 @@ import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class FilterPresenter @Inject constructor(
         val ui: FilterUi,
@@ -39,8 +37,7 @@ class FilterPresenter @Inject constructor(
 
         val optionClicks = intentions.optionClicks()
                 .map { option ->
-                    val value = option.second
-                    when(value) {
+                    when(val value = option.second) {
                         is Expansion -> Change.ExpansionSelected(value)
                         is Rarity -> Change.RaritySelected(value)
                         else -> Change.ExpansionSelected(value as Expansion)
@@ -58,7 +55,6 @@ class FilterPresenter @Inject constructor(
 
         val categoryChanges = categoryIntentions.categoryChange()
                 .map { Change.CategoryChanged(it) as Change }
-
 
         val merged = loadExpansions
                 .mergeWith(fieldChanged)
