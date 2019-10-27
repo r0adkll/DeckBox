@@ -18,6 +18,7 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.R
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
+import java.lang.IllegalStateException
 
 class CustomTabBrowser(
         private val context: AppCompatActivity,
@@ -62,7 +63,13 @@ class CustomTabBrowser(
     }
 
     fun destroy() {
-        context.unbindService(this)
+        if (session.value == null) {
+            try {
+                context.unbindService(this)
+            } catch (e: IllegalStateException) {
+                Timber.e(e)
+            }
+        }
     }
 
     fun prepare(uri: Uri) {
