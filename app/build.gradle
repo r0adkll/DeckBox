@@ -153,6 +153,7 @@ dependencies {
 
     implementation 'nz.bradcampbell:paperparcel:2.0.8'
     implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.8'
+    implementation 'nz.bradcampbell:paperparcel-api:2.0.8'
     kapt 'nz.bradcampbell:paperparcel-compiler:2.0.8'
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.9"

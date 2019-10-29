@@ -11,8 +11,10 @@ import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.stack
-import io.pokemontcg.model.SuperType
-import io.pokemontcg.model.SuperType.*
+import io.pokemontcg.model.SuperType.ENERGY
+import io.pokemontcg.model.SuperType.POKEMON
+import io.pokemontcg.model.SuperType.TRAINER
+import io.pokemontcg.model.SuperType.UNKNOWN
 import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
