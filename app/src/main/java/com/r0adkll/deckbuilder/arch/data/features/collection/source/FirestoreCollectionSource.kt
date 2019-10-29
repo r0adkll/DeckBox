@@ -22,7 +22,7 @@ import kotlin.math.ceil
 class FirestoreCollectionSource @Inject constructor(
         val preferences: AppPreferences,
         val schedulers: AppSchedulers
-) : CollectionCache {
+) : CollectionSource {
 
     override fun observeAll(): Observable<List<CollectionCount>> {
         return getUserCardCollection()?.let { collection ->

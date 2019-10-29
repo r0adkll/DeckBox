@@ -24,7 +24,7 @@ class PreviewExpansionDataSource @Inject constructor(
 
     private val previewApi = Pokemon(Config(
             logLevel = if (BuildConfig.DEBUG) BODY else NONE,
-            apiUrl = "https://deckboxtcg.app/api/v1/"
+            apiUrl = BuildConfig.PREVIEW_API_URL
     ))
     private val memoryCache: ExpansionCache = InMemoryExpansionCache()
     private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences, AppPreferences::previewExpansions)
@@ -43,6 +43,11 @@ class PreviewExpansionDataSource @Inject constructor(
         // Force a refresh from the network, that will subsequently update cache implementations,
         // but won't clear on failure
         return network()
+    }
+
+    fun clear() {
+        memoryCache.clear()
+        diskCache.clear()
     }
 
     private fun network(): Observable<List<Expansion>> {

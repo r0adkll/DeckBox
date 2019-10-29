@@ -22,7 +22,7 @@ class DefaultExpansionRepository(
 
     override fun getExpansion(code: String): Observable<Expansion> {
         val previewExpansionVersion = remote.previewExpansionVersion
-        return if (previewExpansionVersion?.expansionCode == code) {
+        return if (previewExpansionVersion?.expansionCode == code && shouldIncludePreview) {
             previewSource.getExpansions()
                     .map { expansions ->
                         expansions.find { it.code == code }
@@ -43,7 +43,11 @@ class DefaultExpansionRepository(
                     defaultSource.getExpansions(),
                     previewSource.getExpansions(),
                     BiFunction { default, preview ->
-                        default.plus(preview)
+                        if (default.none { it.code == preview.firstOrNull()?.code }) {
+                            default.plus(preview)
+                        } else {
+                            default
+                        }
                     }
             )
         } else {
@@ -52,14 +56,16 @@ class DefaultExpansionRepository(
     }
 
     override fun refreshExpansions(): Observable<List<Expansion>> {
-        val isRemoteDefined = remote.previewExpansionVersion != null
-
-        return if (isRemoteDefined) {
+        return if (shouldIncludePreview) {
             Observable.combineLatest(
                     defaultSource.refreshExpansions(),
                     previewSource.getExpansions(),
                     BiFunction { default, preview ->
-                        default.plus(preview)
+                        if (default.none { it.code == preview.firstOrNull()?.code }) {
+                            default.plus(preview)
+                        } else {
+                            default
+                        }
                     }
             )
         } else {

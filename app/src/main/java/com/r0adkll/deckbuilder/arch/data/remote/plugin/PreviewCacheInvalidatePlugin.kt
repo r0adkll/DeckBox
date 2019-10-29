@@ -2,14 +2,17 @@ package com.r0adkll.deckbuilder.arch.data.remote.plugin
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.ExpansionCache
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.ExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.PreviewExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import timber.log.Timber
 
 class PreviewCacheInvalidatePlugin(
-        val expansionDataSource: ExpansionDataSource,
+        val expansionDataSource: PreviewExpansionDataSource,
+        val db: DeckDatabase,
         val preferences: AppPreferences,
         val schedulers: AppSchedulers
 ) : RemotePlugin {
@@ -22,17 +25,20 @@ class PreviewCacheInvalidatePlugin(
         if (expansionVersion != null && previewExpansionVersion != null) {
             if (previewExpansionVersion.expansionCode == expansionVersion.expansionCode) {
                 /*
-                 * TODO
-                 *
                  * Looks like the API is now supporting our preview expansion. We need to:
                  *
-                 * 1. Convert decks using preview cards to new, official cards
-                 * 2. Remove preview expansions
-                 * 3. Remove preview cards cache.
-                 * 4. Clear preview card image cache
-                 *
-                 * TODO
+                 * 1. Remove preview expansions
+                 * 2. Remove preview cards cache.
+                 * 3. Clear preview card image cache
                  */
+                expansionDataSource.clear()
+                db.cards().clearPreviewCards()
+                        .subscribeOn(schedulers.disk)
+                        .subscribe({
+                            Timber.i("Preview cards removed from cache")
+                        }, {
+                            Timber.e(it, "Error removing preview cards from cache")
+                        })
 
                 // We don't need to go any further
                 return

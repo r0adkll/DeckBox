@@ -8,13 +8,13 @@ import com.google.firebase.firestore.Source
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.mapper.EntityMapper
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.model.ProductEntity
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
 import com.r0adkll.deckbuilder.util.RxFirebase.asObservable
 
 class FirestoreMarketplaceSource(
         private val source: MarketplaceSource.Source,
-        private val schedulers: Schedulers
+        private val schedulers: AppSchedulers
 ) : MarketplaceSource {
 
     override fun getPrice(cardId: String): Observable<List<Product>> {

@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
@@ -11,10 +11,11 @@ import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountReposito
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingNetworkSearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskSearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DefaultCardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskCardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.NetworkCardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.PreviewCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.source.FirestoreCollectionSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
@@ -136,11 +137,15 @@ class DataModule {
      * ---
      * 1. Initial Version
      * 2. Added collections support
+     * 3. Added 'isPreview' flag to 'cards' table
      */
     @Provides @AppScope
     fun provideRoomDatabase(context: Context): DeckDatabase {
         return Room.databaseBuilder(context, DeckDatabase::class.java, BuildConfig.DATABASE_NAME)
-                .addMigrations(DeckDatabase.MIGRATION_1_2)
+                .addMigrations(
+                        DeckDatabase.MIGRATION_1_2,
+                        DeckDatabase.MIGRATION_2_3
+                )
                 .build()
     }
 
@@ -227,7 +232,7 @@ class DataModule {
     }
 
     @Provides @AppScope
-    fun provideMarketplaceRepository(schedulers: Schedulers): MarketplaceRepository {
+    fun provideMarketplaceRepository(schedulers: AppSchedulers): MarketplaceRepository {
         return CachingMarketplaceRepository(
                 FirestoreMarketplaceSource(MarketplaceSource.Source.CACHE, schedulers),
                 FirestoreMarketplaceSource(MarketplaceSource.Source.NETWORK, schedulers)

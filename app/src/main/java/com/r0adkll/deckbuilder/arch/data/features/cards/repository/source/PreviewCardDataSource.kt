@@ -49,7 +49,7 @@ class PreviewCardDataSource(
                     pageSize = 1000
                 }
                 .observeAll()
-                .doOnNext { cache.putCards(it) }
+                .doOnNext { cache.putCards(it, true) }
                 .subscribeOn(schedulers.network)
     }
 
@@ -82,7 +82,7 @@ class PreviewCardDataSource(
         return previewApi.card()
                 .where(request)
                 .observeAll()
-                .doOnNext { cache.putCards(it) }
+                .doOnNext { cache.putCards(it, true) }
                 .subscribeOn(schedulers.network)
     }
 }

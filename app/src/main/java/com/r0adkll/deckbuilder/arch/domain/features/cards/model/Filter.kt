@@ -33,6 +33,7 @@ data class Filter(
         val evolvesFrom: String? = null,
         val weaknesses: List<Type> = emptyList(),
         val resistances: List<Type> = emptyList(),
+        val includePreview: Boolean = false,
         val pageSize: Int = 1000
 ) : Parcelable {
 

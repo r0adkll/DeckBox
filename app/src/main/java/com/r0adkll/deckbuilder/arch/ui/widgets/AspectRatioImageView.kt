@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import com.r0adkll.deckbuilder.R
+import kotlin.math.roundToInt
 
 
 class AspectRatioImageView @JvmOverloads constructor(
@@ -27,12 +28,12 @@ class AspectRatioImageView @JvmOverloads constructor(
             when (ratioType) {
                 RATIO_WIDTH -> {
                     val width = MeasureSpec.getSize(widthMeasureSpec)
-                    val height = Math.round(width * (drawable.intrinsicHeight.toFloat() / drawable.intrinsicWidth.toFloat()))
+                    val height = (width * (drawable.intrinsicHeight.toFloat() / drawable.intrinsicWidth.toFloat())).roundToInt()
                     setMeasuredDimension(width, height)
                 }
                 RATIO_HEIGHT -> {
                     val height = MeasureSpec.getSize(heightMeasureSpec)
-                    val width = Math.round(height * (drawable.intrinsicWidth.toFloat() / drawable.intrinsicHeight.toFloat()))
+                    val width = (height * (drawable.intrinsicWidth.toFloat() / drawable.intrinsicHeight.toFloat())).roundToInt()
                     setMeasuredDimension(width, height)
                 }
                 else -> super.onMeasure(widthMeasureSpec, heightMeasureSpec)

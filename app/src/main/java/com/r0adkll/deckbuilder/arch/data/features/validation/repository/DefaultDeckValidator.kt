@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
-import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository

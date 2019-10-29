@@ -122,7 +122,7 @@ object RoomEntityMapper {
         )
     }
 
-    fun to(card: Card): CardWithAttacks {
+    fun to(card: Card, isPreview: Boolean = false): CardWithAttacks {
         val cardEntity = CardEntity(
                 card.id,
                 card.name,
@@ -144,7 +144,8 @@ object RoomEntityMapper {
                 card.imageUrlHiRes,
                 card.ability?.let { AbilityEntity(it.name, it.text) },
                 card.weaknesses?.compactCardEffects(),
-                card.resistances?.compactCardEffects()
+                card.resistances?.compactCardEffects(),
+                isPreview
         )
         val attacks = card.attacks?.map {
             to(card.id, it)
