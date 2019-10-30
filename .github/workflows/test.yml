@@ -23,4 +23,4 @@ jobs:
         GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
       
     - name: Run Tests and Linters
-      run: ./gradlew test
+      run: ./gradlew lint test
