@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.E
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersion
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.PreviewExpansionVersion
 import io.reactivex.Observable
 import org.amshove.kluent.When
 import org.amshove.kluent.any
@@ -43,31 +44,7 @@ class DefaultExpansionRepositoryTest {
     }
 
     @Test
-    fun `expansions with preview disabled`() {
-        When calling preferences.preferencePreviewExpansions itReturns false
-
-        val result = repository.getExpansions().blockingFirst()
-
-        result.size shouldEqualTo 1
-        result shouldContain defaultExpansion
-        result shouldNotContain previewExpansion
-    }
-
-    @Test
-    fun `expansions with preview disabled and remote defined`() {
-        When calling preferences.preferencePreviewExpansions itReturns false
-        When calling remote.previewExpansionVersion itReturns ExpansionVersion(1, "sm12")
-
-        val result = repository.getExpansions().blockingFirst()
-
-        result.size shouldEqualTo 1
-        result shouldContain defaultExpansion
-        result shouldNotContain previewExpansion
-    }
-
-    @Test
-    fun `expansions with preview enabled and remote undefined`() {
-        When calling preferences.preferencePreviewExpansions itReturns true
+    fun `expansions with remote undefined`() {
         When calling remote.previewExpansionVersion itReturns null
 
         val result = repository.getExpansions().blockingFirst()
@@ -79,8 +56,7 @@ class DefaultExpansionRepositoryTest {
 
     @Test
     fun `expansions with preview`() {
-        When calling preferences.preferencePreviewExpansions itReturns true
-        When calling remote.previewExpansionVersion itReturns ExpansionVersion(1, "sm12")
+        When calling remote.previewExpansionVersion itReturns PreviewExpansionVersion(1, "sm12")
 
         val result = repository.getExpansions().blockingFirst()
 
@@ -90,8 +66,7 @@ class DefaultExpansionRepositoryTest {
     }
 
     @Test
-    fun `refreshed expansions with preview disabled and remote undefined`() {
-        When calling preferences.preferencePreviewExpansions itReturns false
+    fun `refreshed expansions with remote undefined`() {
         When calling remote.previewExpansionVersion itReturns null
 
         val result = repository.refreshExpansions().blockingFirst()
@@ -99,36 +74,12 @@ class DefaultExpansionRepositoryTest {
         result.size shouldEqualTo 2
         result shouldContain defaultExpansion
         result shouldContain refreshedExpansion
+        result shouldNotContain previewExpansion
     }
 
     @Test
-    fun `refreshed expansions with preview enabled and remote undefined`() {
-        When calling preferences.preferencePreviewExpansions itReturns true
-        When calling remote.previewExpansionVersion itReturns null
-
-        val result = repository.refreshExpansions().blockingFirst()
-
-        result.size shouldEqualTo 2
-        result shouldContain defaultExpansion
-        result shouldContain refreshedExpansion
-    }
-
-    @Test
-    fun `refreshed expansions with preview disabled and remote defined`() {
-        When calling preferences.preferencePreviewExpansions itReturns false
-        When calling remote.previewExpansionVersion itReturns ExpansionVersion(1, "sm12")
-
-        val result = repository.refreshExpansions().blockingFirst()
-
-        result.size shouldEqualTo 2
-        result shouldContain defaultExpansion
-        result shouldContain refreshedExpansion
-    }
-
-    @Test
-    fun `refreshed expansions with preview enabled and remote defined`() {
-        When calling preferences.preferencePreviewExpansions itReturns true
-        When calling remote.previewExpansionVersion itReturns ExpansionVersion(1, "sm12")
+    fun `refreshed expansions with remote defined`() {
+        When calling remote.previewExpansionVersion itReturns PreviewExpansionVersion(1, "sm12")
 
         val result = repository.refreshExpansions().blockingFirst()
 

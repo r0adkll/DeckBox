@@ -48,10 +48,12 @@ class DefaultCardDataSource(
         val forceDiskSearch = filterExpansionCodes
                 ?.let { it.isNotEmpty() && preferences.offlineExpansions.get().containsAll(it) }
                 ?: false
+
         val previewExpansionVersion = remote.previewExpansionVersion?.expansionCode
         val previewExpansion = filter?.expansions?.find { it.code == previewExpansionVersion && it.isPreview }
+
         return if (connectivity.isConnected() && !forceDiskSearch) {
-            if (previewExpansion != null || filter?.expansions.isNullOrEmpty()) {
+            if (previewExpansion != null || (filter?.expansions.isNullOrEmpty() && previewExpansionVersion != null)) {
                 Timber.i("Searching both preview and default sources")
                 // if the user has selected to search the preview expansion or the user doesn't select any expansions
                 // search both local preview cache and normal network + disk fallback
