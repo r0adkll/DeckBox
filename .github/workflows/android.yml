@@ -21,4 +21,4 @@ jobs:
         GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
       
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew test
