@@ -6,6 +6,7 @@ import com.r0adkll.deckbuilder.arch.data.features.importer.model.CardSpec
 import com.r0adkll.deckbuilder.arch.data.features.importer.parser.DeckListParser
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 
 class DefaultImporter @Inject constructor(
-        val repository: CardRepository,
+        val cardRepository: CardRepository,
+        val expansionRepository: ExpansionRepository,
         val preferences: AppPreferences
 ) : Importer {
 
@@ -22,12 +24,12 @@ class DefaultImporter @Inject constructor(
 
 
     override fun import(deckList: String): Observable<List<PokemonCard>> {
-        return repository.getExpansions()
+        return expansionRepository.getExpansions()
                 .onErrorReturnItem(emptyList())
                 .flatMap { it ->
                     val cards = parser.parse(it, deckList)
                     val ids = cards.map { it.id }
-                    repository.find(ids)
+                    cardRepository.find(ids)
                             .map { pokes ->
                                 val allCards = ArrayList<PokemonCard>()
                                 pokes.forEach { poke ->
@@ -60,7 +62,7 @@ class DefaultImporter @Inject constructor(
                                         Timber.d("Searching for default energy: $missingEnergy")
 
                                         // Now search for these missing default energy cards
-                                        repository.find(energyIds)
+                                        cardRepository.find(energyIds)
                                                 .map { pokes ->
                                                     pokes.forEach { poke ->
                                                         val count = missingEnergyCards.find { it.second == poke.id }?.first?.count ?: 0

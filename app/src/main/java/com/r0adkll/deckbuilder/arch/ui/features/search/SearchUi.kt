@@ -17,7 +17,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
 
     val state: State
 
-
     interface Intentions {
 
         fun filterUpdates(): Observable<Pair<SuperType, Filter>>
@@ -27,7 +26,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun removeCard(): Observable<PokemonCard>
         fun clearSelection(): Observable<Unit>
     }
-
 
     interface Actions {
 
@@ -42,7 +40,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun showError(superType: SuperType, description: String)
         fun hideError(superType: SuperType)
     }
-
 
     @PaperParcel
     data class Result @JvmOverloads constructor(
@@ -61,7 +58,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
                 return Result("", Filter.DEFAULT, false, null, superType, emptyList())
             }
         }
-
 
         override fun toString(): String {
             return "Result(query='$query', filter=$filter, isLoading=$isLoading, error=$error, category=$category, results=${results.size})"

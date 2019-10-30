@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.ftinc.kit.kotlin.adapter.ListRecyclerAdapter
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.Format
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 
 
 class ExpansionRecyclerAdapter(

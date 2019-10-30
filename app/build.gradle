@@ -39,6 +39,7 @@ android {
         buildConfigField "String", "GIT_SHA", "\"$GIT_SHA\""
         buildConfigField "String", "DATABASE_NAME", "\"deckbox.db\""
         buildConfigField "String", "AFFILIATE_CODE", "\"DeckBox\""
+        buildConfigField "String", "PREVIEW_API_URL", "\"https://deckboxtcg.app/api/v1/\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -120,11 +121,11 @@ dependencies {
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
     implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "androidx.recyclerview:recyclerview:1.1.0-beta05"
+    implementation "androidx.recyclerview:recyclerview:1.1.0-rc01"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.preference:preference:1.1.0"
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
-    implementation "com.google.android.material:material:1.1.0-beta01"
+    implementation "com.google.android.material:material:1.2.0-alpha01"
     implementation "androidx.palette:palette:1.0.0"
     implementation "androidx.browser:browser:1.2.0-alpha09"
 
@@ -153,6 +154,7 @@ dependencies {
 
     implementation 'nz.bradcampbell:paperparcel:2.0.8'
     implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.8'
+    implementation 'nz.bradcampbell:paperparcel-api:2.0.8'
     kapt 'nz.bradcampbell:paperparcel-compiler:2.0.8'
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.9"

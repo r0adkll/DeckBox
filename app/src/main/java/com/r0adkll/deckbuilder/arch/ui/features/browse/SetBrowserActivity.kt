@@ -25,7 +25,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
@@ -75,7 +75,11 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_browser)
 
-        state = state.copy(setCode = expansion.code, pageSize = expansion.totalCards + 100 /* Hack to account for secret rares */)
+        state = state.copy(
+                setCode = expansion.code,
+                isPreview = expansion.isPreview,
+                pageSize = expansion.totalCards + 100 /* Hack to account for secret rares */
+        )
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = " "

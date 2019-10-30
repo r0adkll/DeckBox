@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.settings
 
-
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -45,7 +44,6 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +69,6 @@ class SettingsActivity : BaseActivity() {
         private var migrationSnackbar: Snackbar? = null
         private lateinit var customTabBrowser: CustomTabBrowser
 
-
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
             customTabBrowser = CustomTabBrowser(requireActivity() as AppCompatActivity)
@@ -79,14 +76,12 @@ class SettingsActivity : BaseActivity() {
             setupClient()
         }
 
-
         override fun onDestroy() {
             super.onDestroy()
             disposables.clear()
             migrationSnackbar?.dismiss()
             migrationSnackbar = null
         }
-
 
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             super.onActivityResult(requestCode, resultCode, data)
@@ -96,13 +91,11 @@ class SettingsActivity : BaseActivity() {
             }
         }
 
-
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             DeckApp.component.inject(this)
             addPreferencesFromResource(R.xml.settings_preferences)
             setupPreferences()
         }
-
 
         override fun onPreferenceTreeClick(preference: Preference): Boolean {
             return when(preference.key) {

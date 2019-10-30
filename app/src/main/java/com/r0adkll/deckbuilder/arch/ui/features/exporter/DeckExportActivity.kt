@@ -16,7 +16,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -34,7 +34,7 @@ class DeckExportActivity : BaseActivity() {
         getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
 
-    @Inject lateinit var schedulers: Schedulers
+    @Inject lateinit var schedulers: AppSchedulers
     @Inject lateinit var exporter: PtcgoExporter
 
 

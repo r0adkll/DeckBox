@@ -15,7 +15,7 @@ import com.nex3z.flowlayout.FlowLayout
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute

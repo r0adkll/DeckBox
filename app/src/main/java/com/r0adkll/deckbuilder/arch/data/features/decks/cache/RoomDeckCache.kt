@@ -5,25 +5,24 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.DeckEntity
 import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.data.database.relations.DeckStackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
-import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
-
 class RoomDeckCache @Inject constructor(
         val db: DeckDatabase,
-        val expansionSource: ExpansionDataSource
+        val repository: ExpansionRepository
 ) : DeckCache {
 
     override fun getDeck(id: String): Observable<Deck> {
         val deckId = id.toLongOrNull()
         return if (deckId != null) {
-            expansionSource.getExpansions()
+            repository.getExpansions()
                     .flatMap { expansions ->
                         val deck = db.decks().getDeck(deckId).toObservable()
                         val cards = db.decks().getDeckCards(deckId).toObservable()
@@ -38,7 +37,7 @@ class RoomDeckCache @Inject constructor(
     }
 
     override fun getDecks(): Observable<List<Deck>> {
-        return expansionSource.getExpansions()
+        return repository.getExpansions()
                 .switchMap { expansions ->
                     val decks = db.decks().getDecks().toObservable()
                     val deckCards = db.decks().getDeckCards().toObservable()

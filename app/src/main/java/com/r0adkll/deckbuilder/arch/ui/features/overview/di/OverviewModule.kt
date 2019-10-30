@@ -4,7 +4,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewFragment
 import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewUi
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -27,6 +27,6 @@ class OverviewModule(val fragment: OverviewFragment) {
     @Provides @FragmentScope
     fun provideRenderer(
             actions: OverviewUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ) : OverviewRenderer = OverviewRenderer(actions, schedulers.main, schedulers.comp)
 }

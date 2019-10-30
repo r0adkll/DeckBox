@@ -80,9 +80,21 @@ class CardDetailRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showEvolvesTo(it) }
+
+        disposables += state
+                .mapNullable { it.card }
+                .filter { it.value?.isPreview == true }
+                .distinctUntilChanged()
+                .addToLifecycle()
+                .subscribe {
+                    if (it.isNonNull()) {
+                        actions.hideCollectionCounter()
+                        actions.showCardInformation(it.value!!)
+                    }
+                }
     }
 
-    fun List<PokemonCard>.sortByExpansionReleaseDate(): List<PokemonCard> = this.sortedByDescending {
+    private fun List<PokemonCard>.sortByExpansionReleaseDate(): List<PokemonCard> = this.sortedByDescending {
         it.expansion?.releaseDate?.fromReleaseDate() ?: 0L
     }
 }

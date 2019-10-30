@@ -1,11 +1,11 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 
 import android.annotation.SuppressLint
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @SuppressLint("DefaultLocale")
 class DefaultDeckValidator @Inject constructor(
         val rules: Set<@JvmSuppressWildcards Rule>,
-        val cardRepository: CardRepository,
+        val expansionRepository: ExpansionRepository,
         val deckRepository: DeckRepository,
         val editRepository: EditRepository,
         val remote: Remote
@@ -36,7 +36,7 @@ class DefaultDeckValidator @Inject constructor(
     }
 
     override fun validate(cards: List<PokemonCard>): Observable<Validation> {
-        return cardRepository.getExpansions()
+        return expansionRepository.getExpansions()
                 .onErrorReturnItem(emptyList())
                 .map { expansions ->
                     // Validate formats
@@ -82,6 +82,7 @@ class DefaultDeckValidator @Inject constructor(
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun checkExpandedLegal(expansions: List<Expansion>, cards: List<PokemonCard>): Boolean {
         val reprints = remote.reprints
         val banList = remote.banList

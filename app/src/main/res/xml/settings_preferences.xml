@@ -30,6 +30,26 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="pref_category_preview"
+        android:title="@string/pref_category_preview"
+        app:isPreferenceVisible="false"
+        tools:isPreferenceVisible="true">
+
+        <Preference
+            android:key="pref_preview_version"
+            android:title="Current preview expansion"
+            android:summary="Sun &amp; Moon: Cosmic Eclipse"
+            />
+
+        <SwitchPreferenceCompat
+            android:key="pref_preview_expansions"
+            android:title="@string/pref_preview_expansions_title"
+            android:summary="@string/pref_preview_expansions_summary"
+            />
+
+    </PreferenceCategory>
+
     <!--<PreferenceCategory android:title="@string/pref_category_cache">-->
 
         <!--<Preference-->

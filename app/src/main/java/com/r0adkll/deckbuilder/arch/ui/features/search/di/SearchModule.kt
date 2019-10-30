@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi
 import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -28,6 +28,6 @@ class SearchModule(val activity: SearchActivity) {
     @Provides @ActivityScope
     fun provideRenderer(
             actions: SearchUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ) : SearchRenderer = SearchRenderer(actions, schedulers.main, schedulers.comp)
 }

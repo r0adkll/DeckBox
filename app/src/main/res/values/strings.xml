@@ -279,6 +279,9 @@
     <string name="pref_account_migrate_collection_title">Migrate your Collection</string>
     <string name="pref_account_migrate_collection_summary">Move your collection counts to your online account</string>
     <string name="action_add_all">Add entire set</string>
+    <string name="pref_category_preview">Preview</string>
+    <string name="pref_preview_expansions_title">Preview expansions</string>
+    <string name="pref_preview_expansions_summary">Enable access to the preview expansions for unreleased sets</string>
     <string name="action_buy">Buy now @ TCGPlayer</string>
     <string name="activity_marketplace_tcgplayer">TCGPlayer.com</string>
     <string name="marketplace_price_low">Low</string>
@@ -291,4 +294,8 @@
     <string name="dialog_market_price_message">This price point is compiled from recent sales completed on TCGplayer.com. TCG Market Price is updated as transactions complete and reflects the best suggested retail price of a product.</string>
     <string name="action_view_more">More info</string>
     <string name="action_toggle_missing_cards">Toggle missing cards</string>
+    <string name="card_info_retreat">Retreat</string>
+    <string name="card_info_resistance">Resistance</string>
+    <string name="card_info_weakness">Weakness</string>
+    <string name="card_info_ability">Ability:</string>
 </resources>

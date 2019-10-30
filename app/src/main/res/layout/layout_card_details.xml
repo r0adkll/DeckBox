@@ -83,10 +83,17 @@
         />
 
     <include
+        android:id="@+id/collectionCounter"
         layout="@layout/layout_collection_count_adjuster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        />
+
+    <include
+        android:id="@+id/cardInformation"
+        layout="@layout/layout_card_information"
+        android:visibility="gone"
         />
 
     <include

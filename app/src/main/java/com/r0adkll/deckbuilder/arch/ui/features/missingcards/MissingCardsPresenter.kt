@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.missingcards
 
-
-import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
+import android.annotation.SuppressLint
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.model.MissingCard
 import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
@@ -14,17 +14,17 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class MissingCardsPresenter @Inject constructor(
         val ui: MissingCardsUi,
         val intentions: MissingCardsUi.Intentions,
-        val repository: CardRepository,
+        val expansionRepository: ExpansionRepository,
         val missingCardRepository: MissingCardRepository
 ) : Presenter() {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
-        val loadExpansions = repository.getExpansions()
+        val loadExpansions = expansionRepository.getExpansions()
                 .map { it.reversed() }
                 .map { Change.ExpansionsLoaded(it) as Change }
                 .onErrorReturn(handleUnknownError)

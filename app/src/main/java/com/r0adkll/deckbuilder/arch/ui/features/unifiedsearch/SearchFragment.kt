@@ -44,7 +44,7 @@ import javax.inject.Inject
 class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
-    private val drawer: androidx.drawerlayout.widget.DrawerLayout by lazy { view as androidx.drawerlayout.widget.DrawerLayout }
+    private val drawer: DrawerLayout by lazy { view as DrawerLayout }
 
     override var state: SearchUi.State = SearchUi.State.DEFAULT
 
@@ -80,12 +80,10 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
             ImeUtils.hideIme(searchView)
         }
 
-        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 6)
+        recycler.layoutManager = GridLayoutManager(activity!!, 6)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
         recycler.setItemViewCacheSize(20)
-        recycler.isDrawingCacheEnabled = true
-        recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
 
         recycler.addOnScrollListener(KeyboardScrollHideListener(searchView))
 
@@ -216,7 +214,7 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     fun wiggleCard(card: PokemonCard) {
         val adapterPosition = adapter.indexOf(card)
         if (adapterPosition != RecyclerView.NO_POSITION) {
-            val layoutManager = recycler.layoutManager as androidx.recyclerview.widget.GridLayoutManager
+            val layoutManager = recycler.layoutManager as GridLayoutManager
             val childIndex = adapterPosition - layoutManager.findFirstVisibleItemPosition()
             val child = layoutManager.getChildAt(childIndex)
             child?.let {

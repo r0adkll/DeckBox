@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.browse
 
 
 import android.os.Parcelable
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
@@ -44,16 +44,13 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
     @Parcelize
     data class State(
             val setCode: String,
+            val isPreview: Boolean,
             val isLoading: Boolean,
             val error: String?,
             val cards: List<PokemonCard>,
             val filter: BrowseFilter,
             val pageSize: Int = 1000
     ) : Parcelable {
-
-        val searchFilter: Filter
-            get() = Filter.DEFAULT.copy(expansions = listOf(Expansion(setCode, null, "", "", 0, false, false, "", "", "")), pageSize = pageSize)
-
 
         fun reduce(change: Change): State = when(change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
@@ -78,7 +75,7 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
         companion object {
 
             val DEFAULT by lazy {
-                State("sm5", false, null, emptyList(), BrowseFilter.ALL)
+                State("sm5", false, false, null, emptyList(), BrowseFilter.ALL)
             }
         }
     }

@@ -100,7 +100,16 @@
         tools:text="Standard"
         />
 
-    <include layout="@layout/layout_collection_count_adjuster" />
+    <include
+        android:id="@+id/collectionCounter"
+        layout="@layout/layout_collection_count_adjuster"
+        />
+
+    <include
+        android:id="@+id/cardInformation"
+        layout="@layout/layout_card_information"
+        android:visibility="gone"
+        />
 
     <include
         layout="@layout/layout_marketplace"

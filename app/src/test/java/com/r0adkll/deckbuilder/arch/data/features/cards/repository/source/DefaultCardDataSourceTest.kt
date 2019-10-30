@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.tools.ModelUtils.createExpansion
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
 import com.r0adkll.deckbuilder.tools.mockPreference
@@ -13,23 +14,28 @@ import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
+class DefaultCardDataSourceTest {
 
-class CombinedSearchDataSourceTest {
-
-    lateinit var diskSource: SearchDataSource
-    lateinit var networkSource: SearchDataSource
+    lateinit var diskSource: CardDataSource
+    lateinit var networkSource: CardDataSource
+    lateinit var previewSource: CardDataSource
     lateinit var connectivity: Connectivity
     lateinit var preferences: AppPreferences
+    lateinit var remote: Remote
+    lateinit var source: DefaultCardDataSource
 
     @Before
     fun setUp() {
         diskSource = mock()
         networkSource = mock()
+        previewSource = mock()
         connectivity = mock()
         preferences = mock()
+        remote = mock()
 
         When calling networkSource.search(anyOrNull(), any(), anyOrNull()) itReturns Observable.just(emptyList())
         When calling diskSource.search(anyOrNull(), any(), anyOrNull()) itReturns Observable.just(emptyList())
+        source = DefaultCardDataSource(preferences, diskSource, networkSource, previewSource, connectivity, remote)
     }
 
     @Test
@@ -37,10 +43,9 @@ class CombinedSearchDataSourceTest {
         When calling connectivity.isConnected() itReturns true
         val mockedPreference = mockPreference(toReturn = emptySet<String>())
         When calling preferences.offlineExpansions itReturns mockedPreference
-        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
         val query = "test"
 
-        combinedSearchDataSource.search(null, query, null)
+        source.search(null, query, null)
                 .blockingSubscribe()
 
         Verify on networkSource that networkSource.search(null, query, null) was called
@@ -52,10 +57,9 @@ class CombinedSearchDataSourceTest {
         When calling connectivity.isConnected() itReturns false
         val mockedPreference = mockPreference(toReturn = emptySet<String>())
         When calling preferences.offlineExpansions itReturns mockedPreference
-        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
         val query = "test"
 
-        combinedSearchDataSource.search(null, query, null)
+        source.search(null, query, null)
                 .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, null) was called
@@ -67,11 +71,10 @@ class CombinedSearchDataSourceTest {
         When calling connectivity.isConnected() itReturns true
         val mockedPreference = mockPreference(toReturn = setOf("sm8"))
         When calling preferences.offlineExpansions itReturns mockedPreference
-        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
         val query = "test"
         val filter = Filter()
 
-        combinedSearchDataSource.search(null, query, filter)
+        source.search(null, query, filter)
                 .blockingSubscribe()
 
         Verify on networkSource that networkSource.search(null, query, filter) was called
@@ -83,11 +86,10 @@ class CombinedSearchDataSourceTest {
         When calling connectivity.isConnected() itReturns true
         val mockedPreference = mockPreference(toReturn = setOf("sm8", "sm7", "sm6", "sm75"))
         When calling preferences.offlineExpansions itReturns mockedPreference
-        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
         val query = "test"
         val filter = Filter(expansions = listOf(createExpansion("sm8", "sm6")))
 
-        combinedSearchDataSource.search(null, query, filter)
+        source.search(null, query, filter)
                 .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, filter) was called
@@ -100,10 +102,9 @@ class CombinedSearchDataSourceTest {
         When calling connectivity.isConnected() itReturns true
         val mockedPreference = mockPreference(toReturn = emptySet<String>())
         When calling preferences.offlineExpansions itReturns mockedPreference
-        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
         val query = "test"
 
-        combinedSearchDataSource.search(null, query, null)
+        source.search(null, query, null)
                 .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, null) was called
@@ -120,10 +121,8 @@ class CombinedSearchDataSourceTest {
         val ids = cards.map { it.id }
         When calling connectivity.isConnected() itReturns true
         When calling diskSource.find(any()) itReturns Observable.just(cards)
-        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
 
-        val results = combinedSearchDataSource.find(ids)
-                .blockingFirst()
+        val results = source.find(ids).blockingFirst()
 
         results shouldEqual cards
         VerifyNotCalled on networkSource that networkSource.find(any())
@@ -141,10 +140,8 @@ class CombinedSearchDataSourceTest {
         When calling connectivity.isConnected() itReturns true
         When calling diskSource.find(any()) itReturns Observable.just(cards.take(3))
         When calling networkSource.find(any()) itReturns Observable.just(cards.subList(3, 4))
-        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
 
-        val results = combinedSearchDataSource.find(ids)
-                .blockingFirst()
+        val results = source.find(ids).blockingFirst()
 
         results shouldContainAll  cards
         Verify on diskSource that diskSource.find(ids) was called
@@ -162,10 +159,8 @@ class CombinedSearchDataSourceTest {
         val ids = cards.map { it.id }
         When calling connectivity.isConnected() itReturns false
         When calling diskSource.find(any()) itReturns Observable.just(cards)
-        val combinedSearchDataSource = CombinedSearchDataSource(preferences, diskSource, networkSource, connectivity)
 
-        val results = combinedSearchDataSource.find(ids)
-                .blockingFirst()
+        val results = source.find(ids).blockingFirst()
 
         results shouldEqual cards
         Verify on diskSource that diskSource.find(ids) was called

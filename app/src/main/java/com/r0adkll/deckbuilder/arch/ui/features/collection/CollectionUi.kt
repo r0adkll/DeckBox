@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.ftinc.kit.arch.presentation.BaseActions
 import com.ftinc.kit.arch.presentation.state.BaseState
 import com.ftinc.kit.arch.presentation.state.Ui
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import io.reactivex.Observable

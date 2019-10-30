@@ -29,7 +29,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity

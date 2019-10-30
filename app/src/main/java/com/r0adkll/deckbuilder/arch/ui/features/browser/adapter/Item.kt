@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser.adapter
 
 import com.r0adkll.deckbuilder.R
 import com.ftinc.kit.kotlin.adapter.RecyclerItem
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 
 

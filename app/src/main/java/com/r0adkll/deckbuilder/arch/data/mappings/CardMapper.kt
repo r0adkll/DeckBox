@@ -2,12 +2,14 @@ package com.r0adkll.deckbuilder.arch.data.mappings
 
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import io.pokemontcg.model.Card
 
 
 object CardMapper {
 
     fun to(card: Card, expansions: List<Expansion>): PokemonCard {
+        val expansion = expansions.find { it.code == card.setCode }
         return PokemonCard(
                 card.id,
                 card.name,
@@ -24,12 +26,13 @@ object CardMapper {
                 card.artist ?: "",
                 card.rarity,
                 card.series,
-                expansions.find { it.code == card.setCode },
+                expansion,
                 card.text,
                 card.attacks?.map { to(it) },
                 card.weaknesses?.map { to(it) },
                 card.resistances?.map { to(it) },
-                card.ability?.let { to(it) }
+                card.ability?.let { to(it) },
+                isPreview = expansion?.isPreview == true
         )
     }
 

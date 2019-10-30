@@ -1,9 +1,8 @@
 package com.r0adkll.deckbuilder.arch.data
 
-
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
@@ -12,10 +11,11 @@ import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountReposito
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CachingNetworkSearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CombinedSearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskSearchDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.SearchDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DefaultCardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskCardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.NetworkCardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.PreviewCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.source.FirestoreCollectionSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
@@ -28,8 +28,9 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRe
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RoomSessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
-import com.r0adkll.deckbuilder.arch.data.features.expansions.CachingExpansionDataSource
-import com.r0adkll.deckbuilder.arch.data.features.expansions.ExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.DefaultExpansionDataSource
+import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.DefaultExpansionRepository
+import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.PreviewExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExporter
 import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
@@ -48,6 +49,7 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.remote.FirebaseRemote
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
+import com.r0adkll.deckbuilder.arch.data.remote.plugin.PreviewCacheInvalidatePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
@@ -55,6 +57,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.Collec
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
@@ -67,7 +70,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.helper.Connectivity
 import dagger.Module
 import dagger.Provides
@@ -80,32 +83,39 @@ import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import java.util.concurrent.Executors
 
-
 @Module
 class DataModule {
 
     @Provides @AppScope @IntoSet
-    fun provideCacheInvalidatePlugin(plugin: CacheInvalidatePlugin): RemotePlugin = plugin
+    fun provideCacheInvalidatePlugin(
+            defaultSource: DefaultExpansionDataSource,
+            preferences: AppPreferences,
+            schedulers: AppSchedulers
+    ): RemotePlugin = CacheInvalidatePlugin(defaultSource, preferences, schedulers)
 
+    @Provides @AppScope @IntoSet
+    fun providePreviewCacheInvalidatePlugin(
+            previewSource: PreviewExpansionDataSource,
+            db: DeckDatabase,
+            preferences: AppPreferences,
+            schedulers: AppSchedulers
+    ): RemotePlugin = PreviewCacheInvalidatePlugin(previewSource, db, preferences, schedulers)
 
     @Provides @AppScope
     fun provideSharedPreferences(context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-
     @Provides @AppScope
     fun provideRxSharedPreferences(sharedPreferences: SharedPreferences) : RxSharedPreferences {
         return RxSharedPreferences.create(sharedPreferences)
     }
 
-
     @Provides @AppScope
     fun provideRemotePreferences(remoteConfig: FirebaseRemote): Remote = remoteConfig
 
-
     @Provides @AppScope
-    fun provideSchedulers(): Schedulers = Schedulers(
+    fun provideSchedulers(): AppSchedulers = AppSchedulers(
             AndroidSchedulers.mainThread(),
             io.reactivex.schedulers.Schedulers.io(),
             io.reactivex.schedulers.Schedulers.computation(),
@@ -114,30 +124,31 @@ class DataModule {
             Executors.newSingleThreadExecutor()
     )
 
-
     @Provides @AppScope
     fun providePokemonApiConfig(): Config {
         val level = if (BuildConfig.DEBUG) BODY else NONE
         return Config(logLevel = level)
     }
 
-
     @Provides @AppScope
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
-
     /**
-     * Change Log
+     * Changelog
      * ---
      * 1. Initial Version
+     * 2. Added collections support
+     * 3. Added 'isPreview' flag to 'cards' table
      */
     @Provides @AppScope
     fun provideRoomDatabase(context: Context): DeckDatabase {
         return Room.databaseBuilder(context, DeckDatabase::class.java, BuildConfig.DATABASE_NAME)
-                .addMigrations(DeckDatabase.MIGRATION_1_2)
+                .addMigrations(
+                        DeckDatabase.MIGRATION_1_2,
+                        DeckDatabase.MIGRATION_2_3
+                )
                 .build()
     }
-
 
     /*
      * Caching
@@ -146,46 +157,38 @@ class DataModule {
     @Provides @AppScope
     fun provideCardCache(cache: RoomCardCache): CardCache = cache
 
-
     @Provides @AppScope
     fun provideDeckCache(cache: SwitchingDeckCache): DeckCache = cache
-
 
     @Provides @AppScope
     fun provideCommunityCache(cache: FirestoreCommunityCache): CommunityCache = cache
 
-
     @Provides @AppScope
     fun provideSessionCache(cache: RoomSessionCache): SessionCache = cache
 
-
     @Provides @AppScope
     fun provideOfflineStatusConsumer(consumer: DefaultOfflineRepository): OfflineStatusConsumer = consumer
-
 
     /*
      * Data Sources
      */
 
     @Provides @AppScope
-    fun provideExpansionDataSource(dataSource: CachingExpansionDataSource): ExpansionDataSource = dataSource
-
-
-    @Provides @AppScope
     fun provideSearchDataSource(
             api: Pokemon,
             cache: CardCache,
-            source: ExpansionDataSource,
+            repository: ExpansionRepository,
+            previewExpansionDataSource: PreviewExpansionDataSource,
             remote: Remote,
-            schedulers: Schedulers,
+            schedulers: AppSchedulers,
             preferences: AppPreferences,
             connectivity: Connectivity
-    ): SearchDataSource {
-        val disk: SearchDataSource = DiskSearchDataSource(cache, schedulers)
-        val network: SearchDataSource = CachingNetworkSearchDataSource(api, source, cache, remote, schedulers)
-        return CombinedSearchDataSource(preferences, disk, network, connectivity)
+    ): CardDataSource {
+        val disk = DiskCardDataSource(cache, schedulers)
+        val network = NetworkCardDataSource(api, repository, cache, remote, schedulers)
+        val preview = PreviewCardDataSource(previewExpansionDataSource, cache, remote, schedulers)
+        return DefaultCardDataSource(preferences, disk, network, preview, connectivity, remote)
     }
-
 
     /*
      * Repositories
@@ -194,30 +197,31 @@ class DataModule {
     @Provides @AppScope
     fun provideAccountRepository(repository: DefaultAccountRepository): AccountRepository = repository
 
-
     @Provides @AppScope
     fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository
-
 
     @Provides @AppScope
     fun provideCommunityRepository(repository: DefaultCommunityRepository): CommunityRepository = repository
 
-
     @Provides @AppScope
     fun provideEditRepository(repository: DefaultEditRepository): EditRepository = repository
 
+    @Provides @AppScope
+    fun provideExpansionRepository(
+            defaultSource: DefaultExpansionDataSource,
+            previewSource: PreviewExpansionDataSource,
+            preferences: AppPreferences,
+            remote: Remote
+    ): ExpansionRepository = DefaultExpansionRepository(defaultSource, previewSource, preferences, remote)
 
     @Provides @AppScope
     fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
 
-
     @Provides @AppScope
     fun provideMissingCardRepository(repository: DefaultMissingCardRepository): MissingCardRepository = repository
 
-
     @Provides @AppScope
     fun provideOfflineRepository(repository: DefaultOfflineRepository): OfflineRepository = repository
-
 
     @Provides @AppScope
     fun providePreviewRepository(repository: RemotePreviewRepository): PreviewRepository {
@@ -229,7 +233,7 @@ class DataModule {
     }
 
     @Provides @AppScope
-    fun provideMarketplaceRepository(schedulers: Schedulers): MarketplaceRepository {
+    fun provideMarketplaceRepository(schedulers: AppSchedulers): MarketplaceRepository {
         return CachingMarketplaceRepository(
                 FirestoreMarketplaceSource(MarketplaceSource.Source.CACHE, schedulers),
                 FirestoreMarketplaceSource(MarketplaceSource.Source.NETWORK, schedulers)
@@ -244,7 +248,6 @@ class DataModule {
     ): CollectionRepository {
         return DefaultCollectionRepository(roomCollectionCache, firestoreCollectionCache, preferences)
     }
-
 
     /*
      * Deck Validation Rules
@@ -261,22 +264,17 @@ class DataModule {
         )
     }
 
-
     @Provides @AppScope
     fun provideDeckTester(tester: DefaultDeckTester): DeckTester = tester
-
 
     @Provides @AppScope
     fun provideDeckValidator(validator: DefaultDeckValidator): DeckValidator = validator
 
-
     @Provides @AppScope
     fun provideImporter(importer: DefaultImporter): Importer = importer
 
-
     @Provides @AppScope
     fun providePtcgoExporter(): PtcgoExporter = DefaultPtcgoExporter()
-
 
     @Provides @AppScope
     fun provideTournamentExporter(exporter: DefaultTournamentExporter): TournamentExporter = exporter

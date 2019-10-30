@@ -15,6 +15,10 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+import android.widget.TextView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -43,10 +47,12 @@ import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
 import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
+import com.r0adkll.deckbuilder.util.extensions.drawable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
 import kotlinx.android.synthetic.main.layout_card_details.*
+import kotlinx.android.synthetic.main.layout_card_information.*
 import kotlinx.android.synthetic.main.layout_collection_count_adjuster.*
 import kotlinx.android.synthetic.main.layout_marketplace.*
 import javax.inject.Inject
@@ -288,6 +294,76 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         evolvesToDivider?.setVisible(cards.isNotEmpty())
         evolvesToHeader.setVisible(cards.isNotEmpty())
         evolvesToRecycler.setVisible(cards.isNotEmpty())
+    }
+
+    override fun hideCollectionCounter() {
+        collectionCounter.gone()
+    }
+
+    override fun showCardInformation(card: PokemonCard) {
+        cardInformation.visible()
+
+        // Set Ability
+        if (card.ability != null) {
+            abilityName.text = card.ability.name
+            abilityText.text = card.ability.text
+        } else {
+            abilityLabel.gone()
+            abilityName.gone()
+            abilityText.gone()
+        }
+
+        // Set Attacks
+        card.attacks?.forEach { attack ->
+            val itemView = layoutInflater.inflate(R.layout.layout_card_attack, attacks, false)
+            val attackEnergies = itemView.findViewById<LinearLayout>(R.id.attackEnergies)
+            val attackName = itemView.findViewById<TextView>(R.id.attackName)
+            val attackDamage = itemView.findViewById<TextView>(R.id.attackDamage)
+            val attackText = itemView.findViewById<TextView>(R.id.attackText)
+            attack.cost?.forEach { cost ->
+                val energy = ImageView(this)
+                energy.setImageResource(cost.drawable)
+                val lp = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+                lp.marginEnd = dipToPx(8f)
+                attackEnergies.addView(energy, lp)
+            }
+
+            attackName.text = attack.name
+            attackDamage.text = attack.damage
+            attackText.setVisible(!attack.text.isNullOrBlank())
+            attackText.text = attack.text
+            attacks.addView(itemView)
+        }
+
+        // Set Card Text
+        cardText.setVisible(!card.text.isNullOrEmpty())
+        cardText.text = card.text?.joinToString("\n")
+
+        // Set Card Weakness
+        cardWeaknessLayout.setVisible(!card.weaknesses.isNullOrEmpty())
+        card.weaknesses?.first()?.let { effect ->
+            cardWeakness.text = effect.value
+            cardWeakness.setCompoundDrawablesRelativeWithIntrinsicBounds(effect.type.drawable, 0, 0, 0)
+        }
+
+        // Set Card Resistance
+        cardResistanceLayout.setVisible(!card.resistances.isNullOrEmpty())
+        card.resistances?.first()?.let { effect ->
+            cardResistance.text = effect.value
+            cardResistance.setCompoundDrawablesRelativeWithIntrinsicBounds(effect.type.drawable, 0, 0, 0)
+        }
+
+        // Set Retreat
+        cardRetreatLayout.setVisible(!card.retreatCost.isNullOrEmpty())
+        card.retreatCost?.let { cost ->
+            cost.forEach { type ->
+                val energy = ImageView(this)
+                energy.setImageResource(type.drawable)
+                val lp = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+                lp.marginEnd = dipToPx(8f)
+                cardRetreat.addView(energy, lp)
+            }
+        }
     }
 
     private fun bindCard() {

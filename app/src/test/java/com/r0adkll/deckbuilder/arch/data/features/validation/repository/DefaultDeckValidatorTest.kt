@@ -1,10 +1,10 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.BanList
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.LegalOverrides
@@ -19,7 +19,7 @@ import org.junit.Test
 
 class DefaultDeckValidatorTest {
 
-    lateinit var cardRepository: CardRepository
+    lateinit var expansionRepository: ExpansionRepository
     lateinit var deckRepository: DeckRepository
     lateinit var editRepository: EditRepository
     lateinit var remote: Remote
@@ -27,13 +27,13 @@ class DefaultDeckValidatorTest {
 
     @Before
     fun setUp() {
-        cardRepository = mock()
+        expansionRepository = mock()
         deckRepository = mock()
         editRepository = mock()
         remote = mock()
 
         val rules = emptySet<Rule>()
-        validator = DefaultDeckValidator(rules, cardRepository, deckRepository, editRepository, remote)
+        validator = DefaultDeckValidator(rules, expansionRepository, deckRepository, editRepository, remote)
     }
 
     @Test
@@ -204,7 +204,7 @@ class DefaultDeckValidatorTest {
     }
 
     private fun setupExpansionMock(items: List<Expansion>) {
-        When calling cardRepository.getExpansions() itReturns Observable.just(items)
+        When calling expansionRepository.getExpansions() itReturns Observable.just(items)
     }
 
     private fun PokemonCard.reprintHash(): Long {

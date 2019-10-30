@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.domain.features.community.model
 
 import android.os.Parcelable
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import kotlinx.android.parcel.Parcelize
 

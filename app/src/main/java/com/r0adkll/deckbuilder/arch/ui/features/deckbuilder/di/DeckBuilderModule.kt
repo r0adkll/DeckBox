@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi
 import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -30,6 +30,6 @@ class DeckBuilderModule(
     @Provides @ActivityScope
     fun provideRenderer(
             actions: DeckBuilderUi.Actions,
-            schedulers: Schedulers
+            schedulers: AppSchedulers
     ) : DeckBuilderRenderer = DeckBuilderRenderer(actions, schedulers.main, schedulers.comp)
 }

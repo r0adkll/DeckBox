@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.util.Schedulers
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.extensions.sortableNumber
 import io.reactivex.functions.BiPredicate
 
 
 class CollectionSetRenderer(
         actions: CollectionSetUi.Actions,
-        schedulers: Schedulers
+        schedulers: AppSchedulers
 ) : UiBaseStateRenderer<CollectionSetUi.State, CollectionSetUi.State.Change, CollectionSetUi.Actions>(actions, schedulers.main, schedulers.comp) {
 
     @SuppressLint("RxSubscribeOnError")

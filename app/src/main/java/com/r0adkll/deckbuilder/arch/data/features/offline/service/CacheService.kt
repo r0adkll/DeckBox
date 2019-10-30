@@ -7,14 +7,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.util.Stopwatch
 import com.r0adkll.deckbuilder.DeckApp
@@ -23,10 +18,9 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
-import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.util.extensions.bytes
 import com.r0adkll.deckbuilder.util.extensions.retryWithBackoff
@@ -100,7 +94,6 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         }
     }
 
-
     private fun getExpansion(expansion: Expansion): List<Card> {
         return api.card()
                 .where {
@@ -111,7 +104,6 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                 .retryWithBackoff()
                 .blockingSingle()
     }
-
 
     private fun cacheCardImages(expansion: Expansion, cards: List<Card>) {
         val targets = cards.map {
@@ -142,7 +134,6 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         throttle.stop()
     }
 
-
     @TargetApi(Build.VERSION_CODES.O)
     private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -157,7 +148,6 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             notifMan.createNotificationChannel(channel)
         }
     }
-
 
     private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?) {
         createChannel()
@@ -205,7 +195,6 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
-
 
     companion object {
         private const val EXTRA_REQUEST = "CacheService.Request"

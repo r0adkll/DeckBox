@@ -5,11 +5,11 @@ import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Expansion
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.Observable
@@ -17,12 +17,10 @@ import io.reactivex.functions.Function3
 import java.io.IOException
 import javax.inject.Inject
 
-
 class RoomSessionCache @Inject constructor(
         val db: DeckDatabase,
-        val cardRepository: CardRepository
+        val expansionRepository: ExpansionRepository
 ) : SessionCache {
-
 
     override fun createSession(deck: Deck?, imports: List<PokemonCard>?): Observable<Long> {
         val newSession = createNewSession(deck)
@@ -48,7 +46,7 @@ class RoomSessionCache @Inject constructor(
     override fun observeSession(sessionId: Long): Observable<Session> {
         val session = db.sessions().getSessionWithChanges(sessionId).toObservable()
         val cards = db.sessions().getSessionCards(sessionId).toObservable()
-        val expansions = cardRepository.getExpansions()
+        val expansions = expansionRepository.getExpansions()
 
         return Observable.combineLatest(session, cards, expansions,
                 Function3<SessionWithChanges, List<StackedCard>, List<Expansion>, Session> { s, c, e ->
@@ -145,7 +143,6 @@ class RoomSessionCache @Inject constructor(
             db.sessions().clearSearchSession(sessionId, searchSessionId)
         }
     }
-
 
     private fun createNewSession(deck: Deck?): SessionEntity {
         return SessionEntity(
