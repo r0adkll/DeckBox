@@ -199,7 +199,8 @@ object RoomEntityMapper {
                             e.card.card.resistances?.deserializeEffects(),
                             e.card.card.ability?.let {
                                 Ability(it.name, it.text)
-                            }
+                            },
+                            isPreview = e.card.card.isPreview
                     ),
                     e.count
             )
@@ -232,7 +233,8 @@ object RoomEntityMapper {
                             e.card.card.resistances?.deserializeEffects(),
                             e.card.card.ability?.let {
                                 Ability(it.name, it.text)
-                            }
+                            },
+                            isPreview = e.card.card.isPreview
                     ),
                     e.count
             )
@@ -264,7 +266,8 @@ object RoomEntityMapper {
                         e.card.resistances?.deserializeEffects(),
                         e.card.ability?.let {
                             Ability(it.name, it.text)
-                        }
+                        },
+                        isPreview = e.card.isPreview
                 )
         }
     }

@@ -30,5 +30,6 @@ data class PokemonCard(
         val weaknesses: List<Effect>?,
         val resistances: List<Effect>?,
         val ability: Ability?,
-        val isCached: Boolean = false
+        val isCached: Boolean = false,
+        val isPreview: Boolean = false
 ) : Parcelable

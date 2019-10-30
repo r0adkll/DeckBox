@@ -13,6 +13,10 @@ class DefaultCardRepository @Inject constructor(
         val cardDataSource: CardDataSource
 ) : CardRepository {
 
+    override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
+        return cardDataSource.findByExpansion(setCode)
+    }
+
     override fun search(type: SuperType?, text: String, filter: Filter?): Observable<List<PokemonCard>> {
         return cardDataSource.search(type, text, filter)
     }

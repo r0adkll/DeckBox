@@ -96,9 +96,10 @@ class DataModule {
     @Provides @AppScope @IntoSet
     fun providePreviewCacheInvalidatePlugin(
             previewSource: PreviewExpansionDataSource,
+            db: DeckDatabase,
             preferences: AppPreferences,
             schedulers: AppSchedulers
-    ): RemotePlugin = PreviewCacheInvalidatePlugin(previewSource, preferences, schedulers)
+    ): RemotePlugin = PreviewCacheInvalidatePlugin(previewSource, db, preferences, schedulers)
 
     @Provides @AppScope
     fun provideSharedPreferences(context: Context): SharedPreferences {

@@ -24,6 +24,7 @@ class CollectionPresenter @Inject constructor(
     override fun smashObservables(): Observable<Change> {
 
         val expansions = expansionRepository.getExpansions()
+                .map { it.filter { !it.isPreview } }
                 .map { Change.Expansions(it) as Change }
                 .onErrorReturn(handleUnknownError)
 

@@ -1,6 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browse
 
 
+import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.State.Change
@@ -17,9 +18,10 @@ class SetBrowserPresenter @Inject constructor(
         val repository: CardRepository
 ) : Presenter() {
 
+    @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
-        val loadCards = repository.search(null, "", ui.state.searchFilter)
+        val loadCards = repository.findByExpansion(ui.state.setCode)
                 .map { Change.CardsLoaded(it) as Change }
                 .startWith(Change.IsLoading as Change)
                 .onErrorReturn(handleUnknownError)

@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.util.extensions.combineLatest
 import com.r0adkll.deckbuilder.util.helper.Connectivity
@@ -20,6 +21,29 @@ class DefaultCardDataSource(
         val remote: Remote
 ) : CardDataSource {
 
+    override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
+        val forceDiskSearch = preferences.offlineExpansions.get().contains(setCode)
+        val previewExpansionVersion = remote.previewExpansionVersion?.expansionCode
+        return if (setCode == previewExpansionVersion) {
+            // Disk Cache first, then preview network
+            diskSource.findByExpansion(setCode)
+                    .onErrorResumeNext( Function {
+                        previewSource.findByExpansion(setCode)
+                    })
+                    .switchIfEmpty(previewSource.findByExpansion(setCode))
+        } else {
+            if (connectivity.isConnected() && !forceDiskSearch) {
+                networkSource.findByExpansion(setCode)
+                        .onErrorResumeNext(Function {
+                            Timber.e(it, "Error fetching network cards for $setCode")
+                            diskSource.findByExpansion(setCode)
+                        })
+            } else {
+                diskSource.findByExpansion(setCode)
+            }
+        }
+    }
+
     override fun search(type: SuperType?, query: String, filter: Filter?): Observable<List<PokemonCard>> {
         val filterExpansionCodes = filter?.expansions?.map { it.code }
         val forceDiskSearch = filterExpansionCodes
@@ -29,12 +53,16 @@ class DefaultCardDataSource(
         val previewExpansion = filter?.expansions?.find { it.code == previewExpansionVersion && it.isPreview }
         return if (connectivity.isConnected() && !forceDiskSearch) {
             if (previewExpansion != null || filter?.expansions.isNullOrEmpty()) {
+                Timber.i("Searching both preview and default sources")
                 // if the user has selected to search the preview expansion or the user doesn't select any expansions
                 // search both local preview cache and normal network + disk fallback
-                val previewFilter = filter?.copy(includePreview = true) ?: Filter(includePreview = true)
-                val previewSearch = diskSource.search(type, query, previewFilter)
-                        .defaultIfEmpty(emptyList())
-                        .onErrorReturnItem(emptyList())
+                val previewSearch = previewSource.search(type, query, filter)
+                        .onErrorResumeNext(Function {
+                            val previewFilter = filter?.copy(includePreview = true) ?: Filter(includePreview = true)
+                            diskSource.search(type, query, previewFilter)
+                                    .defaultIfEmpty(emptyList())
+                                    .onErrorReturnItem(emptyList())
+                        })
 
                 val networkSearch = networkSource.search(type, query, filter)
                         .onErrorResumeNext(Function {

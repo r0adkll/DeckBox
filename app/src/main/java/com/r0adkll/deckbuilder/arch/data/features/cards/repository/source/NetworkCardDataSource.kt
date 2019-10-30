@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.util.AppSchedulers
@@ -14,6 +15,7 @@ import io.pokemontcg.model.Card
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.requests.CardQueryBuilder
 import io.reactivex.Observable
+import kotlin.math.exp
 
 @Suppress("UNCHECKED_CAST")
 class NetworkCardDataSource(
@@ -23,6 +25,12 @@ class NetworkCardDataSource(
         val remote: Remote,
         val schedulers: AppSchedulers
 ) : CardDataSource {
+
+    override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
+        return expansionRepository.getExpansions() + searchNetwork(null, "",
+                Filter(expansions = listOf(Expansion(setCode)))
+        )
+    }
 
     override fun search(type: SuperType?, query: String, filter: Filter?): Observable<List<PokemonCard>> {
         return expansionRepository.getExpansions() + searchNetwork(type, query, filter)

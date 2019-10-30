@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.data.mappings.FilterMapper
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.extensions.plus
@@ -33,6 +34,12 @@ class PreviewCardDataSource(
                     logLevel = if (BuildConfig.DEBUG) BASIC else NONE
             )
     )
+
+    override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
+        return previewExpansionDataSource.getExpansions() + searchNetwork(null, "",
+                Filter(expansions = listOf(Expansion(setCode)))
+        )
+    }
 
     override fun search(type: SuperType?, query: String, filter: Filter?): Observable<List<PokemonCard>> {
         return previewExpansionDataSource.getExpansions() + searchNetwork(type, query, filter)
