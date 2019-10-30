@@ -18,8 +18,8 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.*
  *
  * Changelog
  * ---
- * 1. Initial Version
- * 2. Added collections support
+ * 1. Initial Version (production)
+ * 2. Added collections support (production)
  * 3. Added 'isPreview' flag to 'cards' table
  */
 @Database(

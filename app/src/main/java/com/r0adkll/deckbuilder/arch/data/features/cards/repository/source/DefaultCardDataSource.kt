@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.data.features.cards.repository.source
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.util.extensions.combineLatest
 import com.r0adkll.deckbuilder.util.helper.Connectivity
