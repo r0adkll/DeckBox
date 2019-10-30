@@ -17,6 +17,7 @@ class DiskCardDataSource(
 
     override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
         return searchDisk(null, "", Filter(expansions = listOf(Expansion(setCode))))
+                .subscribeOn(schedulers.disk)
     }
 
     override fun search(type: SuperType?, query: String, filter: Filter?): Observable<List<PokemonCard>> {
