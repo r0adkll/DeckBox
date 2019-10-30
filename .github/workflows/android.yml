@@ -18,7 +18,7 @@ jobs:
       uses: finnp/create-file-action@1.0.0
       env:
         FILE_NAME: google-services.json
-        FILE_DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        FILE_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
         
     - name: Copy services into place
       run: mv google-services.json app/google-services.json
