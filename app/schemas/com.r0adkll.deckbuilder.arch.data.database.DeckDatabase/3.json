@@ -1,9 +1,124 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "85d8b68f7a1be3c1d1ecfd9608d273b9",
+    "version": 3,
+    "identityHash": "ca25c10c83a37a577b99a254081b3968",
     "entities": [
+      {
+        "tableName": "decks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `image` TEXT, `collectionOnly` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "collectionOnly",
+            "columnName": "collectionOnly",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "deck_card_join",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`deckId` INTEGER NOT NULL, `cardId` TEXT NOT NULL, `count` INTEGER NOT NULL, PRIMARY KEY(`deckId`, `cardId`), FOREIGN KEY(`deckId`) REFERENCES `decks`(`uid`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`cardId`) REFERENCES `cards`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "deckId",
+            "columnName": "deckId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "cardId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "count",
+            "columnName": "count",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "deckId",
+            "cardId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_deck_card_join_cardId",
+            "unique": false,
+            "columnNames": [
+              "cardId"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_deck_card_join_cardId` ON `${TABLE_NAME}` (`cardId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "decks",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "deckId"
+            ],
+            "referencedColumns": [
+              "uid"
+            ]
+          },
+          {
+            "table": "cards",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "cardId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
       {
         "tableName": "attacks",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cardId` TEXT NOT NULL, `cost` TEXT, `convertedEnergyCost` INTEGER NOT NULL, `name` TEXT NOT NULL, `text` TEXT, `damage` TEXT, `convertedDamageCost` INTEGER, FOREIGN KEY(`cardId`) REFERENCES `cards`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
@@ -70,7 +185,7 @@
             "columnNames": [
               "cardId"
             ],
-            "createSql": "CREATE  INDEX `index_attacks_cardId` ON `${TABLE_NAME}` (`cardId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attacks_cardId` ON `${TABLE_NAME}` (`cardId`)"
           }
         ],
         "foreignKeys": [
@@ -89,7 +204,7 @@
       },
       {
         "tableName": "cards",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `number` TEXT NOT NULL, `text` TEXT, `artist` TEXT NOT NULL, `rarity` TEXT, `nationalPokedexNumber` INTEGER, `hp` INTEGER, `retreatCost` INTEGER NOT NULL, `types` TEXT, `superType` TEXT NOT NULL, `subType` TEXT NOT NULL, `evolvesFrom` TEXT, `series` TEXT NOT NULL, `expansionSet` TEXT NOT NULL, `setCode` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `imageUrlHiRes` TEXT NOT NULL, `weaknesses` TEXT, `resistances` TEXT, `ability_name` TEXT, `ability_text` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `number` TEXT NOT NULL, `text` TEXT, `artist` TEXT NOT NULL, `rarity` TEXT, `nationalPokedexNumber` INTEGER, `hp` INTEGER, `retreatCost` INTEGER NOT NULL, `types` TEXT, `superType` TEXT NOT NULL, `subType` TEXT NOT NULL, `evolvesFrom` TEXT, `series` TEXT NOT NULL, `expansionSet` TEXT NOT NULL, `setCode` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `imageUrlHiRes` TEXT NOT NULL, `weaknesses` TEXT, `resistances` TEXT, `isPreview` INTEGER NOT NULL, `ability_name` TEXT, `ability_text` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -212,6 +327,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "isPreview",
+            "columnName": "isPreview",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "ability.name",
             "columnName": "ability_name",
             "affinity": "TEXT",
@@ -270,7 +391,7 @@
             "columnNames": [
               "cardId"
             ],
-            "createSql": "CREATE  INDEX `index_session_card_join_cardId` ON `${TABLE_NAME}` (`cardId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_session_card_join_cardId` ON `${TABLE_NAME}` (`cardId`)"
           }
         ],
         "foreignKeys": [
@@ -346,7 +467,7 @@
             "columnNames": [
               "sessionId"
             ],
-            "createSql": "CREATE  INDEX `index_session_changes_sessionId` ON `${TABLE_NAME}` (`sessionId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_session_changes_sessionId` ON `${TABLE_NAME}` (`sessionId`)"
           }
         ],
         "foreignKeys": [
@@ -365,7 +486,7 @@
       },
       {
         "tableName": "sessions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `deckId` TEXT, `originalName` TEXT, `originalDescription` TEXT, `originalImage` TEXT, `name` TEXT, `description` TEXT, `image` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `deckId` TEXT, `originalName` TEXT, `originalDescription` TEXT, `originalImage` TEXT, `originalCollectionOnly` INTEGER, `name` TEXT, `description` TEXT, `image` TEXT, `collectionOnly` INTEGER)",
         "fields": [
           {
             "fieldPath": "uid",
@@ -398,6 +519,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "originalCollectionOnly",
+            "columnName": "originalCollectionOnly",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
@@ -414,6 +541,12 @@
             "columnName": "image",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "collectionOnly",
+            "columnName": "collectionOnly",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -429,16 +562,54 @@
             "columnNames": [
               "deckId"
             ],
-            "createSql": "CREATE UNIQUE INDEX `index_sessions_deckId` ON `${TABLE_NAME}` (`deckId`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_sessions_deckId` ON `${TABLE_NAME}` (`deckId`)"
           }
         ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "collection",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cardId` TEXT NOT NULL, `count` INTEGER NOT NULL, `set` TEXT NOT NULL, `series` TEXT NOT NULL, PRIMARY KEY(`cardId`))",
+        "fields": [
+          {
+            "fieldPath": "cardId",
+            "columnName": "cardId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "count",
+            "columnName": "count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "set",
+            "columnName": "set",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "series",
+            "columnName": "series",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "cardId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
         "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"85d8b68f7a1be3c1d1ecfd9608d273b9\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ca25c10c83a37a577b99a254081b3968')"
     ]
   }
 }
