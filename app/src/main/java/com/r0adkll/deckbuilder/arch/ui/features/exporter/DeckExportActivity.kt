@@ -7,14 +7,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.util.IntentUtils
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -85,8 +85,8 @@ class DeckExportActivity : BaseActivity() {
         }
     }
 
-    override fun setupComponent(component: AppComponent) {
-        component.inject(this)
+    override fun setupComponent() {
+        DeckApp.component.inject(this)
     }
 
     companion object {

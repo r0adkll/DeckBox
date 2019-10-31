@@ -65,7 +65,6 @@
             android:theme="@style/Theme.DeckBuilder.OSS"
             />
 
-        <activity android:name=".arch.ui.features.missingcards.MissingCardsActivity" />
         <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
         <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
         <activity android:name=".arch.ui.features.setbrowser.SetBrowserActivity"
@@ -86,7 +85,6 @@
 
         <service android:name=".arch.data.features.offline.service.CacheService"
                  android:exported="false" />
-        <service android:name=".arch.data.features.collection.service.FirebaseCollectionMigrationService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

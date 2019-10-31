@@ -1,17 +1,15 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 import android.os.Parcelable
+import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.PlayerInfo
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
-
-    val state: State
+interface TournamentExportUi : Ui<TournamentExportUi.State, TournamentExportUi.State.Change> {
 
     interface Intentions {
 
@@ -38,9 +36,9 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
             val dob: Date?,
             val ageDivision: AgeDivision?,
             val format: Format?
-    ) : Parcelable {
+    ) : Ui.State<State.Change>, Parcelable {
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when(change) {
             is Change.PlayerName -> this.copy(playerName = change.name)
             is Change.PlayerId -> this.copy(playerId = change.id)
             is Change.DateOfBirth -> this.copy(dob = change.dob)
@@ -56,7 +54,7 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
                 format ?: Format.STANDARD
         )
 
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String) : Ui.State.Change(logText) {
             class PlayerName(val name: String) : Change("user -> player name changed $name")
             class PlayerId(val id: String) : Change("user -> player id changed $id")
             class DateOfBirth(val dob: Date) : Change("user -> dob updated $dob")

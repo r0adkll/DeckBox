@@ -1,17 +1,15 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.*
-import com.r0adkll.deckbuilder.util.extensions.logState
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderUi.State.Change
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
@@ -19,16 +17,16 @@ import javax.inject.Inject
 
 @SuppressLint("CheckResult")
 class DeckBuilderPresenter @Inject constructor(
-        val ui: DeckBuilderUi,
+        ui: DeckBuilderUi,
         val intentions: DeckBuilderUi.Intentions,
         val repository: EditRepository,
         val collectionRepository: CollectionRepository,
         val marketplaceRepository: MarketplaceRepository,
         val validator: DeckValidator
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
     @SuppressLint("RxSubscribeOnError")
-    override fun start() {
+    override fun smashObservables(): Observable<Change> {
 
         val observeSession = repository.observeSession(ui.state.sessionId)
                 .flatMap { session ->
@@ -103,16 +101,11 @@ class DeckBuilderPresenter @Inject constructor(
                             .onErrorReturn(handlePersistError)
                 }
 
-        val merged = observeSession
+        return observeSession
                 .mergeWith(observeCollection)
                 .mergeWith(editDeck)
                 .mergeWith(editOverview)
                 .mergeWith(saveDeck)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe(ui::render)
     }
 
     companion object {

@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.setbrowser
 
 import android.annotation.SuppressLint
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
+import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.ALL
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.ENERGY
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.GX
@@ -9,7 +9,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFi
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.PRISM
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.TAG_TEAM
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.TRAINER
-import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.sortableNumber
 import io.pokemontcg.model.SubType
@@ -17,31 +16,13 @@ import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
 
 class SetBrowserRenderer(
-        val actions: SetBrowserUi.Actions,
+        actions: SetBrowserUi.Actions,
         main: Scheduler,
         comp: Scheduler
-) : DisposableStateRenderer<SetBrowserUi.State>(main, comp) {
+) : UiBaseStateRenderer<SetBrowserUi.State, SetBrowserUi.State.Change, SetBrowserUi.Actions>(actions, main, comp) {
 
     @SuppressLint("RxSubscribeOnError")
-    override fun start() {
-
-        disposables += state
-                .map { it.isLoading }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe { actions.showLoading(it) }
-
-        disposables += state
-                .mapNullable { it.error }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe {
-                    if (it.value != null) {
-                        actions.showError(it.value)
-                    } else {
-                        actions.hideError()
-                    }
-                }
+    override fun onStart() {
 
         disposables += state
                 .map { s ->

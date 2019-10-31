@@ -1,8 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
 import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.extensions.combine
@@ -13,13 +13,13 @@ import io.pokemontcg.model.Type
 import io.reactivex.Scheduler
 
 class DeckImageRenderer(
-        val actions: DeckImageUi.Actions,
+        actions: DeckImageUi.Actions,
         main: Scheduler,
         comp: Scheduler
-) : DisposableStateRenderer<DeckImageUi.State>(main, comp) {
+) : UiBaseStateRenderer<DeckImageUi.State, DeckImageUi.State.Change, DeckImageUi.Actions>(actions, main, comp) {
 
     @SuppressLint("RxSubscribeOnError")
-    override fun start() {
+    override fun onStart() {
 
         disposables += state
                 .map { it.cards }
@@ -71,24 +71,6 @@ class DeckImageRenderer(
                 .subscribe {
                     if (it) {
                         actions.close()
-                    }
-                }
-
-        disposables += state
-                .map { it.isLoading }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe { actions.showLoading(it) }
-
-        disposables += state
-                .mapNullable { it.error }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe {
-                    if (it.value != null) {
-                        actions.showError(it.value)
-                    } else {
-                        actions.hideError()
                     }
                 }
     }

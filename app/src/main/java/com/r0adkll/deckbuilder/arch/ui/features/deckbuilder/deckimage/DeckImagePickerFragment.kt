@@ -2,11 +2,12 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
+import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.kotlin.utils.bindLong
 import com.ftinc.kit.kotlin.utils.bindString
 import com.ftinc.kit.kotlin.utils.bundle
@@ -21,13 +22,12 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderCompon
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
-import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_deck_image_picker.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImageUi, DeckImageUi.Intentions, DeckImageUi.Actions {
+class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Intentions, DeckImageUi.Actions {
 
     override var state: DeckImageUi.State = DeckImageUi.State.DEFAULT
 
@@ -86,7 +86,8 @@ class DeckImagePickerFragment : androidx.fragment.app.DialogFragment(), DeckImag
         get() = deckImageClicks
 
     override val selectDeckImageClicks: Observable<Unit>
-        get() = actionSelect.clicks().uiDebounce()
+        get() = actionSelect.clicks()
+                .uiDebounce()
                 .doOnNext {
                     Analytics.event(Event.SelectContent.Deck.EditImage)
                 }

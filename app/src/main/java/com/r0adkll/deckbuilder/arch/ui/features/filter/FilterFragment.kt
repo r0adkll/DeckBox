@@ -4,13 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.ftinc.kit.arch.presentation.BaseFragment
+import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.FilterRecyclerAdapter
@@ -25,11 +27,11 @@ import io.pokemontcg.model.Type
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_filter.*
 import javax.inject.Inject
+import com.evernote.android.state.State as SaveState
 
 class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.Actions {
 
-    @com.evernote.android.state.State
-    override var state: State = State.DEFAULT
+    @SaveState override var state: State = State.DEFAULT
     private val filterIntentions: FilterIntentions = FilterIntentions()
 
     @Inject lateinit var renderer: FilterRenderer
@@ -65,21 +67,15 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
             val type = (activity as SearchActivity).superType
             state = state.copy(category = type)
         }
-
-        renderer.start()
-        presenter.start()
     }
 
     override fun setupComponent() {
         getComponent(FilterableComponent::class)
                 .plus(FilterModule(this))
                 .inject(this)
-    }
 
-    override fun onDestroy() {
-        presenter.stop()
-        renderer.stop()
-        super.onDestroy()
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
     override fun render(state: State) {

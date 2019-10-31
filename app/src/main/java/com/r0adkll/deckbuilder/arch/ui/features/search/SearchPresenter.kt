@@ -2,14 +2,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 
 import android.annotation.SuppressLint
 import android.text.TextUtils
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State.Change
-import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -19,13 +18,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class SearchPresenter @Inject constructor(
-        val ui: SearchUi,
+        ui: SearchUi,
         val intentions: SearchUi.Intentions,
         val repository: CardRepository,
         val editor: EditRepository
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
-    override fun start() {
+    override fun smashObservables(): Observable<Change> {
 
         disposables += intentions.selectCard()
                 .sessionMap(ui.state.sessionId) { editor.addCards(ui.state.sessionId, listOf(it), ui.state.id) }
@@ -67,17 +66,10 @@ class SearchPresenter @Inject constructor(
                     getReSearchCardsObservable(category, filter)
                 }
 
-        val merged = observeSession
+        return observeSession
                 .mergeWith(searchCards)
                 .mergeWith(switchCategories)
                 .mergeWith(filterChanges)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe(ui::render) {
-                    Timber.e(it, "Error reducing search state")
-                }
     }
 
     /**

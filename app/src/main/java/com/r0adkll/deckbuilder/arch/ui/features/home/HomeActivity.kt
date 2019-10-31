@@ -9,11 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.ftinc.kit.arch.di.HasComponent
+import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionProgressController
@@ -25,8 +27,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.importer.DeckImportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.internal.di.HasComponent
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.snackbar
@@ -38,7 +38,6 @@ import kotlin.math.roundToInt
 
 class HomeActivity : BaseActivity(),
         HasComponent<HomeComponent>,
-        com.ftinc.kit.arch.di.HasComponent<HomeComponent>,
         CollectionProgressController {
 
     @Inject lateinit var editor: EditRepository
@@ -93,6 +92,14 @@ class HomeActivity : BaseActivity(),
         })
     }
 
+    override fun setupComponent() {
+        this.component = DeckApp.component
+                .plus(HomeModule(this))
+        this.component.inject(this)
+    }
+
+    override fun getComponent(): HomeComponent = component
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val cards = DeckImportActivity.parseResults(resultCode, requestCode, data)
@@ -131,13 +138,6 @@ class HomeActivity : BaseActivity(),
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-    override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(HomeModule(this))
-        this.component.inject(this)
-    }
-
-    override fun getComponent(): HomeComponent = component
 
     override fun setOverallProgress(progress: Float) {
         progressCompletion.text = getString(R.string.completion_format, (progress.times(100f).roundToInt().coerceIn(0, 100)))

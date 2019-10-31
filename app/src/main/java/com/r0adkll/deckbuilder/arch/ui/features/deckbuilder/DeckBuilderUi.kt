@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
+import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
@@ -7,7 +8,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionC
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.stack
 import io.pokemontcg.model.SuperType.ENERGY
@@ -18,9 +18,7 @@ import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
-interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
-
-    val state: State
+interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
 
     interface Intentions {
 
@@ -77,7 +75,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             @Transient val trainerCards: List<PokemonCard> = emptyList(),
             @Transient val energyCards: List<PokemonCard> = emptyList(),
             @Transient val collectionCounts: List<CollectionCount> = emptyList()
-    ) : PaperParcelable {
+    ) : Ui.State<State.Change>, PaperParcelable {
 
         val allCards: List<PokemonCard>
             get() = pokemonCards.plus(trainerCards).plus(energyCards)
@@ -85,7 +83,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         val allCardsStackedWithCollection: List<StackedPokemonCard>
             get() = allCards.stack(collectionCounts)
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when(change) {
             Change.Saving -> copy(isSaving = true, error = null)
             Change.Saved -> copy(isSaving = false)
             is Change.SessionUpdated -> copy(
@@ -146,7 +144,7 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     "products=${products.size})"
         }
 
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String) : Ui.State.Change(logText) {
             object Saving : Change("user -> is saving deck")
             object Saved : Change("network -> deck saved!")
             class SessionUpdated(val session: Session) : Change("cache -> Session changed/updated $session")

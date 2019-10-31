@@ -1,9 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
+import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import paperparcel.PaperParcel
@@ -11,9 +11,7 @@ import paperparcel.PaperParcelable
 import java.util.*
 import kotlin.collections.ArrayList
 
-interface SearchUi : StateRenderer<SearchUi.State> {
-
-    val state: State
+interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
 
     interface Intentions {
 
@@ -69,11 +67,11 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             val category: SuperType,
             val results: Map<SuperType, Result>,
             @Transient val selected: List<PokemonCard> = emptyList()
-    ) : PaperParcelable {
+    ) : Ui.State<State.Change>, PaperParcelable {
 
         fun current(): Result? = results[category]
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when(change) {
             is Change.IsLoading -> {
                 val newResults = results.toMutableMap()
                 newResults[change.category] = newResults[change.category]!!
@@ -134,7 +132,7 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             return "State(category=$category, results=$results, selected=${selected.size})"
         }
 
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String) : Ui.State.Change(logText) {
             class CategorySwitched(val category: SuperType) : Change("user -> switching category to $category")
             class IsLoading(val category: SuperType) : Change("network -> loading search results")
             class Error(val category: SuperType, val description: String) : Change("error -> $description")

@@ -9,17 +9,16 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.print.PrintAttributes
 import android.print.PrintManager
-import androidx.core.content.FileProvider
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.content.FileProvider
+import com.ftinc.kit.arch.presentation.BaseActivity
 import com.jakewharton.rxbinding2.view.clicks
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.PdfDocumentAdapter
 import com.r0adkll.deckbuilder.util.bindSerializable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
@@ -92,7 +91,7 @@ class PdfPreviewActivity : BaseActivity() {
         file.deleteOnExit()
     }
 
-    override fun setupComponent(component: AppComponent) {
+    override fun setupComponent() {
     }
 
     private fun printFile() {

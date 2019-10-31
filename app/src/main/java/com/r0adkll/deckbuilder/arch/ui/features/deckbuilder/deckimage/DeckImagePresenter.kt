@@ -1,21 +1,20 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageUi.State.Change
-import com.r0adkll.deckbuilder.util.extensions.logState
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
 class DeckImagePresenter @Inject constructor(
-        val ui: DeckImageUi,
+        ui: DeckImageUi,
         val intentions: DeckImageUi.Intentions,
         val repository: EditRepository
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
-    override fun start() {
+    override fun smashObservables(): Observable<Change> {
 
         val loadImages = repository.getSession(ui.state.sessionId)
                 .map { Change.CardsLoaded(it.cards) as Change }
@@ -30,14 +29,9 @@ class DeckImagePresenter @Inject constructor(
                             .map { Change.ImageSaved as Change }
                 }
 
-        val merged = loadImages
+        return loadImages
                 .mergeWith(deckImageClicks)
                 .mergeWith(deckImageSelected)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe { ui.render(it) }
     }
 
     companion object {

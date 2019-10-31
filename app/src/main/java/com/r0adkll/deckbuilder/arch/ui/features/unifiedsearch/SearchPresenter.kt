@@ -2,14 +2,12 @@ package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 import android.annotation.SuppressLint
 import android.text.TextUtils
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi.State.Change
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import com.r0adkll.deckbuilder.util.extensions.logState
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
@@ -17,12 +15,12 @@ import javax.inject.Inject
 
 @FragmentScope
 class SearchPresenter @Inject constructor(
-        val ui: SearchUi,
+        ui: SearchUi,
         val intentions: SearchUi.Intentions,
         val repository: CardRepository
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
-    override fun start() {
+    override fun smashObservables(): Observable<Change> {
 
         val searchCards = intentions.searchCards()
                 .flatMap { getSearchCardsObservable(it) }
@@ -33,13 +31,8 @@ class SearchPresenter @Inject constructor(
                     getReSearchCardsObservable(filter)
                 }
 
-        val merged = searchCards
+        return searchCards
                 .mergeWith(filterChanges)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe(ui::render)
     }
 
     private fun getReSearchCardsObservable(filter: Filter): Observable<Change> {

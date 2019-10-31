@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import com.ftinc.kit.arch.presentation.BaseFragment
+import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
@@ -17,7 +20,6 @@ import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.preview.PdfPreviewActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State
@@ -25,17 +27,24 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.Tournamen
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.AgeDivisionUtils
-import com.r0adkll.deckbuilder.util.extensions.*
+import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.extensions.setDate
+import com.r0adkll.deckbuilder.util.extensions.snackbar
+import com.r0adkll.deckbuilder.util.extensions.toCalendar
+import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tournament_export.*
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
+import com.evernote.android.state.State as SaveState
 
-class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentExportUi.Intentions,
+class TournamentExportFragment : BaseFragment(),
+        TournamentExportUi,
+        TournamentExportUi.Intentions,
         TournamentExportUi.Actions {
 
-    @com.evernote.android.state.State override var state: State = State.DEFAULT
+    @SaveState override var state: State = State.DEFAULT
 
     @Inject lateinit var exportTask: ExportTask
     @Inject lateinit var renderer: TournamentExportRenderer
@@ -91,21 +100,15 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
         optionAgeDivisionJunior.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.JUNIOR)
         optionAgeDivisionSenior.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.SENIOR)
         optionAgeDivisionMasters.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.MASTERS)
-
-        renderer.start()
-        presenter.start()
-    }
-
-    override fun onDestroy() {
-        presenter.stop()
-        renderer.stop()
-        super.onDestroy()
     }
 
     override fun setupComponent() {
         getComponent(MultiExportComponent::class)
                 .plus(TournamentExportModule(this))
                 .inject(this)
+
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
     override fun render(state: State) {

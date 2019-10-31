@@ -15,6 +15,9 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
+import androidx.lifecycle.Lifecycle
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.util.UIUtils
@@ -22,12 +25,12 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
@@ -38,7 +41,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.bindParcelable
@@ -61,12 +63,11 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     @Inject lateinit var renderer: SetBrowserRenderer
     @Inject lateinit var presenter: SetBrowserPresenter
 
-    private val filterChanges: Relay<SetBrowserUi.BrowseFilter> = PublishRelay.create()
+    private val filterChanges: Relay<BrowseFilter> = PublishRelay.create()
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private lateinit var adapter: PokemonBuilderRecyclerAdapter
     
     private var statusBarHeight: Int = 0
-    
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,32 +145,27 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         adapter.emptyView = emptyView
         recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, spanCount)
         recycler.adapter = adapter
-
-        renderer.start()
-        presenter.start()
     }
 
-    override fun setupComponent(component: AppComponent) {
-        component.plus(SetBrowserModule(this))
+    override fun setupComponent() {
+        DeckApp.component
+                .plus(SetBrowserModule(this))
                 .inject(this)
+
+        delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
-    override fun onDestroy() {
-        presenter.stop()
-        renderer.stop()
-        super.onDestroy()
-    }
-
-    override fun render(state: SetBrowserUi.State) {
+    override fun render(state: State) {
         this.state = state
         renderer.render(state)
     }
 
-    override fun filterChanged(): Observable<SetBrowserUi.BrowseFilter> {
+    override fun filterChanged(): Observable<BrowseFilter> {
         return filterChanges
     }
 
-    override fun setFilter(filter: SetBrowserUi.BrowseFilter) {
+    override fun setFilter(filter: BrowseFilter) {
         for (i in (0 until tabs.tabCount)) {
             val tab = tabs.getTabAt(i)
             val tag = tab?.tag as? String

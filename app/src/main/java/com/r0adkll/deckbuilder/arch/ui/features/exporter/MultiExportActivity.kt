@@ -6,17 +6,17 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.ftinc.kit.arch.di.HasComponent
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo.PtcgoExportFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportFragment
-import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindParcelable
-import com.r0adkll.deckbuilder.internal.di.HasComponent
 import kotlinx.android.synthetic.main.activity_multi_export.*
 
 class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
@@ -37,8 +37,8 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
         tabs.setupWithViewPager(pager)
     }
 
-    override fun setupComponent(component: AppComponent) {
-        this.component = component.plus(MultiExportModule(task))
+    override fun setupComponent() {
+        this.component = DeckApp.component.plus(MultiExportModule(task))
         this.component.inject(this)
     }
 

@@ -6,7 +6,13 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import com.ftinc.kit.arch.presentation.BaseFragment
 import com.ftinc.kit.util.IntentUtils
 import com.jakewharton.rxbinding2.view.clicks
 import com.r0adkll.deckbuilder.R
@@ -14,7 +20,6 @@ import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -28,7 +33,7 @@ import javax.inject.Inject
 class PtcgoExportFragment : BaseFragment() {
 
     private val clipboard: ClipboardManager by lazy {
-        activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
 
     @Inject lateinit var schedulers: AppSchedulers

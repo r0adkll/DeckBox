@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
+import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -14,13 +15,12 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
@@ -73,6 +73,10 @@ class SetupActivity : BaseActivity() {
         }
     }
 
+    override fun setupComponent() {
+        DeckApp.component.inject(this)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
@@ -81,10 +85,6 @@ class SetupActivity : BaseActivity() {
                 handleSignInResult(result)
             }
         }
-    }
-
-    override fun setupComponent(component: AppComponent) {
-        component.inject(this)
     }
 
     private fun setupClient() {

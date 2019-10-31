@@ -4,21 +4,23 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Lifecycle
 import com.evernote.android.state.State
+import com.ftinc.kit.arch.di.HasComponent
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.kotlin.extensions.color
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
-import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
@@ -29,14 +31,12 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerA
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
+import com.r0adkll.deckbuilder.util.ImeUtils
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
 import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findEnum
-import com.r0adkll.deckbuilder.internal.di.HasComponent
-import com.r0adkll.deckbuilder.util.ImeUtils
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_search.*
@@ -120,34 +120,24 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         )
     }
 
-    override fun onStart() {
-        super.onStart()
-        renderer.start()
-        presenter.start()
+    override fun setupComponent() {
+        this.component = DeckApp.component.searchComponentBuilder()
+                .searchModule(SearchModule(this))
+                .filterableModule(FilterableModule(this, this))
+                .build()
+        this.component.inject(this)
+
+        delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
-    override fun onStop() {
-        presenter.stop()
-        renderer.stop()
-        super.onStop()
+    override fun getComponent(): FilterableComponent {
+        return component
     }
 
     override fun onPause() {
         super.onPause()
         ImeUtils.hideIme(searchView)
-    }
-
-    override fun setupComponent(component: AppComponent) {
-        this.component = component.searchComponentBuilder()
-                .searchModule(SearchModule(this))
-                .filterableModule(FilterableModule(this, this))
-                .build()
-
-        this.component.inject(this)
-    }
-
-    override fun getComponent(): FilterableComponent {
-        return component
     }
 
     override fun render(state: SearchUi.State) {

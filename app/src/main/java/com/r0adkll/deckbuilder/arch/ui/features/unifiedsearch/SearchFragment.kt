@@ -1,15 +1,23 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 import android.os.Bundle
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.*
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.RotateAnimation
+import android.view.animation.TranslateAnimation
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.arch.di.HasComponent
+import com.ftinc.kit.arch.presentation.BaseFragment
+import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
@@ -17,7 +25,6 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
@@ -31,7 +38,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchMo
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.HasComponent
 import com.r0adkll.deckbuilder.util.ImeUtils
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.pokemontcg.model.SuperType
@@ -39,8 +45,13 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
-class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
-        FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
+class SearchFragment : BaseFragment(),
+        SearchUi,
+        SearchUi.Intentions,
+        SearchUi.Actions,
+        FilterIntentions,
+        DrawerInteractor,
+        HasComponent<FilterableComponent> {
 
     private val drawer: DrawerLayout by lazy { view as DrawerLayout }
 
@@ -92,15 +103,22 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
             }
             false
         }
-
-        renderer.start()
-        presenter.start()
     }
 
-    override fun onDestroy() {
-        presenter.stop()
-        renderer.stop()
-        super.onDestroy()
+    override fun setupComponent() {
+        component = getComponent(DeckBuilderComponent::class)
+                .unifiedSearchComponentBuilder()
+                .unifiedSearchModule(UnifiedSearchModule(this))
+                .filterableModule(FilterableModule(this, this))
+                .build()
+        component.inject(this)
+
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
+    }
+
+    override fun getComponent(): FilterableComponent {
+        return component
     }
 
     override fun render(state: SearchUi.State) {
@@ -174,19 +192,6 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     override fun closeDrawer() {
         drawer.closeDrawer(GravityCompat.END)
-    }
-
-    override fun setupComponent() {
-        component = getComponent(DeckBuilderComponent::class)
-                .unifiedSearchComponentBuilder()
-                .unifiedSearchModule(UnifiedSearchModule(this))
-                .filterableModule(FilterableModule(this, this))
-                .build()
-        component.inject(this)
-    }
-
-    override fun getComponent(): FilterableComponent {
-        return component
     }
 
     fun wiggleCard(card: PokemonCard) {

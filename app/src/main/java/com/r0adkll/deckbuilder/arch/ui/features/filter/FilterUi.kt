@@ -1,13 +1,22 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
 import android.os.Parcelable
+import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.Rarity
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
-import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.*
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.AttributeSelected
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.CategoryChanged
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.ClearFilter
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.ExpansionSelected
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.ExpansionsLoaded
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.FieldChanged
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.RaritySelected
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.TypeSelected
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.ValueRangeChanged
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.ViewMoreSelected
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
 import com.r0adkll.deckbuilder.util.extensions.expanded
 import com.r0adkll.deckbuilder.util.extensions.standard
@@ -17,9 +26,7 @@ import io.pokemontcg.model.Type
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-interface FilterUi : StateRenderer<FilterUi.State> {
-
-    val state: State
+interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
 
     interface Intentions {
 
@@ -87,9 +94,9 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             val category: SuperType,
             val filters: Map<SuperType, FilterState>,
             val expansions: List<Expansion>
-    ) : Parcelable {
+    ) : Ui.State<State.Change>, Parcelable {
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when(change) {
             is ExpansionsLoaded -> {
                 val newFilters = filters.toMutableMap()
                 SuperType.values()
@@ -177,7 +184,7 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             return "State(category=$category, filters=$filters, expansions=${expansions.size})"
         }
 
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String) : Ui.State.Change(logText) {
             class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
             class CategoryChanged(val category: SuperType) : Change("user -> category changed to $category")
 

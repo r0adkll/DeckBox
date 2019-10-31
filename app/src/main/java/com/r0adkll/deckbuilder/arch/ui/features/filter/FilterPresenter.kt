@@ -1,11 +1,11 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
+import com.ftinc.kit.arch.presentation.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State
-import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign

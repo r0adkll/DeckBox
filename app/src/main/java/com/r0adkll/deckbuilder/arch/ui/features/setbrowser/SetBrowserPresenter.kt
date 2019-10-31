@@ -1,23 +1,22 @@
 package com.r0adkll.deckbuilder.arch.ui.features.setbrowser
 
 import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.State.Change
-import com.r0adkll.deckbuilder.util.extensions.logState
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
 class SetBrowserPresenter @Inject constructor(
-        val ui: SetBrowserUi,
+        ui: SetBrowserUi,
         val intentions: SetBrowserUi.Intentions,
         val repository: CardRepository
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
     @SuppressLint("RxSubscribeOnError")
-    override fun start() {
+    override fun smashObservables(): Observable<Change> {
 
         val loadCards = repository.findByExpansion(ui.state.setCode)
                 .map { Change.CardsLoaded(it) as Change }
@@ -27,12 +26,7 @@ class SetBrowserPresenter @Inject constructor(
         val changeFilter = intentions.filterChanged()
                 .map { Change.FilterChanged(it) as Change }
 
-        val merged = loadCards.mergeWith(changeFilter)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe { ui.render(it) }
+        return loadCards.mergeWith(changeFilter)
     }
 
     companion object {

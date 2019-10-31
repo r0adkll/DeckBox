@@ -3,15 +3,16 @@ package com.r0adkll.deckbuilder.arch.ui.features.settings
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import androidx.preference.Preference
-import androidx.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.widget.ImageView
+import androidx.preference.Preference
+import androidx.preference.PreferenceViewHolder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 
+@Suppress("unused")
 class ProfilePreference : Preference {
 
     var avatarUrl: Uri? = null

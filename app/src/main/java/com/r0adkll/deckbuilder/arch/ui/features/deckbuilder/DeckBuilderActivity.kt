@@ -4,23 +4,32 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.evernote.android.state.State
-import com.ftinc.kit.kotlin.extensions.*
+import com.ftinc.kit.arch.di.HasComponent
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
+import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.kotlin.extensions.invisible
+import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.kotlin.extensions.snackbar
+import com.ftinc.kit.kotlin.extensions.visible
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.BuildConfig
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
@@ -29,7 +38,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
@@ -49,17 +57,17 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.*
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
-import com.r0adkll.deckbuilder.internal.di.HasComponent
+import com.r0adkll.deckbuilder.util.MarketplaceHelper
+import com.r0adkll.deckbuilder.util.bindBoolean
+import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -293,22 +301,27 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
+    override fun getComponent(): DeckBuilderComponent {
+        return component
+    }
+
+    override fun setupComponent() {
+        this.component = DeckApp.component.deckBuilderComponentBuilder()
+                .sessionModule(SessionModule(sessionId))
+                .deckBuilderModule(DeckBuilderModule(this))
+                .build()
+        this.component.inject(this)
+
+        delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
+    }
+
     override fun onStart() {
         super.onStart()
-        renderer.start()
-        presenter.start()
-
-        // Add pending import if exists
         if (pendingImport != null) {
             editCardIntentions.addCardClicks.accept(pendingImport)
             pendingImport = null
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        presenter.stop()
-        renderer.stop()
     }
 
     override fun onDestroy() {
@@ -410,18 +423,6 @@ class DeckBuilderActivity : BaseActivity(),
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun getComponent(): DeckBuilderComponent {
-        return component
-    }
-
-    override fun setupComponent(component: AppComponent) {
-        this.component = component.deckBuilderComponentBuilder()
-                .sessionModule(SessionModule(sessionId))
-                .deckBuilderModule(DeckBuilderModule(this))
-                .build()
-        this.component.inject(this)
     }
 
     override fun render(state: DeckBuilderUi.State) {

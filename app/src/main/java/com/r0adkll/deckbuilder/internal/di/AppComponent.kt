@@ -20,8 +20,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeModule
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
-import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsComponent
-import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsModule
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di.SetBrowserComponent
@@ -49,7 +47,6 @@ interface AppComponent {
     fun plus(module: HomeModule): HomeComponent
     fun plus(module: CardDetailModule): CardDetailComponent
     fun plus(module: DeckImportModule): DeckImportComponent
-    fun plus(module: MissingCardsModule): MissingCardsComponent
     fun plus(module: MultiExportModule): MultiExportComponent
     fun plus(module: SetBrowserModule): SetBrowserComponent
     fun plus(module: DeckImageModule): DeckImageComponent

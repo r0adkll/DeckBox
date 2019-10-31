@@ -16,9 +16,9 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.Defaul
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.NetworkCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.PreviewCardDataSource
+import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
 import com.r0adkll.deckbuilder.arch.data.features.collection.source.FirestoreCollectionSource
 import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
-import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.FirestoreCommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.repository.DefaultCommunityRepository
@@ -28,8 +28,8 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRe
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RoomSessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
-import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.DefaultExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.DefaultExpansionRepository
+import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.DefaultExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.PreviewExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExporter
 import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
@@ -37,7 +37,6 @@ import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImp
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.CachingMarketplaceRepository
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.FirestoreMarketplaceSource
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.MarketplaceSource
-import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
 import com.r0adkll.deckbuilder.arch.data.features.preview.RemotePreviewRepository
@@ -62,7 +61,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
-import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
@@ -216,9 +214,6 @@ class DataModule {
 
     @Provides @AppScope
     fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
-
-    @Provides @AppScope
-    fun provideMissingCardRepository(repository: DefaultMissingCardRepository): MissingCardRepository = repository
 
     @Provides @AppScope
     fun provideOfflineRepository(repository: DefaultOfflineRepository): OfflineRepository = repository

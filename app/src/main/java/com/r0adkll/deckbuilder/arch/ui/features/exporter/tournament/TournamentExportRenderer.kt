@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 import android.annotation.SuppressLint
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
+import com.ftinc.kit.arch.presentation.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.dateOfBirth
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign

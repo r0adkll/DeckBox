@@ -1,27 +1,27 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
+import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
-import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State.*
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State
-import com.r0adkll.deckbuilder.util.extensions.logState
+import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State.Change
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
-import timber.log.Timber
 import javax.inject.Inject
 
 class TournamentExportPresenter @Inject constructor(
+        ui: TournamentExportUi,
         val exportTask: ExportTask,
-        val ui: TournamentExportUi,
         val intentions: TournamentExportUi.Intentions,
         val preferences: AppPreferences,
         val validator: DeckValidator
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
-    override fun start() {
+    @SuppressLint("RxSubscribeOnError")
+    override fun smashObservables(): Observable<Change> {
 
         val initialFormat = when {
             exportTask.sessionId != null -> validator.validate(exportTask.sessionId)
@@ -50,18 +50,6 @@ class TournamentExportPresenter @Inject constructor(
         val ageChange = preferences.playerAgeDivision.asObservable()
                 .map { Change.AgeDivisionChange(it) as Change }
 
-        val merged = initialFormat
-                .mergeWith(nameChange)
-                .mergeWith(idChange)
-                .mergeWith(dobChange)
-                .mergeWith(ageChange)
-                .mergeWith(formatChange)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe { ui.render(it) }
-
         /* Intentions directly change preferences */
 
         disposables += intentions.playerNameChanged()
@@ -75,5 +63,12 @@ class TournamentExportPresenter @Inject constructor(
 
         disposables += intentions.ageDivisionChanged()
                 .subscribe(preferences.playerAgeDivision.asConsumer())
+
+        return initialFormat
+                .mergeWith(nameChange)
+                .mergeWith(idChange)
+                .mergeWith(dobChange)
+                .mergeWith(ageChange)
+                .mergeWith(formatChange)
     }
 }

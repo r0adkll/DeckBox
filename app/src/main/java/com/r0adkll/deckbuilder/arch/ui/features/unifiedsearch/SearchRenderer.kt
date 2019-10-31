@@ -1,19 +1,18 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 import android.annotation.SuppressLint
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
-import com.r0adkll.deckbuilder.util.extensions.mapNullable
+import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
 
 class SearchRenderer(
-        val actions: SearchUi.Actions,
+        actions: SearchUi.Actions,
         main: Scheduler,
         comp: Scheduler
-) : DisposableStateRenderer<SearchUi.State>(main, comp) {
+) : UiBaseStateRenderer<SearchUi.State, SearchUi.State.Change, SearchUi.Actions>(actions, main, comp) {
 
     @SuppressLint("RxSubscribeOnError")
-    override fun start() {
+    override fun onStart() {
 
         disposables += state
                 .map { it.filter.isEmpty }
@@ -36,25 +35,6 @@ class SearchRenderer(
                         actions.showEmptyResults()
                     } else {
                         actions.showEmptyDefault()
-                    }
-                }
-
-        disposables += state
-                .map { it.isLoading }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe { actions.showLoading(it) }
-
-        disposables += state
-                .mapNullable { it.error }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe {
-                    val value = it.value
-                    if (value != null) {
-                        actions.showError(value)
-                    } else {
-                        actions.hideError()
                     }
                 }
 
