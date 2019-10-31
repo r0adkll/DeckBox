@@ -1,16 +1,15 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
-import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State.Change
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State
-import com.r0adkll.deckbuilder.util.extensions.logState
+import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State.Change
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,17 +17,17 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class CardDetailPresenter @Inject constructor(
-        val ui: CardDetailUi,
+        ui: CardDetailUi,
         val intentions: CardDetailUi.Intentions,
         val repository: CardRepository,
         val collectionRepository: CollectionRepository,
         val marketplaceRepository: MarketplaceRepository,
         val editor: EditRepository,
         val validator: DeckValidator
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
     @SuppressLint("RxSubscribeOnError")
-    override fun start() {
+    override fun smashObservables(): Observable<Change> {
 
         val observeSession = ui.state.sessionId?.let {
             editor.observeSession(it)
@@ -96,7 +95,7 @@ class CardDetailPresenter @Inject constructor(
                     Timber.d("Card removed from session")
                 }, { t -> Timber.e(t, "Error removing card from session")})
 
-        val merged = observeSession
+        return observeSession
                 .mergeWith(loadVariants)
                 .mergeWith(loadValidation)
                 .mergeWith(loadCollectionCount)
@@ -105,11 +104,6 @@ class CardDetailPresenter @Inject constructor(
                 .mergeWith(loadEvolvesTo)
                 .mergeWith(incrementCollectionCount)
                 .mergeWith(decrementCollectionCount)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe { ui.render(it) }
     }
 
     companion object {

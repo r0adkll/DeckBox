@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.browse
+package com.r0adkll.deckbuilder.arch.ui.features.setbrowser
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -24,17 +24,17 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.BrowseFilter
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.State
-import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.State
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -50,7 +50,6 @@ import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_set_browser.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions, SetBrowserUi.Actions {

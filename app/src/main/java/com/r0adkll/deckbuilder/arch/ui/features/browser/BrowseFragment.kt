@@ -15,12 +15,12 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.ExpansionRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.browser.di.BrowseModule
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.DialogUtils

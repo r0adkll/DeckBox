@@ -6,8 +6,6 @@ import com.r0adkll.deckbuilder.arch.data.DataModule
 import com.r0adkll.deckbuilder.arch.data.features.offline.service.CacheService
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.arch.ui.ShortcutActivity
-import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserComponent
-import com.r0adkll.deckbuilder.arch.ui.features.browse.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailComponent
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetComponent
@@ -26,6 +24,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsComp
 import com.r0adkll.deckbuilder.arch.ui.features.missingcards.di.MissingCardsModule
 import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di.SetBrowserComponent
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingComponent

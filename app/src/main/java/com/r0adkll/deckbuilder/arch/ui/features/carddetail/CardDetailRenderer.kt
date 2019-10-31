@@ -1,9 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.fromReleaseDate
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign

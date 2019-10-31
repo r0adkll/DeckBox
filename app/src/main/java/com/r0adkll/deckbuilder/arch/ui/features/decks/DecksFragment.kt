@@ -16,7 +16,6 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapter
@@ -24,6 +23,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event

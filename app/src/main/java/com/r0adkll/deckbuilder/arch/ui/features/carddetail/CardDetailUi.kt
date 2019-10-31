@@ -1,17 +1,15 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import android.os.Parcelable
+import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-interface CardDetailUi : StateRenderer<CardDetailUi.State> {
-
-    val state: State
+interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
 
     interface Intentions {
 
@@ -48,12 +46,12 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             val validation: Validation,
             val collectionCount: Int,
             val products: List<Product>?
-    ) : Parcelable {
+    ) : Ui.State<State.Change>, Parcelable {
 
         val hasCopies: Boolean
             get() = count?.let { it > 0 } == true
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when(change) {
             is Change.Error -> this.copy(error = error)
             is Change.CountChanged -> this.copy(count = change.count)
             is Change.Validated -> this.copy(validation = change.validation)
@@ -65,7 +63,7 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             is Change.PriceUpdated -> this.copy(products = change.products)
         }
 
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String): Ui.State.Change(logText) {
             class Error(val description: String): Change("error -> $description")
             class CountChanged(val count: Int) : Change("user -> number of copies changed $count")
             class VariantsLoaded(val cards: List<PokemonCard>) : Change("network -> variants loaded")

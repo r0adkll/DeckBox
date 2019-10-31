@@ -6,8 +6,6 @@ import android.content.Intent
 import android.graphics.DashPathEffect
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.core.app.ActivityOptionsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
@@ -18,31 +16,42 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
+import androidx.core.app.ActivityOptionsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.evernote.android.state.State
-import com.ftinc.kit.kotlin.extensions.*
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
+import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.kotlin.extensions.gone
+import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.kotlin.extensions.setVisibleWeak
+import com.ftinc.kit.kotlin.extensions.spToPx
+import com.ftinc.kit.kotlin.extensions.visible
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.marketplace.ProductSparkAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
 import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.bindOptionalParcelable
@@ -147,15 +156,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             Analytics.event(Event.SelectContent.Action("market_price_info"))
             MarketplaceHelper.showMarketPriceExplanationDialog(this)
         }
-
-        renderer.start()
-        presenter.start()
-    }
-
-    override fun onDestroy() {
-        presenter.stop()
-        renderer.stop()
-        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -201,9 +201,12 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         }
     }
 
-    override fun setupComponent(component: AppComponent) {
-        component.plus(CardDetailModule(this))
+    override fun setupComponent() {
+        DeckApp.component.plus(CardDetailModule(this))
                 .inject(this)
+
+        delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
     override fun render(state: CardDetailUi.State) {

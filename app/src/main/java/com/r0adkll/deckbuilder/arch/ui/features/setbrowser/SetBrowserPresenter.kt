@@ -1,10 +1,10 @@
-package com.r0adkll.deckbuilder.arch.ui.features.browse
+package com.r0adkll.deckbuilder.arch.ui.features.setbrowser
 
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.State.Change
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi.State
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.State
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.State.Change
 import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber

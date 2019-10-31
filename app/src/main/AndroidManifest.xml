@@ -68,7 +68,7 @@
         <activity android:name=".arch.ui.features.missingcards.MissingCardsActivity" />
         <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
         <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
-        <activity android:name=".arch.ui.features.browse.SetBrowserActivity"
+        <activity android:name=".arch.ui.features.setbrowser.SetBrowserActivity"
             android:theme="@style/Theme.DeckBuilder.Translucent" />
 
         <activity android:name=".arch.ui.features.testing.DeckTestingActivity"

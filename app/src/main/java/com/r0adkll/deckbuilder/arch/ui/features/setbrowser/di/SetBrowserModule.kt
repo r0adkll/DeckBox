@@ -1,8 +1,8 @@
-package com.r0adkll.deckbuilder.arch.ui.features.browse.di
+package com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di
 
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserRenderer
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserUi
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserActivity
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserRenderer
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi
 import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
