@@ -26,7 +26,6 @@ object EntityMapper {
                 deck.description,
                 deck.image?.uri?.toString(),
                 deck.collectionOnly,
-                /* Deprecated */ emptyList(),
                 deck.cards.stack().map { to(it) },
                 /* Deprecated */ null,
                 Timestamp.now()
@@ -139,10 +138,7 @@ object EntityMapper {
     }
 
     fun DeckEntity.metadata(): List<CardMetadataEntity> {
-        return this.cardMetadata
-                ?: this.cards.stackCards().map {
-                    to(it.first, it.second)
-                }
+        return this.cardMetadata ?: emptyList()
     }
 
     fun List<PokemonCardEntity>.stackCards(): List<Pair<PokemonCardEntity, Int>> {

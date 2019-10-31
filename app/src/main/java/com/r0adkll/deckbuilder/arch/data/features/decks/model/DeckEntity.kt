@@ -10,8 +10,6 @@ class DeckEntity(
         val image: String? = null,
         val collectionOnly: Boolean? = false,
 
-        @Deprecated("No longer used", replaceWith = ReplaceWith("cardMetadata"))
-        val cards: List<PokemonCardEntity> = emptyList(),
         val cardMetadata: List<CardMetadataEntity>? = null,
 
         @Deprecated("See Issue#86: Migrating to [Timestamp] object in firebase")

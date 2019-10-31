@@ -11,7 +11,6 @@ import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 
-
 /**
  * Custom view for renderering all the different validation formats of tournament play
  * i.e. Standard, Expanded, Unlimited, Theme (this is a special one
@@ -48,26 +47,22 @@ class PokemonFormatView @JvmOverloads constructor(
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-
     init {
         paint.color = strokeColor
         paint.strokeWidth = strokeWidth
         paint.style = Paint.Style.STROKE
 
         val a = context.obtainStyledAttributes(attrs, R.styleable.PokemonFormatView, defStyleAttr, 0)
-        a?.let {
-            val formatValue = a.getInteger(R.styleable.PokemonFormatView_format, 0)
-            format = Format.values()[formatValue]
+        val formatValue = a.getInteger(R.styleable.PokemonFormatView_format, 0)
+        format = Format.values()[formatValue]
 
-            strokeWidth = a.getDimension(R.styleable.PokemonFormatView_strokeWidth, strokeWidth)
-            strokeColor = a.getColor(R.styleable.PokemonFormatView_strokeColor, strokeColor)
-            fillColor = a.getColor(R.styleable.PokemonFormatView_fillColor, fillColor)
-            ringPadding = a.getDimension(R.styleable.PokemonFormatView_ringPadding, ringPadding)
+        strokeWidth = a.getDimension(R.styleable.PokemonFormatView_strokeWidth, strokeWidth)
+        strokeColor = a.getColor(R.styleable.PokemonFormatView_strokeColor, strokeColor)
+        fillColor = a.getColor(R.styleable.PokemonFormatView_fillColor, fillColor)
+        ringPadding = a.getDimension(R.styleable.PokemonFormatView_ringPadding, ringPadding)
 
-            a.recycle()
-        }
+        a.recycle()
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -76,7 +71,6 @@ class PokemonFormatView @JvmOverloads constructor(
         nodeRadius = ((measuredWidth - viewPadding) / 3f) / 2f
         ringRadius = ((measuredWidth - viewPadding) / 2f) - ringPadding
     }
-
 
     override fun onDraw(canvas: Canvas) {
         drawRing(canvas)
@@ -89,7 +83,6 @@ class PokemonFormatView @JvmOverloads constructor(
         }
     }
 
-
     private fun drawNodes(canvas: Canvas, vararg angles: Float) {
         val cx = measuredWidth / 2f
         val cy = measuredHeight / 2f
@@ -100,13 +93,11 @@ class PokemonFormatView @JvmOverloads constructor(
         }
     }
 
-
     private fun drawRing(canvas: Canvas) {
         val cx = measuredWidth / 2f
         val cy = measuredHeight / 2f
         drawCircle(canvas, cx, cy, ringRadius)
     }
-
 
     private fun drawCircle(canvas: Canvas, cx: Float, cy: Float, radius: Float) {
         paint.style = Paint.Style.FILL
@@ -116,7 +107,6 @@ class PokemonFormatView @JvmOverloads constructor(
         paint.color = strokeColor
         canvas.drawCircle(cx, cy, radius, paint)
     }
-
 
     private fun pointOnCircle(angleInDegrees: Float, radius: Float): PointF {
         val angleInRadians = Math.toRadians(angleInDegrees.toDouble())

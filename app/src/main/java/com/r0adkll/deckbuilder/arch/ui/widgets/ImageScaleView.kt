@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import com.r0adkll.deckbuilder.R
 
 import androidx.appcompat.widget.AppCompatImageView
-
+import kotlin.math.max
 
 
 /**
@@ -72,7 +72,7 @@ open class ImageScaleView @JvmOverloads constructor(
             val originalImageWidth = getDrawable().intrinsicWidth.toFloat()
             val originalImageHeight = getDrawable().intrinsicHeight.toFloat()
 
-            var usedScaleFactor = 1f
+            var usedScaleFactor: Float
 
 //            if (frameWidth > originalImageWidth || frameHeight > originalImageHeight) {
                 // If frame is bigger than image
@@ -110,14 +110,13 @@ open class ImageScaleView @JvmOverloads constructor(
     private fun recomputeImgMatrix() {
         val drawable = drawable
         if (drawable != null && matrixType != MatrixCropType.NONE) {
-
-            val frameWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-            val frameHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+            val frameWidth = width - paddingLeft - paddingRight
+            val frameHeight = height - paddingTop - paddingBottom
 
             val originalImageWidth = getDrawable().intrinsicWidth.toFloat()
             val originalImageHeight = getDrawable().intrinsicHeight.toFloat()
 
-            var usedScaleFactor = 1f
+            var usedScaleFactor: Float
 
 //            if (frameWidth > originalImageWidth || frameHeight > originalImageHeight) {
                 // If frame is bigger than image
@@ -127,7 +126,7 @@ open class ImageScaleView @JvmOverloads constructor(
                 val fitHorizontallyScaleFactor = frameWidth / originalImageWidth
                 val fitVerticallyScaleFactor = frameHeight / originalImageHeight
 
-                usedScaleFactor = Math.max(fitHorizontallyScaleFactor, fitVerticallyScaleFactor)
+                usedScaleFactor = max(fitHorizontallyScaleFactor, fitVerticallyScaleFactor)
 //            }
 
             val newImageWidth = originalImageWidth * usedScaleFactor
@@ -139,7 +138,6 @@ open class ImageScaleView @JvmOverloads constructor(
             when (matrixType) {
                 MatrixCropType.TOP_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, 0f)
                 MatrixCropType.BOTTOM_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, frameHeight - newImageHeight)
-
                 else -> {
                 }
             }

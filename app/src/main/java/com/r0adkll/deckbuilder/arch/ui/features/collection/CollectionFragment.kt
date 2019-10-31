@@ -76,8 +76,8 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
                 .plus(CollectionModule(this))
                 .inject(this)
 
-        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_RESUME)
-        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_RESUME)
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
     override fun render(state: State) {

@@ -78,8 +78,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         }
         adapter.emptyView = empty_view
 
-        val layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) as RecyclerView.LayoutManager
+        recycler.layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
+            StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL)
         } else {
             val lm = GridLayoutManager(activity, 2)
             lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -96,7 +96,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             lm
         }
 
-        recycler.layoutManager = layoutManager
         recycler.adapter = adapter
 
         fab.setOnClickListener {
@@ -143,14 +142,14 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         renderer.start()
         presenter.start()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         renderer.stop()
         presenter.stop()
     }

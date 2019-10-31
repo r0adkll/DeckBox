@@ -6,21 +6,16 @@ import android.util.AttributeSet
 import com.r0adkll.deckbuilder.R
 import kotlin.math.roundToInt
 
-
 class AspectRatioImageView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
 
-    // The Ratio Type
     var ratioType = RATIO_WIDTH
-
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.AspectRatioImageView, defStyleAttr, 0)
-        a?.let {
-            ratioType = a.getInt(R.styleable.AspectRatioImageView_ratioType, RATIO_WIDTH)
-            a.recycle()
-        }
+        ratioType = a.getInt(R.styleable.AspectRatioImageView_ratioType, RATIO_WIDTH)
+        a.recycle()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

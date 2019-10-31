@@ -12,12 +12,13 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.ftinc.kit.kotlin.extensions.clear
 import com.ftinc.kit.util.IntentUtils
-import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.auth.api.signin.GoogleSignInResult
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -57,9 +58,9 @@ class SettingsActivity : BaseActivity() {
     override fun setupComponent(component: AppComponent) {
     }
 
-    class SettingsFragment : PreferenceFragmentCompat(), GoogleApiClient.OnConnectionFailedListener {
+    class SettingsFragment : PreferenceFragmentCompat() {
 
-        private var googleClient: GoogleApiClient? = null
+        private lateinit var googleSignInClient: GoogleSignInClient
 
         @Inject lateinit var preferences: AppPreferences
         @Inject lateinit var accountRepository: AccountRepository
@@ -86,7 +87,7 @@ class SettingsActivity : BaseActivity() {
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             super.onActivityResult(requestCode, resultCode, data)
             if (requestCode == RC_SIGN_IN) {
-                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+                val result = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleSignInResult(result)
             }
         }
@@ -94,6 +95,9 @@ class SettingsActivity : BaseActivity() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             DeckApp.component.inject(this)
             addPreferencesFromResource(R.xml.settings_preferences)
+        }
+
+        override fun onBindPreferences() {
             setupPreferences()
         }
 
@@ -105,7 +109,11 @@ class SettingsActivity : BaseActivity() {
                 "pref_account_migrate_collection" -> {
                     // Now we need to migrate any existing local decks to their account
                     view?.let {
-                        migrationSnackbar = Snackbar.make(it, R.string.account_migration_started, Snackbar.LENGTH_INDEFINITE)
+                        migrationSnackbar = Snackbar.make(
+                                it,
+                                R.string.account_migration_started,
+                                Snackbar.LENGTH_INDEFINITE
+                        )
                         migrationSnackbar?.show()
                     }
 
@@ -118,7 +126,8 @@ class SettingsActivity : BaseActivity() {
                                 }
                             }, { e ->
                                 view?.let { v ->
-                                    migrationSnackbar = Snackbar.make(v, e.localizedMessage, Snackbar.LENGTH_SHORT)
+                                    migrationSnackbar = Snackbar.make(v, e.localizedMessage ?:
+                                    "Uh-oh! We encountered an error migrating your collection", Snackbar.LENGTH_SHORT)
                                     migrationSnackbar?.show()
                                 }
                             })
@@ -175,7 +184,7 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_cache_manage" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "manage_cache"))
-                    startActivity(ManageOfflineActivity.createIntent(activity!!))
+                    startActivity(ManageOfflineActivity.createIntent(requireActivity()))
                     true
                 }
                 "pref_developer_reset_preview" -> {
@@ -189,21 +198,29 @@ class SettingsActivity : BaseActivity() {
 
                     val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                     clipboardManager?.let { cm ->
-                        cm.setPrimaryClip(ClipData("deckbox user id", arrayOf("text/plain"), ClipData.Item(preference.summary)))
+                        cm.setPrimaryClip(ClipData(
+                                "deckbox user id",
+                                arrayOf("text/plain"),
+                                ClipData.Item(preference.summary)
+                        ))
                         toast("User Id copied to clipboard")
                     }
                     true
                 }
                 "pref_account_signout" -> {
                     Analytics.event(Event.Logout)
-                    Shortcuts.clearShortcuts(activity!!)
+                    Shortcuts.clearShortcuts(requireActivity())
+
                     preferences.deviceId = null
                     preferences.offlineId.delete()
+
                     FirebaseAuth.getInstance().signOut()
-                    if (googleClient != null && googleClient?.isConnected == true) {
-                        googleClient?.clearDefaultAccountAndReconnect()
-                    }
-                    val intent = SetupActivity.createIntent(activity!!).clear()
+                    googleSignInClient.signOut()
+                            .addOnCompleteListener {
+                                Timber.i("User signed out of Google")
+                            }
+
+                    val intent = SetupActivity.createIntent(requireActivity()).clear()
                     startActivity(intent)
                     activity?.finish()
                     true
@@ -211,12 +228,6 @@ class SettingsActivity : BaseActivity() {
                 else -> super.onPreferenceTreeClick(preference)
             }
         }
-
-
-        override fun onConnectionFailed(p0: ConnectionResult) {
-            Timber.e("onConnectionFailed(${p0.errorCode} :: ${p0.errorMessage}")
-        }
-
 
         private fun setupPreferences() {
             val profilePref = findPreference<ProfilePreference>("pref_account_profile")
@@ -288,31 +299,25 @@ class SettingsActivity : BaseActivity() {
                     .getString("pref_developer_test_user_id", null) ?: "Enter a user's id to test with"
         }
 
-
         private fun setupClient() {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(getString(R.string.default_web_client_id))
                     .requestEmail()
                     .build()
 
-            googleClient = GoogleApiClient.Builder(activity!!)
-                    .enableAutoManage(activity as androidx.fragment.app.FragmentActivity, this)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build()
+            googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
         }
 
-
         private fun signIn() {
-            val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleClient)
+            val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-
-        private fun handleSignInResult(result: GoogleSignInResult) {
-            if (result.isSuccess) {
+        private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+            try {
+                val account = completedTask.getResult(ApiException::class.java)!!
                 val firebaseAuth = FirebaseAuth.getInstance()
-                val acct = result.signInAccount
-                val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                 val currentUser = firebaseAuth.currentUser
                 if (currentUser != null && currentUser.isAnonymous) {
                     currentUser.linkWithCredential(credential)
@@ -356,7 +361,11 @@ class SettingsActivity : BaseActivity() {
                                                 }
                                             }, { e ->
                                                 view?.let { v ->
-                                                    migrationSnackbar = Snackbar.make(v, e.localizedMessage, Snackbar.LENGTH_SHORT)
+                                                    migrationSnackbar = Snackbar.make(
+                                                            v,
+                                                            e.localizedMessage ?: "Uh-oh! We encountered an error migrating your account",
+                                                            Snackbar.LENGTH_SHORT
+                                                    )
                                                     migrationSnackbar?.show()
                                                 }
                                             })
@@ -367,9 +376,8 @@ class SettingsActivity : BaseActivity() {
                                 }
                             }
                 }
-            }
-            else {
-                Timber.e("Unable to link account: ${result.status}")
+            } catch (e: ApiException) {
+                Timber.e("Unable to link account: ${e.statusCode}")
                 snackbar("Unable to link account.")
             }
         }
@@ -378,7 +386,6 @@ class SettingsActivity : BaseActivity() {
             private const val RC_SIGN_IN = 100
         }
     }
-
 
     companion object {
 

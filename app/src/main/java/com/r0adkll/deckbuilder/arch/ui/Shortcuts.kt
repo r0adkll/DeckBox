@@ -1,18 +1,21 @@
 package com.r0adkll.deckbuilder.arch.ui
 
-
 import android.content.Context
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Build
-import androidx.annotation.RequiresApi
 import android.view.View
+import androidx.annotation.RequiresApi
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.CustomViewTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.r0adkll.deckbuilder.GlideApp
@@ -22,14 +25,12 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import timber.log.Timber
 
-
 /**
  * Helper class for creating and managing shortcuts in the home launcher using [ShortcutManager]
  */
 object Shortcuts {
 
     const val CREATE_DECK_ID = "create-new-deck"
-
 
     /**
      * Report the usage of a shortcut by it's Id
@@ -39,7 +40,6 @@ object Shortcuts {
             context.shortcutManager().reportShortcutUsed(shortcutId)
         }
     }
-
 
     /**
      * Add a deck shortcut to the list of shortcuts so user's can quickly access the edit screen
@@ -82,7 +82,6 @@ object Shortcuts {
         }
     }
 
-
     fun balanceShortcuts(context: Context, decks: List<Deck>) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             val shortcutManager = context.shortcutManager()
@@ -99,7 +98,6 @@ object Shortcuts {
         }
     }
 
-
     /**
      * Clear all shortcuts out
      */
@@ -111,7 +109,6 @@ object Shortcuts {
             }
         }
     }
-
 
     /**
      * Asynchronously generate the deck image and update the shortcut with it
@@ -172,7 +169,6 @@ object Shortcuts {
         }
     }
 
-
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     private fun updateDeckShortcutIcon(context: Context, deck: Deck, bitmap: Bitmap) {
         val shortcutManager = context.shortcutManager()
@@ -192,7 +188,6 @@ object Shortcuts {
             shortcutManager.updateShortcuts(listOf(updatedShortcut))
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     private fun Context.shortcutManager(): ShortcutManager {

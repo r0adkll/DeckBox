@@ -48,25 +48,23 @@ class PokemonTypeView @JvmOverloads constructor(
         paint.color = highlightColor
 
         val a = context.obtainStyledAttributes(attrs, R.styleable.PokemonTypeView, defStyleAttr, 0)
-        a?.let {
-            val pokeType = a.getInteger(R.styleable.PokemonTypeView_pokeType, 0)
-            type = when(pokeType) {
-                0 -> COLORLESS
-                1 -> FIRE
-                2 -> GRASS
-                3 -> WATER
-                4 -> LIGHTNING
-                5 -> FIGHTING
-                6 -> PSYCHIC
-                7 -> METAL
-                8 -> DRAGON
-                9 -> FAIRY
-                10 -> DARKNESS
-                else -> COLORLESS
-            }
-
-            a.recycle()
+        val pokeType = a.getInteger(R.styleable.PokemonTypeView_pokeType, 0)
+        type = when(pokeType) {
+            0 -> COLORLESS
+            1 -> FIRE
+            2 -> GRASS
+            3 -> WATER
+            4 -> LIGHTNING
+            5 -> FIGHTING
+            6 -> PSYCHIC
+            7 -> METAL
+            8 -> DRAGON
+            9 -> FAIRY
+            10 -> DARKNESS
+            else -> COLORLESS
         }
+
+        a.recycle()
     }
 
     override fun onDraw(canvas: Canvas?) {

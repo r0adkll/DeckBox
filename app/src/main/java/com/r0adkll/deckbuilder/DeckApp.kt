@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.r0adkll.deckbuilder
 
 import android.app.Application
@@ -6,7 +8,6 @@ import com.google.firebase.FirebaseApp
 import com.r0adkll.deckbuilder.internal.AppDelegate
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.LoggingAnalyticInterface
-import com.r0adkll.deckbuilder.internal.analytics.UserProperty
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.internal.di.AppModule
 import com.r0adkll.deckbuilder.internal.di.DaggerAppComponent
@@ -73,12 +74,12 @@ class DeckApp : Application() {
             if (e is NullPointerException || e is IllegalArgumentException) {
                 // that's likely a bug in the application
                 Thread.currentThread().uncaughtExceptionHandler
-                        .uncaughtException(Thread.currentThread(), e)
+                        ?.uncaughtException(Thread.currentThread(), e)
             }
             if (e is IllegalStateException) {
                 // that's a bug in RxJava or in a custom operator
                 Thread.currentThread().uncaughtExceptionHandler
-                        .uncaughtException(Thread.currentThread(), e)
+                        ?.uncaughtException(Thread.currentThread(), e)
             }
             Timber.w(ex, "Undeliverable exception received, not sure what to do")
         }

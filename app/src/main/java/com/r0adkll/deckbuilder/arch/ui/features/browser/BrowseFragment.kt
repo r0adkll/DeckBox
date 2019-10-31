@@ -31,7 +31,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_browse.*
 import javax.inject.Inject
 
-
 class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Intentions {
 
     override var state: BrowseUi.State = BrowseUi.State.DEFAULT
@@ -48,7 +47,6 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_browse, container, false)
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -85,21 +83,22 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
                 R.color.poketype_dark
         )
 
-        renderer.start()
-        presenter.start()
-
         actionSearch.setOnClickListener {
             startActivity(SearchActivity.createIntent(it.context))
         }
     }
 
-
-    override fun onDestroy() {
-        presenter.stop()
-        renderer.stop()
-        super.onDestroy()
+    override fun onStart() {
+        super.onStart()
+        renderer.start()
+        presenter.start()
     }
 
+    override fun onStop() {
+        super.onStop()
+        presenter.stop()
+        renderer.stop()
+    }
 
     override fun setupComponent() {
         getComponent(HomeComponent::class)
@@ -107,12 +106,10 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
                 .inject(this)
     }
 
-
     override fun render(state: BrowseUi.State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun refreshExpansions(): Observable<Unit> {
         return swipeRefresh.refreshes()
@@ -121,14 +118,12 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
                 }
     }
 
-
     override fun downloadExpansion(): Observable<Expansion> {
         return downloadClicks
                 .doOnNext {
                     Analytics.event(Event.SelectContent.Action("download_expansion", it.name))
                 }
     }
-
 
     override fun downloadFormatExpansions(): Observable<List<Expansion>> {
         return downloadFormatClicks
@@ -160,7 +155,6 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
                 }
     }
 
-
     override fun hideOfflineOutline(): Observable<Unit> {
         return dismissClicks
                 .doOnNext {
@@ -172,22 +166,18 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
         adapter.setExpansionItems(items)
     }
 
-
     override fun showLoading(isLoading: Boolean) {
         emptyView.setLoading(isLoading)
         swipeRefresh.isRefreshing = isLoading
     }
 
-
     override fun showError(description: String) {
         emptyView.emptyMessage = description
     }
 
-
     override fun hideError() {
         emptyView.setEmptyMessage(R.string.empty_browse_message)
     }
-
 
     companion object {
 

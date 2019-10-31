@@ -11,7 +11,6 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.R
 
-
 class CollectionProgressBar @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
@@ -50,18 +49,15 @@ class CollectionProgressBar @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val renderBounds = RectF()
 
-
     init {
         paint.strokeWidth = dpToPx(1f)
 
         val a = context.obtainStyledAttributes(attrs, R.styleable.CollectionProgressBar, defStyleAttr, 0)
-        a?.let {
-            trackColor = it.getColor(R.styleable.CollectionProgressBar_trackColor, color(R.color.white50))
-            progressColor = it.getColor(R.styleable.CollectionProgressBar_progressColor, color(R.color.secondaryColor))
-            borderColor = it.getColor(R.styleable.CollectionProgressBar_borderColor, Color.WHITE)
-            borderWidth = it.getDimension(R.styleable.CollectionProgressBar_borderWidth, dpToPx(1f))
-            a.recycle()
-        }
+        trackColor = a.getColor(R.styleable.CollectionProgressBar_trackColor, color(R.color.white50))
+        progressColor = a.getColor(R.styleable.CollectionProgressBar_progressColor, color(R.color.secondaryColor))
+        borderColor = a.getColor(R.styleable.CollectionProgressBar_borderColor, Color.WHITE)
+        borderWidth = a.getDimension(R.styleable.CollectionProgressBar_borderWidth, dpToPx(1f))
+        a.recycle()
 
         if (isInEditMode) {
             progress = .33f

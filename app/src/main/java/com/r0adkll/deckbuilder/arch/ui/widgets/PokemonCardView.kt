@@ -179,7 +179,7 @@ class PokemonCardView @JvmOverloads constructor(
         }
 
         // Draw from cache
-        canvas.drawBitmap(cacheBitmap!!, bounds!!.left.toFloat(), bounds!!.top.toFloat(), null)
+        canvas.drawBitmap(cacheBitmap!!, bounds.left.toFloat(), bounds.top.toFloat(), null)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

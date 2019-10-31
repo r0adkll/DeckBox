@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
-import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
@@ -141,9 +140,9 @@ class DeckImageView @JvmOverloads constructor(
     }
 
 
-    override fun setFrame(l: Int, t: Int, r: Int, b: Int): Boolean {
-        val changed = super.setFrame(l, t, r, b)
-        mBounds = Rect(0, 0, r - l, b - t)
+    override fun setFrame(frameLeft: Int, frameTop: Int, frameRight: Int, frameBottom: Int): Boolean {
+        val changed = super.setFrame(frameLeft, frameTop, frameRight, frameBottom)
+        mBounds = Rect(0, 0, frameRight - frameLeft, frameBottom - frameTop)
         mBoundsF = RectF(mBounds)
 
         if (mBorderDrawable != null) {

@@ -32,26 +32,14 @@ class MarqueeCardContainer @JvmOverloads constructor(
     private var imageIndex = 0
 
     init {
-        // Initialize at least 5 views
         (0..NUMBER_CARDS).forEach { _ ->
             addNewCard()
         }
 
         val a = context.obtainStyledAttributes(attrs, R.styleable.MarqueeCardContainer, defStyleAttr, 0)
-        a?.let {
-            cardWidth = it.getDimensionPixelSize(R.styleable.MarqueeCardContainer_cardWidth, dipToPx(CARD_WIDTH))
-            a.recycle()
-        }
+        cardWidth = a.getDimensionPixelSize(R.styleable.MarqueeCardContainer_cardWidth, dipToPx(CARD_WIDTH))
+        a.recycle()
     }
-
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        val cardHeight = measuredHeight - (2 * dipToPx(64f))
-        cardWidth = (cardHeight / PokemonCardView.RATIO).toInt()
-    }
-
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -62,7 +50,6 @@ class MarqueeCardContainer @JvmOverloads constructor(
         disposable?.dispose()
         super.onDetachedFromWindow()
     }
-
 
     @SuppressLint("RxSubscribeOnError", "RxDefaultScheduler")
     private fun setupAnimator() {
@@ -84,7 +71,6 @@ class MarqueeCardContainer @JvmOverloads constructor(
                     }
                 }
     }
-
 
     private fun addNewCard() {
         var view = cardPool.acquire()

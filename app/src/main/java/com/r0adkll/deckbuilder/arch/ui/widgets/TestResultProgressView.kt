@@ -47,6 +47,9 @@ class TestResultProgressView @JvmOverloads constructor(
         textPaint.textSize = spToPx(20f)
         textPaint.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         val width = textPaint.measureText("Mulligan")
+
+        // This should be updated when we move the minSdk to 23+
+        @Suppress("DEPRECATION")
         mulliganText = StaticLayout("Mulligan", textPaint, width.toInt(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false)
 
         if (isInEditMode) {

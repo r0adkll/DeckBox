@@ -409,6 +409,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
                 request = request.placeholder(R.drawable.pokemon_card_back)
             }
 
+            @Suppress("PLUGIN_WARNING")
             request.into(image ?: tabletImage)
 
             // Load expansion symbol

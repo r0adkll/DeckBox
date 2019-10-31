@@ -267,7 +267,9 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
                 progressBar.trackColor = secondaryColor
                 val size = appbar?.menu?.size() ?: 0
                 (0 until size).forEach {
-                    appbar?.menu?.getItem(it)?.icon?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+                    appbar?.menu?.getItem(it)?.let { item ->
+                        MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(color))
+                    }
                 }
             } else {
                 val color = Color.WHITE
@@ -278,7 +280,9 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
                 progressBar.trackColor = secondaryColor
                 val size = appbar?.menu?.size() ?: 0
                 (0 until size).forEach {
-                    appbar?.menu?.getItem(it)?.icon?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+                    appbar?.menu?.getItem(it)?.let { item ->
+                        MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(color))
+                    }
                 }
             }
         }

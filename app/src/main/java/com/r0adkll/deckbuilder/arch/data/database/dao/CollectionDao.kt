@@ -90,7 +90,7 @@ abstract class CollectionDao {
                     card.id,
                     1,
                     card.expansion!!.code,
-                    card.expansion!!.series
+                    card.expansion.series
             )
         }
         insertCounts(newCountEntities)

@@ -11,10 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        app:cardWidth="@dimen/marquee_card_width">
-
-
-    </com.r0adkll.deckbuilder.arch.ui.widgets.MarqueeCardContainer>
+        app:cardWidth="@dimen/marquee_card_width"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +43,7 @@
             />
 
         <com.google.android.gms.common.SignInButton
-            android:id="@+id/action_signin"
+            android:id="@+id/actionSignIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -54,7 +52,7 @@
             />
 
         <TextView
-            android:id="@+id/action_continue"
+            android:id="@+id/actionContinue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

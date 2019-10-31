@@ -26,8 +26,8 @@ class AlphaTransformation(val alpha: Float) : BitmapTransformation() {
         return bitmap
     }
 
-    override fun equals(o: Any?): Boolean {
-        return o is AlphaTransformation
+    override fun equals(other: Any?): Boolean {
+        return other is AlphaTransformation
     }
 
     override fun hashCode(): Int {

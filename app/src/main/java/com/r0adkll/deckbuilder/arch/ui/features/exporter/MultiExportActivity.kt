@@ -19,14 +19,12 @@ import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.internal.di.HasComponent
 import kotlinx.android.synthetic.main.activity_multi_export.*
 
-
 class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
 
     private val task: ExportTask by bindParcelable(EXTRA_TASK)
 
     private lateinit var component: MultiExportComponent
     private lateinit var adapter: ExportPagerAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,26 +37,22 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
         tabs.setupWithViewPager(pager)
     }
 
-
     override fun setupComponent(component: AppComponent) {
         this.component = component.plus(MultiExportModule(task))
         this.component.inject(this)
     }
 
-
     override fun getComponent(): MultiExportComponent = component
-
 
     class ExportPagerAdapter(
             val context: Context,
-            fragmentManager: androidx.fragment.app.FragmentManager
-    ) : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
+            fragmentManager: FragmentManager
+    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-        override fun getItem(position: Int): androidx.fragment.app.Fragment = when(position) {
+        override fun getItem(position: Int): Fragment = when(position) {
             0 -> TournamentExportFragment.newInstance()
             else -> PtcgoExportFragment.newInstance()
         }
-
 
         override fun getPageTitle(position: Int): CharSequence? = when(position) {
             0 -> context.getString(R.string.tab_export_tournament)
@@ -68,7 +62,6 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
         override fun getCount(): Int = 2
     }
 
-
     companion object {
         const val EXTRA_TASK = "MultiExportActivity.ExportTask"
 
@@ -77,7 +70,6 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
             intent.putExtra(EXTRA_TASK, ExportTask(deck.id, null))
             return intent
         }
-
 
         fun createIntent(context: Context, sessionId: Long): Intent {
             val intent = Intent(context, MultiExportActivity::class.java)

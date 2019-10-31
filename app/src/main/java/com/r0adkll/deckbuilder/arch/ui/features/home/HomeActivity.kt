@@ -159,7 +159,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
 
     class HomePagerAdapter(
             fragmentManager: FragmentManager
-    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_SET_USER_VISIBLE_HINT) {
+    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getItem(position: Int): Fragment = when(position) {
             0 -> DecksFragment.newInstance()
@@ -168,7 +168,7 @@ class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProg
             else -> throw IllegalArgumentException("Invalid pager position")
         }
 
-        override fun getCount(): Int = 3 // TODO: Increase when we add more screens
+        override fun getCount(): Int = 3
     }
 
     companion object {

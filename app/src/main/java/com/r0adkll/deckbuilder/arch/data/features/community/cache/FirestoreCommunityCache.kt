@@ -23,10 +23,8 @@ class FirestoreCommunityCache @Inject constructor(
 
     override fun getDeckTemplates(): Observable<List<DeckTemplate>> {
         val tournaments = getTemplateCollection(TOURNAMENTS)
-        val themes = getTemplateCollection(THEMES)
-
         val query = tournaments.whereEqualTo("rank", 1)
-        val tournamentTemplates = getCollectionItems(query, TournamentDeckTemplateEntity::class)
+        return getCollectionItems(query, TournamentDeckTemplateEntity::class)
                 .flatMap { decks ->
                     val cardIds = decks.flatMap {
                         it.cardMetadata!!.map { it.id }
@@ -39,22 +37,7 @@ class FirestoreCommunityCache @Inject constructor(
                                 }
                             }
                 }
-
-//        val themeTemplates = getCollectionItems(themes, ThemeDeckTemplateEntity::class)
-//                .flatMap { decks ->
-//                    val cardIds = decks.flatMap {
-//                        it.cardMetadata!!.map { it.id }
-//                    }.toHashSet() // Convert to set so we don't request duplicate id's
-//
-//                    cardRepository.find(cardIds.toList())
-//                            .map { cards ->
-//                                decks.map { EntityMapper.to(it, cards) }
-//                            }
-//                }
-
-        return tournamentTemplates //Observable.merge(tournamentTemplates, themeTemplates)
     }
-
 
     private fun getTemplateCollection(type: String): CollectionReference {
         val db = FirebaseFirestore.getInstance()
@@ -62,7 +45,6 @@ class FirestoreCommunityCache @Inject constructor(
                 .document(type)
                 .collection(TEMPLATE_DECKS)
     }
-
 
     private fun <T : FirebaseEntity> getCollectionItems(query: Query, clazz: KClass<T>): Observable<List<T>> {
         return RxFirebase.from(query.get()/*, schedulers.firebaseExecutor*/)

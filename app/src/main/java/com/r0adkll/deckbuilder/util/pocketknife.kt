@@ -1,15 +1,13 @@
-package com.r0adkll.deckbuilder.util
+@file:Suppress("unused")
 
+package com.r0adkll.deckbuilder.util
 
 import android.app.Activity
 import android.os.Bundle
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import java.io.Serializable
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KClass
-
 
 fun <P : Parcelable> Fragment.bindOptionalParcelable(key: String): ReadOnlyProperty<Fragment, P?> = Lazy { fragment, _ ->
     fragment.arguments?.getParcelable(key)
@@ -36,7 +34,7 @@ fun <P : Parcelable> Activity.bindOptionalParcelableList(key: String): ReadOnlyP
 
 
 fun <P : Parcelable> Activity.bindParcelable(key: String): ReadOnlyProperty<Activity, P> = Lazy { activity, _ ->
-    activity.intent.getParcelableExtra(key)
+    activity.intent.getParcelableExtra(key)!!
 }
 
 
@@ -68,7 +66,7 @@ fun Activity.bindOptionalString(key: String, defaultValue: String? = null): Read
 
 inline fun <reified E : Enum<E>> Activity.bindEnum(key: String): ReadOnlyProperty<Activity, E> = Lazy { activity, _ ->
     val name = activity.intent?.getStringExtra(key)
-    java.lang.Enum.valueOf(E::class.java, name)
+    java.lang.Enum.valueOf(E::class.java, name!!)
 }
 
 

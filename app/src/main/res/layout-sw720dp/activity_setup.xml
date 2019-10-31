@@ -60,14 +60,14 @@
             android:orientation="horizontal">
 
             <com.google.android.gms.common.SignInButton
-                android:id="@+id/action_signin"
+                android:id="@+id/actionSignIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:buttonSize="wide"
                 />
 
             <TextView
-                android:id="@+id/action_continue"
+                android:id="@+id/actionContinue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
