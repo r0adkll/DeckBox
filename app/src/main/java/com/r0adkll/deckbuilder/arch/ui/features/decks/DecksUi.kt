@@ -1,19 +1,18 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.os.Parcelable
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
+import com.ftinc.kit.arch.presentation.BaseActions
+import com.ftinc.kit.arch.presentation.state.BaseState
+import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.features.community.model.DeckTemplate
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.ValidatedDeck
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-interface DecksUi : StateRenderer<DecksUi.State> {
-
-    val state: State
+interface DecksUi : Ui<DecksUi.State, DecksUi.State.Change> {
 
     interface Intentions {
 
@@ -40,17 +39,17 @@ interface DecksUi : StateRenderer<DecksUi.State> {
 
     @Parcelize
     data class State(
-            val isLoading: Boolean,
+            override val isLoading: Boolean,
+            override val error: String?,
             val hasLoadedOnce: Boolean,
-            val error: String?,
             val decks: List<ValidatedDeck>,
             val preview: ExpansionPreview?,
             val quickStart: QuickStart?,
             val isSessionLoading: String?,
             val sessionId: Long?
-    ) : Parcelable {
+    ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when(change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             Change.DeckDeleted -> this
             Change.HidePreview -> this.copy(preview = null)
@@ -64,7 +63,7 @@ interface DecksUi : StateRenderer<DecksUi.State> {
             is Change.SessionLoaded -> this.copy(sessionId = change.sessionId, isSessionLoading = null)
         }
 
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String) : Ui.State.Change(logText){
             object IsLoading : Change("network -> loading decks")
             class Error(val description: String) : Change("error -> $description")
             class DecksLoaded(val decks: List<ValidatedDeck>) : Change("network -> decks loaded ${decks.size}")
@@ -79,13 +78,14 @@ interface DecksUi : StateRenderer<DecksUi.State> {
         }
 
         override fun toString(): String {
-            return "State(isLoading=$isLoading, error=$error, decks=${decks.size}, showPreview=${preview != null}, showQuickstart=${quickStart != null}, isSessionLoading=$isSessionLoading, sessionId=$sessionId)"
+            return "State(isLoading=$isLoading, error=$error, decks=${decks.size}, showPreview=${preview != null}, " +
+                    "showQuickstart=${quickStart != null}, isSessionLoading=$isSessionLoading, sessionId=$sessionId)"
         }
 
         companion object {
 
             val DEFAULT by lazy {
-                State(false, false, null, emptyList(), null, null, null, null)
+                State(false, null, false, emptyList(), null, null, null, null)
             }
         }
     }

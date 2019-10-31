@@ -4,15 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.ftinc.kit.arch.presentation.BaseFragment
+import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.ExpansionRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
@@ -22,7 +24,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.SearchActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.DialogUtils
-import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.*
+import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.Resource
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.extensions.uiDebounce
@@ -88,22 +90,13 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        renderer.start()
-        presenter.start()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        presenter.stop()
-        renderer.stop()
-    }
-
     override fun setupComponent() {
         getComponent(HomeComponent::class)
                 .plus(BrowseModule(this))
                 .inject(this)
+
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
     override fun render(state: BrowseUi.State) {

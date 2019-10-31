@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.internal.di.HasComponent
 import io.reactivex.disposables.CompositeDisposable
 import kotlin.reflect.KClass
 
+@Deprecated("Move to use 52Kit arch lib")
 abstract class BaseFragment : Fragment() {
 
     protected val delegates = ArrayList<FragmentDelegate>()

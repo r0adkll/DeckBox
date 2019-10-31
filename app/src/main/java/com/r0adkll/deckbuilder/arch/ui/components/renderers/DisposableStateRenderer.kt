@@ -6,6 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 
+@Deprecated("Move to use 52Kit arch lib")
 abstract class DisposableStateRenderer<T>(
         val main: Scheduler,
         val comp: Scheduler

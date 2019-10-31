@@ -1,28 +1,28 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browser
 
 import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
-import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseUi.State.Change
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseUi.State
-import com.r0adkll.deckbuilder.util.extensions.logState
+import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseUi.State.Change
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
 class BrowsePresenter @Inject constructor(
-        val ui: BrowseUi,
+        ui: BrowseUi,
         val intentions: BrowseUi.Intentions,
         val expansionRepository: ExpansionRepository,
         val offlineRepository: OfflineRepository,
         val preferences: AppPreferences
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
     @SuppressLint("RxSubscribeOnError")
-    override fun start() {
+    override fun smashObservables(): Observable<Change> {
 
         val loadExpansions = expansionRepository.getExpansions()
                 .map { it.reversed() }
@@ -46,16 +46,6 @@ class BrowsePresenter @Inject constructor(
                 .asObservable()
                 .map { Change.OfflineOutline(it) as Change }
 
-        val merged = loadExpansions
-                .mergeWith(offlineStatus)
-                .mergeWith(offlineOutline)
-                .mergeWith(refreshExpansions)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe { ui.render(it) }
-
         disposables += intentions.downloadExpansion()
                 .subscribe {
                     offlineRepository.download(DownloadRequest(listOf(it), true))
@@ -70,6 +60,11 @@ class BrowsePresenter @Inject constructor(
                 .subscribe {
                     preferences.offlineOutline.set(false)
                 }
+
+        return loadExpansions
+                .mergeWith(offlineStatus)
+                .mergeWith(offlineOutline)
+                .mergeWith(refreshExpansions)
     }
 
     companion object {

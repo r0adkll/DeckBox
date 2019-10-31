@@ -60,8 +60,7 @@ class DecksRecyclerAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        val item = getItem(position)
-        return when(item) {
+        return when(val item = getItem(position)) {
             is Item.DeckItem -> item.validatedDeck.deck.id.hashCode().toLong()
             is Item.QuickStart -> 0L
             is Item.Preview -> 1L

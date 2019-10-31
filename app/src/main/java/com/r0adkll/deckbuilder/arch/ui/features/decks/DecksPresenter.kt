@@ -1,21 +1,20 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.ValidatedDeck
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
+import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
-import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
-import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State.*
+import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State.Change
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import timber.log.Timber
@@ -23,7 +22,7 @@ import javax.inject.Inject
 
 @FragmentScope
 class DecksPresenter @Inject constructor(
-        val ui: DecksUi,
+        ui: DecksUi,
         val intentions: DecksUi.Intentions,
         val deckRepository: DeckRepository,
         val communityRepository: CommunityRepository,
@@ -32,11 +31,10 @@ class DecksPresenter @Inject constructor(
         val validator: DeckValidator,
         val remote: Remote,
         val preferences: AppPreferences
-) : Presenter() {
+) : UiPresenter<State, Change>(ui) {
 
-    @SuppressLint("CheckResult", "RxSubscribeOnError")
-    override fun start() {
-
+    @SuppressLint("RxSubscribeOnError")
+    override fun smashObservables(): Observable<Change> {
         val loadDecks = deckRepository.getDecks()
                 .flatMap {
                     Observable.fromIterable(it)
@@ -97,18 +95,6 @@ class DecksPresenter @Inject constructor(
                     }
                 }
 
-        val merged = loadDecks.mergeWith(deleteDecks)
-                .mergeWith(createSession)
-                .mergeWith(createNewSession)
-                .mergeWith(clearSession)
-                .mergeWith(showQuickStart)
-                .mergeWith(showPreview)
-                .doOnNext { Timber.d(it.logText) }
-
-        disposables += merged.scan(ui.state, State::reduce)
-                .logState()
-                .subscribe(ui::render)
-
         disposables += intentions.duplicateClicks()
                 .flatMap {
                     Analytics.event(Event.SelectContent.Action("duplicate_deck"))
@@ -124,6 +110,13 @@ class DecksPresenter @Inject constructor(
                 .subscribe {
                     previewRepository.dismissPreview()
                 }
+
+        return loadDecks.mergeWith(deleteDecks)
+                .mergeWith(createSession)
+                .mergeWith(createNewSession)
+                .mergeWith(clearSession)
+                .mergeWith(showQuickStart)
+                .mergeWith(showPreview)
     }
 
     companion object {

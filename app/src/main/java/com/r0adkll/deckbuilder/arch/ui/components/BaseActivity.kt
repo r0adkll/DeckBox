@@ -13,6 +13,7 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalView
 import io.reactivex.disposables.CompositeDisposable
 
+@Deprecated("Move to use 52Kit arch lib")
 abstract class BaseActivity : AppCompatActivity() {
 
     protected val appbar: Toolbar? by bindOptionalView(R.id.appbar)

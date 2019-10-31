@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.components.renderers
 /**
  * Responsible for rendering a view's state.
  */
+@Deprecated("Move to use 52Kit arch lib")
 interface StateRenderer<in VS> {
 
     /**

@@ -1,21 +1,21 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
+import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.r0adkll.deckbuilder.arch.domain.Format
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
 
 class DecksRenderer(
-        val actions: DecksUi.Actions,
+        actions: DecksUi.Actions,
         main: Scheduler,
         comp: Scheduler
-) : DisposableStateRenderer<DecksUi.State>(main, comp) {
+) : UiBaseStateRenderer<DecksUi.State, DecksUi.State.Change, DecksUi.Actions>(actions, main, comp) {
 
     @SuppressLint("RxSubscribeOnError")
-    override fun start() {
+    override fun onStart() {
 
         disposables += state
                 .map { s ->
@@ -66,26 +66,6 @@ class DecksRenderer(
                 .subscribe {
                     if (it.value != null) {
                         actions.openSession(it.value)
-                    }
-                }
-
-        disposables += state
-                .map { it.isLoading }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe { actions.showLoading(it) }
-
-        disposables += state
-                .mapNullable { it.error }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe {
-                    val error = it.value
-                    if (error != null) {
-                        actions.showError(error)
-                    }
-                    else {
-                        actions.hideError()
                     }
                 }
     }
