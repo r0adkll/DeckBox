@@ -18,9 +18,10 @@ import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.util.UIUtils
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.widget.EmptyView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxrelay2.PublishRelay
@@ -47,9 +48,9 @@ import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.addLayoutHeight
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.margins
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
+import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_set_browser.*
 import javax.inject.Inject
@@ -115,11 +116,13 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
 
-        statusBarHeight = UIUtils.getStatusBarHeight(this)
-        appBarLayout.addLayoutHeight((statusBarHeight - dipToPx(24f)))
-        appbar?.margins(top = statusBarHeight)
-        logo?.layoutHeight(dipToPx(100f))
-        logo?.margins(top = (statusBarHeight - dipToPx(24f)) / 2)
+        appBarLayout.doOnApplyWindowInsets { _, insets, _ ->
+            statusBarHeight = insets.systemWindowInsetTop
+            appBarLayout.addLayoutHeight(statusBarHeight - dip(24f))
+            appbar?.margins(top = statusBarHeight)
+            logo?.layoutHeight(dip(100f))
+            logo?.margins(top = (statusBarHeight - dip(24f)) / 2)
+        }
 
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { view, offset ->
             val height = view.height.toFloat() - ((appbar?.height ?: 0) + statusBarHeight)
@@ -197,15 +200,19 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     }
 
     override fun showLoading(isLoading: Boolean) {
-        emptyView.setLoading(isLoading)
+        emptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     override fun showError(description: String) {
-        emptyView.emptyMessage = description
+        emptyView.message = description
     }
 
     override fun hideError() {
-        emptyView.setEmptyMessage(R.string.empty_set_browse_message)
+        emptyView.setMessage(R.string.empty_set_browse_message)
     }
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {

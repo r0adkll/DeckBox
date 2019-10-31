@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/tournament_pdf_title"
-        android:textSize="@dimen/display_1"
+        android:textSize="@dimen/font_display1"
         android:textColor="@color/black"
         android:textStyle="bold"
         />

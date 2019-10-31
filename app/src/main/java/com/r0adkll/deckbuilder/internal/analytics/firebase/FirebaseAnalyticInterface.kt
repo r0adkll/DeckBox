@@ -3,9 +3,15 @@ package com.r0adkll.deckbuilder.internal.analytics.firebase
 import android.content.Context
 import android.os.Bundle
 import android.provider.Settings
-import com.ftinc.kit.kotlin.utils.bundle
+import com.ftinc.kit.util.bundle
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.FirebaseAnalytics.Param.*
+import com.google.firebase.analytics.FirebaseAnalytics.Param.CONTENT_TYPE
+import com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_CATEGORY
+import com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_ID
+import com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_NAME
+import com.google.firebase.analytics.FirebaseAnalytics.Param.METHOD
+import com.google.firebase.analytics.FirebaseAnalytics.Param.SEARCH_TERM
+import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
 import com.r0adkll.deckbuilder.internal.analytics.AnalyticInterface
 import com.r0adkll.deckbuilder.internal.analytics.Event
 

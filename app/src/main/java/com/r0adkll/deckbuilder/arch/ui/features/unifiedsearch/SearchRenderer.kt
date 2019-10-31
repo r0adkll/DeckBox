@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.ftinc.kit.arch.util.plusAssign
 import io.reactivex.Scheduler
 
 class SearchRenderer(

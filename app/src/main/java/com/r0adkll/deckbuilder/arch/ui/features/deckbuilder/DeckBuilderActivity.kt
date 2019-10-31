@@ -9,6 +9,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -16,12 +18,11 @@ import com.evernote.android.state.State
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.invisible
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.snackbar
-import com.ftinc.kit.kotlin.extensions.visible
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.arch.util.uiDebounce
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.extensions.snackbar
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.checkedChanges
@@ -61,10 +62,7 @@ import com.r0adkll.deckbuilder.util.MarketplaceHelper
 import com.r0adkll.deckbuilder.util.bindBoolean
 import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
-import com.r0adkll.deckbuilder.util.extensions.isVisible
 import com.r0adkll.deckbuilder.util.extensions.margins
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.COLLAPSED
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState.EXPANDED
@@ -91,16 +89,15 @@ class DeckBuilderActivity : BaseActivity(),
 
             val infoBarOffset = calculateAlpha(slideOffset, .95f)
             infoBar.alpha = infoBarOffset
-            infoBar.elevation = infoBarOffset * dpToPx(4f)
+            infoBar.elevation = infoBarOffset * dp(4f)
             deckImage.alpha = calculateAlpha(slideOffset, .80f)
             text_input_deck_name.alpha = calculateAlpha(slideOffset, .80f)
             text_input_deck_description.alpha = calculateAlpha(slideOffset, .65f)
 
-            if (slideOffset > 0f && !infoBar.isVisible()) {
-                infoBar.visible()
-            }
-            else if (slideOffset == 0f && infoBar.isVisible()) {
-                infoBar.invisible()
+            if (slideOffset > 0f && !infoBar.isVisible) {
+                infoBar.isVisible = true
+            } else if (slideOffset == 0f && infoBar.isVisible) {
+                infoBar.isInvisible = true
             }
         }
 
@@ -119,8 +116,7 @@ class DeckBuilderActivity : BaseActivity(),
                     (it.height.toFloat() / 2f) //- iconOffset
                 } ?: defaultOffset
                 val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
-//                deckError.setVisibleWeak(offset < recyclerOffset)
-                deckError.setVisible(offset < recyclerOffset)
+                deckError.isVisible = offset < recyclerOffset
             }
         }
 
@@ -154,8 +150,8 @@ class DeckBuilderActivity : BaseActivity(),
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
     private val editOverviewClicks: Relay<Boolean> = PublishRelay.create()
 
-    private val iconOffset: Float by lazy { dpToPx(12f) }
-    private val defaultOffset: Float by lazy { dpToPx(22f) }
+    private val iconOffset: Float by lazy { dp(12f) }
+    private val defaultOffset: Float by lazy { dp(22f) }
 
     private val panelSlideListener = DeckBuilderPanelSlideListener()
     private lateinit var component: DeckBuilderComponent
@@ -285,7 +281,7 @@ class DeckBuilderActivity : BaseActivity(),
         deckFormat.setOnClickListener {
         }
 
-        actionBuy.setVisible(remote.marketplaceMassEntryEnabled)
+        actionBuy.isVisible = remote.marketplaceMassEntryEnabled
         actionBuy.setOnClickListener {
             val link = MarketplaceHelper.buildAffiliateLink(state.allCards, state.products)
             customTabBrowser.launch(link)
@@ -553,8 +549,8 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun showPrices(low: Double?, market: Double?, high: Double?) {
         val isVisible = low != null || market != null || high != null
-        divider.margins(top = if (isVisible) dipToPx(16f) else dipToPx(8f))
-        costsLayout.setVisible(isVisible)
+        divider.margins(top = if (isVisible) dip(16f) else dip(8f))
+        costsLayout.isVisible = isVisible
         priceLow.text = low?.formatPrice() ?: "n/a"
         priceMarket.text = market?.formatPrice() ?: "n/a"
         priceHigh.text = high?.formatPrice() ?: "n/a"
@@ -562,8 +558,8 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun showCollectionPrices(low: Double?, market: Double?, high: Double?) {
         val isVisible = low != null || market != null || high != null
-        collectionPriceDivider.setVisible(isVisible)
-        collectionPricesRow.setVisible(isVisible)
+        collectionPriceDivider.isVisible = isVisible
+        collectionPricesRow.isVisible = isVisible
         collectionPriceLow.text = low?.times(-1.0)?.formatPrice() ?: "n/a"
         collectionPriceMarket.text = market?.times(-1.0)?.formatPrice() ?: "n/a"
         collectionPriceHigh.text = high?.times(-1.0)?.formatPrice() ?: "n/a"
@@ -637,7 +633,7 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
     override fun showBrokenRules(errors: List<Int>) {
-        deckError.setVisible(errors.isNotEmpty())
+        deckError.isVisible = errors.isNotEmpty()
         ruleAdapter.submitList(errors)
     }
 

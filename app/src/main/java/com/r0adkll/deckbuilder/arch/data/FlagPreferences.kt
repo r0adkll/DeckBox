@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder.arch.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.ftinc.kit.kotlin.extensions.Preferences
+import com.ftinc.kit.extensions.Preferences
 import javax.inject.Inject
 
 /**

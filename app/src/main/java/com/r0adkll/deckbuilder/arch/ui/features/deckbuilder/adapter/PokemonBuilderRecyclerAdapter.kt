@@ -2,13 +2,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.recycler.EmptyViewListAdapter
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItemCallback
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.notifyingField
@@ -18,7 +18,7 @@ class PokemonBuilderRecyclerAdapter(
         private val spanCount: Int,
         private val editCardIntentions: EditCardIntentions,
         private val pokemonCardClicks: Relay<PokemonCardView>
-) : EmptyViewListAdapter<PokemonItem, RecyclerView.ViewHolder>(RecyclerItemCallback()) {
+) : EmptyViewListAdapter<PokemonItem, RecyclerView.ViewHolder>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)
 

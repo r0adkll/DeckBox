@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.presentation.BaseFragment
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.arch.util.uiDebounce
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -39,7 +41,6 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ImeUtils
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -73,8 +74,8 @@ class SearchFragment : BaseFragment(),
         super.onActivityCreated(savedInstanceState)
 
         adapter = SearchResultsRecyclerAdapter(activity!!, true)
-        adapter.setEmptyView(emptyView)
-        adapter.setOnViewItemClickListener { v, _ ->
+        adapter.emptyView = emptyView
+        adapter.onItemClickListener = { v, _ ->
             // FIXME: Do something about this god-awful mess
             val card = v.findViewById<PokemonCardView>(R.id.card)
             Analytics.event(Event.SelectContent.PokemonCard(card.card?.id ?: "unknown"))
@@ -160,34 +161,31 @@ class SearchFragment : BaseFragment(),
     }
 
     override fun setResults(cards: List<PokemonCard>) {
-        adapter.setCards(cards)
+        adapter.submitList(cards)
     }
 
     override fun showEmptyResults() {
-        emptyView.setEmptyMessage(R.string.empty_search_results_category)
-//        emptyView.setActionLabelRes(R.string.empty_search_missing_card)
-//        emptyView.setActionColorRes(R.color.red_500)
-//        emptyView.setOnActionClickListener {
-//            Analytics.event(Event.SelectContent.Action("search_missing_card", "tablet"))
-//            MissingCardsActivity.show(activity!!)
-//        }
+        emptyView.setMessage(R.string.empty_search_results_category)
     }
 
     override fun showEmptyDefault() {
-        emptyView.setEmptyMessage(R.string.empty_search_category)
-        emptyView.actionLabel = null
+        emptyView.setMessage(R.string.empty_search_category)
     }
 
     override fun showLoading(isLoading: Boolean) {
-        emptyView.setLoading(isLoading)
+        emptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     override fun showError(description: String) {
-        emptyView.emptyMessage = description
+        emptyView.message = description
     }
 
     override fun hideError() {
-        emptyView.setEmptyMessage(R.string.empty_search_category)
+        emptyView.setMessage(R.string.empty_search_category)
     }
 
     override fun closeDrawer() {
@@ -206,7 +204,7 @@ class SearchFragment : BaseFragment(),
                 rotateAnim.repeatMode = Animation.REVERSE
                 rotateAnim.duration = 50
 
-                val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dpToPx(8f))
+                val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dp(8))
                 transAnim.repeatCount = 1
                 transAnim.repeatMode = Animation.REVERSE
                 transAnim.duration = 100
@@ -225,7 +223,7 @@ class SearchFragment : BaseFragment(),
             private val toolBar: View
     ) : RecyclerView.OnScrollListener() {
 
-        private val elevation: Float by lazy { toolBar.dpToPx(4f) }
+        private val elevation: Float by lazy { toolBar.dp(4) }
         private var scrollY: Float = 0f
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

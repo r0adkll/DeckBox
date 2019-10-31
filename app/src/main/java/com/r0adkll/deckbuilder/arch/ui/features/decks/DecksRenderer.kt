@@ -2,10 +2,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
+import com.ftinc.kit.arch.util.mapNullable
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
-import com.r0adkll.deckbuilder.util.extensions.mapNullable
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
 
 class DecksRenderer(
@@ -65,7 +65,7 @@ class DecksRenderer(
                 .addToLifecycle()
                 .subscribe {
                     if (it.value != null) {
-                        actions.openSession(it.value)
+                        actions.openSession(it.value!!)
                     }
                 }
     }

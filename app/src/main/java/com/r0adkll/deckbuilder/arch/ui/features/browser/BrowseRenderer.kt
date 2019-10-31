@@ -2,8 +2,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
+
 import io.reactivex.Scheduler
 
 class BrowseRenderer(

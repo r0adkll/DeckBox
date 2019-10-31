@@ -6,8 +6,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.ftinc.kit.kotlin.extensions.setVisible
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
@@ -35,11 +35,11 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         private val actionDismiss by bindView<Button>(R.id.actionDismiss)
 
         override fun bind(item: Item.Migration) {
-            message.setVisible(!item.isLoading)
-            loadingIndicator.setVisible(item.isLoading)
-            errorMessage.setVisible(item.error != null)
+            message.isVisible = !item.isLoading
+            loadingIndicator.isVisible = item.isLoading
+            errorMessage.isVisible = item.error != null
             errorMessage.text = item.error
-            actionLayout.setVisible(!item.isLoading)
+            actionLayout.isVisible = !item.isLoading
 
             actionMigrate.setText(when(item.error) {
                 null -> R.string.action_migrate

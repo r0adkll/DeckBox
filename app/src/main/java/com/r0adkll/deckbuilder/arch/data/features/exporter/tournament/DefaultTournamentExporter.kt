@@ -14,9 +14,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.gone
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.visible
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -135,7 +134,7 @@ class DefaultTournamentExporter @Inject constructor(
                 ?.sortedByDescending { it.count }
                 ?.let {
             if (stacked.size >= 31) {
-                extraColumn.visible()
+                extraColumn.isVisible = true
 
                 if (it.size >= 34) {
                     val pokemon1 = it.subList(0, 34)
@@ -147,7 +146,7 @@ class DefaultTournamentExporter @Inject constructor(
                     pokemon2.map { createRow(inflater, view, it) }
                             .forEach { tablePokemon2.addView(it) }
                 } else {
-                    tablePokemon2.gone()
+                    tablePokemon2.isGone = true
                     it.map { createRow(inflater, view, it) }
                             .forEach { tablePokemon.addView(it) }
                 }
@@ -192,8 +191,8 @@ class DefaultTournamentExporter @Inject constructor(
         setCode.text = card.card.expansion?.ptcgoCode
         setNumber.text = card.card.number
 
-        setCode.setVisible(card.card.supertype == SuperType.POKEMON)
-        setNumber.setVisible(card.card.supertype == SuperType.POKEMON)
+        setCode.isVisible = card.card.supertype == SuperType.POKEMON
+        setNumber.isVisible = card.card.supertype == SuperType.POKEMON
 
         return row
     }

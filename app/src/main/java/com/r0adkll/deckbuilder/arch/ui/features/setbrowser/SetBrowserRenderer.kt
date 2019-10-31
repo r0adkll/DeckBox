@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.setbrowser
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.ALL
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.ENERGY
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.GX
@@ -9,7 +10,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFi
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.PRISM
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.TAG_TEAM
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.TRAINER
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.sortableNumber
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType

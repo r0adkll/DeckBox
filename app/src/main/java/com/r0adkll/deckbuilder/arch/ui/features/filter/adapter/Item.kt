@@ -1,25 +1,25 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
 import androidx.annotation.StringRes
-import com.ftinc.kit.kotlin.adapter.RecyclerItem
+import com.ftinc.kit.recycler.RecyclerViewItem
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 
-sealed class Item : RecyclerItem {
+sealed class Item : RecyclerViewItem {
 
     abstract val itemId: Long
 
     data class Header(@StringRes val title: Int) : Item() {
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is Header -> new.title == title
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is Header -> new.title == title
             else -> false
         }
@@ -30,12 +30,12 @@ sealed class Item : RecyclerItem {
 
     data class Field(val searchField: SearchField) : Item() {
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is Field -> true
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is Field -> new.searchField == searchField
             else -> false
         }
@@ -49,12 +49,12 @@ sealed class Item : RecyclerItem {
             val selected: List<io.pokemontcg.model.Type>
     ) : Item() {
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is Type -> new.key == key
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is Type -> new == this
             else -> false
         }
@@ -68,12 +68,12 @@ sealed class Item : RecyclerItem {
             val selected: List<FilterAttribute>
     ) : Item() {
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is Attribute -> true
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is Attribute -> new == this
             else -> false
         }
@@ -90,12 +90,12 @@ sealed class Item : RecyclerItem {
 
         abstract val text: String
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is Option<*> -> new.key == key
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is Option<*> -> new == this
             else -> false
         }
@@ -126,12 +126,12 @@ sealed class Item : RecyclerItem {
 
     data class ViewMore(@StringRes val title: Int) : Item() {
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is ViewMore -> new.title == title
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is ViewMore -> new.title == title
             else -> false
         }
@@ -147,12 +147,12 @@ sealed class Item : RecyclerItem {
             val value: Value = Value(0, Modifier.NONE)
     ) : Item() {
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is ValueRange -> new.key == key
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is ValueRange -> new == this
             else -> false
         }

@@ -2,14 +2,13 @@ package com.r0adkll.deckbuilder.arch.ui.components.drag
 
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
-import androidx.viewpager.widget.ViewPager
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.view.DragEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.color
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView

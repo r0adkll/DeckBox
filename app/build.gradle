@@ -100,10 +100,11 @@ ext {
     kluent_version = '1.42'
 
     // Dependencies
+    androidXCoreVersion = '1.2.0-beta01'
     bottombar_version = '2.3.1'
     butterknife_version = '8.8.1'
     canvas_version = '1.0.2'
-    ftkit_version = '0.6.1'
+    ftkit_version = '2.0.5'
     leakcanary_version = '1.5.1'
     play_version = '15.0.0'
     poketcg_version = '1.0.19'
@@ -136,9 +137,13 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.preference:preference:1.1.0"
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
+    implementation "androidx.core:core-ktx:$androidXCoreVersion"
     implementation "com.google.android.material:material:1.2.0-alpha01"
     implementation "androidx.palette:palette:1.0.0"
     implementation "androidx.browser:browser:1.2.0-alpha09"
+
+    implementation "dev.chrisbanes:insetter:0.1.1"
+    implementation "dev.chrisbanes:insetter-ktx:0.1.1"
 
     implementation "com.google.firebase:firebase-core:17.2.1"
     implementation "com.google.firebase:firebase-firestore:21.2.1"
@@ -182,15 +187,8 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
-    implementation("com.52inc:52Kit-core:$ftkit_version") {
-        exclude group: 'io.reactivex'
-    }
-    implementation("com.52inc:52Kit-kotlin:$ftkit_version") {
-        exclude group: 'io.reactivex'
-    }
-    implementation("com.52inc:52Kit-arch:$ftkit_version") {
-        exclude group: 'io.reactivex'
-    }
+    implementation "com.ftinc:kit:$ftkit_version"
+    implementation "com.ftinc:kit-arch:$ftkit_version"
 
     implementation "com.jakewharton.timber:timber:4.7.1"
     implementation "com.roughike:bottom-bar:$bottombar_version"

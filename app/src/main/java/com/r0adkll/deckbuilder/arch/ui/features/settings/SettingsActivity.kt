@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.ftinc.kit.arch.presentation.BaseActivity
-import com.ftinc.kit.kotlin.extensions.clear
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.extensions.clear
+import com.ftinc.kit.extensions.snackbar
+import com.ftinc.kit.extensions.toast
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -35,9 +38,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.settings.offline.ManageOfflineAc
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
-import com.r0adkll.deckbuilder.util.extensions.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers

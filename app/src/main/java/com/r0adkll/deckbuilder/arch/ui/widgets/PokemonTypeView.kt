@@ -4,17 +4,28 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Outline
 import android.graphics.Paint
-import androidx.annotation.ColorInt
-import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatImageView
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.util.extensions.drawable
 import io.pokemontcg.model.Type
-import io.pokemontcg.model.Type.*
+import io.pokemontcg.model.Type.COLORLESS
+import io.pokemontcg.model.Type.DARKNESS
+import io.pokemontcg.model.Type.DRAGON
+import io.pokemontcg.model.Type.FAIRY
+import io.pokemontcg.model.Type.FIGHTING
+import io.pokemontcg.model.Type.FIRE
+import io.pokemontcg.model.Type.GRASS
+import io.pokemontcg.model.Type.LIGHTNING
+import io.pokemontcg.model.Type.METAL
+import io.pokemontcg.model.Type.PSYCHIC
+import io.pokemontcg.model.Type.WATER
 
 class PokemonTypeView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -34,9 +45,9 @@ class PokemonTypeView @JvmOverloads constructor(
         }
 
     @ColorInt private val highlightColor: Int = color(R.color.secondaryColor)
-    private val padding: Int = dipToPx(8f)
-    private val highlightWidth: Int = dipToPx(2f)
-    private val highlightElevation: Float = dpToPx(6f)
+    private val padding: Int = dip(8)
+    private val highlightWidth: Int = dip(2)
+    private val highlightElevation: Float = dp(6)
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
@@ -74,21 +85,7 @@ class PokemonTypeView @JvmOverloads constructor(
     }
 
     private fun applyType() {
-        val drawable = when(type) {
-            Type.COLORLESS -> R.drawable.ic_poketype_colorless
-            Type.FIRE -> R.drawable.ic_poketype_fire
-            Type.GRASS -> R.drawable.ic_poketype_grass
-            Type.WATER -> R.drawable.ic_poketype_water
-            Type.LIGHTNING -> R.drawable.ic_poketype_electric
-            Type.FIGHTING -> R.drawable.ic_poketype_fighting
-            Type.PSYCHIC -> R.drawable.ic_poketype_psychic
-            Type.METAL -> R.drawable.ic_poketype_steel
-            Type.DRAGON -> R.drawable.ic_poketype_dragon
-            Type.FAIRY -> R.drawable.ic_poketype_fairy
-            Type.DARKNESS -> R.drawable.ic_poketype_dark
-            else -> R.drawable.ic_poketype_colorless
-        }
-        setImageResource(drawable)
+        setImageResource(type.drawable)
     }
 
     private inner class TypeOutlineProvider : ViewOutlineProvider() {

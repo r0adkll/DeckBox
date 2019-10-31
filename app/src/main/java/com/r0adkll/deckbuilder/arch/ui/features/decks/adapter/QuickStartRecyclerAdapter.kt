@@ -5,24 +5,26 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.recycler.RecyclerViewItem
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.community.model.DeckTemplate
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.QuickStartRecyclerAdapter.QuickStartViewHolder.ViewType.PLACEHOLDER
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.QuickStartRecyclerAdapter.QuickStartViewHolder.ViewType.DECK
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.QuickStartRecyclerAdapter.QuickStartViewHolder.ViewType.PLACEHOLDER
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
@@ -30,8 +32,14 @@ import com.r0adkll.deckbuilder.util.bindView
 class QuickStartRecyclerAdapter(
         context: Context,
         private val quickStart: Relay<Deck>
-) : ListRecyclerAdapter<QuickStartRecyclerAdapter.Item,
-        QuickStartRecyclerAdapter.QuickStartViewHolder<QuickStartRecyclerAdapter.Item>>(context) {
+) : ListAdapter<QuickStartRecyclerAdapter.Item,
+        QuickStartRecyclerAdapter.QuickStartViewHolder<QuickStartRecyclerAdapter.Item>>(RecyclerViewItemCallback()) {
+
+    private val inflater = LayoutInflater.from(context)
+
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickStartViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
@@ -39,11 +47,15 @@ class QuickStartRecyclerAdapter(
     }
 
     override fun onBindViewHolder(vh: QuickStartViewHolder<Item>, i: Int) {
-        vh.bind(items[i])
+        vh.bind(getItem(i))
     }
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].viewType
+        return getItem(position).viewType
+    }
+
+    override fun getItemId(position: Int): Long {
+        return getItem(position).itemId
     }
 
     override fun onViewAttachedToWindow(holder: QuickStartViewHolder<Item>) {
@@ -51,36 +63,34 @@ class QuickStartRecyclerAdapter(
         holder.applyAnimation()
     }
 
-    fun setQuickStartItems(quickStartItems: List<Item>) {
-        val diff = calculateDiff(quickStartItems, items)
-        items = ArrayList(quickStartItems)
-        diff.diff.dispatchUpdatesTo(getListUpdateCallback())
-    }
+    sealed class Item : RecyclerViewItem {
 
-    sealed class Item : RecyclerItem {
+        abstract val itemId: Long
 
         class Placeholder(val index: Int) : Item() {
 
-            override val layoutId: Int = R.layout.item_deck_placeholder
+            override val layoutId: Int get() = R.layout.item_deck_placeholder
+            override val itemId: Long get() = index.toLong()
 
-            override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+            override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
                 is Placeholder -> new.index == index
                 else -> false
             }
 
-            override fun isContentSame(new: RecyclerItem): Boolean = false
+            override fun isContentSame(new: RecyclerViewItem): Boolean = false
         }
 
         class Template(val template: DeckTemplate): Item() {
 
-            override val layoutId: Int = R.layout.item_deck_quickstart
+            override val layoutId: Int get() = R.layout.item_deck_quickstart
+            override val itemId: Long get() = template.deck.id.hashCode().toLong()
 
-            override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+            override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
                 is Template -> new.template.deck.id == template.deck.id
                 else -> false
             }
 
-            override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+            override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
                 is Template -> new.template == template
                 else -> false
             }

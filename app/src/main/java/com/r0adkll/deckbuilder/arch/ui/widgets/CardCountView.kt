@@ -2,13 +2,16 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
 import android.graphics.Typeface
-import androidx.annotation.DrawableRes
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.*
+import androidx.annotation.DrawableRes
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
@@ -32,7 +35,7 @@ class CardCountView @JvmOverloads constructor(
         trainerCountView = createCountView(R.drawable.ic_wrench)
         energyCountView = createCountView(R.drawable.ic_flash)
         allCountView = createCountView(R.drawable.ic_card_total)
-        allCountView.gone()
+        allCountView.isGone = true
 
         addView(pokemonCountView)
         addView(trainerCountView)
@@ -82,7 +85,7 @@ class CardCountView @JvmOverloads constructor(
 
     fun totalCount(count: Int) {
         allCountView.text = count.toString()
-        allCountView.visible()
+        allCountView.isVisible = true
     }
 
     private fun createCountView(@DrawableRes icon: Int): TextView {
@@ -91,15 +94,15 @@ class CardCountView @JvmOverloads constructor(
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
         view.setTextColor(color(R.color.black56))
         view.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-        view.compoundDrawablePadding = dipToPx(4f)
+        view.compoundDrawablePadding = dip(4)
         view.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, icon, 0)
         return view
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
         val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        lp.marginStart = dipToPx(4f)
-        lp.marginEnd = dipToPx(4f)
+        lp.marginStart = dip(4)
+        lp.marginEnd = dip(4)
         return lp
     }
 }

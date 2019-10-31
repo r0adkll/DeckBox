@@ -17,7 +17,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.extensions.dip
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
@@ -115,7 +115,7 @@ object Shortcuts {
      */
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     private fun generateDeckImage(context: Context, deck: Deck) {
-        val size = context.dipToPx(44f)
+        val size = context.dip(44f)
 
         deck.image?.let { image ->
             when(image) {
@@ -139,7 +139,7 @@ object Shortcuts {
                     view.primaryType = image.type1
                     view.secondaryType = image.type2
 
-                    val viewSize = context.dipToPx(128f)
+                    val viewSize = context.dip(128f)
                     val measureWidth = View.MeasureSpec.makeMeasureSpec(viewSize, View.MeasureSpec.EXACTLY)
                     val measuredHeight = View.MeasureSpec.makeMeasureSpec(viewSize, View.MeasureSpec.EXACTLY)
 

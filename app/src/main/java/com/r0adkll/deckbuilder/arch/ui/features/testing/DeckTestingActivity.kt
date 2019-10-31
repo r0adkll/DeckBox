@@ -8,25 +8,27 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Lifecycle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.arch.util.bindViews
+import com.ftinc.kit.arch.util.plusAssign
 import com.ftinc.kit.arch.util.uiDebounce
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.gone
-import com.ftinc.kit.kotlin.extensions.toast
-import com.ftinc.kit.kotlin.extensions.visible
-import com.ftinc.kit.kotlin.utils.bindLong
-import com.ftinc.kit.kotlin.utils.bindOptionalString
-import com.ftinc.kit.widget.DividerSpacerItemDecoration
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.extensions.toast
+import com.ftinc.kit.util.bindLong
+import com.ftinc.kit.util.bindOptionalString
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.longClicks
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.ui.components.DividerSpacerItemDecoration
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResultsRecyclerAdapter
@@ -36,7 +38,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.fromHtml
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -80,7 +81,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         adapter = TestResultsRecyclerAdapter(this)
         recycler.adapter = adapter
         recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        recycler.addItemDecoration(DividerSpacerItemDecoration(dpToPx(8f), false))
+        recycler.addItemDecoration(DividerSpacerItemDecoration(dp(8f), false))
 
         inputIterations.setOnClickListener { toast(R.string.test_iterations_explanation) }
     }
@@ -157,7 +158,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     }
 
     override fun showTestResults(results: List<TestResult>) {
-        adapter.setTestResults(results)
+        adapter.submitList(results)
     }
 
     override fun showTestHand(hand: List<PokemonCard>) {
@@ -177,7 +178,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                             cards[it].setImageDrawable(images[it])
                             val isBasic = hand[it].let { it.supertype == SuperType.POKEMON
                                     && (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank()) }
-                            cards[it].elevation = if (isBasic) dpToPx(4f) else 0f
+                            cards[it].elevation = if (isBasic) dp(4f) else 0f
                             cards[it].scaleX = if (isBasic) 1.05f else 1f
                             cards[it].scaleY = if (isBasic) 1.05f else 1f
                         }
@@ -185,14 +186,14 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                         // Animate cards out
                         val width = field.width
                         val height = field.height
-                        val outerMargin = dpToPx(32f)
-                        val innerMargin = dpToPx(8f)
+                        val outerMargin = dp(32f)
+                        val innerMargin = dp(8f)
                         val cardWidth = ((width - ((2 * outerMargin) + (3 * innerMargin))) / 4f).toInt()
                         val lowerOuterMargin = (width - ((3 * cardWidth) + (2 * innerMargin))) / 2f
                         Timber.i("Showing Hand (width: $width, height: $height, outerMargin: $outerMargin, lowerOuterMargin: $lowerOuterMargin, innerMargin: $innerMargin, cardWidth: $cardWidth)")
                         (0 until 4).forEach {
                             val x = outerMargin + (it * cardWidth) + (it * innerMargin)
-                            val y = (height / 2f) + ((cardWidth * PokemonCardView.RATIO) + innerMargin/2f) + dpToPx(8f)
+                            val y = (height / 2f) + ((cardWidth * PokemonCardView.RATIO) + innerMargin/2f) + dp(8f)
                             Timber.i("Card($it) [x: $x, y: $y]")
 
                             val card = cards[it]
@@ -263,16 +264,20 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         hideError()
         actionTestSingleHand.isEnabled = !isLoading
         actionTestOverall.isEnabled = !isLoading
-        emptyView.setLoading(isLoading)
+        emptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     override fun showError(description: String) {
         errorBar.text = description
-        errorBar.visible()
+        errorBar.isVisible = true
     }
 
     override fun hideError() {
-        errorBar.gone()
+        errorBar.isGone = true
     }
 
     override fun hideTestHand() {
@@ -280,16 +285,15 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     }
 
     override fun hideTestResults() {
-        adapter.clear()
-        adapter.notifyDataSetChanged()
+        adapter.submitList(emptyList())
     }
 
     override fun showEmptyView() {
-        emptyView.visible()
+        emptyView.isVisible = true
     }
 
     override fun hideEmptyView() {
-        emptyView.gone()
+        emptyView.isGone = true
     }
 
     private fun createHideHandAnimation(): AnimatorSet {

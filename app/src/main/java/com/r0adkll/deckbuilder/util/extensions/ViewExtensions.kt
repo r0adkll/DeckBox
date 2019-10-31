@@ -1,28 +1,11 @@
 package com.r0adkll.deckbuilder.util.extensions
 
-import androidx.annotation.DrawableRes
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
-
-fun View.isVisible(): Boolean = this.visibility == View.VISIBLE
-
-fun EditText.moveCursorToEnd() {
-    this.setSelection(this.text.length)
-}
-
-/*
- * TextView
- */
-
-fun TextView.drawableStart(@DrawableRes resId: Int) {
-    this.setCompoundDrawablesRelativeWithIntrinsicBounds(resId, 0, 0, 0)
-}
 
 /*
  * LayoutParams

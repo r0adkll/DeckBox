@@ -5,13 +5,6 @@
         <attr name="collectionAdjusterTint" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="AspectRatioImageView">
-        <attr name="ratioType" format="enum">
-            <enum name="width" value="0" />
-            <enum name="height" value="1" />
-        </attr>
-    </declare-styleable>
-
     <declare-styleable name="ForegroundImageView">
         <attr name="android:foreground"/>
     </declare-styleable>

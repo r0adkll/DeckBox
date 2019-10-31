@@ -1,18 +1,27 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browser.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.ftinc.kit.kotlin.adapter.ListRecyclerAdapter
+import com.ftinc.kit.recycler.EmptyViewListAdapter
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class ExpansionRecyclerAdapter(
         context: Context,
         private val downloadClicks: Relay<Expansion>,
         private val dismissClicks: Relay<Unit>,
-        private val downloadFormat: Relay<Format>
-) : ListRecyclerAdapter<Item, UiViewHolder<Item>>(context) {
+        private val downloadFormat: Relay<Format>,
+        private val onItemClickListener: (Item) -> Unit
+) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerViewItemCallback()) {
+
+    private val inflater = LayoutInflater.from(context)
+
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
@@ -20,25 +29,19 @@ class ExpansionRecyclerAdapter(
     }
 
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {
-        super.onBindViewHolder(vh, i)
-        vh.bind(items[i])
-    }
+        val item = getItem(i)
+        vh.bind(item)
 
-    override fun getItemViewType(position: Int): Int {
-        return items[position].viewType
-    }
-
-    override fun getItemId(position: Int): Long {
-        val item = items[position]
-        return when(item) {
-            is Item.ExpansionSet -> item.expansion.code.hashCode().toLong()
-            else -> 0L
+        vh.itemView.setOnClickListener {
+            onItemClickListener(item)
         }
     }
 
-    fun setExpansionItems(newItems: List<Item>) {
-        val diff = calculateDiff(newItems, items)
-        items = ArrayList(diff.new)
-        diff.diff.dispatchUpdatesTo(getListUpdateCallback())
+    override fun getItemViewType(position: Int): Int {
+        return getItem(position).viewType
+    }
+
+    override fun getItemId(position: Int): Long {
+        return getItem(position).itemId
     }
 }

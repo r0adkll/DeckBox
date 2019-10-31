@@ -3,13 +3,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ftinc.kit.recycler.EmptyViewListAdapter
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
-import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class DecksRecyclerAdapter(
         context: Context,
@@ -21,7 +21,7 @@ class DecksRecyclerAdapter(
         private val viewPreview: Relay<ExpansionPreview>,
         private val quickStart: Relay<Deck>,
         private val dismissQuickStart: Relay<Unit>
-) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(ITEM_CALLBACK) {
+) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerViewItemCallback()) {
 
     var itemClickListener: (Item) -> Unit = {}
     private val inflater = LayoutInflater.from(context)
@@ -60,30 +60,11 @@ class DecksRecyclerAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return when(val item = getItem(position)) {
-            is Item.DeckItem -> item.validatedDeck.deck.id.hashCode().toLong()
-            is Item.QuickStart -> 0L
-            is Item.Preview -> 1L
-            is Item.Header -> item.text.hashCode().toLong()
-        }
+        return getItem(position).itemId
     }
 
     override fun onViewDetachedFromWindow(holder: UiViewHolder<Item>) {
         super.onViewDetachedFromWindow(holder)
         holder.dispose()
-    }
-
-    companion object {
-
-        val ITEM_CALLBACK = object : DiffUtil.ItemCallback<Item>() {
-
-            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-                return oldItem.isItemSame(newItem)
-            }
-
-            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-                return oldItem.isContentSame(newItem)
-            }
-        }
     }
 }

@@ -3,14 +3,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItemCallback
+import com.ftinc.kit.recycler.EmptyViewListAdapter
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class DeckImageRecyclerAdapter(
         context: Context,
         private val itemClickListener: (DeckImage) -> Unit = {}
-) : EmptyViewListAdapter<DeckImage, UiViewHolder<DeckImage>>(RecyclerItemCallback()) {
+) : EmptyViewListAdapter<DeckImage, UiViewHolder<DeckImage>>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)
 

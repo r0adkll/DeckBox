@@ -14,11 +14,10 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.R
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
-import java.lang.IllegalStateException
 
 class CustomTabBrowser(
         private val context: AppCompatActivity,

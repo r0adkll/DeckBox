@@ -10,7 +10,9 @@ import com.evernote.android.state.State
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.arch.util.uiDebounce
+import com.ftinc.kit.extensions.color
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -34,8 +36,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ImeUtils
 import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
 import com.r0adkll.deckbuilder.util.bindLong
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import com.r0adkll.deckbuilder.util.findEnum
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable

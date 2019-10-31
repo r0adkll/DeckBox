@@ -10,10 +10,10 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.spToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.extensions.sp
 import com.r0adkll.deckbuilder.R
 
 class TestResultProgressView @JvmOverloads constructor(
@@ -28,10 +28,10 @@ class TestResultProgressView @JvmOverloads constructor(
             backgroundPaint.color = if (value) color(R.color.grey_500) else color(R.color.primaryColor)
         }
 
-    private val cardRadius = dpToPx(8f)
-    private val mulliganMargin = dpToPx(16f)
-    private val defaultHeight = dipToPx(96f)
-    private val percentWidth = dipToPx(88f)
+    private val cardRadius = dp(8)
+    private val mulliganMargin = dp(16)
+    private val defaultHeight = dip(96)
+    private val percentWidth = dip(88)
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val mulliganText: StaticLayout
@@ -41,7 +41,7 @@ class TestResultProgressView @JvmOverloads constructor(
 
         val textPaint = TextPaint(Paint.LINEAR_TEXT_FLAG)
         textPaint.color = Color.WHITE
-        textPaint.textSize = spToPx(20f)
+        textPaint.textSize = sp(20)
         textPaint.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         val width = textPaint.measureText("Mulligan")
 

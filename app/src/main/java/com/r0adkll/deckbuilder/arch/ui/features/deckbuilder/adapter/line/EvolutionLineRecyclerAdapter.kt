@@ -1,20 +1,19 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
 import android.content.Context
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.ftinc.kit.kotlin.extensions.dipToPx
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.extensions.dip
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.layoutWidth
-import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.marginsRelative
 
 /**
@@ -26,8 +25,8 @@ class EvolutionLineRecyclerAdapter(
         val spanCount: Int
 ) : RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
 
-    private val linkSpacing: Int = context.dipToPx(24f)
-    private val stageSpacing: Int = context.dipToPx(16f)
+    private val linkSpacing: Int = context.dip(24f)
+    private val stageSpacing: Int = context.dip(16f)
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -142,11 +141,9 @@ class EvolutionLineRecyclerAdapter(
         else {
             if (isFirstCard && isLastCard && hasNextNode) {
                 return PokemonCardView.Evolution.MIDDLE
-            }
-            else if (isFirstCard) {
+            } else if (isFirstCard) {
                 return PokemonCardView.Evolution.START
-            }
-            else if (isLastCard && hasNextNode) {
+            } else if (isLastCard && hasNextNode) {
                 return PokemonCardView.Evolution.END
             }
         }

@@ -4,6 +4,7 @@ package com.r0adkll.deckbuilder
 
 import android.app.Application
 import com.bumptech.glide.request.target.ViewTarget
+import com.ftinc.kit.widget.EmptyView
 import com.google.firebase.FirebaseApp
 import com.r0adkll.deckbuilder.internal.AppDelegate
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
@@ -40,6 +41,7 @@ class DeckApp : Application() {
 
         // Setup Glide to allow for custom tag id's so we can set tags to images for our own purpose
         ViewTarget.setTagId(R.id.glide_tag_id)
+        EmptyView.defaultMessageTextSizeSp = 20
     }
 
     private fun installAnalytics() {

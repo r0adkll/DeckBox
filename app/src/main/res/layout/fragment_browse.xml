@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     >
 
-    <com.ftinc.kit.widget.TightSwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,7 +19,7 @@
             android:clipToPadding="false"
             />
 
-    </com.ftinc.kit.widget.TightSwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.ftinc.kit.widget.EmptyView
         android:id="@+id/emptyView"

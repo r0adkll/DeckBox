@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.r0adkll.deckbuilder.arch.ui.widgets.AspectRatioImageView
+            <com.ftinc.kit.widget.AspectRatioImageView
                 android:id="@+id/logo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

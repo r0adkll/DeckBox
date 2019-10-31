@@ -2,14 +2,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.overview.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import androidx.recyclerview.widget.DiffUtil
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.recycler.EmptyViewListAdapter
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class OverviewRecyclerAdapter(

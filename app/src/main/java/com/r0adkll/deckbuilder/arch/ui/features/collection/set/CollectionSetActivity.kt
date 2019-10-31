@@ -21,16 +21,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.util.UIUtils
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.adapter.CollectionSetRecyclerAdapter
@@ -44,8 +44,14 @@ import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
+import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_collection_set.*
+import kotlinx.android.synthetic.main.activity_collection_set.backdrop
+import kotlinx.android.synthetic.main.activity_collection_set.emptyView
+import kotlinx.android.synthetic.main.activity_collection_set.logo
+import kotlinx.android.synthetic.main.activity_collection_set.recycler
+import kotlinx.android.synthetic.main.activity_set_browser.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -99,10 +105,12 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         recycler.layoutManager = GridLayoutManager(this, spanCount)
         (recycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
-        statusBarHeight = UIUtils.getStatusBarHeight(this)
-        appbar?.margins(top = statusBarHeight)
-        logo?.layoutHeight(dipToPx(100f))
-        logo?.margins(top = statusBarHeight + dipToPx(16f))
+        appBarLayout.doOnApplyWindowInsets { _, insets, _ ->
+            statusBarHeight = insets.systemWindowInsetTop
+            appbar?.margins(top = statusBarHeight)
+            logo?.layoutHeight(dip(100f))
+            logo?.margins(top = statusBarHeight + dip(16f))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -194,15 +202,19 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     }
 
     override fun hideError() {
-        emptyView.setEmptyMessage(R.string.empty_collection_set)
+        emptyView.setMessage(R.string.empty_collection_set)
     }
 
     override fun showError(description: String) {
-        emptyView.emptyMessage = description
+        emptyView.message = description
     }
 
     override fun showLoading(isLoading: Boolean) {
-        emptyView.setLoading(isLoading)
+        emptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {

@@ -1,27 +1,43 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
 import android.content.res.ColorStateList
-import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.CheckBox
+import android.widget.CheckedTextView
+import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dp
 import com.jakewharton.rxrelay2.Relay
 import com.nex3z.flowlayout.FlowLayout
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Rarity
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier
-import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.GREATER_THAN
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.GREATER_THAN_EQUALS
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.LESS_THAN
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.LESS_THAN_EQUALS
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.NONE
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Value
-import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.*
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.ATTRIBUTES
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.FIELD
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.HEADER
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.OPTION
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.TYPE
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.VALUE_RANGE
+import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.VIEW_MORE
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
 import com.r0adkll.deckbuilder.arch.ui.widgets.SeekBarIndicatorView
 import com.r0adkll.deckbuilder.util.bindView
@@ -129,7 +145,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                     is FilterAttribute.ExpansionAttribute -> attr.format.name.toLowerCase().capitalize()
                 }
                 view.setTextColor(color(if (isChecked) R.color.white else R.color.black87))
-                view.elevation = if (isChecked) dpToPx(4f) else 0f
+                view.elevation = if (isChecked) dp(4) else 0f
                 view.isChecked = isChecked
                 view.setOnClickListener {
                     attributeClicks.accept(attr)

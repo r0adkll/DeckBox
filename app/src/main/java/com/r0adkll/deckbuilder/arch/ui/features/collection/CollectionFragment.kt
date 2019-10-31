@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.ftinc.kit.arch.presentation.BaseFragment
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
-import com.ftinc.kit.kotlin.utils.ScreenUtils.smallestWidth
+import com.ftinc.kit.util.ScreenUtils
+import com.ftinc.kit.util.ScreenUtils.smallestWidth
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
@@ -58,7 +60,7 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
         collectionRecycler.adapter = adapter
         (collectionRecycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         (collectionRecycler.layoutManager as? GridLayoutManager)?.apply {
-            spanCount = if (smallestWidth(requireContext().resources, com.ftinc.kit.kotlin.utils.ScreenUtils.Config.TABLET_10)) 6 else 3
+            spanCount = if (smallestWidth(requireContext().resources, ScreenUtils.Config.TABLET_10)) 6 else 3
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (adapter.currentList[position]) {
@@ -94,15 +96,19 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
     }
 
     override fun hideError() {
-        collectionEmptyView.setEmptyMessage(R.string.empty_collection)
+        collectionEmptyView.setMessage(R.string.empty_collection)
     }
 
     override fun showError(description: String) {
-        collectionEmptyView.emptyMessage = description
+        collectionEmptyView.message = description
     }
 
     override fun showLoading(isLoading: Boolean) {
-        collectionEmptyView.setLoading(isLoading)
+        collectionEmptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     companion object {

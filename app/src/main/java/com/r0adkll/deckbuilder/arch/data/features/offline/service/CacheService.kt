@@ -10,7 +10,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.arch.util.retryWithBackoff
+import com.ftinc.kit.extensions.color
 import com.ftinc.kit.util.Stopwatch
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
@@ -23,7 +24,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.util.extensions.bytes
-import com.r0adkll.deckbuilder.util.extensions.retryWithBackoff
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
 import timber.log.Timber

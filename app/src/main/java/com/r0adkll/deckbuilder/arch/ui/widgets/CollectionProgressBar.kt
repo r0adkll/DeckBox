@@ -7,8 +7,8 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 
 class CollectionProgressBar @JvmOverloads constructor(
@@ -33,7 +33,7 @@ class CollectionProgressBar @JvmOverloads constructor(
             invalidate()
         }
 
-    var borderWidth: Float = dpToPx(1f)
+    var borderWidth: Float = dp(1)
         set(value) {
             field = value
             paint.strokeWidth = value
@@ -50,13 +50,13 @@ class CollectionProgressBar @JvmOverloads constructor(
     private val renderBounds = RectF()
 
     init {
-        paint.strokeWidth = dpToPx(1f)
+        paint.strokeWidth = dp(1)
 
         val a = context.obtainStyledAttributes(attrs, R.styleable.CollectionProgressBar, defStyleAttr, 0)
         trackColor = a.getColor(R.styleable.CollectionProgressBar_trackColor, color(R.color.white50))
         progressColor = a.getColor(R.styleable.CollectionProgressBar_progressColor, color(R.color.secondaryColor))
         borderColor = a.getColor(R.styleable.CollectionProgressBar_borderColor, Color.WHITE)
-        borderWidth = a.getDimension(R.styleable.CollectionProgressBar_borderWidth, dpToPx(1f))
+        borderWidth = a.getDimension(R.styleable.CollectionProgressBar_borderWidth, dp(1))
         a.recycle()
 
         if (isInEditMode) {

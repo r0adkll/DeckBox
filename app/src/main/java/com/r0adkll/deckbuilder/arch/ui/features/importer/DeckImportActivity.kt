@@ -10,13 +10,12 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.gone
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.visible
+import com.ftinc.kit.extensions.color
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -59,8 +58,8 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
         deckList.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 invalidateOptionsMenu()
-                action_layout?.setVisible(deckList.text.isNotBlank())
-                action_divider?.setVisible(deckList.text.isNotBlank())
+                action_layout?.isVisible = deckList.text.isNotBlank()
+                action_divider?.isVisible = deckList.text.isNotBlank()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -135,17 +134,17 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
     }
 
     override fun showLoading(isLoading: Boolean) {
-        loading.setVisible(isLoading)
-        deckList.setVisible(!isLoading)
+        loading.isVisible = isLoading
+        deckList.isVisible = !isLoading
     }
 
     override fun showError(description: String) {
         errorMessage.text = description
-        error.visible()
+        error.isVisible = true
     }
 
     override fun hideError() {
-        error.gone()
+        error.isGone = true
     }
 
     private fun detectClipBoard() {

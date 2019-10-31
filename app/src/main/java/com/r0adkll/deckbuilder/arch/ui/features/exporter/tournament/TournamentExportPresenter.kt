@@ -2,13 +2,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State.Change
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import javax.inject.Inject
 

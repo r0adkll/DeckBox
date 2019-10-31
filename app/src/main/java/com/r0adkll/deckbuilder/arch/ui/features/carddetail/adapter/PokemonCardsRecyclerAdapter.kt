@@ -2,14 +2,11 @@ package com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
-import androidx.recyclerview.widget.DiffUtil
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.recycler.EmptyViewListAdapter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 

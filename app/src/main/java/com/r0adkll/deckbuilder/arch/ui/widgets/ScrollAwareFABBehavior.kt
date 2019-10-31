@@ -1,11 +1,11 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import android.view.View
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.ftinc.kit.extensions.dp
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 @Suppress("UNUSED_PARAMETER")
 class ScrollAwareFABBehavior(
@@ -13,7 +13,7 @@ class ScrollAwareFABBehavior(
         attrs: AttributeSet
 ) : CoordinatorLayout.Behavior<FloatingActionButton>() {
 
-    private val maxTransY = context.dpToPx(56f + 16f)
+    private val maxTransY = context.dp(56f + 16f)
 
     override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout,
                                      child: FloatingActionButton,

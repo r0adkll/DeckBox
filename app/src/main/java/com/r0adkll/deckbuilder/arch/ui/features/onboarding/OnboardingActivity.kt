@@ -9,16 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.ftinc.kit.arch.presentation.BaseActivity
-import com.ftinc.kit.kotlin.extensions.gone
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.visible
-import com.ftinc.kit.kotlin.utils.bindParcelable
-import com.ftinc.kit.kotlin.utils.bundle
+import com.ftinc.kit.util.bindParcelable
+import com.ftinc.kit.util.bundle
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
@@ -86,15 +85,15 @@ class OnboardingActivity : BaseActivity() {
             when(position) {
                 1 -> {
                     action_finish.alpha = 0f
-                    action_finish.gone()
+                    action_finish.isGone = true
                     action_next.alpha = 1f
-                    action_next.visible()
+                    action_next.isVisible = true
                 }
                 2 -> {
                     action_finish.alpha = 1f
-                    action_finish.visible()
+                    action_finish.isVisible = true
                     action_next.alpha = 0f
-                    action_next.gone()
+                    action_next.isGone = true
                 }
             }
         }
@@ -134,7 +133,7 @@ class OnboardingActivity : BaseActivity() {
             title.setText(page.title)
             subtitle.setText(page.subtitle)
             image.setImageResource(page.image)
-            comingSoon.setVisible(page.comingSoon)
+            comingSoon.isVisible = page.comingSoon
         }
 
         companion object {

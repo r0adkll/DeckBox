@@ -2,6 +2,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
@@ -10,7 +11,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.Marke
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailUi.State.Change
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber

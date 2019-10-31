@@ -1,16 +1,15 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.gone
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.visible
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.extensions.dp
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -48,24 +47,24 @@ class PokemonCardViewHolder(
         cardView.evolution = evolution
 
         if (isCollectionMode) {
-            collectionCounter?.visible()
+            collectionCounter?.isVisible = true
             collectionCounter?.text = "$collectionCount"
             cardView.imageAlpha = if (collectionCount >= count) 255 else 102
             Timber.v("Binding(id=${card.id}, collection=$collectionCount, count=$count, resultAlpha=${cardView.alpha}")
         } else {
-            collectionCounter?.gone()
+            collectionCounter?.isGone = true
             cardView.alpha = 1f
         }
 
-        actionLayout?.setVisible((isEditMode && !displayWhenOne) || isEditMode && ((displayWhenOne && count > 0) || count > 1))
+        actionLayout?.isVisible = (isEditMode && !displayWhenOne) || isEditMode && ((displayWhenOne && count > 0) || count > 1)
         actionRemove?.setOnClickListener { removeCardClicks.accept(card) }
         actionAdd?.setOnClickListener { addCardClicks.accept(listOf(card)) }
 
         if (displayWhenOne && count > 0) {
-            cardView.elevation = dpToPx(8f)
+            cardView.elevation = dp(8)
         }
         else {
-            cardView.elevation = dpToPx(4f)
+            cardView.elevation = dp(4)
         }
     }
 

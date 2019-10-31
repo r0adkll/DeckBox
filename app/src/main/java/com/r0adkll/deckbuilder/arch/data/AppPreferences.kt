@@ -2,10 +2,10 @@ package com.r0adkll.deckbuilder.arch.data
 
 import android.content.SharedPreferences
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.ftinc.kit.kotlin.extensions.Preferences
-import com.ftinc.kit.kotlin.extensions.Preferences.BooleanPreference
-import com.ftinc.kit.kotlin.extensions.Preferences.IntPreference
-import com.ftinc.kit.kotlin.extensions.Preferences.StringPreference
+import com.ftinc.kit.extensions.Preferences
+import com.ftinc.kit.extensions.Preferences.BooleanPreference
+import com.ftinc.kit.extensions.Preferences.IntPreference
+import com.ftinc.kit.extensions.Preferences.StringPreference
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveBasicEnergySetPreference

@@ -2,8 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.DisposableStateRenderer
-import com.r0adkll.deckbuilder.util.extensions.mapNullable
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.ftinc.kit.arch.util.mapNullable
+import com.ftinc.kit.arch.util.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
 

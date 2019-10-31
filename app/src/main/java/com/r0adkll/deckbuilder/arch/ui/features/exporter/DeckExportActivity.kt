@@ -8,6 +8,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.extensions.snackbar
+import com.ftinc.kit.extensions.toast
 import com.ftinc.kit.util.IntentUtils
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
@@ -17,9 +20,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.bindParcelable
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
-import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.activity_deck_exporter.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -52,7 +52,7 @@ class DeckExportActivity : BaseActivity() {
         actionShare?.setOnClickListener {
             Analytics.event(Event.Share("deck"))
             val text = deckList.text.toString()
-            val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")
+            val intent = Intent.createChooser(IntentUtils.shareText("", text), "Share deck")
             startActivity(intent)
         }
 
@@ -77,7 +77,7 @@ class DeckExportActivity : BaseActivity() {
             R.id.action_share -> {
                 Analytics.event(Event.Share("deck"))
                 val text = deckList.text.toString()
-                val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")
+                val intent = Intent.createChooser(IntentUtils.shareText("", text), "Share deck")
                 startActivity(intent)
                 true
             }

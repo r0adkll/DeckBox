@@ -1,24 +1,24 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter
 
+import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
-sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+sealed class UiViewHolder<in I : DeckImage>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I, isSelected: Boolean?)
 
-    protected fun getElevation(isSelected: Boolean?): Float {
+    protected fun getElevation(isSelected: Boolean?): Int {
         return when(isSelected) {
-            null -> 3f
-            true -> 6f
-            else -> 0f
+            null -> 3
+            true -> 6
+            else -> 0
         }
     }
 
@@ -48,7 +48,7 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerv
                     .placeholder(R.drawable.pokemon_card_back)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(pokemonCardView)
-            pokemonCardView.elevation = dpToPx(getElevation(isSelected))
+            pokemonCardView.elevation = dp(getElevation(isSelected))
             pokemonCardView.alpha = getAlpha(isSelected)
             pokemonCardView.scaleX = getScale(isSelected)
             pokemonCardView.scaleY = getScale(isSelected)
@@ -62,7 +62,7 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerv
         override fun bind(item: DeckImage.Type, isSelected: Boolean?) {
             typeCardView.primaryType = item.type1
             typeCardView.secondaryType = item.type2
-            typeCardView.elevation = dpToPx(getElevation(isSelected))
+            typeCardView.elevation = dp(getElevation(isSelected))
             typeCardView.alpha = getAlpha(isSelected)
             typeCardView.scaleX = getScale(isSelected)
             typeCardView.scaleY = getScale(isSelected)

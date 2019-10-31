@@ -2,13 +2,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter
 
 import android.net.Uri
 import android.os.Parcelable
-import com.ftinc.kit.kotlin.adapter.RecyclerItem
+import com.ftinc.kit.recycler.RecyclerViewItem
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.util.compact
 import com.r0adkll.deckbuilder.util.type
 import kotlinx.android.parcel.Parcelize
 
-sealed class DeckImage : Parcelable, RecyclerItem {
+sealed class DeckImage : Parcelable, RecyclerViewItem {
 
     abstract val uri: Uri
 
@@ -19,12 +19,12 @@ sealed class DeckImage : Parcelable, RecyclerItem {
         override val uri: Uri
             get() = Uri.parse(imageUrl)
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is Pokemon -> new.imageUrl == imageUrl
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is Pokemon -> new.imageUrl == imageUrl
             else -> false
         }
@@ -47,12 +47,12 @@ sealed class DeckImage : Parcelable, RecyclerItem {
                 return builder.build()
             }
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
             is Type -> type1 == new.type1 && type2 == new.type2
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
             is Type -> type1 == new.type1 && type2 == new.type2
             else -> false
         }

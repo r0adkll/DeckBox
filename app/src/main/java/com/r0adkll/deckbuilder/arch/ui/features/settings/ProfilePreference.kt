@@ -8,7 +8,7 @@ import android.widget.ImageView
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 

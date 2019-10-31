@@ -1,12 +1,18 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter
 
 import android.content.res.Configuration
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.RotateAnimation
+import android.view.animation.TranslateAnimation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import android.view.View
-import android.view.animation.*
 import androidx.recyclerview.widget.GridLayoutManager
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.recycler.EmptyViewListAdapter
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -14,9 +20,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokemonRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.ScreenUtils
@@ -48,15 +53,15 @@ abstract class SuperTypeViewHolder<out A : EmptyViewListAdapter<*, *>>(
     private val emptyView: EmptyView = itemView.findViewById(R.id.empty_view)
 
     abstract val adapter: A
-    abstract val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
+    abstract val layoutManager: LayoutManager
     abstract fun bind(cards: List<StackedPokemonCard>)
     abstract fun wiggleCard(card: PokemonCard)
     abstract fun setEditMode(isEditing: Boolean)
     abstract fun setCollectionMode(isCollectionEnabled: Boolean)
 
     open fun setup() {
-        emptyView.setIcon(emptyIcon)
-        emptyView.setEmptyMessage(emptyMessage)
+        emptyView.setIconResource(emptyIcon)
+        emptyView.setMessage(emptyMessage)
 
         adapter.emptyView = emptyView
         recycler.layoutManager = layoutManager
@@ -84,7 +89,7 @@ class PokemonViewHolder(
     }
 
     override val adapter: PokemonBuilderRecyclerAdapter = PokemonBuilderRecyclerAdapter(itemView.context, spanSize, editCardIntentions, pokemonCardClicks)
-    override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
+    override val layoutManager: LayoutManager = GridLayoutManager(itemView.context, spanSize)
 
     override fun setup() {
         super.setup()
@@ -148,7 +153,7 @@ class TrainerEnergyViewHolder(
 
     override val adapter: StackedPokemonRecyclerAdapter = StackedPokemonRecyclerAdapter(itemView.context,
             editCardIntentions.addCardClicks, editCardIntentions.removeCardClicks)
-    override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
+    override val layoutManager: LayoutManager = GridLayoutManager(itemView.context, spanSize)
 
     init {
         recycler.setHasFixedSize(true)
@@ -190,7 +195,7 @@ class TrainerEnergyViewHolder(
                 rotateAnim.repeatMode = Animation.REVERSE
                 rotateAnim.duration = 50
 
-                val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dpToPx(8f))
+                val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dp(8))
                 transAnim.repeatCount = 1
                 transAnim.repeatMode = Animation.REVERSE
                 transAnim.duration = 100

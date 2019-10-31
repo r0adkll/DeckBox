@@ -6,10 +6,10 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.string
+import com.ftinc.kit.extensions.string
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
@@ -63,7 +63,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             name.text = item.expansion.name
             series.text = item.expansion.series
             date.text = string(R.string.expansion_released_date_format, item.expansion.releaseDate)
-            downloadProgress.setVisible(item.offlineStatus is CacheStatus.Downloading || item.offlineStatus == CacheStatus.Queued)
+            downloadProgress.isVisible = item.offlineStatus is CacheStatus.Downloading || item.offlineStatus == CacheStatus.Queued
             downloadProgress.isIndeterminate = (item.offlineStatus as? CacheStatus.Downloading)?.progress == null
             downloadProgress.progress = when (item.offlineStatus) {
                 is CacheStatus.Downloading -> item.offlineStatus.progress?.times(100f)?.toInt() ?: 0

@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.util.plusAssign
 import com.jakewharton.rxbinding2.view.clicks
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
@@ -21,7 +22,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.PdfDocumentAdapter
 import com.r0adkll.deckbuilder.util.bindSerializable
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import kotlinx.android.synthetic.main.activity_pdf_preview.*
 import java.io.File
 import java.io.IOException

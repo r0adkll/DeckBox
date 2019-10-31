@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.R
 
 class ProgressLinearLayout @JvmOverloads constructor(

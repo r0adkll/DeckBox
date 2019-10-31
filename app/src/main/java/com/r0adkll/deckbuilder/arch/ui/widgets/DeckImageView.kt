@@ -2,16 +2,25 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Outline
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
-import androidx.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.drawable
+import androidx.annotation.ColorInt
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.extensions.drawable
 import com.r0adkll.deckbuilder.R
 import io.pokemontcg.model.Type
 
@@ -124,7 +133,7 @@ class DeckImageView @JvmOverloads constructor(
             mDesaturateColorFilter = ColorMatrixColorFilter(cm)
         }
 
-        outlineProvider = CardOutlineProvider(dpToPx(4f))
+        outlineProvider = CardOutlineProvider(dp(4))
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -260,7 +269,7 @@ class DeckImageView @JvmOverloads constructor(
         // Render the first type
         primaryType?.let {
             val typeDrawable = getTypeDrawable(it)
-            typeDrawable.setBounds(0, 0, dipToPx(24f), dipToPx(24f))
+            typeDrawable.setBounds(0, 0, dip(24), dip(24))
             mTypePaint.color = getTypeColor(it)
             primaryTypeRect.set(0, 0, if (secondaryType == null) width else width / 2, height)
             canvas.drawRect(primaryTypeRect, mTypePaint)
@@ -276,7 +285,7 @@ class DeckImageView @JvmOverloads constructor(
         // Render the second type
         secondaryType?.let {
             val typeDrawable2 = getTypeDrawable(it)
-            typeDrawable2.setBounds(0, 0, dipToPx(24f), dipToPx(24f))
+            typeDrawable2.setBounds(0, 0, dip(24), dip(24))
             mTypePaint.color = getTypeColor(it)
             secondaryTypeRect.set(width / 2, 0, width, height)
             canvas.drawRect(secondaryTypeRect, mTypePaint)

@@ -3,17 +3,17 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.View
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import androidx.viewpager.widget.ViewPager
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 
 class DotPageIndicator @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr), androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+) : View(context, attrs, defStyleAttr), ViewPager.OnPageChangeListener {
 
     var index: Int = 0
         set(value) {
@@ -39,11 +39,11 @@ class DotPageIndicator @JvmOverloads constructor(
             invalidate()
         }
 
-    val size: Int = dipToPx(8f)
-    val spacing: Float = dpToPx(8f)
+    val size: Int = dip(8)
+    val spacing: Float = dp(8)
 
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var pager: androidx.viewpager.widget.ViewPager? = null
+    private var pager: ViewPager? = null
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
@@ -83,7 +83,7 @@ class DotPageIndicator @JvmOverloads constructor(
         index = position
     }
 
-    fun setupWithViewPager(pager: androidx.viewpager.widget.ViewPager) {
+    fun setupWithViewPager(pager: ViewPager) {
         this.pager = pager
         max = pager.adapter?.count ?: 0
         pager.addOnPageChangeListener(this)

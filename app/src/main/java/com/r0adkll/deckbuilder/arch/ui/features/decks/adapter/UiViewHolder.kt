@@ -3,26 +3,34 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupMenu
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.arch.util.plusAssign
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.ui.components.preview.ExpansionPreviewRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.*
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.DECK
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.HEADER
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.PREVIEW
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.QUICK_START
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -110,7 +118,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
                 (0 until 5).map { QuickStartRecyclerAdapter.Item.Placeholder(it) }
             }
 
-            adapter.setQuickStartItems(items)
+            adapter.submitList(items)
 
             actionDismiss.setOnClickListener {
                 dismissQuickStart.accept(Unit)
@@ -151,8 +159,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
 
             val deck = item.validatedDeck.deck
             title.text = deck.name
-            error.setVisible(deck.isMissingCards)
-            loading.setVisible(item.isLoading)
+            error.isVisible = deck.isMissingCards
+            loading.isVisible = item.isLoading
 
             deck.image?.let {
                 when(it) {

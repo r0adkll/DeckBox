@@ -4,15 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.*
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.util.bindOptionalView
 import com.r0adkll.deckbuilder.util.bindView
 
 class CollectionCardViewHolder(
@@ -29,10 +28,10 @@ class CollectionCardViewHolder(
     fun bind(card: PokemonCard, count: Int) {
         cardView.card = card
         if (count > 0) {
-            cardCount.visible()
+            cardCount.isVisible = true
             cardCount.text = "$count"
         } else {
-            cardCount.gone()
+            cardCount.isGone = true
         }
 
         actionRemove.isEnabled = count > 0

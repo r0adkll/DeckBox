@@ -13,6 +13,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.ftinc.kit.arch.presentation.BaseFragment
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.extensions.toast
 import com.ftinc.kit.util.IntentUtils
 import com.jakewharton.rxbinding2.view.clicks
 import com.r0adkll.deckbuilder.R
@@ -24,8 +26,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.AppSchedulers
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.fragment_ptcgo_export.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -94,7 +94,7 @@ class PtcgoExportFragment : BaseFragment() {
             R.id.action_share -> {
                 Analytics.event(Event.Share("deck"))
                 val text = deckList.text.toString()
-                val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")
+                val intent = Intent.createChooser(IntentUtils.shareText("", text), "Share deck")
                 startActivity(intent)
                 true
             }

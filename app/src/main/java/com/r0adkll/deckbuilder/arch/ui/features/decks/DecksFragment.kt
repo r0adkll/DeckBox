@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.ftinc.kit.arch.presentation.BaseFragment
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.extensions.snackbar
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
@@ -31,8 +34,6 @@ import com.r0adkll.deckbuilder.util.DialogUtils
 import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.Resource
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_decks.*
 import javax.inject.Inject
@@ -184,7 +185,11 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
     override fun showLoading(isLoading: Boolean) {
-        empty_view.setLoading(isLoading)
+        empty_view.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     override fun showError(description: String) {

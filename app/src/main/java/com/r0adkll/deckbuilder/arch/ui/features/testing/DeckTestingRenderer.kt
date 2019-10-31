@@ -2,9 +2,9 @@ package com.r0adkll.deckbuilder.arch.ui.features.testing
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
+import com.ftinc.kit.arch.util.mapNullable
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
-import com.r0adkll.deckbuilder.util.extensions.mapNullable
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
 import timber.log.Timber
 import kotlin.math.max
@@ -48,7 +48,7 @@ class DeckTestingRenderer(
                 .addToLifecycle()
                 .subscribe {
                     if (it.value != null) {
-                        actions.showTestResults(it.value)
+                        actions.showTestResults(it.value!!)
                     } else {
                         actions.hideTestResults()
                     }
@@ -60,7 +60,7 @@ class DeckTestingRenderer(
                 .addToLifecycle()
                 .subscribe {
                     if (it.value != null) {
-                        actions.showTestHand(it.value)
+                        actions.showTestHand(it.value!!)
                     } else {
                         actions.hideTestHand()
                     }
@@ -72,7 +72,7 @@ class DeckTestingRenderer(
                 .addToLifecycle()
                 .subscribe {
                     if (it.value != null) {
-                        actions.setMetadata(it.value)
+                        actions.setMetadata(it.value!!)
                     }
                 }
 

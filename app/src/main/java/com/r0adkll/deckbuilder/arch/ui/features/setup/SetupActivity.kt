@@ -5,7 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import com.ftinc.kit.arch.presentation.BaseActivity
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.snackbar
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -21,7 +22,6 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.util.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
 import java.util.*

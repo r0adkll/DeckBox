@@ -8,9 +8,9 @@ import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 
 class SeekBarIndicatorView @JvmOverloads constructor(
@@ -23,7 +23,7 @@ class SeekBarIndicatorView @JvmOverloads constructor(
 
     init {
         indicator.gravity = Gravity.CENTER
-        indicator.setPadding(0, 0, 0, dipToPx(8f))
+        indicator.setPadding(0, 0, 0, dip(8))
         indicator.setTextColor(color(R.color.white))
         indicator.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
         indicator.setBackgroundResource(R.drawable.ic_value_bubble)
@@ -50,7 +50,7 @@ class SeekBarIndicatorView @JvmOverloads constructor(
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
         seekBarChangeListener?.onStopTrackingTouch(seekBar)
-        indicator.elevation = dpToPx(4f)
+        indicator.elevation = dp(4)
         syncToProgress(seekBar.progress, seekBar.max)
     }
 
@@ -61,7 +61,7 @@ class SeekBarIndicatorView @JvmOverloads constructor(
     private fun syncToProgress(progress: Int, max: Int) {
         val percent = progress.toFloat() / max.toFloat()
         val width = (measuredWidth - paddingStart - paddingEnd) - indicator.width
-        val translationX = ((width * percent) + paddingStart) - dpToPx(0.5f)
+        val translationX = ((width * percent) + paddingStart) - (dp(1) * 0.5f)
         indicator.translationX = translationX
         indicator.text = valueFormatter.format(progress)
     }

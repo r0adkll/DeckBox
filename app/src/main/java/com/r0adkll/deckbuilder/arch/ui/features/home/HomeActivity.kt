@@ -11,7 +11,9 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.presentation.BaseActivity
-import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.snackbar
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
@@ -28,8 +30,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import timber.log.Timber
@@ -149,7 +149,7 @@ class HomeActivity : BaseActivity(),
         progressLayout.alpha = (progress - .8f).coerceAtLeast(0f) / .2f
 
         val translationY = (progress * progressLayout.height)
-        val height = dipToPx(56f) + translationY
+        val height = dip(56f) + translationY
         appBarLayout.layoutHeight(height.toInt())
         progressLayout.translationY = translationY
     }

@@ -6,8 +6,8 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 
@@ -24,7 +24,7 @@ class PokemonFormatView @JvmOverloads constructor(
             field = value
             invalidate()
         }
-    var strokeWidth: Float = dpToPx(4f)
+    var strokeWidth: Float = dp(4)
         set(value) {
             field = value
             paint.strokeWidth = value
@@ -41,9 +41,9 @@ class PokemonFormatView @JvmOverloads constructor(
             invalidate()
         }
 
-    var ringPadding = dpToPx(4f)
+    var ringPadding = dp(4)
     var ringRadius = 0f
-    var nodeRadius = dpToPx(4f)
+    var nodeRadius = dp(4)
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 

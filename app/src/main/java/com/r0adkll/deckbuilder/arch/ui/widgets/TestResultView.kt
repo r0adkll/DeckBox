@@ -10,8 +10,13 @@ import android.util.TypedValue
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.ftinc.kit.kotlin.extensions.*
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 import kotlin.math.roundToInt
 
@@ -38,13 +43,14 @@ class TestResultView @JvmOverloads constructor(
     var isMulligan: Boolean = false
         set(value) {
             field = value
-            card.setVisible(!value)
-            title.setVisible(value)
+            card.isGone = value
+            title.isVisible = value
             backgroundPaint.color = color(if (value) R.color.grey_300 else R.color.primaryColor)
         }
 
     var text: String = context.getString(R.string.mulligan)
         set(value) {
+            field = value
             title.text = value
         }
 
@@ -52,10 +58,10 @@ class TestResultView @JvmOverloads constructor(
     private val title = TextView(context)
     private val card = ImageView(context)
 
-    private val defaultHeight = dipToPx(72f)
-    private val defaultPadding = dipToPx(20f)
-    private val cardMargin = dipToPx(16f)
-    private val cardRadius = dpToPx(8f)
+    private val defaultHeight = dip(72)
+    private val defaultPadding = dip(20)
+    private val cardMargin = dip(16)
+    private val cardRadius = dp(8)
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
@@ -72,7 +78,7 @@ class TestResultView @JvmOverloads constructor(
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
         title.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         title.setTextColor(color(R.color.white))
-        title.invisible()
+        title.isInvisible = true
         addView(title)
 
         val w = defaultHeight / PokemonCardView.RATIO

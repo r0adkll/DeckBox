@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import com.ftinc.kit.arch.presentation.BaseFragment
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.arch.util.uiDebounce
+import com.ftinc.kit.extensions.snackbar
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
@@ -27,11 +30,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.di.Tournamen
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.AgeDivisionUtils
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import com.r0adkll.deckbuilder.util.extensions.setDate
-import com.r0adkll.deckbuilder.util.extensions.snackbar
 import com.r0adkll.deckbuilder.util.extensions.toCalendar
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_tournament_export.*
 import timber.log.Timber

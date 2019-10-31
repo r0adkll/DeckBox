@@ -4,11 +4,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
@@ -20,9 +20,9 @@ class EvolutionLineItemDecoration(
     private val linkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val linkBarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private val nodeSpacing: Int = context.dipToPx(4f)
-    private val linkSpacing: Int = context.dipToPx(24f)
-    private val linkRadius: Float = context.dpToPx(8f)
+    private val nodeSpacing: Int = context.dip(4f)
+    private val linkSpacing: Int = context.dip(24f)
+    private val linkRadius: Float = context.dp(8f)
 
     init {
         linkPaint.color = context.color(R.color.primaryColor)

@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.arch.di.HasComponent
-import com.ftinc.kit.kotlin.utils.bindLong
-import com.ftinc.kit.kotlin.utils.bindString
-import com.ftinc.kit.kotlin.utils.bundle
+import com.ftinc.kit.arch.util.uiDebounce
+import com.ftinc.kit.util.bindLong
+import com.ftinc.kit.util.bindString
+import com.ftinc.kit.util.bundle
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -21,7 +23,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckIma
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_deck_image_picker.*
 import javax.inject.Inject
@@ -106,15 +107,19 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
     }
 
     override fun showLoading(isLoading: Boolean) {
-        emptyView.setLoading(isLoading)
+        emptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     override fun showError(description: String) {
-        emptyView.emptyMessage = description
+        emptyView.message = description
     }
 
     override fun hideError() {
-        emptyView.setEmptyMessage(R.string.empty_deck_image_message)
+        emptyView.setMessage(R.string.empty_deck_image_message)
     }
 
     private fun <C : Any> getComponent(componentType: KClass<C>): C {

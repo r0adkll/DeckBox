@@ -1,15 +1,19 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
 import android.content.Context
-import androidx.viewpager.widget.PagerAdapter
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.*
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
 import android.view.animation.Animation.RELATIVE_TO_SELF
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import android.view.animation.AnimationSet
+import android.view.animation.RotateAnimation
+import android.view.animation.TranslateAnimation
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
+import com.ftinc.kit.extensions.dp
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -26,10 +30,10 @@ class ResultsPagerAdapter(
         private val scrollHideListener: KeyboardScrollHideListener,
         private val pokemonCardLongClicks: Relay<PokemonCardView>,
         private val editCardIntentions: EditCardIntentions
-) : androidx.viewpager.widget.PagerAdapter() {
+) : PagerAdapter() {
 
     private val inflater = LayoutInflater.from(context)
-    private val viewHolders: Array<SearchResultViewHolder?> = Array(3) { _ -> null }
+    private val viewHolders: Array<SearchResultViewHolder?> = Array(3) { null }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
@@ -134,24 +138,26 @@ class ResultsPagerAdapter(
                 editCardIntentions = editCardIntentions)
 
         init {
-            emptyView.setIcon(R.drawable.ic_empty_search)
-            emptyView.setEmptyMessage(when(position) {
+            emptyView.setIconResource(R.drawable.ic_empty_search)
+            emptyView.setMessage(when(position) {
                 0 -> R.string.empty_search_pokemon_message
                 1 -> R.string.empty_search_trainer_message
                 else -> R.string.empty_search_energy_message
             })
 
-            adapter.setEmptyView(emptyView)
+            adapter.emptyView = emptyView
             if (hasValidSession) {
-                adapter.setOnItemClickListener { editCardIntentions.addCardClicks.accept(listOf(it)) }
-                adapter.setOnItemLongClickListener { view, _ ->
+                adapter.onItemClickListener = { _, card ->
+                    editCardIntentions.addCardClicks.accept(listOf(card))
+                }
+                adapter.onItemLongClickListener = { view, _ ->
                     // TODO: Fix this atrocity
                     val card = view.findViewById<PokemonCardView>(R.id.card)
                     pokemonCardLongClicks.accept(card)
                     true
                 }
             } else {
-                adapter.setOnViewItemClickListener { view, _ ->
+                adapter.onItemClickListener = { view, _ ->
                     val card = view.findViewById<PokemonCardView>(R.id.card)
                     pokemonCardLongClicks.accept(card)
                 }
@@ -165,7 +171,7 @@ class ResultsPagerAdapter(
         }
 
         fun bind(cards: List<PokemonCard>) {
-            adapter.setCards(cards)
+            adapter.submitList(cards)
         }
 
         fun setSelectedCards(cards: List<PokemonCard>) {
@@ -173,34 +179,31 @@ class ResultsPagerAdapter(
         }
 
         fun showLoading(isLoading: Boolean) {
-            emptyView.setLoading(isLoading)
+            emptyView.state = if (isLoading) {
+                EmptyView.State.LOADING
+            } else {
+                EmptyView.State.EMPTY
+            }
         }
 
         fun showEmptyResults() {
-            emptyView.setEmptyMessage(when(position) {
+            emptyView.setMessage(when(position) {
                 0 -> R.string.empty_search_results_pokemon_message
                 1 -> R.string.empty_search_results_trainer_message
                 else -> R.string.empty_search_results_energy_message
             })
-//            emptyView.setActionLabelRes(R.string.empty_search_missing_card)
-//            emptyView.actionColor = emptyView.color(R.color.red_500)
-//            emptyView.setOnActionClickListener {
-//                Analytics.event(Event.SelectContent.Action("search_missing_card", position.toString()))
-//                MissingCardsActivity.show(itemView.context)
-//            }
         }
 
         fun showEmptyDefault() {
-            emptyView.setEmptyMessage(when(position) {
+            emptyView.setMessage(when(position) {
                 0 -> R.string.empty_search_pokemon_message
                 1 -> R.string.empty_search_trainer_message
                 else -> R.string.empty_search_energy_message
             })
-            emptyView.actionLabel = null
         }
 
         fun showError(description: String) {
-            emptyView.emptyMessage = description
+            emptyView.message = description
         }
 
         fun hideError() {
@@ -219,7 +222,7 @@ class ResultsPagerAdapter(
                     rotateAnim.repeatMode = Animation.REVERSE
                     rotateAnim.duration = 50
 
-                    val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dpToPx(8f))
+                    val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dp(8))
                     transAnim.repeatCount = 1
                     transAnim.repeatMode = Animation.REVERSE
                     transAnim.duration = 100

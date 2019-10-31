@@ -1,18 +1,18 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing.adapter
 
 import android.annotation.SuppressLint
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.TestResultProgressView
 import com.r0adkll.deckbuilder.util.bindView
 
-class TestResultViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+class TestResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val background: TestResultProgressView by bindView(R.id.background)
     private val imageView: ImageView by bindView(R.id.pokemonImage)

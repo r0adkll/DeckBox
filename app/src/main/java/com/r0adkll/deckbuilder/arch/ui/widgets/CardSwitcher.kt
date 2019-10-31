@@ -5,7 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ViewSwitcher
-import com.ftinc.kit.kotlin.extensions.dipToPx
+import com.ftinc.kit.extensions.dip
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
@@ -31,12 +31,12 @@ class CardSwitcher : ViewSwitcher {
         setInAnimation(context, android.R.anim.slide_in_left)
         setOutAnimation(context, android.R.anim.slide_out_right)
 
-        var lp = LayoutParams(dipToPx(400f), LayoutParams.WRAP_CONTENT)
+        var lp = LayoutParams(dip(400), LayoutParams.WRAP_CONTENT)
         lp.gravity = Gravity.CENTER
         card1 = PokemonCardView(context)
         addView(card1, lp)
 
-        lp = LayoutParams(dipToPx(400f), LayoutParams.WRAP_CONTENT)
+        lp = LayoutParams(dip(400), LayoutParams.WRAP_CONTENT)
         lp.gravity = Gravity.CENTER
         card2 = PokemonCardView(context)
         addView(card2, lp)

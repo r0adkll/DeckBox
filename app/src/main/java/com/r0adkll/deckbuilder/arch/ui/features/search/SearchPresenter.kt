@@ -3,13 +3,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State.Change
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import io.reactivex.ObservableSource

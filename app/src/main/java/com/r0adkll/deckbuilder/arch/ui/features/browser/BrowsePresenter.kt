@@ -2,13 +2,13 @@ package com.r0adkll.deckbuilder.arch.ui.features.browser
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseUi.State.Change
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject

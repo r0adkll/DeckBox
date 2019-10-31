@@ -2,6 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.DisposableStateRenderer
+import com.ftinc.kit.arch.util.mapNullable
+import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
@@ -9,8 +11,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.SumType.NO_COLLECTION
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.SumType.ONLY_COLLECTION
 import com.r0adkll.deckbuilder.util.CardUtils.stackCards
-import com.r0adkll.deckbuilder.util.extensions.mapNullable
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
 
 class DeckBuilderRenderer(

@@ -6,7 +6,7 @@
     <dimen name="deck_building_width">-1dp</dimen>
     <dimen name="setup_body_textsize">16sp</dimen>
     <dimen name="marquee_card_width">120dp</dimen>
-    <dimen name="setup_title_textsize">@dimen/display_1</dimen>
+    <dimen name="setup_title_textsize">@dimen/font_display1</dimen>
     <dimen name="card_radius">8dp</dimen>
     <dimen name="sparkline_height">72dp</dimen>
 </resources>

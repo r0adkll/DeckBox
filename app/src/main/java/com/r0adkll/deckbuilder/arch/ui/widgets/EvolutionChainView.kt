@@ -4,20 +4,21 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.*
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.END
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.MIDDLE
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.NONE
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.START
 
 class EvolutionChainView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -27,13 +28,13 @@ class EvolutionChainView @JvmOverloads constructor(
     private val linkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val linkBarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private var defaultCardWidth: Int = dipToPx(156f)
+    private var defaultCardWidth: Int = dip(156)
     private var cardWidth: Int = defaultCardWidth
-    private val linkSpacing: Int = dipToPx(24f)
-    private val stageSpacing: Int = dipToPx(16f)
-    private val nodeSpacing: Int = dipToPx(4f)
-    private val chainSpacing: Int = dipToPx(8f)
-    private val linkRadius: Float = dpToPx(8f)
+    private val linkSpacing: Int = dip(24)
+    private val stageSpacing: Int = dip(16)
+    private val nodeSpacing: Int = dip(4)
+    private val chainSpacing: Int = dip(8)
+    private val linkRadius: Float = dp(8)
 
     private var pokemonCardClickListener: OnPokemonCardClickListener? = null
     private var pokemonCardEditListener: OnPokemonEditListener? = null
@@ -49,7 +50,7 @@ class EvolutionChainView @JvmOverloads constructor(
     init {
         orientation = HORIZONTAL
         setWillNotDraw(false)
-        defaultCardWidth = (dipToPx(382f) - (2 * stageSpacing + 2 * linkSpacing)) / 3
+        defaultCardWidth = (dip(382) - (2 * stageSpacing + 2 * linkSpacing)) / 3
         cardWidth = defaultCardWidth
 
         linkPaint.color = color(R.color.primaryColor)
@@ -170,7 +171,7 @@ class EvolutionChainView @JvmOverloads constructor(
                     cardView.layoutParams = clp
 
                     val alp = actionLayout.layoutParams as MarginLayoutParams
-                    alp.bottomMargin = dipToPx(24f)
+                    alp.bottomMargin = dip(24)
                     actionLayout.layoutParams = alp
 
                     // Calculate approximate cardWidth

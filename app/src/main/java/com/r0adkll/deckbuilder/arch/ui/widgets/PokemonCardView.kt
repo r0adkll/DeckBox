@@ -3,7 +3,18 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Outline
+import android.graphics.Paint
+import android.graphics.Point
+import android.graphics.PointF
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
@@ -12,9 +23,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewOutlineProvider
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.spToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.extensions.sp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -42,9 +53,9 @@ class PokemonCardView @JvmOverloads constructor(
     private var cachedWidth: Int = 0
     private var cachedHeight: Int = 0
 
-    private val radius = dpToPx(4f)
-    private val punchRadius = dpToPx(10f)
-    private val countRadius = dpToPx(16f)
+    private val radius = dp(4)
+    private val punchRadius = dp(10)
+    private val countRadius = dp(16)
 
     private var lastTouchX: Float = 0f
     private var lastTouchY: Float = 1f
@@ -90,8 +101,8 @@ class PokemonCardView @JvmOverloads constructor(
         punchPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         maskedPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         countPaint.color = color(R.color.primaryColor)
-        countPaint.setShadowLayer(dpToPx(4f), 0f, -1f, color(R.color.black54))
-        countTextPaint.textSize = spToPx(12f)
+        countPaint.setShadowLayer(dp(4), 0f, -1f, color(R.color.black54))
+        countTextPaint.textSize = sp(12)
         countTextPaint.color = color(R.color.white)
 
         // Always want a cache allocated.
@@ -105,7 +116,7 @@ class PokemonCardView @JvmOverloads constructor(
         }
 
         setImageResource(R.drawable.pokemon_card_back)
-        elevation = dpToPx(4f)
+        elevation = dp(4)
         outlineProvider = CardOutlineProvider(radius)
     }
 
@@ -272,7 +283,7 @@ class PokemonCardView @JvmOverloads constructor(
             }
 
             canvas.save()
-            canvas.translate(x - countRadius, y - countTextPaint.textSize - dpToPx(2f))
+            canvas.translate(x - countRadius, y - countTextPaint.textSize - dp(2))
             text.draw(canvas)
             canvas.restore()
         }

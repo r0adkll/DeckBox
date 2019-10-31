@@ -1,12 +1,12 @@
 package com.r0adkll.deckbuilder.util
 
 import android.content.Context
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
 import android.text.InputType
 import android.widget.EditText
 import android.widget.FrameLayout
-import com.ftinc.kit.kotlin.extensions.dipToPx
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
+import com.ftinc.kit.extensions.dip
 import io.reactivex.Observable
 
 object DialogUtils {
@@ -51,8 +51,8 @@ object DialogUtils {
             input.setHint(hint)
             input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-            lp.marginStart = context.dipToPx(20f)
-            lp.marginEnd = context.dipToPx(20f)
+            lp.marginStart = context.dip(20f)
+            lp.marginEnd = context.dip(20f)
             view.addView(input, lp)
 
             val builder = AlertDialog.Builder(context)

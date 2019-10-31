@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.ftinc.kit.arch.presentation.BaseFragment
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
+import com.ftinc.kit.arch.util.uiDebounce
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
@@ -27,7 +29,6 @@ import com.r0adkll.deckbuilder.util.DialogUtils
 import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.Resource
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
-import com.r0adkll.deckbuilder.util.extensions.uiDebounce
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_browse.*
@@ -53,9 +54,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = ExpansionRecyclerAdapter(activity!!, downloadClicks, dismissClicks, downloadFormatClicks)
-        adapter.setEmptyView(emptyView)
-        adapter.setOnItemClickListener {
+        adapter = ExpansionRecyclerAdapter(activity!!, downloadClicks, dismissClicks, downloadFormatClicks) {
             when(it) {
                 is Item.ExpansionSet -> {
                     Analytics.event(Event.SelectContent.BrowseExpansionSet(it.expansion.code))
@@ -64,6 +63,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
                 }
             }
         }
+        adapter.emptyView = emptyView
         recycler.layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
             GridLayoutManager(activity!!, 3)
         } else {
@@ -156,20 +156,24 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     }
 
     override fun setExpansionsItems(items: List<Item>) {
-        adapter.setExpansionItems(items)
+        adapter.submitList(items)
     }
 
     override fun showLoading(isLoading: Boolean) {
-        emptyView.setLoading(isLoading)
+        emptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
         swipeRefresh.isRefreshing = isLoading
     }
 
     override fun showError(description: String) {
-        emptyView.emptyMessage = description
+        emptyView.message = description
     }
 
     override fun hideError() {
-        emptyView.setEmptyMessage(R.string.empty_browse_message)
+        emptyView.setMessage(R.string.empty_browse_message)
     }
 
     companion object {

@@ -10,9 +10,9 @@ import android.graphics.drawable.LayerDrawable
 import android.util.Base64
 import android.view.View
 import android.widget.ImageView
+import com.ftinc.kit.widget.AspectRatioImageView
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview.PreviewSpec
-import com.r0adkll.deckbuilder.arch.ui.widgets.AspectRatioImageView
 import com.r0adkll.deckbuilder.arch.ui.widgets.BackgroundDrawableWrapper
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.AlphaTransformation
@@ -53,9 +53,9 @@ object ExpansionPreviewRenderer {
         spec.aspectRatio?.let { aspectRatio ->
             if (imageView is AspectRatioImageView) {
                 imageView.ratioType = if (aspectRatio) {
-                    AspectRatioImageView.RATIO_WIDTH
+                    AspectRatioImageView.RatioType.WIDTH
                 } else {
-                    AspectRatioImageView.RATIO_NONE
+                    AspectRatioImageView.RatioType.HEIGHT
                 }
             }
         }
