@@ -9,17 +9,25 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.5.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.2'
-        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.19'
-        //noinspection GradleDynamicVersion
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.31.2'
         classpath 'com.google.gms:oss-licenses:0.9.2'
-        classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
         classpath 'com.android.tools.build.jetifier:jetifier-processor:1.0.0-beta07'
-        classpath 'com.github.holgerbrandl:kscript-annotations:1.2'
+        classpath 'com.pascalwelsch.gitversioner:gitversioner:0.4.1'
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.19'
     }
 }
 
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0-RC16"
+    id "org.jlleitschuh.gradle.ktlint" version "8.2.0"
+}
+
+ext.ReporterType = org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 allprojects {
+    apply from: "$rootDir/detekt.gradle"
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
+
     repositories {
         google()
         jcenter()
@@ -27,7 +35,14 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url 'https://maven.fabric.io/public' }
     }
+
+    ktlint {
+        android = true
+        reporters = [ReporterType.PLAIN, ReporterType.CHECKSTYLE]
+    }
 }
+
+apply plugin: 'com.pascalwelsch.gitversioner'
 
 task clean(type: Delete) {
     delete rootProject.buildDir

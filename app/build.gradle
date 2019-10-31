@@ -5,38 +5,30 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.oss.licenses.plugin'
 apply plugin: 'io.fabric'
 
-def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-
 def VERSION_NAME = "1.10.0"
 
-ext.gitVersioner = [
-        defaultBranch           : "master",
-        stableBranches          : ["release"],
-        yearFactor              : 1200,
-        snapshotEnabled         : false,
-        localChangesCountEnabled: false,
-        shortName: { gitVersion ->
-            return gitVersion.commit.subSequence(0, 7)
-        }
-]
-apply from: 'https://raw.githubusercontent.com/passsy/gradle-GitVersioner/master/git-versioner.gradle'
-
+gitVersioner {
+    baseBranch 'master'
+    yearFactor 1200
+    addSnapshot false
+    addLocalChangesDetails false
+}
 
 android {
     compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.r0adkll.deckbuilder"
-        buildToolsVersion "28.0.3"
+        buildToolsVersion "29.0.2"
 
         minSdkVersion 22
         targetSdkVersion 29
 
-        versionCode gitVersion.version
-        versionName "$VERSION_NAME.${gitVersion.version}"
+        versionCode gitVersioner.versionCode
+        versionName "$VERSION_NAME.${gitVersioner.versionName}"
         multiDexEnabled true
 
-        buildConfigField "String", "GIT_SHA", "\"$GIT_SHA\""
+        buildConfigField "String", "GIT_SHA", "\"${gitVersioner.currentSha1Short}\""
         buildConfigField "String", "DATABASE_NAME", "\"deckbox.db\""
         buildConfigField "String", "AFFILIATE_CODE", "\"DeckBox\""
         buildConfigField "String", "PREVIEW_API_URL", "\"https://deckboxtcg.app/api/v1/\""
@@ -49,11 +41,6 @@ android {
                                      "$projectDir/schemas".toString()]
             }
         }
-
-        compileOptions {
-            sourceCompatibility 1.8
-            targetCompatibility 1.8
-        }
     }
 
     buildTypes {
@@ -63,11 +50,35 @@ android {
         }
     }
 
+    lintOptions {
+        xmlReport true
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = ["-Xallow-result-return-type"]
+    }
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests {
+        includeAndroidResources = true
+
+        all {
+            testLogging {
+                events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+            }
+        }
+    }
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             if (variant.buildType.name == "release") {
-                outputFileName = "deckbox-" + variant.versionName + "." + GIT_SHA.toUpperCase() + ".apk"
+                outputFileName = "deckbox-" + variant.versionName + "." + gitVersioner.currentSha1Short + ".apk"
             }
         }
     }
@@ -129,8 +140,8 @@ dependencies {
     implementation "androidx.palette:palette:1.0.0"
     implementation "androidx.browser:browser:1.2.0-alpha09"
 
-    implementation "com.google.firebase:firebase-core:17.2.0"
-    implementation "com.google.firebase:firebase-firestore:21.2.0"
+    implementation "com.google.firebase:firebase-core:17.2.1"
+    implementation "com.google.firebase:firebase-firestore:21.2.1"
     implementation "com.google.firebase:firebase-auth:19.1.0"
     implementation "com.google.firebase:firebase-config:19.0.3"
     implementation "com.google.android.gms:play-services-auth:17.0.0"
