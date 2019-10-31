@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.set
 
-
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -50,7 +49,6 @@ import kotlinx.android.synthetic.main.activity_collection_set.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-
 class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.Intentions, CollectionSetUi.Actions {
 
     private val expansion: Expansion by bindParcelable(EXTRA_EXPANSION)
@@ -67,7 +65,6 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     private lateinit var adapter: CollectionSetRecyclerAdapter
     private var statusBarHeight: Int = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

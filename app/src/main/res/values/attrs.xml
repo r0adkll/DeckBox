@@ -67,7 +67,6 @@
         </attr>
     </declare-styleable>
 
-
     <declare-styleable name="PokemonFormatView">
         <attr name="format" format="enum">
             <enum name="standard" value="0" />

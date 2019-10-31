@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.ui.components
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.util.extensions.fromReleaseDate
 
-
 class ExpansionComparator : Comparator<Expansion> {
 
     override fun compare(lhs: Expansion, rhs: Expansion): Int {

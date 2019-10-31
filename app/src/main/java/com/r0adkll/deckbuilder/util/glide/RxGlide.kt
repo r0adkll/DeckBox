@@ -5,7 +5,6 @@ import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.GlideRequest
 import io.reactivex.Observable
 
-
 object RxGlide {
 
     /**

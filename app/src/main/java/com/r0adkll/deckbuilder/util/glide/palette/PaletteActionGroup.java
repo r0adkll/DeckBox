@@ -118,7 +118,6 @@ public class PaletteActionGroup implements SwatchBuilder, ReusableSwatchBuilder,
         return this;
     }
 
-
     @NonNull
     public PaletteActionGroup bodyText(@NonNull TextView view) {
         bodys.add(view);
@@ -150,7 +149,6 @@ public class PaletteActionGroup implements SwatchBuilder, ReusableSwatchBuilder,
     public PaletteActionGroup background(@NonNull View view) {
         return this.background(view, OPAQUE);
     }
-
 
     public void execute(@Nullable Palette palette) {
         ensureSaved();
@@ -199,7 +197,6 @@ public class PaletteActionGroup implements SwatchBuilder, ReusableSwatchBuilder,
             saved = true;
         }
     }
-
 
     @SuppressWarnings("deprecation")
     protected void restoreSaved() {

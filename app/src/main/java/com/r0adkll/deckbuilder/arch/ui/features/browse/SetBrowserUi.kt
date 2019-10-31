@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browse
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
@@ -10,17 +9,14 @@ import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
         fun filterChanged(): Observable<BrowseFilter>
     }
-
 
     interface Actions : BaseActions {
 
@@ -28,7 +24,6 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
         fun setCards(cards: List<PokemonCard>)
         fun hideFilters(vararg filters: BrowseFilter)
     }
-
 
     enum class BrowseFilter {
         ALL,
@@ -39,7 +34,6 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
         TAG_TEAM,
         PRISM
     }
-
 
     @Parcelize
     data class State(
@@ -59,14 +53,12 @@ interface SetBrowserUi : StateRenderer<SetBrowserUi.State> {
             is Change.CardsLoaded -> this.copy(cards = change.cards, isLoading = false)
         }
 
-
         sealed class Change(val logText: String) {
             object IsLoading : Change("network -> loading cards from set")
             class Error(val description: String) : Change("error -> $description")
             class FilterChanged(val filter: BrowseFilter) : Change("user -> filter changed: ${filter.name}")
             class CardsLoaded(val cards: List<PokemonCard>) : Change("network -> ${cards.size} cards loaded")
         }
-
 
         override fun toString(): String {
             return "State(setCode=$setCode, isLoading=$isLoading, error=$error, cards=${cards.size}, filter=$filter)"

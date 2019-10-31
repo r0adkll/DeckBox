@@ -31,7 +31,6 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_overview.*
 import javax.inject.Inject
 
-
 class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, OverviewUi.Actions {
 
     override var state: OverviewUi.State = OverviewUi.State.DEFAULT
@@ -52,7 +51,6 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         } else {
             sessionIdByIntent
         }
-
 
     @SuppressLint("RxSubscribeOnError")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -78,11 +76,9 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         }
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
     }
-
 
     override fun setupComponent() {
         getComponent(OverviewableComponent::class)
@@ -99,56 +95,46 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         presenter.start()
     }
 
-
     override fun onStop() {
         presenter.stop()
         renderer.stop()
         super.onStop()
     }
 
-
     override fun render(state: OverviewUi.State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
                 .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
     }
 
-
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
                 .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
     }
 
-
     override fun showCards(cards: List<EvolutionChain>) {
         adapter.submitList(cards)
     }
-
 
     override fun showLoading(isLoading: Boolean) {
         emptyView.setLoading(isLoading)
     }
 
-
     override fun showError(description: String) {
         emptyView.emptyMessage = description
     }
-
 
     override fun hideError() {
         emptyView.setEmptyMessage(R.string.empty_deck_overview)
     }
 
-
     companion object {
         const val TAG = "OverviewFragment"
         private const val EXTRA_SESSION_ID = "OverviewFragment.SessionId"
-
 
         fun newInstance(sessionId: Long): OverviewFragment {
             val fragment = OverviewFragment()

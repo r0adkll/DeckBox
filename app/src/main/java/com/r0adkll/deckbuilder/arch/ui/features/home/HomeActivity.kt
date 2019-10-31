@@ -41,7 +41,6 @@ import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-
 class HomeActivity : BaseActivity(), HasComponent<HomeComponent>, CollectionProgressController {
 
     @Inject lateinit var editor: EditRepository

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.adapter
 
-
 import android.content.Context
 import androidx.recyclerview.widget.DiffUtil
 import android.view.ViewGroup
@@ -8,7 +7,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
-
 
 class SearchResultsRecyclerAdapter(
         context: Context,
@@ -18,12 +16,10 @@ class SearchResultsRecyclerAdapter(
 
     private var selectedCards: List<PokemonCard> = emptyList()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
         return PokemonCardViewHolder.create(inflater, parent, true, instantDragSupport,
                 editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
     }
-
 
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         super.onBindViewHolder(vh, i)
@@ -32,24 +28,20 @@ class SearchResultsRecyclerAdapter(
         vh.bind(card, count, isEditMode = true)
     }
 
-
     fun setCards(cards: List<PokemonCard>) {
         val diff = calculateDiff(items, cards)
         items = ArrayList(diff.new)
         diff.diff.dispatchUpdatesTo(DiffUpdateCallback())
     }
 
-
     fun setSelectedCards(cards: List<PokemonCard>) {
         selectedCards = cards
         notifyDataSetChanged()
     }
 
-
     fun indexOf(card: PokemonCard): Int {
         return items.indexOf(card)
     }
-
 
     companion object {
         private fun calculateDiff(old: List<PokemonCard>, new: List<PokemonCard>): RecyclerViewBinding<PokemonCard> {

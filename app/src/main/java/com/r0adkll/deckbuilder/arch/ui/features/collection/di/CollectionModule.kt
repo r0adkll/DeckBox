@@ -9,7 +9,6 @@ import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
-
 @Module
 class CollectionModule(val fragment: CollectionFragment) {
 

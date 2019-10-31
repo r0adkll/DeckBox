@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -9,7 +8,6 @@ import com.r0adkll.deckbuilder.util.extensions.fromReleaseDate
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
-
 
 class CardDetailRenderer(
         val actions: CardDetailUi.Actions,

@@ -1,10 +1,9 @@
 package com.r0adkll.deckbuilder.arch.domain.features.community.model
 
 import android.os.Parcelable
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import kotlinx.android.parcel.Parcelize
-
 
 /**
  * Template for creating a new deck
@@ -29,7 +28,6 @@ sealed class DeckTemplate(
             val tournament: Tournament,
             val deckInfo: List<DeckInfo>
     ): DeckTemplate(deck, name, description)
-
 
     @Parcelize
     data class ThemeDeckTemplate(

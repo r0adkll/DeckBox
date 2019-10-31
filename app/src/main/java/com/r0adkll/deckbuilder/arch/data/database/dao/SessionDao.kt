@@ -1,14 +1,22 @@
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
-
 import android.net.Uri
-import androidx.room.*
-import com.r0adkll.deckbuilder.arch.data.database.entities.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
+import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionCardJoin
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionChangeEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
-import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
+import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import io.reactivex.Flowable
-
 
 @Dao
 abstract class SessionDao {
@@ -90,7 +98,6 @@ abstract class SessionDao {
 
     @Delete
     abstract fun deleteChanges(changes: List<SessionChangeEntity>)
-
 
     private fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {
         cards.forEach {

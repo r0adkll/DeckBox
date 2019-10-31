@@ -9,7 +9,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
 import com.r0adkll.deckbuilder.util.compact
 import timber.log.Timber
 
-
 object FilterQueryHelper {
 
     /**

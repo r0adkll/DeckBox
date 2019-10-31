@@ -2,21 +2,28 @@
 
 package com.r0adkll.deckbuilder.arch.data.features.decks.mapper
 
-
 import android.net.Uri
 import android.util.ArrayMap
 import com.google.firebase.Timestamp
-import com.r0adkll.deckbuilder.arch.data.features.decks.model.*
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.*
+import com.r0adkll.deckbuilder.arch.data.features.decks.model.CardMetadataEntity
+import com.r0adkll.deckbuilder.arch.data.features.decks.model.DeckEntity
+import com.r0adkll.deckbuilder.arch.data.features.decks.model.PokemonCardEntity
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Ability
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.util.*
+import com.r0adkll.deckbuilder.util.compactEffects
+import com.r0adkll.deckbuilder.util.compactTypes
+import com.r0adkll.deckbuilder.util.deserializeEffects
+import com.r0adkll.deckbuilder.util.deserializeTypes
 import com.r0adkll.deckbuilder.util.extensions.milliseconds
+import com.r0adkll.deckbuilder.util.stack
+import com.r0adkll.deckbuilder.util.unstack
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
-
 
 object EntityMapper {
 
@@ -32,7 +39,6 @@ object EntityMapper {
         )
     }
 
-
     fun to(entity: DeckEntity, cards: List<PokemonCard>, isMissingCards: Boolean): Deck {
         return Deck(
                 entity.id,
@@ -45,7 +51,6 @@ object EntityMapper {
                 entity.updatedAt?.milliseconds ?: entity.timestamp ?: System.currentTimeMillis()
         )
     }
-
 
     fun to(entity: DeckEntity, cards: List<PokemonCard>): Deck {
         var isMissingCards = false
@@ -65,7 +70,6 @@ object EntityMapper {
         return to(entity, stackedCards.unstack(), isMissingCards)
     }
 
-
     fun to(stackedCard: StackedPokemonCard): CardMetadataEntity {
         return CardMetadataEntity(
                 stackedCard.card.id,
@@ -75,7 +79,6 @@ object EntityMapper {
                 stackedCard.count
         )
     }
-
 
     fun to(card: PokemonCard): PokemonCardEntity {
         return PokemonCardEntity(
@@ -104,7 +107,6 @@ object EntityMapper {
         )
     }
 
-
     fun to(entity: PokemonCardEntity, expansions: List<Expansion>): PokemonCard {
         return PokemonCard(
                 entity.id,
@@ -131,7 +133,6 @@ object EntityMapper {
 //                entity.attacks?.map { to(it) },
         )
     }
-
 
     fun to(entity: PokemonCardEntity, count: Int): CardMetadataEntity {
         return CardMetadataEntity(entity.id, entity.supertype, entity.imageUrl, entity.imageUrlHiRes, count)

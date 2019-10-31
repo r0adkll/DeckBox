@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
@@ -17,7 +16,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
-
 
 @SuppressLint("CheckResult")
 class DeckBuilderPresenter @Inject constructor(
@@ -116,7 +114,6 @@ class DeckBuilderPresenter @Inject constructor(
                 .logState()
                 .subscribe(ui::render)
     }
-
 
     companion object {
 

@@ -8,14 +8,12 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-
 /**
  * Property interface for getting values out of the [FirebaseRemoteConfig] instance
  */
 interface FirebaseRemotePreferences {
 
     val remote: FirebaseRemoteConfig
-
 
     /**
      * Remote property class that fetches a long from the remote object

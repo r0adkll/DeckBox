@@ -1,6 +1,5 @@
 #!/usr/bin/env kscript
 
-
 /*
  * Bulbapedia Info:
  * URL: https://bulbapedia.bulbagarden.net/wiki/Hidden_Fates_(TCG)

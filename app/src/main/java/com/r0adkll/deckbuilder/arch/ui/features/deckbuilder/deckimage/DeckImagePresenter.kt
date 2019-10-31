@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
-
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageUi.State
@@ -9,7 +8,6 @@ import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class DeckImagePresenter @Inject constructor(
         val ui: DeckImageUi,
@@ -32,7 +30,6 @@ class DeckImagePresenter @Inject constructor(
                             .map { Change.ImageSaved as Change }
                 }
 
-
         val merged = loadImages
                 .mergeWith(deckImageClicks)
                 .mergeWith(deckImageSelected)
@@ -42,7 +39,6 @@ class DeckImagePresenter @Inject constructor(
                 .logState()
                 .subscribe { ui.render(it) }
     }
-
 
     companion object {
 

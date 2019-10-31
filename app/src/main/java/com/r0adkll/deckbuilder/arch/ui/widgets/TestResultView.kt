@@ -15,7 +15,6 @@ import com.ftinc.kit.kotlin.extensions.*
 import com.r0adkll.deckbuilder.R
 import kotlin.math.roundToInt
 
-
 class TestResultView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
@@ -59,7 +58,6 @@ class TestResultView @JvmOverloads constructor(
     private val cardRadius = dpToPx(8f)
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-
     init {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         setWillNotDraw(false)
@@ -88,13 +86,11 @@ class TestResultView @JvmOverloads constructor(
         }
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         measureChildren(widthMeasureSpec, heightMeasureSpec)
         setMeasuredDimension(measuredWidth, defaultHeight)
     }
-
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 
@@ -109,7 +105,6 @@ class TestResultView @JvmOverloads constructor(
 
         card.layout(cX.toInt(), 0, cX.toInt() + card.measuredWidth, defaultHeight)
     }
-
 
     override fun onDraw(canvas: Canvas?) {
         canvas?.drawRoundRect(0f, 0f, card.right.toFloat(), defaultHeight.toFloat(), cardRadius, cardRadius, backgroundPaint)

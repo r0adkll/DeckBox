@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.offline.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-
 @Parcelize
 data class OfflineStatus(val expansions: Map<String, CacheStatus> = emptyMap()) : Parcelable {
 
@@ -21,7 +20,6 @@ data class OfflineStatus(val expansions: Map<String, CacheStatus> = emptyMap()) 
         val updatedExpansions = expansions.plus(statuses)
         return copy(expansions = updatedExpansions)
     }
-
 
     companion object {
         const val ALL = "all"

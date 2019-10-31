@@ -1,10 +1,8 @@
 package com.r0adkll.deckbuilder.arch.domain.features.testing
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import kotlinx.android.parcel.Parcelize
-
 
 @Parcelize
 data class TestResults(

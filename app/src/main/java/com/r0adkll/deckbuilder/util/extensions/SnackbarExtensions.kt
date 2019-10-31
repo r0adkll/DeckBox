@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.util.extensions
 
-
 import android.app.Activity
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
@@ -8,7 +7,6 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.preference.PreferenceFragmentCompat
-
 
 fun Activity.find(@IdRes resId: Int) = this.findViewById<View>(resId)
 

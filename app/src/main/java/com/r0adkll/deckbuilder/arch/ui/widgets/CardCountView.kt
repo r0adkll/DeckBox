@@ -15,7 +15,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import io.pokemontcg.model.SuperType
 
-
 class CardCountView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
@@ -24,7 +23,6 @@ class CardCountView @JvmOverloads constructor(
     private val trainerCountView: TextView
     private val energyCountView: TextView
     private val allCountView: TextView
-
 
     init {
         orientation = HORIZONTAL
@@ -42,13 +40,11 @@ class CardCountView @JvmOverloads constructor(
         addView(allCountView)
     }
 
-
     fun count(deck: Deck) {
         pokemonCountView.text = "${deck.pokemonCount}"
         trainerCountView.text = "${deck.trainerCount}"
         energyCountView.text = "${deck.energyCount}"
     }
-
 
     fun count(cards: List<PokemonCard>) {
         pokemonCountView.text = cards.count { it.supertype == SuperType.POKEMON }.toString()
@@ -56,13 +52,11 @@ class CardCountView @JvmOverloads constructor(
         energyCountView.text = cards.count { it.supertype == SuperType.ENERGY }.toString()
     }
 
-
     fun count(pokemon: Int, trainer: Int, energy: Int) {
         pokemonCountView.text = pokemon.toString()
         trainerCountView.text = trainer.toString()
         energyCountView.text = energy.toString()
     }
-
 
     @Suppress("NON_EXHAUSTIVE_WHEN")
     fun count(superType: SuperType, cards: List<PokemonCard>) {
@@ -73,7 +67,6 @@ class CardCountView @JvmOverloads constructor(
             SuperType.ENERGY -> energyCountView.text = count
         }
     }
-
 
     @Suppress("NON_EXHAUSTIVE_WHEN")
     fun countStacks(superType: SuperType, cards: List<StackedPokemonCard>) {
@@ -87,12 +80,10 @@ class CardCountView @JvmOverloads constructor(
         }
     }
 
-
     fun totalCount(count: Int) {
         allCountView.text = count.toString()
         allCountView.visible()
     }
-
 
     private fun createCountView(@DrawableRes icon: Int): TextView {
         val view = TextView(context)
@@ -104,7 +95,6 @@ class CardCountView @JvmOverloads constructor(
         view.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, icon, 0)
         return view
     }
-
 
     override fun generateDefaultLayoutParams(): LayoutParams {
         val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)

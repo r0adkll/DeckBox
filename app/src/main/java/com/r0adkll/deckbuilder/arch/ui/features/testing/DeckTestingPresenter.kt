@@ -11,7 +11,6 @@ import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class DeckTestingPresenter @Inject constructor(
         ui: DeckTestingUi,
         val intentions: DeckTestingUi.Intentions,
@@ -79,7 +78,6 @@ class DeckTestingPresenter @Inject constructor(
                 .mergeWith(testSingleHand)
                 .mergeWith(testOverallHands)
     }
-
 
     companion object {
 

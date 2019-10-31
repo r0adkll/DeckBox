@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.preview
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import io.reactivex.Observable
 
-
 interface PreviewRepository {
 
     /**

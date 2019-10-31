@@ -55,7 +55,6 @@ import java.net.URL
 import java.util.*
 import kotlin.system.exitProcess
 
-
 /*
  * Configuration
  */
@@ -546,7 +545,6 @@ encapsulatedSpans.forEach { span ->
 
     span.remove()
 }
-
 
 fun printNodeTree(elements: Elements, name: String = "nodes.txt") {
     val scriptDir = File(".")

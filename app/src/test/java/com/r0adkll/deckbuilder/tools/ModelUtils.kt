@@ -6,7 +6,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 
-
 object ModelUtils {
 
     val EXPANSIONS = arrayListOf(

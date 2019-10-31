@@ -8,21 +8,17 @@ import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
-
 @Module
 class CardDetailModule(val activity: CardDetailActivity) {
 
     @Provides @ActivityScope
     fun provideUi(): CardDetailUi = activity
 
-
     @Provides @ActivityScope
     fun provideIntentions(): CardDetailUi.Intentions = activity
 
-
     @Provides @ActivityScope
     fun provideActions(): CardDetailUi.Actions = activity
-
 
     @Provides @ActivityScope
     fun provideRenderer(

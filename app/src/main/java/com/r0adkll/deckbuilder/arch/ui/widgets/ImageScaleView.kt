@@ -8,7 +8,6 @@ import com.r0adkll.deckbuilder.R
 import androidx.appcompat.widget.AppCompatImageView
 import kotlin.math.max
 
-
 /**
  * Scale to center top or scale to center bottom
  *
@@ -26,7 +25,6 @@ open class ImageScaleView @JvmOverloads constructor(
         NONE(-1),
         TOP_CENTER(0),
         BOTTOM_CENTER(1);
-
 
         companion object {
 

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -9,18 +8,15 @@ import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface SearchUi : StateRenderer<SearchUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
         fun filterUpdates(): Observable<Pair<SuperType, Filter>>
         fun searchCards(): Observable<String>
     }
-
 
     interface Actions {
 
@@ -33,7 +29,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
         fun showError(description: String)
         fun hideError()
     }
-
 
     @Parcelize
     data class State(
@@ -64,11 +59,9 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             class ResultsLoaded(val results: List<PokemonCard>) : Change("network -> search results loaded (${results.size})")
         }
 
-
         override fun toString(): String {
             return "State(query='$query', filter=$filter, isLoading=$isLoading, error=$error, results=${results.size} Cards)"
         }
-
 
         companion object {
 

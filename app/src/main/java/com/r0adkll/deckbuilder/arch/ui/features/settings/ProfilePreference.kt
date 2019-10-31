@@ -12,7 +12,6 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 
-
 class ProfilePreference : Preference {
 
     var avatarUrl: Uri? = null
@@ -29,7 +28,6 @@ class ProfilePreference : Preference {
     init {
         layoutResource = R.layout.layout_profile_preference
     }
-
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)

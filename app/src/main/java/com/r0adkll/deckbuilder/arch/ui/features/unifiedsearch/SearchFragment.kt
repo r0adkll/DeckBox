@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
-
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -40,7 +39,6 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
-
 class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
@@ -56,11 +54,9 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
     private lateinit var component: UnifiedSearchComponent
     private lateinit var toolbarScrollListener: ToolbarScrollListener
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -101,34 +97,28 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         presenter.start()
     }
 
-
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
         super.onDestroy()
     }
 
-
     override fun render(state: SearchUi.State) {
         this.state = state
         renderer.render(state)
     }
 
-
     override fun filterUpdates(): Observable<Pair<SuperType, Filter>> {
         return filterChanges
     }
-
 
     override fun filterChanges(): Relay<Pair<SuperType, Filter>> {
         return filterChanges
     }
 
-
     override fun categoryChange(): Observable<SuperType> {
         return Observable.just(SuperType.UNKNOWN)
     }
-
 
     override fun searchCards(): Observable<String> {
         return searchView.queryTextChanges()
@@ -140,7 +130,6 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
                 }
     }
 
-
     override fun showFilterEmpty(enabled: Boolean) {
         actionFilter.setImageResource(when(enabled) {
             true -> R.drawable.ic_filter_outline
@@ -148,16 +137,13 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         })
     }
 
-
     override fun setQueryText(text: String) {
         searchView.setQuery(text, false)
     }
 
-
     override fun setResults(cards: List<PokemonCard>) {
         adapter.setCards(cards)
     }
-
 
     override fun showEmptyResults() {
         emptyView.setEmptyMessage(R.string.empty_search_results_category)
@@ -169,32 +155,26 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
 //        }
     }
 
-
     override fun showEmptyDefault() {
         emptyView.setEmptyMessage(R.string.empty_search_category)
         emptyView.actionLabel = null
     }
 
-
     override fun showLoading(isLoading: Boolean) {
         emptyView.setLoading(isLoading)
     }
-
 
     override fun showError(description: String) {
         emptyView.emptyMessage = description
     }
 
-
     override fun hideError() {
         emptyView.setEmptyMessage(R.string.empty_search_category)
     }
 
-
     override fun closeDrawer() {
         drawer.closeDrawer(GravityCompat.END)
     }
-
 
     override fun setupComponent() {
         component = getComponent(DeckBuilderComponent::class)
@@ -205,11 +185,9 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         component.inject(this)
     }
 
-
     override fun getComponent(): FilterableComponent {
         return component
     }
-
 
     fun wiggleCard(card: PokemonCard) {
         val adapterPosition = adapter.indexOf(card)
@@ -238,7 +216,6 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         }
     }
 
-
     class ToolbarScrollListener(
             private val toolBar: View
     ) : RecyclerView.OnScrollListener() {
@@ -246,19 +223,16 @@ class SearchFragment : BaseFragment(), SearchUi, SearchUi.Intentions, SearchUi.A
         private val elevation: Float by lazy { toolBar.dpToPx(4f) }
         private var scrollY: Float = 0f
 
-
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             scrollY += dy
             toolBar.elevation = scrollY.coerceIn(0f, elevation)
         }
-
 
         fun reset() {
             scrollY = 0f
             toolBar.elevation = 0f
         }
     }
-
 
     companion object {
         const val TAG = "UnifiedSearchFragment"

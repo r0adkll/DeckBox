@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.internal.di
 
-
 import com.r0adkll.deckbuilder.BuildModule
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.DataModule
@@ -33,7 +32,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingComponent
 import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import dagger.Component
-
 
 @AppScope
 @Component(modules = [AppModule::class, BuildModule::class, DataModule::class])

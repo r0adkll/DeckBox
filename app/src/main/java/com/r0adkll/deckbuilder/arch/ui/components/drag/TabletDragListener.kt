@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.components.drag
 
-
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
 import androidx.viewpager.widget.ViewPager
@@ -15,7 +14,6 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
-
 
 class TabletDragListener(
         val dropZone: View,
@@ -32,7 +30,6 @@ class TabletDragListener(
     private var listener: DropListener? = null
     private var lastPage: Int = 0
     private var wiggleAnimator: ObjectAnimator? = null
-
 
     override fun onDrag(v: View, event: DragEvent): Boolean {
         val state = event.localState as PokemonCardView.DragState
@@ -83,7 +80,6 @@ class TabletDragListener(
         }
     }
 
-
     fun setDropListener(listener: (PokemonCard) -> Unit) {
         this.listener = object : DropListener {
             override fun onDrop(card: PokemonCard) {
@@ -92,7 +88,6 @@ class TabletDragListener(
         }
     }
 
-
     private fun unselectDropZone() {
         background.setImageResource(R.drawable.dr_dropzone_background)
         card.imageTintList = null
@@ -100,7 +95,6 @@ class TabletDragListener(
 
         wiggleAnimator?.end()
     }
-
 
     private fun selectDropZone() {
         background.setImageResource(R.drawable.dr_dropzone_background_selected)
@@ -116,7 +110,6 @@ class TabletDragListener(
         wiggleAnimator?.start()
     }
 
-
     private fun showDropZone() {
         dropZone.animate()
                 .alpha(1f)
@@ -124,7 +117,6 @@ class TabletDragListener(
                 .setInterpolator(FastOutSlowInInterpolator())
                 .start()
     }
-
 
     private fun hideDropZone() {
         dropZone.animate()
@@ -134,12 +126,10 @@ class TabletDragListener(
                 .start()
     }
 
-
     interface DropListener {
 
         fun onDrop(card: PokemonCard)
     }
-
 
     companion object {
         private const val ANIM_DURATION = 200L
@@ -155,7 +145,6 @@ class TabletDragListener(
             target.setOnDragListener(listener)
             return listener
         }
-
 
         /**
          * Attach a new [TabletDragListener] to the target view to handle the

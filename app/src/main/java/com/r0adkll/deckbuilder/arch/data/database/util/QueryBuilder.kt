@@ -118,8 +118,6 @@ class LogicalCondition(
     }
 }
 
-
-
 abstract class Expression(protected val statement: Statement): Return<String> {
 
     abstract fun build(): String
@@ -211,20 +209,17 @@ class Statement internal constructor(private val table: String) : Join<String>, 
 
     internal val expressions = ArrayList<Expression>()
 
-
     override fun join(table: String): JoinOn<String> {
         val expression = JoinExpression(this, table)
         expressions += expression
         return expression
     }
 
-
     override fun <V> where(condition: Condition<V, *>): WhereAndOr<String> {
         val expression = WhereExpression(this, condition)
         expressions += expression
         return expression
     }
-
 
     override fun get(): String {
         val builder = StringBuilder("SELECT * FROM $table")

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
@@ -9,11 +8,9 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface DeckImageUi : StateRenderer<DeckImageUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
@@ -21,14 +18,12 @@ interface DeckImageUi : StateRenderer<DeckImageUi.State> {
         val selectDeckImageClicks: Observable<Unit>
     }
 
-
     interface Actions : BaseActions {
 
         fun setDeckImages(images: List<DeckImage>)
         fun setSelectedDeckImage(image: DeckImage?)
         fun close()
     }
-
 
     @Parcelize
     data class State(
@@ -50,7 +45,6 @@ interface DeckImageUi : StateRenderer<DeckImageUi.State> {
             Change.ImageSaved -> this.copy(isSaved = true)
         }
 
-
         sealed class Change(val logText: String) {
             object IsLoading : Change("disk -> Loading session")
             class Error(val description: String) : Change("error -> $description")
@@ -58,7 +52,6 @@ interface DeckImageUi : StateRenderer<DeckImageUi.State> {
             class ImageSelected(val image: DeckImage) : Change("user -> deck image selected: $image")
             object ImageSaved : Change("user -> deck image saved")
         }
-
 
         companion object {
 

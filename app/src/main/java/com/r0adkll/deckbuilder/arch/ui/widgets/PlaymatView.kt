@@ -9,7 +9,6 @@ import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.kotlin.extensions.spToPx
 import com.r0adkll.deckbuilder.R
 
-
 class PlaymatView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
@@ -26,7 +25,6 @@ class PlaymatView @JvmOverloads constructor(
     private val cardRadius = dpToPx(4f)
     private var silhouetteWidth: Float = 0f
     private var silhouetteHeight: Float = 0f
-
 
     init {
         paint.color = color(R.color.playmat)
@@ -56,7 +54,6 @@ class PlaymatView @JvmOverloads constructor(
         silhouetteHeight = silhouetteWidth * PokemonCardView.RATIO
 
     }
-
 
     override fun onDraw(canvas: Canvas) {
         // Draw Pokeball
@@ -89,14 +86,12 @@ class PlaymatView @JvmOverloads constructor(
         canvas.drawBitmap(diceClusterImage, diceX, diceY, null)
     }
 
-
     private fun drawCardSilhouette(canvas: Canvas, x: Float, y: Float, text: String? = null) {
         canvas.drawRoundRect(x, y, x + silhouetteWidth, y + silhouetteHeight, cardRadius, cardRadius, silhouettePaint)
         if (text != null) {
             canvas.drawText(text, x + silhouetteWidth / 2f, (y + silhouetteHeight / 2f), silhouetteTextPaint)
         }
     }
-
 
     private fun drawPokeBall(canvas: Canvas) {
         val centerX = measuredWidth / 2f

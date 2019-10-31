@@ -8,7 +8,6 @@ buildscript {
     }
 }
 
-
 import io.pokemontcg.model.CardSet
 import io.pokemontcg.requests.CardQueryBuilder
 import io.pokemontcg.Pokemon
@@ -19,7 +18,6 @@ import kotlin.jvm.functions.Function1
 
 import java.text.SimpleDateFormat
 import java.util.function.Consumer
-
 
 /**
  * Custom task to output a random list of pokemon card images for use in [app/src/main/java/com/r0adkll/deckbuilder/util/CardUtils.kt]

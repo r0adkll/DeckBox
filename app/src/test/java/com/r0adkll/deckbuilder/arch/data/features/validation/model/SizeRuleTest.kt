@@ -5,7 +5,6 @@ import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.Test
 
-
 class SizeRuleTest {
 
     @Test
@@ -27,7 +26,6 @@ class SizeRuleTest {
 
         result.shouldNotBeNull()
     }
-
 
     @Test
     fun shouldFailTooManySizeRule() {

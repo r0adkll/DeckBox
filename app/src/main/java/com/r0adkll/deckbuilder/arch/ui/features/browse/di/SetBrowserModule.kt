@@ -8,21 +8,17 @@ import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
-
 @Module
 class SetBrowserModule(val activity: SetBrowserActivity) {
 
     @Provides @ActivityScope
     fun provideUi(): SetBrowserUi = activity
 
-
     @Provides @ActivityScope
     fun provideIntentions(): SetBrowserUi.Intentions = activity
 
-
     @Provides @ActivityScope
     fun provideActions(): SetBrowserUi.Actions = activity
-
 
     @Provides @ActivityScope
     fun provideRenderer(

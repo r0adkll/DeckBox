@@ -7,7 +7,6 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 
-
 class ManageOfflineActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,11 +17,9 @@ class ManageOfflineActivity : BaseActivity() {
         appbar?.setNavigationOnClickListener { finish() }
     }
 
-
     override fun setupComponent(component: AppComponent) {
 
     }
-
 
     companion object {
 

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
-
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
@@ -19,7 +18,6 @@ import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
-
 interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
 
     val state: State
@@ -35,7 +33,6 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun editDeckDescription(): Observable<String>
         fun editDeckCollectionOnly(): Observable<Boolean>
     }
-
 
     interface Actions {
 
@@ -57,7 +54,6 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
         fun showPrices(low: Double?, market: Double?, high: Double?)
         fun showCollectionPrices(low: Double?, market: Double?, high: Double?)
     }
-
 
     @PaperParcel
     data class State @JvmOverloads constructor(
@@ -132,7 +128,6 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             is Change.PriceProducts -> copy(products = change.products)
         }
 
-
         override fun toString(): String {
             return "State(sessionId=$sessionId, " +
                     "isSaving=$isSaving, " +
@@ -151,7 +146,6 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
                     "products=${products.size})"
         }
 
-
         sealed class Change(val logText: String) {
             object Saving : Change("user -> is saving deck")
             object Saved : Change("network -> deck saved!")
@@ -168,7 +162,6 @@ interface DeckBuilderUi : StateRenderer<DeckBuilderUi.State>{
             class CollectionCounts(val counts: List<CollectionCount>) : Change("cache -> collection count loaded/changed: ${counts.size}")
             class PriceProducts(val products: Map<String, Product>) : Change("cache -> price products loaded: ${products.size}")
         }
-
 
         companion object {
             @JvmField val CREATOR = PaperParcelDeckBuilderUi_State.CREATOR

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.adapter
 
-
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +20,6 @@ import com.r0adkll.deckbuilder.util.bindOptionalView
 import com.r0adkll.deckbuilder.util.bindView
 import timber.log.Timber
 
-
 class PokemonCardViewHolder(
         itemView: View,
         val displayWhenOne: Boolean = false,
@@ -35,7 +33,6 @@ class PokemonCardViewHolder(
     private val actionRemove: ImageView? by bindOptionalView(R.id.action_remove)
     private val actionAdd: ImageView? by bindOptionalView(R.id.action_add)
     val collectionCounter: TextView? by bindOptionalView(R.id.count)
-
 
     fun bind(card: PokemonCard,
              count: Int,
@@ -71,7 +68,6 @@ class PokemonCardViewHolder(
             cardView.elevation = dpToPx(4f)
         }
     }
-
 
     companion object {
         fun create(inflater: LayoutInflater,

@@ -8,7 +8,6 @@ import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.extensions.sortableNumber
 import io.reactivex.functions.BiPredicate
 
-
 class CollectionSetRenderer(
         actions: CollectionSetUi.Actions,
         schedulers: AppSchedulers

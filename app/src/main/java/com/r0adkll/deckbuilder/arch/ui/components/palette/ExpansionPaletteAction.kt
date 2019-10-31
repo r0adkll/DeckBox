@@ -7,7 +7,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.ExpansionAction
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 
-
 class ExpansionPaletteAction(
         val expansion: Expansion,
         val actions: List<ExpansionAction>,
@@ -25,7 +24,6 @@ class ExpansionPaletteAction(
             }
         }
     }
-
 
     companion object {
 

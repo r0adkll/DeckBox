@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import com.r0adkll.deckbuilder.R;
 
-
 public class ForegroundImageView extends AppCompatImageView {
     private Drawable foreground;
 

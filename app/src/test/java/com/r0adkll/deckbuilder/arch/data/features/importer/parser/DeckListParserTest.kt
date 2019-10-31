@@ -1,15 +1,12 @@
 package com.r0adkll.deckbuilder.arch.data.features.importer.parser
 
-
 import com.r0adkll.deckbuilder.tools.ModelUtils.EXPANSIONS
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Test
 
-
 class DeckListParserTest {
 
     private val parser = DeckListParser()
-
 
     @Test
     fun testDefaultPtcgoDeckList() {
@@ -17,7 +14,6 @@ class DeckListParserTest {
         results.size.shouldEqualTo(27)
         results.sumBy { it.count }.shouldEqualTo(60)
     }
-
 
     @Test
     fun testUserDeckLists() {
@@ -33,7 +29,6 @@ class DeckListParserTest {
         results2.sumBy { it.count }.shouldEqualTo(60)
         results3.sumBy { it.count }.shouldEqualTo(60)
     }
-
 
     companion object {
 

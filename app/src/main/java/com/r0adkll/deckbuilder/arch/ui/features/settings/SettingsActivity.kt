@@ -370,7 +370,6 @@ class SettingsActivity : BaseActivity() {
                                                 }
                                             })
 
-
                                 } else {
                                     snackbar("Authentication failed")
                                 }

@@ -17,7 +17,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class CardDetailPresenter @Inject constructor(
         val ui: CardDetailUi,
         val intentions: CardDetailUi.Intentions,
@@ -112,7 +111,6 @@ class CardDetailPresenter @Inject constructor(
                 .logState()
                 .subscribe { ui.render(it) }
     }
-
 
     companion object {
 

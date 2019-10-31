@@ -10,7 +10,6 @@ import com.r0adkll.deckbuilder.util.RxFirebase
 import io.reactivex.Observable
 import javax.inject.Inject
 
-
 class DefaultMissingCardRepository @Inject constructor(
     val preferences: AppPreferences
 ) : MissingCardRepository {
@@ -30,7 +29,6 @@ class DefaultMissingCardRepository @Inject constructor(
         val task = collection.add(entity)
         return RxFirebase.from(task).map { Unit }
     }
-
 
     companion object {
         private const val COLLECTION_MISSING_CARDS = "missing_cards"

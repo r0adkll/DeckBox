@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
-
 import android.os.Parcelable
 import androidx.annotation.StringRes
 import com.r0adkll.deckbuilder.R
@@ -22,12 +21,10 @@ import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import kotlinx.android.parcel.Parcelize
 
-
 @Parcelize
 data class FilterSpec(val specs: List<Spec>) : Parcelable {
 
     fun apply(filter: Filter): List<Item> = specs.flatMap { it.apply(filter) }
-
 
     sealed class Spec : Parcelable {
 
@@ -37,12 +34,10 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
          */
         abstract fun apply(filter: Filter): List<Item>
 
-
         override fun toString(): String {
             return javaClass.simpleName
 
         }
-
 
         @Parcelize
         class FieldSpec : Spec() {
@@ -53,7 +48,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
             )
         }
 
-
         @Parcelize
         class TypeSpec(val key: String, @StringRes val title: Int) : Spec() {
 
@@ -61,7 +55,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     Item.Header(title),
                     Item.Type(key, getSelected(filter))
             )
-
 
             private fun getSelected(filter: Filter): List<Type> = when(key) {
                 "type" -> filter.types
@@ -71,7 +64,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
             }
         }
 
-
         @Parcelize
         class AttributeSpec(val attributes: List<FilterAttribute>) : Spec() {
 
@@ -79,7 +71,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     Item.Header(R.string.filter_header_attributes),
                     Item.Attribute(attributes, getFilteredAttributes(filter))
             )
-
 
             private fun getFilteredAttributes(filter: Filter): List<FilterAttribute> {
                 val attrs = ArrayList<FilterAttribute>()
@@ -89,7 +80,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                 return attrs
             }
         }
-
 
         @Parcelize
         class ExpansionSpec(
@@ -116,7 +106,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                 return items
             }
 
-
             private fun getVisibleExpansions(filter: Filter): List<Item> {
                 return expansions.filter {
                     when(visibility) {
@@ -128,7 +117,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     ExpansionOption("expansion", it, filter.expansions.contains(it))
                 }
             }
-
 
             private fun getSelectedFormatAttributes(filter: Filter): List<FilterAttribute> {
                 val standardExpansions = expansions.filter { it.standardLegal }
@@ -144,7 +132,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
             }
         }
 
-
         @Parcelize
         class RaritySpec(val rarities: List<Rarity>) : Spec() {
 
@@ -152,14 +139,12 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     Item.Header(R.string.filter_header_rarity)
             ).plus(getRarityItems(filter))
 
-
             private fun getRarityItems(filter: Filter): List<Item> {
                 return rarities.map {
                     RarityOption("rarity", it, filter.rarity.contains(it))
                 }
             }
         }
-
 
         @Parcelize
         class ValueRangeSpec(val key: String,
@@ -172,7 +157,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     Item.ValueRange(key, min, max, getValue(filter))
             )
 
-
             private fun getValue(filter: Filter): Value = when(key) {
                 "hp" -> parseValue(filter.hp)
                 "attackCost" -> parseValue(filter.attackCost)
@@ -180,7 +164,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                 "retreatCost" -> parseValue(filter.retreatCost)
                 else -> Value(0, NONE)
             }
-
 
             companion object {
 
@@ -208,7 +191,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
             }
         }
     }
-
 
     companion object {
 
@@ -268,7 +250,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
             )
         }
 
-
         fun createPokemon(expansions: List<Expansion>,
                           visibility: FilterUi.ExpansionVisibility): FilterSpec {
             return FilterSpec(
@@ -301,7 +282,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
             )
         }
 
-
         fun createTrainer(expansions: List<Expansion>,
                           visibility: FilterUi.ExpansionVisibility): FilterSpec {
             return FilterSpec(
@@ -321,7 +301,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     )
             )
         }
-
 
         fun createEnergy(expansions: List<Expansion>,
                          visibility: FilterUi.ExpansionVisibility): FilterSpec {

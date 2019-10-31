@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.overview
 
-
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.overview.OverviewUi.State.Change
@@ -10,13 +9,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class OverviewPresenter @Inject constructor(
         ui: OverviewUi,
         val intentions: OverviewUi.Intentions,
         val repository: EditRepository
 ) : UiPresenter<OverviewUi.State, Change>(ui) {
-
 
     override fun smashObservables(): Observable<Change> {
 
@@ -41,7 +38,6 @@ class OverviewPresenter @Inject constructor(
 
         return observeDeck
     }
-
 
     companion object {
 

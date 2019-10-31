@@ -1,8 +1,6 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 import java.util.*
-import kotlin.Comparator
-
 
 /**
  * Class that collects and defines evolution chains for pokemon in a deck
@@ -14,7 +12,6 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
 
     val size: Int
         get() = nodes.map { it.cards.size }.sum()
-
 
     fun first(): Node? = nodes.find { it.previous == null }
     fun last(): Node? = nodes.find { it.next == null }
@@ -76,7 +73,6 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
 
     }
 
-
     fun removeCard(card: StackedPokemonCard): Boolean {
         val node = nodes.find { it.cards.contains(card) }
         if (node != null) {
@@ -88,9 +84,7 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
         return false
     }
 
-
     private fun StackedPokemonCard.isBasic(): Boolean = this.card.evolvesFrom == null
-
 
     class Node(
             val name: String?,
@@ -100,7 +94,6 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
             var previous: Node? = null,
             var next: Node? = null
     ) {
-
 
         override fun hashCode(): Int {
             var result = 0
@@ -139,7 +132,6 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
         }
     }
 
-
     private class PokemonComparator : Comparator<StackedPokemonCard> {
 
         override fun compare(lhs: StackedPokemonCard, rhs: StackedPokemonCard): Int {
@@ -158,7 +150,6 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
         }
     }
 
-
     companion object {
 
         internal fun create(card: StackedPokemonCard): EvolutionChain {
@@ -172,7 +163,6 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
 
             return chain
         }
-
 
         fun build(cards: List<StackedPokemonCard>): List<EvolutionChain> {
             val chains = ArrayList<EvolutionChain>()

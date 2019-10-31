@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
-
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
@@ -27,7 +26,6 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-
 sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), Disposable {
 
     abstract fun bind(item: I)
@@ -42,7 +40,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         disposables.clear()
     }
 
-
     class PreviewViewHolder(
             itemView: View,
             private val dismissPreview: Relay<Unit>,
@@ -56,7 +53,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         private val description by bindView<TextView>(R.id.description)
         private val actionDismiss by bindView<Button>(R.id.actionDismiss)
         private val actionView by bindView<Button>(R.id.actionView)
-
 
         override fun bind(item: Item.Preview) {
             val spec = item.spec.preview
@@ -90,7 +86,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         }
     }
 
-
     class QuickViewHolder(
             itemView: View,
             private val quickStart: Relay<Deck>,
@@ -99,7 +94,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
 
         private val recycler by bindView<RecyclerView>(R.id.recycler)
         private val actionDismiss by bindView<Button>(R.id.actionDismiss)
-
 
         override fun bind(item: Item.QuickStart) {
             // Setup recycler
@@ -130,7 +124,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
 
         private val text by bindView<TextView>(R.id.title)
 
-
         override fun bind(item: Item.Header) {
             text.text = item.text
         }
@@ -151,7 +144,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         private val actionShare by bindView<ImageView>(R.id.action_share)
         private val actionMore by bindView<ImageView>(R.id.action_more)
         private val actionTest by bindView<ImageView>(R.id.action_test)
-
 
         @SuppressLint("ClickableViewAccessibility")
         override fun bind(item: Item.DeckItem) {
@@ -201,7 +193,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             actionTest.setOnClickListener { testClicks.accept(deck) }
         }
 
-
         private fun mostProminentCard(cards: List<PokemonCard>): PokemonCard? {
             val stacks = CardUtils.stackCards().invoke(cards)
             val evolutions = EvolutionChain.build(stacks)
@@ -209,7 +200,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             return largestEvolutionLine?.last()?.cards?.firstOrNull()?.card
         }
     }
-
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         PREVIEW(R.layout.item_set_preview),
@@ -228,7 +218,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             }
         }
     }
-
 
     companion object {
 

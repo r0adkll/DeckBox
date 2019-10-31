@@ -15,7 +15,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.unstack
 
-
 object EntityMapper {
 
     fun to(entity: TournamentDeckTemplateEntity, cards: List<PokemonCard>): DeckTemplate {

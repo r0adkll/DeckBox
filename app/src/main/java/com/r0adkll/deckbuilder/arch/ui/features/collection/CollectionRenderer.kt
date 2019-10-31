@@ -7,7 +7,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 
-
 class CollectionRenderer(
         actions: CollectionUi.Actions,
         schedulers: AppSchedulers,

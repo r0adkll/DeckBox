@@ -19,7 +19,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.*
 
-
 class EvolutionChainView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
@@ -47,7 +46,6 @@ class EvolutionChainView @JvmOverloads constructor(
 
     var dragAndDropEnabled: Boolean = false
 
-
     init {
         orientation = HORIZONTAL
         setWillNotDraw(false)
@@ -62,7 +60,6 @@ class EvolutionChainView @JvmOverloads constructor(
         linkBarPaint.strokeWidth = linkRadius
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         if (evolutionChain != null) {
@@ -76,7 +73,6 @@ class EvolutionChainView @JvmOverloads constructor(
             }
         }
     }
-
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
@@ -104,7 +100,6 @@ class EvolutionChainView @JvmOverloads constructor(
         }
     }
 
-
     fun setOnPokemonCardClickListener(listener: (PokemonCardView) -> Unit) {
         pokemonCardClickListener = object : OnPokemonCardClickListener {
             override fun onPokemonCardClicked(view: PokemonCardView, card: PokemonCard) {
@@ -112,7 +107,6 @@ class EvolutionChainView @JvmOverloads constructor(
             }
         }
     }
-
 
     fun setOnPokemonCardEditListener(onAdd: (PokemonCard) -> Unit, onRemove: (PokemonCard) -> Unit) {
         pokemonCardEditListener = object : OnPokemonEditListener {
@@ -125,7 +119,6 @@ class EvolutionChainView @JvmOverloads constructor(
             }
         }
     }
-
 
     @SuppressLint("NewApi")
     private fun configurePokemonCardViews() {
@@ -226,7 +219,6 @@ class EvolutionChainView @JvmOverloads constructor(
         }
     }
 
-
     private fun getEvolutionState(chain: EvolutionChain, nodeIndex: Int, cardIndex: Int): PokemonCardView.Evolution {
         val node = chain.nodes[nodeIndex]
         val isFirstNode = nodeIndex == 0
@@ -253,12 +245,10 @@ class EvolutionChainView @JvmOverloads constructor(
         return NONE
     }
 
-
     interface OnPokemonCardClickListener {
 
         fun onPokemonCardClicked(view: PokemonCardView, card: PokemonCard)
     }
-
 
     interface OnPokemonEditListener {
 

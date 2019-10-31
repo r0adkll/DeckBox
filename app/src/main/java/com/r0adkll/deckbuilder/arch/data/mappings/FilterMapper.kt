@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.data.mappings
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import io.pokemontcg.requests.CardQueryBuilder
 
-
 object FilterMapper {
 
     fun to(filter: Filter): CardQueryBuilder {

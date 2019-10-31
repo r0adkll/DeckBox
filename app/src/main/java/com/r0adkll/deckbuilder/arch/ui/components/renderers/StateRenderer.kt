@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.components.renderers
 
-
 /**
  * Responsible for rendering a view's state.
  */

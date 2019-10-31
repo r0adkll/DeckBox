@@ -1,12 +1,10 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.model
 
-
 import com.r0adkll.deckbuilder.tools.ModelUtils.createEnergyCard
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.Test
-
 
 class DuplicateRuleTest {
 
@@ -32,7 +30,6 @@ class DuplicateRuleTest {
         result.shouldBeNull()
     }
 
-
     @Test
     fun shouldDetectDuplicateError() {
         val cards = listOf(
@@ -54,7 +51,6 @@ class DuplicateRuleTest {
 
         result.shouldNotBeNull()
     }
-
 
     @Test
     fun shouldNotDetectBasicEnergy() {

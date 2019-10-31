@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browse
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
@@ -10,7 +9,6 @@ import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class SetBrowserPresenter @Inject constructor(
         val ui: SetBrowserUi,
@@ -36,7 +34,6 @@ class SetBrowserPresenter @Inject constructor(
                 .logState()
                 .subscribe { ui.render(it) }
     }
-
 
     companion object {
 

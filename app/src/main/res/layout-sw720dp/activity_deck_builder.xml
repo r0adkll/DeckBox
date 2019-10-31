@@ -171,7 +171,6 @@
                     android:layout_gravity="center"
                     android:gravity="center">
 
-
                     <ImageView
                         android:id="@+id/dropCard"
                         android:layout_width="75dp"

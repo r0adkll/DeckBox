@@ -1,9 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.expansions.cache
 
-
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import io.reactivex.Observable
-
 
 /**
  * In Memory implementation of [Expansion] cache to store a list of
@@ -13,7 +11,6 @@ class  InMemoryExpansionCache : ExpansionCache {
 
     private val expansions: ArrayList<Expansion> = ArrayList()
 
-
     override fun putExpansions(expansions: List<Expansion>) {
         synchronized(this) {
             this.expansions.clear()
@@ -21,13 +18,11 @@ class  InMemoryExpansionCache : ExpansionCache {
         }
     }
 
-
     override fun getExpansions(): Observable<List<Expansion>> {
         return synchronized(this) {
             Observable.just(expansions.toList())
         }
     }
-
 
     override fun clear() {
         synchronized(this) {

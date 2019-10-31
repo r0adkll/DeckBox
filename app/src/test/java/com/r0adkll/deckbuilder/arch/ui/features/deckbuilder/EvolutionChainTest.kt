@@ -7,7 +7,6 @@ import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
 import org.amshove.kluent.*
 import org.junit.Test
 
-
 class EvolutionChainTest {
 
     @Test
@@ -46,7 +45,6 @@ class EvolutionChainTest {
         chain.nodes[0].cards[0].shouldEqual(pokemon.stack())
     }
 
-
     @Test
     fun testAddEvolutionPokemon() {
         val pokemon = createPokemonCard().copy(id = "sm1-5", name = "Eevee")
@@ -61,7 +59,6 @@ class EvolutionChainTest {
         chain.first()!!.name?.shouldBeEqualTo("Eevee")
         chain.last()!!.name?.shouldBeEqualTo("Espeon-GX")
     }
-
 
     @Test
     fun testAddBasicOutOfOrder() {
@@ -79,7 +76,6 @@ class EvolutionChainTest {
         chain.last().shouldNotBeNull()
         chain.last()?.name?.shouldBeEqualTo("Espeon-GX")
     }
-
 
     @Test
     fun testAddMultipleBasic() {
@@ -105,7 +101,6 @@ class EvolutionChainTest {
         chain.last()!!.evolvesFrom?.shouldBeEqualTo("Eevee")
     }
 
-
     @Test
     fun testIsChainForCard() {
         val pokemon1 = createPokemonCard().copy(id = "sm1-6", name = "Eevee")
@@ -122,7 +117,6 @@ class EvolutionChainTest {
         chain.isChainFor(pokemonDiff.stack()).shouldBeFalse()
     }
 
-
     @Test
     fun testBuildChainList() {
         val pokemons = listOf(
@@ -138,7 +132,6 @@ class EvolutionChainTest {
         chains[0].nodes.size.shouldEqualTo(2)
         chains[1].nodes.size.shouldEqualTo(1)
     }
-
 
     @Test
     fun testStage2OutOfOrderChainBuilding() {
@@ -158,7 +151,6 @@ class EvolutionChainTest {
 
     }
 
-
     @Test
     fun testShortStage2OutOfOrderChainBuilding() {
         val pokemons = listOf(
@@ -174,7 +166,6 @@ class EvolutionChainTest {
         chains[0].nodes[1].cards.contains(pokemons[0]).shouldBeTrue()
 
     }
-
 
     @Test
     fun testBreakEvolutionChain() {

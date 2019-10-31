@@ -27,42 +27,35 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
 
-
 class QuickStartRecyclerAdapter(
         context: Context,
         private val quickStart: Relay<Deck>
 ) : ListRecyclerAdapter<QuickStartRecyclerAdapter.Item,
         QuickStartRecyclerAdapter.QuickStartViewHolder<QuickStartRecyclerAdapter.Item>>(context) {
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickStartViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
         return QuickStartViewHolder.create(itemView, viewType, quickStart)
     }
 
-
     override fun onBindViewHolder(vh: QuickStartViewHolder<Item>, i: Int) {
         vh.bind(items[i])
     }
 
-
     override fun getItemViewType(position: Int): Int {
         return items[position].viewType
     }
-
 
     override fun onViewAttachedToWindow(holder: QuickStartViewHolder<Item>) {
         super.onViewAttachedToWindow(holder)
         holder.applyAnimation()
     }
 
-
     fun setQuickStartItems(quickStartItems: List<Item>) {
         val diff = calculateDiff(quickStartItems, items)
         items = ArrayList(quickStartItems)
         diff.diff.dispatchUpdatesTo(getListUpdateCallback())
     }
-
 
     sealed class Item : RecyclerItem {
 
@@ -94,12 +87,10 @@ class QuickStartRecyclerAdapter(
         }
     }
 
-
     sealed class QuickStartViewHolder<in I : Item>(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         abstract fun bind(item: I)
         open fun applyAnimation() {}
-
 
         class PlaceholderViewHolder(itemView: View): QuickStartViewHolder<Item.Placeholder>(itemView) {
 
@@ -112,7 +103,6 @@ class QuickStartRecyclerAdapter(
             override fun bind(item: Item.Placeholder) {
             }
 
-
             override fun applyAnimation() {
                 set?.cancel()
                 set = AnimatorSet().apply {
@@ -124,7 +114,6 @@ class QuickStartRecyclerAdapter(
                     this.start()
                 }
             }
-
 
             private fun applyAnimator(view: View, startDelay: Long = 0L, duration: Long = 300L): AnimatorSet {
                 return AnimatorSet().apply {
@@ -149,7 +138,6 @@ class QuickStartRecyclerAdapter(
             }
         }
 
-
         class DeckViewHolder(
                 itemView: View,
                 private val quickStart: Relay<Deck>
@@ -158,7 +146,6 @@ class QuickStartRecyclerAdapter(
             private val image by bindView<DeckImageView>(R.id.image)
             private val title by bindView<TextView>(R.id.title)
             private val subtitle by bindView<TextView>(R.id.subtitle)
-
 
             override fun bind(item: Item.Template) {
                 image.topCropEnabled = true
@@ -192,7 +179,6 @@ class QuickStartRecyclerAdapter(
                 }
             }
 
-
             private fun mostProminentCard(cards: List<PokemonCard>): PokemonCard? {
                 val stacks = CardUtils.stackCards().invoke(cards)
                 val evolutions = EvolutionChain.build(stacks)
@@ -200,7 +186,6 @@ class QuickStartRecyclerAdapter(
                 return largestEvolutionLine?.last()?.cards?.firstOrNull()?.card
             }
         }
-
 
         enum class ViewType(@LayoutRes val layoutId: Int) {
             PLACEHOLDER(R.layout.item_deck_placeholder),
@@ -217,7 +202,6 @@ class QuickStartRecyclerAdapter(
                 }
             }
         }
-
 
         companion object {
 

@@ -17,7 +17,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-
 class ShortcutActivity : Activity() {
 
     @Inject lateinit var preferences: AppPreferences
@@ -82,12 +81,10 @@ class ShortcutActivity : Activity() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()
     }
-
 
     private fun isSignedIn(): Boolean {
         return FirebaseAuth.getInstance().currentUser != null ||
@@ -95,24 +92,20 @@ class ShortcutActivity : Activity() {
                 preferences.offlineId.get().isNotBlank()
     }
 
-
     companion object {
         private const val ACTION_NEW_DECK = "com.r0adkll.deckbuilder.intent.ACTION_NEW_DECK"
         private const val ACTION_OPEN_DECK = "com.r0adkll.deckbuilder.intent.ACTION_OPEN_DECK"
         private const val EXTRA_DECK_ID = "com.r0adkll.deckbuilder.intent.EXTRA_DECK_ID"
 
-
         fun createIntent(context: Context): Intent {
             return Intent(context, ShortcutActivity::class.java)
         }
-
 
         fun createNewDeckIntent(context: Context): Intent {
             val intent = createIntent(context)
             intent.action = ACTION_NEW_DECK
             return intent
         }
-
 
         fun createOpenDeckIntent(context: Context, deckId: String): Intent {
             val intent = createIntent(context)

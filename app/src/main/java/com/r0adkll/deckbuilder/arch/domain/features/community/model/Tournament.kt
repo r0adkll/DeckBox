@@ -4,7 +4,6 @@ import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Format
 import kotlinx.android.parcel.Parcelize
 
-
 @Parcelize
 data class Tournament(
         val name: String,

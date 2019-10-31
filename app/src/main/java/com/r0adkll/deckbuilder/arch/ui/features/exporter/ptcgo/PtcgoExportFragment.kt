@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo
 
-
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -26,7 +25,6 @@ import kotlinx.android.synthetic.main.fragment_ptcgo_export.*
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class PtcgoExportFragment : BaseFragment() {
 
     private val clipboard: ClipboardManager by lazy {
@@ -39,11 +37,9 @@ class PtcgoExportFragment : BaseFragment() {
     @Inject lateinit var exporter: PtcgoExporter
     @Inject lateinit var exportTask: ExportTask
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_ptcgo_export, container, false)
     }
-
 
     @SuppressLint("RxSubscribeOnError")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -84,11 +80,9 @@ class PtcgoExportFragment : BaseFragment() {
                 }
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.activity_export_ptcgo, menu)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
@@ -103,12 +97,10 @@ class PtcgoExportFragment : BaseFragment() {
         }
     }
 
-
     override fun setupComponent() {
         getComponent(MultiExportComponent::class)
                 .inject(this)
     }
-
 
     companion object {
 

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.preview
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -28,7 +27,6 @@ import kotlinx.android.synthetic.main.activity_pdf_preview.*
 import java.io.File
 import java.io.IOException
 
-
 class PdfPreviewActivity : BaseActivity() {
 
     private val file: File by bindSerializable(EXTRA_FILE)
@@ -39,7 +37,6 @@ class PdfPreviewActivity : BaseActivity() {
     private var renderer: PdfRenderer? = null
     private var fileDescriptor: ParcelFileDescriptor? = null
     private var currentPage: PdfRenderer.Page? = null
-
 
     @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,12 +61,10 @@ class PdfPreviewActivity : BaseActivity() {
         }
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_export_tournament, menu)
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
@@ -87,7 +82,6 @@ class PdfPreviewActivity : BaseActivity() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         try {
@@ -98,10 +92,8 @@ class PdfPreviewActivity : BaseActivity() {
         file.deleteOnExit()
     }
 
-
     override fun setupComponent(component: AppComponent) {
     }
-
 
     private fun printFile() {
         Analytics.event(Event.SelectContent.Action("print_decklist"))
@@ -113,7 +105,6 @@ class PdfPreviewActivity : BaseActivity() {
 
         printManager.print(jobName, PdfDocumentAdapter(this, file), attrs)
     }
-
 
     /**
      * Sets up a [android.graphics.pdf.PdfRenderer] and related resources.
@@ -138,7 +129,6 @@ class PdfPreviewActivity : BaseActivity() {
         renderer?.close()
         fileDescriptor?.close()
     }
-
 
     /**
      * Shows the specified page of PDF to the screen.
@@ -168,7 +158,6 @@ class PdfPreviewActivity : BaseActivity() {
         // We are ready to show the Bitmap to user.
         image.setImageBitmap(bitmap)
     }
-
 
     companion object {
         const val EXTRA_FILE = "PdfPreviewActivity.File"

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browser
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
@@ -10,11 +9,9 @@ import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface BrowseUi : StateRenderer<BrowseUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
@@ -24,12 +21,10 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
         fun hideOfflineOutline(): Observable<Unit>
     }
 
-
     interface Actions : BaseActions {
 
         fun setExpansionsItems(items: List<Item>)
     }
-
 
     @Parcelize
     data class State(
@@ -48,7 +43,6 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
             is Change.OfflineOutline -> this.copy(offlineOutline = change.enabled)
         }
 
-
         sealed class Change(val logText: String) {
             object IsLoading : Change("network -> loading expansions")
             class Error(val description: String) : Change("error -> $description")
@@ -57,11 +51,9 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
             class OfflineOutline(val enabled: Boolean): Change("user -> offline outline($enabled)")
         }
 
-
         override fun toString(): String {
             return "State(isLoading=$isLoading, error=$error, expansions=${expansions.map { it.code }}, offlineStats=$offlineStatus, offlineOutline=$offlineOutline)"
         }
-
 
         companion object {
 

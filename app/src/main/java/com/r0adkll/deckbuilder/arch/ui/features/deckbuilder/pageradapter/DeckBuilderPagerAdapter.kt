@@ -13,7 +13,6 @@ import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
 
-
 /**
  * Pager adapter for all the [io.pokemontcg.model.SuperType]s involved in building a deck
  */
@@ -42,7 +41,6 @@ class DeckBuilderPagerAdapter(
     private val inflater = LayoutInflater.from(context)
     private val viewHolders: Array<SuperTypeViewHolder<*>?> = Array(3) { _ -> null }
 
-
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
         val vh = getViewHolder(position, view, pokemonCardClicks, editCardIntentions)
@@ -60,11 +58,9 @@ class DeckBuilderPagerAdapter(
         return view
     }
 
-
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
     }
-
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
     override fun getCount(): Int = 3
@@ -94,7 +90,6 @@ class DeckBuilderPagerAdapter(
         }
     }
 
-
     @Suppress("NON_EXHAUSTIVE_WHEN")
     fun wiggleCard(card: PokemonCard) {
         when(card.supertype) {
@@ -103,7 +98,6 @@ class DeckBuilderPagerAdapter(
             SuperType.ENERGY -> viewHolders[2]?.wiggleCard(card)
         }
     }
-
 
     private fun getViewHolder(
             position: Int,

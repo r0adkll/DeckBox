@@ -1,8 +1,6 @@
 package com.r0adkll.deckbuilder.arch.domain.features.remote
 
-
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.*
-
 
 /**
  * Wrapper around Firebase Remote Configuration SDK

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.util
 
-
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
@@ -15,7 +14,6 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 import java.util.concurrent.Executor
 import kotlin.reflect.KClass
-
 
 object RxFirebase {
 
@@ -72,7 +70,6 @@ object RxFirebase {
         }, BackpressureStrategy.BUFFER)
     }
 
-
     /**
      * Create an observable for any [Task] spawned from Firebase operation
      */
@@ -97,7 +94,6 @@ object RxFirebase {
             task.addOnFailureListener(failureListener)
         }
     }
-
 
     /**
      * Create an observable for any [Task] spawned from Firebase operation
@@ -124,7 +120,6 @@ object RxFirebase {
         }
     }
 
-
     /**
      * Create an observable for any [Task] spawned from Firebase operation
      */
@@ -149,7 +144,6 @@ object RxFirebase {
             task.addOnFailureListener(failureListener)
         }
     }
-
 
     /**
      * Create an observable for any [Task] spawned from Firebase operation

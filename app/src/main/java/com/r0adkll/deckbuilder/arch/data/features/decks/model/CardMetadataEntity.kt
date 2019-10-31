@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.model
 
-
 /**
  * Barebones card reference to avoid store the entirety of the card in FireStore
  *

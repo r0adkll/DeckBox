@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browse
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -53,7 +52,6 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_set_browser.*
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions, SetBrowserUi.Actions {
 
@@ -152,12 +150,10 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         presenter.start()
     }
 
-
     override fun setupComponent(component: AppComponent) {
         component.plus(SetBrowserModule(this))
                 .inject(this)
     }
-
 
     override fun onDestroy() {
         presenter.stop()
@@ -165,17 +161,14 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         super.onDestroy()
     }
 
-
     override fun render(state: SetBrowserUi.State) {
         this.state = state
         renderer.render(state)
     }
 
-
     override fun filterChanged(): Observable<SetBrowserUi.BrowseFilter> {
         return filterChanges
     }
-
 
     override fun setFilter(filter: SetBrowserUi.BrowseFilter) {
         for (i in (0 until tabs.tabCount)) {
@@ -187,7 +180,6 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             }
         }
     }
-
 
     override fun hideFilters(vararg filters: BrowseFilter) {
         filters.forEach { filter ->
@@ -205,26 +197,21 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         }
     }
 
-
     override fun setCards(cards: List<PokemonCard>) {
         adapter.submitList(cards.map { PokemonItem.Single(StackedPokemonCard(it, 1)) })
     }
-
 
     override fun showLoading(isLoading: Boolean) {
         emptyView.setLoading(isLoading)
     }
 
-
     override fun showError(description: String) {
         emptyView.emptyMessage = description
     }
 
-
     override fun hideError() {
         emptyView.setEmptyMessage(R.string.empty_set_browse_message)
     }
-
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
         override fun execute(palette: androidx.palette.graphics.Palette?) {
@@ -299,7 +286,6 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             intent.putExtra(EXTRA_EXPANSION, expansion)
             return intent
         }
-
 
         fun createIntent(context: Context, setCode: String): Intent {
             val expansion = Expansion(setCode, null, "", "", 300, false, false, "", "", "https://images.pokemontcg.io/$setCode/logo.png")

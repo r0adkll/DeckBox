@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class CollectionSetPresenter @Inject constructor(
         ui: CollectionSetUi,
         val intentions: CollectionSetUi.Intentions,

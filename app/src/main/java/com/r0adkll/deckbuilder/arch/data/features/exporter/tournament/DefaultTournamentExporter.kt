@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.exporter.tournament
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -10,7 +9,11 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TableLayout
+import android.widget.TextView
 import com.ftinc.kit.kotlin.extensions.gone
 import com.ftinc.kit.kotlin.extensions.setVisible
 import com.ftinc.kit.kotlin.extensions.visible
@@ -36,7 +39,6 @@ import java.io.IOException
 import java.net.URLEncoder
 import javax.inject.Inject
 
-
 class DefaultTournamentExporter @Inject constructor(
         val deckRepository: DeckRepository,
         val editRepository: EditRepository
@@ -51,7 +53,6 @@ class DefaultTournamentExporter @Inject constructor(
             else -> Observable.error(IOException("Unable to export your deck"))
         }
     }
-
 
     private fun createDocument(context: Context, cards: List<PokemonCard>, name: String, playerInfo: PlayerInfo): File {
         val margin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, MARGIN.toFloat(), context.resources.displayMetrics).toInt()
@@ -84,7 +85,6 @@ class DefaultTournamentExporter @Inject constructor(
         // return
         return outputFile
     }
-
 
     @SuppressLint("InflateParams")
     private fun printDeck(cards: List<PokemonCard>, playerInfo: PlayerInfo, canvas: Canvas, context: Context) {
@@ -180,7 +180,6 @@ class DefaultTournamentExporter @Inject constructor(
         view.draw(canvas)
     }
 
-
     private fun createRow(inflater: LayoutInflater, parent: ViewGroup, card: StackedPokemonCard): View {
         val row = inflater.inflate(R.layout.layout_tournament_card_row, parent, false)
         val quantity = row.findViewById<TextView>(R.id.quantity)
@@ -198,7 +197,6 @@ class DefaultTournamentExporter @Inject constructor(
 
         return row
     }
-
 
     private fun List<StackedPokemonCard>.reduce(): List<StackedPokemonCard> {
         val reducedStackedTrainers = HashMap<String, StackedPokemonCard>()
@@ -224,7 +222,6 @@ class DefaultTournamentExporter @Inject constructor(
 
         return reducedStackedTrainers.values.toList()
     }
-
 
     companion object {
 

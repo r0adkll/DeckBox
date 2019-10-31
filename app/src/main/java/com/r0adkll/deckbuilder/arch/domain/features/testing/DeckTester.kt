@@ -4,7 +4,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import io.reactivex.Observable
 
-
 interface DeckTester {
 
     fun testSession(sessionId: Long, iterations: Int = 1000): Observable<TestResults>

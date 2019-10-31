@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.internal.analytics.firebase
 
-
 import android.content.Context
 import android.os.Bundle
 import android.provider.Settings
@@ -9,7 +8,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.FirebaseAnalytics.Param.*
 import com.r0adkll.deckbuilder.internal.analytics.AnalyticInterface
 import com.r0adkll.deckbuilder.internal.analytics.Event
-
 
 class FirebaseAnalyticInterface(
         context: Context

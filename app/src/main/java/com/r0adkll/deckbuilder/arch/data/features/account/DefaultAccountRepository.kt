@@ -12,7 +12,6 @@ import io.reactivex.functions.BiFunction
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
-
 class DefaultAccountRepository @Inject constructor(
         val roomDeckCache: RoomDeckCache,
         val roomCollectionCache: RoomCollectionSource,

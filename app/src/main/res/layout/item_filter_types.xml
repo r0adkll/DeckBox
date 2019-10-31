@@ -59,7 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
             style="@style/Widget.Deck.PokeType"
             android:id="@+id/type_steel"

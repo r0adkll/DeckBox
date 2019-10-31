@@ -16,11 +16,9 @@ import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.extensions.max
 import kotlin.math.roundToInt
 
-
 sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
-
 
     class MigrationViewHolder(
             itemView: View,
@@ -35,7 +33,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
 
         private val actionMigrate by bindView<Button>(R.id.actionMigrate)
         private val actionDismiss by bindView<Button>(R.id.actionDismiss)
-
 
         override fun bind(item: Item.Migration) {
             message.setVisible(!item.isLoading)
@@ -63,7 +60,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         private val title by bindView<TextView>(R.id.title)
         private val completion by bindView<TextView>(R.id.completion)
 
-
         override fun bind(item: Item.ExpansionSeries) {
             title.text = item.series
             completion.text = itemView.context.getString(R.string.completion_format,
@@ -77,7 +73,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         private val completion by bindView<TextView>(R.id.completion)
         private val count by bindView<TextView>(R.id.count)
         private val progress by bindView<ProgressLinearLayout>(R.id.progress)
-
 
         override fun bind(item: Item.ExpansionSet) {
             GlideApp.with(itemView)
@@ -110,7 +105,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             }
         }
     }
-
 
     companion object {
 

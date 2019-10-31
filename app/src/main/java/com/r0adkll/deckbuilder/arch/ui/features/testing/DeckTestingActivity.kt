@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing
 
-
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -47,7 +46,6 @@ import kotlinx.android.synthetic.main.activity_deck_testing.*
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intentions, DeckTestingUi.Actions {
 
     private val sessionId: Long by bindLong(EXTRA_SESSION_ID, -1L)
@@ -61,7 +59,6 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     @Inject lateinit var presenter: DeckTestingPresenter
 
     private lateinit var adapter: TestResultsRecyclerAdapter
-
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +85,6 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         inputIterations.setOnClickListener { toast(R.string.test_iterations_explanation) }
     }
 
-
     override fun setupComponent() {
         DeckApp.component.plus(DeckTestingModule(this))
                 .inject(this)
@@ -97,12 +93,10 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
-
     override fun render(state: State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun testSingleHand(): Observable<Int> {
         return actionTestSingleHand.clicks()
@@ -128,13 +122,11 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                 .doOnNext { Analytics.event(Event.SelectContent.Action("test_deck", value = it.toLong())) }
     }
 
-
     override fun testOverallHands(): Observable<Int> {
         return actionTestOverall.clicks()
                 .uiDebounce()
                 .map { state.iterations }
     }
-
 
     override fun incrementIterations(): Observable<Int> {
         val incrementSmall = actionIterationPlus.clicks()
@@ -147,7 +139,6 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                 .doOnNext { Analytics.event(Event.SelectContent.Action("increment_test_iterations", value = it.toLong())) }
     }
 
-
     override fun decrementIterations(): Observable<Int> {
         val decrementSmall = actionIterationMinus.clicks()
                 .map { STEP }
@@ -159,18 +150,15 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                 .doOnNext { Analytics.event(Event.SelectContent.Action("decrement_test_iterations", value = it.toLong())) }
     }
 
-
     override fun setMetadata(metadata: DeckTestingUi.Metadata) {
         name.text = metadata.name
         description.text = if (metadata.description.isEmpty()) getString(R.string.empty_metadata_description).fromHtml() else metadata.description
         cardCount.count(metadata.pokemon, metadata.trainer, metadata.energy)
     }
 
-
     override fun showTestResults(results: List<TestResult>) {
         adapter.setTestResults(results)
     }
-
 
     override fun showTestHand(hand: List<PokemonCard>) {
         val futures = hand.map {
@@ -255,7 +243,6 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                             }
                         }
 
-
                         if (hand.isMulligan()) {
                             showError(getString(R.string.mulligan))
                         } else {
@@ -268,11 +255,9 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
 
     }
 
-
     override fun setTestIterations(iterations: Int) {
         inputIterations.text = "$iterations"
     }
-
 
     override fun showLoading(isLoading: Boolean) {
         hideError()
@@ -281,38 +266,31 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         emptyView.setLoading(isLoading)
     }
 
-
     override fun showError(description: String) {
         errorBar.text = description
         errorBar.visible()
     }
 
-
     override fun hideError() {
         errorBar.gone()
     }
 
-
     override fun hideTestHand() {
         createHideHandAnimation().start()
     }
-
 
     override fun hideTestResults() {
         adapter.clear()
         adapter.notifyDataSetChanged()
     }
 
-
     override fun showEmptyView() {
         emptyView.visible()
     }
 
-
     override fun hideEmptyView() {
         emptyView.gone()
     }
-
 
     private fun createHideHandAnimation(): AnimatorSet {
         val animators = cards.map {
@@ -331,7 +309,6 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         return superSet
     }
 
-
     companion object {
         private const val EXTRA_SESSION_ID = "DeckTestingActivity.SessionId"
         private const val EXTRA_DECK_ID = "DeckTestingActivity.DeckId"
@@ -342,13 +319,11 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         private const val DEAL_ANIMATION_DURATION = 250L
         private const val DEAL_RETURN_ANIMATION_DURATION = 200L
 
-
         fun createIntent(context: Context, sessionId: Long): Intent {
             val intent = Intent(context, DeckTestingActivity::class.java)
             intent.putExtra(EXTRA_SESSION_ID, sessionId)
             return intent
         }
-
 
         fun createIntent(context: Context, deckId: String): Intent {
             val intent = Intent(context, DeckTestingActivity::class.java)

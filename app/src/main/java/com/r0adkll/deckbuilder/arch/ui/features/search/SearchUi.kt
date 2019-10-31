@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
-
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
@@ -11,7 +10,6 @@ import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 interface SearchUi : StateRenderer<SearchUi.State> {
 
@@ -63,7 +61,6 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             return "Result(query='$query', filter=$filter, isLoading=$isLoading, error=$error, category=$category, results=${results.size})"
         }
     }
-
 
     @PaperParcel
     data class State @JvmOverloads constructor(
@@ -133,11 +130,9 @@ interface SearchUi : StateRenderer<SearchUi.State> {
             }
         }
 
-
         override fun toString(): String {
             return "State(category=$category, results=$results, selected=${selected.size})"
         }
-
 
         sealed class Change(val logText: String) {
             class CategorySwitched(val category: SuperType) : Change("user -> switching category to $category")

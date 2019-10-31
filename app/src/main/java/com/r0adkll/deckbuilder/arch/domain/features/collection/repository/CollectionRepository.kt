@@ -4,7 +4,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import io.reactivex.Observable
 
-
 interface CollectionRepository {
 
     /**

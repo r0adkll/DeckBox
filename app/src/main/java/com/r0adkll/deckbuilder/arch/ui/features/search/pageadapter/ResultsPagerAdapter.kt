@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
-
 import android.content.Context
 import androidx.viewpager.widget.PagerAdapter
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +19,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecy
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
 
-
 @Suppress("NON_EXHAUSTIVE_WHEN")
 class ResultsPagerAdapter(
         val context: Context,
@@ -33,7 +31,6 @@ class ResultsPagerAdapter(
     private val inflater = LayoutInflater.from(context)
     private val viewHolders: Array<SearchResultViewHolder?> = Array(3) { _ -> null }
 
-
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
         val vh = SearchResultViewHolder(view, position, hasValidSession, scrollHideListener,
@@ -45,17 +42,13 @@ class ResultsPagerAdapter(
         return view
     }
 
-
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
     }
 
-
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
 
-
     override fun getCount(): Int = 3
-
 
     override fun getPageTitle(position: Int): CharSequence = when(position) {
         0 -> context.getString(R.string.tab_pokemon)
@@ -64,13 +57,11 @@ class ResultsPagerAdapter(
         else -> ""
     }
 
-
     fun setSelectedCards(cards: List<PokemonCard>) {
         viewHolders[0]?.setSelectedCards(cards)
         viewHolders[1]?.setSelectedCards(cards)
         viewHolders[2]?.setSelectedCards(cards)
     }
-
 
     fun setCards(type: SuperType, cards: List<PokemonCard>) {
         when(type) {
@@ -80,7 +71,6 @@ class ResultsPagerAdapter(
         }
     }
 
-
     fun showLoading(type: SuperType, isLoading: Boolean) {
         when(type) {
             SuperType.POKEMON -> viewHolders[0]?.showLoading(isLoading)
@@ -88,7 +78,6 @@ class ResultsPagerAdapter(
             SuperType.ENERGY -> viewHolders[2]?.showLoading(isLoading)
         }
     }
-
 
     fun showEmptyResults(type: SuperType) {
         when(type) {
@@ -98,7 +87,6 @@ class ResultsPagerAdapter(
         }
     }
 
-
     fun showEmptyDefault(type: SuperType) {
         when(type) {
             SuperType.POKEMON -> viewHolders[0]?.showEmptyDefault()
@@ -106,7 +94,6 @@ class ResultsPagerAdapter(
             SuperType.ENERGY -> viewHolders[2]?.showEmptyDefault()
         }
     }
-
 
     fun showError(type: SuperType, description: String) {
         when(type) {
@@ -116,7 +103,6 @@ class ResultsPagerAdapter(
         }
     }
 
-
     fun hideError(type: SuperType) {
         when(type) {
             SuperType.POKEMON -> viewHolders[0]?.hideError()
@@ -125,7 +111,6 @@ class ResultsPagerAdapter(
         }
     }
 
-
     fun wiggleCard(card: PokemonCard) {
         when(card.supertype) {
             SuperType.POKEMON -> viewHolders[0]?.wiggleCard(card)
@@ -133,7 +118,6 @@ class ResultsPagerAdapter(
             SuperType.ENERGY -> viewHolders[2]?.wiggleCard(card)
         }
     }
-
 
     private class SearchResultViewHolder(
             itemView: View,
@@ -180,21 +164,17 @@ class ResultsPagerAdapter(
             recycler.addOnScrollListener(scrollHideListener)
         }
 
-
         fun bind(cards: List<PokemonCard>) {
             adapter.setCards(cards)
         }
-
 
         fun setSelectedCards(cards: List<PokemonCard>) {
             adapter.setSelectedCards(cards)
         }
 
-
         fun showLoading(isLoading: Boolean) {
             emptyView.setLoading(isLoading)
         }
-
 
         fun showEmptyResults() {
             emptyView.setEmptyMessage(when(position) {
@@ -210,7 +190,6 @@ class ResultsPagerAdapter(
 //            }
         }
 
-
         fun showEmptyDefault() {
             emptyView.setEmptyMessage(when(position) {
                 0 -> R.string.empty_search_pokemon_message
@@ -220,16 +199,13 @@ class ResultsPagerAdapter(
             emptyView.actionLabel = null
         }
 
-
         fun showError(description: String) {
             emptyView.emptyMessage = description
         }
 
-
         fun hideError() {
             showEmptyDefault()
         }
-
 
         fun wiggleCard(card: PokemonCard) {
             val adapterPosition = adapter.indexOf(card)

@@ -16,7 +16,6 @@ import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.ftinc.kit.kotlin.extensions.spToPx
 import com.r0adkll.deckbuilder.R
 
-
 class TestResultProgressView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
@@ -29,7 +28,6 @@ class TestResultProgressView @JvmOverloads constructor(
             backgroundPaint.color = if (value) color(R.color.grey_500) else color(R.color.primaryColor)
         }
 
-
     private val cardRadius = dpToPx(8f)
     private val mulliganMargin = dpToPx(16f)
     private val defaultHeight = dipToPx(96f)
@@ -37,7 +35,6 @@ class TestResultProgressView @JvmOverloads constructor(
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val mulliganText: StaticLayout
-
 
     init {
         backgroundPaint.color = color(R.color.primaryColor)
@@ -57,7 +54,6 @@ class TestResultProgressView @JvmOverloads constructor(
         }
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
@@ -69,7 +65,6 @@ class TestResultProgressView @JvmOverloads constructor(
         val percentageWidth = (workingWidth * workingPercent).toInt() + offset.toInt()
         setMeasuredDimension(percentageWidth, defaultHeight)
     }
-
 
     override fun onDraw(canvas: Canvas) {
         canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(), cardRadius, cardRadius, backgroundPaint)

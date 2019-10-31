@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder
 
-
 import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
@@ -15,7 +14,6 @@ import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapTranscoder
 import com.r0adkll.deckbuilder.util.glide.svg.SvgDecoder
 import java.io.InputStream
-
 
 @GlideModule
 class DeckGlideModule : AppGlideModule() {

@@ -1,12 +1,15 @@
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import com.r0adkll.deckbuilder.arch.data.database.entities.CollectionCountEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import io.reactivex.Flowable
 import io.reactivex.Single
-
 
 @Dao
 abstract class CollectionDao {

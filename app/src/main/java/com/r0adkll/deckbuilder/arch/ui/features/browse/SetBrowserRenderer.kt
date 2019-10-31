@@ -10,7 +10,6 @@ import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
 
-
 class SetBrowserRenderer(
         val actions: SetBrowserUi.Actions,
         main: Scheduler,
@@ -25,7 +24,6 @@ class SetBrowserRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.showLoading(it) }
-
 
         disposables += state
                 .mapNullable { it.error }
@@ -82,7 +80,6 @@ class SetBrowserRenderer(
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.setCards(it) }
-
 
         disposables += state
                 .map { it.filter }

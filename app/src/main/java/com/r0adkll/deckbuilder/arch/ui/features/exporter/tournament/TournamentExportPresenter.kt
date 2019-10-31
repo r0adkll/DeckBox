@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
-
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
@@ -13,7 +12,6 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class TournamentExportPresenter @Inject constructor(
         val exportTask: ExportTask,
@@ -52,7 +50,6 @@ class TournamentExportPresenter @Inject constructor(
         val ageChange = preferences.playerAgeDivision.asObservable()
                 .map { Change.AgeDivisionChange(it) as Change }
 
-
         val merged = initialFormat
                 .mergeWith(nameChange)
                 .mergeWith(idChange)
@@ -64,7 +61,6 @@ class TournamentExportPresenter @Inject constructor(
         disposables += merged.scan(ui.state, State::reduce)
                 .logState()
                 .subscribe { ui.render(it) }
-
 
         /* Intentions directly change preferences */
 

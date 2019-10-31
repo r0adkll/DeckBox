@@ -16,7 +16,6 @@ import com.r0adkll.deckbuilder.R
 import io.pokemontcg.model.Type
 import io.pokemontcg.model.Type.*
 
-
 class PokemonTypeView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
@@ -34,13 +33,11 @@ class PokemonTypeView @JvmOverloads constructor(
             invalidate()
         }
 
-
     @ColorInt private val highlightColor: Int = color(R.color.secondaryColor)
     private val padding: Int = dipToPx(8f)
     private val highlightWidth: Int = dipToPx(2f)
     private val highlightElevation: Float = dpToPx(6f)
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
 
     init {
         setPadding(padding, padding, padding, padding)
@@ -76,7 +73,6 @@ class PokemonTypeView @JvmOverloads constructor(
         super.onDraw(canvas)
     }
 
-
     private fun applyType() {
         val drawable = when(type) {
             Type.COLORLESS -> R.drawable.ic_poketype_colorless
@@ -94,7 +90,6 @@ class PokemonTypeView @JvmOverloads constructor(
         }
         setImageResource(drawable)
     }
-
 
     private inner class TypeOutlineProvider : ViewOutlineProvider() {
         override fun getOutline(view: View?, outline: Outline?) {

@@ -7,7 +7,6 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 
-
 class ExpansionRecyclerAdapter(
         context: Context,
         private val downloadClicks: Relay<Expansion>,

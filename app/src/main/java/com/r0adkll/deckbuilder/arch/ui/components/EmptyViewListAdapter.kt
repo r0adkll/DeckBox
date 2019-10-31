@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ftinc.kit.kotlin.extensions.setVisible
 
-
 abstract class EmptyViewListAdapter<Item, Holder : RecyclerView.ViewHolder>(
     diffCallback: DiffUtil.ItemCallback<Item>,
     private val emptyChangeModifier: (emptyView: View, isEmpty: Boolean) -> Unit = defaultEmptyChangeModifier

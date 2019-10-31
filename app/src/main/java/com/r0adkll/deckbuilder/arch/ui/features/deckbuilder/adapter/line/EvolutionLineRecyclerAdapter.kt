@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
-
 import android.content.Context
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +16,6 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.layoutWidth
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.marginsRelative
-
 
 /**
  * A [RecyclerView.Adapter] for horizontally displaying an [EvolutionChain]
@@ -42,7 +40,6 @@ class EvolutionLineRecyclerAdapter(
         setHasStableIds(true)
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
         val vh = PokemonCardViewHolder.create(inflater, parent, false, false,
                 editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
@@ -59,7 +56,6 @@ class EvolutionLineRecyclerAdapter(
 
         return vh
     }
-
 
     override fun onBindViewHolder(holder: PokemonCardViewHolder, position: Int) {
         evolution.getItem(position)?.let { card ->
@@ -85,16 +81,13 @@ class EvolutionLineRecyclerAdapter(
         }
     }
 
-
     override fun getItemCount(): Int {
         return evolution?.size ?: 0
     }
 
-
     override fun getItemId(position: Int): Long {
         return evolution.getItem(position)?.card?.hashCode()?.toLong() ?: RecyclerView.NO_ID
     }
-
 
     override fun getEvolutionState(position: Int): EvolutionLineAdapter.State {
         return if (evolution != null) {
@@ -121,13 +114,11 @@ class EvolutionLineRecyclerAdapter(
         }
     }
 
-
     fun setEvolutionChain(chain: EvolutionChain) {
         val diff = calculateDiff(evolution, chain)
         evolution = diff.new.first()
         diff.diff.dispatchUpdatesTo(this)
     }
-
 
     fun setOnPokemonCardViewClickListener(listener: (PokemonCardView) -> Unit) {
         cardViewClickListener = object : OnPokemonCardViewClickListener {
@@ -136,7 +127,6 @@ class EvolutionLineRecyclerAdapter(
             }
         }
     }
-
 
     private fun getEvolutionState(chain: EvolutionChain, nodeIndex: Int, cardIndex: Int): PokemonCardView.Evolution {
         val node = chain.nodes[nodeIndex]
@@ -164,12 +154,10 @@ class EvolutionLineRecyclerAdapter(
         return PokemonCardView.Evolution.NONE
     }
 
-
     interface OnPokemonCardViewClickListener {
 
         fun onClick(view: PokemonCardView)
     }
-
 
     companion object {
 

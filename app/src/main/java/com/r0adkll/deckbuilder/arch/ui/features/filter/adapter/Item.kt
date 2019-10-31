@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
-
 import androidx.annotation.StringRes
 import com.ftinc.kit.kotlin.adapter.RecyclerItem
 import com.r0adkll.deckbuilder.R
@@ -9,11 +8,9 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.SearchField
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.FilterAttribute
 
-
 sealed class Item : RecyclerItem {
 
     abstract val itemId: Long
-
 
     data class Header(@StringRes val title: Int) : Item() {
 
@@ -21,7 +18,6 @@ sealed class Item : RecyclerItem {
             is Header -> new.title == title
             else -> false
         }
-
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Header -> new.title == title
@@ -32,14 +28,12 @@ sealed class Item : RecyclerItem {
         override val layoutId: Int = R.layout.item_filter_header
     }
 
-
     data class Field(val searchField: SearchField) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
             is Field -> true
             else -> false
         }
-
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Field -> new.searchField == searchField
@@ -49,7 +43,6 @@ sealed class Item : RecyclerItem {
         override val itemId: Long get() = searchField.hashCode().toLong()
         override val layoutId: Int get() = R.layout.item_filter_field
     }
-
 
     data class Type(
             val key: String,
@@ -61,7 +54,6 @@ sealed class Item : RecyclerItem {
             else -> false
         }
 
-
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Type -> new == this
             else -> false
@@ -70,7 +62,6 @@ sealed class Item : RecyclerItem {
         override val itemId: Long = key.hashCode().toLong()
         override val layoutId: Int = R.layout.item_filter_types
     }
-
 
     data class Attribute(
             val attributes: List<FilterAttribute>,
@@ -91,7 +82,6 @@ sealed class Item : RecyclerItem {
         override val layoutId: Int = R.layout.item_filter_attributes
     }
 
-
     sealed class Option<out T>(
             open val key: String,
             open val option: T,
@@ -105,15 +95,12 @@ sealed class Item : RecyclerItem {
             else -> false
         }
 
-
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Option<*> -> new == this
             else -> false
         }
 
-
         override val layoutId: Int = R.layout.item_filter_option
-
 
         data class ExpansionOption(
                 override val key: String,
@@ -124,7 +111,6 @@ sealed class Item : RecyclerItem {
             override val itemId: Long = option.code.hashCode().toLong()
             override val text: String = option.name
         }
-
 
         data class RarityOption(
                 override val key: String,
@@ -138,14 +124,12 @@ sealed class Item : RecyclerItem {
 
     }
 
-
     data class ViewMore(@StringRes val title: Int) : Item() {
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
             is ViewMore -> new.title == title
             else -> false
         }
-
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is ViewMore -> new.title == title
@@ -155,7 +139,6 @@ sealed class Item : RecyclerItem {
         override val itemId: Long = title.toLong()
         override val layoutId: Int = R.layout.item_filter_view_more
     }
-
 
     data class ValueRange(
             val key: String,
@@ -169,16 +152,13 @@ sealed class Item : RecyclerItem {
             else -> false
         }
 
-
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is ValueRange -> new == this
             else -> false
         }
 
-
         override val itemId: Long = key.hashCode().toLong()
         override val layoutId: Int = R.layout.item_filter_value_range
-
 
         data class Value(
                 val value: Int,
@@ -190,7 +170,6 @@ sealed class Item : RecyclerItem {
                 "${modifier.value}$value"
             }
         }
-
 
         enum class Modifier(val value: String){
             NONE(""),

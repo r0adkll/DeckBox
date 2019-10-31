@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line.Evoluti
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.bindView
 
-
 class EvolutionChainViewHolder(
         itemView: View,
         private val spanCount: Int,
@@ -25,7 +23,6 @@ class EvolutionChainViewHolder(
 ): RecyclerView.ViewHolder(itemView) {
 
     private val recyclerView by bindView<RecyclerView>(R.id.recycler)
-
 
     fun bind(evolutionChain: EvolutionChain, isEditing: Boolean, isCollectionEnabled: Boolean) {
 
@@ -51,7 +48,6 @@ class EvolutionChainViewHolder(
             adapter.setEvolutionChain(evolutionChain)
         }
     }
-
 
     companion object {
 

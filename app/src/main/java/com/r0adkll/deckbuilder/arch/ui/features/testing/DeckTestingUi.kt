@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing
 
-
 import android.os.Parcelable
 import com.ftinc.kit.arch.presentation.BaseActions
 import com.ftinc.kit.arch.presentation.state.BaseState
@@ -11,9 +10,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
-
 
     interface Intentions {
 
@@ -22,7 +19,6 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
         fun incrementIterations(): Observable<Int>
         fun decrementIterations(): Observable<Int>
     }
-
 
     interface Actions : BaseActions {
 
@@ -36,7 +32,6 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
         fun hideEmptyView()
     }
 
-
     @Parcelize
     data class Metadata(
             val name: String,
@@ -45,7 +40,6 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
             val trainer: Int,
             val energy: Int
     ): Parcelable
-
 
     @Parcelize
     data class State(
@@ -71,7 +65,6 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
             is Change.Hand -> this.copy(hand = change.hand, isLoading = false, results = null)
         }
 
-
         sealed class Change(logText: String) : Ui.State.Change(logText) {
             object IsLoading : Change("cache -> loading deck")
             class Error(val description: String) : Change("error -> $description")
@@ -81,7 +74,6 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
             class DecrementIterations(val amount: Int) : Change("user -> decrement iterations by $amount")
             class MetadataLoaded(val metadata: Metadata) : Change("network -> metadata loaded: $metadata")
         }
-
 
         companion object {
 

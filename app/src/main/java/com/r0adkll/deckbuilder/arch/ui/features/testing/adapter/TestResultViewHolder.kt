@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.testing.adapter
 
-
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,13 +12,11 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.TestResultProgressView
 import com.r0adkll.deckbuilder.util.bindView
 
-
 class TestResultViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     private val background: TestResultProgressView by bindView(R.id.background)
     private val imageView: ImageView by bindView(R.id.pokemonImage)
     private val percent: TextView by bindView(R.id.percent)
-
 
     @SuppressLint("SetTextI18n")
     fun bind(item: TestResult) {
@@ -33,7 +30,6 @@ class TestResultViewHolder(itemView: View) : androidx.recyclerview.widget.Recycl
                 .load(item.pokemonCard?.imageUrl)
                 .into(imageView)
     }
-
 
     companion object {
 

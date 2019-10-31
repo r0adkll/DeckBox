@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.importer.parser
 
-
 /**
  * Interface for validating a line of text in a deck list for importing
  */
@@ -34,7 +33,6 @@ class LineValidator {
 
         return null
     }
-
 
     companion object {
         private const val MIN_PART_COUNT = 4

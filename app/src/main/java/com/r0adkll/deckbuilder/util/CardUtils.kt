@@ -8,7 +8,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import io.pokemontcg.model.Type
 
-
 object CardUtils {
 
     val CARDS: Array<String> = arrayOf(

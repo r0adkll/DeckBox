@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.importer.model
 import io.pokemontcg.model.Type
 import io.pokemontcg.model.Type.*
 
-
 sealed class BasicEnergySet {
 
     abstract fun convert(type: Type): String?
@@ -38,7 +37,6 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object Generations : BasicEnergySet() {
         override fun convert(type: Type): String? = when(type) {
             GRASS -> "g1-75"
@@ -53,7 +51,6 @@ sealed class BasicEnergySet {
             else -> null
         }
     }
-
 
     object Evolutions : BasicEnergySet() {
         override fun convert(type: Type): String? = when(type) {
@@ -70,7 +67,6 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object ECard : BasicEnergySet() {
         override fun convert(type: Type): String? = when(type) {
             GRASS -> "ecard1-162"
@@ -83,7 +79,6 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object Emerald : BasicEnergySet() {
         override fun convert(type: Type): String? = when(type) {
             GRASS -> "ex9-101"
@@ -95,7 +90,6 @@ sealed class BasicEnergySet {
             else -> null
         }
     }
-
 
     object Legends : BasicEnergySet() {
         override fun convert(type: Type): String? = when(type) {
@@ -111,7 +105,6 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object HGSS : BasicEnergySet() {
         override fun convert(type: Type): String? = when(type) {
             GRASS -> "hgss1-115"
@@ -125,6 +118,5 @@ sealed class BasicEnergySet {
             else -> null
         }
     }
-
 
 }

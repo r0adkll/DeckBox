@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter
 
-
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -25,7 +24,6 @@ import kotlinx.android.synthetic.main.activity_deck_exporter.*
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class DeckExportActivity : BaseActivity() {
 
     private val deck: Deck by bindParcelable(EXTRA_DECK)
@@ -36,7 +34,6 @@ class DeckExportActivity : BaseActivity() {
 
     @Inject lateinit var schedulers: AppSchedulers
     @Inject lateinit var exporter: PtcgoExporter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,12 +67,10 @@ class DeckExportActivity : BaseActivity() {
                 })
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_deck_export, menu)
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
@@ -90,11 +85,9 @@ class DeckExportActivity : BaseActivity() {
         }
     }
 
-
     override fun setupComponent(component: AppComponent) {
         component.inject(this)
     }
-
 
     companion object {
         private const val EXTRA_DECK = "DeckExportActivity.Deck"

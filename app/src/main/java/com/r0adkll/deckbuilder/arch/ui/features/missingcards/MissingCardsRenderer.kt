@@ -1,19 +1,16 @@
 package com.r0adkll.deckbuilder.arch.ui.features.missingcards
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
 
-
 class MissingCardsRenderer(
         val actions: MissingCardsUi.Actions,
         main: Scheduler,
         comp: Scheduler
 ) : DisposableStateRenderer<MissingCardsUi.State>(main, comp) {
-
 
     @SuppressLint("RxSubscribeOnError")
     override fun start() {

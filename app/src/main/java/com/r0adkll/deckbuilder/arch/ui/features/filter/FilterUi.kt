@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.Rarity
@@ -18,11 +17,9 @@ import io.pokemontcg.model.Type
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface FilterUi : StateRenderer<FilterUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
@@ -35,20 +32,17 @@ interface FilterUi : StateRenderer<FilterUi.State> {
         fun clearFilter(): Observable<Unit>
     }
 
-
     interface Actions {
 
         fun setItems(items: List<Item>)
         fun setIsEmpty(isEmpty: Boolean)
     }
 
-
     enum class ExpansionVisibility(val next: () -> ExpansionVisibility) {
         STANDARD({ EXPANDED }),
         EXPANDED({ UNLIMITED }),
         UNLIMITED({ UNLIMITED })
     }
-
 
     sealed class FilterAttribute : Parcelable {
 
@@ -179,11 +173,9 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             }
         }
 
-
         override fun toString(): String {
             return "State(category=$category, filters=$filters, expansions=${expansions.size})"
         }
-
 
         sealed class Change(val logText: String) {
             class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
@@ -198,7 +190,6 @@ interface FilterUi : StateRenderer<FilterUi.State> {
             object ViewMoreSelected : Change("user -> view more expansions selected")
             object ClearFilter : Change("user -> clear filter")
         }
-
 
         companion object {
 

@@ -15,7 +15,6 @@ import com.ftinc.kit.kotlin.extensions.drawable
 import com.r0adkll.deckbuilder.R
 import io.pokemontcg.model.Type
 
-
 class DeckImageView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ImageScaleView(context, attrs, defStyleAttr) {
@@ -51,7 +50,6 @@ class DeckImageView @JvmOverloads constructor(
             matrixType = MatrixCropType.TOP_CENTER
             scaleType = ScaleType.MATRIX
         }
-
 
     init {
         // Attribute initialization
@@ -129,7 +127,6 @@ class DeckImageView @JvmOverloads constructor(
         outlineProvider = CardOutlineProvider(dpToPx(4f))
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         if (forceAspectRatio) {
@@ -138,7 +135,6 @@ class DeckImageView @JvmOverloads constructor(
             setMeasuredDimension(width, height)
         }
     }
-
 
     override fun setFrame(frameLeft: Int, frameTop: Int, frameRight: Int, frameBottom: Int): Boolean {
         val changed = super.setFrame(frameLeft, frameTop, frameRight, frameBottom)
@@ -158,7 +154,6 @@ class DeckImageView @JvmOverloads constructor(
 
         return changed
     }
-
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
@@ -225,7 +220,6 @@ class DeckImageView @JvmOverloads constructor(
                 null)
     }
 
-
     override fun drawableStateChanged() {
         super.drawableStateChanged()
         if (mBorderDrawable != null && mBorderDrawable.isStateful) {
@@ -239,7 +233,6 @@ class DeckImageView @JvmOverloads constructor(
         }
     }
 
-
     override fun invalidateDrawable(who: Drawable) {
         if (who === mBorderDrawable || who === mMaskDrawable) {
             invalidate()
@@ -248,18 +241,15 @@ class DeckImageView @JvmOverloads constructor(
         }
     }
 
-
     override fun verifyDrawable(who: Drawable): Boolean {
         return who === mBorderDrawable || who === mMaskDrawable || super.verifyDrawable(who)
     }
-
 
     fun clear() {
         primaryType = null
         secondaryType = null
         setImageDrawable(null)
     }
-
 
     private fun drawTypes(canvas: Canvas): Boolean {
         if (primaryType == null) return false
@@ -302,7 +292,6 @@ class DeckImageView @JvmOverloads constructor(
         return true
     }
 
-
     @ColorInt
     private fun getTypeColor(type: Type): Int = color(when(type) {
         Type.COLORLESS -> R.color.poketype_colorless
@@ -319,7 +308,6 @@ class DeckImageView @JvmOverloads constructor(
         else -> R.color.poketype_colorless
     })
 
-
     private fun getTypeDrawable(type: Type): Drawable = drawable(when(type) {
         Type.COLORLESS -> R.drawable.ic_poketype_colorless
         Type.FIRE -> R.drawable.ic_poketype_fire
@@ -334,7 +322,6 @@ class DeckImageView @JvmOverloads constructor(
         Type.DARKNESS -> R.drawable.ic_poketype_dark
         else -> R.drawable.ic_poketype_colorless
     })!!
-
 
     class CardOutlineProvider(private val radius: Float) : ViewOutlineProvider() {
         override fun getOutline(view: View, outline: Outline) {

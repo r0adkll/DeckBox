@@ -1,11 +1,9 @@
 package com.r0adkll.deckbuilder.arch.domain.features.editing.model
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import kotlinx.android.parcel.Parcelize
-
 
 @Parcelize
 data class Session(

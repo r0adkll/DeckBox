@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 
-
 @Entity(
         tableName = "session_card_join",
         primaryKeys = ["sessionId", "cardId"],

@@ -18,7 +18,6 @@
         app:title="@string/activity_deck_import"
         />
 
-
     <LinearLayout
         android:id="@+id/error"
         android:layout_width="match_parent"
@@ -54,7 +53,6 @@
             />
 
     </LinearLayout>
-
 
     <EditText
         android:id="@+id/deckList"

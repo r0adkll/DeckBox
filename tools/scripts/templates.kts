@@ -55,7 +55,6 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.min
 import kotlin.system.exitProcess
 
-
 /*
  * Configuration
  */
@@ -72,8 +71,6 @@ val options = FirebaseOptions.Builder()
         .setDatabaseUrl("https://deck-builder-1b711.firebaseio.com/")
         .build()
 FirebaseApp.initializeApp(options)
-
-
 
 val pokemon = Pokemon(Config(logLevel = HttpLoggingInterceptor.Level.NONE))
 
@@ -115,7 +112,6 @@ data class Player(
         val deckInfo: List<DeckInfoEntity>,
         val deckList: String
 )
-
 
 class DeckListParser {
     private val validator = LineValidator()
@@ -339,7 +335,6 @@ fun importDeckList(deckList: String): List<CardMetadataEntity> {
     }
 }
 
-
 /*
  * Scrape the list of tournaments and decklists
  */
@@ -378,7 +373,6 @@ rankingTable.forEach { row ->
         tournaments += Tournament(name, date, country, format, playerCount, loadTournamentWinners(url, 8))
     }
 }
-
 
 /*
  * Parse and import tournament decks into Firebase template models

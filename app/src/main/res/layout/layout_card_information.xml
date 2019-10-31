@@ -151,7 +151,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/cardRetreatLayout"
         android:layout_width="0dp"
@@ -204,7 +203,6 @@
 <!--                android:layout_marginEnd="8dp"-->
 <!--                android:src="@drawable/ic_poketype_colorless"-->
 <!--                />-->
-
 
         </LinearLayout>
 

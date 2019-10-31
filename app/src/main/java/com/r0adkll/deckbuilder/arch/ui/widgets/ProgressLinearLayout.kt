@@ -8,7 +8,6 @@ import android.widget.LinearLayout
 import com.ftinc.kit.kotlin.extensions.color
 import com.r0adkll.deckbuilder.R
 
-
 class ProgressLinearLayout @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
@@ -29,7 +28,6 @@ class ProgressLinearLayout @JvmOverloads constructor(
 
         if (isInEditMode) progress = .25f
     }
-
 
     override fun onDraw(canvas: Canvas) {
         val progressHeight = height * progress

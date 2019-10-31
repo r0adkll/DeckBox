@@ -9,11 +9,9 @@ import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-
 interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
@@ -24,7 +22,6 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
         fun formatChanged(): Observable<Format>
     }
 
-
     interface Actions {
 
         fun setPlayerName(name: String?)
@@ -33,7 +30,6 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
         fun setAgeDivision(ageDivision: AgeDivision?)
         fun setFormat(format: Format?)
     }
-
 
     @Parcelize
     data class State(
@@ -52,7 +48,6 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
             is Change.FormatChange -> this.copy(format = change.format)
         }
 
-
         fun toPlayerInfo(): PlayerInfo = PlayerInfo(
                 playerId ?: "",
                 playerName ?: "",
@@ -61,7 +56,6 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
                 format ?: Format.STANDARD
         )
 
-
         sealed class Change(val logText: String) {
             class PlayerName(val name: String) : Change("user -> player name changed $name")
             class PlayerId(val id: String) : Change("user -> player id changed $id")
@@ -69,7 +63,6 @@ interface TournamentExportUi : StateRenderer<TournamentExportUi.State> {
             class AgeDivisionChange(val ageDivision: AgeDivision) : Change("user -> age division $ageDivision")
             class FormatChange(val format: Format) : Change("user -> Format $format")
         }
-
 
         companion object {
 

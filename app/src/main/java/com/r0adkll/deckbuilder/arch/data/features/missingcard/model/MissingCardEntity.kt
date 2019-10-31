@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.missingcard.model
 
-
 /**
  * Firebase Entity for writing missing card models to firebase
  */

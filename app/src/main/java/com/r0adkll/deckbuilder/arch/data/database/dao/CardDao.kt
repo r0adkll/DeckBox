@@ -1,13 +1,16 @@
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
-
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.room.Transaction
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import io.reactivex.Single
-
 
 @Dao
 abstract class CardDao {

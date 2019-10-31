@@ -30,7 +30,6 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 class CacheService : IntentService("DeckBox-Cache-Service") {
 
     @Inject lateinit var api: Pokemon
@@ -45,7 +44,6 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         DeckApp.component.inject(this)
     }
 
-
     override fun onHandleIntent(intent: Intent?) {
         val request = intent?.getParcelableExtra<DownloadRequest>(EXTRA_REQUEST)
         if (request != null) {
@@ -54,11 +52,9 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         }
     }
 
-
     private fun updateCacheStatus(value: Pair<String, CacheStatus>) {
         offlineStatusConsumer.status = offlineStatusConsumer.status.set(value)
     }
-
 
     private fun cacheCardData(expansions: List<Expansion>, downloadImages: Boolean) {
         // Update initial state of all expansions

@@ -59,7 +59,6 @@
 * Fixed issue with validation icon flashing
 * Fixed UI bug in expansion browser header
 
-
 ## 1.7.7
 * Hotfix for issue where decks were missing cards due to find(ids) paging limit
 

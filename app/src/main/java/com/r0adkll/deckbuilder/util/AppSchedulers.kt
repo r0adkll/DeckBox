@@ -1,10 +1,8 @@
 package com.r0adkll.deckbuilder.util
 
-
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.Executor
-
 
 class AppSchedulers(
         val main: Scheduler,

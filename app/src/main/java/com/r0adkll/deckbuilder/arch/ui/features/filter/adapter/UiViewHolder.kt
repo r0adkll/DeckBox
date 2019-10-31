@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
-
 import android.content.res.ColorStateList
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
@@ -30,11 +29,9 @@ import com.r0adkll.deckbuilder.util.bindViews
 import io.pokemontcg.model.Type
 import timber.log.Timber
 
-
 sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
-
 
     /**
      * Recycler UI Item for [Item.Header]
@@ -43,12 +40,10 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
         private val title: TextView by bindView(R.id.title)
 
-
         override fun bind(item: Item.Header) {
             title.setText(item.title)
         }
     }
-
 
     /**
      * Recycler UI Item for [Item.Field]
@@ -59,7 +54,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
     ) : UiViewHolder<Item.Field>(itemView) {
 
         val spinner: Spinner by bindView(R.id.search_field)
-
 
         override fun bind(item: Item.Field) {
             spinner.setSelection(item.searchField.ordinal)
@@ -72,7 +66,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             }
         }
     }
-
 
     /**
      * Recycler UI Item for [Item.Type]
@@ -96,7 +89,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 R.id.type_dark
         )
 
-
         override fun bind(item: Item.Type) {
             types.forEach { it.checked = false }
             item.selected.forEach { selectType(it) }
@@ -109,12 +101,10 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             }
         }
 
-
         private fun selectType(type: Type) {
             types.find { it.type == type}?.checked = true
         }
     }
-
 
     /**
      * Recycler UI Item for [Item.Attribute]
@@ -126,7 +116,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
         private val inflater: LayoutInflater = LayoutInflater.from(itemView.context)
         private val container: FlowLayout by bindView(R.id.attribute_container)
-
 
         override fun bind(item: Item.Attribute) {
             container.removeAllViews()
@@ -151,7 +140,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
         }
     }
 
-
     /**
      * Recycler UI Item for [Item.Option]
      */
@@ -163,7 +151,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
         private val icon: ImageView by bindView(R.id.icon)
         private val text: TextView by bindView(R.id.title)
         private val checkBox: CheckBox by bindView(R.id.checkbox)
-
 
         override fun bind(item: Item.Option<*>) {
             itemView.setOnClickListener {
@@ -193,7 +180,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
         }
     }
 
-
     /**
      * Recycler UI Item for [Item.ViewMore]
      */
@@ -204,14 +190,11 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
         private val text: TextView by bindView(android.R.id.text1)
 
-
         override fun bind(item: Item.ViewMore) {
             text.setText(item.title)
             itemView.setOnClickListener { viewMoreClicks.accept(Unit) }
         }
     }
-
-
 
     class ValueRangeViewHolder(
             itemView: View,
@@ -226,7 +209,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 R.id.modifier_less_than,
                 R.id.modifier_less_than_equal
         )
-
 
         override fun bind(item: Item.ValueRange) {
             seekBar.setOnSeekBarChangeListener(seekBarIndicator)
@@ -255,10 +237,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 }
 
-
                 override fun onStartTrackingTouch(seekBar: SeekBar) {
                 }
-
 
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
                     val modifier = modifiers.firstOrNull { it.alpha == 1f }?.id?.modifier() ?: NONE
@@ -266,7 +246,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 }
             })
         }
-
 
         private fun Modifier.viewId(): Int = when(this) {
             NONE -> -1
@@ -276,7 +255,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             LESS_THAN_EQUALS -> R.id.modifier_less_than_equal
         }
 
-
         private fun Int.modifier(): Modifier = when(this) {
             R.id.modifier_greater_than -> GREATER_THAN
             R.id.modifier_greater_than_equal -> GREATER_THAN_EQUALS
@@ -285,7 +263,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             else -> NONE
         }
 
-
         private fun ImageView.select(isSelected: Boolean) {
             this.alpha = if (isSelected) 1f else 0.26f
             this.imageTintList = ColorStateList.valueOf(color(
@@ -293,7 +270,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             ))
         }
     }
-
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         HEADER(R.layout.item_filter_header),
@@ -315,7 +291,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             }
         }
     }
-
 
     companion object {
 

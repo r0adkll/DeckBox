@@ -9,11 +9,9 @@ import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface CardDetailUi : StateRenderer<CardDetailUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
@@ -23,7 +21,6 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
         fun incrementCollectionCount(): Observable<Unit>
         fun decrementCollectionCount(): Observable<Unit>
     }
-
 
     interface Actions {
 
@@ -38,7 +35,6 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
         fun showPrices(lowPrice: Double?, marketPrice: Double?, highPrice: Double?)
         fun showPriceHistory(products: List<Product>)
     }
-
 
     @Parcelize
     data class State(
@@ -57,7 +53,6 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
         val hasCopies: Boolean
             get() = count?.let { it > 0 } == true
 
-
         fun reduce(change: Change): State = when(change) {
             is Change.Error -> this.copy(error = error)
             is Change.CountChanged -> this.copy(count = change.count)
@@ -69,7 +64,6 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             is Change.CollectionCountUpdated -> this.copy(collectionCount = collectionCount + change.change)
             is Change.PriceUpdated -> this.copy(products = change.products)
         }
-
 
         sealed class Change(val logText: String) {
             class Error(val description: String): Change("error -> $description")
@@ -83,13 +77,11 @@ interface CardDetailUi : StateRenderer<CardDetailUi.State> {
             class PriceUpdated(val products: List<Product>): Change("network -> products updated: $products")
         }
 
-
         override fun toString(): String {
             return "State(sessionId=$sessionId, card=${card?.id}, count=$count, variants=${variants.size}, " +
                     "evolvesFrom=${evolvesFrom.size}, evolvesTo=${evolvesTo.size}, validation=$validation, " +
                     "collection=$collectionCount, products=$products)"
         }
-
 
         companion object {
 

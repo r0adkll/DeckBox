@@ -5,7 +5,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 
-
 class DefaultPtcgoExporter : PtcgoExporter {
 
     override fun export(cards: List<PokemonCard>, name: String): Observable<String> {
@@ -59,7 +58,6 @@ class DefaultPtcgoExporter : PtcgoExporter {
 
         return Observable.just(listBuilder.toString())
     }
-
 
     private fun serialize(count: Int, card: PokemonCard): String {
         return "* $count ${card.name} ${card.expansion?.ptcgoCode ?: ""} ${card.number}"

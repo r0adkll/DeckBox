@@ -1,11 +1,9 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.model
 
-
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.Test
-
 
 class PrismStarRuleTest {
 
@@ -25,7 +23,6 @@ class PrismStarRuleTest {
 
         result.shouldBeNull()
     }
-
 
     @Test
     fun shouldDetectDuplicateError() {

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.util
 
-
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -9,7 +8,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import io.reactivex.Observable
-
 
 object DialogUtils {
 
@@ -41,7 +39,6 @@ object DialogUtils {
             }
         }
     }
-
 
     fun inputDialog(context: Context,
                     @StringRes title: Int,
@@ -82,21 +79,17 @@ object DialogUtils {
         }
     }
 
-
     sealed class DialogText {
 
         abstract fun toText(context: Context): CharSequence?
-
 
         class Literal(val text: CharSequence?) : DialogText() {
             override fun toText(context: Context): CharSequence? = text
         }
 
-
         class Resource(@StringRes val resId: Int, vararg args: Any) : DialogText() {
 
             private val arguments: Array<out Any> = args
-
 
             override fun toText(context: Context): CharSequence? {
                 return if (arguments.isNotEmpty()) {

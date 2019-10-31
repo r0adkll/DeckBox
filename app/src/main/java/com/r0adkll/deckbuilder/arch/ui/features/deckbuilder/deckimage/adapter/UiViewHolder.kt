@@ -10,11 +10,9 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
-
 sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I, isSelected: Boolean?)
-
 
     protected fun getElevation(isSelected: Boolean?): Float {
         return when(isSelected) {
@@ -24,7 +22,6 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerv
         }
     }
 
-
     protected fun getScale(isSelected: Boolean?): Float {
         return when(isSelected) {
             null -> 1f
@@ -32,7 +29,6 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerv
             else -> 0.99f
         }
     }
-
 
     protected fun getAlpha(isSelected: Boolean?): Float {
         return when(isSelected) {
@@ -42,11 +38,9 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerv
         }
     }
 
-
     class PokemonViewHolder(itemView: View) : UiViewHolder<DeckImage.Pokemon>(itemView) {
 
         private val pokemonCardView = itemView as PokemonCardView
-
 
         override fun bind(item: DeckImage.Pokemon, isSelected: Boolean?) {
             GlideApp.with(itemView)
@@ -61,11 +55,9 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerv
         }
     }
 
-
     class TypeViewHolder(itemView: View) : UiViewHolder<DeckImage.Type>(itemView) {
 
         private val typeCardView = itemView as DeckImageView
-
 
         override fun bind(item: DeckImage.Type, isSelected: Boolean?) {
             typeCardView.primaryType = item.type1
@@ -76,7 +68,6 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerv
             typeCardView.scaleY = getScale(isSelected)
         }
     }
-
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         POKEMON(R.layout.item_deck_image_pokemon),
@@ -93,7 +84,6 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : androidx.recyclerv
             }
         }
     }
-
 
     companion object {
 

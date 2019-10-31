@@ -4,7 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import org.amshove.kluent.*
 
-
 inline fun <reified T : Any> mockPreference(
         toReturn: T,
         asObservable: Observable<T>? = null,
@@ -30,6 +29,5 @@ inline fun <reified T : Any> mockPreference(
 
     return mock
 }
-
 
 typealias PreferenceSetter<T> = (T) -> Unit

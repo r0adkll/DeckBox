@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
@@ -12,7 +11,6 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import io.reactivex.Scheduler
-
 
 class DeckImageRenderer(
         val actions: DeckImageUi.Actions,

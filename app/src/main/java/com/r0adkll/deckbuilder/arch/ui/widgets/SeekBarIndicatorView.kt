@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
@@ -14,7 +13,6 @@ import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.R
 
-
 class SeekBarIndicatorView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), SeekBar.OnSeekBarChangeListener {
@@ -22,7 +20,6 @@ class SeekBarIndicatorView @JvmOverloads constructor(
     private val indicator: TextView = TextView(context)
     var valueFormatter: ValueFormatter = DefaultValueFormatter()
     var seekBarChangeListener: SeekBar.OnSeekBarChangeListener? = null
-
 
     init {
         indicator.gravity = Gravity.CENTER
@@ -34,7 +31,6 @@ class SeekBarIndicatorView @JvmOverloads constructor(
         val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         addView(indicator, lp)
 
-
         if (isInEditMode) {
             @SuppressLint("SetTextI18n")
             indicator.text = "50"
@@ -42,18 +38,15 @@ class SeekBarIndicatorView @JvmOverloads constructor(
         }
     }
 
-
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
         seekBarChangeListener?.onProgressChanged(seekBar, progress, fromUser)
         syncToProgress(progress, seekBar.max)
     }
 
-
     override fun onStartTrackingTouch(seekBar: SeekBar) {
         seekBarChangeListener?.onStartTrackingTouch(seekBar)
         indicator.elevation = 0f
     }
-
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
         seekBarChangeListener?.onStopTrackingTouch(seekBar)
@@ -61,11 +54,9 @@ class SeekBarIndicatorView @JvmOverloads constructor(
         syncToProgress(seekBar.progress, seekBar.max)
     }
 
-
     fun setOnSeekBarChangeListener(listener: SeekBar.OnSeekBarChangeListener) {
         seekBarChangeListener = listener
     }
-
 
     private fun syncToProgress(progress: Int, max: Int) {
         val percent = progress.toFloat() / max.toFloat()
@@ -75,12 +66,10 @@ class SeekBarIndicatorView @JvmOverloads constructor(
         indicator.text = valueFormatter.format(progress)
     }
 
-
     interface ValueFormatter {
 
         fun format(progress: Int): CharSequence
     }
-
 
     class DefaultValueFormatter: ValueFormatter {
         override fun format(progress: Int): CharSequence {

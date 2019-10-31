@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
@@ -8,7 +7,6 @@ import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import kotlinx.android.parcel.Parcelize
-
 
 /**
  * Search filter master object. Any changes or updates to this class must be propagated to it's
@@ -47,7 +45,6 @@ data class Filter(
 
     val isEmpty: Boolean
         get() = isEmptyWithoutField && this.field == SearchField.NAME
-
 
     companion object {
 

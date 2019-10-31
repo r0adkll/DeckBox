@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -69,7 +68,6 @@ import kotlinx.android.synthetic.main.layout_detail_panel.*
 import kotlinx.android.synthetic.main.layout_marketplace.*
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class DeckBuilderActivity : BaseActivity(),
         HasComponent<DeckBuilderComponent>,

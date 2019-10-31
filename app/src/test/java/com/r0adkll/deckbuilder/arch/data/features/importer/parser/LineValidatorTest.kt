@@ -1,16 +1,13 @@
 package com.r0adkll.deckbuilder.arch.data.features.importer.parser
 
-
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.Test
 
-
 class LineValidatorTest {
 
     private val validator = LineValidator()
-
 
     @Test
     fun testValidPtcgoLine() {
@@ -19,14 +16,12 @@ class LineValidatorTest {
         result.shouldEqual(PLAIN_LINE)
     }
 
-
     @Test
     fun testValidPlainLine() {
         val result = validator.validate(PLAIN_LINE)
         result.shouldNotBeNull()
         result.shouldEqual(PLAIN_LINE)
     }
-
 
     @Test
     fun testValidJunkLine() {
@@ -35,8 +30,6 @@ class LineValidatorTest {
         result.shouldEqual(PLAIN_LINE)
     }
 
-
-
     @Test
     fun testValidEnergyLine() {
         val result = validator.validate(ENERGY_LINE)
@@ -44,20 +37,17 @@ class LineValidatorTest {
         result.shouldEqual(ENERGY_LINE)
     }
 
-
     @Test
     fun testInvalidLineCount() {
         val result = validator.validate(INVALID_LINE_COUNT)
         result.shouldBeNull()
     }
 
-
     @Test
     fun testInvalidLineCardCount() {
         val result = validator.validate(INVALID_LINE_CARDCOUNT)
         result.shouldBeNull()
     }
-
 
     companion object {
         private const val PTCGO_LINE = "* 4 Articuno-GX CES 31"

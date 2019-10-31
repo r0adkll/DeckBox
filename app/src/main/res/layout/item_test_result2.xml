@@ -44,5 +44,4 @@
         app:layout_constraintVertical_bias="0.0"
         app:maskDrawable="@drawable/dr_mask_round_rect" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

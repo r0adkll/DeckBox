@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.components
 
-
 import android.content.Context
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
@@ -11,7 +10,6 @@ import timber.log.Timber
 
 import java.util.ArrayList
 import java.util.Collections
-
 
 abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         protected val context: Context
@@ -188,11 +186,9 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         this.itemClickListener = itemClickListener
     }
 
-
     fun setOnItemLongClickListener(itemLongClickListener: OnItemLongClickListener<M>?) {
         this.itemLongClickListener = itemLongClickListener
     }
-
 
     fun setOnItemClickListener(listener: (M) -> Unit) {
         this.itemClickListener = object : OnItemClickListener<M> {
@@ -202,7 +198,6 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         }
     }
 
-
     fun setOnViewItemClickListener(listener: (View, M) -> Unit) {
         this.itemClickListener = object : OnItemClickListener<M> {
             override fun onItemClick(v: View, item: M, position: Int) {
@@ -210,7 +205,6 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
             }
         }
     }
-
 
     fun setOnItemLongClickListener(listener: (View, M) -> Boolean) {
         this.itemLongClickListener = object : OnItemLongClickListener<M> {
@@ -257,7 +251,6 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
             }
         }
 
-
         if (itemLongClickListener != null) {
             vh.itemView.setOnLongClickListener { v ->
                 val position = vh.adapterPosition
@@ -285,7 +278,6 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         return RecyclerView.NO_ID
     }
 
-
     /**
      * The interface for detecting item click events from within the adapter, this listener
      * is triggered by [.onItemClick]
@@ -294,11 +286,9 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
         fun onItemClick(v: View, item: T, position: Int)
     }
 
-
     interface OnItemLongClickListener<in T> {
         fun onItemLongClick(v: View, item: T, position: Int): Boolean
     }
-
 
     protected inner class DiffUpdateCallback(val log: Boolean = false): ListUpdateCallback {
         override fun onChanged(position: Int, count: Int, payload: Any?) {
@@ -324,7 +314,6 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>(
             checkIfEmpty()
         }
     }
-
 
     companion object {
         fun <T : RecyclerItem> calculateDiff(new: List<T>, old: List<T>): RecyclerViewBinding<T> {

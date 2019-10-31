@@ -23,7 +23,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-
 object ExpansionPreviewRenderer {
 
     fun applyLogo(imageView: ImageView, spec: PreviewSpec.LogoSpec) {
@@ -32,7 +31,6 @@ object ExpansionPreviewRenderer {
                 .into(imageView)
         imageView.margins(spec.margins)
     }
-
 
     fun applyBackground(view: View, specs: List<PreviewSpec.DrawableSpec>): Disposable {
         val drawables = specs.map { createDrawable(view.context, it) }
@@ -47,7 +45,6 @@ object ExpansionPreviewRenderer {
                     Timber.e(it, "Error applying preview spec background")
                 })
     }
-
 
     fun applyForeground(imageView: ImageView, spec: PreviewSpec.DrawableSpec): Disposable? {
         // Apply options
@@ -86,7 +83,6 @@ object ExpansionPreviewRenderer {
         }
     }
 
-
     private fun createDrawable(context: Context, spec: PreviewSpec.DrawableSpec): Observable<Drawable> {
         return when(spec.source.type) {
             "base64" -> base64Drawable(context, spec)
@@ -95,7 +91,6 @@ object ExpansionPreviewRenderer {
             else -> Observable.empty()
         }
     }
-
 
     private fun base64Drawable(context: Context, spec: PreviewSpec.DrawableSpec): Observable<Drawable> {
         return Observable.just(spec.source.value)
@@ -120,7 +115,6 @@ object ExpansionPreviewRenderer {
                 .subscribeOn(Schedulers.computation())
     }
 
-
     private fun urlDrawable(context: Context, spec: PreviewSpec.DrawableSpec): Observable<Drawable> {
         var request = GlideApp.with(context)
                 .load(spec.source.value)
@@ -131,7 +125,6 @@ object ExpansionPreviewRenderer {
 
         return request.asObservable(context)
     }
-
 
     private fun colorDrawable(spec: PreviewSpec.DrawableSpec): Observable<Drawable> {
         val color = Color.parseColor(spec.source.value)

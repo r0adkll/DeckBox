@@ -32,7 +32,6 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-
 class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentExportUi.Intentions,
         TournamentExportUi.Actions {
 
@@ -46,11 +45,9 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
 
     private val dateOfBirthChanges: Relay<Date> = PublishRelay.create()
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_tournament_export, container, false)
     }
-
 
     @SuppressLint("RxSubscribeOnError")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -91,7 +88,6 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                             })
                 }
 
-
         optionAgeDivisionJunior.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.JUNIOR)
         optionAgeDivisionSenior.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.SENIOR)
         optionAgeDivisionMasters.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.MASTERS)
@@ -100,13 +96,11 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
         presenter.start()
     }
 
-
     override fun onDestroy() {
         presenter.stop()
         renderer.stop()
         super.onDestroy()
     }
-
 
     override fun setupComponent() {
         getComponent(MultiExportComponent::class)
@@ -114,12 +108,10 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                 .inject(this)
     }
 
-
     override fun render(state: State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun playerNameChanged(): Observable<String> {
         return inputPlayerName.textChanges()
@@ -127,18 +119,15 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                 .uiDebounce()
     }
 
-
     override fun playerIdChanged(): Observable<String> {
         return inputPlayerId.textChanges()
                 .map { it.toString() }
                 .uiDebounce()
     }
 
-
     override fun dateOfBirthChanged(): Observable<Date> {
         return dateOfBirthChanges
     }
-
 
     override fun ageDivisionChanged(): Observable<AgeDivision> {
         return optionsAgeDivision.checkedChanges()
@@ -149,7 +138,6 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                 } }
     }
 
-
     override fun formatChanged(): Observable<Format> {
         return optionsFormat.checkedChanges().skipInitialValue()
                 .map { when(it) {
@@ -158,13 +146,11 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
                 } }
     }
 
-
     override fun setPlayerName(name: String?) {
         if (inputPlayerName.text.toString() != name) {
             inputPlayerName.setText(name)
         }
     }
-
 
     override fun setPlayerId(id: String?) {
         if (inputPlayerId.text.toString() != id) {
@@ -172,11 +158,9 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
         }
     }
 
-
     override fun setDateOfBirth(dob: String?) {
         inputDateOfBirth.text = dob
     }
-
 
     override fun setAgeDivision(ageDivision: AgeDivision?) {
         optionsAgeDivision.check(when(ageDivision) {
@@ -187,7 +171,6 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
         })
     }
 
-
     override fun setFormat(format: Format?) {
         optionsFormat.check(when(format) {
             Format.STANDARD -> R.id.optionFormatStandard
@@ -195,7 +178,6 @@ class TournamentExportFragment : BaseFragment(), TournamentExportUi, TournamentE
             null -> -1
         })
     }
-
 
     companion object {
 

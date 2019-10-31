@@ -1,8 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
-
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-
 
 interface EvolutionLineAdapter {
 

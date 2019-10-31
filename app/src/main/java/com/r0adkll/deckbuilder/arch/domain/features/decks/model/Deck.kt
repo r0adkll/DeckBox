@@ -1,12 +1,10 @@
 package com.r0adkll.deckbuilder.arch.domain.features.decks.model
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.pokemontcg.model.SuperType
 import kotlinx.android.parcel.Parcelize
-
 
 @Parcelize
 data class Deck(

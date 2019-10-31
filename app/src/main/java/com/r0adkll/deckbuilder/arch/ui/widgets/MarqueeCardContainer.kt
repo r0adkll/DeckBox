@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.core.util.Pools
@@ -16,7 +15,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
-
 
 class MarqueeCardContainer @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

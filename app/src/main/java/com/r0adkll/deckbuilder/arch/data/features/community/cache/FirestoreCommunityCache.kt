@@ -8,13 +8,12 @@ import com.r0adkll.deckbuilder.arch.data.features.community.model.FirebaseEntity
 import com.r0adkll.deckbuilder.arch.data.features.community.model.TournamentDeckTemplateEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.community.model.DeckTemplate
-import com.r0adkll.deckbuilder.util.RxFirebase
 import com.r0adkll.deckbuilder.util.AppSchedulers
+import com.r0adkll.deckbuilder.util.RxFirebase
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.reflect.KClass
-
 
 class FirestoreCommunityCache @Inject constructor(
         val cardRepository: CardRepository,
@@ -64,7 +63,6 @@ class FirestoreCommunityCache @Inject constructor(
                     }
                 }
     }
-
 
     companion object {
         const val TEMPLATES = "templates"

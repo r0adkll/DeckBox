@@ -5,7 +5,6 @@ import com.ftinc.kit.kotlin.adapter.RecyclerItem
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 
-
 sealed class Item : RecyclerItem {
 
     object OfflineOutline : Item() {
@@ -16,7 +15,6 @@ sealed class Item : RecyclerItem {
 
         override fun isContentSame(new: RecyclerItem): Boolean = new is OfflineOutline
     }
-
 
     data class ExpansionSet(val expansion: Expansion, val offlineStatus: CacheStatus?) : Item() {
 

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.pageradapter
 
-
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -23,7 +22,6 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import io.pokemontcg.model.SubType
 import kotlin.math.min
-
 
 /**
  * A ViewHolder interface for each [io.pokemontcg.model.SuperType] in the main deckbuilding interface
@@ -56,7 +54,6 @@ abstract class SuperTypeViewHolder<out A : EmptyViewListAdapter<*, *>>(
     abstract fun setEditMode(isEditing: Boolean)
     abstract fun setCollectionMode(isCollectionEnabled: Boolean)
 
-
     open fun setup() {
         emptyView.setIcon(emptyIcon)
         emptyView.setEmptyMessage(emptyMessage)
@@ -67,7 +64,6 @@ abstract class SuperTypeViewHolder<out A : EmptyViewListAdapter<*, *>>(
         (recycler.itemAnimator as androidx.recyclerview.widget.SimpleItemAnimator).supportsChangeAnimations = false
     }
 }
-
 
 /**
  * The [SuperTypeViewHolder] implementation for Pokémon cards in the deck building interface
@@ -87,10 +83,8 @@ class PokemonViewHolder(
         }
     }
 
-
     override val adapter: PokemonBuilderRecyclerAdapter = PokemonBuilderRecyclerAdapter(itemView.context, spanSize, editCardIntentions, pokemonCardClicks)
     override val layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager = GridLayoutManager(itemView.context, spanSize)
-
 
     override fun setup() {
         super.setup()
@@ -139,7 +133,6 @@ class PokemonViewHolder(
         adapter.isCollectionEnabled = isCollectionEnabled
     }
 }
-
 
 /**
  * The [SuperTypeViewHolder] implementation for both Energy and Supporter cards in the deckbuilding

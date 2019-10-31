@@ -32,7 +32,6 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_deck_importer.*
 import javax.inject.Inject
 
-
 class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions, DeckImportUi.Actions {
 
     override var state: DeckImportUi.State = DeckImportUi.State.DEFAULT
@@ -45,7 +44,6 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
     private val importDeck: Relay<String> = PublishRelay.create()
 
     private var clipboardSnackBar: Snackbar? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,12 +78,10 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
         presenter.start()
     }
 
-
     override fun onResume() {
         super.onResume()
         detectClipBoard()
     }
-
 
     override fun onDestroy() {
         clipboardSnackBar?.dismiss()
@@ -94,19 +90,16 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
         super.onDestroy()
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_deck_import, menu)
         return true
     }
-
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val importItem = menu.findItem(R.id.action_import)
         importItem?.isVisible = deckList.text.isNotBlank()
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
@@ -121,23 +114,19 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
         }
     }
 
-
     override fun setupComponent(component: AppComponent) {
         component.plus(DeckImportModule(this))
                 .inject(this)
     }
 
-
     override fun importDeckList(): Observable<String> {
         return importDeck
     }
-
 
     override fun render(state: DeckImportUi.State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun setResults(cards: List<PokemonCard>) {
         val data = Intent()
@@ -149,23 +138,19 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
         }
     }
 
-
     override fun showLoading(isLoading: Boolean) {
         loading.setVisible(isLoading)
         deckList.setVisible(!isLoading)
     }
-
 
     override fun showError(description: String) {
         errorMessage.text = description
         error.visible()
     }
 
-
     override fun hideError() {
         error.gone()
     }
-
 
     private fun detectClipBoard() {
         if (clipboardManager.hasPrimaryClip()) {
@@ -193,7 +178,6 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
             }
         }
     }
-
 
     companion object {
         private const val RC_IMPORT = 200

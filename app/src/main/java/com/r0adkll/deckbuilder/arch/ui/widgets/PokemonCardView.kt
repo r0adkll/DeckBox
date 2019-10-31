@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
-
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
@@ -22,7 +21,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import timber.log.Timber
 import kotlin.math.abs
 import kotlin.math.roundToInt
-
 
 class PokemonCardView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
@@ -299,7 +297,6 @@ class PokemonCardView @JvmOverloads constructor(
         private var canvasCache: Canvas? = null
         private val destRect: Rect = Rect()
 
-
         override fun onProvideShadowMetrics(outShadowSize: Point, outShadowTouchPoint: Point) {
             view?.let {
                 val width = it.width.coerceAtLeast(0) * SHADOW_SIZE_RATIO
@@ -323,7 +320,6 @@ class PokemonCardView @JvmOverloads constructor(
                 canvas.drawBitmap(bitmapCache!!, null, destRect, null)
             }
         }
-
 
         companion object {
             private const val SHADOW_SIZE_RATIO = 1.25f

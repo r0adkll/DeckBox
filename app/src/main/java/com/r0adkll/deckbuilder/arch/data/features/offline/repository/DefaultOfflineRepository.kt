@@ -14,7 +14,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-
 @AppScope
 class DefaultOfflineRepository @Inject constructor(
         val context: Context,

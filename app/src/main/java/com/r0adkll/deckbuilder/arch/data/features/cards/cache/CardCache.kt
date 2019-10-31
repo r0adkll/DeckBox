@@ -1,11 +1,9 @@
 package com.r0adkll.deckbuilder.arch.data.features.cards.cache
 
-
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import io.pokemontcg.model.Card
 import io.reactivex.Observable
-
 
 interface CardCache {
 

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.components
 
-
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -14,16 +13,13 @@ import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.bindOptionalView
 import io.reactivex.disposables.CompositeDisposable
 
-
 abstract class BaseActivity : AppCompatActivity() {
 
     protected val appbar: Toolbar? by bindOptionalView(R.id.appbar)
     protected val disposables = CompositeDisposable()
     private val delegates: ArrayList<ActivityDelegate> = ArrayList()
 
-
     protected abstract fun setupComponent(component: AppComponent)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +66,6 @@ abstract class BaseActivity : AppCompatActivity() {
         delegates.forEach { it.onDestroy() }
         super.onDestroy()
     }
-
 
     protected fun addDelegate(delegate: ActivityDelegate) = delegates.add(delegate)
     protected fun removeDelegate(delegate: ActivityDelegate) = delegates.remove(delegate)

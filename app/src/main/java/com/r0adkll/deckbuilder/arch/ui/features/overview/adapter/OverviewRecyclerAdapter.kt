@@ -12,7 +12,6 @@ import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.ListRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
-
 class OverviewRecyclerAdapter(
         context: Context,
         private val cardClicks: Relay<PokemonCardView>,

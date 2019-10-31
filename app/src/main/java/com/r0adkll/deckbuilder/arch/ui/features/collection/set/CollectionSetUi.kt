@@ -15,7 +15,6 @@ import com.r0adkll.deckbuilder.util.extensions.findAndUpdate
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface CollectionSetUi : Ui<State, Change> {
 
     interface Intentions {

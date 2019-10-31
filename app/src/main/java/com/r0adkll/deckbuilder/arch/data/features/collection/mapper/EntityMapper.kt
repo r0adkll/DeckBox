@@ -1,9 +1,8 @@
 package com.r0adkll.deckbuilder.arch.data.features.collection.mapper
 
 import com.r0adkll.deckbuilder.arch.data.database.entities.CollectionCountEntity
-import com.r0adkll.deckbuilder.arch.data.features.collection.model.CollectionCountEntity as FirebaseCollectionCountEntity
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
-
+import com.r0adkll.deckbuilder.arch.data.features.collection.model.CollectionCountEntity as FirebaseCollectionCountEntity
 
 object EntityMapper {
 

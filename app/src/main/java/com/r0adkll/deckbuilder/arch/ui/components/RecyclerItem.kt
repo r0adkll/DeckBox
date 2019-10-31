@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.components
 
-
 interface RecyclerItem {
 
     val layoutId: Int

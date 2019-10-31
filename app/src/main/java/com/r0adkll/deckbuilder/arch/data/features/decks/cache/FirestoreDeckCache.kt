@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.cache
 
-
 import android.annotation.SuppressLint
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -14,14 +13,13 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.model.DeckEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.RxFirebase.asObservable
 import com.r0adkll.deckbuilder.util.RxFirebase.asVoidObservable
-import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
-import javax.inject.Inject
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import timber.log.Timber
-
+import javax.inject.Inject
 
 @SuppressLint("CheckResult")
 class FirestoreDeckCache @Inject constructor(

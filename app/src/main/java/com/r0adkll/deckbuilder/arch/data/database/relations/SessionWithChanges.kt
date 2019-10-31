@@ -5,7 +5,6 @@ import androidx.room.Relation
 import com.r0adkll.deckbuilder.arch.data.database.entities.SessionChangeEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
 
-
 data class SessionWithChanges(
         @Embedded
         val session: SessionEntity,

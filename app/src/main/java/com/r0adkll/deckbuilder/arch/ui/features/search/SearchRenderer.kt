@@ -7,7 +7,6 @@ import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
 
-
 class SearchRenderer(
         val actions: SearchUi.Actions,
         main: Scheduler,
@@ -37,14 +36,12 @@ class SearchRenderer(
                 .addToLifecycle()
                 .subscribe { actions.setCategory(it) }
 
-
         disposables += state
                 .map { it.selected }
                 .distinctUntilChanged()
                 .addToLifecycle()
                 .subscribe { actions.setSelectedCards(it) }
     }
-
 
     @SuppressLint("RxSubscribeOnError")
     private fun subscribeToSuperType(superType: SuperType) {

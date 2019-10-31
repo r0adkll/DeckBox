@@ -14,7 +14,6 @@
 
 package com.r0adkll.deckbuilder.util;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -32,18 +31,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
-
 public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
 
     private final File file;
-
 
     public PdfDocumentAdapter(@NonNull Context context, @NonNull File file) {
         super(context);
         this.file = file;
     }
-
 
     @Override
     LayoutJob buildLayoutJob(PrintAttributes oldAttributes,
@@ -54,7 +49,6 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
                 cancellationSignal, callback, extras, file));
     }
 
-
     @Override
     WriteJob buildWriteJob(PageRange[] pages,
                            ParcelFileDescriptor destination,
@@ -64,11 +58,9 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
                 callback, ctxt, file));
     }
 
-
     private static class PdfLayoutJob extends LayoutJob {
 
         private final File file;
-
 
         PdfLayoutJob(PrintAttributes oldAttributes,
                      PrintAttributes newAttributes,
@@ -100,7 +92,6 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
 
         private final File file;
 
-
         PdfWriteJob(PageRange[] pages,
                     ParcelFileDescriptor destination,
                     CancellationSignal cancellationSignal,
@@ -110,7 +101,6 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
             super(pages, destination, cancellationSignal, callback, context);
             this.file = file;
         }
-
 
         @Override
         public void run() {

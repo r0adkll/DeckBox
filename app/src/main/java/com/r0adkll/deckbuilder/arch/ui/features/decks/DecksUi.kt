@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.community.model.DeckTemplate
@@ -12,11 +11,9 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface DecksUi : StateRenderer<DecksUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
@@ -29,7 +26,6 @@ interface DecksUi : StateRenderer<DecksUi.State> {
         fun clearSession(): Observable<Unit>
     }
 
-
     interface Actions : BaseActions {
 
         fun showItems(items: List<Item>)
@@ -37,12 +33,10 @@ interface DecksUi : StateRenderer<DecksUi.State> {
         fun openSession(sessionId: Long)
     }
 
-
     @Parcelize
     data class QuickStart(
             val templates: List<DeckTemplate> = emptyList()
     ) : Parcelable
-
 
     @Parcelize
     data class State(
@@ -70,7 +64,6 @@ interface DecksUi : StateRenderer<DecksUi.State> {
             is Change.SessionLoaded -> this.copy(sessionId = change.sessionId, isSessionLoading = null)
         }
 
-
         sealed class Change(val logText: String) {
             object IsLoading : Change("network -> loading decks")
             class Error(val description: String) : Change("error -> $description")
@@ -85,11 +78,9 @@ interface DecksUi : StateRenderer<DecksUi.State> {
             object DeckDeleted : Change("user -> deck deleted")
         }
 
-
         override fun toString(): String {
             return "State(isLoading=$isLoading, error=$error, decks=${decks.size}, showPreview=${preview != null}, showQuickstart=${quickStart != null}, isSessionLoading=$isSessionLoading, sessionId=$sessionId)"
         }
-
 
         companion object {
 

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
-
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -57,7 +56,6 @@ import kotlinx.android.synthetic.main.layout_collection_count_adjuster.*
 import kotlinx.android.synthetic.main.layout_marketplace.*
 import javax.inject.Inject
 
-
 class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions, CardDetailUi.Actions {
 
     private val card: PokemonCard? by bindOptionalParcelable(EXTRA_CARD)
@@ -75,7 +73,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     private lateinit var variantsAdapter: PokemonCardsRecyclerAdapter
     private lateinit var evolvesFromAdapter: PokemonCardsRecyclerAdapter
     private lateinit var evolvesToAdapter: PokemonCardsRecyclerAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -420,12 +417,10 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         }
     }
 
-
     companion object {
         const val EXTRA_CARD = "CardDetailActivity.Card"
         const val EXTRA_SESSION_ID = "CardDetailActivity.SessionId"
         private val ONLY_NUMBER_REGEX by lazy { "^[0-9]+".toRegex() }
-
 
         fun createIntent(context: Context,
                          card: PokemonCard,

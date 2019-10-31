@@ -1,12 +1,10 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
-
 
 class SearchRenderer(
         val actions: SearchUi.Actions,

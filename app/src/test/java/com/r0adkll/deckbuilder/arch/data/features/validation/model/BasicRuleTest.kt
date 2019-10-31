@@ -6,7 +6,6 @@ import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.Test
 
-
 class BasicRuleTest {
 
     @Test
@@ -22,7 +21,6 @@ class BasicRuleTest {
 
         result.shouldBeNull()
     }
-
 
     @Test
     fun shouldFailBasicRule() {

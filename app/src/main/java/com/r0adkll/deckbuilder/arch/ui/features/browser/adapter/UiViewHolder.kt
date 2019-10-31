@@ -18,11 +18,9 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.util.bindView
 
-
 sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
-
 
     class OutlineViewHolder(
             itemView: View,
@@ -33,7 +31,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         private val actionDownloadStandard by bindView<Button>(R.id.actionDownloadStandard)
         private val actionDownloadExpanded by bindView<Button>(R.id.actionDownloadExpanded)
         private val actionHide by bindView<Button>(R.id.actionHide)
-
 
         override fun bind(item: Item.OfflineOutline) {
             actionHide.setOnClickListener {
@@ -50,7 +47,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         }
     }
 
-
     class ExpansionViewHolder(
             itemView: View,
             private val downloadClicks: Relay<Expansion>
@@ -62,7 +58,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         private val date by bindView<TextView>(R.id.date)
         private val actionDownload by bindView<ImageView>(R.id.actionDownload)
         private val downloadProgress by bindView<ProgressBar>(R.id.downloadProgress)
-
 
         override fun bind(item: Item.ExpansionSet) {
             name.text = item.expansion.name
@@ -97,7 +92,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         }
     }
 
-
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         OUTLINE(R.layout.item_expansion_outline),
         EXPANSION(R.layout.item_expansion);
@@ -113,7 +107,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             }
         }
     }
-
 
     companion object {
 

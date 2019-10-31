@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
-
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -12,7 +11,6 @@ import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-
 
 class EvolutionLineItemDecoration(
         val context: Context,
@@ -26,7 +24,6 @@ class EvolutionLineItemDecoration(
     private val linkSpacing: Int = context.dipToPx(24f)
     private val linkRadius: Float = context.dpToPx(8f)
 
-
     init {
         linkPaint.color = context.color(R.color.primaryColor)
         linkPaint.style = Paint.Style.FILL
@@ -35,7 +32,6 @@ class EvolutionLineItemDecoration(
         linkBarPaint.style = Paint.Style.STROKE
         linkBarPaint.strokeWidth = linkRadius
     }
-
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val adapterPosition = parent.getChildAdapterPosition(view)
@@ -51,7 +47,6 @@ class EvolutionLineItemDecoration(
 
         outRect.set(spacing, 0, 0, 0)
     }
-
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, s: RecyclerView.State) {
         val adapter = parent.adapter

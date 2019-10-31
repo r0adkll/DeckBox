@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
-
 interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
 
     interface Intentions {
@@ -19,12 +18,10 @@ interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
         fun removeCard(): Observable<PokemonCard>
     }
 
-
     interface Actions : BaseActions {
 
         fun showCards(cards: List<EvolutionChain>)
     }
-
 
     @PaperParcel
     data class State @JvmOverloads constructor(

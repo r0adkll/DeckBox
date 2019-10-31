@@ -1,16 +1,22 @@
 package com.r0adkll.deckbuilder.arch.data
 
 import android.content.SharedPreferences
-import androidx.annotation.VisibleForTesting
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.f2prateek.rx.preferences2.Preference as RxPreference
 import com.ftinc.kit.kotlin.extensions.Preferences
-import com.ftinc.kit.kotlin.extensions.Preferences.*
+import com.ftinc.kit.kotlin.extensions.Preferences.BooleanPreference
+import com.ftinc.kit.kotlin.extensions.Preferences.IntPreference
+import com.ftinc.kit.kotlin.extensions.Preferences.StringPreference
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.util.extensions.RxPreferences
-import com.r0adkll.deckbuilder.util.extensions.RxPreferences.*
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveBasicEnergySetPreference
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveBooleanPreference
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveDatePreference
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveEnumPreference
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveExpansionsPreference
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveIntPreference
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveStringPreference
+import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveStringSetPreference
 import javax.inject.Inject
-
 
 open class AppPreferences @Inject constructor(
         override val sharedPreferences: SharedPreferences,

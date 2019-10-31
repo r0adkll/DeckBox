@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.importer
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
 import com.r0adkll.deckbuilder.arch.ui.components.presenter.Presenter
@@ -10,7 +9,6 @@ import com.r0adkll.deckbuilder.util.extensions.logState
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class DeckImportPresenter @Inject constructor(
         val ui: DeckImportUi,
@@ -35,7 +33,6 @@ class DeckImportPresenter @Inject constructor(
                 .subscribe { ui.render(it) }
 
     }
-
 
     companion object {
 

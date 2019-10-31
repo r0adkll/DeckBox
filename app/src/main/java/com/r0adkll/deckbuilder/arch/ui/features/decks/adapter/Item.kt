@@ -1,12 +1,10 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
-
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.ValidatedDeck
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItem
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi
-
 
 sealed class Item : RecyclerItem{
 

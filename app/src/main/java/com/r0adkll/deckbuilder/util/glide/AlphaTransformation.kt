@@ -10,7 +10,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import java.nio.charset.Charset
 import java.security.MessageDigest
 
-
 class AlphaTransformation(val alpha: Float) : BitmapTransformation() {
 
     private val paint = Paint()

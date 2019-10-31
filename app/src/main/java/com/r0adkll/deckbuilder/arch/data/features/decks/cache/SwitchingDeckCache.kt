@@ -7,7 +7,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import io.reactivex.Observable
 import javax.inject.Inject
 
-
 class SwitchingDeckCache @Inject constructor(
         val roomDeckCache: RoomDeckCache,
         val firestoreDeckCache: FirestoreDeckCache,

@@ -8,7 +8,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionC
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import io.reactivex.Observable
 
-
 class DefaultCollectionRepository(
         private val roomCollectionSource: RoomCollectionSource,
         private val firestoreCollectionSource: FirestoreCollectionSource,

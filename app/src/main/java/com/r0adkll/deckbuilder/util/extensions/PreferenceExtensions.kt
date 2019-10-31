@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.util.extensions
 
-
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.gson.Gson
@@ -14,14 +13,11 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-
 interface RxPreferences {
 
     val rxSharedPreferences: RxSharedPreferences
 
-
     abstract class ReactivePreference<T : Any?>(val key: String) : ReadOnlyProperty<RxPreferences, Preference<T>>
-
 
     class ReactiveIntPreference(key: String, val default: Int = 0) : ReactivePreference<Int>(key) {
 
@@ -30,14 +26,12 @@ interface RxPreferences {
         }
     }
 
-
     class ReactiveBooleanPreference(key: String, val default: Boolean = false) : ReactivePreference<Boolean>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<Boolean> {
             return thisRef.rxSharedPreferences.getBoolean(key, default)
         }
     }
-
 
     class ReactiveStringPreference(key: String, val default: String? = null) : ReactivePreference<String>(key) {
 
@@ -48,7 +42,6 @@ interface RxPreferences {
         }
     }
 
-
     class ReactiveOptionalStringPreference(key: String, val default: String? = null) : ReactivePreference<String?>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<String?> {
@@ -58,7 +51,6 @@ interface RxPreferences {
         }
     }
 
-
     class ReactiveStringSetPreference(key: String, val default: Set<String> = HashSet()) : ReactivePreference<Set<String>>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<Set<String>> {
@@ -66,13 +58,11 @@ interface RxPreferences {
         }
     }
 
-
     class ReactiveExpansionsPreference(key: String): ReactivePreference<List<Expansion>>(key) {
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<List<Expansion>> {
             return thisRef.rxSharedPreferences.getObject(key, listOf(), ExpansionConverter())
         }
     }
-
 
     class ReactiveBasicEnergySetPreference(key: String): ReactivePreference<BasicEnergySet>(key) {
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<BasicEnergySet> {
@@ -80,13 +70,11 @@ interface RxPreferences {
         }
     }
 
-
     class ReactiveDatePreference(key: String, val default: Date? = null) : ReactivePreference<Date>(key) {
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<Date> {
             return thisRef.rxSharedPreferences.getObject(key, default ?: Date(), DateConverter())
         }
     }
-
 
     @Suppress("UNCHECKED_CAST")
     class ReactiveEnumPreference<T : Enum<T>>(key: String, val default: T) : ReactivePreference<T>(key) {
@@ -96,14 +84,12 @@ interface RxPreferences {
         }
     }
 
-
     class ReactiveJsonPreference<T : Any>(key: String, val default: T) : ReactivePreference<T>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<T> {
             return thisRef.rxSharedPreferences.getObject(key, default, GsonConverter<T>(default::class))
         }
     }
-
 
     private class DateConverter : Preference.Converter<Date> {
 
@@ -115,7 +101,6 @@ interface RxPreferences {
             return ISO8601Utils.format(value)
         }
     }
-
 
     private class BasicEnergySetConverter : Preference.Converter<BasicEnergySet> {
 
@@ -129,23 +114,19 @@ interface RxPreferences {
         }
     }
 
-
     private class ExpansionConverter : Preference.Converter<List<Expansion>> {
 
         private val gson = Gson()
-
 
         override fun deserialize(serialized: String): List<Expansion> {
             val type = object : TypeToken<List<@kotlin.jvm.JvmSuppressWildcards Expansion>>() {}.type
             return gson.fromJson(serialized, type) ?: emptyList()
         }
 
-
         override fun serialize(value: List<Expansion>): String {
             return gson.toJson(value)
         }
     }
-
 
     private class GsonConverter<T : Any>(
             val clazz: KClass<out T>
@@ -153,11 +134,9 @@ interface RxPreferences {
 
         private val gson = Gson()
 
-
         override fun deserialize(serialized: String): T {
             return gson.fromJson(serialized, clazz.java)
         }
-
 
         override fun serialize(value: T): String {
             return gson.toJson(value)

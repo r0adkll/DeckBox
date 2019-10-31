@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.importer.repository
 
-
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.importer.model.CardSpec
 import com.r0adkll.deckbuilder.arch.data.features.importer.parser.DeckListParser
@@ -13,7 +12,6 @@ import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class DefaultImporter @Inject constructor(
         val cardRepository: CardRepository,
         val expansionRepository: ExpansionRepository,
@@ -21,7 +19,6 @@ class DefaultImporter @Inject constructor(
 ) : Importer {
 
     private val parser = DeckListParser()
-
 
     override fun import(deckList: String): Observable<List<PokemonCard>> {
         return expansionRepository.getExpansions()
@@ -84,7 +81,6 @@ class DefaultImporter @Inject constructor(
                 }
     }
 
-
     private fun filterEnergy(): (CardSpec) -> Boolean {
         return { spec ->
             Type.VALUES.filter { it != Type.COLORLESS && it != Type.UNKNOWN && it != Type.DRAGON }
@@ -94,7 +90,6 @@ class DefaultImporter @Inject constructor(
                     } != null
         }
     }
-
 
     private fun mapEnergy(): (CardSpec) -> Pair<CardSpec, String>? {
         return { spec ->

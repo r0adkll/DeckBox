@@ -19,14 +19,12 @@ import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_LOCAL
 import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_OFFLINE_LEGACY
 import javax.inject.Inject
 
-
 class RouteActivity : AppCompatActivity() {
 
     private val firebase: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     @Inject lateinit var preferences: AppPreferences
     @Inject lateinit var remote: Remote
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +49,6 @@ class RouteActivity : AppCompatActivity() {
 
         finish()
     }
-
 
     private fun isSignedIn(): Boolean {
         return firebase.currentUser != null
@@ -79,7 +76,6 @@ class RouteActivity : AppCompatActivity() {
         // Set the last version that was installed for future compat checks
         preferences.lastVersion = BuildConfig.VERSION_CODE
     }
-
 
     companion object {
 

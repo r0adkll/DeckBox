@@ -5,7 +5,6 @@ import com.evernote.android.state.StateSaver
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.ActivityDelegate
 
-
 class StateSaverActivityDelegate(private val activity: BaseActivity) : ActivityDelegate {
 
     override fun onCreate(savedInstanceState: Bundle?) {

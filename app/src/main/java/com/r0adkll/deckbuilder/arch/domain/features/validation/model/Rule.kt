@@ -1,9 +1,7 @@
 package com.r0adkll.deckbuilder.arch.domain.features.validation.model
 
-
 import androidx.annotation.StringRes
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-
 
 interface Rule {
 

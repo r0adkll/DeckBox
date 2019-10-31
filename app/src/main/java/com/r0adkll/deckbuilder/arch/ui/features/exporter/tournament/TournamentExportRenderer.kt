@@ -1,13 +1,11 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.ui.components.renderers.DisposableStateRenderer
 import com.r0adkll.deckbuilder.util.extensions.dateOfBirth
 import com.r0adkll.deckbuilder.util.extensions.mapNullable
 import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Scheduler
-
 
 class TournamentExportRenderer(
         val actions: TournamentExportUi.Actions,

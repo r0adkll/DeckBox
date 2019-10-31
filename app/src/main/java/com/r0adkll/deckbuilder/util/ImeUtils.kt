@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.util
 
-
 import android.content.Context
 import android.os.ResultReceiver
 import android.view.View

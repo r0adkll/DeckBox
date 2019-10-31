@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch
 
-
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
@@ -15,7 +14,6 @@ import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
-
 
 @FragmentScope
 class SearchPresenter @Inject constructor(
@@ -44,7 +42,6 @@ class SearchPresenter @Inject constructor(
                 .subscribe(ui::render)
     }
 
-
     private fun getReSearchCardsObservable(filter: Filter): Observable<Change> {
         if (ui.state.query.isBlank() && filter.isEmptyWithoutField) {
             return Observable.just(Change.FilterChanged(filter) as Change)
@@ -60,7 +57,6 @@ class SearchPresenter @Inject constructor(
                     .onErrorReturn(handleUnknownError)
         }
     }
-
 
     @SuppressLint("CheckResult")
     private fun getSearchCardsObservable(text: String): Observable<Change> {
@@ -78,7 +74,6 @@ class SearchPresenter @Inject constructor(
                     .onErrorReturn(handleUnknownError)
         }
     }
-
 
     companion object {
 

@@ -18,7 +18,6 @@ View the progress of upcoming and currently worked on features for this project.
 </a>
 </p>
 
-
 ## API
 [![pokemontcg-developers on discord](https://img.shields.io/badge/discord-pokemontcg--developers-738bd7.svg)](https://discord.gg/dpsTCvg)  
 DeckBox is powered by [pokemontcg.io](https://pokemontcg.io) 

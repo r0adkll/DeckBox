@@ -8,21 +8,17 @@ import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
-
 @Module
 class OverviewModule(val fragment: OverviewFragment) {
 
     @Provides @FragmentScope
     fun provideUi(): OverviewUi = fragment
 
-
     @Provides @FragmentScope
     fun provideIntentions(): OverviewUi.Intentions = fragment
 
-
     @Provides @FragmentScope
     fun provideActions(): OverviewUi.Actions = fragment
-
 
     @Provides @FragmentScope
     fun provideRenderer(

@@ -7,7 +7,6 @@ import android.net.NetworkRequest
 import com.r0adkll.deckbuilder.util.extensions.systemService
 import java.util.concurrent.atomic.AtomicBoolean
 
-
 class ConnectivityContext(context: Context): Connectivity, ConnectivityManager.NetworkCallback() {
 
     private val connectivityManager by systemService<ConnectivityManager>(context, Context.CONNECTIVITY_SERVICE)

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-
 /**
  * A builder to easily handle the different swatches and set the background and text colors.
  * <p>

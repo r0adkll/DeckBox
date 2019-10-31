@@ -24,7 +24,6 @@ sealed class DeckImage : Parcelable, RecyclerItem {
             else -> false
         }
 
-
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Pokemon -> new.imageUrl == imageUrl
             else -> false
@@ -52,7 +51,6 @@ sealed class DeckImage : Parcelable, RecyclerItem {
             is Type -> type1 == new.type1 && type2 == new.type2
             else -> false
         }
-
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Type -> type1 == new.type1 && type2 == new.type2

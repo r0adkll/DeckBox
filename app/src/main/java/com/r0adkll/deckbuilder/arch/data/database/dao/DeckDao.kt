@@ -1,7 +1,11 @@
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
 import android.net.Uri
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckCardJoin
@@ -60,7 +64,6 @@ abstract class DeckDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertJoins(joins: List<DeckCardJoin>)
 
-
     @Transaction
     open fun insertDeckWithCards(id: Long?,
                                  cards: List<PokemonCard>,
@@ -90,12 +93,10 @@ abstract class DeckDao {
         return deck
     }
 
-
     @Transaction
     open fun duplicateDeck(deck: Deck) {
         duplicate(deck)
     }
-
 
     private fun duplicate(deck: Deck) {
         val existing = getDeck(deck.name)
@@ -116,7 +117,6 @@ abstract class DeckDao {
             duplicate(Deck("", newName, deck.description, deck.image, deck.collectionOnly, deck.cards, false, deck.timestamp))
         }
     }
-
 
     private fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {
         cards.forEach {

@@ -7,17 +7,14 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 
 sealed class PokemonItem : RecyclerItem {
 
-
     data class Evolution(val evolutionChain: EvolutionChain) : PokemonItem() {
 
         override val layoutId: Int get() = R.layout.item_evolution_chain
-
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
             is Evolution -> new.evolutionChain.id == evolutionChain.id
             else -> false
         }
-
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Evolution -> new.evolutionChain == evolutionChain
@@ -25,17 +22,14 @@ sealed class PokemonItem : RecyclerItem {
         }
     }
 
-
     data class Single(val card: StackedPokemonCard) : PokemonItem() {
 
         override val layoutId: Int get() = R.layout.item_pokemon_card_editable
-
 
         override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
             is Single -> new.card.card.id == card.card.id
             else -> false
         }
-
 
         override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
             is Single -> new.card.hashCode() == card.hashCode()

@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
-
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
@@ -18,7 +17,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class SearchPresenter @Inject constructor(
         val ui: SearchUi,
@@ -82,7 +80,6 @@ class SearchPresenter @Inject constructor(
                 }
     }
 
-
     /**
      * Helper extensions function for determining is we have a valid sessionId, and if not to just return
      * an empty observable. This enables us to use the search activity without having a session to
@@ -95,7 +92,6 @@ class SearchPresenter @Inject constructor(
             Observable.empty()
         }
     }
-
 
     private fun getReSearchCardsObservable(category: SuperType, filter: Filter): Observable<Change> {
         val result = ui.state.results[category]
@@ -114,7 +110,6 @@ class SearchPresenter @Inject constructor(
         }
     }
 
-
     @SuppressLint("CheckResult")
     private fun getSearchCardsObservable(category: SuperType, text: String): Observable<Change> {
         val filter = ui.state.current()?.filter
@@ -131,7 +126,6 @@ class SearchPresenter @Inject constructor(
                     .onErrorReturn(handleUnknownError(category))
         }
     }
-
 
     companion object {
 

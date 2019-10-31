@@ -12,7 +12,6 @@
     app:umanoFadeColor="@color/transparent"
     >
 
-
     <!-- Main content panel -->
     <RelativeLayout
         android:id="@+id/mainContent"
@@ -155,7 +154,6 @@
             />
 
     </RelativeLayout>
-
 
     <!-- Drawer Panel -->
     <include layout="@layout/layout_detail_panel"

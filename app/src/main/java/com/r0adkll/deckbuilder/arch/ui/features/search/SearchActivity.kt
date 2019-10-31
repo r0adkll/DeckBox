@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -44,7 +43,6 @@ import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 import javax.inject.Inject
 
-
 class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
         FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
 
@@ -64,7 +62,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     private var selectionSnackBar: com.google.android.material.snackbar.Snackbar? = null
     private lateinit var adapter: ResultsPagerAdapter
     private lateinit var component: SearchComponent
-
 
     @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,7 +102,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
                     CardDetailActivity.show(this, it, sessionId)
                 }
 
-
         superType = findEnum<SuperType>(EXTRA_SUPER_TYPE) ?: SuperType.POKEMON
 
         // Set default tab
@@ -124,13 +120,11 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         )
     }
 
-
     override fun onStart() {
         super.onStart()
         renderer.start()
         presenter.start()
     }
-
 
     override fun onStop() {
         presenter.stop()
@@ -138,12 +132,10 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         super.onStop()
     }
 
-
     override fun onPause() {
         super.onPause()
         ImeUtils.hideIme(searchView)
     }
-
 
     override fun setupComponent(component: AppComponent) {
         this.component = component.searchComponentBuilder()
@@ -154,17 +146,14 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         this.component.inject(this)
     }
 
-
     override fun getComponent(): FilterableComponent {
         return component
     }
-
 
     override fun render(state: SearchUi.State) {
         this.state = state
         renderer.render(state)
     }
-
 
     override fun searchCards(): Observable<String> {
         return searchView.queryTextChanges()
@@ -175,11 +164,9 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
                 }
     }
 
-
     override fun switchCategories(): Observable<SuperType> {
         return categoryChanges
     }
-
 
     override fun selectCard(): Observable<PokemonCard> {
         return editCardIntentions.addCardClicks
@@ -187,21 +174,17 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
                 .doOnNext { Analytics.event(Event.SelectContent.PokemonCard(it.id)) }
     }
 
-
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
     }
-
 
     override fun clearSelection(): Observable<Unit> {
         return clearSelectionClicks
     }
 
-
     override fun categoryChange(): Observable<SuperType> {
         return categoryChanges
     }
-
 
     /*
      * This receives changes from the FilterPresenter
@@ -210,7 +193,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         return filterChanges
     }
 
-
     /*
      * This sends changes to the SearchPresenter
      */
@@ -218,16 +200,13 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         return filterChanges
     }
 
-
     override fun closeDrawer() {
         drawer.closeDrawer(GravityCompat.END)
     }
 
-
     override fun setQueryText(text: String) {
         searchView.setQuery(text, false)
     }
-
 
     override fun showFilterEmpty(enabled: Boolean) {
         actionFilter.setImageResource(when(enabled) {
@@ -236,42 +215,34 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         })
     }
 
-
     override fun setResults(superType: SuperType, cards: List<PokemonCard>) {
         adapter.setCards(superType, cards)
     }
-
 
     override fun setSelectedCards(cards: List<PokemonCard>) {
         adapter.setSelectedCards(cards)
         showSelectionSnackbar(cards.size)
     }
 
-
     override fun showLoading(superType: SuperType, isLoading: Boolean) {
         adapter.showLoading(superType, isLoading)
     }
-
 
     override fun showEmptyResults(superType: SuperType) {
         adapter.showEmptyResults(superType)
     }
 
-
     override fun showEmptyDefault(superType: SuperType) {
         adapter.showEmptyDefault(superType)
     }
-
 
     override fun showError(superType: SuperType, description: String) {
         adapter.showError(superType, description)
     }
 
-
     override fun hideError(superType: SuperType) {
         adapter.hideError(superType)
     }
-
 
     override fun setCategory(superType: SuperType) {
         this.superType = superType
@@ -283,7 +254,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         }
         tabs.getTabAt(position)?.select()
     }
-
 
     private fun showSelectionSnackbar(count: Int) {
         val text = resources.getQuantityString(R.plurals.card_selection_count, count, count)
@@ -306,7 +276,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         }
     }
 
-
     private fun validationSnackbar(result: Int) {
         val wasShown = selectionSnackBar?.isShownOrQueued ?: false
 
@@ -321,11 +290,9 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         snackbar.show()
     }
 
-
     companion object {
         const val EXTRA_SESSION_ID = "SearchActivity.SessionId"
         const val EXTRA_SUPER_TYPE = "SearchActivity.SuperType"
-
 
         fun createIntent(context: Context,
                          sessionId: Long = Session.NO_ID,

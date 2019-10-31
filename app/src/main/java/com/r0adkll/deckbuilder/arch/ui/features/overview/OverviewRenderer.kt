@@ -11,7 +11,6 @@ import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
 import java.util.*
 
-
 class OverviewRenderer(
         actions: OverviewUi.Actions,
         main: Scheduler,
@@ -66,23 +65,19 @@ class OverviewRenderer(
                 .subscribe { actions.showCards(it) }
     }
 
-
     private fun compareSupertype(lhs: PokemonCard, rhs: PokemonCard): Int {
         return lhs.supertype.weight().compareTo(rhs.supertype.weight())
     }
 
-
     private fun compareSubtype(lhs: PokemonCard, rhs: PokemonCard): Int {
         return lhs.subtype.weight(lhs.supertype).compareTo(rhs.subtype.weight(rhs.supertype))
     }
-
 
     private fun SuperType.weight(): Int = when(this) {
         SuperType.POKEMON -> 0
         SuperType.TRAINER -> 1
         else -> 2
     }
-
 
     private fun SubType.weight(superType: SuperType): Int = when(superType) {
         SuperType.ENERGY -> when(this) {

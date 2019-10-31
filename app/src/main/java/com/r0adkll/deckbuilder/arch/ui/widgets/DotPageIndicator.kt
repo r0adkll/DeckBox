@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
-
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -11,7 +10,6 @@ import com.ftinc.kit.kotlin.extensions.color
 import com.ftinc.kit.kotlin.extensions.dipToPx
 import com.ftinc.kit.kotlin.extensions.dpToPx
 import com.r0adkll.deckbuilder.R
-
 
 class DotPageIndicator @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -47,20 +45,17 @@ class DotPageIndicator @JvmOverloads constructor(
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var pager: androidx.viewpager.widget.ViewPager? = null
 
-
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         pager?.removeOnPageChangeListener(this)
         pager = null
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val width = (max * size) + ((max - 1) * spacing)
         setMeasuredDimension(width.toInt(), size)
     }
-
 
     override fun onDraw(canvas: Canvas?) {
         (0..max).forEach {
@@ -78,26 +73,21 @@ class DotPageIndicator @JvmOverloads constructor(
         }
     }
 
-
     override fun onPageScrollStateChanged(state: Int) {
     }
-
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
     }
 
-
     override fun onPageSelected(position: Int) {
         index = position
     }
-
 
     fun setupWithViewPager(pager: androidx.viewpager.widget.ViewPager) {
         this.pager = pager
         max = pager.adapter?.count ?: 0
         pager.addOnPageChangeListener(this)
     }
-
 
     companion object {
         const val DEFAULT_MAX = 3

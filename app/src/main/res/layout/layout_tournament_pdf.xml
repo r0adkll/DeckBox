@@ -7,7 +7,6 @@
     tools:padding="16dp"
     >
 
-
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -59,8 +58,6 @@
                 />
 
         </LinearLayout>
-
-
 
         <LinearLayout
             android:layout_width="wrap_content"

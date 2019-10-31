@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.util.extensions
 import android.content.Intent
 import android.os.Parcel
 
-
 /**
  * Get the data size in Bytes for this intent when it is parceled
  */

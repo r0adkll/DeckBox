@@ -15,7 +15,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
-
 class CardSwitcher : ViewSwitcher {
 
     private val card1: PokemonCardView
@@ -25,10 +24,8 @@ class CardSwitcher : ViewSwitcher {
     private var disposable: Disposable? = null
     private var imageIndex = 0
 
-
     constructor(context: Context): super(context)
     constructor(context: Context, attrs: AttributeSet): super(context, attrs)
-
 
     init {
         setInAnimation(context, android.R.anim.slide_in_left)
@@ -48,23 +45,19 @@ class CardSwitcher : ViewSwitcher {
         loadNextImage(card2)
     }
 
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         startSwitching()
     }
-
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         disposable?.dispose()
     }
 
-
     fun setOnPaletteChangeListener(listener: OnPaletteChangeListener) {
         paletteChangeListener = listener
     }
-
 
     fun setOnPaletteChangeListener(listener: (androidx.palette.graphics.Palette) -> Unit) {
         paletteChangeListener = object : OnPaletteChangeListener {
@@ -73,7 +66,6 @@ class CardSwitcher : ViewSwitcher {
             }
         }
     }
-
 
     @SuppressLint("RxSubscribeOnError", "RxDefaultScheduler")
     private fun startSwitching() {
@@ -85,7 +77,6 @@ class CardSwitcher : ViewSwitcher {
                     showNext()
                 }
     }
-
 
     private fun loadNextImage(view: PokemonCardView) {
         val url = getNextImageUrl()
@@ -102,7 +93,6 @@ class CardSwitcher : ViewSwitcher {
         }
     }
 
-
     private fun getNextImageUrl(): String {
         val imageUrl = SHUFFLED_CARDS[imageIndex]
         ++imageIndex
@@ -112,7 +102,6 @@ class CardSwitcher : ViewSwitcher {
         return imageUrl.replace(".png", "_hires.png")
     }
 
-
     private fun getNextCacheImageUrl(): String? {
         return if (imageIndex + 1 >= SHUFFLED_CARDS.size) {
             null
@@ -120,7 +109,6 @@ class CardSwitcher : ViewSwitcher {
             SHUFFLED_CARDS[imageIndex + 1].replace(".png", "_hires.png")
         }
     }
-
 
     inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
         override fun execute(palette: androidx.palette.graphics.Palette?) {
@@ -130,12 +118,10 @@ class CardSwitcher : ViewSwitcher {
         }
     }
 
-
     interface OnPaletteChangeListener {
 
         fun onPaletteChanged(palette: androidx.palette.graphics.Palette)
     }
-
 
     companion object {
         private const val INTERVAL = 6000L

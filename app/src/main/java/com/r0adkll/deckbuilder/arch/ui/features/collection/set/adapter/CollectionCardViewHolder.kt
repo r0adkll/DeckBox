@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.set.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.bindOptionalView
 import com.r0adkll.deckbuilder.util.bindView
-
 
 class CollectionCardViewHolder(
         itemView: View,
@@ -41,7 +39,6 @@ class CollectionCardViewHolder(
         actionRemove.setOnClickListener { removeCardClicks.accept(card) }
         actionAdd.setOnClickListener { addCardClicks.accept(listOf(card)) }
     }
-
 
     companion object {
         fun create(inflater: LayoutInflater,

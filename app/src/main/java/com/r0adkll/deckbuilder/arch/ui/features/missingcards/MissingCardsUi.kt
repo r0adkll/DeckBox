@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.missingcards
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
@@ -8,11 +7,9 @@ import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
 interface MissingCardsUi : StateRenderer<MissingCardsUi.State> {
 
     val state: State
-
 
     interface Intentions {
 
@@ -23,7 +20,6 @@ interface MissingCardsUi : StateRenderer<MissingCardsUi.State> {
         fun selectPrint(): Observable<String>
         fun submitReport(): Observable<Unit>
     }
-
 
     interface Actions : BaseActions {
 
@@ -36,7 +32,6 @@ interface MissingCardsUi : StateRenderer<MissingCardsUi.State> {
         fun setSendEnabled(enabled: Boolean)
         fun closeReport()
     }
-
 
     @Parcelize
     data class State(
@@ -65,7 +60,6 @@ interface MissingCardsUi : StateRenderer<MissingCardsUi.State> {
             is Change.SelectedExpansion -> this.copy(expansion = change.expansion)
             is Change.SelectedPrint -> this.copy(print = change.print)
         }
-
 
         sealed class Change(val logText: String) {
             object IsLoading : Change("network -> submitting missing card request")

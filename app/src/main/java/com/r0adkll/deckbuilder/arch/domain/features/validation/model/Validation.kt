@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.validation.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-
 @Parcelize
 data class Validation(
         val standard: Boolean,

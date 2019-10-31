@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.collection.model
 
-
 /**
  * A Collection card count index that represents how many of the card [cardId] they
  * have in their collection.

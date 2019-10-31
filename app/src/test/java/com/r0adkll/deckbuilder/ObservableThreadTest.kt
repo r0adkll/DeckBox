@@ -21,7 +21,6 @@ class ObservableThreadTest {
                 .doOnNext { System.out.println("Final::Thread: ${Thread.currentThread().name}") }
                 .blockingFirst()
 
-
         System.out.println("Subscribe::Thread: ${Thread.currentThread().name}")
     }
 }
