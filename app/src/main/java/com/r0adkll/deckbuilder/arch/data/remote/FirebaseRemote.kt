@@ -9,7 +9,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.remote.model.BanList
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.LegalOverrides
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.PreviewExpansionVersion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.Reprints
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
 import com.r0adkll.deckbuilder.util.extensions.FirebaseRemotePreferences
@@ -35,11 +34,6 @@ class FirebaseRemote @Inject constructor(
      * @see Remote.expansionVersion
      */
     override val expansionVersion by RemoteObject(KEY_EXPANSION_VERSION, ExpansionVersion::class)
-
-    /**
-     * @see Remote.previewExpansionVersion
-     */
-    override val previewExpansionVersion by RemoteObject(KEY_PREVIEW_EXPANSION_VERSION, PreviewExpansionVersion::class)
 
     /**
      * @see Remote.expansionPreview
@@ -103,7 +97,6 @@ class FirebaseRemote @Inject constructor(
 
     companion object {
         private const val KEY_EXPANSION_VERSION = "expansion_version"
-        private const val KEY_PREVIEW_EXPANSION_VERSION = "preview_expansion_version"
         private const val KEY_EXPANSION_PREVIEW = "expansion_preview_v2"
         private const val KEY_SEARCH_PROXIES = "search_proxies"
         private const val KEY_REPRINTS = "reprints"

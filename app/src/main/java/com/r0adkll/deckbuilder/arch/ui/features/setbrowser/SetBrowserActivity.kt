@@ -76,7 +76,6 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
         state = state.copy(
             setCode = expansion.code,
-            isPreview = expansion.isPreview,
             pageSize = expansion.totalCards + 100 /* Hack to account for secret rares */
         )
 

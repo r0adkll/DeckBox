@@ -27,7 +27,5 @@ class CardEntity(
 
     @Embedded(prefix = "ability_") var ability: AbilityEntity?,
     var weaknesses: String?,
-    var resistances: String?,
-
-    var isPreview: Boolean = false
+    var resistances: String?
 )

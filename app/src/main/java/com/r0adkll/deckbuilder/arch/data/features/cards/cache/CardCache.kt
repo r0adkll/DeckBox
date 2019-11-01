@@ -7,7 +7,7 @@ import io.reactivex.Observable
 
 interface CardCache {
 
-    fun putCards(cards: List<Card>, isPreview: Boolean = false)
+    fun putCards(cards: List<Card>)
     fun findCards(ids: List<String>): Observable<List<PokemonCard>>
     fun findCards(query: String, filter: Filter?): Observable<List<PokemonCard>>
     fun clear()

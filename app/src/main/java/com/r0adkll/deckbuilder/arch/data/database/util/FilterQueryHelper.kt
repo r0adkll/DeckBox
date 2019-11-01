@@ -129,13 +129,6 @@ object FilterQueryHelper {
             filterQuery = filterQuery.and("resistances" like "%$type%")
         }
 
-        // ONLY filter for preview cards if explicitly demanded
-        if (filter?.includePreview == true) {
-            filterQuery = filterQuery.and("isPreview" eq 1) // true
-        } else {
-            filterQuery = filterQuery.and("isPreview" eq 0) // false
-        }
-
         val compiledSql = filterQuery.get()
         Timber.i("SQL: $compiledSql")
         return SimpleSQLiteQuery(compiledSql)

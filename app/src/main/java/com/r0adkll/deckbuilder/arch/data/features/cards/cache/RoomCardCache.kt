@@ -20,8 +20,8 @@ class RoomCardCache @Inject constructor(
     val remote: Remote
 ) : CardCache {
 
-    override fun putCards(cards: List<Card>, isPreview: Boolean) {
-        val entities = cards.map { RoomEntityMapper.to(it, isPreview) }
+    override fun putCards(cards: List<Card>) {
+        val entities = cards.map { RoomEntityMapper.to(it) }
         db.cards().insertCardsWithAttacks(entities)
     }
 

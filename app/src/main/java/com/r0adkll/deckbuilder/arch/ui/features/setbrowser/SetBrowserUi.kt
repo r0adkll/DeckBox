@@ -35,7 +35,6 @@ interface SetBrowserUi : Ui<SetBrowserUi.State, SetBrowserUi.State.Change> {
     @Parcelize
     data class State(
         val setCode: String,
-        val isPreview: Boolean,
         override val isLoading: Boolean,
         override val error: String?,
         val cards: List<PokemonCard>,
@@ -64,7 +63,7 @@ interface SetBrowserUi : Ui<SetBrowserUi.State, SetBrowserUi.State.Change> {
         companion object {
 
             val DEFAULT by lazy {
-                State("sm5", false, false, null, emptyList(), BrowseFilter.ALL)
+                State("sm12", false, null, emptyList(), BrowseFilter.ALL)
             }
         }
     }

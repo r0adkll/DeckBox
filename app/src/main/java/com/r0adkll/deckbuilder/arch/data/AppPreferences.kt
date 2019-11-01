@@ -27,9 +27,7 @@ open class AppPreferences @Inject constructor(
         const val KEY_ONBOARDING = "pref_onboarding"
         const val KEY_QUICKSTART = "pref_quickstart"
         const val KEY_EXPANSIONS = "pref_expansions_sm7" // Bump name to HARD force people to the new expansion
-        const val KEY_PREVIEW_EXPANSIONS = "pref_preview_expansions"
         const val KEY_EXPANSIONS_VERSION = "pref_expansions_version"
-        const val KEY_PREVIEW_EXPANSIONS_VERSION = "pref_preview_expansions_version"
         const val KEY_DEFAULT_ENERGY_SET = "pref_default_energy_set"
         const val KEY_PLAYER_NAME = "pref_player_name"
         const val KEY_PLAYER_ID = "pref_player_id"
@@ -51,7 +49,6 @@ open class AppPreferences @Inject constructor(
     open var lastVersion by IntPreference(KEY_LAST_VERSION, -1)
     open var deviceId by StringPreference(KEY_DEVICE_ID)
     open var expansionsVersion by IntPreference(KEY_EXPANSIONS_VERSION, 1)
-    open var previewExpansionsVersion by IntPreference(KEY_PREVIEW_EXPANSIONS_VERSION, 1)
 
     open val offlineId by ReactiveStringPreference(KEY_OFFLINE_ID)
     open val offlineExpansions by ReactiveStringSetPreference(KEY_OFFLINE_EXPANSIONS)
@@ -59,7 +56,6 @@ open class AppPreferences @Inject constructor(
     open val quickStart by ReactiveBooleanPreference(KEY_QUICKSTART, true)
     open val showCollectionMigration by ReactiveBooleanPreference(KEY_COLLECTION_MIGRATION, true)
     open val expansions by ReactiveExpansionsPreference(KEY_EXPANSIONS)
-    open val previewExpansions by ReactiveExpansionsPreference(KEY_PREVIEW_EXPANSIONS)
     open val basicEnergySet by ReactiveBasicEnergySetPreference(KEY_DEFAULT_ENERGY_SET)
 
     open val playerName by ReactiveStringPreference(KEY_PLAYER_NAME)

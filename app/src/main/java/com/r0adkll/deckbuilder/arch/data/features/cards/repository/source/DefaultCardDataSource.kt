@@ -15,31 +15,20 @@ class DefaultCardDataSource(
     val preferences: AppPreferences,
     val diskSource: CardDataSource,
     val networkSource: CardDataSource,
-    val previewSource: CardDataSource,
     val connectivity: Connectivity,
     val remote: Remote
 ) : CardDataSource {
 
     override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
         val forceDiskSearch = preferences.offlineExpansions.get().contains(setCode)
-        val previewExpansionVersion = remote.previewExpansionVersion?.expansionCode
-        return if (setCode == previewExpansionVersion) {
-            // Disk Cache first, then preview network
-            diskSource.findByExpansion(setCode)
+        return if (connectivity.isConnected() && !forceDiskSearch) {
+            networkSource.findByExpansion(setCode)
                 .onErrorResumeNext(Function {
-                    previewSource.findByExpansion(setCode)
+                    Timber.e(it, "Error fetching network cards for $setCode")
+                    diskSource.findByExpansion(setCode)
                 })
-                .switchIfEmpty(previewSource.findByExpansion(setCode))
         } else {
-            if (connectivity.isConnected() && !forceDiskSearch) {
-                networkSource.findByExpansion(setCode)
-                    .onErrorResumeNext(Function {
-                        Timber.e(it, "Error fetching network cards for $setCode")
-                        diskSource.findByExpansion(setCode)
-                    })
-            } else {
-                diskSource.findByExpansion(setCode)
-            }
+            diskSource.findByExpansion(setCode)
         }
     }
 
@@ -49,49 +38,14 @@ class DefaultCardDataSource(
             ?.let { it.isNotEmpty() && preferences.offlineExpansions.get().containsAll(it) }
             ?: false
 
-        val previewExpansionVersion = remote.previewExpansionVersion?.expansionCode
-        val previewExpansion = filter?.expansions?.find { it.code == previewExpansionVersion && it.isPreview }
-
         return if (connectivity.isConnected() && !forceDiskSearch) {
-            if (previewExpansion != null || (filter?.expansions.isNullOrEmpty() && previewExpansionVersion != null)) {
-                Timber.i("Searching both preview and default sources")
-                // if the user has selected to search the preview expansion or the user doesn't select any expansions
-                // search both local preview cache and normal network + disk fallback
-                val previewSearch = previewSource.search(type, query, filter)
-                    .onErrorResumeNext(Function {
-                        val previewFilter = filter?.copy(includePreview = true)
-                            ?: Filter(includePreview = true)
-                        diskSource.search(type, query, previewFilter)
-                            .defaultIfEmpty(emptyList())
-                            .onErrorReturnItem(emptyList())
-                    })
-
-                val networkSearch = networkSource.search(type, query, filter)
-                    .onErrorResumeNext(Function {
-                        Timber.e(it, "Error searching for cards")
-                        diskSource.search(type, query, filter)
-                    })
-
-                previewSearch combineLatest networkSearch
-            } else {
-                networkSource.search(type, query, filter)
-                    .onErrorResumeNext(Function {
-                        Timber.e(it, "Error searching for cards")
-                        diskSource.search(type, query, filter)
-                    })
-            }
+            networkSource.search(type, query, filter)
+                .onErrorResumeNext(Function {
+                    Timber.e(it, "Error searching for cards")
+                    diskSource.search(type, query, filter)
+                })
         } else {
-            if (previewExpansion != null || filter?.expansions.isNullOrEmpty()) {
-                val previewFilter = filter?.copy(includePreview = true)
-                    ?: Filter(includePreview = true)
-                val previewSearch = diskSource.search(type, query, previewFilter)
-                    .defaultIfEmpty(emptyList())
-                    .onErrorReturnItem(emptyList())
-
-                diskSource.search(type, query, filter) combineLatest previewSearch
-            } else {
-                diskSource.search(type, query, filter)
-            }
+            diskSource.search(type, query, filter)
         }
     }
 

@@ -5,8 +5,8 @@ import io.pokemontcg.model.CardSet
 
 object SetMapper {
 
-    fun to(set: CardSet, isPreview: Boolean = false): Expansion {
+    fun to(set: CardSet): Expansion {
         return Expansion(set.code, set.ptcgoCode, set.name, set.series, set.totalCards, set.standardLegal,
-            set.expandedLegal, set.releaseDate, set.symbolUrl, set.logoUrl, isPreview)
+            set.expandedLegal, set.releaseDate, set.symbolUrl, set.logoUrl)
     }
 }

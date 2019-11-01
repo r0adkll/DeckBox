@@ -32,8 +32,7 @@ object CardMapper {
             card.attacks?.map { to(it) },
             card.weaknesses?.map { to(it) },
             card.resistances?.map { to(it) },
-            card.ability?.let { to(it) },
-            isPreview = expansion?.isPreview == true
+            card.ability?.let { to(it) }
         )
     }
 

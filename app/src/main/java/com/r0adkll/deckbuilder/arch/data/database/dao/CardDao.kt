@@ -34,9 +34,6 @@ abstract class CardDao {
     @Query("DELETE FROM cards")
     abstract fun clear()
 
-    @Query("DELETE FROM cards WHERE isPreview = 1")
-    abstract fun clearPreviewCards(): Single<Int>
-
     @Suppress("UNCHECKED_CAST")
     open fun getCardsSplit(ids: List<String>): Single<List<CardWithAttacks>> {
         return if (ids.size > 900) {

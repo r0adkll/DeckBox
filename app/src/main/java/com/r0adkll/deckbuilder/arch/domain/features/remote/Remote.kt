@@ -19,12 +19,6 @@ interface Remote {
     val expansionVersion: ExpansionVersion?
 
     /**
-     * This is the versioning string for the latest preview expansion that is exposed by my preview
-     * api microservice [DeckBox Preview API](https://github.com/r0adkll/DeckBox-Preview-API).
-     */
-    val previewExpansionVersion: PreviewExpansionVersion?
-
-    /**
      * This is the spec for an expansion preview card that appears on the deck list screen to tell
      * users about a new expansion that has been added and other information about it. It also attempts
      * to direct them to browse the expansion
