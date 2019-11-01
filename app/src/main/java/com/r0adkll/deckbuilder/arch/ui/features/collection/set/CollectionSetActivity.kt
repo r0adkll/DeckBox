@@ -51,7 +51,6 @@ import kotlinx.android.synthetic.main.activity_collection_set.backdrop
 import kotlinx.android.synthetic.main.activity_collection_set.emptyView
 import kotlinx.android.synthetic.main.activity_collection_set.logo
 import kotlinx.android.synthetic.main.activity_collection_set.recycler
-import kotlinx.android.synthetic.main.activity_set_browser.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -105,7 +104,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         recycler.layoutManager = GridLayoutManager(this, spanCount)
         (recycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
-        appBarLayout.doOnApplyWindowInsets { _, insets, _ ->
+        appbar?.doOnApplyWindowInsets { _, insets, _ ->
             statusBarHeight = insets.systemWindowInsetTop
             appbar?.margins(top = statusBarHeight)
             logo?.layoutHeight(dip(100f))
