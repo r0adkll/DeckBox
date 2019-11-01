@@ -1,3 +1,5 @@
+@file:Suppress("ComplexMethod")
+
 package com.r0adkll.deckbuilder.arch.domain.features.importer.model
 
 import io.pokemontcg.model.Type

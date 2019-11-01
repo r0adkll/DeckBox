@@ -28,6 +28,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Fo
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.util.AgeDivisionUtils
 import com.r0adkll.deckbuilder.util.CardUtils
+import com.r0adkll.deckbuilder.util.stack
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -127,7 +128,7 @@ class DefaultTournamentExporter @Inject constructor(
         playerId.setText(playerInfo.id)
         dateOfBirth.setText(playerInfo.displayDate())
 
-        val stacked = CardUtils.stackCards().invoke(cards)
+        val stacked = cards.stack()
         val stackedGroups = stacked.groupBy { it.card.supertype }
 
         stackedGroups[SuperType.POKEMON]

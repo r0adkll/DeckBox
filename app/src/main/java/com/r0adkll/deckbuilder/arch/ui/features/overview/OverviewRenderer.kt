@@ -6,6 +6,7 @@ import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.util.CardUtils
+import com.r0adkll.deckbuilder.util.stack
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
@@ -21,8 +22,7 @@ class OverviewRenderer(
     override fun onStart() {
 
         disposables += state
-            .map { it.cards }
-            .map(CardUtils.stackCards())
+            .map { it.cards.stack() }
             .map { EvolutionChain.build(it) }
             .map {
                 it.sortedWith(Comparator { lhs, rhs ->

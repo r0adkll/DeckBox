@@ -10,7 +10,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.SumType.EXCLUDE_COLLECTION
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.SumType.NO_COLLECTION
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderRenderer.SumType.ONLY_COLLECTION
-import com.r0adkll.deckbuilder.util.CardUtils.stackCards
+import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.Scheduler
 
 class DeckBuilderRenderer(
@@ -76,7 +76,7 @@ class DeckBuilderRenderer(
             }
 
         disposables += state
-            .map { stackCards(it.pokemonCards, it.collectionCounts) }
+            .map { it.pokemonCards.stack(it.collectionCounts) }
             .distinctUntilChanged { t1, t2 ->
                 t1.hashCode() == t2.hashCode()
             }
@@ -84,7 +84,7 @@ class DeckBuilderRenderer(
             .subscribe { actions.showPokemonCards(it) }
 
         disposables += state
-            .map { stackCards(it.trainerCards, it.collectionCounts) }
+            .map { it.trainerCards.stack(it.collectionCounts) }
             .distinctUntilChanged { t1, t2 ->
                 t1.hashCode() == t2.hashCode()
             }
@@ -92,7 +92,7 @@ class DeckBuilderRenderer(
             .subscribe { actions.showTrainerCards(it) }
 
         disposables += state
-            .map { stackCards(it.energyCards, it.collectionCounts) }
+            .map { it.energyCards.stack(it.collectionCounts) }
             .distinctUntilChanged { t1, t2 ->
                 t1.hashCode() == t2.hashCode()
             }

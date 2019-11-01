@@ -146,9 +146,9 @@ dependencies {
     implementation "dev.chrisbanes:insetter-ktx:0.1.1"
 
     implementation "com.google.firebase:firebase-core:17.2.1"
-    implementation "com.google.firebase:firebase-firestore:21.2.1"
+    implementation "com.google.firebase:firebase-firestore-ktx:21.2.1"
     implementation "com.google.firebase:firebase-auth:19.1.0"
-    implementation "com.google.firebase:firebase-config:19.0.3"
+    implementation "com.google.firebase:firebase-config-ktx:19.0.3"
     implementation "com.google.android.gms:play-services-auth:17.0.0"
     implementation "com.google.android.gms:play-services-oss-licenses:17.0.0"
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'

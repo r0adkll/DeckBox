@@ -31,6 +31,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewT
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
+import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -206,7 +207,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         }
 
         private fun mostProminentCard(cards: List<PokemonCard>): PokemonCard? {
-            val stacks = CardUtils.stackCards().invoke(cards)
+            val stacks = cards.stack()
             val evolutions = EvolutionChain.build(stacks)
             val largestEvolutionLine = evolutions.maxBy { it.size }
             return largestEvolutionLine?.last()?.cards?.firstOrNull()?.card

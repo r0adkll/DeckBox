@@ -24,8 +24,10 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.ktx.Firebase
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
@@ -38,6 +40,10 @@ import com.r0adkll.deckbuilder.arch.ui.features.settings.offline.ManageOfflineAc
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
+import com.r0adkll.deckbuilder.internal.analytics.UserProperty
+import com.r0adkll.deckbuilder.util.extensions.auth
+import com.r0adkll.deckbuilder.util.extensions.makeSnackbar
+import com.r0adkll.deckbuilder.util.extensions.showAndReturn
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -100,43 +106,14 @@ class SettingsActivity : BaseActivity() {
             setupPreferences()
         }
 
+        @Suppress("LongMethod", "ComplexMethod")
         override fun onPreferenceTreeClick(preference: Preference): Boolean {
             return when (preference.key) {
                 "pref_account_profile" -> {
                     true
                 }
                 "pref_account_migrate_collection" -> {
-                    // Now we need to migrate any existing local decks to their account
-                    view?.let {
-                        migrationSnackbar = Snackbar.make(
-                            it,
-                            R.string.account_migration_started,
-                            Snackbar.LENGTH_INDEFINITE
-                        )
-                        migrationSnackbar?.show()
-                    }
-
-                    disposables += accountRepository.migrateCollections()
-                        .subscribe({
-                            setupPreferences()
-                            view?.let { v ->
-                                migrationSnackbar = Snackbar.make(
-                                    v,
-                                    R.string.account_migration_finished,
-                                    Snackbar.LENGTH_SHORT
-                                )
-                                migrationSnackbar?.show()
-                            }
-                        }, { e ->
-                            view?.let { v ->
-                                migrationSnackbar = Snackbar.make(
-                                    v,
-                                    e.localizedMessage ?: "Uh-oh! We encountered an error migrating your collection",
-                                    Snackbar.LENGTH_SHORT
-                                )
-                                migrationSnackbar?.show()
-                            }
-                        })
+                    migrateCollection()
                     true
                 }
                 "pref_about_privacy_policy" -> {
@@ -322,68 +299,24 @@ class SettingsActivity : BaseActivity() {
         private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
             try {
                 val account = completedTask.getResult(ApiException::class.java)!!
-                val firebaseAuth = FirebaseAuth.getInstance()
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-                val currentUser = firebaseAuth.currentUser
+                val currentUser = Firebase.auth.currentUser
                 if (currentUser != null && currentUser.isAnonymous) {
-                    currentUser.linkWithCredential(credential)
-                        .addOnCompleteListener {
-                            if (it.isSuccessful) {
-                                Analytics.event(Event.SignUp.Google)
-                                snackbar("${it.result?.user?.email} linked!")
-                                setupPreferences()
-                            } else {
-                                Timber.e(it.exception, "Unable to link account")
-                                snackbar("Unable to link account", Snackbar.LENGTH_LONG)
-                            }
-                        }
+                    linkAnonymousUserWithCredential(credential)
                 } else {
-                    firebaseAuth.signInWithCredential(credential)
+                    Firebase.auth.signInWithCredential(credential)
                         .addOnCompleteListener { r ->
                             if (r.isSuccessful) {
-                                // Auto-grab the user's name from their account
                                 r.result?.user?.displayName?.let {
                                     preferences.playerName.set(it)
                                 }
                                 r.result?.user?.uid?.let {
                                     Analytics.userId(it)
+                                    Analytics.userProperty(UserProperty.LEVEL, UserProperty.LEVEL_GOOGLE)
                                 }
                                 Analytics.event(Event.SignUp.Google)
                                 setupPreferences()
-
-                                // Now we need to migrate any existing local decks to their account
-                                view?.let {
-                                    migrationSnackbar = Snackbar.make(
-                                        it,
-                                        R.string.account_migration_started,
-                                        Snackbar.LENGTH_INDEFINITE
-                                    )
-                                    migrationSnackbar?.show()
-                                }
-
-                                disposables += accountRepository.migrateAccount()
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe({
-                                        setupPreferences()
-                                        view?.let { v ->
-                                            migrationSnackbar = Snackbar.make(
-                                                v,
-                                                R.string.account_migration_finished,
-                                                Snackbar.LENGTH_SHORT
-                                            )
-                                            migrationSnackbar?.show()
-                                        }
-                                    }, { e ->
-                                        view?.let { v ->
-                                            migrationSnackbar = Snackbar.make(
-                                                v,
-                                                e.localizedMessage
-                                                    ?: "Uh-oh! We encountered an error migrating your account",
-                                                Snackbar.LENGTH_SHORT
-                                            )
-                                            migrationSnackbar?.show()
-                                        }
-                                    })
+                                migrateAccount()
                             } else {
                                 snackbar("Authentication failed")
                             }
@@ -393,6 +326,61 @@ class SettingsActivity : BaseActivity() {
                 Timber.e("Unable to link account: ${e.statusCode}")
                 snackbar("Unable to link account.")
             }
+        }
+
+        private fun linkAnonymousUserWithCredential(credential: AuthCredential) {
+            Firebase.auth.currentUser
+                ?.linkWithCredential(credential)
+                ?.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Analytics.event(Event.SignUp.Google)
+                        snackbar("${it.result?.user?.email} linked!")
+                        setupPreferences()
+                    } else {
+                        Timber.e(it.exception, "Unable to link account")
+                        snackbar("Unable to link account", Snackbar.LENGTH_LONG)
+                    }
+                }
+        }
+
+        private fun migrateAccount() {
+            migrationSnackbar = makeSnackbar(
+                R.string.account_migration_started,
+                Snackbar.LENGTH_INDEFINITE
+            ).showAndReturn()
+
+            disposables += accountRepository.migrateAccount()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    setupPreferences()
+                    migrationSnackbar = makeSnackbar(
+                        R.string.account_migration_finished
+                    ).showAndReturn()
+                }, { e ->
+                    migrationSnackbar = makeSnackbar(
+                        e.localizedMessage
+                            ?: "Uh-oh! We encountered an error migrating your account"
+                    ).showAndReturn()
+                })
+        }
+
+        private fun migrateCollection() {
+            migrationSnackbar = makeSnackbar(
+                R.string.account_migration_started,
+                Snackbar.LENGTH_INDEFINITE
+            ).showAndReturn()
+
+            disposables += accountRepository.migrateCollections()
+                .subscribe({
+                    setupPreferences()
+                    migrationSnackbar = makeSnackbar(
+                        R.string.account_migration_finished
+                    ).showAndReturn()
+                }, { e ->
+                    migrationSnackbar = makeSnackbar(
+                        e.localizedMessage ?: "Uh-oh! We encountered an error migrating your collection"
+                    ).showAndReturn()
+                })
         }
 
         companion object {

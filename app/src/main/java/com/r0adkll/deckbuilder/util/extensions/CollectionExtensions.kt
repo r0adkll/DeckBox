@@ -1,7 +1,7 @@
 package com.r0adkll.deckbuilder.util.extensions
 
 fun <T1, T2> Collection<T1>.combine(other: Iterable<T2>): List<Pair<T1, T2>> {
-    return combine(other, { thisItem: T1, otherItem: T2 -> Pair(thisItem, otherItem) })
+    return combine(other) { thisItem: T1, otherItem: T2 -> Pair(thisItem, otherItem) }
 }
 
 fun <T1, T2, R> Collection<T1>.combine(other: Iterable<T2>, transformer: (thisItem: T1, otherItem: T2) -> R): List<R> {
@@ -10,7 +10,7 @@ fun <T1, T2, R> Collection<T1>.combine(other: Iterable<T2>, transformer: (thisIt
 
 fun <T> Collection<T>.shuffle(iterations: Int): List<T> {
     val items = this.toMutableList()
-    (0 until iterations).forEach {
+    (0 until iterations).forEach { _ ->
         items.shuffle()
     }
     return items.toList()
@@ -22,7 +22,8 @@ fun <T> Collection<T>.shuffle(iterations: Int): List<T> {
  *
  * @param item the item you wish to swap with
  * @param selector the selector to determine which item to swap with
- * @return a list with the first item found by [selector] replaced with [item], or added to end of list if no item found to replace
+ * @return a list with the first item found by [selector] replaced with [item], or added to end of list if no item
+ *         found to replace
  */
 fun <Item> List<Item>.findAndReplace(item: Item, selector: (Item) -> Boolean): List<Item> {
     val items = toMutableList()

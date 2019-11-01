@@ -99,7 +99,6 @@ object EntityMapper {
             card.series,
             card.expansion?.code,
             card.text?.joinToString("\n"),
-//                card.attacks?.map { to(it) },
             card.weaknesses?.compactEffects(),
             card.resistances?.compactEffects(),
             card.ability?.name,
@@ -130,7 +129,6 @@ object EntityMapper {
             entity.weaknesses?.deserializeEffects(),
             entity.resistances?.deserializeEffects(),
             entity.abilityName?.let { Ability(it, entity.abilityText ?: "") }
-//                entity.attacks?.map { to(it) },
         )
     }
 

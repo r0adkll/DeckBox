@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.r0adkll.deckbuilder.internal.di
 
 import com.r0adkll.deckbuilder.BuildModule

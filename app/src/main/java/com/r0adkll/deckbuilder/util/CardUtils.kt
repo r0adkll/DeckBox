@@ -573,39 +573,31 @@ object CardUtils {
         "https://images.pokemontcg.io/sm11/143.png",
         "https://images.pokemontcg.io/sm11/200.png"
     )
-
-    fun stackCards(): (List<PokemonCard>) -> List<StackedPokemonCard> {
-        return {
-            val map = ArrayMap<PokemonCard, Int>(it.size)
-            it.forEach { card ->
-                val count = map[card] ?: 0
-                map[card] = count + 1
-            }
-            map.map { StackedPokemonCard(it.key, it.value) }
-                .sortedBy { card -> card.card.nationalPokedexNumber }
-        }
-    }
-
-    fun stackCards(cards: List<PokemonCard>, collection: List<CollectionCount>): List<StackedPokemonCard> {
-        val map = ArrayMap<PokemonCard, Int>(cards.size)
-        val collectionMap = ArrayMap<PokemonCard, Int>(cards.size)
-        cards.forEach { card ->
-            val count = map[card] ?: 0
-            map[card] = count + 1
-            collectionMap[card] = collection.find { it.id == card.id }?.count ?: 0
-        }
-
-        return map.map {
-            val collectionCount = collectionMap[it.key] ?: 0
-            StackedPokemonCard(it.key, it.value, collectionCount)
-        }.sortedBy { card -> card.card.nationalPokedexNumber }
-    }
 }
 
-fun List<PokemonCard>.stack(): List<StackedPokemonCard> = CardUtils.stackCards().invoke(this)
+fun List<PokemonCard>.stack(): List<StackedPokemonCard> {
+    val map = ArrayMap<PokemonCard, Int>(size)
+    forEach { card ->
+        val count = map[card] ?: 0
+        map[card] = count + 1
+    }
+    return map.map { StackedPokemonCard(it.key, it.value) }
+        .sortedBy { card -> card.card.nationalPokedexNumber }
+}
 
 fun List<PokemonCard>.stack(collection: List<CollectionCount>): List<StackedPokemonCard> {
-    return CardUtils.stackCards(this, collection)
+    val map = ArrayMap<PokemonCard, Int>(this.size)
+    val collectionMap = ArrayMap<PokemonCard, Int>(this.size)
+    this.forEach { card ->
+        val count = map[card] ?: 0
+        map[card] = count + 1
+        collectionMap[card] = collection.find { it.id == card.id }?.count ?: 0
+    }
+
+    return map.map {
+        val collectionCount = collectionMap[it.key] ?: 0
+        StackedPokemonCard(it.key, it.value, collectionCount)
+    }.sortedBy { card -> card.card.nationalPokedexNumber }
 }
 
 fun List<StackedPokemonCard>.unstack(): List<PokemonCard> = this.flatMap { stack ->
@@ -625,6 +617,7 @@ Fi[R] e (Fire)
 Drago[N] (Dragon)
 Fair[Y] (Fairy)
  */
+@Suppress("ComplexMethod")
 fun Type.compact(): String = when (this) {
     Type.COLORLESS -> "C"
     Type.DARKNESS -> "D"
@@ -641,6 +634,7 @@ fun Type.compact(): String = when (this) {
 }
 
 @SuppressLint("DefaultLocale")
+@Suppress("ComplexMethod")
 fun String.type(): Type = when (this.toUpperCase()) {
     "C" -> Type.COLORLESS
     "D" -> Type.DARKNESS
@@ -683,13 +677,6 @@ fun List<Effect>.compactEffects(): String {
         } else {
             new
         }
-    }
-}
-
-fun String.deserializeCardEffects(): List<io.pokemontcg.model.Effect> {
-    return this.split(",").map {
-        val parts = it.replace("[", "").replace("]", "").split("|")
-        io.pokemontcg.model.Effect(parts[0].type(), parts[1])
     }
 }
 

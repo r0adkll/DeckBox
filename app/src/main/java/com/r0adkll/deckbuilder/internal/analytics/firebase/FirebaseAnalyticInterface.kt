@@ -15,6 +15,7 @@ import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
 import com.r0adkll.deckbuilder.internal.analytics.AnalyticInterface
 import com.r0adkll.deckbuilder.internal.analytics.Event
 
+@Suppress("ComplexMethod")
 class FirebaseAnalyticInterface(
     context: Context
 ) : AnalyticInterface {

@@ -28,6 +28,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.QuickStartRecycler
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
+import com.r0adkll.deckbuilder.util.stack
 
 class QuickStartRecyclerAdapter(
     context: Context,
@@ -190,7 +191,7 @@ class QuickStartRecyclerAdapter(
             }
 
             private fun mostProminentCard(cards: List<PokemonCard>): PokemonCard? {
-                val stacks = CardUtils.stackCards().invoke(cards)
+                val stacks = cards.stack()
                 val evolutions = EvolutionChain.build(stacks)
                 val largestEvolutionLine = evolutions.maxBy { it.size }
                 return largestEvolutionLine?.last()?.cards?.firstOrNull()?.card

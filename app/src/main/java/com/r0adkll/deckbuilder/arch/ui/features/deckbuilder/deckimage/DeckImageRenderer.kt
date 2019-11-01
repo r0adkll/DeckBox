@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.extensions.combine
+import com.r0adkll.deckbuilder.util.stack
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import io.reactivex.Scheduler
@@ -25,7 +26,7 @@ class DeckImageRenderer(
             .map { it.cards }
             .map { it ->
                 val cards = it.filter { it.supertype == SuperType.POKEMON }
-                val stacks = CardUtils.stackCards().invoke(cards)
+                val stacks = cards.stack()
                 val evolutions = EvolutionChain.build(stacks)
                 val types = stacks.flatMap { it.card.types ?: emptyList() }
                     .fold(HashSet<Type>()) { acc, type ->

@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.r0adkll.deckbuilder.util
 
 import android.app.Activity
