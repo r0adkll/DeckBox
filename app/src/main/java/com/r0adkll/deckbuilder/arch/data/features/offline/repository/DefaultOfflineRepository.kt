@@ -16,8 +16,8 @@ import javax.inject.Inject
 
 @AppScope
 class DefaultOfflineRepository @Inject constructor(
-        val context: Context,
-        val preferences: AppPreferences
+    val context: Context,
+    val preferences: AppPreferences
 ) : OfflineRepository, OfflineStatusConsumer {
 
     override var status = OfflineStatus()
@@ -55,6 +55,6 @@ class DefaultOfflineRepository @Inject constructor(
 
     override fun observeStatus(): Observable<OfflineStatus> {
         return statusRelay
-                .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 }

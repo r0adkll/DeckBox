@@ -26,7 +26,8 @@
             android:id="@+id/appbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:elevation="4dp">
+            app:elevation="4dp"
+            >
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/appbar"
@@ -141,7 +142,8 @@
             app:fabSize="normal"
             app:rippleColor="@color/white30"
             app:backgroundTint="?attr/colorPrimary"
-            tools:ignore="RelativeOverlap" />
+            tools:ignore="RelativeOverlap"
+            />
 
         <ImageView
             android:id="@+id/panelIndicator"
@@ -156,7 +158,8 @@
     </RelativeLayout>
 
     <!-- Drawer Panel -->
-    <include layout="@layout/layout_detail_panel"
+    <include
+        layout="@layout/layout_detail_panel"
         android:id="@+id/detailPanel"
         />
 

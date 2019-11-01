@@ -6,6 +6,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ValidatedDeck(
-        val deck: Deck,
-        val validation: Validation?
-): Parcelable
+    val deck: Deck,
+    val validation: Validation?
+) : Parcelable

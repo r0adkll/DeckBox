@@ -84,51 +84,61 @@ import java.util.concurrent.Executors
 @Module
 class DataModule {
 
-    @Provides @AppScope @IntoSet
+    @Provides
+    @AppScope
+    @IntoSet
     fun provideCacheInvalidatePlugin(
-            defaultSource: DefaultExpansionDataSource,
-            preferences: AppPreferences,
-            schedulers: AppSchedulers
+        defaultSource: DefaultExpansionDataSource,
+        preferences: AppPreferences,
+        schedulers: AppSchedulers
     ): RemotePlugin = CacheInvalidatePlugin(defaultSource, preferences, schedulers)
 
-    @Provides @AppScope @IntoSet
+    @Provides
+    @AppScope
+    @IntoSet
     fun providePreviewCacheInvalidatePlugin(
-            previewSource: PreviewExpansionDataSource,
-            db: DeckDatabase,
-            preferences: AppPreferences,
-            schedulers: AppSchedulers
+        previewSource: PreviewExpansionDataSource,
+        db: DeckDatabase,
+        preferences: AppPreferences,
+        schedulers: AppSchedulers
     ): RemotePlugin = PreviewCacheInvalidatePlugin(previewSource, db, preferences, schedulers)
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideSharedPreferences(context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    @Provides @AppScope
-    fun provideRxSharedPreferences(sharedPreferences: SharedPreferences) : RxSharedPreferences {
+    @Provides
+    @AppScope
+    fun provideRxSharedPreferences(sharedPreferences: SharedPreferences): RxSharedPreferences {
         return RxSharedPreferences.create(sharedPreferences)
     }
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideRemotePreferences(remoteConfig: FirebaseRemote): Remote = remoteConfig
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideSchedulers(): AppSchedulers = AppSchedulers(
-            AndroidSchedulers.mainThread(),
-            io.reactivex.schedulers.Schedulers.io(),
-            io.reactivex.schedulers.Schedulers.computation(),
-            io.reactivex.schedulers.Schedulers.io(),
-            Executors.newSingleThreadExecutor(),
-            Executors.newSingleThreadExecutor()
+        AndroidSchedulers.mainThread(),
+        io.reactivex.schedulers.Schedulers.io(),
+        io.reactivex.schedulers.Schedulers.computation(),
+        io.reactivex.schedulers.Schedulers.io(),
+        Executors.newSingleThreadExecutor(),
+        Executors.newSingleThreadExecutor()
     )
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun providePokemonApiConfig(): Config {
         val level = if (BuildConfig.DEBUG) BODY else NONE
         return Config(logLevel = level)
     }
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun providePokemonApi(config: Config): Pokemon = Pokemon(config)
 
     /**
@@ -138,49 +148,56 @@ class DataModule {
      * 2. Added collections support
      * 3. Added 'isPreview' flag to 'cards' table
      */
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideRoomDatabase(context: Context): DeckDatabase {
         return Room.databaseBuilder(context, DeckDatabase::class.java, BuildConfig.DATABASE_NAME)
-                .addMigrations(
-                        DeckDatabase.MIGRATION_1_2,
-                        DeckDatabase.MIGRATION_2_3
-                )
-                .build()
+            .addMigrations(
+                DeckDatabase.MIGRATION_1_2,
+                DeckDatabase.MIGRATION_2_3
+            )
+            .build()
     }
 
     /*
      * Caching
      */
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideCardCache(cache: RoomCardCache): CardCache = cache
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideDeckCache(cache: SwitchingDeckCache): DeckCache = cache
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideCommunityCache(cache: FirestoreCommunityCache): CommunityCache = cache
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideSessionCache(cache: RoomSessionCache): SessionCache = cache
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideOfflineStatusConsumer(consumer: DefaultOfflineRepository): OfflineStatusConsumer = consumer
 
     /*
      * Data Sources
      */
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideSearchDataSource(
-            api: Pokemon,
-            cache: CardCache,
-            repository: ExpansionRepository,
-            previewExpansionDataSource: PreviewExpansionDataSource,
-            remote: Remote,
-            schedulers: AppSchedulers,
-            preferences: AppPreferences,
-            connectivity: Connectivity
+        api: Pokemon,
+        cache: CardCache,
+        repository: ExpansionRepository,
+        previewExpansionDataSource: PreviewExpansionDataSource,
+        remote: Remote,
+        schedulers: AppSchedulers,
+        preferences: AppPreferences,
+        connectivity: Connectivity
     ): CardDataSource {
         val disk = DiskCardDataSource(cache, schedulers)
         val network = NetworkCardDataSource(api, repository, cache, remote, schedulers)
@@ -192,54 +209,64 @@ class DataModule {
      * Repositories
      */
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideAccountRepository(repository: DefaultAccountRepository): AccountRepository = repository
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideCommunityRepository(repository: DefaultCommunityRepository): CommunityRepository = repository
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideEditRepository(repository: DefaultEditRepository): EditRepository = repository
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideExpansionRepository(
-            defaultSource: DefaultExpansionDataSource,
-            previewSource: PreviewExpansionDataSource,
-            preferences: AppPreferences,
-            remote: Remote
+        defaultSource: DefaultExpansionDataSource,
+        previewSource: PreviewExpansionDataSource,
+        preferences: AppPreferences,
+        remote: Remote
     ): ExpansionRepository = DefaultExpansionRepository(defaultSource, previewSource, preferences, remote)
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideOfflineRepository(repository: DefaultOfflineRepository): OfflineRepository = repository
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun providePreviewRepository(repository: RemotePreviewRepository): PreviewRepository {
 //        if (BuildConfig.DEBUG) {
 //            return TestPreviewRepository()
 //        } else {
-            return repository
+        return repository
 //        }
     }
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideMarketplaceRepository(schedulers: AppSchedulers): MarketplaceRepository {
         return CachingMarketplaceRepository(
-                FirestoreMarketplaceSource(MarketplaceSource.Source.CACHE, schedulers),
-                FirestoreMarketplaceSource(MarketplaceSource.Source.NETWORK, schedulers)
+            FirestoreMarketplaceSource(MarketplaceSource.Source.CACHE, schedulers),
+            FirestoreMarketplaceSource(MarketplaceSource.Source.NETWORK, schedulers)
         )
     }
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideCollectionRepository(
-            roomCollectionCache: RoomCollectionSource,
-            firestoreCollectionCache: FirestoreCollectionSource,
-            preferences: AppPreferences
+        roomCollectionCache: RoomCollectionSource,
+        firestoreCollectionCache: FirestoreCollectionSource,
+        preferences: AppPreferences
     ): CollectionRepository {
         return DefaultCollectionRepository(roomCollectionCache, firestoreCollectionCache, preferences)
     }
@@ -248,30 +275,35 @@ class DataModule {
      * Deck Validation Rules
      */
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     @ElementsIntoSet
-    fun provideDefaultRuleSet() : Set<Rule> {
+    fun provideDefaultRuleSet(): Set<Rule> {
         return setOf(
-                SizeRule(),
-                DuplicateRule(),
-                BasicRule(),
-                PrismStarRule()
+            SizeRule(),
+            DuplicateRule(),
+            BasicRule(),
+            PrismStarRule()
         )
     }
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideDeckTester(tester: DefaultDeckTester): DeckTester = tester
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideDeckValidator(validator: DefaultDeckValidator): DeckValidator = validator
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideImporter(importer: DefaultImporter): Importer = importer
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun providePtcgoExporter(): PtcgoExporter = DefaultPtcgoExporter()
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideTournamentExporter(exporter: DefaultTournamentExporter): TournamentExporter = exporter
-
 }

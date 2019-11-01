@@ -34,16 +34,16 @@ interface SetBrowserUi : Ui<SetBrowserUi.State, SetBrowserUi.State.Change> {
 
     @Parcelize
     data class State(
-            val setCode: String,
-            val isPreview: Boolean,
-            override val isLoading: Boolean,
-            override val error: String?,
-            val cards: List<PokemonCard>,
-            val filter: BrowseFilter,
-            val pageSize: Int = 1000
+        val setCode: String,
+        val isPreview: Boolean,
+        override val isLoading: Boolean,
+        override val error: String?,
+        val cards: List<PokemonCard>,
+        val filter: BrowseFilter,
+        val pageSize: Int = 1000
     ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
-        override fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when (change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.FilterChanged -> this.copy(filter = change.filter)

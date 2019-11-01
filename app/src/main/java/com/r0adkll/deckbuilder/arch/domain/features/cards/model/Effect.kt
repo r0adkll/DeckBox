@@ -6,6 +6,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Effect(
-        val type: Type,
-        val value: String
+    val type: Type,
+    val value: String
 ) : Parcelable

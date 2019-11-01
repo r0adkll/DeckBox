@@ -36,7 +36,7 @@ object EntityMapper {
         val description = entity.tournament!!.name
         val deck = to(entity, stackedCards.unstack(), isMissingCards)
         return DeckTemplate.TournamentDeckTemplate(deck, name, description, entity.author,
-                entity.authorCountry, to(entity.tournament), to(entity.deckInfo))
+            entity.authorCountry, to(entity.tournament), to(entity.deckInfo))
     }
 
     fun to(entity: ThemeDeckTemplateEntity, cards: List<PokemonCard>): DeckTemplate {
@@ -65,27 +65,28 @@ object EntityMapper {
         val deckImageCard = entity.deckInfo.map { info ->
             cards.find { it.name.contains(info.name, true) }
         }.firstOrNull { it != null }
-        val deckImage = deckImageCard?.let { DeckImage.Pokemon(it.imageUrl) } ?: entity.image?.let { DeckImage.from(Uri.parse(it)) }
+        val deckImage = deckImageCard?.let { DeckImage.Pokemon(it.imageUrl) }
+            ?: entity.image?.let { DeckImage.from(Uri.parse(it)) }
 
         return Deck(
-                entity.id,
-                deckName,
-                deckDescription,
-                deckImage,
-                false,
-                cards,
-                isMissingCards,
-                entity.timestamp
+            entity.id,
+            deckName,
+            deckDescription,
+            deckImage,
+            false,
+            cards,
+            isMissingCards,
+            entity.timestamp
         )
     }
 
     fun to(entity: TournamentEntity): Tournament {
         return Tournament(
-                entity.name,
-                entity.date,
-                entity.country,
-                Format.of(entity.format),
-                entity.playerCount
+            entity.name,
+            entity.date,
+            entity.country,
+            Format.of(entity.format),
+            entity.playerCount
         )
     }
 
@@ -95,14 +96,14 @@ object EntityMapper {
 
     fun to(entity: ThemeDeckTemplateEntity, cards: List<PokemonCard>, isMissingCards: Boolean): Deck {
         return Deck(
-                entity.id,
-                entity.name,
-                entity.description,
-                entity.image?.let { DeckImage.from(Uri.parse(it)) },
-                false,
-                cards,
-                isMissingCards,
-                0L
+            entity.id,
+            entity.name,
+            entity.description,
+            entity.image?.let { DeckImage.from(Uri.parse(it)) },
+            false,
+            cards,
+            isMissingCards,
+            0L
         )
     }
 }

@@ -36,5 +36,4 @@ class SizeRuleTest {
 
         result.shouldNotBeNull()
     }
-
 }

@@ -10,7 +10,7 @@ import javax.inject.Inject
  * and special user onboarding
  */
 class FlagPreferences @Inject constructor(
-        context: Context
+    context: Context
 ) : Preferences {
 
     override val sharedPreferences: SharedPreferences = context.getSharedPreferences(NAME, Context.MODE_PRIVATE)

@@ -16,11 +16,11 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.bindView
 
 class EvolutionChainViewHolder(
-        itemView: View,
-        private val spanCount: Int,
-        private val editCardIntentions: EditCardIntentions,
-        private val pokemonCardClicks: Relay<PokemonCardView>
-): RecyclerView.ViewHolder(itemView) {
+    itemView: View,
+    private val spanCount: Int,
+    private val editCardIntentions: EditCardIntentions,
+    private val pokemonCardClicks: Relay<PokemonCardView>
+) : RecyclerView.ViewHolder(itemView) {
 
     private val recyclerView by bindView<RecyclerView>(R.id.recycler)
 
@@ -37,8 +37,7 @@ class EvolutionChainViewHolder(
         }
 
         val adapter = recyclerView.adapter as EvolutionLineRecyclerAdapter
-        val forceChange = adapter.isEditing != isEditing
-                || adapter.isCollectionEnabled != isCollectionEnabled
+        val forceChange = adapter.isEditing != isEditing || adapter.isCollectionEnabled != isCollectionEnabled
         if (forceChange) {
             adapter.evolution = evolutionChain
             adapter.isEditing = isEditing
@@ -51,14 +50,15 @@ class EvolutionChainViewHolder(
 
     companion object {
 
-        fun create(inflater: LayoutInflater,
-                   parent: ViewGroup?,
-                   spanCount: Int,
-                   editCardIntentions: EditCardIntentions,
-                   pokemonCardClicks: Relay<PokemonCardView>
+        fun create(
+            inflater: LayoutInflater,
+            parent: ViewGroup?,
+            spanCount: Int,
+            editCardIntentions: EditCardIntentions,
+            pokemonCardClicks: Relay<PokemonCardView>
         ): EvolutionChainViewHolder {
             return EvolutionChainViewHolder(inflater.inflate(R.layout.item_evolution_chain, parent, false),
-                    spanCount, editCardIntentions, pokemonCardClicks)
+                spanCount, editCardIntentions, pokemonCardClicks)
         }
     }
 }

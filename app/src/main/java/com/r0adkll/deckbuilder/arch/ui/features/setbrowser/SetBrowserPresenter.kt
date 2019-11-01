@@ -10,21 +10,21 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class SetBrowserPresenter @Inject constructor(
-        ui: SetBrowserUi,
-        val intentions: SetBrowserUi.Intentions,
-        val repository: CardRepository
+    ui: SetBrowserUi,
+    val intentions: SetBrowserUi.Intentions,
+    val repository: CardRepository
 ) : UiPresenter<State, Change>(ui) {
 
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
 
         val loadCards = repository.findByExpansion(ui.state.setCode)
-                .map { Change.CardsLoaded(it) as Change }
-                .startWith(Change.IsLoading as Change)
-                .onErrorReturn(handleUnknownError)
+            .map { Change.CardsLoaded(it) as Change }
+            .startWith(Change.IsLoading as Change)
+            .onErrorReturn(handleUnknownError)
 
         val changeFilter = intentions.filterChanged()
-                .map { Change.FilterChanged(it) as Change }
+            .map { Change.FilterChanged(it) as Change }
 
         return loadCards.mergeWith(changeFilter)
     }

@@ -1,14 +1,14 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.cache
 
 import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
-import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
-import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
+import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
+import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.stack
@@ -18,8 +18,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class RoomSessionCache @Inject constructor(
-        val db: DeckDatabase,
-        val expansionRepository: ExpansionRepository
+    val db: DeckDatabase,
+    val expansionRepository: ExpansionRepository
 ) : SessionCache {
 
     override fun createSession(deck: Deck?, imports: List<PokemonCard>?): Observable<Long> {
@@ -40,7 +40,7 @@ class RoomSessionCache @Inject constructor(
 
     override fun getSession(sessionId: Long): Observable<Session> {
         return observeSession(sessionId)
-                .take(1)
+            .take(1)
     }
 
     override fun observeSession(sessionId: Long): Observable<Session> {
@@ -49,9 +49,9 @@ class RoomSessionCache @Inject constructor(
         val expansions = expansionRepository.getExpansions()
 
         return Observable.combineLatest(session, cards, expansions,
-                Function3<SessionWithChanges, List<StackedCard>, List<Expansion>, Session> { s, c, e ->
-                    RoomEntityMapper.to(s, c, e)
-                })
+            Function3<SessionWithChanges, List<StackedCard>, List<Expansion>, Session> { s, c, e ->
+                RoomEntityMapper.to(s, c, e)
+            })
     }
 
     override fun deleteSession(sessionId: Long): Observable<Int> {
@@ -146,16 +146,16 @@ class RoomSessionCache @Inject constructor(
 
     private fun createNewSession(deck: Deck?): SessionEntity {
         return SessionEntity(
-                0L,
-                deck?.id,
-                deck?.name ?: "",
-                deck?.description ?: "",
-                deck?.image?.uri,
-                deck?.collectionOnly,
-                deck?.name ?: "",
-                deck?.description ?: "",
-                deck?.image?.uri,
-                deck?.collectionOnly
+            0L,
+            deck?.id,
+            deck?.name ?: "",
+            deck?.description ?: "",
+            deck?.image?.uri,
+            deck?.collectionOnly,
+            deck?.name ?: "",
+            deck?.description ?: "",
+            deck?.image?.uri,
+            deck?.collectionOnly
         )
     }
 }

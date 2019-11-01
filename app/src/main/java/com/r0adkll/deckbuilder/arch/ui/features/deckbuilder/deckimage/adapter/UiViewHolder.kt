@@ -15,7 +15,7 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : RecyclerView.ViewH
     abstract fun bind(item: I, isSelected: Boolean?)
 
     protected fun getElevation(isSelected: Boolean?): Int {
-        return when(isSelected) {
+        return when (isSelected) {
             null -> 3
             true -> 6
             else -> 0
@@ -23,7 +23,7 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : RecyclerView.ViewH
     }
 
     protected fun getScale(isSelected: Boolean?): Float {
-        return when(isSelected) {
+        return when (isSelected) {
             null -> 1f
             true -> 1.05f
             else -> 0.99f
@@ -31,7 +31,7 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : RecyclerView.ViewH
     }
 
     protected fun getAlpha(isSelected: Boolean?): Float {
-        return when(isSelected) {
+        return when (isSelected) {
             null -> 1f
             true -> 1f
             else -> 0.70f
@@ -44,10 +44,10 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : RecyclerView.ViewH
 
         override fun bind(item: DeckImage.Pokemon, isSelected: Boolean?) {
             GlideApp.with(itemView)
-                    .load(item.imageUrl)
-                    .placeholder(R.drawable.pokemon_card_back)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(pokemonCardView)
+                .load(item.imageUrl)
+                .placeholder(R.drawable.pokemon_card_back)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(pokemonCardView)
             pokemonCardView.elevation = dp(getElevation(isSelected))
             pokemonCardView.alpha = getAlpha(isSelected)
             pokemonCardView.scaleX = getScale(isSelected)
@@ -90,7 +90,7 @@ sealed class UiViewHolder<in I : DeckImage>(itemView: View) : RecyclerView.ViewH
         @Suppress("UNCHECKED_CAST")
         fun create(itemView: View, layoutId: Int): UiViewHolder<DeckImage> {
             val viewType = ViewType.of(layoutId)
-            return when(viewType) {
+            return when (viewType) {
                 ViewType.POKEMON -> PokemonViewHolder(itemView) as UiViewHolder<DeckImage>
                 ViewType.TYPE -> TypeViewHolder(itemView) as UiViewHolder<DeckImage>
             }

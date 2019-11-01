@@ -50,15 +50,15 @@ object Shortcuts {
             val shortcutManager = context.shortcutManager()
 
             val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(10) else "Deck"
-            val longLabel = if(deck.name.isNotEmpty()) deck.name.take(25) else "Deck with no name"
+            val longLabel = if (deck.name.isNotEmpty()) deck.name.take(25) else "Deck with no name"
 
             val shortcut = ShortcutInfo.Builder(context, deck.id)
-                    .setShortLabel(shortLabel)
-                    .setLongLabel(longLabel)
-                    .setIcon(Icon.createWithResource(context, R.drawable.ic_cards_variant))
-                    .setIntent(ShortcutActivity.createOpenDeckIntent(context, deck.id))
-                    .setRank(1)
-                    .build()
+                .setShortLabel(shortLabel)
+                .setLongLabel(longLabel)
+                .setIcon(Icon.createWithResource(context, R.drawable.ic_cards_variant))
+                .setIntent(ShortcutActivity.createOpenDeckIntent(context, deck.id))
+                .setRank(1)
+                .build()
 
             // 1) Determine if we already have a shortcut for this deck then float it's rank to 1
             val existing = shortcutManager.dynamicShortcuts.find { it.id == deck.id }
@@ -69,7 +69,8 @@ object Shortcuts {
             } else {
 
                 // Determine if we need to drop a shortcut
-                if (shortcutManager.dynamicShortcuts.size + shortcutManager.manifestShortcuts.size >= shortcutManager.maxShortcutCountPerActivity) {
+                if (shortcutManager.dynamicShortcuts.size + shortcutManager.manifestShortcuts.size >=
+                    shortcutManager.maxShortcutCountPerActivity) {
                     // Remove the last dynamic shortcut
                     shortcutManager.dynamicShortcuts.lastOrNull()?.let {
                         shortcutManager.removeDynamicShortcuts(listOf(it.id))
@@ -88,12 +89,12 @@ object Shortcuts {
 
             // Find any shortcuts that don't exist as decks
             val deadShortcuts = shortcutManager.dynamicShortcuts
-                    .filter { shortcut -> decks.none { it.id == shortcut.id } }
-                    .map { it.id }
+                .filter { shortcut -> decks.none { it.id == shortcut.id } }
+                .map { it.id }
             shortcutManager.removeDynamicShortcuts(deadShortcuts)
 
             // Update existing deck shortcuts
-            val aliveShortcuts = decks.filter { deck -> shortcutManager.dynamicShortcuts.any { it.id == deck.id} }
+            val aliveShortcuts = decks.filter { deck -> shortcutManager.dynamicShortcuts.any { it.id == deck.id } }
             aliveShortcuts.forEach { addDeckShortcut(context, it) }
         }
     }
@@ -118,21 +119,21 @@ object Shortcuts {
         val size = context.dip(44f)
 
         deck.image?.let { image ->
-            when(image) {
+            when (image) {
                 is DeckImage.Pokemon -> {
                     GlideApp.with(context)
-                            .asBitmap()
-                            .load(image.imageUrl)
-                            .circleCrop()
-                            .into(object : CustomTarget<Bitmap>(size, size) {
-                                override fun onLoadCleared(placeholder: Drawable?) {
-                                }
+                        .asBitmap()
+                        .load(image.imageUrl)
+                        .circleCrop()
+                        .into(object : CustomTarget<Bitmap>(size, size) {
+                            override fun onLoadCleared(placeholder: Drawable?) {
+                            }
 
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    Timber.i("Pokemon Deck Image loaded")
-                                    updateDeckShortcutIcon(context, deck, resource)
-                                }
-                            })
+                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                Timber.i("Pokemon Deck Image loaded")
+                                updateDeckShortcutIcon(context, deck, resource)
+                            }
+                        })
                 }
                 is DeckImage.Type -> {
                     val view = DeckImageView(context)
@@ -175,15 +176,15 @@ object Shortcuts {
         val shortcut = shortcutManager.dynamicShortcuts.find { it.id == deck.id }
         if (shortcut != null) {
             val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(10) else "Deck"
-            val longLabel = if(deck.name.isNotEmpty()) deck.name.take(25) else "Deck with no name"
+            val longLabel = if (deck.name.isNotEmpty()) deck.name.take(25) else "Deck with no name"
 
             val updatedShortcut = ShortcutInfo.Builder(context, deck.id)
-                    .setShortLabel(shortLabel)
-                    .setLongLabel(longLabel)
-                    .setIcon(Icon.createWithBitmap(bitmap))
-                    .setIntent(ShortcutActivity.createOpenDeckIntent(context, deck.id))
-                    .setRank(1)
-                    .build()
+                .setShortLabel(shortLabel)
+                .setLongLabel(longLabel)
+                .setIcon(Icon.createWithBitmap(bitmap))
+                .setIntent(ShortcutActivity.createOpenDeckIntent(context, deck.id))
+                .setRank(1)
+                .build()
 
             shortcutManager.updateShortcuts(listOf(updatedShortcut))
         }

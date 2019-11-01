@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.pdf.PdfDocument
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import android.widget.TableLayout
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.ftinc.kit.extensions.pt
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -39,30 +39,30 @@ import java.net.URLEncoder
 import javax.inject.Inject
 
 class DefaultTournamentExporter @Inject constructor(
-        val deckRepository: DeckRepository,
-        val editRepository: EditRepository
+    val deckRepository: DeckRepository,
+    val editRepository: EditRepository
 ) : TournamentExporter {
 
     override fun export(activityContext: Context, task: ExportTask, playerInfo: PlayerInfo): Observable<File> {
-        return when{
+        return when {
             task.deckId != null -> deckRepository.getDeck(task.deckId)
-                    .map { createDocument(activityContext, it.cards, it.name, playerInfo) }
+                .map { createDocument(activityContext, it.cards, it.name, playerInfo) }
             task.sessionId != null -> editRepository.getSession(task.sessionId)
-                    .map { createDocument(activityContext, it.cards, it.name, playerInfo) }
+                .map { createDocument(activityContext, it.cards, it.name, playerInfo) }
             else -> Observable.error(IOException("Unable to export your deck"))
         }
     }
 
     private fun createDocument(context: Context, cards: List<PokemonCard>, name: String, playerInfo: PlayerInfo): File {
-        val margin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, MARGIN.toFloat(), context.resources.displayMetrics).toInt()
-        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, WIDTH.toFloat() * 0.75f, context.resources.displayMetrics).toInt()
-        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, HEIGHT.toFloat() * 0.75f, context.resources.displayMetrics).toInt()
+        val margin = context.pt(MARGIN.toFloat()).toInt()
+        val width = context.pt(WIDTH.toFloat() * 0.75f).toInt()
+        val height = context.pt(HEIGHT.toFloat() * 0.75f).toInt()
         val content = Rect(margin, margin, width - margin, height - margin)
 
         val document = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(width, height, 0)
-                .setContentRect(content)
-                .create()
+            .setContentRect(content)
+            .create()
         val page = document.startPage(pageInfo)
 
         // Print the deck to the page
@@ -105,19 +105,19 @@ class DefaultTournamentExporter @Inject constructor(
         val tablePokemon = view.findViewById<TableLayout>(R.id.tablePokemon)
         val tablePokemon2 = view.findViewById<TableLayout>(R.id.tablePokemon2)
         val tablePokemon2Title = view.findViewById<TextView>(R.id.tablePokemon2Title)
-        val tableTrainer= view.findViewById<TableLayout>(R.id.tableTrainer)
+        val tableTrainer = view.findViewById<TableLayout>(R.id.tableTrainer)
         val tableEnergy = view.findViewById<TableLayout>(R.id.tableEnergy)
 
         ageJuniorLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.JUNIOR)
         ageSeniorLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.SENIOR)
         ageMasterLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.MASTERS)
 
-        when(playerInfo.format) {
+        when (playerInfo.format) {
             Format.STANDARD -> formatStandard.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
             Format.EXPANDED -> formatExpanded.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
         }
 
-        when(playerInfo.ageDivision) {
+        when (playerInfo.ageDivision) {
             AgeDivision.JUNIOR -> ageJunior.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
             AgeDivision.SENIOR -> ageSenior.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
             AgeDivision.MASTERS -> ageMaster.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
@@ -131,41 +131,41 @@ class DefaultTournamentExporter @Inject constructor(
         val stackedGroups = stacked.groupBy { it.card.supertype }
 
         stackedGroups[SuperType.POKEMON]
-                ?.sortedByDescending { it.count }
-                ?.let {
-            if (stacked.size >= 31) {
-                extraColumn.isVisible = true
+            ?.sortedByDescending { it.count }
+            ?.let {
+                if (stacked.size >= 31) {
+                    extraColumn.isVisible = true
 
-                if (it.size >= 34) {
-                    val pokemon1 = it.subList(0, 34)
-                    val pokemon2 = it.subList(34, it.size)
+                    if (it.size >= 34) {
+                        val pokemon1 = it.subList(0, 34)
+                        val pokemon2 = it.subList(34, it.size)
 
-                    pokemon1.map { createRow(inflater, view, it) }
+                        pokemon1.map { createRow(inflater, view, it) }
                             .forEach { tablePokemon.addView(it) }
 
-                    pokemon2.map { createRow(inflater, view, it) }
+                        pokemon2.map { createRow(inflater, view, it) }
                             .forEach { tablePokemon2.addView(it) }
-                } else {
-                    tablePokemon2.isGone = true
-                    it.map { createRow(inflater, view, it) }
+                    } else {
+                        tablePokemon2.isGone = true
+                        it.map { createRow(inflater, view, it) }
                             .forEach { tablePokemon.addView(it) }
-                }
-            } else {
-                tablePokemon2Title.setText(R.string.tournament_pdf_table_pokemon)
-                it.map { createRow(inflater, view, it) }
+                    }
+                } else {
+                    tablePokemon2Title.setText(R.string.tournament_pdf_table_pokemon)
+                    it.map { createRow(inflater, view, it) }
                         .forEach { tablePokemon2.addView(it) }
+                }
             }
-        }
 
         stackedGroups[SuperType.TRAINER]?.reduce()
-                ?.sortedByDescending { it.count }
-                ?.map { createRow(inflater, view, it) }
-                ?.forEach { tableTrainer.addView(it) }
+            ?.sortedByDescending { it.count }
+            ?.map { createRow(inflater, view, it) }
+            ?.forEach { tableTrainer.addView(it) }
 
         stackedGroups[SuperType.ENERGY]?.reduce()
-                ?.sortedByDescending { it.count }
-                ?.map { createRow(inflater, view, it) }
-                ?.forEach { tableEnergy.addView(it) }
+            ?.sortedByDescending { it.count }
+            ?.map { createRow(inflater, view, it) }
+            ?.forEach { tableEnergy.addView(it) }
 
         val width = canvas.width
         val height = canvas.height
@@ -201,7 +201,6 @@ class DefaultTournamentExporter @Inject constructor(
         val reducedStackedTrainers = HashMap<String, StackedPokemonCard>()
 
         this.forEach {
-
             val name = if (it.card.supertype == SuperType.ENERGY && it.card.subtype == SubType.BASIC) {
                 // Make sure to trim the term "Basic" out of energy cards
                 it.card.name.replace("Basic", "").trim()
@@ -216,7 +215,6 @@ class DefaultTournamentExporter @Inject constructor(
                 val newCount = stack.count + it.count
                 reducedStackedTrainers[name] = stack.copy(count = newCount)
             }
-
         }
 
         return reducedStackedTrainers.values.toList()

@@ -71,8 +71,8 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
     override fun setupComponent() {
         getComponent(FilterableComponent::class)
-                .plus(FilterModule(this))
-                .inject(this)
+            .plus(FilterModule(this))
+            .inject(this)
 
         delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
@@ -92,7 +92,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
     }
 
     override fun attributeClicks(): Observable<FilterAttribute> = filterIntentions.attributeClicks.doOnNext { attr ->
-        Analytics.event(Event.SelectContent.FilterOption("attribute", when(attr) {
+        Analytics.event(Event.SelectContent.FilterOption("attribute", when (attr) {
             is FilterAttribute.SuperTypeAttribute -> attr.superType.displayName
             is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
             is FilterAttribute.ContainsAttribute -> attr.attribute
@@ -102,7 +102,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
     override fun optionClicks(): Observable<Pair<String, Any>> = filterIntentions.optionClicks.doOnNext { opt ->
         val option = opt.second
-        Analytics.event(Event.SelectContent.FilterOption("option", when(option) {
+        Analytics.event(Event.SelectContent.FilterOption("option", when (option) {
             is Expansion -> option.code
             is Rarity -> option.key
             else -> option.toString()
@@ -111,8 +111,14 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
 
     override fun viewMoreClicks(): Observable<Unit> = filterIntentions.viewMoreClicks
 
-    override fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>> = filterIntentions.valueRangeChanges.doOnNext {
-        Analytics.event(Event.SelectContent.FilterOption(it.first, it.second.modifier.name, it.second.value.toLong()))
+    override fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>> {
+        return filterIntentions.valueRangeChanges.doOnNext {
+            Analytics.event(Event.SelectContent.FilterOption(
+                it.first,
+                it.second.modifier.name,
+                it.second.value.toLong()
+            ))
+        }
     }
 
     override fun clearFilter(): Observable<Unit> = filterIntentions.clearFilter.doOnNext {

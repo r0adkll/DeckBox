@@ -55,7 +55,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
         super.onActivityCreated(savedInstanceState)
 
         adapter = ExpansionRecyclerAdapter(activity!!, downloadClicks, dismissClicks, downloadFormatClicks) {
-            when(it) {
+            when (it) {
                 is Item.ExpansionSet -> {
                     Analytics.event(Event.SelectContent.BrowseExpansionSet(it.expansion.code))
                     val intent = SetBrowserActivity.createIntent(activity!!, it.expansion)
@@ -73,16 +73,16 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
         (recycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
         swipeRefresh.setColorSchemeResources(
-                R.color.poketype_fire,
-                R.color.poketype_grass,
-                R.color.poketype_water,
-                R.color.poketype_electric,
-                R.color.poketype_fighting,
-                R.color.poketype_psychic,
-                R.color.poketype_steel,
-                R.color.poketype_dragon,
-                R.color.poketype_fairy,
-                R.color.poketype_dark
+            R.color.poketype_fire,
+            R.color.poketype_grass,
+            R.color.poketype_water,
+            R.color.poketype_electric,
+            R.color.poketype_fighting,
+            R.color.poketype_psychic,
+            R.color.poketype_steel,
+            R.color.poketype_dragon,
+            R.color.poketype_fairy,
+            R.color.poketype_dark
         )
 
         actionSearch.setOnClickListener {
@@ -92,8 +92,8 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
 
     override fun setupComponent() {
         getComponent(HomeComponent::class)
-                .plus(BrowseModule(this))
-                .inject(this)
+            .plus(BrowseModule(this))
+            .inject(this)
 
         delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
@@ -106,53 +106,53 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
 
     override fun refreshExpansions(): Observable<Unit> {
         return swipeRefresh.refreshes()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Action("refresh_expansions"))
-                }
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Action("refresh_expansions"))
+            }
     }
 
     override fun downloadExpansion(): Observable<Expansion> {
         return downloadClicks
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Action("download_expansion", it.name))
-                }
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Action("download_expansion", it.name))
+            }
     }
 
     override fun downloadFormatExpansions(): Observable<List<Expansion>> {
         return downloadFormatClicks
-                .uiDebounce()
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap { format ->
-                    val formatName = format.name.toLowerCase().capitalize()
-                    val expansions = state.expansions.filter {
-                        when(format) {
-                            Format.STANDARD -> it.standardLegal
-                            Format.EXPANDED -> it.expandedLegal
-                            else -> true
+            .uiDebounce()
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap { format ->
+                val formatName = format.name.toLowerCase().capitalize()
+                val expansions = state.expansions.filter {
+                    when (format) {
+                        Format.STANDARD -> it.standardLegal
+                        Format.EXPANDED -> it.expandedLegal
+                        else -> true
+                    }
+                }
+                Analytics.event(Event.SelectContent.Action("download_format", format.name))
+                DialogUtils.confirmDialog(activity!!,
+                    Resource(R.string.dialog_confirm_download_format, formatName),
+                    Resource(R.string.dialog_confirm_download_format_message, expansions.size, formatName),
+                    R.string.action_download, android.R.string.cancel)
+                    .flatMap {
+                        if (it) {
+                            Analytics.event(Event.SelectContent.Action("download_format", "accepted"))
+                            Observable.just(expansions)
+                        } else {
+                            Analytics.event(Event.SelectContent.Action("download_format", "denied"))
+                            Observable.empty()
                         }
                     }
-                    Analytics.event(Event.SelectContent.Action("download_format", format.name))
-                    DialogUtils.confirmDialog(activity!!,
-                            Resource(R.string.dialog_confirm_download_format, formatName),
-                            Resource(R.string.dialog_confirm_download_format_message, expansions.size, formatName),
-                            R.string.action_download, android.R.string.cancel)
-                            .flatMap {
-                                if (it) {
-                                    Analytics.event(Event.SelectContent.Action("download_format", "accepted"))
-                                    Observable.just(expansions)
-                                } else {
-                                    Analytics.event(Event.SelectContent.Action("download_format", "denied"))
-                                    Observable.empty()
-                                }
-                            }
-                }
+            }
     }
 
     override fun hideOfflineOutline(): Observable<Unit> {
         return dismissClicks
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Action("hide_offline_outline"))
-                }
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Action("hide_offline_outline"))
+            }
     }
 
     override fun setExpansionsItems(items: List<Item>) {

@@ -23,190 +23,195 @@ import javax.inject.Inject
 import kotlin.math.ceil
 
 class FirestoreCollectionSource @Inject constructor(
-        val preferences: AppPreferences,
-        val schedulers: AppSchedulers
+    val preferences: AppPreferences,
+    val schedulers: AppSchedulers
 ) : CollectionSource {
 
     override fun observeAll(): Observable<List<CollectionCount>> {
         return getUserCardCollection()?.let { collection ->
             collection
-                    .observeAs {
-                        val documentId = it.id
-                        val entity = it.toObject(CollectionCountEntity::class.java)
-                        EntityMapper.to(entity, documentId)
-                    }
-                    .toObservable()
-                    .doOnNext { Timber.i("Collection All from Network: ${it.size}") }
+                .observeAs {
+                    val documentId = it.id
+                    val entity = it.toObject(CollectionCountEntity::class.java)
+                    EntityMapper.to(entity, documentId)
+                }
+                .toObservable()
+                .doOnNext { Timber.i("Collection All from Network: ${it.size}") }
         } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
 
     override fun getCount(cardId: String): Observable<CollectionCount> {
         return getUserCardCollection()?.let { collection ->
             collection.document(cardId).get()
-                    .asObservable(schedulers.firebaseExecutor)
-                    .map { it.toObject(CollectionCountEntity::class.java) ?: throw IllegalStateException("Unable to parse search result") }
-                    .map { EntityMapper.to(it) }
+                .asObservable(schedulers.firebaseExecutor)
+                .map {
+                    it.toObject(CollectionCountEntity::class.java)
+                        ?: throw IllegalStateException("Unable to parse search result")
+                }
+                .map { EntityMapper.to(it) }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
     override fun getCountForSet(set: String): Observable<List<CollectionCount>> {
         return getUserCardCollection()?.let { collection ->
             collection.whereEqualTo("set", set).get()
-                    .asObservable(schedulers.firebaseExecutor)
-                    .map {
-                        it.map { documentSnapshot ->
-                            val documentId = documentSnapshot.id
-                            val entity = documentSnapshot.toObject(CollectionCountEntity::class.java)
-                            EntityMapper.to(entity, documentId)
-                        }
+                .asObservable(schedulers.firebaseExecutor)
+                .map {
+                    it.map { documentSnapshot ->
+                        val documentId = documentSnapshot.id
+                        val entity = documentSnapshot.toObject(CollectionCountEntity::class.java)
+                        EntityMapper.to(entity, documentId)
                     }
+                }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
     override fun getCountForSeries(series: String): Observable<List<CollectionCount>> {
         return getUserCardCollection()?.let { collection ->
             collection.whereEqualTo("series", series).get()
-                    .asObservable(schedulers.firebaseExecutor)
-                    .map {
-                        it.map { documentSnapshot ->
-                            val documentId = documentSnapshot.id
-                            val entity = documentSnapshot.toObject(CollectionCountEntity::class.java)
-                            EntityMapper.to(entity, documentId)
-                        }
+                .asObservable(schedulers.firebaseExecutor)
+                .map {
+                    it.map { documentSnapshot ->
+                        val documentId = documentSnapshot.id
+                        val entity = documentSnapshot.toObject(CollectionCountEntity::class.java)
+                        EntityMapper.to(entity, documentId)
                     }
+                }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
     override fun incrementCount(card: PokemonCard): Observable<Unit> {
         return getUserCardCollection()?.let { collection ->
             collection.document(card.id)
-                    .update("count", FieldValue.increment(1),
-                            "cardId", card.id,
-                            "set", card.expansion?.code ?: "",
-                            "series", card.expansion?.series ?: "")
-                    .asVoidObservable(schedulers.firebaseExecutor)
-                    .onErrorResumeNext { t: Throwable ->
-                        if (t is FirebaseFirestoreException) {
-                            when(t.code) {
-                                Code.NOT_FOUND -> {
-                                    collection.document(card.id)
-                                            .set(CollectionCountEntity(
-                                                    card.id,
-                                                    1,
-                                                    card.expansion?.code ?: "",
-                                                    card.expansion?.series ?: ""
-                                            ))
-                                            .asVoidObservable(schedulers.firebaseExecutor)
-                                }
-                                else -> Observable.error(t)
+                .update("count", FieldValue.increment(1),
+                    "cardId", card.id,
+                    "set", card.expansion?.code ?: "",
+                    "series", card.expansion?.series ?: "")
+                .asVoidObservable(schedulers.firebaseExecutor)
+                .onErrorResumeNext { t: Throwable ->
+                    if (t is FirebaseFirestoreException) {
+                        when (t.code) {
+                            Code.NOT_FOUND -> {
+                                collection.document(card.id)
+                                    .set(CollectionCountEntity(
+                                        card.id,
+                                        1,
+                                        card.expansion?.code ?: "",
+                                        card.expansion?.series ?: ""
+                                    ))
+                                    .asVoidObservable(schedulers.firebaseExecutor)
                             }
-                        } else {
-                            Observable.error(t)
+                            else -> Observable.error(t)
                         }
+                    } else {
+                        Observable.error(t)
                     }
-                    .subscribeOn(schedulers.firebase)
+                }
+                .subscribeOn(schedulers.firebase)
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
     override fun decrementCount(card: PokemonCard): Observable<Unit> {
         return getUserCardCollection()?.let { collection ->
             collection.document(card.id)
-                    .update("count", FieldValue.increment(-1),
-                            "cardId", card.id,
-                            "set", card.expansion?.code ?: "",
-                            "series", card.expansion?.series ?: "")
-                    .asVoidObservable(schedulers.firebaseExecutor)
-                    .subscribeOn(schedulers.firebase)
+                .update("count", FieldValue.increment(-1),
+                    "cardId", card.id,
+                    "set", card.expansion?.code ?: "",
+                    "series", card.expansion?.series ?: "")
+                .asVoidObservable(schedulers.firebaseExecutor)
+                .subscribeOn(schedulers.firebase)
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
     override fun incrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>> {
         return getUserCardCollection()?.let { collection ->
             collection.whereEqualTo("set", set)
-                    .get()
-                    .asObservable(schedulers.firebaseExecutor)
-                    .flatMap {
-                        val batch = FirebaseFirestore.getInstance().batch()
-                        val entities = it.toObjects(CollectionCountEntity::class.java)
-                        entities.forEach { entity ->
-                            batch.update(collection.document(entity.cardId), "count", entity.count + 1)
-                        }
-
-                        val missingCards = cards.filter { card ->
-                            entities.none { entity ->
-                                entity.cardId == card.id
-                            }
-                        }.map { card ->
-                            CollectionCountEntity(
-                                card.id, 1, card.expansion!!.code, card.expansion.series
-                            )
-                        }
-
-                        missingCards.forEach { count ->
-                            batch.set(collection.document(count.cardId), count)
-                        }
-
-                        batch.commit()
-                                .asVoidObservable(schedulers.firebaseExecutor)
-                                .map {
-                                    entities.forEach { it.count++ }
-                                    entities.plus(missingCards)
-                                            .map(EntityMapper::to)
-                                }
+                .get()
+                .asObservable(schedulers.firebaseExecutor)
+                .flatMap {
+                    val batch = FirebaseFirestore.getInstance().batch()
+                    val entities = it.toObjects(CollectionCountEntity::class.java)
+                    entities.forEach { entity ->
+                        batch.update(collection.document(entity.cardId), "count", entity.count + 1)
                     }
+
+                    val missingCards = cards.filter { card ->
+                        entities.none { entity ->
+                            entity.cardId == card.id
+                        }
+                    }.map { card ->
+                        CollectionCountEntity(
+                            card.id, 1, card.expansion!!.code, card.expansion.series
+                        )
+                    }
+
+                    missingCards.forEach { count ->
+                        batch.set(collection.document(count.cardId), count)
+                    }
+
+                    batch.commit()
+                        .asVoidObservable(schedulers.firebaseExecutor)
+                        .map {
+                            entities.forEach { it.count++ }
+                            entities.plus(missingCards)
+                                .map(EntityMapper::to)
+                        }
+                }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
     fun migrateLegacyCounts(): Observable<Unit> {
         return getUserCardCollection()?.let { collection ->
             collection.get()
-                    .asObservable(schedulers.firebaseExecutor)
-                    .flatMap {
-                        val counts = it.map { queryDocumentSnapshot ->
-                            val documentId = queryDocumentSnapshot.id
-                            val entity = queryDocumentSnapshot.toObject(CollectionCountEntity::class.java)
-                            documentId to EntityMapper.to(entity, documentId)
+                .asObservable(schedulers.firebaseExecutor)
+                .flatMap {
+                    val counts = it.map { queryDocumentSnapshot ->
+                        val documentId = queryDocumentSnapshot.id
+                        val entity = queryDocumentSnapshot.toObject(CollectionCountEntity::class.java)
+                        documentId to EntityMapper.to(entity, documentId)
+                    }
+
+                    val legacyCounts = counts.filter { count -> count.second.isSourceOld }
+                    if (legacyCounts.isNotEmpty()) {
+                        // Since we are writing and deleting each count
+                        val batchCount = ceil(legacyCounts.size.toFloat() / 250f).toInt()
+                        val batches = ArrayList<WriteBatch>(batchCount)
+                        for (i in 0 until batchCount) {
+                            Timber.i("Legacy collection counts(${legacyCounts.size}) found! Migrating...")
+                            val batch = FirebaseFirestore.getInstance().batch()
+
+                            val start = i * 250
+                            val end = start + (legacyCounts.size - start).coerceAtMost(250)
+                            for (index in start until end) {
+                                val legacyCountPair = legacyCounts[index]
+                                Timber.d("""Migrating Id(${legacyCountPair.first}) to 
+                                    /collection/${legacyCountPair.second.id}""".trimMargin())
+                                val legacyCount = legacyCountPair.second
+                                val newDocumentRef = collection.document(legacyCount.id)
+                                batch.set(newDocumentRef, CollectionCountEntity(
+                                    legacyCount.id,
+                                    legacyCount.count,
+                                    legacyCount.set,
+                                    legacyCount.series
+                                ))
+                                batch.delete(collection.document(legacyCountPair.first))
+                            }
+
+                            batches += batch
                         }
 
-                        val legacyCounts = counts.filter { count -> count.second.isSourceOld }
-                        if (legacyCounts.isNotEmpty()) {
-                            val batchCount = ceil(legacyCounts.size.toFloat() / 250f).toInt() // Since we are writing and deleting each count
-                            val batches = ArrayList<WriteBatch>(batchCount)
-                            for (i in 0 until batchCount) {
-                                Timber.i("Legacy collection counts(${legacyCounts.size}) found! Migrating...")
-                                val batch = FirebaseFirestore.getInstance().batch()
-
-                                val start = i * 250
-                                val end = start + (legacyCounts.size - start).coerceAtMost(250)
-                                for (index in start until end) {
-                                    val legacyCountPair = legacyCounts[index]
-                                    Timber.d("Migrating Id(${legacyCountPair.first}) to /collection/${legacyCountPair.second.id}")
-                                    val legacyCount = legacyCountPair.second
-                                    val newDocumentRef = collection.document(legacyCount.id)
-                                    batch.set(newDocumentRef, CollectionCountEntity(
-                                            legacyCount.id,
-                                            legacyCount.count,
-                                            legacyCount.set,
-                                            legacyCount.series
-                                    ))
-                                    batch.delete(collection.document(legacyCountPair.first))
-                                }
-
-                                batches += batch
-                            }
-
-                            if (batches.isNotEmpty()) {
-                                val commits = batches.map { it.commit().asVoidObservable(schedulers.firebaseExecutor) }
-                                Observable.zip(commits) { Unit }
-                            } else {
-                                Timber.i("No batch changes made, Aborting...")
-                                Observable.just(Unit)
-                            }
+                        if (batches.isNotEmpty()) {
+                            val commits = batches.map { it.commit().asVoidObservable(schedulers.firebaseExecutor) }
+                            Observable.zip(commits) { Unit }
                         } else {
-                            Timber.i("No legacy count objects found. Aborting...")
+                            Timber.i("No batch changes made, Aborting...")
                             Observable.just(Unit)
                         }
+                    } else {
+                        Timber.i("No legacy count objects found. Aborting...")
+                        Observable.just(Unit)
                     }
+                }
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
@@ -228,10 +233,10 @@ class FirestoreCollectionSource @Inject constructor(
                     val count = counts[index]
                     val documentRef = collection.document(count.id)
                     batch.set(documentRef, CollectionCountEntity(
-                            count.id,
-                            count.count,
-                            count.set,
-                            count.series
+                        count.id,
+                        count.count,
+                        count.set,
+                        count.series
                     ))
                 }
 
@@ -254,18 +259,19 @@ class FirestoreCollectionSource @Inject constructor(
 
         return user?.let { u ->
             db.collection(COLLECTION_USERS)
-                    .document(preferences.testUserId ?: u.uid)
-                    .collection(COLLECTION_COLLECTION)
+                .document(preferences.testUserId ?: u.uid)
+                .collection(COLLECTION_COLLECTION)
         } ?: preferences.deviceId?.let { dId ->
             db.collection(COLLECTION_OFFLINE_USERS)
-                    .document(dId)
-                    .collection(COLLECTION_COLLECTION)
+                .document(dId)
+                .collection(COLLECTION_COLLECTION)
         }
     }
 
     companion object {
-        private const val COLLECTION_USERS = "decks" // Do to an error on my side, this is now stuck as 'decks', but it is users
-        private const val COLLECTION_OFFLINE_USERS = "offline_users" // Do to an error on my side, this is now stuck as 'decks', but it is users
+        // Do to an error on my side, this is now stuck as 'decks', but it is users
+        private const val COLLECTION_USERS = "decks"
+        private const val COLLECTION_OFFLINE_USERS = "offline_users"
         private const val COLLECTION_COLLECTION = "collection"
     }
 }

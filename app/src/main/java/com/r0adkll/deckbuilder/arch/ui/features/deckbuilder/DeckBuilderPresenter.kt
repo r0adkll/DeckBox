@@ -17,95 +17,95 @@ import javax.inject.Inject
 
 @SuppressLint("CheckResult")
 class DeckBuilderPresenter @Inject constructor(
-        ui: DeckBuilderUi,
-        val intentions: DeckBuilderUi.Intentions,
-        val repository: EditRepository,
-        val collectionRepository: CollectionRepository,
-        val marketplaceRepository: MarketplaceRepository,
-        val validator: DeckValidator
+    ui: DeckBuilderUi,
+    val intentions: DeckBuilderUi.Intentions,
+    val repository: EditRepository,
+    val collectionRepository: CollectionRepository,
+    val marketplaceRepository: MarketplaceRepository,
+    val validator: DeckValidator
 ) : UiPresenter<State, Change>(ui) {
 
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
 
         val observeSession = repository.observeSession(ui.state.sessionId)
-                .flatMap { session ->
-                    val validation = validator.validate(session.cards)
-                            .map { Change.Validated(it) as Change }
-                            .startWith(Change.SessionUpdated(session) as Change)
-                            .onErrorReturn(handleUnknownError)
+            .flatMap { session ->
+                val validation = validator.validate(session.cards)
+                    .map { Change.Validated(it) as Change }
+                    .startWith(Change.SessionUpdated(session) as Change)
+                    .onErrorReturn(handleUnknownError)
 
-                    // We don't want to load pricing information for invalid decks
-                    val marketplace = if (session.cards.size <= SizeRule.MAX_SIZE) {
-                        val cardIds = session.cards.map { it.id }.toSet()
-                        marketplaceRepository.getPrices(cardIds)
-                                .map { Change.PriceProducts(it) as Change }
-                                .onErrorReturn(handleMarketplaceError)
-                    } else {
-                        Observable.empty()
-                    }
-
-                    Observable.merge(validation, marketplace)
+                // We don't want to load pricing information for invalid decks
+                val marketplace = if (session.cards.size <= SizeRule.MAX_SIZE) {
+                    val cardIds = session.cards.map { it.id }.toSet()
+                    marketplaceRepository.getPrices(cardIds)
+                        .map { Change.PriceProducts(it) as Change }
+                        .onErrorReturn(handleMarketplaceError)
+                } else {
+                    Observable.empty()
                 }
+
+                Observable.merge(validation, marketplace)
+            }
 
         val observeCollection = collectionRepository.observeAll()
-                .map { Change.CollectionCounts(it) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { Change.CollectionCounts(it) as Change }
+            .onErrorReturn(handleUnknownError)
 
         disposables += intentions.addCards()
-                .flatMap { repository.addCards(ui.state.sessionId, it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Card(s) added to session")
-                }, { t -> Timber.e(t, "Error adding card to session")})
+            .flatMap { repository.addCards(ui.state.sessionId, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Card(s) added to session")
+            }, { t -> Timber.e(t, "Error adding card to session") })
 
         disposables += intentions.removeCard()
-                .flatMap { repository.removeCard(ui.state.sessionId, it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Card removed from session")
-                }, { t -> Timber.e(t, "Error removing card from session")})
+            .flatMap { repository.removeCard(ui.state.sessionId, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Card removed from session")
+            }, { t -> Timber.e(t, "Error removing card from session") })
 
         disposables += intentions.editDeckName()
-                .flatMap { repository.changeName(ui.state.sessionId, it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Name changed!")
-                }, { t -> Timber.e(t, "Error changing deck name")})
+            .flatMap { repository.changeName(ui.state.sessionId, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Name changed!")
+            }, { t -> Timber.e(t, "Error changing deck name") })
 
         disposables += intentions.editDeckDescription()
-                .flatMap { repository.changeDescription(ui.state.sessionId, it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Description changed!")
-                }, { t -> Timber.e(t, "Error changing description name")})
+            .flatMap { repository.changeDescription(ui.state.sessionId, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Description changed!")
+            }, { t -> Timber.e(t, "Error changing description name") })
 
         disposables += intentions.editDeckCollectionOnly()
-                .flatMap { repository.changeCollectionOnly(ui.state.sessionId, it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Collection Only changed!")
-                }, { t -> Timber.e(t, "Error changing collection only")})
+            .flatMap { repository.changeCollectionOnly(ui.state.sessionId, it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Collection Only changed!")
+            }, { t -> Timber.e(t, "Error changing collection only") })
 
         val editDeck = intentions.editDeckClicks()
-                .map { Change.Editing(it) as Change }
+            .map { Change.Editing(it) as Change }
 
         val editOverview = intentions.editOverviewClicks()
-                .map { Change.Overview(it) as Change }
+            .map { Change.Overview(it) as Change }
 
         val saveDeck = intentions.saveDeck()
-                .flatMap {
-                    repository.persistSession(ui.state.sessionId)
-                            .map { Change.Saved as Change }
-                            .startWith(Change.Saving as Change)
-                            .onErrorReturn(handlePersistError)
-                }
+            .flatMap {
+                repository.persistSession(ui.state.sessionId)
+                    .map { Change.Saved as Change }
+                    .startWith(Change.Saving as Change)
+                    .onErrorReturn(handlePersistError)
+            }
 
         return observeSession
-                .mergeWith(observeCollection)
-                .mergeWith(editDeck)
-                .mergeWith(editOverview)
-                .mergeWith(saveDeck)
+            .mergeWith(observeCollection)
+            .mergeWith(editDeck)
+            .mergeWith(editOverview)
+            .mergeWith(saveDeck)
     }
 
     companion object {

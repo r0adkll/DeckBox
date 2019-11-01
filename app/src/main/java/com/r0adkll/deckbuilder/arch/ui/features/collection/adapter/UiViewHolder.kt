@@ -21,9 +21,9 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
     abstract fun bind(item: I)
 
     class MigrationViewHolder(
-            itemView: View,
-            private val migrateClicks: Relay<Unit>,
-            private val dismissClicks: () -> Unit
+        itemView: View,
+        private val migrateClicks: Relay<Unit>,
+        private val dismissClicks: () -> Unit
     ) : UiViewHolder<Item.Migration>(itemView) {
 
         private val message by bindView<TextView>(R.id.message)
@@ -41,7 +41,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             errorMessage.text = item.error
             actionLayout.isVisible = !item.isLoading
 
-            actionMigrate.setText(when(item.error) {
+            actionMigrate.setText(when (item.error) {
                 null -> R.string.action_migrate
                 else -> R.string.action_retry
             })
@@ -63,7 +63,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         override fun bind(item: Item.ExpansionSeries) {
             title.text = item.series
             completion.text = itemView.context.getString(R.string.completion_format,
-                    item.completion.times(100f).roundToInt().coerceIn(0, 100))
+                item.completion.times(100f).roundToInt().coerceIn(0, 100))
         }
     }
 
@@ -76,15 +76,19 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
 
         override fun bind(item: Item.ExpansionSet) {
             GlideApp.with(itemView)
-                    .load(item.expansion.logoUrl)
-                    .into(logo)
+                .load(item.expansion.logoUrl)
+                .into(logo)
 
             val completionProgress = (item.count.toFloat() / item.expansion.totalCards.toFloat())
-                    .coerceIn(0f, 1f)
+                .coerceIn(0f, 1f)
 
-            count.text = itemView.context.getString(R.string.completion_count_format, item.count, item.expansion.totalCards.max(item.count))
+            count.text = itemView.context.getString(
+                R.string.completion_count_format,
+                item.count,
+                item.expansion.totalCards.max(item.count)
+            )
             completion.text = itemView.context.getString(R.string.completion_format,
-                    completionProgress.times(100f).roundToInt())
+                completionProgress.times(100f).roundToInt())
             progress.progress = completionProgress
         }
     }
@@ -110,12 +114,12 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
 
         @Suppress("UNCHECKED_CAST")
         fun create(
-                itemView: View,
-                layoutId: Int,
-                migrateClicks: Relay<Unit>,
-                dismissClicks: () -> Unit
+            itemView: View,
+            layoutId: Int,
+            migrateClicks: Relay<Unit>,
+            dismissClicks: () -> Unit
         ): UiViewHolder<Item> {
-            return when(ViewType.of(layoutId)) {
+            return when (ViewType.of(layoutId)) {
                 ViewType.MIGRATE -> MigrationViewHolder(itemView, migrateClicks, dismissClicks) as UiViewHolder<Item>
                 ViewType.SERIES -> ExpansionSeriesViewHolder(itemView) as UiViewHolder<Item>
                 ViewType.SET -> ExpansionSetViewHolder(itemView) as UiViewHolder<Item>

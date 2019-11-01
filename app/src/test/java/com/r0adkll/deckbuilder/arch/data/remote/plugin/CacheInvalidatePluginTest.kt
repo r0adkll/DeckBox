@@ -44,7 +44,8 @@ class CacheInvalidatePluginTest {
     @Test
     fun testInvalidateByMissingExpansion() {
         When calling remote.expansionVersion itReturns ExpansionVersion(1, "sm8")
-        When calling expansionDataSource.getExpansions(any()) itReturns Observable.just(EXPANSIONS.filter { it.code != "sm8" })
+        When calling expansionDataSource.getExpansions(any()) itReturns
+            Observable.just(EXPANSIONS.filter { it.code != "sm8" })
         When calling expansionDataSource.refreshExpansions() itReturns Observable.just(EXPANSIONS.toList())
         When calling preferences.expansionsVersion itReturns 1
         val plugin = CacheInvalidatePlugin(expansionDataSource, preferences, schedulers)

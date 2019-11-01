@@ -15,39 +15,38 @@ import javax.inject.Inject
 
 @FragmentScope
 class SearchPresenter @Inject constructor(
-        ui: SearchUi,
-        val intentions: SearchUi.Intentions,
-        val repository: CardRepository
+    ui: SearchUi,
+    val intentions: SearchUi.Intentions,
+    val repository: CardRepository
 ) : UiPresenter<State, Change>(ui) {
 
     override fun smashObservables(): Observable<Change> {
 
         val searchCards = intentions.searchCards()
-                .flatMap { getSearchCardsObservable(it) }
+            .flatMap { getSearchCardsObservable(it) }
 
         val filterChanges = intentions.filterUpdates()
-                .filter { it.first == SuperType.UNKNOWN }
-                .flatMap { (_, filter) ->
-                    getReSearchCardsObservable(filter)
-                }
+            .filter { it.first == SuperType.UNKNOWN }
+            .flatMap { (_, filter) ->
+                getReSearchCardsObservable(filter)
+            }
 
         return searchCards
-                .mergeWith(filterChanges)
+            .mergeWith(filterChanges)
     }
 
     private fun getReSearchCardsObservable(filter: Filter): Observable<Change> {
         if (ui.state.query.isBlank() && filter.isEmptyWithoutField) {
             return Observable.just(Change.FilterChanged(filter) as Change)
-        }
-        else {
+        } else {
             val query = ui.state.query
             return repository.search(filter.superType, query.replace(",", "|"), filter)
-                    .map { Change.ResultsLoaded(it) as Change }
-                    .startWith(listOf(
-                            Change.FilterChanged(filter) as Change,
-                            Change.IsLoading as Change
-                    ))
-                    .onErrorReturn(handleUnknownError)
+                .map { Change.ResultsLoaded(it) as Change }
+                .startWith(listOf(
+                    Change.FilterChanged(filter) as Change,
+                    Change.IsLoading as Change
+                ))
+                .onErrorReturn(handleUnknownError)
         }
     }
 
@@ -56,15 +55,14 @@ class SearchPresenter @Inject constructor(
         val filter = ui.state.filter
         return if (TextUtils.isEmpty(text) && filter.isEmptyWithoutField) {
             Observable.just(Change.ClearQuery as Change)
-        }
-        else {
+        } else {
             repository.search(filter.superType, text.replace(",", "|"), filter)
-                    .map { Change.ResultsLoaded(it) as Change }
-                    .startWith(listOf(
-                            Change.QuerySubmitted(text) as Change,
-                            Change.IsLoading as Change
-                    ))
-                    .onErrorReturn(handleUnknownError)
+                .map { Change.ResultsLoaded(it) as Change }
+                .startWith(listOf(
+                    Change.QuerySubmitted(text) as Change,
+                    Change.IsLoading as Change
+                ))
+                .onErrorReturn(handleUnknownError)
         }
     }
 

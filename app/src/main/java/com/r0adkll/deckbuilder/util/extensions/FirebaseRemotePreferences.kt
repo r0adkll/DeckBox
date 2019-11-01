@@ -18,7 +18,7 @@ interface FirebaseRemotePreferences {
     /**
      * Remote property class that fetches a long from the remote object
      */
-    class RemoteDouble(val key: String): ReadOnlyProperty<FirebaseRemotePreferences, Double> {
+    class RemoteDouble(val key: String) : ReadOnlyProperty<FirebaseRemotePreferences, Double> {
 
         override fun getValue(thisRef: FirebaseRemotePreferences, property: KProperty<*>): Double {
             return thisRef.remote.getDouble(key)
@@ -28,7 +28,7 @@ interface FirebaseRemotePreferences {
     /**
      * Remote property class that fetches a long from the remote object
      */
-    class RemoteBoolean(val key: String): ReadOnlyProperty<FirebaseRemotePreferences, Boolean> {
+    class RemoteBoolean(val key: String) : ReadOnlyProperty<FirebaseRemotePreferences, Boolean> {
 
         override fun getValue(thisRef: FirebaseRemotePreferences, property: KProperty<*>): Boolean {
             return thisRef.remote.getBoolean(key)
@@ -38,7 +38,7 @@ interface FirebaseRemotePreferences {
     /**
      * Remote property class that fetches a long from the remote object
      */
-    class RemoteLong(val key: String): ReadOnlyProperty<FirebaseRemotePreferences, Long> {
+    class RemoteLong(val key: String) : ReadOnlyProperty<FirebaseRemotePreferences, Long> {
 
         override fun getValue(thisRef: FirebaseRemotePreferences, property: KProperty<*>): Long {
             return thisRef.remote.getLong(key)
@@ -48,7 +48,7 @@ interface FirebaseRemotePreferences {
     /**
      * Remote property class that fetches a string from the remote object
      */
-    class RemoteString(val key: String): ReadOnlyProperty<FirebaseRemotePreferences, String> {
+    class RemoteString(val key: String) : ReadOnlyProperty<FirebaseRemotePreferences, String> {
 
         override fun getValue(thisRef: FirebaseRemotePreferences, property: KProperty<*>): String {
             return thisRef.remote.getString(key)
@@ -58,7 +58,10 @@ interface FirebaseRemotePreferences {
     /**
      * JSON based object property class for fetching and converting remote json objects
      */
-    class RemoteObject<out T : Any>(val key: String, private val clazz: KClass<out T>): ReadOnlyProperty<FirebaseRemotePreferences, T?> {
+    class RemoteObject<out T : Any>(
+        val key: String,
+        private val clazz: KClass<out T>
+    ) : ReadOnlyProperty<FirebaseRemotePreferences, T?> {
 
         private val gson = Gson()
 

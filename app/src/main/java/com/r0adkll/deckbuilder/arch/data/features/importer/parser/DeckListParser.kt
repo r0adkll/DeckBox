@@ -46,9 +46,8 @@ class DeckListParser {
     private fun parseName(line: String): String {
         val parts = line.trim().split(" ").toMutableList()
         val nameParts = parts
-                .drop(1) // Drop the card count
-                .dropLast(2) // Drop the set information
+            .drop(1) // Drop the card count
+            .dropLast(2) // Drop the set information
         return nameParts.joinToString(" ")
     }
-
 }

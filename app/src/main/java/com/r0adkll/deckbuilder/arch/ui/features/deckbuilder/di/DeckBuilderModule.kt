@@ -10,21 +10,25 @@ import dagger.Provides
 
 @Module
 class DeckBuilderModule(
-        val activity: DeckBuilderActivity
+    val activity: DeckBuilderActivity
 ) {
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideUi(): DeckBuilderUi = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideIntentions(): DeckBuilderUi.Intentions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideActions(): DeckBuilderUi.Actions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideRenderer(
-            actions: DeckBuilderUi.Actions,
-            schedulers: AppSchedulers
-    ) : DeckBuilderRenderer = DeckBuilderRenderer(actions, schedulers.main, schedulers.comp)
+        actions: DeckBuilderUi.Actions,
+        schedulers: AppSchedulers
+    ): DeckBuilderRenderer = DeckBuilderRenderer(actions, schedulers.main, schedulers.comp)
 }

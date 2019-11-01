@@ -6,9 +6,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Tournament(
-        val name: String,
-        val date: String,
-        val country: String,
-        val format: Format,
-        val playerCount: Int
-): Parcelable
+    val name: String,
+    val date: String,
+    val country: String,
+    val format: Format,
+    val playerCount: Int
+) : Parcelable

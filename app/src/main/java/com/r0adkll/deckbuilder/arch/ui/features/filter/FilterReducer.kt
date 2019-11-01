@@ -20,7 +20,7 @@ object FilterReducer {
     }
 
     fun reduceType(key: String, type: Type, filter: Filter): Filter {
-        return when(key) {
+        return when (key) {
             "type" -> filter.copy(types = filter.types.toggle(type))
             "weaknesses" -> filter.copy(weaknesses = filter.weaknesses.toggle(type))
             "resistances" -> filter.copy(resistances = filter.resistances.toggle(type))
@@ -28,7 +28,7 @@ object FilterReducer {
         }
     }
 
-    fun reduceAttribute(attribute: FilterAttribute, filter: Filter): Filter = when(attribute) {
+    fun reduceAttribute(attribute: FilterAttribute, filter: Filter): Filter = when (attribute) {
         is SuperTypeAttribute -> filter.copy(superType = filter.toggle(attribute.superType))
         is SubTypeAttribute -> filter.copy(subTypes = filter.subTypes.toggle(attribute.subType))
         is FilterAttribute.ContainsAttribute -> filter.copy(contains = filter.contains.toggle(attribute.attribute))
@@ -44,7 +44,7 @@ object FilterReducer {
     }
 
     fun reduceValueRange(key: String, value: String?, filter: Filter): Filter {
-        return when(key) {
+        return when (key) {
             "hp" -> filter.copy(hp = value)
             "attackCost" -> filter.copy(attackCost = value)
             "attackDamage" -> filter.copy(attackDamage = value)
@@ -62,15 +62,15 @@ object FilterReducer {
     }
 
     private fun Filter.toggle(value: SuperType): SuperType? =
-            if (this.superType == value) null else value
+        if (this.superType == value) null else value
 
     private fun Filter.toggle(expansions: List<Expansion>, format: Format): Filter {
         val isStandardSelected = this.expansions.containsAll(expansions.standard())
         val isExpandedSelected = this.expansions.containsAll(expansions.expanded())
 
-        return when(format) {
-            Format.STANDARD -> if ((!isStandardSelected && !isExpandedSelected) || (isStandardSelected && isExpandedSelected)) {
-                // Select only standard expansions
+        return when (format) {
+            Format.STANDARD -> if ((!isStandardSelected && !isExpandedSelected) ||
+                (isStandardSelected && isExpandedSelected)) {
                 this.copy(expansions = expansions.standard())
             } else if (isStandardSelected && !isExpandedSelected) {
                 this.copy(expansions = emptyList())

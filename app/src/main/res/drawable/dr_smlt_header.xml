@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/black" />
-    <item >
+    <item>
         <bitmap
             android:src="@drawable/dr_lt_background_tile"
             android:tileModeX="repeat"
@@ -9,9 +10,10 @@
             android:alpha=".50"
             />
     </item>
-    <item android:height="128dp"
-        android:top="56dp">
-        <bitmap android:src="@drawable/dr_smlt_foreground"
-            />
+    <item
+        android:height="128dp"
+        android:top="56dp"
+        >
+        <bitmap android:src="@drawable/dr_smlt_foreground" />
     </item>
 </layer-list>

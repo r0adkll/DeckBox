@@ -8,12 +8,16 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
 
 class DividerSpacerItemDecoration(
-        private val height: Float = -1f,
-        private val drawFirst: Boolean = false
+    private val height: Float = -1f,
+    private val drawFirst: Boolean = false
 ) : ItemDecoration() {
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
-                                state: State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: State
+    ) {
         super.getItemOffsets(outRect, view, parent, state)
         if (height == -1f) {
             return
@@ -37,7 +41,7 @@ class DividerSpacerItemDecoration(
             return layoutManager!!.orientation
         } else {
             throw IllegalStateException(
-                    "DividerItemDecoration can only be used with a LinearLayoutManager.")
+                "DividerItemDecoration can only be used with a LinearLayoutManager.")
         }
     }
 }

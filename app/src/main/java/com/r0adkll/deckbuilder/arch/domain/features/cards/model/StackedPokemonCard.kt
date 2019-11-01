@@ -5,10 +5,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class StackedPokemonCard(
-        val card: PokemonCard,
-        val count: Int,
-        val collection: Int? = null
-): Parcelable {
+    val card: PokemonCard,
+    val count: Int,
+    val collection: Int? = null
+) : Parcelable {
 
     override fun equals(other: Any?): Boolean {
         if (this !== other) {

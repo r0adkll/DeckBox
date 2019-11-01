@@ -17,7 +17,9 @@ import com.ftinc.kit.extensions.sp
 import com.r0adkll.deckbuilder.R
 
 class TestResultProgressView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     var percentage: Float = 0f
@@ -57,7 +59,11 @@ class TestResultProgressView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val offset = (if (isMulligan) mulliganText.width.toFloat() else (defaultHeight / PokemonCardView.RATIO)) + percentWidth
+        val offset = (if (isMulligan) {
+            mulliganText.width.toFloat()
+        } else {
+            (defaultHeight / PokemonCardView.RATIO)
+        }) + percentWidth
 
         val workingWidth = measuredWidth - offset - (cardRadius * 2f)
         val workingPercent = percentage / maxPercentage

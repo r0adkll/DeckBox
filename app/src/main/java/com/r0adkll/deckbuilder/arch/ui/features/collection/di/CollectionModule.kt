@@ -12,19 +12,23 @@ import dagger.Provides
 @Module
 class CollectionModule(val fragment: CollectionFragment) {
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideUi(): CollectionUi = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideIntentions(): CollectionUi.Intentions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideActions(): CollectionUi.Actions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideRenderer(
-            actions: CollectionUi.Actions,
-            schedulers: AppSchedulers,
-            controller: CollectionProgressController
+        actions: CollectionUi.Actions,
+        schedulers: AppSchedulers,
+        controller: CollectionProgressController
     ): CollectionRenderer = CollectionRenderer(actions, schedulers, controller)
 }

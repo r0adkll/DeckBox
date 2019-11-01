@@ -12,10 +12,10 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.EvolutionChainView
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class OverviewViewHolder(
-        itemView: View,
-        private val cardClicks: Relay<PokemonCardView>,
-        private val editCardIntentions: EditCardIntentions
-) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    itemView: View,
+    private val cardClicks: Relay<PokemonCardView>,
+    private val editCardIntentions: EditCardIntentions
+) : RecyclerView.ViewHolder(itemView) {
 
     private val chainView = itemView as EvolutionChainView
 
@@ -33,11 +33,17 @@ class OverviewViewHolder(
 
     companion object {
 
-        fun create(inflater: LayoutInflater,
-                   parent: ViewGroup,
-                   cardClicks: Relay<PokemonCardView>,
-                   editCardIntentions: EditCardIntentions): OverviewViewHolder {
-            return OverviewViewHolder(inflater.inflate(R.layout.item_overview, parent, false), cardClicks, editCardIntentions)
+        fun create(
+            inflater: LayoutInflater,
+            parent: ViewGroup,
+            cardClicks: Relay<PokemonCardView>,
+            editCardIntentions: EditCardIntentions
+        ): OverviewViewHolder {
+            return OverviewViewHolder(
+                inflater.inflate(R.layout.item_overview, parent, false),
+                cardClicks,
+                editCardIntentions
+            )
         }
     }
 }

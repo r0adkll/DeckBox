@@ -40,9 +40,9 @@ import javax.inject.Inject
 import com.evernote.android.state.State as SaveState
 
 class TournamentExportFragment : BaseFragment(),
-        TournamentExportUi,
-        TournamentExportUi.Intentions,
-        TournamentExportUi.Actions {
+    TournamentExportUi,
+    TournamentExportUi.Intentions,
+    TournamentExportUi.Actions {
 
     @SaveState override var state: State = State.DEFAULT
 
@@ -65,37 +65,37 @@ class TournamentExportFragment : BaseFragment(),
 
         // Prepopulate state
         state = state.copy(
-                playerName = preferences.playerName.get(),
-                playerId = preferences.playerId.get(),
-                dob = preferences.playerDOB.get(),
-                ageDivision = preferences.playerAgeDivision.get()
+            playerName = preferences.playerName.get(),
+            playerId = preferences.playerId.get(),
+            dob = preferences.playerDOB.get(),
+            ageDivision = preferences.playerAgeDivision.get()
         )
 
         disposables += inputDateOfBirthLayout.clicks()
-                .subscribe {
-                    val currentDob = state.dob ?: Date()
-                    val cal = currentDob.toCalendar()
+            .subscribe {
+                val currentDob = state.dob ?: Date()
+                val cal = currentDob.toCalendar()
 
-                    DatePickerDialog(activity!!, { _, year, month, dayOfMonth ->
-                        val pickedDate = Calendar.getInstance().setDate(year, month, dayOfMonth)
-                        dateOfBirthChanges.accept(pickedDate.time)
-                    }, cal[Calendar.YEAR], cal[Calendar.MONTH], cal[Calendar.DAY_OF_MONTH]).show()
-                }
+                DatePickerDialog(activity!!, { _, year, month, dayOfMonth ->
+                    val pickedDate = Calendar.getInstance().setDate(year, month, dayOfMonth)
+                    dateOfBirthChanges.accept(pickedDate.time)
+                }, cal[Calendar.YEAR], cal[Calendar.MONTH], cal[Calendar.DAY_OF_MONTH]).show()
+            }
 
         disposables += actionExport.clicks()
-                .subscribe { _ ->
-                    Analytics.event(Event.SelectContent.Action("tournament_export"))
-                    val playerInfo = state.toPlayerInfo()
+            .subscribe { _ ->
+                Analytics.event(Event.SelectContent.Action("tournament_export"))
+                val playerInfo = state.toPlayerInfo()
 
-                    disposables += exporter.export(activity!!, exportTask, playerInfo)
-                            .subscribe({
-                                val intent = PdfPreviewActivity.createIntent(activity!!, it)
-                                startActivity(intent)
-                            }, { t ->
-                                Timber.e(t)
-                                snackbar("Error exporting your deck")
-                            })
-                }
+                disposables += exporter.export(activity!!, exportTask, playerInfo)
+                    .subscribe({
+                        val intent = PdfPreviewActivity.createIntent(activity!!, it)
+                        startActivity(intent)
+                    }, { t ->
+                        Timber.e(t)
+                        snackbar("Error exporting your deck")
+                    })
+            }
 
         optionAgeDivisionJunior.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.JUNIOR)
         optionAgeDivisionSenior.text = AgeDivisionUtils.divisionLabel(requireContext(), AgeDivision.SENIOR)
@@ -104,8 +104,8 @@ class TournamentExportFragment : BaseFragment(),
 
     override fun setupComponent() {
         getComponent(MultiExportComponent::class)
-                .plus(TournamentExportModule(this))
-                .inject(this)
+            .plus(TournamentExportModule(this))
+            .inject(this)
 
         delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
@@ -118,14 +118,14 @@ class TournamentExportFragment : BaseFragment(),
 
     override fun playerNameChanged(): Observable<String> {
         return inputPlayerName.textChanges()
-                .map { it.toString() }
-                .uiDebounce()
+            .map { it.toString() }
+            .uiDebounce()
     }
 
     override fun playerIdChanged(): Observable<String> {
         return inputPlayerId.textChanges()
-                .map { it.toString() }
-                .uiDebounce()
+            .map { it.toString() }
+            .uiDebounce()
     }
 
     override fun dateOfBirthChanged(): Observable<Date> {
@@ -134,19 +134,23 @@ class TournamentExportFragment : BaseFragment(),
 
     override fun ageDivisionChanged(): Observable<AgeDivision> {
         return optionsAgeDivision.checkedChanges()
-                .map { when(it) {
+            .map {
+                when (it) {
                     R.id.optionAgeDivisionJunior -> AgeDivision.JUNIOR
                     R.id.optionAgeDivisionSenior -> AgeDivision.SENIOR
                     else -> AgeDivision.MASTERS
-                } }
+                }
+            }
     }
 
     override fun formatChanged(): Observable<Format> {
         return optionsFormat.checkedChanges().skipInitialValue()
-                .map { when(it) {
+            .map {
+                when (it) {
                     R.id.optionFormatStandard -> Format.STANDARD
                     else -> Format.EXPANDED
-                } }
+                }
+            }
     }
 
     override fun setPlayerName(name: String?) {
@@ -166,7 +170,7 @@ class TournamentExportFragment : BaseFragment(),
     }
 
     override fun setAgeDivision(ageDivision: AgeDivision?) {
-        optionsAgeDivision.check(when(ageDivision) {
+        optionsAgeDivision.check(when (ageDivision) {
             AgeDivision.JUNIOR -> R.id.optionAgeDivisionJunior
             AgeDivision.SENIOR -> R.id.optionAgeDivisionSenior
             AgeDivision.MASTERS -> R.id.optionAgeDivisionMasters
@@ -175,7 +179,7 @@ class TournamentExportFragment : BaseFragment(),
     }
 
     override fun setFormat(format: Format?) {
-        optionsFormat.check(when(format) {
+        optionsFormat.check(when (format) {
             Format.STANDARD -> R.id.optionFormatStandard
             Format.EXPANDED -> R.id.optionFormatExpanded
             null -> -1

@@ -104,7 +104,7 @@ ext {
     bottombar_version = '2.3.1'
     butterknife_version = '8.8.1'
     canvas_version = '1.0.2'
-    ftkit_version = '2.0.5'
+    ftkit_version = '2.0.6'
     leakcanary_version = '1.5.1'
     play_version = '15.0.0'
     poketcg_version = '1.0.19'

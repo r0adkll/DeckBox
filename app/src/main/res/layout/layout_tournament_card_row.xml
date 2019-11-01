@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:showIn="@layout/layout_tournament_pdf">
+    tools:showIn="@layout/layout_tournament_pdf"
+    >
 
     <TextView
         android:id="@+id/quantity"
@@ -16,7 +18,8 @@
         android:minHeight="24dp"
         android:textColor="@color/black"
 
-        tools:text="4" />
+        tools:text="4"
+        />
 
     <TextView
         android:id="@+id/name"
@@ -36,7 +39,8 @@
         android:paddingEnd="8dp"
         android:textColor="@color/black"
 
-        tools:text="Decidueye-GX\nDecidueye-GX" />
+        tools:text="Decidueye-GX\nDecidueye-GX"
+        />
 
     <TextView
         android:id="@+id/setCode"
@@ -52,7 +56,8 @@
         android:paddingEnd="8dp"
         android:textColor="@color/black"
 
-        tools:text="SUM" />
+        tools:text="SUM"
+        />
 
     <TextView
         android:id="@+id/setNumber"
@@ -68,6 +73,7 @@
         android:paddingEnd="8dp"
         android:textColor="@color/black"
 
-        tools:text="151" />
+        tools:text="151"
+        />
 
 </TableRow>

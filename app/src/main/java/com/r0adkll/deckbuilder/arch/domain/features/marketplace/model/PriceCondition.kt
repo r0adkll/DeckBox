@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PriceCondition(
-        val id: Int,
-        val name: String,
-        val abbreviation: String
-): Parcelable
+    val id: Int,
+    val name: String,
+    val abbreviation: String
+) : Parcelable

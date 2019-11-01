@@ -9,29 +9,29 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DeckImagePresenter @Inject constructor(
-        ui: DeckImageUi,
-        val intentions: DeckImageUi.Intentions,
-        val repository: EditRepository
+    ui: DeckImageUi,
+    val intentions: DeckImageUi.Intentions,
+    val repository: EditRepository
 ) : UiPresenter<State, Change>(ui) {
 
     override fun smashObservables(): Observable<Change> {
 
         val loadImages = repository.getSession(ui.state.sessionId)
-                .map { Change.CardsLoaded(it.cards) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { Change.CardsLoaded(it.cards) as Change }
+            .onErrorReturn(handleUnknownError)
 
         val deckImageClicks = intentions.pickedDeckImage
-                .map { Change.ImageSelected(it) as Change }
+            .map { Change.ImageSelected(it) as Change }
 
         val deckImageSelected = intentions.selectDeckImageClicks
-                .flatMap {
-                    repository.changeDeckImage(ui.state.sessionId, ui.state.selectedDeckImage!!)
-                            .map { Change.ImageSaved as Change }
-                }
+            .flatMap {
+                repository.changeDeckImage(ui.state.sessionId, ui.state.selectedDeckImage!!)
+                    .map { Change.ImageSaved as Change }
+            }
 
         return loadImages
-                .mergeWith(deckImageClicks)
-                .mergeWith(deckImageSelected)
+            .mergeWith(deckImageClicks)
+            .mergeWith(deckImageSelected)
     }
 
     companion object {

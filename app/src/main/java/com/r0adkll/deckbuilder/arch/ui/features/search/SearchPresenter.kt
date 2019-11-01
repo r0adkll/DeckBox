@@ -18,58 +18,58 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class SearchPresenter @Inject constructor(
-        ui: SearchUi,
-        val intentions: SearchUi.Intentions,
-        val repository: CardRepository,
-        val editor: EditRepository
+    ui: SearchUi,
+    val intentions: SearchUi.Intentions,
+    val repository: CardRepository,
+    val editor: EditRepository
 ) : UiPresenter<State, Change>(ui) {
 
     override fun smashObservables(): Observable<Change> {
 
         disposables += intentions.selectCard()
-                .sessionMap(ui.state.sessionId) { editor.addCards(ui.state.sessionId, listOf(it), ui.state.id) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Card added to search session")
-                }, { Timber.e(it, "Error adding card to search session")})
+            .sessionMap(ui.state.sessionId) { editor.addCards(ui.state.sessionId, listOf(it), ui.state.id) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Card added to search session")
+            }, { Timber.e(it, "Error adding card to search session") })
 
         disposables += intentions.removeCard()
-                .sessionMap(ui.state.sessionId) { editor.removeCard(ui.state.sessionId, it, ui.state.id) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Card removed from search session")
-                }, { Timber.e(it, "Error removing card from search session") })
+            .sessionMap(ui.state.sessionId) { editor.removeCard(ui.state.sessionId, it, ui.state.id) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Card removed from search session")
+            }, { Timber.e(it, "Error removing card from search session") })
 
         disposables += intentions.clearSelection()
-                .sessionMap(ui.state.sessionId) { editor.clearSearchSession(ui.state.sessionId, ui.state.id) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Search session cleared.")
-                }, { Timber.e(it, "Error clearing search session") })
+            .sessionMap(ui.state.sessionId) { editor.clearSearchSession(ui.state.sessionId, ui.state.id) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Search session cleared.")
+            }, { Timber.e(it, "Error clearing search session") })
 
         val observeSession = if (ui.state.sessionId != Session.NO_ID) {
             editor.observeSession(ui.state.sessionId)
-                    .map { Change.SessionUpdated(it) as Change }
-                    .onErrorReturn(handleUnknownError(SuperType.UNKNOWN))
+                .map { Change.SessionUpdated(it) as Change }
+                .onErrorReturn(handleUnknownError(SuperType.UNKNOWN))
         } else {
             Observable.empty()
         }
 
         val searchCards = intentions.searchCards()
-                .flatMap { getSearchCardsObservable(ui.state.category, it) }
+            .flatMap { getSearchCardsObservable(ui.state.category, it) }
 
         val switchCategories = intentions.switchCategories()
-                .map { Change.CategorySwitched(it) as Change }
+            .map { Change.CategorySwitched(it) as Change }
 
         val filterChanges = intentions.filterUpdates()
-                .flatMap { (category, filter) ->
-                    getReSearchCardsObservable(category, filter)
-                }
+            .flatMap { (category, filter) ->
+                getReSearchCardsObservable(category, filter)
+            }
 
         return observeSession
-                .mergeWith(searchCards)
-                .mergeWith(switchCategories)
-                .mergeWith(filterChanges)
+            .mergeWith(searchCards)
+            .mergeWith(switchCategories)
+            .mergeWith(filterChanges)
     }
 
     /**
@@ -89,16 +89,15 @@ class SearchPresenter @Inject constructor(
         val result = ui.state.results[category]
         return if (result?.query.isNullOrBlank() && filter.isEmptyWithoutField) {
             Observable.just(Change.FilterChanged(category, filter) as Change)
-        }
-        else {
+        } else {
             val query = result?.query ?: ""
             repository.search(category, query.replace(",", "|"), filter)
-                    .map { Change.ResultsLoaded(category, it) as Change }
-                    .startWith(listOf(
-                            Change.FilterChanged(category, filter) as Change,
-                            Change.IsLoading(category) as Change
-                    ))
-                    .onErrorReturn(handleUnknownError(category))
+                .map { Change.ResultsLoaded(category, it) as Change }
+                .startWith(listOf(
+                    Change.FilterChanged(category, filter) as Change,
+                    Change.IsLoading(category) as Change
+                ))
+                .onErrorReturn(handleUnknownError(category))
         }
     }
 
@@ -107,15 +106,14 @@ class SearchPresenter @Inject constructor(
         val filter = ui.state.current()?.filter
         return if (TextUtils.isEmpty(text) && filter?.isEmptyWithoutField != false) {
             Observable.just(Change.ClearQuery(category) as Change)
-        }
-        else {
+        } else {
             repository.search(ui.state.category, text.replace(",", "|"), filter)
-                    .map { Change.ResultsLoaded(category, it) as Change }
-                    .startWith(listOf(
-                            Change.QuerySubmitted(category, text) as Change,
-                            Change.IsLoading(category) as Change
-                    ))
-                    .onErrorReturn(handleUnknownError(category))
+                .map { Change.ResultsLoaded(category, it) as Change }
+                .startWith(listOf(
+                    Change.QuerySubmitted(category, text) as Change,
+                    Change.IsLoading(category) as Change
+                ))
+                .onErrorReturn(handleUnknownError(category))
         }
     }
 

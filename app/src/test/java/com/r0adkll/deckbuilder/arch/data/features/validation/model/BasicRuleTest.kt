@@ -11,9 +11,9 @@ class BasicRuleTest {
     @Test
     fun shouldPassBasicRule() {
         val cards = listOf(
-                createPokemonCard(),
-                createPokemonCard().copy(subtype = GX),
-                createPokemonCard().copy(subtype = GX, evolvesFrom = "Squirtle")
+            createPokemonCard(),
+            createPokemonCard().copy(subtype = GX),
+            createPokemonCard().copy(subtype = GX, evolvesFrom = "Squirtle")
         )
         val rule = BasicRule()
 
@@ -25,9 +25,9 @@ class BasicRuleTest {
     @Test
     fun shouldFailBasicRule() {
         val cards = listOf(
-                createPokemonCard().copy(evolvesFrom = "Charmander"),
-                createPokemonCard().copy(evolvesFrom = "Charizard"),
-                createPokemonCard().copy(evolvesFrom = "Piplup")
+            createPokemonCard().copy(evolvesFrom = "Charmander"),
+            createPokemonCard().copy(evolvesFrom = "Charizard"),
+            createPokemonCard().copy(evolvesFrom = "Piplup")
         )
         val rule = BasicRule()
 

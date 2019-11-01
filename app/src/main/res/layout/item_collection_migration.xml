@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="4dp"
-    app:cardCornerRadius="@dimen/card_radius">
+    app:cardCornerRadius="@dimen/card_radius"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,7 +43,8 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical|start"
             android:visibility="gone"
-            tools:visibility="visible">
+            tools:visibility="visible"
+            >
 
             <ProgressBar
                 android:layout_width="wrap_content"

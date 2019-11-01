@@ -27,14 +27,14 @@ interface BrowseUi : Ui<BrowseUi.State, BrowseUi.State.Change> {
 
     @Parcelize
     data class State(
-            override val isLoading: Boolean,
-            override val error: String?,
-            val expansions: List<Expansion>,
-            val offlineStatus: OfflineStatus?,
-            val offlineOutline: Boolean
+        override val isLoading: Boolean,
+        override val error: String?,
+        val expansions: List<Expansion>,
+        val offlineStatus: OfflineStatus?,
+        val offlineOutline: Boolean
     ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
-        override fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when (change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.ExpansionsLoaded -> this.copy(expansions = change.expansions, isLoading = false)
@@ -45,13 +45,16 @@ interface BrowseUi : Ui<BrowseUi.State, BrowseUi.State.Change> {
         sealed class Change(logText: String) : Ui.State.Change(logText) {
             object IsLoading : Change("network -> loading expansions")
             class Error(val description: String) : Change("error -> $description")
-            class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions(${expansions.size}) loaded")
+            class ExpansionsLoaded(
+                val expansions: List<Expansion>
+            ) : Change("network -> expansions(${expansions.size}) loaded")
             class OfflineStatusUpdated(val status: OfflineStatus) : Change("disk -> offline status($status)")
-            class OfflineOutline(val enabled: Boolean): Change("user -> offline outline($enabled)")
+            class OfflineOutline(val enabled: Boolean) : Change("user -> offline outline($enabled)")
         }
 
         override fun toString(): String {
-            return "State(isLoading=$isLoading, error=$error, expansions=${expansions.map { it.code }}, offlineStats=$offlineStatus, offlineOutline=$offlineOutline)"
+            return "State(isLoading=$isLoading, error=$error, expansions=${expansions.map { it.code }}, " +
+                "offlineStats=$offlineStatus, offlineOutline=$offlineOutline)"
         }
 
         companion object {
@@ -61,5 +64,4 @@ interface BrowseUi : Ui<BrowseUi.State, BrowseUi.State.Change> {
             }
         }
     }
-
 }

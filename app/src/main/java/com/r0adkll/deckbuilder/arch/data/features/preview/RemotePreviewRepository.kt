@@ -9,24 +9,24 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class RemotePreviewRepository @Inject constructor(
-        val remote: Remote,
-        val preferences: AppPreferences
+    val remote: Remote,
+    val preferences: AppPreferences
 ) : PreviewRepository {
 
     override fun getExpansionPreview(): Observable<ExpansionPreview> {
         return preferences.previewVersion
-                .asObservable()
-                .map { version ->
-                    val preview = remote.expansionPreview
-                    if (preview != null && // If preview exists
-                            preview.version > version && // If we haven't dismissed this version
-                            preview.expiresAt.iso8601() > System.currentTimeMillis()) { // If the preview hasn't expired
-                        preview
-                    } else {
-                        // Throw an exception if preview is null or stale. The UI should handle this case
-                        throw NullPointerException()
-                    }
+            .asObservable()
+            .map { version ->
+                val preview = remote.expansionPreview
+                if (preview != null && // If preview exists
+                    preview.version > version && // If we haven't dismissed this version
+                    preview.expiresAt.iso8601() > System.currentTimeMillis()) { // If the preview hasn't expired
+                    preview
+                } else {
+                    // Throw an exception if preview is null or stale. The UI should handle this case
+                    throw NullPointerException()
                 }
+            }
     }
 
     override fun dismissPreview() {

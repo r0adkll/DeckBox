@@ -13,76 +13,76 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class DefaultDeckTester @Inject constructor(
-        val deckRepository: DeckRepository,
-        val editRepository: EditRepository,
-        val validator: DeckValidator
-): DeckTester {
+    val deckRepository: DeckRepository,
+    val editRepository: EditRepository,
+    val validator: DeckValidator
+) : DeckTester {
 
     override fun testSession(sessionId: Long, iterations: Int): Observable<TestResults> {
         return editRepository.getSession(sessionId)
-                .flatMap { session ->
-                    validator.validate(session.cards)
-                            .map {
-                                if (it.isValid) {
-                                    test(session.cards, iterations)
-                                } else {
-                                    throw InvalidDeckException()
-                                }
-                            }
-                }
+            .flatMap { session ->
+                validator.validate(session.cards)
+                    .map {
+                        if (it.isValid) {
+                            test(session.cards, iterations)
+                        } else {
+                            throw InvalidDeckException()
+                        }
+                    }
+            }
     }
 
     override fun testDeck(deck: Deck, iterations: Int): Observable<TestResults> {
         return validator.validate(deck.cards)
-                .map {
-                    if (it.isValid) {
-                        test(deck.cards, iterations)
-                    } else {
-                        throw InvalidDeckException()
-                    }
+            .map {
+                if (it.isValid) {
+                    test(deck.cards, iterations)
+                } else {
+                    throw InvalidDeckException()
                 }
+            }
     }
 
     override fun testDeckById(deckId: String, iterations: Int): Observable<TestResults> {
         return deckRepository.getDeck(deckId)
-                .flatMap { deck ->
-                    validator.validate(deck.cards)
-                            .map {
-                                if (it.isValid) {
-                                    test(deck.cards, iterations)
-                                } else {
-                                    throw InvalidDeckException()
-                                }
-                            }
-                }
+            .flatMap { deck ->
+                validator.validate(deck.cards)
+                    .map {
+                        if (it.isValid) {
+                            test(deck.cards, iterations)
+                        } else {
+                            throw InvalidDeckException()
+                        }
+                    }
+            }
     }
 
     override fun testHand(sessionId: Long, iterations: Int): Observable<List<PokemonCard>> {
         return editRepository.getSession(sessionId)
-                .flatMap { session ->
-                    validator.validate(session.cards)
-                            .map {
-                                if (it.isValid) {
-                                    deal(session.cards, iterations)
-                                } else {
-                                    throw InvalidDeckException()
-                                }
-                            }
-                }
+            .flatMap { session ->
+                validator.validate(session.cards)
+                    .map {
+                        if (it.isValid) {
+                            deal(session.cards, iterations)
+                        } else {
+                            throw InvalidDeckException()
+                        }
+                    }
+            }
     }
 
     override fun testHandById(deckId: String, iterations: Int): Observable<List<PokemonCard>> {
         return deckRepository.getDeck(deckId)
-                .flatMap { deck ->
-                    validator.validate(deck.cards)
-                            .map {
-                                if (it.isValid) {
-                                    deal(deck.cards, iterations)
-                                } else {
-                                    throw InvalidDeckException()
-                                }
-                            }
-                }
+            .flatMap { deck ->
+                validator.validate(deck.cards)
+                    .map {
+                        if (it.isValid) {
+                            deal(deck.cards, iterations)
+                        } else {
+                            throw InvalidDeckException()
+                        }
+                    }
+            }
     }
 
     private fun deal(cards: List<PokemonCard>, iterations: Int): List<PokemonCard> {

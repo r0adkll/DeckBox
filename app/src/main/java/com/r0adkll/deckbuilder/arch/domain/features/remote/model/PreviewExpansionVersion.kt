@@ -6,6 +6,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.remote.model
  * @param expansionCode the expansion code (i.e. sm12) of the expansion to download and check against
  */
 data class PreviewExpansionVersion(
-        val version: Int,
-        val expansionCode: String
+    val version: Int,
+    val expansionCode: String
 )

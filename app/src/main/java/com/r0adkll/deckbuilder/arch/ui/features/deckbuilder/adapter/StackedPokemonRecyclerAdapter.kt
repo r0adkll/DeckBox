@@ -17,10 +17,10 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.notifyingField
 
 class StackedPokemonRecyclerAdapter(
-        context: Context,
-        val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create(),
-        val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
-        var itemViewClickListener: (View, StackedPokemonCard) -> Unit = { _, _ -> }
+    context: Context,
+    val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create(),
+    val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
+    var itemViewClickListener: (View, StackedPokemonCard) -> Unit = { _, _ -> }
 ) : EmptyViewListAdapter<StackedPokemonCard, PokemonCardViewHolder>(StackedPokemonCardItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)
@@ -34,17 +34,17 @@ class StackedPokemonRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
         return PokemonCardViewHolder.create(inflater, parent, false,
-                addCardClicks = addCardClicks, removeCardClicks = removeCardClicks)
+            addCardClicks = addCardClicks, removeCardClicks = removeCardClicks)
     }
 
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         val card = getItem(i)
         vh.bind(
-                card.card,
-                card.count,
-                isEditMode = isEditing,
-                isCollectionMode = isCollectionEnabled,
-                collectionCount = card.collection ?: 0
+            card.card,
+            card.count,
+            isEditMode = isEditing,
+            isCollectionMode = isCollectionEnabled,
+            collectionCount = card.collection ?: 0
         )
         vh.itemView.setOnLongClickListener { v ->
             val c = v.findViewById<PokemonCardView>(R.id.card)

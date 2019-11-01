@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PriceRarity(
-        val id: Int,
-        val key: String,
-        val name: String
-): Parcelable
+    val id: Int,
+    val key: String,
+    val name: String
+) : Parcelable

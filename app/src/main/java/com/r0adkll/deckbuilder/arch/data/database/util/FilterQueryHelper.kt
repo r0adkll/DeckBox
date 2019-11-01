@@ -28,11 +28,11 @@ object FilterQueryHelper {
                 SearchField.ABILITY_TEXT -> statement.where("ability_text" like "%$query%")
                 SearchField.ATTACK_TEXT -> {
                     statement.join("attacks").on("attacks.cardId" eq "cards.id")
-                            .where("attacks.text" like "%$query%")
+                        .where("attacks.text" like "%$query%")
                 }
                 SearchField.ATTACK_NAME -> {
                     statement.join("attacks").on("attacks.cardId" eq "cards.id")
-                            .where("attacks.name" like "%$query%")
+                        .where("attacks.name" like "%$query%")
                 }
             }
         } else {
@@ -56,7 +56,8 @@ object FilterQueryHelper {
             if (filter.subTypes.size == 1) {
                 filterQuery = filterQuery.and("subType" eq filter.subTypes[0].displayName)
             } else if (filter.subTypes.size > 1) {
-                var condition = ("subType" eq filter.subTypes[0].displayName) or ("subType" eq filter.subTypes[1].displayName)
+                var condition = ("subType" eq filter.subTypes[0].displayName) or
+                    ("subType" eq filter.subTypes[1].displayName)
                 if (filter.subTypes.size > 2) {
                     (2 until filter.subTypes.size).forEach {
                         val subType = filter.subTypes[it]
@@ -95,7 +96,7 @@ object FilterQueryHelper {
         // Adjust query for retreatCost
         filter?.retreatCost?.let {
             val value = FilterSpec.Spec.ValueRangeSpec.parseValue(it)
-            filterQuery = when(value.modifier) {
+            filterQuery = when (value.modifier) {
                 Item.ValueRange.Modifier.GREATER_THAN -> filterQuery.and("retreatCost" gt value.value)
                 Item.ValueRange.Modifier.GREATER_THAN_EQUALS -> filterQuery.and("retreatCost" gte value.value)
                 Item.ValueRange.Modifier.LESS_THAN -> filterQuery.and("retreatCost" lt value.value)
@@ -107,7 +108,7 @@ object FilterQueryHelper {
         // Adjust query for attackCost
         filter?.hp?.let {
             val value = FilterSpec.Spec.ValueRangeSpec.parseValue(it)
-            filterQuery = when(value.modifier) {
+            filterQuery = when (value.modifier) {
                 Item.ValueRange.Modifier.GREATER_THAN -> filterQuery.and("hp" gt value.value)
                 Item.ValueRange.Modifier.GREATER_THAN_EQUALS -> filterQuery.and("hp" gte value.value)
                 Item.ValueRange.Modifier.LESS_THAN -> filterQuery.and("hp" lt value.value)

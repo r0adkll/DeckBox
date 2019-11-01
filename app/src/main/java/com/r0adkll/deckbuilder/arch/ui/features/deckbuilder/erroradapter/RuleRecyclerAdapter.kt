@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.r0adkll.deckbuilder.R
 
 class RuleRecyclerAdapter(
-        context: Context
+    context: Context
 ) : ListAdapter<Int, RuleRecyclerAdapter.RuleViewHolder>(ITEM_CALLBACK) {
 
     private val inflater = LayoutInflater.from(context)

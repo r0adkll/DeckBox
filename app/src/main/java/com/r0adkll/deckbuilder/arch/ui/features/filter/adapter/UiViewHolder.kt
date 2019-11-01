@@ -65,8 +65,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
      * Recycler UI Item for [Item.Field]
      */
     class FieldViewHolder(
-            itemView: View,
-            private val fieldChanges: Relay<SearchField>
+        itemView: View,
+        private val fieldChanges: Relay<SearchField>
     ) : UiViewHolder<Item.Field>(itemView) {
 
         val spinner: Spinner by bindView(R.id.search_field)
@@ -87,22 +87,22 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
      * Recycler UI Item for [Item.Type]
      */
     class TypeViewHolder(
-            itemView: View,
-            private val typeClicks: Relay<Pair<String, io.pokemontcg.model.Type>>
+        itemView: View,
+        private val typeClicks: Relay<Pair<String, io.pokemontcg.model.Type>>
     ) : UiViewHolder<Item.Type>(itemView) {
 
         private val types: List<PokemonTypeView> by bindViews(
-                R.id.type_colorless,
-                R.id.type_fire,
-                R.id.type_grass,
-                R.id.type_water,
-                R.id.type_electric,
-                R.id.type_fighting,
-                R.id.type_psychic,
-                R.id.type_steel,
-                R.id.type_dragon,
-                R.id.type_fairy,
-                R.id.type_dark
+            R.id.type_colorless,
+            R.id.type_fire,
+            R.id.type_grass,
+            R.id.type_water,
+            R.id.type_electric,
+            R.id.type_fighting,
+            R.id.type_psychic,
+            R.id.type_steel,
+            R.id.type_dragon,
+            R.id.type_fairy,
+            R.id.type_dark
         )
 
         override fun bind(item: Item.Type) {
@@ -118,7 +118,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
         }
 
         private fun selectType(type: Type) {
-            types.find { it.type == type}?.checked = true
+            types.find { it.type == type }?.checked = true
         }
     }
 
@@ -126,8 +126,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
      * Recycler UI Item for [Item.Attribute]
      */
     class AttributesViewHolder(
-            itemView: View,
-            private val attributeClicks: Relay<FilterAttribute>
+        itemView: View,
+        private val attributeClicks: Relay<FilterAttribute>
     ) : UiViewHolder<Item.Attribute>(itemView) {
 
         private val inflater: LayoutInflater = LayoutInflater.from(itemView.context)
@@ -138,7 +138,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             item.attributes.forEach { attr ->
                 val isChecked = item.selected.contains(attr)
                 val view = inflater.inflate(R.layout.item_attribute, container, false) as CheckedTextView
-                view.text = when(attr) {
+                view.text = when (attr) {
                     is FilterAttribute.SuperTypeAttribute -> attr.superType.displayName
                     is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
                     is FilterAttribute.ContainsAttribute -> attr.attribute
@@ -160,8 +160,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
      * Recycler UI Item for [Item.Option]
      */
     class OptionViewHolder(
-            itemView: View,
-            private val optionClicks: Relay<Pair<String, Any>>
+        itemView: View,
+        private val optionClicks: Relay<Pair<String, Any>>
     ) : UiViewHolder<Item.Option<*>>(itemView) {
 
         private val icon: ImageView by bindView(R.id.icon)
@@ -174,17 +174,17 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             }
             checkBox.isChecked = item.isSelected
             val opt = item.option
-            when(opt) {
+            when (opt) {
                 is Expansion -> {
                     text.text = opt.name
                     GlideApp.with(itemView)
-                            .load(opt.symbolUrl)
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .into(icon)
+                        .load(opt.symbolUrl)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(icon)
                 }
                 is Rarity -> {
                     text.text = opt.key
-                    icon.setImageResource(when(opt){
+                    icon.setImageResource(when (opt) {
                         Rarity.COMMON -> R.drawable.ic_rarity_common
                         Rarity.UNCOMMON -> R.drawable.ic_rarity_uncommon
                         Rarity.RARE -> R.drawable.ic_rarity_rare
@@ -200,8 +200,8 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
      * Recycler UI Item for [Item.ViewMore]
      */
     class ViewMoreViewHolder(
-            itemView: View,
-            private val viewMoreClicks: Relay<Unit>
+        itemView: View,
+        private val viewMoreClicks: Relay<Unit>
     ) : UiViewHolder<Item.ViewMore>(itemView) {
 
         private val text: TextView by bindView(android.R.id.text1)
@@ -213,17 +213,17 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
     }
 
     class ValueRangeViewHolder(
-            itemView: View,
-            private val valueRangeChange: Relay<Pair<String, Item.ValueRange.Value>>
+        itemView: View,
+        private val valueRangeChange: Relay<Pair<String, Item.ValueRange.Value>>
     ) : UiViewHolder<Item.ValueRange>(itemView) {
 
         private val seekBar: SeekBar by bindView(R.id.seekBar)
         private val seekBarIndicator: SeekBarIndicatorView by bindView(R.id.seekBarIndicator)
         private val modifiers: List<ImageView> by bindViews(
-                R.id.modifier_greater_than,
-                R.id.modifier_greater_than_equal,
-                R.id.modifier_less_than,
-                R.id.modifier_less_than_equal
+            R.id.modifier_greater_than,
+            R.id.modifier_greater_than_equal,
+            R.id.modifier_less_than,
+            R.id.modifier_less_than_equal
         )
 
         override fun bind(item: Item.ValueRange) {
@@ -263,7 +263,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             })
         }
 
-        private fun Modifier.viewId(): Int = when(this) {
+        private fun Modifier.viewId(): Int = when (this) {
             NONE -> -1
             GREATER_THAN -> R.id.modifier_greater_than
             GREATER_THAN_EQUALS -> R.id.modifier_greater_than_equal
@@ -271,7 +271,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             LESS_THAN_EQUALS -> R.id.modifier_less_than_equal
         }
 
-        private fun Int.modifier(): Modifier = when(this) {
+        private fun Int.modifier(): Modifier = when (this) {
             R.id.modifier_greater_than -> GREATER_THAN
             R.id.modifier_greater_than_equal -> GREATER_THAN_EQUALS
             R.id.modifier_less_than -> LESS_THAN
@@ -282,7 +282,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
         private fun ImageView.select(isSelected: Boolean) {
             this.alpha = if (isSelected) 1f else 0.26f
             this.imageTintList = ColorStateList.valueOf(color(
-                    if (isSelected) R.color.primaryColor else R.color.black
+                if (isSelected) R.color.primaryColor else R.color.black
             ))
         }
     }
@@ -300,10 +300,9 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             val VALUES by lazy { values() }
 
             fun of(layoutId: Int): ViewType {
-                val match = VALUES.firstOrNull { it.layoutId == layoutId }
-                match?.let { return match }
-
-                throw EnumConstantNotPresentException(ViewType::class.java, "could not find view type for $layoutId")
+                return VALUES.find { it.layoutId == layoutId }
+                    ?: throw EnumConstantNotPresentException(ViewType::class.java,
+                        "could not find view type for $layoutId")
             }
         }
     }
@@ -311,11 +310,12 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
     companion object {
 
         @Suppress("UNCHECKED_CAST")
-        fun create(itemView: View,
-                   layoutId: Int,
-                   intentions: FilterIntentions): UiViewHolder<Item> {
-            val viewType = ViewType.of(layoutId)
-            return when(viewType) {
+        fun create(
+            itemView: View,
+            layoutId: Int,
+            intentions: FilterIntentions
+        ): UiViewHolder<Item> {
+            return when (ViewType.of(layoutId)) {
                 HEADER -> HeaderViewHolder(itemView) as UiViewHolder<Item>
                 FIELD -> FieldViewHolder(itemView, intentions.fieldChanges) as UiViewHolder<Item>
                 TYPE -> TypeViewHolder(itemView, intentions.typeClicks) as UiViewHolder<Item>

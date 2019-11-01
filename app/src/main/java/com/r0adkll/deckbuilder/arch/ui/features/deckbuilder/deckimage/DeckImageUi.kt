@@ -26,15 +26,15 @@ interface DeckImageUi : Ui<DeckImageUi.State, DeckImageUi.State.Change> {
 
     @Parcelize
     data class State(
-            val sessionId: Long,
-            override val isLoading: Boolean,
-            override val error: String?,
-            val cards: List<PokemonCard>,
-            val selectedDeckImage: DeckImage?,
-            val isSaved: Boolean
+        val sessionId: Long,
+        override val isLoading: Boolean,
+        override val error: String?,
+        val cards: List<PokemonCard>,
+        val selectedDeckImage: DeckImage?,
+        val isSaved: Boolean
     ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
-        override fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when (change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.CardsLoaded -> this.copy(cards = change.cards, isLoading = false)

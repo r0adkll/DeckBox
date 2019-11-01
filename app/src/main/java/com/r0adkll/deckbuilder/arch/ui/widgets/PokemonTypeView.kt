@@ -28,7 +28,9 @@ import io.pokemontcg.model.Type.PSYCHIC
 import io.pokemontcg.model.Type.WATER
 
 class PokemonTypeView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     var type: Type = COLORLESS
@@ -44,7 +46,8 @@ class PokemonTypeView @JvmOverloads constructor(
             invalidate()
         }
 
-    @ColorInt private val highlightColor: Int = color(R.color.secondaryColor)
+    @ColorInt
+    private val highlightColor: Int = color(R.color.secondaryColor)
     private val padding: Int = dip(8)
     private val highlightWidth: Int = dip(2)
     private val highlightElevation: Float = dp(6)
@@ -57,7 +60,7 @@ class PokemonTypeView @JvmOverloads constructor(
 
         val a = context.obtainStyledAttributes(attrs, R.styleable.PokemonTypeView, defStyleAttr, 0)
         val pokeType = a.getInteger(R.styleable.PokemonTypeView_pokeType, 0)
-        type = when(pokeType) {
+        type = when (pokeType) {
             0 -> COLORLESS
             1 -> FIRE
             2 -> GRASS
@@ -90,13 +93,13 @@ class PokemonTypeView @JvmOverloads constructor(
 
     private inner class TypeOutlineProvider : ViewOutlineProvider() {
         override fun getOutline(view: View?, outline: Outline?) {
-            val size = minOf(measuredWidth, measuredHeight) - (padding * 2) //+ (if(checked) highlightWidth * 2 else 0)
+            val size = minOf(measuredWidth, measuredHeight) - (padding * 2)
             val centerX = measuredWidth / 2
             val centerY = measuredHeight / 2
             outline?.setOval(centerX - (size / 2),
-                    centerY - (size / 2),
-                    centerX + (size / 2),
-                    centerY + (size / 2))
+                centerY - (size / 2),
+                centerX + (size / 2),
+                centerY + (size / 2))
         }
     }
 }

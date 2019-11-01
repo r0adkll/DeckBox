@@ -42,7 +42,10 @@ interface RxPreferences {
         }
     }
 
-    class ReactiveOptionalStringPreference(key: String, val default: String? = null) : ReactivePreference<String?>(key) {
+    class ReactiveOptionalStringPreference(
+        key: String,
+        val default: String? = null
+    ) : ReactivePreference<String?>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<String?> {
             return default?.let {
@@ -51,20 +54,23 @@ interface RxPreferences {
         }
     }
 
-    class ReactiveStringSetPreference(key: String, val default: Set<String> = HashSet()) : ReactivePreference<Set<String>>(key) {
+    class ReactiveStringSetPreference(
+        key: String,
+        val default: Set<String> = HashSet()
+    ) : ReactivePreference<Set<String>>(key) {
 
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<Set<String>> {
             return thisRef.rxSharedPreferences.getStringSet(key, default)
         }
     }
 
-    class ReactiveExpansionsPreference(key: String): ReactivePreference<List<Expansion>>(key) {
+    class ReactiveExpansionsPreference(key: String) : ReactivePreference<List<Expansion>>(key) {
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<List<Expansion>> {
             return thisRef.rxSharedPreferences.getObject(key, listOf(), ExpansionConverter())
         }
     }
 
-    class ReactiveBasicEnergySetPreference(key: String): ReactivePreference<BasicEnergySet>(key) {
+    class ReactiveBasicEnergySetPreference(key: String) : ReactivePreference<BasicEnergySet>(key) {
         override fun getValue(thisRef: RxPreferences, property: KProperty<*>): Preference<BasicEnergySet> {
             return thisRef.rxSharedPreferences.getObject(key, BasicEnergySet.SunMoon, BasicEnergySetConverter())
         }
@@ -106,7 +112,8 @@ interface RxPreferences {
 
         override fun deserialize(serialized: String): BasicEnergySet {
             return BasicEnergySet::class.nestedClasses
-                    .find { it.qualifiedName == serialized }?.objectInstance as? BasicEnergySet ?: BasicEnergySet.SunMoon
+                .find { it.qualifiedName == serialized }?.objectInstance as? BasicEnergySet
+                ?: BasicEnergySet.SunMoon
         }
 
         override fun serialize(value: BasicEnergySet): String {
@@ -129,7 +136,7 @@ interface RxPreferences {
     }
 
     private class GsonConverter<T : Any>(
-            val clazz: KClass<out T>
+        val clazz: KClass<out T>
     ) : Preference.Converter<T> {
 
         private val gson = Gson()
@@ -142,5 +149,4 @@ interface RxPreferences {
             return gson.toJson(value)
         }
     }
-
 }

@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class TestResults(
-        val count: Int, // The total number of shuffle iterations ran
-        val mulligans: Int, // The total number of mulligans that occured
-        val startingHand: Map<PokemonCard, Int> // The number of times a card has appeared in the starting hand for [count] iterations
+    val count: Int,
+    val mulligans: Int,
+    val startingHand: Map<PokemonCard, Int>
 ) : Parcelable

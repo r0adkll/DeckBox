@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "collection")
 class CollectionCountEntity(
-        @PrimaryKey var cardId: String,
-        var count: Int,
-        var set: String,
-        var series: String
+    @PrimaryKey var cardId: String,
+    var count: Int,
+    var set: String,
+    var series: String
 )

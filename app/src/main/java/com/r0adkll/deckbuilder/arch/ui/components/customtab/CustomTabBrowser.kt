@@ -20,8 +20,8 @@ import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 class CustomTabBrowser(
-        private val context: AppCompatActivity,
-        private val fallback: Fallback = IntentViewFallback()
+    private val context: AppCompatActivity,
+    private val fallback: Fallback = IntentViewFallback()
 ) : CustomTabsServiceConnection() {
 
     interface Fallback {
@@ -90,15 +90,14 @@ class CustomTabBrowser(
             fallback.openUri(context, uri)
         } else {
             CustomTabsIntent.Builder(session.value)
-                    .setToolbarColor(context.color(R.color.primaryColor))
-                    .build()
-                    .apply {
-                        intent.setPackage(packageName)
-                        intent.putExtra(Intent.EXTRA_REFERRER,
-                                        Uri.parse("android-app://" + context.packageName))
-
-                    }
-                    .launchUrl(context, uri)
+                .setToolbarColor(context.color(R.color.primaryColor))
+                .build()
+                .apply {
+                    intent.setPackage(packageName)
+                    intent.putExtra(Intent.EXTRA_REFERRER,
+                        Uri.parse("android-app://" + context.packageName))
+                }
+                .launchUrl(context, uri)
         }
     }
 }

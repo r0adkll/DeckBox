@@ -52,8 +52,8 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
         state = state.copy(sessionId = sessionId, selectedDeckImage = selection)
 
         getComponent(DeckBuilderComponent::class)
-                .plus(DeckImageModule(this))
-                .inject(this)
+            .plus(DeckImageModule(this))
+            .inject(this)
 
         adapter = DeckImageRecyclerAdapter(requireContext()) {
             deckImageClicks.accept(it)
@@ -88,10 +88,10 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
 
     override val selectDeckImageClicks: Observable<Unit>
         get() = actionSelect.clicks()
-                .uiDebounce()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Deck.EditImage)
-                }
+            .uiDebounce()
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Deck.EditImage)
+            }
 
     override fun setDeckImages(images: List<DeckImage>) {
         adapter.submitList(images)

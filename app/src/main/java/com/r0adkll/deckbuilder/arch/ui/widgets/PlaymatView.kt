@@ -14,7 +14,9 @@ import com.ftinc.kit.extensions.sp
 import com.r0adkll.deckbuilder.R
 
 class PlaymatView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -48,15 +50,13 @@ class PlaymatView @JvmOverloads constructor(
 
         pikaCoinImage = BitmapFactory.decodeResource(resources, R.drawable.ic_pika_coin)
         diceClusterImage = BitmapFactory.decodeResource(resources, R.drawable.ic_dice_cluster)
-
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        silhouetteWidth = (measuredWidth.toFloat() -  ((silhouetteMargin * 2)  +  silhouetteMarginInside * 4)) / 5f
+        silhouetteWidth = (measuredWidth.toFloat() - ((silhouetteMargin * 2) + silhouetteMarginInside * 4)) / 5f
         silhouetteHeight = silhouetteWidth * PokemonCardView.RATIO
-
     }
 
     override fun onDraw(canvas: Canvas) {

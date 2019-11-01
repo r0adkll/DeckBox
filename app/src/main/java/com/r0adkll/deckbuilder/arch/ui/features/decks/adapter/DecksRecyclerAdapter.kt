@@ -12,15 +12,15 @@ import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPrevie
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class DecksRecyclerAdapter(
-        context: Context,
-        private val shareClicks: Relay<Deck>,
-        private val duplicateClicks: Relay<Deck>,
-        private val deleteClicks: Relay<Deck>,
-        private val testClicks: Relay<Deck>,
-        private val dismissPreview: Relay<Unit>,
-        private val viewPreview: Relay<ExpansionPreview>,
-        private val quickStart: Relay<Deck>,
-        private val dismissQuickStart: Relay<Unit>
+    context: Context,
+    private val shareClicks: Relay<Deck>,
+    private val duplicateClicks: Relay<Deck>,
+    private val deleteClicks: Relay<Deck>,
+    private val testClicks: Relay<Deck>,
+    private val dismissPreview: Relay<Unit>,
+    private val viewPreview: Relay<ExpansionPreview>,
+    private val quickStart: Relay<Deck>,
+    private val dismissQuickStart: Relay<Unit>
 ) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerViewItemCallback()) {
 
     var itemClickListener: (Item) -> Unit = {}
@@ -33,7 +33,7 @@ class DecksRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiViewHolder<Item> {
         val itemView = inflater.inflate(viewType, parent, false)
         return UiViewHolder.create(itemView, viewType, shareClicks, duplicateClicks, testClicks,
-                deleteClicks, dismissPreview, viewPreview, quickStart, dismissQuickStart)
+            deleteClicks, dismissPreview, viewPreview, quickStart, dismissQuickStart)
     }
 
     override fun onBindViewHolder(vh: UiViewHolder<Item>, i: Int) {

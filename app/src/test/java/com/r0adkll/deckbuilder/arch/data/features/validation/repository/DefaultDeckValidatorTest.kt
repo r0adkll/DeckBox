@@ -65,7 +65,8 @@ class DefaultDeckValidatorTest {
     @Test
     fun testValidateStandardWithReprint() {
         setupExpansionMock(EXPANSIONS.toList())
-        val reprint = createPokemonCard(name = "Ultra Ball", expansionCode = "xy11").copy(text = listOf("Discard 2 cards and search the deck for any pokemon card"))
+        val reprint = createPokemonCard(name = "Ultra Ball", expansionCode = "xy11")
+            .copy(text = listOf("Discard 2 cards and search the deck for any pokemon card"))
         val reprints = Reprints(setOf(reprint.reprintHash()), emptySet())
         When calling remote.reprints itReturns reprints
         val pokemon = (0 until 59).map { createPokemonCard(name = "$it", expansionCode = "sm7") }.plus(reprint)
@@ -81,7 +82,8 @@ class DefaultDeckValidatorTest {
     @Test
     fun testValidateExpandedWithReprint() {
         setupExpansionMock(EXPANSIONS.toList())
-        val reprint = createPokemonCard(name = "Ultra Ball", expansionCode = "hgss1").copy(text = listOf("Discard 2 cards and search the deck for any pokemon card"))
+        val reprint = createPokemonCard(name = "Ultra Ball", expansionCode = "hgss1")
+            .copy(text = listOf("Discard 2 cards and search the deck for any pokemon card"))
         val reprints = Reprints(emptySet(), setOf(reprint.reprintHash()))
         When calling remote.reprints itReturns reprints
         val pokemon = (0 until 59).map { createPokemonCard(name = "$it", expansionCode = "xy1") }.plus(reprint)
@@ -136,7 +138,8 @@ class DefaultDeckValidatorTest {
     @Test
     fun testValidateLegalPromoOverrideLegal() {
         setupExpansionMock(EXPANSIONS.toList())
-        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "smp").copy(id = "smp-sm100", number = "SM100")
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "smp")
+            .copy(id = "smp-sm100", number = "SM100")
         val override = LegalOverrides(LegalOverrides.Promo("smp", 94), null, emptyList())
         When calling remote.legalOverrides itReturns override
 
@@ -150,7 +153,8 @@ class DefaultDeckValidatorTest {
     @Test
     fun testValidateLegalPromoOverrideLegalFail() {
         setupExpansionMock(EXPANSIONS.toList())
-        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "smp").copy(id = "smp-sm54", number = "SM54")
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "smp")
+            .copy(id = "smp-sm54", number = "SM54")
         val override = LegalOverrides(LegalOverrides.Promo("smp", 94), null, emptyList())
         When calling remote.legalOverrides itReturns override
 
@@ -164,7 +168,8 @@ class DefaultDeckValidatorTest {
     @Test
     fun testValidateLegalExpandedPromoOverrideLegal() {
         setupExpansionMock(EXPANSIONS.toList())
-        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "xy9").copy(id = "xy9-sm100", number = "SM100")
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "xy9")
+            .copy(id = "xy9-sm100", number = "SM100")
         val override = LegalOverrides(null, LegalOverrides.Promo("xy9", 94), emptyList())
         When calling remote.legalOverrides itReturns override
 
@@ -178,7 +183,8 @@ class DefaultDeckValidatorTest {
     @Test
     fun testValidateLegalExpandedPromoOverrideLegalFail() {
         setupExpansionMock(EXPANSIONS.toList())
-        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "xy9").copy(id = "xy9-sm54", number = "SM54")
+        val pokemon = createPokemonCard(name = "Charizard", expansionCode = "xy9")
+            .copy(id = "xy9-sm54", number = "SM54")
         val override = LegalOverrides(null, LegalOverrides.Promo("xy9", 94), emptyList())
         When calling remote.legalOverrides itReturns override
 
@@ -209,6 +215,6 @@ class DefaultDeckValidatorTest {
 
     private fun PokemonCard.reprintHash(): Long {
         return (this.name.hashCode().toLong() * 31L) +
-                (this.text?.hashCode()?.toLong() ?: 0L * 31L)
+            (this.text?.hashCode()?.toLong() ?: 0L * 31L)
     }
 }

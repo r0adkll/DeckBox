@@ -15,20 +15,19 @@ import io.pokemontcg.model.Card
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.requests.CardQueryBuilder
 import io.reactivex.Observable
-import kotlin.math.exp
 
 @Suppress("UNCHECKED_CAST")
 class NetworkCardDataSource(
-        val api: Pokemon,
-        val expansionRepository: ExpansionRepository,
-        val cache: CardCache,
-        val remote: Remote,
-        val schedulers: AppSchedulers
+    val api: Pokemon,
+    val expansionRepository: ExpansionRepository,
+    val cache: CardCache,
+    val remote: Remote,
+    val schedulers: AppSchedulers
 ) : CardDataSource {
 
     override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
         return expansionRepository.getExpansions() + searchNetwork(null, "",
-                Filter(expansions = listOf(Expansion(setCode)))
+            Filter(expansions = listOf(Expansion(setCode)))
         )
     }
 
@@ -42,13 +41,13 @@ class NetworkCardDataSource(
 
     private fun findNetwork(ids: List<String>): Observable<List<Card>> {
         return api.card()
-                .where {
-                    id = ids.joinToString("|")
-                    pageSize = 1000
-                }
-                .observeAll()
-                .doOnNext { cache.putCards(it) }
-                .subscribeOn(schedulers.network)
+            .where {
+                id = ids.joinToString("|")
+                pageSize = 1000
+            }
+            .observeAll()
+            .doOnNext { cache.putCards(it) }
+            .subscribeOn(schedulers.network)
     }
 
     private fun searchNetwork(type: SuperType?, query: String, filter: Filter?): Observable<List<Card>> {
@@ -67,7 +66,7 @@ class NetworkCardDataSource(
             val adjustedQuery = proxies?.apply(query) ?: query
 
             // Set search field accordingly
-            when(filter?.field ?: SearchField.NAME) {
+            when (filter?.field ?: SearchField.NAME) {
                 SearchField.NAME -> request.name = adjustedQuery
                 SearchField.TEXT -> request.text = adjustedQuery
                 SearchField.ABILITY_NAME -> request.abilityName = adjustedQuery
@@ -78,9 +77,9 @@ class NetworkCardDataSource(
         }
 
         return api.card()
-                .where(request)
-                .observeAll()
-                .doOnNext { cache.putCards(it) }
-                .subscribeOn(schedulers.network)
+            .where(request)
+            .observeAll()
+            .doOnNext { cache.putCards(it) }
+            .subscribeOn(schedulers.network)
     }
 }

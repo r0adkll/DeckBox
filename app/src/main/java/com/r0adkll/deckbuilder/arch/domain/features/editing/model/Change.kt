@@ -5,8 +5,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Change(
-        val id: Long,
-        val cardId: String,
-        val change: Int,
-        val searchSessionId: String?
+    val id: Long,
+    val cardId: String,
+    val change: Int,
+    val searchSessionId: String?
 ) : Parcelable

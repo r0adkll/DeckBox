@@ -11,18 +11,22 @@ import dagger.Provides
 @Module
 class DeckImportModule(val activity: DeckImportActivity) {
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideUi(): DeckImportUi = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideIntentions(): DeckImportUi.Intentions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideActions(): DeckImportUi.Actions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideRenderer(
-            actions: DeckImportUi.Actions,
-            schedulers: AppSchedulers
-    ) : DeckImportRenderer = DeckImportRenderer(actions, schedulers.comp, schedulers.main)
+        actions: DeckImportUi.Actions,
+        schedulers: AppSchedulers
+    ): DeckImportRenderer = DeckImportRenderer(actions, schedulers.comp, schedulers.main)
 }

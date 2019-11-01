@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:focusableInTouchMode="false"
     android:focusable="false"
-    android:descendantFocusability="afterDescendants">
+    android:descendantFocusability="afterDescendants"
+    >
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
         android:id="@+id/card"
@@ -25,7 +26,8 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="32dp"
         android:orientation="horizontal"
-        android:elevation="12dp">
+        android:elevation="12dp"
+        >
 
         <ImageView
             android:id="@+id/action_remove"

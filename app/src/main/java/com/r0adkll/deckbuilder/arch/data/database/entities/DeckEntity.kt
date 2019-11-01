@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "decks")
 class DeckEntity(
-        @PrimaryKey(autoGenerate = true) var uid: Long,
-        var name: String,
-        var description: String?,
-        var image: Uri?,
-        var collectionOnly: Boolean = false,
-        var timestamp: Long
+    @PrimaryKey(autoGenerate = true) var uid: Long,
+    var name: String,
+    var description: String?,
+    var image: Uri?,
+    var collectionOnly: Boolean = false,
+    var timestamp: Long
 )

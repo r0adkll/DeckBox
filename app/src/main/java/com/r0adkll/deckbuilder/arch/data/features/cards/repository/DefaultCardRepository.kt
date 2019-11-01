@@ -11,8 +11,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class DefaultCardRepository @Inject constructor(
-        val cardDataSource: CardDataSource,
-        val schedulers: AppSchedulers
+    val cardDataSource: CardDataSource,
+    val schedulers: AppSchedulers
 ) : CardRepository {
 
     override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
@@ -25,6 +25,6 @@ class DefaultCardRepository @Inject constructor(
 
     override fun find(ids: List<String>): Observable<List<PokemonCard>> {
         return cardDataSource.find(ids)
-                .switchIfEmpty(Observable.error(IOException("Unable to find cards")))
+            .switchIfEmpty(Observable.error(IOException("Unable to find cards")))
     }
 }

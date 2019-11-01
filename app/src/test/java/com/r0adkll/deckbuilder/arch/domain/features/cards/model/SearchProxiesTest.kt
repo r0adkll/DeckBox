@@ -3,19 +3,18 @@ package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 import com.google.gson.Gson
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldEqualTo
 import org.junit.Before
 import org.junit.Test
 
 class SearchProxiesTest {
 
     val proxyConfig = "{\"proxies\":[{\"regex\":\"\\\\bn\\\\b\",\"replacement\":\"\\\"N\\\"\"}," +
-            "{\"regex\":\"\\\\b(electric)\\\\b(?=( +energy))\",\"replacement\":\"Lightning\"}," +
-            "{\"regex\":\"\\\\b(dark)\\\\b(?=( +energy))\",\"replacement\":\"Darkness\"}," +
-            "{\"regex\":\"\\\\b(steel)\\\\b(?=( +energy))\",\"replacement\":\"Metal\"}," +
-            "{\"regex\":\"\\\\b( GX)\\\\b\",\"replacement\":\"-GX\"}," +
-            "{\"regex\":\"\\\\b( EX)\\\\b\",\"replacement\":\"-EX\"}," +
-            "{\"regex\":\"(Mega)(?= \\\\w)\",\"replacement\":\"M\"}]}"
+        "{\"regex\":\"\\\\b(electric)\\\\b(?=( +energy))\",\"replacement\":\"Lightning\"}," +
+        "{\"regex\":\"\\\\b(dark)\\\\b(?=( +energy))\",\"replacement\":\"Darkness\"}," +
+        "{\"regex\":\"\\\\b(steel)\\\\b(?=( +energy))\",\"replacement\":\"Metal\"}," +
+        "{\"regex\":\"\\\\b( GX)\\\\b\",\"replacement\":\"-GX\"}," +
+        "{\"regex\":\"\\\\b( EX)\\\\b\",\"replacement\":\"-EX\"}," +
+        "{\"regex\":\"(Mega)(?= \\\\w)\",\"replacement\":\"M\"}]}"
     val gson = Gson()
 
     lateinit var proxies: SearchProxies

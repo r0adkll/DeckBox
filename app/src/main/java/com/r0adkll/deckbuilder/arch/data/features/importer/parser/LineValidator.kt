@@ -38,4 +38,3 @@ class LineValidator {
         private const val MIN_PART_COUNT = 4
     }
 }
-

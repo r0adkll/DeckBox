@@ -31,14 +31,14 @@ interface TournamentExportUi : Ui<TournamentExportUi.State, TournamentExportUi.S
 
     @Parcelize
     data class State(
-            val playerName: String?,
-            val playerId: String?,
-            val dob: Date?,
-            val ageDivision: AgeDivision?,
-            val format: Format?
+        val playerName: String?,
+        val playerId: String?,
+        val dob: Date?,
+        val ageDivision: AgeDivision?,
+        val format: Format?
     ) : Ui.State<State.Change>, Parcelable {
 
-        override fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when (change) {
             is Change.PlayerName -> this.copy(playerName = change.name)
             is Change.PlayerId -> this.copy(playerId = change.id)
             is Change.DateOfBirth -> this.copy(dob = change.dob)
@@ -47,11 +47,11 @@ interface TournamentExportUi : Ui<TournamentExportUi.State, TournamentExportUi.S
         }
 
         fun toPlayerInfo(): PlayerInfo = PlayerInfo(
-                playerId ?: "",
-                playerName ?: "",
-                dob ?: Date(),
-                ageDivision ?: AgeDivision.MASTERS,
-                format ?: Format.STANDARD
+            playerId ?: "",
+            playerName ?: "",
+            dob ?: Date(),
+            ageDivision ?: AgeDivision.MASTERS,
+            format ?: Format.STANDARD
         )
 
         sealed class Change(logText: String) : Ui.State.Change(logText) {

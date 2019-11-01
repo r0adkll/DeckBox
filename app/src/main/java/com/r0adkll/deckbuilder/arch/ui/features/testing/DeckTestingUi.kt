@@ -34,28 +34,28 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
 
     @Parcelize
     data class Metadata(
-            val name: String,
-            val description: String,
-            val pokemon: Int,
-            val trainer: Int,
-            val energy: Int
-    ): Parcelable
+        val name: String,
+        val description: String,
+        val pokemon: Int,
+        val trainer: Int,
+        val energy: Int
+    ) : Parcelable
 
     @Parcelize
     data class State(
-            override val isLoading: Boolean,
-            override val error: String?,
+        override val isLoading: Boolean,
+        override val error: String?,
 
-            val sessionId: Long?,
-            val deckId: String?,
-            val metadata: Metadata?,
+        val sessionId: Long?,
+        val deckId: String?,
+        val metadata: Metadata?,
 
-            val iterations: Int,
-            val results: TestResults?,
-            val hand: List<PokemonCard>?
+        val iterations: Int,
+        val results: TestResults?,
+        val hand: List<PokemonCard>?
     ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
-        override fun reduce(change: Change): Ui.State<Change> = when(change) {
+        override fun reduce(change: Change): Ui.State<Change> = when (change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null, hand = null, results = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.Results -> this.copy(results = change.results, isLoading = false, hand = null)

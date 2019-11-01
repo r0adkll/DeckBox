@@ -21,7 +21,9 @@ import com.r0adkll.deckbuilder.R
 import kotlin.math.roundToInt
 
 class TestResultView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
     var percentage: Float = 0f
@@ -36,8 +38,8 @@ class TestResultView @JvmOverloads constructor(
         set(value) {
             field = value
             Glide.with(this)
-                    .load(field)
-                    .into(card)
+                .load(field)
+                .into(card)
         }
 
     var isMulligan: Boolean = false
@@ -113,7 +115,8 @@ class TestResultView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas?) {
-        canvas?.drawRoundRect(0f, 0f, card.right.toFloat(), defaultHeight.toFloat(), cardRadius, cardRadius, backgroundPaint)
+        canvas?.drawRoundRect(0f, 0f, card.right.toFloat(), defaultHeight.toFloat(), cardRadius, cardRadius,
+            backgroundPaint)
         canvas?.drawRect(0f, 0f, cardRadius, defaultHeight.toFloat(), backgroundPaint)
         super.onDraw(canvas)
     }

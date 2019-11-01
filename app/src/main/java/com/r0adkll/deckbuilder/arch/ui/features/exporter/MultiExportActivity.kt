@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.util.bindParcelable
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.ExportTask
@@ -16,7 +17,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo.PtcgoExportFragment
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportFragment
-import com.r0adkll.deckbuilder.util.bindParcelable
 import kotlinx.android.synthetic.main.activity_multi_export.*
 
 class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
@@ -45,16 +45,16 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
     override fun getComponent(): MultiExportComponent = component
 
     class ExportPagerAdapter(
-            val context: Context,
-            fragmentManager: FragmentManager
+        val context: Context,
+        fragmentManager: FragmentManager
     ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-        override fun getItem(position: Int): Fragment = when(position) {
+        override fun getItem(position: Int): Fragment = when (position) {
             0 -> TournamentExportFragment.newInstance()
             else -> PtcgoExportFragment.newInstance()
         }
 
-        override fun getPageTitle(position: Int): CharSequence? = when(position) {
+        override fun getPageTitle(position: Int): CharSequence? = when (position) {
             0 -> context.getString(R.string.tab_export_tournament)
             else -> context.getString(R.string.tab_export_ptcgo)
         }

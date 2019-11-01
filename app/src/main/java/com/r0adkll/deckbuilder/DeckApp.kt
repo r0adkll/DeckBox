@@ -24,11 +24,14 @@ import javax.inject.Inject
 class DeckApp : Application() {
 
     companion object {
-        @JvmStatic lateinit var component: AppComponent
-        @JvmStatic lateinit var refWatcher: RefWatcher
+        @JvmStatic
+        lateinit var component: AppComponent
+        @JvmStatic
+        lateinit var refWatcher: RefWatcher
     }
 
-    @Inject lateinit var delegates: Set<@JvmSuppressWildcards AppDelegate>
+    @Inject
+    lateinit var delegates: Set<@JvmSuppressWildcards AppDelegate>
 
     override fun onCreate() {
         super.onCreate()
@@ -76,12 +79,12 @@ class DeckApp : Application() {
             if (e is NullPointerException || e is IllegalArgumentException) {
                 // that's likely a bug in the application
                 Thread.currentThread().uncaughtExceptionHandler
-                        ?.uncaughtException(Thread.currentThread(), e)
+                    ?.uncaughtException(Thread.currentThread(), e)
             }
             if (e is IllegalStateException) {
                 // that's a bug in RxJava or in a custom operator
                 Thread.currentThread().uncaughtExceptionHandler
-                        ?.uncaughtException(Thread.currentThread(), e)
+                    ?.uncaughtException(Thread.currentThread(), e)
             }
             Timber.w(ex, "Undeliverable exception received, not sure what to do")
         }
@@ -90,8 +93,8 @@ class DeckApp : Application() {
     @Suppress("NON_FINAL_MEMBER_IN_FINAL_CLASS")
     open fun installDagger(): AppComponent {
         component = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
+            .appModule(AppModule(this))
+            .build()
         return component
     }
 }

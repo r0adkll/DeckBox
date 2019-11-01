@@ -12,12 +12,12 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.ui.components.StackedPokemonCardItemCallback
 
 class CollectionSetRecyclerAdapter(
-        context: Context,
-        private val removeCardClicks: Relay<PokemonCard>,
-        private val addCardClicks: Relay<List<PokemonCard>>,
-        private val itemClickListener: (StackedPokemonCard) -> Unit = { },
-        private val itemLongClickListener: (View, StackedPokemonCard) -> Boolean = { _, _ -> false }
-): EmptyViewListAdapter<StackedPokemonCard, CollectionCardViewHolder>(StackedPokemonCardItemCallback()) {
+    context: Context,
+    private val removeCardClicks: Relay<PokemonCard>,
+    private val addCardClicks: Relay<List<PokemonCard>>,
+    private val itemClickListener: (StackedPokemonCard) -> Unit = { },
+    private val itemLongClickListener: (View, StackedPokemonCard) -> Boolean = { _, _ -> false }
+) : EmptyViewListAdapter<StackedPokemonCard, CollectionCardViewHolder>(StackedPokemonCardItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)
 

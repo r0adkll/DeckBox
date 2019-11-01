@@ -101,7 +101,7 @@ class SettingsActivity : BaseActivity() {
         }
 
         override fun onPreferenceTreeClick(preference: Preference): Boolean {
-            return when(preference.key) {
+            return when (preference.key) {
                 "pref_account_profile" -> {
                     true
                 }
@@ -109,27 +109,34 @@ class SettingsActivity : BaseActivity() {
                     // Now we need to migrate any existing local decks to their account
                     view?.let {
                         migrationSnackbar = Snackbar.make(
-                                it,
-                                R.string.account_migration_started,
-                                Snackbar.LENGTH_INDEFINITE
+                            it,
+                            R.string.account_migration_started,
+                            Snackbar.LENGTH_INDEFINITE
                         )
                         migrationSnackbar?.show()
                     }
 
                     disposables += accountRepository.migrateCollections()
-                            .subscribe({
-                                setupPreferences()
-                                view?.let { v ->
-                                    migrationSnackbar = Snackbar.make(v, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
-                                    migrationSnackbar?.show()
-                                }
-                            }, { e ->
-                                view?.let { v ->
-                                    migrationSnackbar = Snackbar.make(v, e.localizedMessage ?:
-                                    "Uh-oh! We encountered an error migrating your collection", Snackbar.LENGTH_SHORT)
-                                    migrationSnackbar?.show()
-                                }
-                            })
+                        .subscribe({
+                            setupPreferences()
+                            view?.let { v ->
+                                migrationSnackbar = Snackbar.make(
+                                    v,
+                                    R.string.account_migration_finished,
+                                    Snackbar.LENGTH_SHORT
+                                )
+                                migrationSnackbar?.show()
+                            }
+                        }, { e ->
+                            view?.let { v ->
+                                migrationSnackbar = Snackbar.make(
+                                    v,
+                                    e.localizedMessage ?: "Uh-oh! We encountered an error migrating your collection",
+                                    Snackbar.LENGTH_SHORT
+                                )
+                                migrationSnackbar?.show()
+                            }
+                        })
                     true
                 }
                 "pref_about_privacy_policy" -> {
@@ -159,7 +166,7 @@ class SettingsActivity : BaseActivity() {
                     Analytics.event(Event.SelectContent.Action("settings", "feedback"))
                     val userId = FirebaseAuth.getInstance().currentUser?.uid
                     val text =
-                            "Version: ${BuildConfig.VERSION_NAME} \n" +
+                        "Version: ${BuildConfig.VERSION_NAME} \n" +
                             "UserId: $userId \n\n\n"
                     val emailAddress = getString(R.string.support_email_address)
                     val intent = IntentUtils.sendEmail(emailAddress, "Feedback", text)
@@ -192,15 +199,15 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_developer_user_id" -> {
                     preferenceManager.sharedPreferences.edit()
-                            .remove("pref_developer_test_user_id")
-                            .apply()
+                        .remove("pref_developer_test_user_id")
+                        .apply()
 
                     val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                     clipboardManager?.let { cm ->
                         cm.setPrimaryClip(ClipData(
-                                "deckbox user id",
-                                arrayOf("text/plain"),
-                                ClipData.Item(preference.summary)
+                            "deckbox user id",
+                            arrayOf("text/plain"),
+                            ClipData.Item(preference.summary)
                         ))
                         toast("User Id copied to clipboard")
                     }
@@ -215,9 +222,9 @@ class SettingsActivity : BaseActivity() {
 
                     FirebaseAuth.getInstance().signOut()
                     googleSignInClient.signOut()
-                            .addOnCompleteListener {
-                                Timber.i("User signed out of Google")
-                            }
+                        .addOnCompleteListener {
+                            Timber.i("User signed out of Google")
+                        }
 
                     val intent = SetupActivity.createIntent(requireActivity()).clear()
                     startActivity(intent)
@@ -242,13 +249,13 @@ class SettingsActivity : BaseActivity() {
                     profilePref?.summary = user.email
 
                     disposables += roomCollectionCache.getAll()
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
-                                migrateCollectionPref?.isVisible = it.isNotEmpty()
-                            }, {
-                                Timber.e(it, "Error checking room collection cache")
-                            })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            migrateCollectionPref?.isVisible = it.isNotEmpty()
+                        }, {
+                            Timber.e(it, "Error checking room collection cache")
+                        })
                 }
 
                 val linkAccount = findPreference<Preference>("pref_account_link")
@@ -271,15 +278,15 @@ class SettingsActivity : BaseActivity() {
 
             @SuppressLint("RxSubscribeOnError")
             disposables += preferences.quickStart.asObservable()
-                    .subscribe {
-                        resetQuickStart?.isVisible = !it
-                    }
+                .subscribe {
+                    resetQuickStart?.isVisible = !it
+                }
 
             @SuppressLint("RxSubscribeOnError")
             disposables += preferences.offlineOutline.asObservable()
-                    .subscribe {
-                        resetOfflineOutline?.isVisible = !it
-                    }
+                .subscribe {
+                    resetOfflineOutline?.isVisible = !it
+                }
 
             /*
              * Debug options
@@ -290,19 +297,19 @@ class SettingsActivity : BaseActivity() {
 
             val userId = findPreference<Preference>("pref_developer_user_id")
             userId?.summary = FirebaseAuth.getInstance().currentUser?.uid
-                    ?: preferences.deviceId
+                ?: preferences.deviceId
                     ?: preferences.offlineId.get()
 
             val testUserId = findPreference<Preference>("pref_developer_test_user_id")
             testUserId?.summary = preferenceManager.sharedPreferences
-                    .getString("pref_developer_test_user_id", null) ?: "Enter a user's id to test with"
+                .getString("pref_developer_test_user_id", null) ?: "Enter a user's id to test with"
         }
 
         private fun setupClient() {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build()
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
 
             googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
         }
@@ -320,59 +327,67 @@ class SettingsActivity : BaseActivity() {
                 val currentUser = firebaseAuth.currentUser
                 if (currentUser != null && currentUser.isAnonymous) {
                     currentUser.linkWithCredential(credential)
-                            .addOnCompleteListener {
-                                if (it.isSuccessful) {
-                                    Analytics.event(Event.SignUp.Google)
-                                    snackbar("${it.result?.user?.email} linked!")
-                                    setupPreferences()
-                                } else {
-                                    Timber.e(it.exception, "Unable to link account")
-                                    snackbar("Unable to link account", Snackbar.LENGTH_LONG)
-                                }
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                Analytics.event(Event.SignUp.Google)
+                                snackbar("${it.result?.user?.email} linked!")
+                                setupPreferences()
+                            } else {
+                                Timber.e(it.exception, "Unable to link account")
+                                snackbar("Unable to link account", Snackbar.LENGTH_LONG)
                             }
+                        }
                 } else {
                     firebaseAuth.signInWithCredential(credential)
-                            .addOnCompleteListener { r ->
-                                if (r.isSuccessful) {
-                                    // Auto-grab the user's name from their account
-                                    r.result?.user?.displayName?.let {
-                                        preferences.playerName.set(it)
-                                    }
-                                    r.result?.user?.uid?.let {
-                                        Analytics.userId(it)
-                                    }
-                                    Analytics.event(Event.SignUp.Google)
-                                    setupPreferences()
-
-                                    // Now we need to migrate any existing local decks to their account
-                                    view?.let {
-                                        migrationSnackbar = Snackbar.make(it, R.string.account_migration_started, Snackbar.LENGTH_INDEFINITE)
-                                        migrationSnackbar?.show()
-                                    }
-
-                                    disposables += accountRepository.migrateAccount()
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe({
-                                                setupPreferences()
-                                                view?.let { v ->
-                                                    migrationSnackbar = Snackbar.make(v, R.string.account_migration_finished, Snackbar.LENGTH_SHORT)
-                                                    migrationSnackbar?.show()
-                                                }
-                                            }, { e ->
-                                                view?.let { v ->
-                                                    migrationSnackbar = Snackbar.make(
-                                                            v,
-                                                            e.localizedMessage ?: "Uh-oh! We encountered an error migrating your account",
-                                                            Snackbar.LENGTH_SHORT
-                                                    )
-                                                    migrationSnackbar?.show()
-                                                }
-                                            })
-
-                                } else {
-                                    snackbar("Authentication failed")
+                        .addOnCompleteListener { r ->
+                            if (r.isSuccessful) {
+                                // Auto-grab the user's name from their account
+                                r.result?.user?.displayName?.let {
+                                    preferences.playerName.set(it)
                                 }
+                                r.result?.user?.uid?.let {
+                                    Analytics.userId(it)
+                                }
+                                Analytics.event(Event.SignUp.Google)
+                                setupPreferences()
+
+                                // Now we need to migrate any existing local decks to their account
+                                view?.let {
+                                    migrationSnackbar = Snackbar.make(
+                                        it,
+                                        R.string.account_migration_started,
+                                        Snackbar.LENGTH_INDEFINITE
+                                    )
+                                    migrationSnackbar?.show()
+                                }
+
+                                disposables += accountRepository.migrateAccount()
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe({
+                                        setupPreferences()
+                                        view?.let { v ->
+                                            migrationSnackbar = Snackbar.make(
+                                                v,
+                                                R.string.account_migration_finished,
+                                                Snackbar.LENGTH_SHORT
+                                            )
+                                            migrationSnackbar?.show()
+                                        }
+                                    }, { e ->
+                                        view?.let { v ->
+                                            migrationSnackbar = Snackbar.make(
+                                                v,
+                                                e.localizedMessage
+                                                    ?: "Uh-oh! We encountered an error migrating your account",
+                                                Snackbar.LENGTH_SHORT
+                                            )
+                                            migrationSnackbar?.show()
+                                        }
+                                    })
+                            } else {
+                                snackbar("Authentication failed")
                             }
+                        }
                 }
             } catch (e: ApiException) {
                 Timber.e("Unable to link account: ${e.statusCode}")

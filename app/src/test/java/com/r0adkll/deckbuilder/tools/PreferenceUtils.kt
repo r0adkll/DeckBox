@@ -5,11 +5,11 @@ import io.reactivex.Observable
 import org.amshove.kluent.*
 
 inline fun <reified T : Any> mockPreference(
-        toReturn: T,
-        asObservable: Observable<T>? = null,
-        noinline onSet: PreferenceSetter<T>? = null,
-        isSet: Boolean? = null
-) : Preference<T> {
+    toReturn: T,
+    asObservable: Observable<T>? = null,
+    noinline onSet: PreferenceSetter<T>? = null,
+    isSet: Boolean? = null
+): Preference<T> {
     val mock = mock<Preference<T>>()
     When calling mock.get() itReturns toReturn
 

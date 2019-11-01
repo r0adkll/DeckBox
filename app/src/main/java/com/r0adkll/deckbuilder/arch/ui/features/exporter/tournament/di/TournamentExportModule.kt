@@ -11,18 +11,22 @@ import dagger.Provides
 @Module
 class TournamentExportModule(val fragment: TournamentExportFragment) {
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideUi(): TournamentExportUi = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideIntentions(): TournamentExportUi.Intentions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideActions(): TournamentExportUi.Actions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun providRenderer(
         actions: TournamentExportUi.Actions,
         schedulers: AppSchedulers
-    ) : TournamentExportRenderer = TournamentExportRenderer(actions, schedulers.main, schedulers.comp)
+    ): TournamentExportRenderer = TournamentExportRenderer(actions, schedulers.main, schedulers.comp)
 }

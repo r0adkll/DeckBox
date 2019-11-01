@@ -9,6 +9,7 @@ import dagger.Provides
 @Module
 class HomeModule(val activity: HomeActivity) {
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideCollectionProgressController(): CollectionProgressController = activity
 }

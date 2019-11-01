@@ -11,18 +11,22 @@ import dagger.Provides
 @Module
 class BrowseModule(val fragment: BrowseFragment) {
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideUi(): BrowseUi = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideIntentions(): BrowseUi.Intentions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideActions(): BrowseUi.Actions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideRenderer(
-            actions: BrowseUi.Actions,
-            schedulers: AppSchedulers
-    ) : BrowseRenderer = BrowseRenderer(actions, schedulers.main, schedulers.comp)
+        actions: BrowseUi.Actions,
+        schedulers: AppSchedulers
+    ): BrowseRenderer = BrowseRenderer(actions, schedulers.main, schedulers.comp)
 }

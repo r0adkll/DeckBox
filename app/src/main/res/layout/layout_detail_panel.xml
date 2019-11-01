@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/infoBar"
@@ -121,7 +122,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <include layout="@layout/layout_marketplace"
+    <include
+        layout="@layout/layout_marketplace"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

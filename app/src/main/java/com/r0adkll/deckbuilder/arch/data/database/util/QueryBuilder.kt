@@ -26,9 +26,9 @@ interface Condition<L, R> {
     val rightOperand: R
 
     fun R.sql(): String {
-        return when(this) {
+        return when (this) {
             is String -> "\"$this\""
-            is List<*> -> "(${this.joinToString { if (it is String) "\"$it\"" else it.toString()}})"
+            is List<*> -> "(${this.joinToString { if (it is String) "\"$it\"" else it.toString() }})"
             else -> this.toString()
         }
     }
@@ -62,10 +62,10 @@ interface Return<R> {
 }
 
 class FieldCondition(
-        override val leftOperand: String,
-        override val operator: Operator,
-        override val rightOperand: Any?
-): Condition<String, Any?> {
+    override val leftOperand: String,
+    override val operator: Operator,
+    override val rightOperand: Any?
+) : Condition<String, Any?> {
 
     override fun toString(): String {
         return "$leftOperand ${operator.text}${rightOperand?.let { " ${it.sql()}" } ?: ""}"
@@ -73,20 +73,21 @@ class FieldCondition(
 }
 
 class AndOrCondition(
-        val andOrOperator: Operator,
-        condition: Condition<String, Any?>
+    val andOrOperator: Operator,
+    condition: Condition<String, Any?>
 ) : Condition<String, Any?> {
     override val leftOperand: String = condition.leftOperand
     override val operator: Operator = condition.operator
     override val rightOperand: Any? = condition.rightOperand
 
-    override fun toString() = "${andOrOperator.text} $leftOperand ${operator.text}${rightOperand?.let { " ${it.sql()}" } ?: ""}"
+    override fun toString() = "${andOrOperator.text} $leftOperand ${operator.text}${rightOperand?.let { " ${it.sql()}" }
+        ?: ""}"
 }
 
 @Suppress("UNCHECKED_CAST")
 class LogicalCondition(
-        condition: Condition<String, Any?>,
-        val conditions: List<Condition<String, Any?>> = listOf(condition)
+    condition: Condition<String, Any?>,
+    val conditions: List<Condition<String, Any?>> = listOf(condition)
 ) : Logical<String, Any?> {
 
     override val leftOperand: String = condition.leftOperand
@@ -106,7 +107,7 @@ class LogicalCondition(
     override fun toString(): String {
         return if (conditions.size > 1) {
             val builder = StringBuilder("(")
-            conditions.forEachIndexed { index, c->
+            conditions.forEachIndexed { index, c ->
                 if (index > 0) builder.append(" ")
                 builder.append(c.toString())
             }
@@ -118,7 +119,7 @@ class LogicalCondition(
     }
 }
 
-abstract class Expression(protected val statement: Statement): Return<String> {
+abstract class Expression(protected val statement: Statement) : Return<String> {
 
     abstract fun build(): String
 
@@ -128,9 +129,9 @@ abstract class Expression(protected val statement: Statement): Return<String> {
 }
 
 class JoinExpression(
-        statement: Statement,
-        private val table: String
-): Expression(statement), JoinOn<String> {
+    statement: Statement,
+    private val table: String
+) : Expression(statement), JoinOn<String> {
 
     override fun <V> on(field: Condition<V, *>): JoinAndOr<String> {
         val expression = JoinOnExpression(statement, field)
@@ -144,9 +145,9 @@ class JoinExpression(
 }
 
 class JoinOnExpression<V>(
-        statement: Statement,
-        private val field: Condition<V, *>,
-        private val operator: Operator? = null
+    statement: Statement,
+    private val field: Condition<V, *>,
+    private val operator: Operator? = null
 ) : Expression(statement), JoinAndOr<String> {
 
     override fun <V> and(condition: Condition<V, *>): JoinAndOr<String> {
@@ -173,10 +174,10 @@ class JoinOnExpression<V>(
 }
 
 open class LogicalExpression<V>(
-        statement: Statement,
-        private val condition: Condition<V, *>,
-        private val operator: Operator? = null
-): Expression(statement), WhereAndOr<String> {
+    statement: Statement,
+    private val condition: Condition<V, *>,
+    private val operator: Operator? = null
+) : Expression(statement), WhereAndOr<String> {
 
     override fun <V> and(condition: Condition<V, *>): WhereAndOr<String> {
         val expression = LogicalExpression(statement, condition, Operator.AND)
@@ -196,8 +197,8 @@ open class LogicalExpression<V>(
 }
 
 class WhereExpression<V>(
-        statement: Statement,
-        condition: Condition<V, *>
+    statement: Statement,
+    condition: Condition<V, *>
 ) : LogicalExpression<V>(statement, condition, null) {
 
     override fun build(): String {
@@ -234,14 +235,21 @@ class Statement internal constructor(private val table: String) : Join<String>, 
 }
 
 infix fun String.eq(other: Any): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.EQUAL, other))
-infix fun String.ne(other: Any): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.NOT_EQUAL, other))
-infix fun String.lt(other: Any): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.LESS_THAN, other))
-infix fun String.gt(other: Any): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.GREATER_THAN, other))
-infix fun String.lte(other: Any): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.LESS_THAN_OR_EQUAL, other))
-infix fun String.gte(other: Any): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.GREATER_THAN_OR_EQUAL, other))
-infix fun String.like(other: String): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.LIKE, other))
+infix fun String.ne(other: Any): Logical<String, Any?> =
+    LogicalCondition(FieldCondition(this, Operator.NOT_EQUAL, other))
+infix fun String.lt(other: Any): Logical<String, Any?> =
+    LogicalCondition(FieldCondition(this, Operator.LESS_THAN, other))
+infix fun String.gt(other: Any): Logical<String, Any?> =
+    LogicalCondition(FieldCondition(this, Operator.GREATER_THAN, other))
+infix fun String.lte(other: Any): Logical<String, Any?> =
+    LogicalCondition(FieldCondition(this, Operator.LESS_THAN_OR_EQUAL, other))
+infix fun String.gte(other: Any): Logical<String, Any?> =
+    LogicalCondition(FieldCondition(this, Operator.GREATER_THAN_OR_EQUAL, other))
+infix fun String.like(other: String): Logical<String, Any?> =
+    LogicalCondition(FieldCondition(this, Operator.LIKE, other))
 fun String.`in`(other: List<Any>): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.IN, other))
-fun String.notIn(other: List<Any>): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.NOT_IN, other))
+fun String.notIn(other: List<Any>): Logical<String, Any?> =
+    LogicalCondition(FieldCondition(this, Operator.NOT_IN, other))
 fun String.isNull(): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.IS_NULL, null))
 fun String.notNull(): Logical<String, Any?> = LogicalCondition(FieldCondition(this, Operator.NOT_NULL, null))
 

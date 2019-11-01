@@ -64,11 +64,11 @@ task countExpansionGroups {
         def sumPart2 = 0
         def sumPart3 = 0
 
-        for (CardSet set: sets) {
+        for (CardSet set : sets) {
             def setRD = df.parse(set.releaseDate)
             if (setRD.before(firstCutoffDate) || setRD == firstCutoffDate) {
                 sumPart1 += set.totalCards
-            } else if (setRD.after(firstCutoffDate) && (setRD.before(secondCutoffDate) || setRD == secondCutoffDate)){
+            } else if (setRD.after(firstCutoffDate) && (setRD.before(secondCutoffDate) || setRD == secondCutoffDate)) {
                 sumPart2 += set.totalCards
             } else {
                 sumPart3 += set.totalCards

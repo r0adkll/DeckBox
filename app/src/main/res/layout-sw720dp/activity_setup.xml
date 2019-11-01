@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center"
-    android:background="?attr/colorPrimary">
+    android:background="?attr/colorPrimary"
+    >
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.CardSwitcher
         android:id="@+id/cardSwitcher"
@@ -21,12 +22,14 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="start|center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            />
 
         <TextView
             android:id="@+id/setupTitle"
@@ -56,7 +59,8 @@
             android:layout_marginTop="24dp"
             android:layout_marginStart="-2dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/actionSignIn"

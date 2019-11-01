@@ -29,10 +29,7 @@ fun View.addLayoutHeight(height: Int) {
     this.layoutParams = lp
 }
 
-fun View.margins(left: Int? = null,
-                 top: Int? = null,
-                 right: Int? = null,
-                 bottom: Int? = null) {
+fun View.margins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
     val lp = this.layoutParams as? ViewGroup.MarginLayoutParams
     lp?.let { params ->
         left?.let { params.leftMargin = it }
@@ -43,10 +40,7 @@ fun View.margins(left: Int? = null,
     }
 }
 
-fun View.marginsRelative(start: Int? = null,
-                         top: Int? = null,
-                         end: Int? = null,
-                         bottom: Int? = null) {
+fun View.marginsRelative(start: Int? = null, top: Int? = null, end: Int? = null, bottom: Int? = null) {
     val lp = this.layoutParams as? ViewGroup.MarginLayoutParams
     lp?.let { params ->
         start?.let { params.marginStart = it }

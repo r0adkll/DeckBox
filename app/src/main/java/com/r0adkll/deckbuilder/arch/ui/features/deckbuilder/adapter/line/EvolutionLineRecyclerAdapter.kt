@@ -20,9 +20,9 @@ import com.r0adkll.deckbuilder.util.extensions.marginsRelative
  * A [RecyclerView.Adapter] for horizontally displaying an [EvolutionChain]
  */
 class EvolutionLineRecyclerAdapter(
-        val context: Context,
-        val editCardIntentions: EditCardIntentions,
-        val spanCount: Int
+    val context: Context,
+    val editCardIntentions: EditCardIntentions,
+    val spanCount: Int
 ) : RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
 
     private val linkSpacing: Int = context.dip(24f)
@@ -41,7 +41,7 @@ class EvolutionLineRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
         val vh = PokemonCardViewHolder.create(inflater, parent, false, false,
-                editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
+            editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
 
         var parentWidth = parent.resources.getDimensionPixelSize(R.dimen.deck_building_width)
         if (parentWidth <= 0) {
@@ -60,12 +60,12 @@ class EvolutionLineRecyclerAdapter(
         evolution.getItem(position)?.let { card ->
             val evolution = getEvolutionState(position)
             holder.bind(
-                    card.card,
-                    card.count,
-                    evolution.evolution,
-                    isEditing,
-                    card.collection ?: 0,
-                    isCollectionEnabled
+                card.card,
+                card.count,
+                evolution.evolution,
+                isEditing,
+                card.collection ?: 0,
+                isCollectionEnabled
             )
 
             holder.itemView.setOnClickListener {
@@ -137,8 +137,7 @@ class EvolutionLineRecyclerAdapter(
             if (hasNextNode && isLastCard) {
                 return PokemonCardView.Evolution.END
             }
-        }
-        else {
+        } else {
             if (isFirstCard && isLastCard && hasNextNode) {
                 return PokemonCardView.Evolution.MIDDLE
             } else if (isFirstCard) {
@@ -176,9 +175,9 @@ class EvolutionLineRecyclerAdapter(
                     return old?.let { oldChain ->
                         val oldItem = oldChain.getItem(oldItemPosition)!!
                         val newItem = new.getItem(newItemPosition)!!
-                        oldItem == newItem
-                                && oldItem.count == newItem.count
-                                && oldItem.collection == newItem.collection
+                        oldItem == newItem &&
+                            oldItem.count == newItem.count &&
+                            oldItem.collection == newItem.collection
                     } ?: false
                 }
 

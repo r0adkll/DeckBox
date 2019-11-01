@@ -11,18 +11,22 @@ import dagger.Provides
 @Module
 class OverviewModule(val fragment: OverviewFragment) {
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideUi(): OverviewUi = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideIntentions(): OverviewUi.Intentions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideActions(): OverviewUi.Actions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideRenderer(
-            actions: OverviewUi.Actions,
-            schedulers: AppSchedulers
-    ) : OverviewRenderer = OverviewRenderer(actions, schedulers.main, schedulers.comp)
+        actions: OverviewUi.Actions,
+        schedulers: AppSchedulers
+    ): OverviewRenderer = OverviewRenderer(actions, schedulers.main, schedulers.comp)
 }

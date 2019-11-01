@@ -37,8 +37,8 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class HomeActivity : BaseActivity(),
-        HasComponent<HomeComponent>,
-        CollectionProgressController {
+    HasComponent<HomeComponent>,
+    CollectionProgressController {
 
     @Inject lateinit var editor: EditRepository
     @Inject lateinit var featureFlags: FlagPreferences
@@ -55,7 +55,7 @@ class HomeActivity : BaseActivity(),
         pager.offscreenPageLimit = 2
 
         bottomNavigation.setOnTabSelectListener({
-            when(it) {
+            when (it) {
                 R.id.tab_decks -> {
                     if (pager.currentItem != 0) {
                         pager.setCurrentItem(0, true)
@@ -94,7 +94,7 @@ class HomeActivity : BaseActivity(),
 
     override fun setupComponent() {
         this.component = DeckApp.component
-                .plus(HomeModule(this))
+            .plus(HomeModule(this))
         this.component.inject(this)
     }
 
@@ -107,13 +107,13 @@ class HomeActivity : BaseActivity(),
             if (it.isNotEmpty()) {
                 Analytics.event(Event.SelectContent.Action("import_cards"))
                 disposables += editor.createSession(imports = it)
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ sessionId ->
-                            startActivity(DeckBuilderActivity.createIntent(this, sessionId, true))
-                        }, { t ->
-                            Timber.e(t)
-                            snackbar(R.string.error_session_new_deck)
-                        })
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ sessionId ->
+                        startActivity(DeckBuilderActivity.createIntent(this, sessionId, true))
+                    }, { t ->
+                        Timber.e(t)
+                        snackbar(R.string.error_session_new_deck)
+                    })
             }
         }
     }
@@ -124,7 +124,7 @@ class HomeActivity : BaseActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_import -> {
                 Analytics.event(Event.SelectContent.MenuAction("import_decklist"))
                 DeckImportActivity.show(this)
@@ -140,7 +140,8 @@ class HomeActivity : BaseActivity(),
     }
 
     override fun setOverallProgress(progress: Float) {
-        progressCompletion.text = getString(R.string.completion_format, (progress.times(100f).roundToInt().coerceIn(0, 100)))
+        progressCompletion.text = getString(R.string.completion_format,
+            (progress.times(100f).roundToInt().coerceIn(0, 100)))
         progressView.progress = progress
     }
 
@@ -155,10 +156,10 @@ class HomeActivity : BaseActivity(),
     }
 
     class HomePagerAdapter(
-            fragmentManager: FragmentManager
+        fragmentManager: FragmentManager
     ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-        override fun getItem(position: Int): Fragment = when(position) {
+        override fun getItem(position: Int): Fragment = when (position) {
             0 -> DecksFragment.newInstance()
             1 -> CollectionFragment.newInstance()
             2 -> BrowseFragment.newInstance()

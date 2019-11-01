@@ -12,7 +12,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
-import com.r0adkll.deckbuilder.internal.analytics.UserProperty
 import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL
 import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_GOOGLE
 import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_LOCAL
@@ -41,8 +40,7 @@ class RouteActivity : AppCompatActivity() {
             }
 
             startActivity(HomeActivity.createIntent(this))
-        }
-        else {
+        } else {
             Shortcuts.clearShortcuts(this)
             startActivity(SetupActivity.createIntent(this))
         }
@@ -51,9 +49,9 @@ class RouteActivity : AppCompatActivity() {
     }
 
     private fun isSignedIn(): Boolean {
-        return firebase.currentUser != null
-                || !preferences.deviceId.isNullOrBlank()
-                || (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())
+        return firebase.currentUser != null ||
+            !preferences.deviceId.isNullOrBlank() ||
+            (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())
     }
 
     private fun setUserLevelProperty() {

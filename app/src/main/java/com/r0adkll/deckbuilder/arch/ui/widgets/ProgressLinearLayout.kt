@@ -9,7 +9,9 @@ import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.R
 
 class ProgressLinearLayout @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     var progress: Float = 0f

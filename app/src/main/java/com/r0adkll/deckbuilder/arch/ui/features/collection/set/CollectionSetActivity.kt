@@ -23,6 +23,7 @@ import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.extensions.color
 import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.util.bindParcelable
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.DeckApp
@@ -39,7 +40,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
-import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
@@ -77,26 +77,26 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         setContentView(R.layout.activity_collection_set)
 
         GlideApp.with(this)
-                .`as`(PaletteBitmap::class.java)
-                .load(expansion.logoUrl)
-                .into(PaletteBitmapViewTarget(logo, listOf(TargetPaletteAction())))
+            .`as`(PaletteBitmap::class.java)
+            .load(expansion.logoUrl)
+            .into(PaletteBitmapViewTarget(logo, listOf(TargetPaletteAction())))
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = " "
         appbar?.setNavigationOnClickListener { finish() }
 
         adapter = CollectionSetRecyclerAdapter(
-                this,
-                removeCardClicks,
-                addCardClicks,
-                {
-                    addCardClicks.accept(listOf(it.card))
-                },
-                { _, stackedPokemonCard ->
-                    Analytics.event(Event.SelectContent.PokemonCard(stackedPokemonCard.card.id))
-                    startActivity(CardDetailActivity.createIntent(this, stackedPokemonCard.card))
-                    true
-                }
+            this,
+            removeCardClicks,
+            addCardClicks,
+            {
+                addCardClicks.accept(listOf(it.card))
+            },
+            { _, stackedPokemonCard ->
+                Analytics.event(Event.SelectContent.PokemonCard(stackedPokemonCard.card.id))
+                startActivity(CardDetailActivity.createIntent(this, stackedPokemonCard.card))
+                true
+            }
         )
         adapter.emptyView = emptyView
 
@@ -127,13 +127,17 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         }
         return menu?.findItem(R.id.action_toggle_missing_cards)?.let { toggleMissingCards ->
             toggleMissingCards.isChecked = state.onlyMissingCards
-            toggleMissingCards.setIcon(if (state.onlyMissingCards) R.drawable.toggle_switch else R.drawable.toggle_switch_off)
+            toggleMissingCards.setIcon(if (state.onlyMissingCards) {
+                R.drawable.toggle_switch
+            } else {
+                R.drawable.toggle_switch_off
+            })
             true
         } ?: false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_add_all -> {
                 Analytics.event(Event.SelectContent.MenuAction("collection_add_all"))
                 incrementSetClicks.accept(Unit)
@@ -150,7 +154,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     override fun setupComponent() {
         DeckApp.component.plus(CollectionSetModule(this))
-                .inject(this)
+            .inject(this)
 
         // Force update state from intent extras
         state = state.copy(expansion = expansion)
@@ -166,18 +170,18 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     override fun addCard(): Observable<List<PokemonCard>> {
         return addCardClicks
-                .doOnNext {
-                    it.forEach { card ->
-                        Analytics.event(Event.SelectContent.Collection.Increment(card.id))
-                    }
+            .doOnNext {
+                it.forEach { card ->
+                    Analytics.event(Event.SelectContent.Collection.Increment(card.id))
                 }
+            }
     }
 
     override fun removeCard(): Observable<PokemonCard> {
         return removeCardClicks
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Collection.Decrement(it.id))
-                }
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Collection.Decrement(it.id))
+            }
     }
 
     override fun addSet(): Observable<Unit> {
@@ -190,7 +194,8 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     override fun showOverallProgress(progress: Float) {
         progressBar.progress = progress
-        progressCompletion.text = getString(R.string.completion_format, progress.times(100f).roundToInt().coerceIn(0, 100))
+        progressCompletion.text = getString(R.string.completion_format,
+            progress.times(100f).roundToInt().coerceIn(0, 100))
     }
 
     override fun showCollection(cards: List<StackedPokemonCard>) {
@@ -221,7 +226,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         override fun execute(palette: androidx.palette.graphics.Palette?) {
             palette?.let { p ->
                 p.vibrantSwatch?.rgb?.let {
-                    when(expansion.code) {
+                    when (expansion.code) {
                         "sm75" -> {
                             val background = ColorDrawable(it)
                             val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)

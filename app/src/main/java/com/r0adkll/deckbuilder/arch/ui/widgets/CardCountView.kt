@@ -19,7 +19,9 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import io.pokemontcg.model.SuperType
 
 class CardCountView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val pokemonCountView: TextView
@@ -64,7 +66,7 @@ class CardCountView @JvmOverloads constructor(
     @Suppress("NON_EXHAUSTIVE_WHEN")
     fun count(superType: SuperType, cards: List<PokemonCard>) {
         val count = cards.count { it.supertype == superType }.toString()
-        when(superType) {
+        when (superType) {
             SuperType.POKEMON -> pokemonCountView.text = count
             SuperType.TRAINER -> trainerCountView.text = count
             SuperType.ENERGY -> energyCountView.text = count
@@ -75,8 +77,8 @@ class CardCountView @JvmOverloads constructor(
     fun countStacks(superType: SuperType, cards: List<StackedPokemonCard>) {
         var count = 0
         cards.filter { it.card.supertype == superType }
-                .forEach { count += it.count }
-        when(superType) {
+            .forEach { count += it.count }
+        when (superType) {
             SuperType.POKEMON -> pokemonCountView.text = count.toString()
             SuperType.TRAINER -> trainerCountView.text = count.toString()
             SuperType.ENERGY -> energyCountView.text = count.toString()

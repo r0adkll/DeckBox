@@ -21,10 +21,16 @@ import io.reactivex.Flowable
 @Dao
 abstract class SessionDao {
 
-    @Transaction @Query("SELECT * FROM sessions WHERE uid = :sessionId")
+    @Transaction
+    @Query("SELECT * FROM sessions WHERE uid = :sessionId")
     abstract fun getSessionWithChanges(sessionId: Long): Flowable<SessionWithChanges>
 
-    @Transaction @Query("SELECT * FROM session_card_join INNER JOIN cards ON session_card_join.cardId = cards.id WHERE session_card_join.sessionId = :sessionId")
+    @Transaction
+    @Query("""
+        SELECT * FROM session_card_join 
+        INNER JOIN cards ON session_card_join.cardId = cards.id 
+        WHERE session_card_join.sessionId = :sessionId
+        """)
     abstract fun getSessionCards(sessionId: Long): Flowable<List<StackedCard>>
 
     @Query("SELECT * FROM session_card_join WHERE sessionId = :sessionId")
@@ -116,7 +122,11 @@ abstract class SessionDao {
      */
 
     @Transaction
-    open fun insertNewSession(session: SessionEntity, cards: List<CardWithAttacks>, joins: List<SessionCardJoin>): Long {
+    open fun insertNewSession(
+        session: SessionEntity,
+        cards: List<CardWithAttacks>,
+        joins: List<SessionCardJoin>
+    ): Long {
         insertCardsWithAttacks(cards)
 
         val sessionId = insertSession(session)
@@ -163,7 +173,7 @@ abstract class SessionDao {
     }
 
     @Transaction
-    open fun insertRemoveChange(sessionId: Long, card: CardWithAttacks?, change: SessionChangeEntity){
+    open fun insertRemoveChange(sessionId: Long, card: CardWithAttacks?, change: SessionChangeEntity) {
         card?.let { insertCardWithAttacks(it) }
         insertChange(change)
 
@@ -203,8 +213,8 @@ abstract class SessionDao {
     open fun clearSearchSession(sessionId: Long, searchSessionId: String) {
         val changes = getChangesForSearchSession(sessionId, searchSessionId)
         val condensedChanges = changes.groupBy { it.cardId }
-                .mapValues { it.value.sumBy { it.change } }
-                .filter { it.value > 0 }
+            .mapValues { it.value.sumBy { it.change } }
+            .filter { it.value > 0 }
 
         val joins = getSessionCardJoins(sessionId, condensedChanges.map { it.key })
         val joinsToUpdate = ArrayList<SessionCardJoin>()

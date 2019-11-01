@@ -4,7 +4,6 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersion
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.PreviewExpansionVersion
 import io.reactivex.Observable
 import org.amshove.kluent.When
@@ -39,7 +38,10 @@ class DefaultExpansionRepositoryTest {
         repository = DefaultExpansionRepository(defaultSource, previewSource, preferences, remote)
 
         When calling defaultSource.getExpansions(any()) itReturns Observable.just(listOf(defaultExpansion))
-        When calling defaultSource.refreshExpansions() itReturns Observable.just(listOf(defaultExpansion, refreshedExpansion))
+        When calling defaultSource.refreshExpansions() itReturns Observable.just(listOf(
+            defaultExpansion,
+            refreshedExpansion
+        ))
         When calling previewSource.getExpansions(any()) itReturns Observable.just(listOf(previewExpansion))
     }
 

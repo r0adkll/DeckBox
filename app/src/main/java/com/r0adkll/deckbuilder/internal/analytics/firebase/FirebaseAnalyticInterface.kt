@@ -16,7 +16,7 @@ import com.r0adkll.deckbuilder.internal.analytics.AnalyticInterface
 import com.r0adkll.deckbuilder.internal.analytics.Event
 
 class FirebaseAnalyticInterface(
-        context: Context
+    context: Context
 ) : AnalyticInterface {
 
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
@@ -41,7 +41,7 @@ class FirebaseAnalyticInterface(
         firebaseAnalytics.logEvent(getEvent(event), getBundle(event))
     }
 
-    private fun getEvent(event: Event): String = when(event) {
+    private fun getEvent(event: Event): String = when (event) {
         is Event.Login -> FirebaseAnalytics.Event.LOGIN
         is Event.SignUp -> FirebaseAnalytics.Event.SIGN_UP
         is Event.SelectContent -> FirebaseAnalytics.Event.SELECT_CONTENT
@@ -54,7 +54,7 @@ class FirebaseAnalyticInterface(
         Event.TutorialComplete -> FirebaseAnalytics.Event.TUTORIAL_COMPLETE
     }
 
-    private fun getBundle(event: Event): Bundle = when(event) {
+    private fun getBundle(event: Event): Bundle = when (event) {
         Event.Login.Google -> bundle { METHOD to "google" }
         Event.Login.Anonymous -> bundle { METHOD to "anonymous" }
         Event.SignUp.Google -> bundle { METHOD to "google" }

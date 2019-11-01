@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class TestResultsRecyclerAdapter(
-        context: Context
+    context: Context
 ) : ListAdapter<TestResult, TestResultViewHolder>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)

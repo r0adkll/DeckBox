@@ -17,13 +17,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class CardDetailPresenter @Inject constructor(
-        ui: CardDetailUi,
-        val intentions: CardDetailUi.Intentions,
-        val repository: CardRepository,
-        val collectionRepository: CollectionRepository,
-        val marketplaceRepository: MarketplaceRepository,
-        val editor: EditRepository,
-        val validator: DeckValidator
+    ui: CardDetailUi,
+    val intentions: CardDetailUi.Intentions,
+    val repository: CardRepository,
+    val collectionRepository: CollectionRepository,
+    val marketplaceRepository: MarketplaceRepository,
+    val editor: EditRepository,
+    val validator: DeckValidator
 ) : UiPresenter<State, Change>(ui) {
 
     @SuppressLint("RxSubscribeOnError")
@@ -31,79 +31,79 @@ class CardDetailPresenter @Inject constructor(
 
         val observeSession = ui.state.sessionId?.let {
             editor.observeSession(it)
-                    .map {
-                        it.cards.filter { it.id == ui.state.card?.id }.count()
-                    }
-                    .map { Change.CountChanged(it) as Change }
-                    .onErrorReturn(handleUnknownError)
+                .map {
+                    it.cards.filter { it.id == ui.state.card?.id }.count()
+                }
+                .map { Change.CountChanged(it) as Change }
+                .onErrorReturn(handleUnknownError)
         } ?: Observable.empty<Change>()
 
         val loadValidation = validator.validate(listOf(ui.state.card!!))
-                .map { Change.Validated(it) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { Change.Validated(it) as Change }
+            .onErrorReturn(handleUnknownError)
 
         val loadCollectionCount = collectionRepository.getCount(ui.state.card!!.id)
-                .map { Change.CollectionCountChanged(it.count) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { Change.CollectionCountChanged(it.count) as Change }
+            .onErrorReturn(handleUnknownError)
 
         val loadPrice = marketplaceRepository.getPrice(ui.state.card!!.id)
-                .map { Change.PriceUpdated(it) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { Change.PriceUpdated(it) as Change }
+            .onErrorReturn(handleUnknownError)
 
         val loadVariants = repository.search(ui.state.card!!.supertype, ui.state.card!!.name)
-                .map { it.filter { it.id != ui.state.card!!.id } }
-                .map { Change.VariantsLoaded(it) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { it.filter { it.id != ui.state.card!!.id } }
+            .map { Change.VariantsLoaded(it) as Change }
+            .onErrorReturn(handleUnknownError)
 
         val loadEvolves = ui.state.card!!.evolvesFrom?.let {
             repository.search(ui.state.card!!.supertype, it)
-                    .map { Change.EvolvesFromLoaded(it) as Change }
-                    .onErrorReturn(handleUnknownError)
+                .map { Change.EvolvesFromLoaded(it) as Change }
+                .onErrorReturn(handleUnknownError)
         } ?: Observable.empty()
 
         val loadEvolvesTo = repository.search(ui.state.card!!.supertype, "", Filter(evolvesFrom = ui.state.card!!.name))
-                .map { Change.EvolvesToLoaded(it) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { Change.EvolvesToLoaded(it) as Change }
+            .onErrorReturn(handleUnknownError)
 
         val incrementCollectionCount = intentions.incrementCollectionCount()
-                .flatMap {
-                    collectionRepository.incrementCount(ui.state.card!!)
-                            .map { Change.CollectionCountUpdated(0) as Change }
-                            .startWith(Change.CollectionCountUpdated(1))
-                            .onErrorReturn { Change.CollectionCountUpdated(-1) }
-                }
+            .flatMap {
+                collectionRepository.incrementCount(ui.state.card!!)
+                    .map { Change.CollectionCountUpdated(0) as Change }
+                    .startWith(Change.CollectionCountUpdated(1))
+                    .onErrorReturn { Change.CollectionCountUpdated(-1) }
+            }
 
         val decrementCollectionCount = intentions.decrementCollectionCount()
-                .flatMap {
-                    collectionRepository.decrementCount(ui.state.card!!)
-                            .map { Change.CollectionCountUpdated(0) as Change }
-                            .startWith(Change.CollectionCountUpdated(-1))
-                            .onErrorReturn { Change.CollectionCountUpdated(1) }
-                }
+            .flatMap {
+                collectionRepository.decrementCount(ui.state.card!!)
+                    .map { Change.CollectionCountUpdated(0) as Change }
+                    .startWith(Change.CollectionCountUpdated(-1))
+                    .onErrorReturn { Change.CollectionCountUpdated(1) }
+            }
 
         disposables += intentions.addCardClicks()
-                .flatMap { editor.addCards(ui.state.sessionId!!, listOf(ui.state.card!!)) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Card(s) added to session")
-                }, { t -> Timber.e(t, "Error adding card to session")})
+            .flatMap { editor.addCards(ui.state.sessionId!!, listOf(ui.state.card!!)) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Card(s) added to session")
+            }, { t -> Timber.e(t, "Error adding card to session") })
 
         disposables += intentions.removeCardClicks()
-                .flatMap { editor.removeCard(ui.state.sessionId!!, ui.state.card!!) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Timber.d("Card removed from session")
-                }, { t -> Timber.e(t, "Error removing card from session")})
+            .flatMap { editor.removeCard(ui.state.sessionId!!, ui.state.card!!) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Timber.d("Card removed from session")
+            }, { t -> Timber.e(t, "Error removing card from session") })
 
         return observeSession
-                .mergeWith(loadVariants)
-                .mergeWith(loadValidation)
-                .mergeWith(loadCollectionCount)
-                .mergeWith(loadPrice)
-                .mergeWith(loadEvolves)
-                .mergeWith(loadEvolvesTo)
-                .mergeWith(incrementCollectionCount)
-                .mergeWith(decrementCollectionCount)
+            .mergeWith(loadVariants)
+            .mergeWith(loadValidation)
+            .mergeWith(loadCollectionCount)
+            .mergeWith(loadPrice)
+            .mergeWith(loadEvolves)
+            .mergeWith(loadEvolvesTo)
+            .mergeWith(incrementCollectionCount)
+            .mergeWith(decrementCollectionCount)
     }
 
     companion object {

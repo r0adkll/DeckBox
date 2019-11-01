@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/slidingLayout"
@@ -33,7 +34,8 @@
                 android:id="@+id/appbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/white"
+                >
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/appbar"
@@ -85,10 +87,10 @@
                 </com.google.android.material.tabs.TabLayout>
 
                 <!--<View-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="1dp"-->
-                    <!--android:background="@color/black12"-->
-                    <!--/>-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/black12"-->
+                <!--/>-->
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -169,7 +171,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_gravity="center"
-                    android:gravity="center">
+                    android:gravity="center"
+                    >
 
                     <ImageView
                         android:id="@+id/dropCard"
@@ -225,7 +228,8 @@
 
         </RelativeLayout>
 
-        <include layout="@layout/layout_detail_panel"
+        <include
+            layout="@layout/layout_detail_panel"
             android:id="@+id/detailPanel"
             />
 
@@ -237,7 +241,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inAnimation="@anim/slide_in_left"
-        android:outAnimation="@anim/slide_out_left">
+        android:outAnimation="@anim/slide_out_left"
+        >
 
         <fragment
             android:id="@+id/search_fragment"

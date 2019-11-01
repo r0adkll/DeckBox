@@ -17,7 +17,6 @@ class ManageOfflineActivity : BaseActivity() {
     }
 
     override fun setupComponent() {
-
     }
 
     companion object {

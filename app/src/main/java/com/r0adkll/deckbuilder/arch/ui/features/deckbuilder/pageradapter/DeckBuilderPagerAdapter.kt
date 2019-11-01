@@ -17,9 +17,9 @@ import io.pokemontcg.model.SuperType
  * Pager adapter for all the [io.pokemontcg.model.SuperType]s involved in building a deck
  */
 class DeckBuilderPagerAdapter(
-        private val context: Context,
-        private val pokemonCardClicks: Relay<PokemonCardView>,
-        private val editCardIntentions: EditCardIntentions
+    private val context: Context,
+    private val pokemonCardClicks: Relay<PokemonCardView>,
+    private val editCardIntentions: EditCardIntentions
 ) : androidx.viewpager.widget.PagerAdapter() {
 
     var isEditing: Boolean = false
@@ -46,7 +46,7 @@ class DeckBuilderPagerAdapter(
         val vh = getViewHolder(position, view, pokemonCardClicks, editCardIntentions)
         vh.setup()
 
-        when(position) {
+        when (position) {
             0 -> vh.bind(pokemonCards)
             1 -> vh.bind(trainerCards)
             2 -> vh.bind(energyCards)
@@ -65,7 +65,7 @@ class DeckBuilderPagerAdapter(
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
     override fun getCount(): Int = 3
 
-    override fun getPageTitle(position: Int): CharSequence = when(position) {
+    override fun getPageTitle(position: Int): CharSequence = when (position) {
         0 -> context.getString(R.string.tab_pokemon)
         1 -> context.getString(R.string.tab_trainer)
         2 -> context.getString(R.string.tab_energy)
@@ -74,7 +74,7 @@ class DeckBuilderPagerAdapter(
 
     fun setCards(type: SuperType, cards: List<StackedPokemonCard>) {
         @Suppress("NON_EXHAUSTIVE_WHEN")
-        when(type) {
+        when (type) {
             SuperType.POKEMON -> {
                 pokemonCards = cards
                 viewHolders[0]?.bind(pokemonCards)
@@ -92,7 +92,7 @@ class DeckBuilderPagerAdapter(
 
     @Suppress("NON_EXHAUSTIVE_WHEN")
     fun wiggleCard(card: PokemonCard) {
-        when(card.supertype) {
+        when (card.supertype) {
             SuperType.POKEMON -> viewHolders[0]?.wiggleCard(card)
             SuperType.TRAINER -> viewHolders[1]?.wiggleCard(card)
             SuperType.ENERGY -> viewHolders[2]?.wiggleCard(card)
@@ -100,26 +100,25 @@ class DeckBuilderPagerAdapter(
     }
 
     private fun getViewHolder(
-            position: Int,
-            itemView: View,
-            pokemonCardClicks: Relay<PokemonCardView>,
-            editCardIntentions: EditCardIntentions
+        position: Int,
+        itemView: View,
+        pokemonCardClicks: Relay<PokemonCardView>,
+        editCardIntentions: EditCardIntentions
     ): SuperTypeViewHolder<*> {
-        val emptyIcon = when(position) {
+        val emptyIcon = when (position) {
             0 -> R.drawable.ic_empty_pokeball
             1 -> R.drawable.ic_empty_wrench
             else -> R.drawable.ic_empty_flash
         }
-        val emptyMessage = when(position) {
+        val emptyMessage = when (position) {
             0 -> R.string.empty_deck_pokemon_message
             1 -> R.string.empty_deck_trainer_message
             else -> R.string.empty_deck_energy_message
         }
 
-        return when(position) {
+        return when (position) {
             0 -> PokemonViewHolder(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions)
             else -> TrainerEnergyViewHolder(itemView, emptyIcon, emptyMessage, pokemonCardClicks, editCardIntentions)
         }
     }
-
 }

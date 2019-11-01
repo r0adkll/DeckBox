@@ -15,10 +15,10 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.bindView
 
 class CollectionCardViewHolder(
-        itemView: View,
-        val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
-        val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
-): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    itemView: View,
+    val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
+    val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
+) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     private val cardView: PokemonCardView by bindView(R.id.card)
     private val cardCount: TextView by bindView(R.id.count)
@@ -40,13 +40,15 @@ class CollectionCardViewHolder(
     }
 
     companion object {
-        fun create(inflater: LayoutInflater,
-                   parent: ViewGroup,
-                   removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
-                   addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()): CollectionCardViewHolder {
+        fun create(
+            inflater: LayoutInflater,
+            parent: ViewGroup,
+            removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
+            addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
+        ): CollectionCardViewHolder {
             val view = inflater.inflate(R.layout.item_pokemon_card_collection, parent, false)
             return CollectionCardViewHolder(view,
-                    removeCardClicks = removeCardClicks, addCardClicks = addCardClicks)
+                removeCardClicks = removeCardClicks, addCardClicks = addCardClicks)
         }
     }
 }

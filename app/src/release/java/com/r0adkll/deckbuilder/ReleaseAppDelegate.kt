@@ -25,8 +25,8 @@ class ReleaseAppDelegate : AppDelegate {
 
     private fun installFabric(app: Application) {
         val fabric = Fabric.Builder(app)
-                .kits(Crashlytics())
-                .build()
+            .kits(Crashlytics())
+            .build()
         Fabric.with(fabric)
     }
 

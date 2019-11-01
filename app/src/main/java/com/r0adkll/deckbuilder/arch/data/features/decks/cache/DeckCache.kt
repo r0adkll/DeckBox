@@ -12,13 +12,13 @@ interface DeckCache {
     fun getDecks(): Observable<List<Deck>>
 
     fun putDeck(
-            id: String?,
-            cards: List<PokemonCard>,
-            name: String,
-            description: String?,
-            image: DeckImage?,
-            collectionOnly: Boolean
-    ) : Observable<Deck>
+        id: String?,
+        cards: List<PokemonCard>,
+        name: String,
+        description: String?,
+        image: DeckImage?,
+        collectionOnly: Boolean
+    ): Observable<Deck>
 
     fun deleteDeck(deck: Deck): Observable<Unit>
 

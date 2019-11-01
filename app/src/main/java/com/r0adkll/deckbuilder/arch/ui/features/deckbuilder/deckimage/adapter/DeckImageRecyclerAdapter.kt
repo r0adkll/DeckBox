@@ -7,8 +7,8 @@ import com.ftinc.kit.recycler.EmptyViewListAdapter
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class DeckImageRecyclerAdapter(
-        context: Context,
-        private val itemClickListener: (DeckImage) -> Unit = {}
+    context: Context,
+    private val itemClickListener: (DeckImage) -> Unit = {}
 ) : EmptyViewListAdapter<DeckImage, UiViewHolder<DeckImage>>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)

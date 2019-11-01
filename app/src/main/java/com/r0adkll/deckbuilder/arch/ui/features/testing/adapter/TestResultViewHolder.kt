@@ -27,8 +27,8 @@ class TestResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         percent.text = "${background.percentage.toInt()}%"
 
         GlideApp.with(itemView)
-                .load(item.pokemonCard?.imageUrl)
-                .into(imageView)
+            .load(item.pokemonCard?.imageUrl)
+            .into(imageView)
     }
 
     companion object {

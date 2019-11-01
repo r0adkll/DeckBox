@@ -9,20 +9,20 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DeckImportPresenter @Inject constructor(
-        ui: DeckImportUi,
-        val intentions: DeckImportUi.Intentions,
-        val importer: Importer
+    ui: DeckImportUi,
+    val intentions: DeckImportUi.Intentions,
+    val importer: Importer
 ) : UiPresenter<State, Change>(ui) {
 
     override fun smashObservables(): Observable<Change> {
         return intentions.importDeckList()
-                .flatMap { deckList ->
-                    importer.import(deckList)
-                            .map { Change.DeckListConverted(it) as Change }
-                            .startWith(Change.IsLoading as Change)
-                            .onErrorReturn(handleUnknownError)
-                }
-                .doOnNext { Timber.d(it.logText) }
+            .flatMap { deckList ->
+                importer.import(deckList)
+                    .map { Change.DeckListConverted(it) as Change }
+                    .startWith(Change.IsLoading as Change)
+                    .onErrorReturn(handleUnknownError)
+            }
+            .doOnNext { Timber.d(it.logText) }
     }
 
     companion object {

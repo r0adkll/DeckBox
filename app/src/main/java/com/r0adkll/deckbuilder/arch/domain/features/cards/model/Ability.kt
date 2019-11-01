@@ -5,6 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Ability(
-        val name: String,
-        val text: String
+    val name: String,
+    val text: String
 ) : Parcelable

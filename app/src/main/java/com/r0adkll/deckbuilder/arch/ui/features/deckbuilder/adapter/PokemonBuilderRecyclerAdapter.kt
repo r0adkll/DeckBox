@@ -14,10 +14,10 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.notifyingField
 
 class PokemonBuilderRecyclerAdapter(
-        context: Context,
-        private val spanCount: Int,
-        private val editCardIntentions: EditCardIntentions,
-        private val pokemonCardClicks: Relay<PokemonCardView>
+    context: Context,
+    private val spanCount: Int,
+    private val editCardIntentions: EditCardIntentions,
+    private val pokemonCardClicks: Relay<PokemonCardView>
 ) : EmptyViewListAdapter<PokemonItem, RecyclerView.ViewHolder>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)
@@ -36,15 +36,15 @@ class PokemonBuilderRecyclerAdapter(
             }
             else -> {
                 PokemonCardViewHolder.create(inflater, parent, false,
-                        addCardClicks = editCardIntentions.addCardClicks,
-                        removeCardClicks = editCardIntentions.removeCardClicks)
+                    addCardClicks = editCardIntentions.addCardClicks,
+                    removeCardClicks = editCardIntentions.removeCardClicks)
             }
         }
     }
 
     override fun onBindViewHolder(vh: RecyclerView.ViewHolder, i: Int) {
         val item = getItem(i)
-        when(vh) {
+        when (vh) {
             is EvolutionChainViewHolder -> {
                 val evolutionChain = item as PokemonItem.Evolution
                 vh.bind(evolutionChain.evolutionChain, isEditing, isCollectionEnabled)
@@ -52,11 +52,11 @@ class PokemonBuilderRecyclerAdapter(
             is PokemonCardViewHolder -> {
                 val single = (item as PokemonItem.Single).card
                 vh.bind(
-                        single.card,
-                        single.count,
-                        isEditMode = isEditing,
-                        collectionCount = single.collection ?: 0,
-                        isCollectionMode = isCollectionEnabled
+                    single.card,
+                    single.count,
+                    isEditMode = isEditing,
+                    collectionCount = single.collection ?: 0,
+                    isCollectionMode = isCollectionEnabled
                 )
                 vh.itemView.setOnClickListener {
                     val card = it.findViewById<PokemonCardView>(R.id.card)
@@ -74,7 +74,7 @@ class PokemonBuilderRecyclerAdapter(
     override fun getItemId(position: Int): Long {
         if (position != RecyclerView.NO_POSITION) {
             val item = getItem(position)
-            return when(item) {
+            return when (item) {
                 is PokemonItem.Evolution -> item.evolutionChain.hashCode().toLong()
                 is PokemonItem.Single -> item.card.card.hashCode().toLong()
             }

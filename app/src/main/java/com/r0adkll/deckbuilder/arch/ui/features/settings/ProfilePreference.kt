@@ -24,7 +24,12 @@ class ProfilePreference : Preference {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+    constructor(
+        context: Context?,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(context, attrs, defStyleAttr, defStyleRes)
 
     init {
         layoutResource = R.layout.layout_profile_preference
@@ -35,10 +40,10 @@ class ProfilePreference : Preference {
         val avatar = holder.findViewById(R.id.avatar) as ImageView
         if (avatarUrl != null) {
             GlideApp.with(avatar)
-                    .load(avatarUrl)
-                    .placeholder(ColorDrawable(context.color(R.color.grey_400)))
-                    .transition(withCrossFade())
-                    .into(avatar)
+                .load(avatarUrl)
+                .placeholder(ColorDrawable(context.color(R.color.grey_400)))
+                .transition(withCrossFade())
+                .into(avatar)
         } else {
             avatar.setImageResource(R.drawable.dr_avatar_offline)
         }

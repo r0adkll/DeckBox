@@ -6,18 +6,18 @@ import com.ftinc.kit.arch.util.plusAssign
 import io.reactivex.Scheduler
 
 class DeckImportRenderer(
-        actions: DeckImportUi.Actions,
-        comp: Scheduler,
-        main: Scheduler
+    actions: DeckImportUi.Actions,
+    comp: Scheduler,
+    main: Scheduler
 ) : UiBaseStateRenderer<DeckImportUi.State, DeckImportUi.State.Change, DeckImportUi.Actions>(actions, main, comp) {
 
     @SuppressLint("RxSubscribeOnError")
     override fun onStart() {
 
         disposables += state
-                .map { it.cards }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe { actions.setResults(it) }
+            .map { it.cards }
+            .distinctUntilChanged()
+            .addToLifecycle()
+            .subscribe { actions.setResults(it) }
     }
 }

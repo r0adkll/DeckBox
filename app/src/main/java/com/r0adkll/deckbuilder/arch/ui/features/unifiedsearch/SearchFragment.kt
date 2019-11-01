@@ -47,12 +47,12 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
 class SearchFragment : BaseFragment(),
-        SearchUi,
-        SearchUi.Intentions,
-        SearchUi.Actions,
-        FilterIntentions,
-        DrawerInteractor,
-        HasComponent<FilterableComponent> {
+    SearchUi,
+    SearchUi.Intentions,
+    SearchUi.Actions,
+    FilterIntentions,
+    DrawerInteractor,
+    HasComponent<FilterableComponent> {
 
     private val drawer: DrawerLayout by lazy { view as DrawerLayout }
 
@@ -99,7 +99,7 @@ class SearchFragment : BaseFragment(),
         recycler.addOnScrollListener(toolbarScrollListener)
 
         recycler.setOnDragListener { _, event ->
-            when(event.action) {
+            when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> ImeUtils.hideIme(searchView)
             }
             false
@@ -108,10 +108,10 @@ class SearchFragment : BaseFragment(),
 
     override fun setupComponent() {
         component = getComponent(DeckBuilderComponent::class)
-                .unifiedSearchComponentBuilder()
-                .unifiedSearchModule(UnifiedSearchModule(this))
-                .filterableModule(FilterableModule(this, this))
-                .build()
+            .unifiedSearchComponentBuilder()
+            .unifiedSearchModule(UnifiedSearchModule(this))
+            .filterableModule(FilterableModule(this, this))
+            .build()
         component.inject(this)
 
         delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
@@ -141,16 +141,16 @@ class SearchFragment : BaseFragment(),
 
     override fun searchCards(): Observable<String> {
         return searchView.queryTextChanges()
-                .map { it.toString() }
-                .uiDebounce(500L)
-                .doOnNext {
-                    Analytics.event(Event.Search(it))
-                    if (it.isBlank()) toolbarScrollListener.reset()
-                }
+            .map { it.toString() }
+            .uiDebounce(500L)
+            .doOnNext {
+                Analytics.event(Event.Search(it))
+                if (it.isBlank()) toolbarScrollListener.reset()
+            }
     }
 
     override fun showFilterEmpty(enabled: Boolean) {
-        actionFilter.setImageResource(when(enabled) {
+        actionFilter.setImageResource(when (enabled) {
             true -> R.drawable.ic_filter_outline
             false -> R.drawable.ic_filter_filled
         })
@@ -199,7 +199,8 @@ class SearchFragment : BaseFragment(),
             val childIndex = adapterPosition - layoutManager.findFirstVisibleItemPosition()
             val child = layoutManager.getChildAt(childIndex)
             child?.let {
-                val rotateAnim = RotateAnimation(-5f, 5f, Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF, .5f)
+                val rotateAnim = RotateAnimation(-5f, 5f, Animation.RELATIVE_TO_SELF, .5f,
+                    Animation.RELATIVE_TO_SELF, .5f)
                 rotateAnim.repeatCount = 3
                 rotateAnim.repeatMode = Animation.REVERSE
                 rotateAnim.duration = 50
@@ -220,7 +221,7 @@ class SearchFragment : BaseFragment(),
     }
 
     class ToolbarScrollListener(
-            private val toolBar: View
+        private val toolBar: View
     ) : RecyclerView.OnScrollListener() {
 
         private val elevation: Float by lazy { toolBar.dp(4) }

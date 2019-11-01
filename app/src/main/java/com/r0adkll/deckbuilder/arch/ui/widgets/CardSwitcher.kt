@@ -24,8 +24,8 @@ class CardSwitcher : ViewSwitcher {
     private var disposable: Disposable? = null
     private var imageIndex = 0
 
-    constructor(context: Context): super(context)
-    constructor(context: Context, attrs: AttributeSet): super(context, attrs)
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     init {
         setInAnimation(context, android.R.anim.slide_in_left)
@@ -71,25 +71,25 @@ class CardSwitcher : ViewSwitcher {
     private fun startSwitching() {
         disposable?.dispose()
         disposable = Observable.interval(INTERVAL, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    loadNextImage(nextView as PokemonCardView)
-                    showNext()
-                }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                loadNextImage(nextView as PokemonCardView)
+                showNext()
+            }
     }
 
     private fun loadNextImage(view: PokemonCardView) {
         val url = getNextImageUrl()
         GlideApp.with(this)
-                .`as`(PaletteBitmap::class.java)
-                .load(url)
-                .into(PaletteBitmapViewTarget(view, listOf(TargetPaletteAction())))
+            .`as`(PaletteBitmap::class.java)
+            .load(url)
+            .into(PaletteBitmapViewTarget(view, listOf(TargetPaletteAction())))
 
         getNextCacheImageUrl()?.let {
             GlideApp.with(this)
-                    .downloadOnly()
-                    .load(it)
-                    .preload()
+                .downloadOnly()
+                .load(it)
+                .preload()
         }
     }
 

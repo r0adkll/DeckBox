@@ -10,9 +10,9 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 
 class SearchResultsRecyclerAdapter(
-        context: Context,
-        val instantDragSupport: Boolean = false,
-        val editCardIntentions: EditCardIntentions = EditCardIntentions()
+    context: Context,
+    val instantDragSupport: Boolean = false,
+    val editCardIntentions: EditCardIntentions = EditCardIntentions()
 ) : EmptyViewListAdapter<PokemonCard, PokemonCardViewHolder>(ITEM_CALLBACK) {
 
     private val inflater = LayoutInflater.from(context)
@@ -23,7 +23,7 @@ class SearchResultsRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
         return PokemonCardViewHolder.create(inflater, parent, true, instantDragSupport,
-                editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
+            editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
     }
 
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {

@@ -7,8 +7,8 @@ interface EvolutionLineAdapter {
     fun getEvolutionState(position: Int): State
 
     data class State(
-            val nodeIndex: Int,
-            val cardIndex: Int,
-            val evolution: PokemonCardView.Evolution
+        val nodeIndex: Int,
+        val cardIndex: Int,
+        val evolution: PokemonCardView.Evolution
     )
 }

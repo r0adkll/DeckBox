@@ -22,101 +22,101 @@ import javax.inject.Inject
 
 @FragmentScope
 class DecksPresenter @Inject constructor(
-        ui: DecksUi,
-        val intentions: DecksUi.Intentions,
-        val deckRepository: DeckRepository,
-        val communityRepository: CommunityRepository,
-        val editRepository: EditRepository,
-        val previewRepository: PreviewRepository,
-        val validator: DeckValidator,
-        val remote: Remote,
-        val preferences: AppPreferences
+    ui: DecksUi,
+    val intentions: DecksUi.Intentions,
+    val deckRepository: DeckRepository,
+    val communityRepository: CommunityRepository,
+    val editRepository: EditRepository,
+    val previewRepository: PreviewRepository,
+    val validator: DeckValidator,
+    val remote: Remote,
+    val preferences: AppPreferences
 ) : UiPresenter<State, Change>(ui) {
 
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
         val loadDecks = deckRepository.getDecks()
-                .flatMap {
-                    Observable.fromIterable(it)
-                            .flatMap { deck ->
-                                validator.validate(deck.cards)
-                                        .map { validation ->
-                                            ValidatedDeck(deck, validation)
-                                        }
+            .flatMap {
+                Observable.fromIterable(it)
+                    .flatMap { deck ->
+                        validator.validate(deck.cards)
+                            .map { validation ->
+                                ValidatedDeck(deck, validation)
                             }
-                            .toList()
-                            .toObservable()
-                }
-                .map { Change.DecksLoaded(it) as Change }
+                    }
+                    .toList()
+                    .toObservable()
+            }
+            .map { Change.DecksLoaded(it) as Change }
 //                .startWith(Change.IsLoading as Change)
-                .onErrorReturn(handleUnknownError)
+            .onErrorReturn(handleUnknownError)
 
         val deleteDecks = intentions.deleteClicks()
-                .flatMap { deck ->
-                    Analytics.event(Event.SelectContent.Action("delete_deck"))
-                    deckRepository.deleteDeck(deck)
-                            .map { Change.DeckDeleted as Change }
-                            .onErrorReturn(handleUnknownError)
-                }
+            .flatMap { deck ->
+                Analytics.event(Event.SelectContent.Action("delete_deck"))
+                deckRepository.deleteDeck(deck)
+                    .map { Change.DeckDeleted as Change }
+                    .onErrorReturn(handleUnknownError)
+            }
 
         val createSession = intentions.createSession()
-                .flatMap { deck ->
-                    editRepository.createSession(deck, null)
-                            .map { Change.SessionLoaded(it) as Change }
-                            .startWith(Change.IsSessionLoading(deck.id))
-                            .onErrorReturn(handleUnknownError)
-                }
+            .flatMap { deck ->
+                editRepository.createSession(deck, null)
+                    .map { Change.SessionLoaded(it) as Change }
+                    .startWith(Change.IsSessionLoading(deck.id))
+                    .onErrorReturn(handleUnknownError)
+            }
 
         val createNewSession = intentions.createNewSession()
-                .flatMap {
-                    editRepository.createSession()
-                            .map { Change.SessionLoaded(it) as Change }
-                            .startWith(Change.IsSessionLoading(""))
-                            .onErrorReturn(handleUnknownError)
-                }
+            .flatMap {
+                editRepository.createSession()
+                    .map { Change.SessionLoaded(it) as Change }
+                    .startWith(Change.IsSessionLoading(""))
+                    .onErrorReturn(handleUnknownError)
+            }
 
         val clearSession = intentions.clearSession()
-                .map { Change.ClearSession as Change }
+            .map { Change.ClearSession as Change }
 
         val showPreview = previewRepository.getExpansionPreview()
-                .map { Change.ShowPreview(it) as Change }
-                .onErrorReturnItem(Change.HidePreview as Change)
+            .map { Change.ShowPreview(it) as Change }
+            .onErrorReturnItem(Change.HidePreview as Change)
 
         val showQuickStart = preferences.quickStart
-                .asObservable()
-                .flatMap { canQuickStart ->
-                    if (canQuickStart) {
-                        communityRepository.getDeckTemplates()
-                                .map { DecksUi.QuickStart(it) }
-                                .map { Change.ShowQuickStart(it) }
-                                .startWith(Change.ShowQuickStart(DecksUi.QuickStart()))
-                    } else {
-                        Observable.just(Change.HideQuickStart)
-                    }
+            .asObservable()
+            .flatMap { canQuickStart ->
+                if (canQuickStart) {
+                    communityRepository.getDeckTemplates()
+                        .map { DecksUi.QuickStart(it) }
+                        .map { Change.ShowQuickStart(it) }
+                        .startWith(Change.ShowQuickStart(DecksUi.QuickStart()))
+                } else {
+                    Observable.just(Change.HideQuickStart)
                 }
+            }
 
         disposables += intentions.duplicateClicks()
-                .flatMap {
-                    Analytics.event(Event.SelectContent.Action("duplicate_deck"))
-                    deckRepository.duplicateDeck(it)
-                }
-                .subscribe({
-                    Timber.i("Deck duplicated!")
-                }, {
-                    Timber.e(it, "Error duplicating deck")
-                })
+            .flatMap {
+                Analytics.event(Event.SelectContent.Action("duplicate_deck"))
+                deckRepository.duplicateDeck(it)
+            }
+            .subscribe({
+                Timber.i("Deck duplicated!")
+            }, {
+                Timber.e(it, "Error duplicating deck")
+            })
 
         disposables += intentions.dismissPreview()
-                .subscribe {
-                    previewRepository.dismissPreview()
-                }
+            .subscribe {
+                previewRepository.dismissPreview()
+            }
 
         return loadDecks.mergeWith(deleteDecks)
-                .mergeWith(createSession)
-                .mergeWith(createNewSession)
-                .mergeWith(clearSession)
-                .mergeWith(showQuickStart)
-                .mergeWith(showPreview)
+            .mergeWith(createSession)
+            .mergeWith(createNewSession)
+            .mergeWith(clearSession)
+            .mergeWith(showQuickStart)
+            .mergeWith(showPreview)
     }
 
     companion object {

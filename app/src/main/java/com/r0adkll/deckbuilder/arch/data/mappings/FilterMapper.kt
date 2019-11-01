@@ -60,5 +60,4 @@ object FilterMapper {
 
         return builder
     }
-
 }

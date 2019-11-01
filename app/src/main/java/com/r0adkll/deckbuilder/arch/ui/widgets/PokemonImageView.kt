@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 
 class PokemonImageView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
 ) : ForegroundImageView(context, attrs, defStyle) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

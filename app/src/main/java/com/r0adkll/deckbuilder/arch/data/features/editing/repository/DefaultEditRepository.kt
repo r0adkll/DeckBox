@@ -12,76 +12,83 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class DefaultEditRepository @Inject constructor(
-        val cache: SessionCache,
-        val decks: DeckRepository,
-        val schedulers: AppSchedulers
+    val cache: SessionCache,
+    val decks: DeckRepository,
+    val schedulers: AppSchedulers
 ) : EditRepository {
 
     override fun createSession(deck: Deck?, imports: List<PokemonCard>?): Observable<Long> {
         return cache.createSession(deck, imports)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun getSession(sessionId: Long): Observable<Session> {
         return cache.getSession(sessionId)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun persistSession(sessionId: Long): Observable<Unit> {
         return cache.getSession(sessionId)
-                .flatMap { session ->
-                    decks.persistDeck(session.deckId, session.cards, session.name, session.description, session.image, session.collectionOnly)
-                            .flatMap {
-                                // Be sure to pass the deck id to the session for when a new deck is created
-                                cache.resetSession(sessionId, it.id)
-                                        .subscribeOn(schedulers.database)
-                            }
-                }
-                .subscribeOn(schedulers.database)
+            .flatMap { session ->
+                decks.persistDeck(
+                    session.deckId,
+                    session.cards,
+                    session.name,
+                    session.description,
+                    session.image,
+                    session.collectionOnly
+                )
+                    .flatMap {
+                        // Be sure to pass the deck id to the session for when a new deck is created
+                        cache.resetSession(sessionId, it.id)
+                            .subscribeOn(schedulers.database)
+                    }
+            }
+            .subscribeOn(schedulers.database)
     }
 
     override fun deleteSession(sessionId: Long): Observable<Int> {
         return cache.deleteSession(sessionId)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun observeSession(sessionId: Long): Observable<Session> {
         return cache.observeSession(sessionId)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun changeName(sessionId: Long, name: String): Observable<String> {
         return cache.changeName(sessionId, name)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun changeDescription(sessionId: Long, description: String): Observable<String> {
         return cache.changeDescription(sessionId, description)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit> {
         return cache.changeDeckImage(sessionId, image)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun changeCollectionOnly(sessionId: Long, collectionOnly: Boolean): Observable<Unit> {
         return cache.changeCollectionOnly(sessionId, collectionOnly)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun addCards(sessionId: Long, cards: List<PokemonCard>, searchSessionId: String?): Observable<Unit> {
         return cache.addCards(sessionId, cards, searchSessionId)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun removeCard(sessionId: Long, card: PokemonCard, searchSessionId: String?): Observable<Unit> {
         return cache.removeCard(sessionId, card, searchSessionId)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 
     override fun clearSearchSession(sessionId: Long, searchSessionId: String): Observable<Unit> {
         return cache.clearSearchSession(sessionId, searchSessionId)
-                .subscribeOn(schedulers.database)
+            .subscribeOn(schedulers.database)
     }
 }

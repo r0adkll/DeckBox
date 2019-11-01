@@ -12,9 +12,9 @@ import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class OverviewRecyclerAdapter(
-        context: Context,
-        private val cardClicks: Relay<PokemonCardView>,
-        private val editCardIntentions: EditCardIntentions
+    context: Context,
+    private val cardClicks: Relay<PokemonCardView>,
+    private val editCardIntentions: EditCardIntentions
 ) : EmptyViewListAdapter<EvolutionChain, OverviewViewHolder>(ITEM_CALLBACK) {
 
     private val inflater = LayoutInflater.from(context)

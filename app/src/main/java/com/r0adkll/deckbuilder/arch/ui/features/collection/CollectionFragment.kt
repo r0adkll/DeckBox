@@ -46,9 +46,9 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
         super.onActivityCreated(savedInstanceState)
 
         adapter = CollectionRecyclerAdapter(requireContext(), migrateClicks,
-                dismissClicks = {
-                    preferences.showCollectionMigration.set(false)
-                }
+            dismissClicks = {
+                preferences.showCollectionMigration.set(false)
+            }
         ) {
             if (it is Item.ExpansionSet) {
                 Analytics.event(Event.SelectContent.CollectionExpansionSet(it.expansion.code))
@@ -75,8 +75,8 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
 
     override fun setupComponent() {
         getComponent(HomeComponent::class)
-                .plus(CollectionModule(this))
-                .inject(this)
+            .plus(CollectionModule(this))
+            .inject(this)
 
         delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)

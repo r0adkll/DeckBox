@@ -20,7 +20,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
 import timber.log.Timber
 import java.util.*
 
@@ -78,9 +77,9 @@ object CustomTabsHelper {
             sPackageNameToUse = null
         } else if (packagesSupportingCustomTabs.size == 1) {
             sPackageNameToUse = packagesSupportingCustomTabs[0]
-        } else if (!TextUtils.isEmpty(defaultViewHandlerPackageName)
-                && !hasSpecializedHandlerIntents(context, activityIntent)
-                && packagesSupportingCustomTabs.contains(defaultViewHandlerPackageName)) {
+        } else if (!TextUtils.isEmpty(defaultViewHandlerPackageName) &&
+            !hasSpecializedHandlerIntents(context, activityIntent) &&
+            packagesSupportingCustomTabs.contains(defaultViewHandlerPackageName)) {
             sPackageNameToUse = defaultViewHandlerPackageName
         } else if (packagesSupportingCustomTabs.contains(STABLE_PACKAGE)) {
             sPackageNameToUse = STABLE_PACKAGE
@@ -103,8 +102,8 @@ object CustomTabsHelper {
         try {
             val pm: PackageManager = context.packageManager
             val handlers: List<ResolveInfo>? = pm.queryIntentActivities(
-                    intent,
-                    PackageManager.GET_RESOLVED_FILTER)
+                intent,
+                PackageManager.GET_RESOLVED_FILTER)
             if (handlers == null || handlers.isEmpty()) {
                 return false
             }

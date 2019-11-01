@@ -23,6 +23,8 @@ import com.ftinc.kit.arch.util.uiDebounce
 import com.ftinc.kit.extensions.dip
 import com.ftinc.kit.extensions.dp
 import com.ftinc.kit.extensions.snackbar
+import com.ftinc.kit.util.bindBoolean
+import com.ftinc.kit.util.bindLong
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.checkedChanges
@@ -59,8 +61,6 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
-import com.r0adkll.deckbuilder.util.bindBoolean
-import com.r0adkll.deckbuilder.util.bindLong
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -76,10 +76,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DeckBuilderActivity : BaseActivity(),
-        HasComponent<DeckBuilderComponent>,
-        DeckBuilderUi,
-        DeckBuilderUi.Intentions,
-        DeckBuilderUi.Actions {
+    HasComponent<DeckBuilderComponent>,
+    DeckBuilderUi,
+    DeckBuilderUi.Intentions,
+    DeckBuilderUi.Actions {
 
     inner class DeckBuilderPanelSlideListener : SlidingUpPanelLayout.PanelSlideListener {
         override fun onPanelSlide(panel: View, slideOffset: Float) {
@@ -101,19 +101,25 @@ class DeckBuilderActivity : BaseActivity(),
             }
         }
 
-        override fun onPanelStateChanged(panel: View, previousState: SlidingUpPanelLayout.PanelState, newState: SlidingUpPanelLayout.PanelState) {
+        override fun onPanelStateChanged(
+            panel: View,
+            previousState: SlidingUpPanelLayout.PanelState,
+            newState: SlidingUpPanelLayout.PanelState
+        ) {
             if (previousState != COLLAPSED && newState == COLLAPSED) {
                 imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
                 imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
             }
         }
 
-        private fun calculateAlpha(offset: Float, ratio: Float): Float = (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
+        private fun calculateAlpha(offset: Float, ratio: Float): Float {
+            return (offset - (1 - ratio)).coerceAtLeast(0f) / ratio
+        }
 
         private fun interpolateErrorMarker(panel: View, offset: Float) {
             if (ruleAdapter.itemCount > 0) {
                 val iconOffset = ruleRecycler.getChildAt(0)?.let {
-                    (it.height.toFloat() / 2f) //- iconOffset
+                    (it.height.toFloat() / 2f)
                 } ?: defaultOffset
                 val recyclerOffset = 1 - ((ruleRecycler.height.toFloat() - iconOffset) / panel.height.toFloat())
                 deckError.isVisible = offset < recyclerOffset
@@ -178,20 +184,19 @@ class DeckBuilderActivity : BaseActivity(),
             if (state.isChanged) {
                 Analytics.event(Event.SelectContent.Action("close_deck_editor"))
                 AlertDialog.Builder(this)
-                        .setTitle(R.string.deckbuilder_unsaved_changes_title)
-                        .setMessage(R.string.deckbuilder_unsaved_changes_message)
-                        .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
-                            Analytics.event(Event.SelectContent.Action("discarded_changes"))
-                            dialog.dismiss()
-                            supportFinishAfterTransition()
-                        }
-                        .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
-                            Analytics.event(Event.SelectContent.Action("kept_changes"))
-                            dialog.dismiss()
-                        }
-                        .show()
-            }
-            else {
+                    .setTitle(R.string.deckbuilder_unsaved_changes_title)
+                    .setMessage(R.string.deckbuilder_unsaved_changes_message)
+                    .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
+                        Analytics.event(Event.SelectContent.Action("discarded_changes"))
+                        dialog.dismiss()
+                        supportFinishAfterTransition()
+                    }
+                    .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
+                        Analytics.event(Event.SelectContent.Action("kept_changes"))
+                        dialog.dismiss()
+                    }
+                    .show()
+            } else {
                 supportFinishAfterTransition()
             }
         }
@@ -262,21 +267,21 @@ class DeckBuilderActivity : BaseActivity(),
 
         @SuppressLint("RxSubscribeOnError")
         disposables += pokemonCardClicks
-                .uiDebounce()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it, sessionId)
-                }
+            .uiDebounce()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
+                CardDetailActivity.show(this, it, sessionId)
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += actionDeckImage.clicks()
-                .uiDebounce()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    DeckImagePickerFragment.newInstance(sessionId, state.image)
-                            .show(supportFragmentManager, DeckImagePickerFragment.TAG)
-                }
+            .uiDebounce()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                DeckImagePickerFragment.newInstance(sessionId, state.image)
+                    .show(supportFragmentManager, DeckImagePickerFragment.TAG)
+            }
 
         deckFormat.setOnClickListener {
         }
@@ -303,9 +308,9 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun setupComponent() {
         this.component = DeckApp.component.deckBuilderComponentBuilder()
-                .sessionModule(SessionModule(sessionId))
-                .deckBuilderModule(DeckBuilderModule(this))
-                .build()
+            .sessionModule(SessionModule(sessionId))
+            .deckBuilderModule(DeckBuilderModule(this))
+            .build()
         this.component.inject(this)
 
         delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
@@ -333,20 +338,19 @@ class DeckBuilderActivity : BaseActivity(),
         } else if (state.isChanged) {
             Analytics.event(Event.SelectContent.Action("close_deck_editor"))
             AlertDialog.Builder(this)
-                    .setTitle(R.string.deckbuilder_unsaved_changes_title)
-                    .setMessage(R.string.deckbuilder_unsaved_changes_message)
-                    .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
-                        Analytics.event(Event.SelectContent.Action("discarded_changes"))
-                        dialog.dismiss()
-                        super.onBackPressed()
-                    }
-                    .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
-                        Analytics.event(Event.SelectContent.Action("kept_changes"))
-                        dialog.dismiss()
-                    }
-                    .show()
-        }
-        else {
+                .setTitle(R.string.deckbuilder_unsaved_changes_title)
+                .setMessage(R.string.deckbuilder_unsaved_changes_message)
+                .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
+                    Analytics.event(Event.SelectContent.Action("discarded_changes"))
+                    dialog.dismiss()
+                    super.onBackPressed()
+                }
+                .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
+                    Analytics.event(Event.SelectContent.Action("kept_changes"))
+                    dialog.dismiss()
+                }
+                .show()
+        } else {
             super.onBackPressed()
         }
     }
@@ -428,12 +432,12 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
-                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
+            .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
     }
 
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
-                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
+            .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
     }
 
     override fun editDeckClicks(): Observable<Boolean> {
@@ -446,29 +450,29 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun editDeckName(): Observable<String> {
         return inputDeckName.textChanges()
-                .map { it.toString() }
-                .uiDebounce()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Deck.EditName)
-                }
+            .map { it.toString() }
+            .uiDebounce()
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Deck.EditName)
+            }
     }
 
     override fun editDeckDescription(): Observable<String> {
         return inputDeckDescription.textChanges()
-                .map { it.toString() }
-                .uiDebounce()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Deck.EditDescription)
-                }
+            .map { it.toString() }
+            .uiDebounce()
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Deck.EditDescription)
+            }
     }
 
     override fun editDeckCollectionOnly(): Observable<Boolean> {
         return collectionSwitch.checkedChanges()
-                .skipInitialValue()
-                .uiDebounce()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Deck.EditCollectionOnly(it))
-                }
+            .skipInitialValue()
+            .uiDebounce()
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Deck.EditCollectionOnly(it))
+            }
     }
 
     override fun saveDeck(): Observable<Unit> {
@@ -499,10 +503,9 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
     override fun showDeckName(name: String) {
-        if(name.isBlank()) {
+        if (name.isBlank()) {
             appbarTitle?.setText(if (isNewDeck) R.string.deckbuilder_default_title else R.string.deckbuilder_edit_title)
-        }
-        else {
+        } else {
             appbarTitle?.text = name
         }
         if (inputDeckName.text.isNullOrBlank()) {
@@ -519,7 +522,7 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
     override fun showDeckImage(image: DeckImage?) {
-        when(image) {
+        when (image) {
             null -> {
                 deckImage.clear()
                 deckImage.setImageResource(R.color.grey_300)
@@ -528,9 +531,9 @@ class DeckBuilderActivity : BaseActivity(),
                 deckImage.primaryType = null
                 deckImage.secondaryType = null
                 GlideApp.with(this)
-                        .load(image.imageUrl)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .into(deckImage)
+                    .load(image.imageUrl)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(deckImage)
             }
             is DeckImage.Type -> {
                 deckImage.primaryType = image.type1
@@ -570,19 +573,16 @@ class DeckBuilderActivity : BaseActivity(),
         if (isSaving) {
             if (savingSnackBar == null) {
                 savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saving_message, Snackbar.LENGTH_INDEFINITE)
-            }
-            else {
+            } else {
                 savingSnackBar?.setText(R.string.deckbuilder_saving_message)
                 savingSnackBar?.duration = Snackbar.LENGTH_INDEFINITE
             }
 
             savingSnackBar?.show()
-        }
-        else {
+        } else {
             if (savingSnackBar == null) {
                 savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saved_message, Snackbar.LENGTH_SHORT)
-            }
-            else {
+            } else {
                 savingSnackBar?.setText(R.string.deckbuilder_saved_message)
                 savingSnackBar?.duration = Snackbar.LENGTH_SHORT
             }
@@ -640,9 +640,9 @@ class DeckBuilderActivity : BaseActivity(),
     @SuppressLint("CheckResult", "RxLeakedSubscription")
     private fun destroySession() {
         editRepository.deleteSession(sessionId)
-                .subscribe({
-                    Timber.i("Session[$sessionId] Deleted!")
-                }, { t -> Timber.e(t, "Error deleting Session[$sessionId]")})
+            .subscribe({
+                Timber.i("Session[$sessionId] Deleted!")
+            }, { t -> Timber.e(t, "Error deleting Session[$sessionId]") })
     }
 
     companion object {

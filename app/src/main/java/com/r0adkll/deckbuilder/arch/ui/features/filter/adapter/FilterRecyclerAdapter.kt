@@ -9,8 +9,8 @@ import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterIntentions
 
 class FilterRecyclerAdapter(
-        context: Context,
-        private val intentions: FilterIntentions
+    context: Context,
+    private val intentions: FilterIntentions
 ) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)

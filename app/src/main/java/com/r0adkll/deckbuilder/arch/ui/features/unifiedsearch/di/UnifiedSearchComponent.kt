@@ -8,7 +8,7 @@ import dagger.Subcomponent
 
 @FragmentScope
 @Subcomponent(modules = [UnifiedSearchModule::class, FilterableModule::class])
-interface UnifiedSearchComponent : FilterableComponent{
+interface UnifiedSearchComponent : FilterableComponent {
 
     fun inject(fragment: SearchFragment)
 

@@ -49,9 +49,9 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
     }
 
     class PreviewViewHolder(
-            itemView: View,
-            private val dismissPreview: Relay<Unit>,
-            private val viewPreview: Relay<ExpansionPreview>
+        itemView: View,
+        private val dismissPreview: Relay<Unit>,
+        private val viewPreview: Relay<ExpansionPreview>
     ) : UiViewHolder<Item.Preview>(itemView) {
 
         private val background by bindView<LinearLayout>(R.id.background)
@@ -95,9 +95,9 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
     }
 
     class QuickViewHolder(
-            itemView: View,
-            private val quickStart: Relay<Deck>,
-            private val dismissQuickStart: Relay<Unit>
+        itemView: View,
+        private val quickStart: Relay<Deck>,
+        private val dismissQuickStart: Relay<Unit>
     ) : UiViewHolder<Item.QuickStart>(itemView) {
 
         private val recycler by bindView<RecyclerView>(R.id.recycler)
@@ -127,7 +127,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
     }
 
     class HeaderViewHolder(
-            itemView: View
+        itemView: View
     ) : UiViewHolder<Item.Header>(itemView) {
 
         private val text by bindView<TextView>(R.id.title)
@@ -138,11 +138,11 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
     }
 
     class DeckViewHolder(
-            itemView: View,
-            private val shareClicks: Relay<Deck>,
-            private val duplicateClicks: Relay<Deck>,
-            private val testClicks: Relay<Deck>,
-            private val deleteClicks: Relay<Deck>
+        itemView: View,
+        private val shareClicks: Relay<Deck>,
+        private val duplicateClicks: Relay<Deck>,
+        private val testClicks: Relay<Deck>,
+        private val deleteClicks: Relay<Deck>
     ) : UiViewHolder<Item.DeckItem>(itemView) {
 
         private val image by bindView<DeckImageView>(R.id.image)
@@ -163,12 +163,12 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             loading.isVisible = item.isLoading
 
             deck.image?.let {
-                when(it) {
+                when (it) {
                     is DeckImage.Pokemon -> {
                         GlideApp.with(itemView)
-                                .load(it.imageUrl)
-                                .placeholder(R.drawable.pokemon_card_back)
-                                .into(image)
+                            .load(it.imageUrl)
+                            .placeholder(R.drawable.pokemon_card_back)
+                            .into(image)
                     }
                     is DeckImage.Type -> {
                         image.primaryType = it.type1
@@ -177,17 +177,21 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
                 }
             } ?: mostProminentCard(deck.cards)?.let {
                 GlideApp.with(itemView)
-                        .load(it.imageUrl)
-                        .placeholder(R.drawable.pokemon_card_back)
-                        .into(image)
+                    .load(it.imageUrl)
+                    .placeholder(R.drawable.pokemon_card_back)
+                    .into(image)
             }
 
             val popupMenu = PopupMenu(itemView.context, actionMore)
             popupMenu.inflate(R.menu.deck_actions)
             popupMenu.setOnMenuItemClickListener { menuItem ->
-                when(menuItem.itemId) {
-                    R.id.action_duplicate -> { duplicateClicks.accept(deck); true }
-                    R.id.action_delete -> { deleteClicks.accept(deck); true }
+                when (menuItem.itemId) {
+                    R.id.action_duplicate -> {
+                        duplicateClicks.accept(deck); true
+                    }
+                    R.id.action_delete -> {
+                        deleteClicks.accept(deck); true
+                    }
                     else -> false
                 }
             }
@@ -219,10 +223,11 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             val VALUES by lazy { values() }
 
             fun of(layoutId: Int): ViewType {
-                val match = VALUES.firstOrNull { it.layoutId == layoutId }
-                match?.let { return match }
-
-                throw EnumConstantNotPresentException(ViewType::class.java, "could not find view type for $layoutId")
+                return VALUES.find { it.layoutId == layoutId }
+                    ?: throw EnumConstantNotPresentException(
+                        ViewType::class.java,
+                        "could not find view type for $layoutId"
+                    )
             }
         }
     }
@@ -230,21 +235,29 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
     companion object {
 
         @Suppress("UNCHECKED_CAST")
-        fun create(itemView: View,
-                   layoutId: Int,
-                   shareClicks: Relay<Deck>,
-                   duplicateClicks: Relay<Deck>,
-                   testClicks: Relay<Deck>,
-                   deleteClicks: Relay<Deck>,
-                   dismissPreview: Relay<Unit>,
-                   viewPreview: Relay<ExpansionPreview>,
-                   quickStart: Relay<Deck>,
-                   dismissQuickStart: Relay<Unit>): UiViewHolder<Item> {
-            return when(ViewType.of(layoutId)) {
+        fun create(
+            itemView: View,
+            layoutId: Int,
+            shareClicks: Relay<Deck>,
+            duplicateClicks: Relay<Deck>,
+            testClicks: Relay<Deck>,
+            deleteClicks: Relay<Deck>,
+            dismissPreview: Relay<Unit>,
+            viewPreview: Relay<ExpansionPreview>,
+            quickStart: Relay<Deck>,
+            dismissQuickStart: Relay<Unit>
+        ): UiViewHolder<Item> {
+            return when (ViewType.of(layoutId)) {
                 PREVIEW -> PreviewViewHolder(itemView, dismissPreview, viewPreview) as UiViewHolder<Item>
                 QUICK_START -> QuickViewHolder(itemView, quickStart, dismissQuickStart) as UiViewHolder<Item>
                 HEADER -> HeaderViewHolder(itemView) as UiViewHolder<Item>
-                DECK -> DeckViewHolder(itemView, shareClicks, duplicateClicks, testClicks, deleteClicks) as UiViewHolder<Item>
+                DECK -> DeckViewHolder(
+                    itemView,
+                    shareClicks,
+                    duplicateClicks,
+                    testClicks,
+                    deleteClicks
+                ) as UiViewHolder<Item>
             }
         }
     }

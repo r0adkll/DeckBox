@@ -10,11 +10,11 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class ExpansionRecyclerAdapter(
-        context: Context,
-        private val downloadClicks: Relay<Expansion>,
-        private val dismissClicks: Relay<Unit>,
-        private val downloadFormat: Relay<Format>,
-        private val onItemClickListener: (Item) -> Unit
+    context: Context,
+    private val downloadClicks: Relay<Expansion>,
+    private val dismissClicks: Relay<Unit>,
+    private val downloadFormat: Relay<Format>,
+    private val onItemClickListener: (Item) -> Unit
 ) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)

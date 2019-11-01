@@ -11,9 +11,11 @@ import dagger.Provides
 @Module
 class AppModule(val app: DeckApp) {
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideApplicationContext(): Context = app
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     fun provideConnectivity(context: Context): Connectivity = ConnectivityContext(context)
 }

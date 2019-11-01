@@ -36,11 +36,16 @@ class PtcgoExportFragment : BaseFragment() {
         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
 
-    @Inject lateinit var schedulers: AppSchedulers
-    @Inject lateinit var deckRepository: DeckRepository
-    @Inject lateinit var editRepository: EditRepository
-    @Inject lateinit var exporter: PtcgoExporter
-    @Inject lateinit var exportTask: ExportTask
+    @Inject
+    lateinit var schedulers: AppSchedulers
+    @Inject
+    lateinit var deckRepository: DeckRepository
+    @Inject
+    lateinit var editRepository: EditRepository
+    @Inject
+    lateinit var exporter: PtcgoExporter
+    @Inject
+    lateinit var exportTask: ExportTask
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_ptcgo_export, container, false)
@@ -53,36 +58,36 @@ class PtcgoExportFragment : BaseFragment() {
 
         if (exportTask.deckId != null) {
             disposables += deckRepository.getDeck(exportTask.deckId!!)
-                    .flatMap { exporter.export(it.cards, it.name) }
-                    .subscribeOn(schedulers.comp)
-                    .observeOn(schedulers.main)
-                    .subscribe({
-                        deckList.text = it
-                    }, {
-                        Timber.e(it, "Error exporting deck")
-                        deckList.text = getText(R.string.error_exporting_deck)
-                    })
+                .flatMap { exporter.export(it.cards, it.name) }
+                .subscribeOn(schedulers.comp)
+                .observeOn(schedulers.main)
+                .subscribe({
+                    deckList.text = it
+                }, {
+                    Timber.e(it, "Error exporting deck")
+                    deckList.text = getText(R.string.error_exporting_deck)
+                })
         } else {
             disposables += editRepository.getSession(exportTask.sessionId!!)
-                    .flatMap { exporter.export(it.cards, it.name) }
-                    .subscribeOn(schedulers.comp)
-                    .observeOn(schedulers.main)
-                    .subscribe({
-                        deckList.text = it
-                    }, {
-                        Timber.e(it, "Error exporting deck")
-                        deckList.text = getText(R.string.error_exporting_deck)
-                    })
+                .flatMap { exporter.export(it.cards, it.name) }
+                .subscribeOn(schedulers.comp)
+                .observeOn(schedulers.main)
+                .subscribe({
+                    deckList.text = it
+                }, {
+                    Timber.e(it, "Error exporting deck")
+                    deckList.text = getText(R.string.error_exporting_deck)
+                })
         }
 
         disposables += actionCopy.clicks()
-                .subscribe {
-                    Analytics.event(Event.SelectContent.Action("copy_decklist"))
-                    val text = deckList.text.toString()
-                    val clip = ClipData.newPlainText("Deckbox Deck", text)
-                    clipboard.setPrimaryClip(clip)
-                    toast(getString(R.string.deck_copied_format, "Deck"))
-                }
+            .subscribe {
+                Analytics.event(Event.SelectContent.Action("copy_decklist"))
+                val text = deckList.text.toString()
+                val clip = ClipData.newPlainText("Deckbox Deck", text)
+                clipboard.setPrimaryClip(clip)
+                toast(getString(R.string.deck_copied_format, "Deck"))
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -90,7 +95,7 @@ class PtcgoExportFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_share -> {
                 Analytics.event(Event.Share("deck"))
                 val text = deckList.text.toString()
@@ -104,7 +109,7 @@ class PtcgoExportFragment : BaseFragment() {
 
     override fun setupComponent() {
         getComponent(MultiExportComponent::class)
-                .inject(this)
+            .inject(this)
     }
 
     companion object {

@@ -19,12 +19,12 @@ sealed class DeckImage : Parcelable, RecyclerViewItem {
         override val uri: Uri
             get() = Uri.parse(imageUrl)
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is Pokemon -> new.imageUrl == imageUrl
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Pokemon -> new.imageUrl == imageUrl
             else -> false
         }
@@ -37,8 +37,8 @@ sealed class DeckImage : Parcelable, RecyclerViewItem {
         override val uri: Uri
             get() {
                 val builder = Uri.Builder()
-                        .scheme("type")
-                        .appendPath(type1.compact())
+                    .scheme("type")
+                    .appendPath(type1.compact())
 
                 if (type2 != null) {
                     builder.appendPath(type2.compact())
@@ -47,12 +47,12 @@ sealed class DeckImage : Parcelable, RecyclerViewItem {
                 return builder.build()
             }
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is Type -> type1 == new.type1 && type2 == new.type2
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Type -> type1 == new.type1 && type2 == new.type2
             else -> false
         }
@@ -60,7 +60,7 @@ sealed class DeckImage : Parcelable, RecyclerViewItem {
 
     companion object {
 
-        fun from(uri: Uri): DeckImage? = when(uri.scheme) {
+        fun from(uri: Uri): DeckImage? = when (uri.scheme) {
             "type" -> {
                 val parts = uri.pathSegments
                 if (parts.isNotEmpty()) {

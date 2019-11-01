@@ -17,7 +17,9 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 class MarqueeCardContainer @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private var cardWidth: Int = dip(CARD_WIDTH)
@@ -52,22 +54,22 @@ class MarqueeCardContainer @JvmOverloads constructor(
     @SuppressLint("RxSubscribeOnError", "RxDefaultScheduler")
     private fun setupAnimator() {
         disposable = Observable.interval(25L, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    cards.forEachIndexed { _, card ->
-                        card.translationX -= (dip(1) * 0.75f) /* This is kind of a hack */
-                    }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                cards.forEachIndexed { _, card ->
+                    card.translationX -= (dip(1) * 0.75f) /* This is kind of a hack */
+                }
 
-                    for ((index, value) in cards.withIndex()) {
-                        if (value.translationX < -cardWidth) {
-                            val card = cards.removeAt(index)
-                            removeView(card)
-                            cardPool.release(card)
-                            addNewCard()
-                            break
-                        }
+                for ((index, value) in cards.withIndex()) {
+                    if (value.translationX < -cardWidth) {
+                        val card = cards.removeAt(index)
+                        removeView(card)
+                        cardPool.release(card)
+                        addNewCard()
+                        break
                     }
                 }
+            }
     }
 
     private fun addNewCard() {
@@ -76,7 +78,7 @@ class MarqueeCardContainer @JvmOverloads constructor(
             view = PokemonCardView(context)
         }
 
-        val lastItemX = cards.lastOrNull()?.let {it.translationX + cardSpacing + cardWidth} ?: 0f
+        val lastItemX = cards.lastOrNull()?.let { it.translationX + cardSpacing + cardWidth } ?: 0f
         view.translationX = lastItemX
         cards += view
 
@@ -90,10 +92,10 @@ class MarqueeCardContainer @JvmOverloads constructor(
             imageIndex = 0
         }
         GlideApp.with(this)
-                .load(imageUrl)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .placeholder(R.drawable.pokemon_card_back)
-                .into(view)
+            .load(imageUrl)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .placeholder(R.drawable.pokemon_card_back)
+            .into(view)
     }
 
     companion object {

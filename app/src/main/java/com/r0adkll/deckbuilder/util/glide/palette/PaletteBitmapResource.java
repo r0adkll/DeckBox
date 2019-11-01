@@ -9,31 +9,31 @@ import com.bumptech.glide.util.Util;
  * com.bumptech.glide.integration.palette.PaletteBitmap}.
  */
 public class PaletteBitmapResource implements Resource<PaletteBitmap> {
-  private PaletteBitmap paletteBitmap;
-  private BitmapPool bitmapPool;
+    private PaletteBitmap paletteBitmap;
+    private BitmapPool bitmapPool;
 
-  public PaletteBitmapResource(PaletteBitmap paletteBitmap, BitmapPool bitmapPool) {
-    this.paletteBitmap = paletteBitmap;
-    this.bitmapPool = bitmapPool;
-  }
+    public PaletteBitmapResource(PaletteBitmap paletteBitmap, BitmapPool bitmapPool) {
+        this.paletteBitmap = paletteBitmap;
+        this.bitmapPool = bitmapPool;
+    }
 
-  @Override
-  public Class<PaletteBitmap> getResourceClass() {
-    return PaletteBitmap.class;
-  }
+    @Override
+    public Class<PaletteBitmap> getResourceClass() {
+        return PaletteBitmap.class;
+    }
 
-  @Override
-  public PaletteBitmap get() {
-    return paletteBitmap;
-  }
+    @Override
+    public PaletteBitmap get() {
+        return paletteBitmap;
+    }
 
-  @Override
-  public int getSize() {
-    return Util.getBitmapByteSize(paletteBitmap.bitmap);
-  }
+    @Override
+    public int getSize() {
+        return Util.getBitmapByteSize(paletteBitmap.bitmap);
+    }
 
-  @Override
-  public void recycle() {
-    bitmapPool.put(paletteBitmap.bitmap);
-  }
+    @Override
+    public void recycle() {
+        bitmapPool.put(paletteBitmap.bitmap);
+    }
 }

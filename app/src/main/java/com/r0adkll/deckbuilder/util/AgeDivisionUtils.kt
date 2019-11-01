@@ -20,7 +20,7 @@ object AgeDivisionUtils {
         }
 
     fun divisionLabel(context: Context, ageDivision: AgeDivision): String {
-        return when(ageDivision) {
+        return when (ageDivision) {
             JUNIOR -> context.getString(R.string.age_division_junior, seasonYear - 11)
             SENIOR -> context.getString(R.string.age_division_senior, seasonYear - 15, seasonYear - 12)
             MASTERS -> context.getString(R.string.age_division_masters, seasonYear - 16)

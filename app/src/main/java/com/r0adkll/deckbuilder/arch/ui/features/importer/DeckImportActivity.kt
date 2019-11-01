@@ -74,7 +74,7 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
 
     override fun setupComponent() {
         DeckApp.component.plus(DeckImportModule(this))
-                .inject(this)
+            .inject(this)
 
         delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
@@ -102,7 +102,7 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_import -> {
                 val text = deckList.text.toString().trim()
                 if (text.isNotBlank()) {
@@ -128,7 +128,7 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
         data.putParcelableArrayListExtra(KEY_RESULTS, ArrayList(cards))
         setResult(RESULT_OK, data)
 
-        if(cards.isNotEmpty()) {
+        if (cards.isNotEmpty()) {
             supportFinishAfterTransition()
         }
     }
@@ -161,7 +161,8 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
                                 deckList.setText(clip.getItemAt(0).text)
                             }
                         } else {
-                            clipboardSnackBar = Snackbar.make(deckList, R.string.import_clipboard_found_message, Snackbar.LENGTH_INDEFINITE)
+                            clipboardSnackBar = Snackbar.make(deckList, R.string.import_clipboard_found_message,
+                                Snackbar.LENGTH_INDEFINITE)
                             clipboardSnackBar?.setActionTextColor(color(R.color.primaryColor))
                             clipboardSnackBar?.setAction(R.string.action_paste) {
                                 deckList.setText(clip.getItemAt(0).text)

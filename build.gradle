@@ -38,6 +38,7 @@ allprojects {
 
     ktlint {
         android = true
+        verbose = true
         reporters = [ReporterType.PLAIN, ReporterType.CHECKSTYLE]
     }
 }

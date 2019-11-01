@@ -36,35 +36,35 @@ class ShortcutActivity : Activity() {
                 ACTION_NEW_DECK -> {
                     Shortcuts.reportUsage(this, Shortcuts.CREATE_DECK_ID)
                     disposables += editor.createSession()
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ sessionId ->
-                                TaskStackBuilder.create(this)
-                                        .addParentStack(DeckBuilderActivity::class.java)
-                                        .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId, true))
-                                        .startActivities()
-                                finish()
-                            }, {
-                                startActivity(HomeActivity.createIntent(this))
-                                finish()
-                            })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ sessionId ->
+                            TaskStackBuilder.create(this)
+                                .addParentStack(DeckBuilderActivity::class.java)
+                                .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId, true))
+                                .startActivities()
+                            finish()
+                        }, {
+                            startActivity(HomeActivity.createIntent(this))
+                            finish()
+                        })
                 }
                 ACTION_OPEN_DECK -> {
                     val deckId = intent?.getStringExtra(EXTRA_DECK_ID)
                     if (deckId != null) {
                         Shortcuts.reportUsage(this, deckId)
                         disposables += deckRepository.getDeck(deckId)
-                                .flatMap { editor.createSession(it) }
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe({ sessionId ->
-                                    TaskStackBuilder.create(this)
-                                            .addParentStack(DeckBuilderActivity::class.java)
-                                            .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId))
-                                            .startActivities()
-                                    finish()
-                                }, {
-                                    startActivity(HomeActivity.createIntent(this))
-                                    finish()
-                                })
+                            .flatMap { editor.createSession(it) }
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ sessionId ->
+                                TaskStackBuilder.create(this)
+                                    .addParentStack(DeckBuilderActivity::class.java)
+                                    .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId))
+                                    .startActivities()
+                                finish()
+                            }, {
+                                startActivity(HomeActivity.createIntent(this))
+                                finish()
+                            })
                     } else {
                         finish()
                     }
@@ -74,7 +74,6 @@ class ShortcutActivity : Activity() {
                     finish()
                 }
             }
-
         } else {
             startActivity(RouteActivity.createIntent(this))
             finish()
@@ -88,8 +87,8 @@ class ShortcutActivity : Activity() {
 
     private fun isSignedIn(): Boolean {
         return FirebaseAuth.getInstance().currentUser != null ||
-                !preferences.deviceId.isNullOrBlank()||
-                preferences.offlineId.get().isNotBlank()
+            !preferences.deviceId.isNullOrBlank() ||
+            preferences.offlineId.get().isNotBlank()
     }
 
     companion object {

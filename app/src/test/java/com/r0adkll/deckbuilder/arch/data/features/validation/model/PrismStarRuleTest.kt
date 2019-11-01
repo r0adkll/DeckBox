@@ -10,12 +10,12 @@ class PrismStarRuleTest {
     @Test
     fun shouldNotDetectDuplicates() {
         val cards = listOf(
-                createPokemonCard("Lunala ◇"),
-                createPokemonCard("Solgaleo ◇"),
-                createPokemonCard("Giratina ◇"),
-                createPokemonCard("Darkrai ◇"),
-                createPokemonCard("Super Boost Energy ◇"),
-                createPokemonCard("Cyrus ◇")
+            createPokemonCard("Lunala ◇"),
+            createPokemonCard("Solgaleo ◇"),
+            createPokemonCard("Giratina ◇"),
+            createPokemonCard("Darkrai ◇"),
+            createPokemonCard("Super Boost Energy ◇"),
+            createPokemonCard("Cyrus ◇")
         )
         val rule = PrismStarRule()
 
@@ -27,13 +27,13 @@ class PrismStarRuleTest {
     @Test
     fun shouldDetectDuplicateError() {
         val cards = listOf(
-                createPokemonCard("Lunala ◇"),
-                createPokemonCard("Lunala ◇"),
-                createPokemonCard("Solgaleo ◇"),
-                createPokemonCard("Giratina ◇"),
-                createPokemonCard("Darkrai ◇"),
-                createPokemonCard("Super Boost Energy ◇"),
-                createPokemonCard("Cyrus ◇")
+            createPokemonCard("Lunala ◇"),
+            createPokemonCard("Lunala ◇"),
+            createPokemonCard("Solgaleo ◇"),
+            createPokemonCard("Giratina ◇"),
+            createPokemonCard("Darkrai ◇"),
+            createPokemonCard("Super Boost Energy ◇"),
+            createPokemonCard("Cyrus ◇")
         )
         val rule = PrismStarRule()
 

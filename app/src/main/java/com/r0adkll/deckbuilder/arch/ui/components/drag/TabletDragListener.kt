@@ -15,8 +15,8 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
 
 class TabletDragListener(
-        val dropZone: View,
-        val pager: androidx.viewpager.widget.ViewPager
+    val dropZone: View,
+    val pager: androidx.viewpager.widget.ViewPager
 ) : View.OnDragListener {
 
     private val selectedColor by lazy { dropZone.color(R.color.secondaryColor) }
@@ -111,18 +111,18 @@ class TabletDragListener(
 
     private fun showDropZone() {
         dropZone.animate()
-                .alpha(1f)
-                .setDuration(ANIM_DURATION)
-                .setInterpolator(FastOutSlowInInterpolator())
-                .start()
+            .alpha(1f)
+            .setDuration(ANIM_DURATION)
+            .setInterpolator(FastOutSlowInInterpolator())
+            .start()
     }
 
     private fun hideDropZone() {
         dropZone.animate()
-                .alpha(0f)
-                .setDuration(ANIM_DURATION)
-                .setInterpolator(FastOutSlowInInterpolator())
-                .start()
+            .alpha(0f)
+            .setDuration(ANIM_DURATION)
+            .setInterpolator(FastOutSlowInInterpolator())
+            .start()
     }
 
     interface DropListener {
@@ -149,7 +149,11 @@ class TabletDragListener(
          * Attach a new [TabletDragListener] to the target view to handle the
          * Drag n' Drop operation for tablet target
          */
-        fun attach(target: View, pager: androidx.viewpager.widget.ViewPager, dropListener: (PokemonCard) -> Unit): TabletDragListener {
+        fun attach(
+            target: View,
+            pager: androidx.viewpager.widget.ViewPager,
+            dropListener: (PokemonCard) -> Unit
+        ): TabletDragListener {
             val listener = TabletDragListener(target, pager)
             listener.setDropListener(dropListener)
             target.setOnDragListener(listener)

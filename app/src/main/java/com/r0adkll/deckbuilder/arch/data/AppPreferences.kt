@@ -19,9 +19,9 @@ import com.r0adkll.deckbuilder.util.extensions.RxPreferences.ReactiveStringSetPr
 import javax.inject.Inject
 
 open class AppPreferences @Inject constructor(
-        override val sharedPreferences: SharedPreferences,
-        override val rxSharedPreferences: RxSharedPreferences
-) : Preferences, RxPreferences{
+    override val sharedPreferences: SharedPreferences,
+    override val rxSharedPreferences: RxSharedPreferences
+) : Preferences, RxPreferences {
 
     companion object {
         const val KEY_ONBOARDING = "pref_onboarding"
@@ -71,7 +71,7 @@ open class AppPreferences @Inject constructor(
 
     fun clear() {
         sharedPreferences.edit()
-                .clear()
-                .apply()
+            .clear()
+            .apply()
     }
 }

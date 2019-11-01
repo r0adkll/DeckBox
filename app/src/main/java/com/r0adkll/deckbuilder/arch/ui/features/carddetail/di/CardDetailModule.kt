@@ -11,19 +11,22 @@ import dagger.Provides
 @Module
 class CardDetailModule(val activity: CardDetailActivity) {
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideUi(): CardDetailUi = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideIntentions(): CardDetailUi.Intentions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideActions(): CardDetailUi.Actions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideRenderer(
-            actions: CardDetailUi.Actions,
-            schedulers: AppSchedulers
-    ) : CardDetailRenderer = CardDetailRenderer(actions, schedulers.comp, schedulers.main)
-
+        actions: CardDetailUi.Actions,
+        schedulers: AppSchedulers
+    ): CardDetailRenderer = CardDetailRenderer(actions, schedulers.comp, schedulers.main)
 }

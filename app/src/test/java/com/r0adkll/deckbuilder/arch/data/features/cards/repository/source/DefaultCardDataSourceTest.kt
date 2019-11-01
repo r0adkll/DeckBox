@@ -46,7 +46,7 @@ class DefaultCardDataSourceTest {
         val query = "test"
 
         source.search(null, query, null)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on networkSource that networkSource.search(null, query, null) was called
         VerifyNotCalled on diskSource that diskSource.search(anyOrNull(), any(), anyOrNull())
@@ -60,7 +60,7 @@ class DefaultCardDataSourceTest {
         val query = "test"
 
         source.search(null, query, null)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, null) was called
         VerifyNotCalled on networkSource that networkSource.search(anyOrNull(), any(), anyOrNull())
@@ -75,7 +75,7 @@ class DefaultCardDataSourceTest {
         val filter = Filter()
 
         source.search(null, query, filter)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on networkSource that networkSource.search(null, query, filter) was called
         VerifyNotCalled on diskSource that diskSource.search(anyOrNull(), any(), anyOrNull())
@@ -90,7 +90,7 @@ class DefaultCardDataSourceTest {
         val filter = Filter(expansions = listOf(createExpansion("sm8", "sm6")))
 
         source.search(null, query, filter)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, filter) was called
         VerifyNotCalled on networkSource that networkSource.search(anyOrNull(), any(), anyOrNull())
@@ -105,7 +105,7 @@ class DefaultCardDataSourceTest {
         val query = "test"
 
         source.search(null, query, null)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, null) was called
     }
@@ -113,10 +113,10 @@ class DefaultCardDataSourceTest {
     @Test
     fun testFindWithConnectivity() {
         val cards = listOf(
-                createPokemonCard().copy(id = "sm8-1"),
-                createPokemonCard().copy(id = "sm8-2"),
-                createPokemonCard().copy(id = "sm8-3"),
-                createPokemonCard().copy(id = "sm8-4")
+            createPokemonCard().copy(id = "sm8-1"),
+            createPokemonCard().copy(id = "sm8-2"),
+            createPokemonCard().copy(id = "sm8-3"),
+            createPokemonCard().copy(id = "sm8-4")
         )
         val ids = cards.map { it.id }
         When calling connectivity.isConnected() itReturns true
@@ -131,10 +131,10 @@ class DefaultCardDataSourceTest {
     @Test
     fun testFindIncompleteWithConnectivity() {
         val cards = listOf(
-                createPokemonCard().copy(id = "sm8-1"),
-                createPokemonCard().copy(id = "sm8-2"),
-                createPokemonCard().copy(id = "sm8-3"),
-                createPokemonCard().copy(id = "sm8-4")
+            createPokemonCard().copy(id = "sm8-1"),
+            createPokemonCard().copy(id = "sm8-2"),
+            createPokemonCard().copy(id = "sm8-3"),
+            createPokemonCard().copy(id = "sm8-4")
         )
         val ids = cards.map { it.id }
         When calling connectivity.isConnected() itReturns true
@@ -143,7 +143,7 @@ class DefaultCardDataSourceTest {
 
         val results = source.find(ids).blockingFirst()
 
-        results shouldContainAll  cards
+        results shouldContainAll cards
         Verify on diskSource that diskSource.find(ids) was called
         Verify on networkSource that networkSource.find(listOf("sm8-4")) was called
     }
@@ -151,10 +151,10 @@ class DefaultCardDataSourceTest {
     @Test
     fun testFindWithoutConnectivity() {
         val cards = listOf(
-                createPokemonCard().copy(id = "sm8-1"),
-                createPokemonCard().copy(id = "sm8-2"),
-                createPokemonCard().copy(id = "sm8-3"),
-                createPokemonCard().copy(id = "sm8-4")
+            createPokemonCard().copy(id = "sm8-1"),
+            createPokemonCard().copy(id = "sm8-2"),
+            createPokemonCard().copy(id = "sm8-3"),
+            createPokemonCard().copy(id = "sm8-4")
         )
         val ids = cards.map { it.id }
         When calling connectivity.isConnected() itReturns false

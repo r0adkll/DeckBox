@@ -32,10 +32,14 @@ import javax.inject.Inject
 
 class CacheService : IntentService("DeckBox-Cache-Service") {
 
-    @Inject lateinit var api: Pokemon
-    @Inject lateinit var preferences: AppPreferences
-    @Inject lateinit var offlineStatusConsumer: OfflineStatusConsumer
-    @Inject lateinit var cardCache: CardCache
+    @Inject
+    lateinit var api: Pokemon
+    @Inject
+    lateinit var preferences: AppPreferences
+    @Inject
+    lateinit var offlineStatusConsumer: OfflineStatusConsumer
+    @Inject
+    lateinit var cardCache: CardCache
 
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
 
@@ -58,7 +62,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
     private fun cacheCardData(expansions: List<Expansion>, downloadImages: Boolean) {
         // Update initial state of all expansions
-        for (expansion in expansions){
+        for (expansion in expansions) {
             // Update cache status and notification
             updateCacheStatus(expansion.code to CacheStatus.Downloading())
             showExpansionNotification(expansion, CacheStatus.Downloading())
@@ -92,21 +96,21 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
     private fun getExpansion(expansion: Expansion): List<Card> {
         return api.card()
-                .where {
-                    setCode = expansion.code
-                    pageSize = PAGE_SIZE
-                }
-                .observeAll()
-                .retryWithBackoff()
-                .blockingSingle()
+            .where {
+                setCode = expansion.code
+                pageSize = PAGE_SIZE
+            }
+            .observeAll()
+            .retryWithBackoff()
+            .blockingSingle()
     }
 
     private fun cacheCardImages(expansion: Expansion, cards: List<Card>) {
         val targets = cards.map {
             GlideApp.with(this)
-                    .downloadOnly()
-                    .load(it.imageUrl)
-                    .submit()
+                .downloadOnly()
+                .load(it.imageUrl)
+                .submit()
         }
 
         val throttle = Stopwatch.createStarted()
@@ -148,7 +152,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?) {
         createChannel()
 
-        val title = when(status) {
+        val title = when (status) {
             CacheStatus.Empty -> getString(R.string.notification_caching_title_start)
             CacheStatus.Queued -> getString(R.string.notification_caching_queued_title)
             is CacheStatus.Downloading -> getString(R.string.notification_caching_title)
@@ -168,19 +172,19 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
 
         val isOngoing = status != null && (status != CacheStatus.Cached)
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setContentIntent(pending)
-                .setColor(color(R.color.primaryColor))
-                .setOngoing(isOngoing)
-                .setOnlyAlertOnce(true)
-                .setSound(null)
-                .setSmallIcon(when(status is CacheStatus.Downloading){
-                    true -> android.R.drawable.stat_sys_download
-                    else -> android.R.drawable.stat_sys_download_done
-                })
-                .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setContentIntent(pending)
+            .setColor(color(R.color.primaryColor))
+            .setOngoing(isOngoing)
+            .setOnlyAlertOnce(true)
+            .setSound(null)
+            .setSmallIcon(when (status is CacheStatus.Downloading) {
+                true -> android.R.drawable.stat_sys_download
+                else -> android.R.drawable.stat_sys_download_done
+            })
+            .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
 
         if (status != null && status is CacheStatus.Downloading) {
             val progress = status.progress?.times(100f)?.toInt() ?: 0

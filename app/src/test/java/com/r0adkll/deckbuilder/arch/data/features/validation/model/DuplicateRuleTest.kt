@@ -11,17 +11,17 @@ class DuplicateRuleTest {
     @Test
     fun shouldNotDetectDuplicates() {
         val cards = listOf(
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Wartortle"),
-                createPokemonCard("Wartortle"),
-                createPokemonCard("Wartortle"),
-                createPokemonCard("Blastoise"),
-                createPokemonCard("Blastoise"),
-                createPokemonCard("Blastoise"),
-                createPokemonCard("Blastoise")
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Wartortle"),
+            createPokemonCard("Wartortle"),
+            createPokemonCard("Wartortle"),
+            createPokemonCard("Blastoise"),
+            createPokemonCard("Blastoise"),
+            createPokemonCard("Blastoise"),
+            createPokemonCard("Blastoise")
         )
         val rule = DuplicateRule()
 
@@ -33,17 +33,17 @@ class DuplicateRuleTest {
     @Test
     fun shouldDetectDuplicateError() {
         val cards = listOf(
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Wartortle"),
-                createPokemonCard("Wartortle"),
-                createPokemonCard("Blastoise"),
-                createPokemonCard("Blastoise"),
-                createPokemonCard("Blastoise"),
-                createPokemonCard("Blastoise")
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Wartortle"),
+            createPokemonCard("Wartortle"),
+            createPokemonCard("Blastoise"),
+            createPokemonCard("Blastoise"),
+            createPokemonCard("Blastoise"),
+            createPokemonCard("Blastoise")
         )
         val rule = DuplicateRule()
 
@@ -55,18 +55,18 @@ class DuplicateRuleTest {
     @Test
     fun shouldNotDetectBasicEnergy() {
         val cards = listOf(
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createPokemonCard("Squirtle"),
-                createEnergyCard("Water Energy"),
-                createEnergyCard("Water Energy"),
-                createEnergyCard("Water Energy"),
-                createEnergyCard("Water Energy"),
-                createEnergyCard("Water Energy"),
-                createEnergyCard("Water Energy"),
-                createEnergyCard("Water Energy"),
-                createEnergyCard("Water Energy")
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createPokemonCard("Squirtle"),
+            createEnergyCard("Water Energy"),
+            createEnergyCard("Water Energy"),
+            createEnergyCard("Water Energy"),
+            createEnergyCard("Water Energy"),
+            createEnergyCard("Water Energy"),
+            createEnergyCard("Water Energy"),
+            createEnergyCard("Water Energy"),
+            createEnergyCard("Water Energy")
         )
         val rule = DuplicateRule()
 

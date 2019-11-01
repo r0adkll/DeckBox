@@ -11,8 +11,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHo
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class PokemonCardsRecyclerAdapter(
-        context: Context,
-        private val onViewItemClickListener: (PokemonCardView, PokemonCard) -> Unit = { _, _ -> }
+    context: Context,
+    private val onViewItemClickListener: (PokemonCardView, PokemonCard) -> Unit = { _, _ -> }
 ) : EmptyViewListAdapter<PokemonCard, PokemonCardViewHolder>(ITEM_CALLBACK) {
 
     private val inflater = LayoutInflater.from(context)

@@ -30,10 +30,10 @@ import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.bindView
 
 class QuickStartRecyclerAdapter(
-        context: Context,
-        private val quickStart: Relay<Deck>
+    context: Context,
+    private val quickStart: Relay<Deck>
 ) : ListAdapter<QuickStartRecyclerAdapter.Item,
-        QuickStartRecyclerAdapter.QuickStartViewHolder<QuickStartRecyclerAdapter.Item>>(RecyclerViewItemCallback()) {
+    QuickStartRecyclerAdapter.QuickStartViewHolder<QuickStartRecyclerAdapter.Item>>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)
 
@@ -72,7 +72,7 @@ class QuickStartRecyclerAdapter(
             override val layoutId: Int get() = R.layout.item_deck_placeholder
             override val itemId: Long get() = index.toLong()
 
-            override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+            override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
                 is Placeholder -> new.index == index
                 else -> false
             }
@@ -80,29 +80,29 @@ class QuickStartRecyclerAdapter(
             override fun isContentSame(new: RecyclerViewItem): Boolean = false
         }
 
-        class Template(val template: DeckTemplate): Item() {
+        class Template(val template: DeckTemplate) : Item() {
 
             override val layoutId: Int get() = R.layout.item_deck_quickstart
             override val itemId: Long get() = template.deck.id.hashCode().toLong()
 
-            override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+            override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
                 is Template -> new.template.deck.id == template.deck.id
                 else -> false
             }
 
-            override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+            override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
                 is Template -> new.template == template
                 else -> false
             }
         }
     }
 
-    sealed class QuickStartViewHolder<in I : Item>(itemView: View): RecyclerView.ViewHolder(itemView) {
+    sealed class QuickStartViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         abstract fun bind(item: I)
         open fun applyAnimation() {}
 
-        class PlaceholderViewHolder(itemView: View): QuickStartViewHolder<Item.Placeholder>(itemView) {
+        class PlaceholderViewHolder(itemView: View) : QuickStartViewHolder<Item.Placeholder>(itemView) {
 
             private val image by bindView<View>(R.id.image)
             private val title by bindView<View>(R.id.title)
@@ -117,9 +117,9 @@ class QuickStartRecyclerAdapter(
                 set?.cancel()
                 set = AnimatorSet().apply {
                     this.playTogether(
-                            applyAnimator(image),
-                            applyAnimator(title, 75L),
-                            applyAnimator(subtitle, 150L)
+                        applyAnimator(image),
+                        applyAnimator(title, 75L),
+                        applyAnimator(subtitle, 150L)
                     )
                     this.start()
                 }
@@ -149,9 +149,9 @@ class QuickStartRecyclerAdapter(
         }
 
         class DeckViewHolder(
-                itemView: View,
-                private val quickStart: Relay<Deck>
-        ): QuickStartViewHolder<Item.Template>(itemView) {
+            itemView: View,
+            private val quickStart: Relay<Deck>
+        ) : QuickStartViewHolder<Item.Template>(itemView) {
 
             private val image by bindView<DeckImageView>(R.id.image)
             private val title by bindView<TextView>(R.id.title)
@@ -162,12 +162,12 @@ class QuickStartRecyclerAdapter(
 
                 val deck = item.template.deck
                 deck.image?.let {
-                    when(it) {
+                    when (it) {
                         is DeckImage.Pokemon -> {
                             GlideApp.with(itemView)
-                                    .load(it.imageUrl)
-                                    .placeholder(R.drawable.pokemon_card_back)
-                                    .into(image)
+                                .load(it.imageUrl)
+                                .placeholder(R.drawable.pokemon_card_back)
+                                .into(image)
                         }
                         is DeckImage.Type -> {
                             image.primaryType = it.type1
@@ -176,9 +176,9 @@ class QuickStartRecyclerAdapter(
                     }
                 } ?: mostProminentCard(deck.cards)?.let {
                     GlideApp.with(itemView)
-                            .load(it.imageUrl)
-                            .placeholder(R.drawable.pokemon_card_back)
-                            .into(image)
+                        .load(it.imageUrl)
+                        .placeholder(R.drawable.pokemon_card_back)
+                        .into(image)
                 }
 
                 title.text = item.template.name
@@ -205,10 +205,11 @@ class QuickStartRecyclerAdapter(
                 val VALUES by lazy { values() }
 
                 fun of(layoutId: Int): ViewType {
-                    val match = VALUES.firstOrNull { it.layoutId == layoutId }
-                    match?.let { return match }
-
-                    throw EnumConstantNotPresentException(ViewType::class.java, "could not find view type for $layoutId")
+                    return VALUES.find { it.layoutId == layoutId }
+                        ?: throw EnumConstantNotPresentException(
+                            ViewType::class.java,
+                            "could not find view type for $layoutId"
+                        )
                 }
             }
         }
@@ -216,16 +217,16 @@ class QuickStartRecyclerAdapter(
         companion object {
 
             @Suppress("UNCHECKED_CAST")
-            fun create(itemView: View,
-                       layoutId: Int,
-                       quickStart: Relay<Deck>) : QuickStartViewHolder<Item> {
-                val viewType = ViewType.of(layoutId)
-                return when(viewType) {
+            fun create(
+                itemView: View,
+                layoutId: Int,
+                quickStart: Relay<Deck>
+            ): QuickStartViewHolder<Item> {
+                return when (ViewType.of(layoutId)) {
                     PLACEHOLDER -> PlaceholderViewHolder(itemView) as QuickStartViewHolder<Item>
                     DECK -> DeckViewHolder(itemView, quickStart) as QuickStartViewHolder<Item>
                 }
             }
         }
     }
-
 }

@@ -12,48 +12,48 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class CollectionPresenter @Inject constructor(
-        ui: CollectionUi,
-        val intentions: CollectionUi.Intentions,
-        val preferences: AppPreferences,
-        val accountRepository: AccountRepository,
-        val collectionRepository: CollectionRepository,
-        val expansionRepository: ExpansionRepository
+    ui: CollectionUi,
+    val intentions: CollectionUi.Intentions,
+    val preferences: AppPreferences,
+    val accountRepository: AccountRepository,
+    val collectionRepository: CollectionRepository,
+    val expansionRepository: ExpansionRepository
 ) : UiPresenter<State, Change>(ui) {
 
     override fun smashObservables(): Observable<Change> {
 
         val expansions = expansionRepository.getExpansions()
-                .map { it.filter { !it.isPreview } }
-                .map { Change.Expansions(it) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { it.filter { !it.isPreview } }
+            .map { Change.Expansions(it) as Change }
+            .onErrorReturn(handleUnknownError)
 
         val counts = collectionRepository.observeAll()
-                .map { Change.Counts(it) as Change }
-                .onErrorReturn(handleUnknownError)
+            .map { Change.Counts(it) as Change }
+            .onErrorReturn(handleUnknownError)
 
         val migrationNeededChanges = preferences.showCollectionMigration
-                .asObservable()
-                .map { Change.MigrationNeeded(it) as Change }
+            .asObservable()
+            .map { Change.MigrationNeeded(it) as Change }
 
         val migrationClicks = intentions.migrateClicks()
-                .flatMap {
-                    accountRepository.migrateLegacyCollectionCounts()
-                            .doOnNext {
-                                preferences.showCollectionMigration.set(false)
-                            }
-                            .map { Change.MigrationNeeded(false) as Change }
-                            .startWith(Change.IsMigrationInProgress)
-                            .onErrorReturn {
-                                Timber.e(it, "Error migrating account")
-                                Timber.e(it) // In Production, this calls Crashlytics.logException(it)
-                                Change.MigrationError("Something went wrong migrating your collection")
-                            }
-                }
+            .flatMap {
+                accountRepository.migrateLegacyCollectionCounts()
+                    .doOnNext {
+                        preferences.showCollectionMigration.set(false)
+                    }
+                    .map { Change.MigrationNeeded(false) as Change }
+                    .startWith(Change.IsMigrationInProgress)
+                    .onErrorReturn {
+                        Timber.e(it, "Error migrating account")
+                        Timber.e(it) // In Production, this calls Crashlytics.logException(it)
+                        Change.MigrationError("Something went wrong migrating your collection")
+                    }
+            }
 
         return expansions
-                .mergeWith(counts)
-                .mergeWith(migrationNeededChanges)
-                .mergeWith(migrationClicks)
+            .mergeWith(counts)
+            .mergeWith(migrationNeededChanges)
+            .mergeWith(migrationClicks)
     }
 
     companion object {

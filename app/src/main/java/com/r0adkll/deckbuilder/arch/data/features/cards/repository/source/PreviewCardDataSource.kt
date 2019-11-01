@@ -22,22 +22,22 @@ import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 
 @Suppress("UNCHECKED_CAST")
 class PreviewCardDataSource(
-        val previewExpansionDataSource: ExpansionDataSource,
-        val cache: CardCache,
-        val remote: Remote,
-        val schedulers: AppSchedulers
+    val previewExpansionDataSource: ExpansionDataSource,
+    val cache: CardCache,
+    val remote: Remote,
+    val schedulers: AppSchedulers
 ) : CardDataSource {
 
     private val previewApi = Pokemon(
-            Config(
-                    BuildConfig.PREVIEW_API_URL,
-                    logLevel = if (BuildConfig.DEBUG) BASIC else NONE
-            )
+        Config(
+            BuildConfig.PREVIEW_API_URL,
+            logLevel = if (BuildConfig.DEBUG) BASIC else NONE
+        )
     )
 
     override fun findByExpansion(setCode: String): Observable<List<PokemonCard>> {
         return previewExpansionDataSource.getExpansions() + searchNetwork(null, "",
-                Filter(expansions = listOf(Expansion(setCode)))
+            Filter(expansions = listOf(Expansion(setCode)))
         )
     }
 
@@ -51,13 +51,13 @@ class PreviewCardDataSource(
 
     private fun findNetwork(ids: List<String>): Observable<List<Card>> {
         return previewApi.card()
-                .where {
-                    id = ids.joinToString("|")
-                    pageSize = 1000
-                }
-                .observeAll()
-                .doOnNext { cache.putCards(it, true) }
-                .subscribeOn(schedulers.network)
+            .where {
+                id = ids.joinToString("|")
+                pageSize = 1000
+            }
+            .observeAll()
+            .doOnNext { cache.putCards(it, true) }
+            .subscribeOn(schedulers.network)
     }
 
     private fun searchNetwork(type: SuperType?, query: String, filter: Filter?): Observable<List<Card>> {
@@ -76,7 +76,7 @@ class PreviewCardDataSource(
             val adjustedQuery = proxies?.apply(query) ?: query
 
             // Set search field accordingly
-            when(filter?.field ?: SearchField.NAME) {
+            when (filter?.field ?: SearchField.NAME) {
                 SearchField.NAME -> request.name = adjustedQuery
                 SearchField.TEXT -> request.text = adjustedQuery
                 SearchField.ABILITY_NAME -> request.abilityName = adjustedQuery
@@ -87,9 +87,9 @@ class PreviewCardDataSource(
         }
 
         return previewApi.card()
-                .where(request)
-                .observeAll()
-                .doOnNext { cache.putCards(it, true) }
-                .subscribeOn(schedulers.network)
+            .where(request)
+            .observeAll()
+            .doOnNext { cache.putCards(it, true) }
+            .subscribeOn(schedulers.network)
     }
 }

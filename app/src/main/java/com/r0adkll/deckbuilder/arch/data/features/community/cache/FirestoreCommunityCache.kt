@@ -16,52 +16,52 @@ import javax.inject.Inject
 import kotlin.reflect.KClass
 
 class FirestoreCommunityCache @Inject constructor(
-        val cardRepository: CardRepository,
-        val schedulers: AppSchedulers
+    val cardRepository: CardRepository,
+    val schedulers: AppSchedulers
 ) : CommunityCache {
 
     override fun getDeckTemplates(): Observable<List<DeckTemplate>> {
         val tournaments = getTemplateCollection(TOURNAMENTS)
         val query = tournaments.whereEqualTo("rank", 1)
         return getCollectionItems(query, TournamentDeckTemplateEntity::class)
-                .flatMap { decks ->
-                    val cardIds = decks.flatMap {
-                        it.cardMetadata!!.map { it.id }
-                    }.toHashSet() // Convert to set so we don't request duplicate id's
+            .flatMap { decks ->
+                val cardIds = decks.flatMap {
+                    it.cardMetadata!!.map { it.id }
+                }.toHashSet() // Convert to set so we don't request duplicate id's
 
-                    cardRepository.find(cardIds.toList())
-                            .map { cards ->
-                                decks.sortedByDescending { it.timestamp }.map {
-                                    EntityMapper.to(it, cards)
-                                }
-                            }
-                }
+                cardRepository.find(cardIds.toList())
+                    .map { cards ->
+                        decks.sortedByDescending { it.timestamp }.map {
+                            EntityMapper.to(it, cards)
+                        }
+                    }
+            }
     }
 
     private fun getTemplateCollection(type: String): CollectionReference {
         val db = FirebaseFirestore.getInstance()
         return db.collection(TEMPLATES)
-                .document(type)
-                .collection(TEMPLATE_DECKS)
+            .document(type)
+            .collection(TEMPLATE_DECKS)
     }
 
     private fun <T : FirebaseEntity> getCollectionItems(query: Query, clazz: KClass<T>): Observable<List<T>> {
         return RxFirebase.from(query.get()/*, schedulers.firebaseExecutor*/)
-                .map { snapshot ->
-                    Timber.d("Firebase::getTemplates() - Thread(${Thread.currentThread().name})")
-                    if (!snapshot.isEmpty) {
-                        val items = ArrayList<T>()
-                        snapshot.documents.forEach { document ->
-                            document.toObject(clazz.java)?.let { entity ->
-                                entity.id = document.id
-                                items += entity
-                            }
+            .map { snapshot ->
+                Timber.d("Firebase::getTemplates() - Thread(${Thread.currentThread().name})")
+                if (!snapshot.isEmpty) {
+                    val items = ArrayList<T>()
+                    snapshot.documents.forEach { document ->
+                        document.toObject(clazz.java)?.let { entity ->
+                            entity.id = document.id
+                            items += entity
                         }
-                        items
-                    } else {
-                        emptyList<T>()
                     }
+                    items
+                } else {
+                    emptyList<T>()
                 }
+            }
     }
 
     companion object {

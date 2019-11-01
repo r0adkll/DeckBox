@@ -25,11 +25,11 @@ import io.pokemontcg.model.SuperType
 
 @Suppress("NON_EXHAUSTIVE_WHEN")
 class ResultsPagerAdapter(
-        val context: Context,
-        val hasValidSession: Boolean,
-        private val scrollHideListener: KeyboardScrollHideListener,
-        private val pokemonCardLongClicks: Relay<PokemonCardView>,
-        private val editCardIntentions: EditCardIntentions
+    val context: Context,
+    val hasValidSession: Boolean,
+    private val scrollHideListener: KeyboardScrollHideListener,
+    private val pokemonCardLongClicks: Relay<PokemonCardView>,
+    private val editCardIntentions: EditCardIntentions
 ) : PagerAdapter() {
 
     private val inflater = LayoutInflater.from(context)
@@ -38,7 +38,7 @@ class ResultsPagerAdapter(
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.layout_deck_supertype, container, false)
         val vh = SearchResultViewHolder(view, position, hasValidSession, scrollHideListener,
-                pokemonCardLongClicks, editCardIntentions)
+            pokemonCardLongClicks, editCardIntentions)
         view.tag = vh
         viewHolders[position] = vh
 
@@ -54,7 +54,7 @@ class ResultsPagerAdapter(
 
     override fun getCount(): Int = 3
 
-    override fun getPageTitle(position: Int): CharSequence = when(position) {
+    override fun getPageTitle(position: Int): CharSequence = when (position) {
         0 -> context.getString(R.string.tab_pokemon)
         1 -> context.getString(R.string.tab_trainer)
         2 -> context.getString(R.string.tab_energy)
@@ -68,7 +68,7 @@ class ResultsPagerAdapter(
     }
 
     fun setCards(type: SuperType, cards: List<PokemonCard>) {
-        when(type) {
+        when (type) {
             SuperType.POKEMON -> viewHolders[0]?.bind(cards)
             SuperType.TRAINER -> viewHolders[1]?.bind(cards)
             SuperType.ENERGY -> viewHolders[2]?.bind(cards)
@@ -76,7 +76,7 @@ class ResultsPagerAdapter(
     }
 
     fun showLoading(type: SuperType, isLoading: Boolean) {
-        when(type) {
+        when (type) {
             SuperType.POKEMON -> viewHolders[0]?.showLoading(isLoading)
             SuperType.TRAINER -> viewHolders[1]?.showLoading(isLoading)
             SuperType.ENERGY -> viewHolders[2]?.showLoading(isLoading)
@@ -84,7 +84,7 @@ class ResultsPagerAdapter(
     }
 
     fun showEmptyResults(type: SuperType) {
-        when(type) {
+        when (type) {
             SuperType.POKEMON -> viewHolders[0]?.showEmptyResults()
             SuperType.TRAINER -> viewHolders[1]?.showEmptyResults()
             SuperType.ENERGY -> viewHolders[2]?.showEmptyResults()
@@ -92,7 +92,7 @@ class ResultsPagerAdapter(
     }
 
     fun showEmptyDefault(type: SuperType) {
-        when(type) {
+        when (type) {
             SuperType.POKEMON -> viewHolders[0]?.showEmptyDefault()
             SuperType.TRAINER -> viewHolders[1]?.showEmptyDefault()
             SuperType.ENERGY -> viewHolders[2]?.showEmptyDefault()
@@ -100,7 +100,7 @@ class ResultsPagerAdapter(
     }
 
     fun showError(type: SuperType, description: String) {
-        when(type) {
+        when (type) {
             SuperType.POKEMON -> viewHolders[0]?.showError(description)
             SuperType.TRAINER -> viewHolders[1]?.showError(description)
             SuperType.ENERGY -> viewHolders[2]?.showError(description)
@@ -108,7 +108,7 @@ class ResultsPagerAdapter(
     }
 
     fun hideError(type: SuperType) {
-        when(type) {
+        when (type) {
             SuperType.POKEMON -> viewHolders[0]?.hideError()
             SuperType.TRAINER -> viewHolders[1]?.hideError()
             SuperType.ENERGY -> viewHolders[2]?.hideError()
@@ -116,7 +116,7 @@ class ResultsPagerAdapter(
     }
 
     fun wiggleCard(card: PokemonCard) {
-        when(card.supertype) {
+        when (card.supertype) {
             SuperType.POKEMON -> viewHolders[0]?.wiggleCard(card)
             SuperType.TRAINER -> viewHolders[1]?.wiggleCard(card)
             SuperType.ENERGY -> viewHolders[2]?.wiggleCard(card)
@@ -124,22 +124,22 @@ class ResultsPagerAdapter(
     }
 
     private class SearchResultViewHolder(
-            itemView: View,
-            val position: Int,
-            val hasValidSession: Boolean,
-            scrollHideListener: KeyboardScrollHideListener,
-            pokemonCardLongClicks: Relay<PokemonCardView>,
-            editCardIntentions: EditCardIntentions
+        itemView: View,
+        val position: Int,
+        val hasValidSession: Boolean,
+        scrollHideListener: KeyboardScrollHideListener,
+        pokemonCardLongClicks: Relay<PokemonCardView>,
+        editCardIntentions: EditCardIntentions
     ) {
 
         private val recycler: RecyclerView = itemView.findViewById(R.id.recycler)
         private val emptyView: EmptyView = itemView.findViewById(R.id.empty_view)
         private val adapter: SearchResultsRecyclerAdapter = SearchResultsRecyclerAdapter(itemView.context,
-                editCardIntentions = editCardIntentions)
+            editCardIntentions = editCardIntentions)
 
         init {
             emptyView.setIconResource(R.drawable.ic_empty_search)
-            emptyView.setMessage(when(position) {
+            emptyView.setMessage(when (position) {
                 0 -> R.string.empty_search_pokemon_message
                 1 -> R.string.empty_search_trainer_message
                 else -> R.string.empty_search_energy_message
@@ -187,7 +187,7 @@ class ResultsPagerAdapter(
         }
 
         fun showEmptyResults() {
-            emptyView.setMessage(when(position) {
+            emptyView.setMessage(when (position) {
                 0 -> R.string.empty_search_results_pokemon_message
                 1 -> R.string.empty_search_results_trainer_message
                 else -> R.string.empty_search_results_energy_message
@@ -195,7 +195,7 @@ class ResultsPagerAdapter(
         }
 
         fun showEmptyDefault() {
-            emptyView.setMessage(when(position) {
+            emptyView.setMessage(when (position) {
                 0 -> R.string.empty_search_pokemon_message
                 1 -> R.string.empty_search_trainer_message
                 else -> R.string.empty_search_energy_message

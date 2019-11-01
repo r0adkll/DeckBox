@@ -6,54 +6,54 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ExpansionPreview(
-        val version: Int,
-        val expiresAt: String,
-        val code: String,
-        val preview: PreviewSpec
+    val version: Int,
+    val expiresAt: String,
+    val code: String,
+    val preview: PreviewSpec
 ) : Parcelable {
 
     @Parcelize
     data class PreviewSpec(
-            val logo: LogoSpec,
-            val title: String,
-            val description: String,
-            val textColor: String,
-            val background: List<DrawableSpec>,
-            val foreground: DrawableSpec?
+        val logo: LogoSpec,
+        val title: String,
+        val description: String,
+        val textColor: String,
+        val background: List<DrawableSpec>,
+        val foreground: DrawableSpec?
     ) : Parcelable {
 
         @Parcelize
         data class LogoSpec(
-                val url: String,
-                val margins: Margins?
+            val url: String,
+            val margins: Margins?
         ) : Parcelable
 
         @Parcelize
         data class DrawableSpec(
-                val source: Source,
-                val tile: Tile?,
-                val margins: Margins?,
-                val aspectRatio: Boolean?,
-                val alpha: Float?
+            val source: Source,
+            val tile: Tile?,
+            val margins: Margins?,
+            val aspectRatio: Boolean?,
+            val alpha: Float?
         ) : Parcelable {
 
             @Parcelize
             data class Source(
-                    val type: String,
-                    val value: String,
-                    val density: Float?
+                val type: String,
+                val value: String,
+                val density: Float?
             ) : Parcelable
 
             @Parcelize
             data class Tile(
-                    val x: String,
-                    val y: String
+                val x: String,
+                val y: String
             ) : Parcelable {
 
                 val tileModeX: Shader.TileMode get() = tileMode(x)
                 val tileModeY: Shader.TileMode get() = tileMode(y)
 
-                private fun tileMode(value: String): Shader.TileMode = when(value) {
+                private fun tileMode(value: String): Shader.TileMode = when (value) {
                     "repeat" -> Shader.TileMode.REPEAT
                     "mirror" -> Shader.TileMode.MIRROR
                     "clamp" -> Shader.TileMode.CLAMP
@@ -64,10 +64,10 @@ data class ExpansionPreview(
 
         @Parcelize
         data class Margins(
-                val start: Int?,
-                val top: Int?,
-                val end: Int?,
-                val bottom: Int?
+            val start: Int?,
+            val top: Int?,
+            val end: Int?,
+            val bottom: Int?
         ) : Parcelable
     }
 }

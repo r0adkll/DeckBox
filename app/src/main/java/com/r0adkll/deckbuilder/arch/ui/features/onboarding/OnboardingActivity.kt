@@ -46,8 +46,7 @@ class OnboardingActivity : BaseActivity() {
         action_next.setOnClickListener {
             if (pager.currentItem < PAGES.size - 1) {
                 pager.setCurrentItem(pager.currentItem + 1, true)
-            }
-            else {
+            } else {
                 launchSetup()
             }
         }
@@ -69,11 +68,10 @@ class OnboardingActivity : BaseActivity() {
     inner class IndicatorPageChangeListener : ViewPager.OnPageChangeListener {
 
         override fun onPageScrollStateChanged(state: Int) {
-
         }
 
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            when(position) {
+            when (position) {
                 1 -> {
                     action_next.alpha = 1f - positionOffset
                     action_finish.alpha = positionOffset
@@ -82,7 +80,7 @@ class OnboardingActivity : BaseActivity() {
         }
 
         override fun onPageSelected(position: Int) {
-            when(position) {
+            when (position) {
                 1 -> {
                     action_finish.alpha = 0f
                     action_finish.isGone = true
@@ -100,8 +98,8 @@ class OnboardingActivity : BaseActivity() {
     }
 
     class OnboardingPagerAdapter(
-            private val pages: List<Page>,
-            fragmentManager: FragmentManager
+        private val pages: List<Page>,
+        fragmentManager: FragmentManager
     ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getItem(position: Int): Fragment {
@@ -114,10 +112,10 @@ class OnboardingActivity : BaseActivity() {
 
     @Parcelize
     data class Page(
-            @StringRes val title: Int,
-            @StringRes val subtitle: Int,
-            @DrawableRes val image: Int,
-            val comingSoon: Boolean = false
+        @StringRes val title: Int,
+        @StringRes val subtitle: Int,
+        @DrawableRes val image: Int,
+        val comingSoon: Boolean = false
     ) : Parcelable
 
     class PageFragment : Fragment() {
@@ -149,9 +147,22 @@ class OnboardingActivity : BaseActivity() {
 
     companion object {
         val PAGES = listOf(
-                Page(R.string.onboarding_title_search, R.string.onboarding_subtitle_search, R.drawable.dr_onboarding_symbol_1),
-                Page(R.string.onboarding_title_build, R.string.onboarding_subtitle_build, R.drawable.dr_onboarding_symbol_2),
-                Page(R.string.onboarding_title_share, R.string.onboarding_subtitle_share, R.drawable.dr_onboarding_symbol_3, true)
+            Page(
+                R.string.onboarding_title_search,
+                R.string.onboarding_subtitle_search,
+                R.drawable.dr_onboarding_symbol_1
+            ),
+            Page(
+                R.string.onboarding_title_build,
+                R.string.onboarding_subtitle_build,
+                R.drawable.dr_onboarding_symbol_2
+            ),
+            Page(
+                R.string.onboarding_title_share,
+                R.string.onboarding_subtitle_share,
+                R.drawable.dr_onboarding_symbol_3,
+                true
+            )
         )
 
         fun createIntent(context: Context): Intent = Intent(context, OnboardingActivity::class.java)

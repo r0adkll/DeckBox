@@ -14,7 +14,9 @@ import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 
 class SeekBarIndicatorView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), SeekBar.OnSeekBarChangeListener {
 
     private val indicator: TextView = TextView(context)
@@ -71,7 +73,7 @@ class SeekBarIndicatorView @JvmOverloads constructor(
         fun format(progress: Int): CharSequence
     }
 
-    class DefaultValueFormatter: ValueFormatter {
+    class DefaultValueFormatter : ValueFormatter {
         override fun format(progress: Int): CharSequence {
             return progress.toString()
         }

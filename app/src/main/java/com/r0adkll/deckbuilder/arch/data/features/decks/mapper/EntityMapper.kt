@@ -29,26 +29,26 @@ object EntityMapper {
 
     fun to(deck: Deck): DeckEntity {
         return DeckEntity("",
-                deck.name,
-                deck.description,
-                deck.image?.uri?.toString(),
-                deck.collectionOnly,
-                deck.cards.stack().map { to(it) },
-                /* Deprecated */ null,
-                Timestamp.now()
+            deck.name,
+            deck.description,
+            deck.image?.uri?.toString(),
+            deck.collectionOnly,
+            deck.cards.stack().map { to(it) },
+            /* Deprecated */ null,
+            Timestamp.now()
         )
     }
 
     fun to(entity: DeckEntity, cards: List<PokemonCard>, isMissingCards: Boolean): Deck {
         return Deck(
-                entity.id,
-                entity.name,
-                entity.description,
-                entity.image?.let { DeckImage.from(Uri.parse(it)) },
-                entity.collectionOnly ?: false,
-                cards,
-                isMissingCards,
-                entity.updatedAt?.milliseconds ?: entity.timestamp ?: System.currentTimeMillis()
+            entity.id,
+            entity.name,
+            entity.description,
+            entity.image?.let { DeckImage.from(Uri.parse(it)) },
+            entity.collectionOnly ?: false,
+            cards,
+            isMissingCards,
+            entity.updatedAt?.milliseconds ?: entity.timestamp ?: System.currentTimeMillis()
         )
     }
 
@@ -72,64 +72,64 @@ object EntityMapper {
 
     fun to(stackedCard: StackedPokemonCard): CardMetadataEntity {
         return CardMetadataEntity(
-                stackedCard.card.id,
-                stackedCard.card.supertype.displayName,
-                stackedCard.card.imageUrl,
-                stackedCard.card.imageUrlHiRes,
-                stackedCard.count
+            stackedCard.card.id,
+            stackedCard.card.supertype.displayName,
+            stackedCard.card.imageUrl,
+            stackedCard.card.imageUrlHiRes,
+            stackedCard.count
         )
     }
 
     fun to(card: PokemonCard): PokemonCardEntity {
         return PokemonCardEntity(
-                card.id,
-                card.name,
-                card.nationalPokedexNumber,
-                card.imageUrl,
-                card.imageUrlHiRes,
-                card.types?.compactTypes(),
-                card.supertype.displayName,
-                card.subtype.displayName,
-                card.evolvesFrom,
-                card.hp,
-                card.retreatCost?.size,
-                card.number,
-                card.artist,
-                card.rarity,
-                card.series,
-                card.expansion?.code,
-                card.text?.joinToString("\n"),
+            card.id,
+            card.name,
+            card.nationalPokedexNumber,
+            card.imageUrl,
+            card.imageUrlHiRes,
+            card.types?.compactTypes(),
+            card.supertype.displayName,
+            card.subtype.displayName,
+            card.evolvesFrom,
+            card.hp,
+            card.retreatCost?.size,
+            card.number,
+            card.artist,
+            card.rarity,
+            card.series,
+            card.expansion?.code,
+            card.text?.joinToString("\n"),
 //                card.attacks?.map { to(it) },
-                card.weaknesses?.compactEffects(),
-                card.resistances?.compactEffects(),
-                card.ability?.name,
-                card.ability?.text
+            card.weaknesses?.compactEffects(),
+            card.resistances?.compactEffects(),
+            card.ability?.name,
+            card.ability?.text
         )
     }
 
     fun to(entity: PokemonCardEntity, expansions: List<Expansion>): PokemonCard {
         return PokemonCard(
-                entity.id,
-                entity.name,
-                entity.nationalPokedexNumber,
-                entity.imageUrl,
-                entity.imageUrlHiRes,
-                entity.types?.deserializeTypes(),
-                SuperType.find(entity.supertype),
-                SubType.find(entity.subtype),
-                entity.evolvesFrom,
-                entity.hp,
-                entity.retreatCost?.let { (0 until it).map { _ -> Type.COLORLESS } },
-                entity.number,
-                entity.artist,
-                entity.rarity,
-                entity.series,
-                entity.expansionCode?.let { code -> expansions.find { it.code == code } },
-                entity.text?.split("\n"),
-                null,
-                entity.weaknesses?.deserializeEffects(),
-                entity.resistances?.deserializeEffects(),
-                entity.abilityName?.let { Ability(it, entity.abilityText ?: "") }
+            entity.id,
+            entity.name,
+            entity.nationalPokedexNumber,
+            entity.imageUrl,
+            entity.imageUrlHiRes,
+            entity.types?.deserializeTypes(),
+            SuperType.find(entity.supertype),
+            SubType.find(entity.subtype),
+            entity.evolvesFrom,
+            entity.hp,
+            entity.retreatCost?.let { (0 until it).map { _ -> Type.COLORLESS } },
+            entity.number,
+            entity.artist,
+            entity.rarity,
+            entity.series,
+            entity.expansionCode?.let { code -> expansions.find { it.code == code } },
+            entity.text?.split("\n"),
+            null,
+            entity.weaknesses?.deserializeEffects(),
+            entity.resistances?.deserializeEffects(),
+            entity.abilityName?.let { Ability(it, entity.abilityText ?: "") }
 //                entity.attacks?.map { to(it) },
         )
     }

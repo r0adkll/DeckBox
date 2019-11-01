@@ -6,8 +6,8 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import io.reactivex.Observable
 
 class PreferenceExpansionCache(
-        val preferences: AppPreferences,
-        private val selector: AppPreferences.() -> Preference<List<Expansion>>
+    val preferences: AppPreferences,
+    private val selector: AppPreferences.() -> Preference<List<Expansion>>
 ) : ExpansionCache {
 
     override fun putExpansions(expansions: List<Expansion>) {
@@ -16,7 +16,7 @@ class PreferenceExpansionCache(
 
     override fun getExpansions(): Observable<List<Expansion>> {
         return preferences.selector().asObservable()
-                .take(1)
+            .take(1)
     }
 
     override fun clear() {

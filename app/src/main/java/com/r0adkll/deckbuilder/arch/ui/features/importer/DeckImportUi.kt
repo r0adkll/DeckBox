@@ -22,12 +22,12 @@ interface DeckImportUi : Ui<DeckImportUi.State, DeckImportUi.State.Change> {
 
     @Parcelize
     data class State(
-            override val isLoading: Boolean,
-            override val error: String?,
-            val cards: List<PokemonCard>
+        override val isLoading: Boolean,
+        override val error: String?,
+        val cards: List<PokemonCard>
     ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
-        override fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when (change) {
             Change.IsLoading -> this.copy(isLoading = true)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.DeckListConverted -> this.copy(cards = change.cards, error = null, isLoading = false)
@@ -36,7 +36,9 @@ interface DeckImportUi : Ui<DeckImportUi.State, DeckImportUi.State.Change> {
         sealed class Change(logText: String) : Ui.State.Change(logText) {
             object IsLoading : Change("network -> starting conversion on deck list")
             class Error(val description: String) : Change("error -> $description")
-            class DeckListConverted(val cards: List<PokemonCard>) : Change("network -> decklist converted ${cards.size} cards")
+            class DeckListConverted(
+                val cards: List<PokemonCard>
+            ) : Change("network -> decklist converted ${cards.size} cards")
         }
 
         override fun toString(): String {

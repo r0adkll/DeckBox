@@ -25,7 +25,9 @@ import com.r0adkll.deckbuilder.R
 import io.pokemontcg.model.Type
 
 class DeckImageView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : ImageScaleView(context, attrs, defStyleAttr) {
 
     private val mBlackPaint: Paint
@@ -63,7 +65,7 @@ class DeckImageView @JvmOverloads constructor(
     init {
         // Attribute initialization
         val a = context.obtainStyledAttributes(attrs, R.styleable.DeckImageView,
-                defStyleAttr, 0)
+            defStyleAttr, 0)
 
         mMaskDrawable = a.getDrawable(R.styleable.DeckImageView_maskDrawable)
         if (mMaskDrawable != null) {
@@ -76,10 +78,10 @@ class DeckImageView @JvmOverloads constructor(
         }
 
         mDesaturateOnPress = a.getBoolean(R.styleable.DeckImageView_desaturateOnPress,
-                mDesaturateOnPress)
+            mDesaturateOnPress)
 
         val pokeType = a.getInteger(R.styleable.DeckImageView_primaryType, -1)
-        primaryType = when(pokeType) {
+        primaryType = when (pokeType) {
             0 -> Type.COLORLESS
             1 -> Type.FIRE
             2 -> Type.GRASS
@@ -95,7 +97,7 @@ class DeckImageView @JvmOverloads constructor(
         }
 
         val pokeType2 = a.getInteger(R.styleable.DeckImageView_secondaryType, -1)
-        secondaryType = when(pokeType2) {
+        secondaryType = when (pokeType2) {
             0 -> Type.COLORLESS
             1 -> Type.FIRE
             2 -> Type.GRASS
@@ -224,9 +226,9 @@ class DeckImageView @JvmOverloads constructor(
 
         // Draw from cache
         canvas.drawBitmap(mCacheBitmap!!,
-                mBounds?.left?.toFloat() ?: 0f,
-                mBounds?.top?.toFloat() ?: 0f,
-                null)
+            mBounds?.left?.toFloat() ?: 0f,
+            mBounds?.top?.toFloat() ?: 0f,
+            null)
     }
 
     override fun drawableStateChanged() {
@@ -302,7 +304,7 @@ class DeckImageView @JvmOverloads constructor(
     }
 
     @ColorInt
-    private fun getTypeColor(type: Type): Int = color(when(type) {
+    private fun getTypeColor(type: Type): Int = color(when (type) {
         Type.COLORLESS -> R.color.poketype_colorless
         Type.FIRE -> R.color.poketype_fire
         Type.GRASS -> R.color.poketype_grass
@@ -317,7 +319,7 @@ class DeckImageView @JvmOverloads constructor(
         else -> R.color.poketype_colorless
     })
 
-    private fun getTypeDrawable(type: Type): Drawable = drawable(when(type) {
+    private fun getTypeDrawable(type: Type): Drawable = drawable(when (type) {
         Type.COLORLESS -> R.drawable.ic_poketype_colorless
         Type.FIRE -> R.drawable.ic_poketype_fire
         Type.GRASS -> R.drawable.ic_poketype_grass

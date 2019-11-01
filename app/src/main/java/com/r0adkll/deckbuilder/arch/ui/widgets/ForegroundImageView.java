@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+
 import androidx.appcompat.widget.AppCompatImageView;
+
 import android.util.AttributeSet;
+
 import com.r0adkll.deckbuilder.R;
 
 public class ForegroundImageView extends AppCompatImageView {
@@ -67,23 +70,27 @@ public class ForegroundImageView extends AppCompatImageView {
         invalidate();
     }
 
-    @Override protected boolean verifyDrawable(Drawable who) {
+    @Override
+    protected boolean verifyDrawable(Drawable who) {
         return super.verifyDrawable(who) || who == foreground;
     }
 
-    @Override public void jumpDrawablesToCurrentState() {
+    @Override
+    public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
         if (foreground != null) foreground.jumpToCurrentState();
     }
 
-    @Override protected void drawableStateChanged() {
+    @Override
+    protected void drawableStateChanged() {
         super.drawableStateChanged();
         if (foreground != null && foreground.isStateful()) {
             foreground.setState(getDrawableState());
         }
     }
 
-    @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (foreground != null) {
             foreground.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
@@ -91,7 +98,8 @@ public class ForegroundImageView extends AppCompatImageView {
         }
     }
 
-    @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (foreground != null) {
             foreground.setBounds(0, 0, w, h);
@@ -99,7 +107,8 @@ public class ForegroundImageView extends AppCompatImageView {
         }
     }
 
-    @Override public void draw(Canvas canvas) {
+    @Override
+    public void draw(Canvas canvas) {
         super.draw(canvas);
 
         if (foreground != null) {

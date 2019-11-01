@@ -68,10 +68,10 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
 
     @Parcelize
     data class FilterState(
-            val category: SuperType,
-            val spec: FilterSpec,
-            val filter: Filter,
-            val visibility: ExpansionVisibility
+        val category: SuperType,
+        val spec: FilterSpec,
+        val filter: Filter,
+        val visibility: ExpansionVisibility
     ) : Parcelable {
 
         fun applySpecification(): List<Item> = spec.apply(filter)
@@ -84,27 +84,31 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
 
             fun createDefault(superType: SuperType): FilterState {
                 return FilterState(superType, FilterSpec.create(superType, emptyList(), ExpansionVisibility.STANDARD),
-                        Filter.DEFAULT, ExpansionVisibility.STANDARD)
+                    Filter.DEFAULT, ExpansionVisibility.STANDARD)
             }
         }
     }
 
     @Parcelize
     data class State(
-            val category: SuperType,
-            val filters: Map<SuperType, FilterState>,
-            val expansions: List<Expansion>
+        val category: SuperType,
+        val filters: Map<SuperType, FilterState>,
+        val expansions: List<Expansion>
     ) : Ui.State<State.Change>, Parcelable {
 
-        override fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when (change) {
             is ExpansionsLoaded -> {
                 val newFilters = filters.toMutableMap()
                 SuperType.values()
-                        .forEach {
-                            val filterState = newFilters[it]!!
-                            newFilters[it] = filterState
-                                    .copy(spec = FilterSpec.create(filterState.category, change.expansions, filterState.visibility))
-                        }
+                    .forEach {
+                        val filterState = newFilters[it]!!
+                        newFilters[it] = filterState
+                            .copy(spec = FilterSpec.create(
+                                filterState.category,
+                                change.expansions,
+                                filterState.visibility
+                            ))
+                    }
                 this.copy(expansions = change.expansions, filters = newFilters.toMap())
             }
 
@@ -115,13 +119,13 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
             is FieldChanged -> {
                 val newFilters = filters.toMutableMap()
                 newFilters[category] = newFilters[category]!!
-                        .copy(filter = FilterReducer.reduceField(change.field, newFilters[category]!!.filter))
+                    .copy(filter = FilterReducer.reduceField(change.field, newFilters[category]!!.filter))
                 this.copy(filters = newFilters.toMap())
             }
             is TypeSelected -> {
                 val newFilters = filters.toMutableMap()
                 newFilters[category] = newFilters[category]!!
-                        .copy(filter = FilterReducer.reduceType(change.key, change.type, newFilters[category]!!.filter))
+                    .copy(filter = FilterReducer.reduceType(change.key, change.type, newFilters[category]!!.filter))
                 this.copy(filters = newFilters.toMap())
             }
 
@@ -139,28 +143,40 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
                     filterState.visibility
                 }
 
-                newFilters[category] = filterState.copy(spec = FilterSpec.create(filterState.category, expansions, visibility), filter = newFilter, visibility = visibility)
+                newFilters[category] = filterState.copy(
+                    spec = FilterSpec.create(
+                        filterState.category,
+                        expansions,
+                        visibility
+                    ),
+                    filter = newFilter,
+                    visibility = visibility
+                )
                 this.copy(filters = newFilters.toMap())
             }
 
             is ExpansionSelected -> {
                 val newFilters = filters.toMutableMap()
                 newFilters[category] = newFilters[category]!!
-                        .copy(filter = FilterReducer.reduceExpansion(change.expansion, newFilters[category]!!.filter))
+                    .copy(filter = FilterReducer.reduceExpansion(change.expansion, newFilters[category]!!.filter))
                 this.copy(filters = newFilters.toMap())
             }
 
             is RaritySelected -> {
                 val newFilters = filters.toMutableMap()
                 newFilters[category] = newFilters[category]!!
-                        .copy(filter = FilterReducer.reduceRarity(change.rarity, newFilters[category]!!.filter))
+                    .copy(filter = FilterReducer.reduceRarity(change.rarity, newFilters[category]!!.filter))
                 this.copy(filters = newFilters.toMap())
             }
 
             is ValueRangeChanged -> {
                 val newFilters = filters.toMutableMap()
                 newFilters[category] = newFilters[category]!!
-                        .copy(filter = FilterReducer.reduceValueRange(change.key, change.value, newFilters[category]!!.filter))
+                    .copy(filter = FilterReducer.reduceValueRange(
+                        change.key,
+                        change.value,
+                        newFilters[category]!!.filter
+                    ))
                 this.copy(filters = newFilters.toMap())
             }
 
@@ -168,8 +184,8 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
                 val newFilters = filters.toMutableMap()
                 val filterState = newFilters[category]!!
                 newFilters[category] = filterState
-                        .copy(visibility = filterState.visibility.next(),
-                                spec = FilterSpec.create(filterState.category, expansions, filterState.visibility.next()))
+                    .copy(visibility = filterState.visibility.next(),
+                        spec = FilterSpec.create(filterState.category, expansions, filterState.visibility.next()))
                 this.copy(filters = newFilters.toMap())
             }
 
@@ -193,7 +209,7 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
             class AttributeSelected(val attribute: FilterAttribute) : Change("user -> $attribute was selected")
             class ExpansionSelected(val expansion: Expansion) : Change("user -> $expansion was selected")
             class RaritySelected(val rarity: Rarity) : Change("user -> $rarity was selected")
-            class ValueRangeChanged(val key: String, val value: String) : Change("user -> $key change was changed to $value")
+            class ValueRangeChanged(val key: String, val value: String) : Change("user -> $key was changed to $value")
             object ViewMoreSelected : Change("user -> view more expansions selected")
             object ClearFilter : Change("user -> clear filter")
         }
@@ -202,10 +218,10 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
 
             val DEFAULT by lazy {
                 State(SuperType.POKEMON, mapOf(
-                        SuperType.POKEMON to FilterState.createDefault(SuperType.POKEMON),
-                        SuperType.TRAINER to FilterState.createDefault(SuperType.TRAINER),
-                        SuperType.ENERGY to FilterState.createDefault(SuperType.ENERGY),
-                        SuperType.UNKNOWN to FilterState.createDefault(SuperType.UNKNOWN)
+                    SuperType.POKEMON to FilterState.createDefault(SuperType.POKEMON),
+                    SuperType.TRAINER to FilterState.createDefault(SuperType.TRAINER),
+                    SuperType.ENERGY to FilterState.createDefault(SuperType.ENERGY),
+                    SuperType.UNKNOWN to FilterState.createDefault(SuperType.UNKNOWN)
                 ), emptyList())
             }
         }

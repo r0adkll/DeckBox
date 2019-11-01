@@ -21,6 +21,7 @@ import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.arch.util.plusAssign
 import com.ftinc.kit.extensions.color
 import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.util.bindParcelable
 import com.ftinc.kit.widget.EmptyView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
@@ -44,7 +45,6 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
-import com.r0adkll.deckbuilder.util.bindParcelable
 import com.r0adkll.deckbuilder.util.extensions.addLayoutHeight
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.margins
@@ -67,7 +67,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     private val filterChanges: Relay<BrowseFilter> = PublishRelay.create()
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private lateinit var adapter: PokemonBuilderRecyclerAdapter
-    
+
     private var statusBarHeight: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,9 +75,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         setContentView(R.layout.activity_set_browser)
 
         state = state.copy(
-                setCode = expansion.code,
-                isPreview = expansion.isPreview,
-                pageSize = expansion.totalCards + 100 /* Hack to account for secret rares */
+            setCode = expansion.code,
+            isPreview = expansion.isPreview,
+            pageSize = expansion.totalCards + 100 /* Hack to account for secret rares */
         )
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -85,9 +85,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         appbar?.setNavigationOnClickListener { finish() }
 
         GlideApp.with(this)
-                .`as`(PaletteBitmap::class.java)
-                .load(expansion.logoUrl)
-                .into(PaletteBitmapViewTarget(logo, listOf(TargetPaletteAction())))
+            .`as`(PaletteBitmap::class.java)
+            .load(expansion.logoUrl)
+            .into(PaletteBitmapViewTarget(logo, listOf(TargetPaletteAction())))
 
         // listen for tab changes
         // FIXME: Hack
@@ -98,7 +98,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         tabs.tabMode = if (smallestWidth(TABLET_10)) TabLayout.MODE_FIXED else TabLayout.MODE_SCROLLABLE
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                val filter = when(tab.tag as? String) {
+                val filter = when (tab.tag as? String) {
                     "ALL" -> BrowseFilter.ALL
                     "POKEMON" -> BrowseFilter.POKEMON
                     "TRAINER" -> BrowseFilter.TRAINER
@@ -138,10 +138,10 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
         @SuppressLint("RxSubscribeOnError")
         disposables += cardClicks
-                .subscribe {
-                    Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                    CardDetailActivity.show(this, it)
-                }
+            .subscribe {
+                Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
+                CardDetailActivity.show(this, it)
+            }
 
         val spanCount = if (smallestWidth(TABLET_10)) 9 else 3
         adapter = PokemonBuilderRecyclerAdapter(this, spanCount, EditCardIntentions(), cardClicks)
@@ -152,8 +152,8 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
     override fun setupComponent() {
         DeckApp.component
-                .plus(SetBrowserModule(this))
-                .inject(this)
+            .plus(SetBrowserModule(this))
+            .inject(this)
 
         delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
@@ -220,7 +220,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             palette?.let { p ->
                 if (expansion.code != "sm5") {
                     p.vibrantSwatch?.rgb?.let {
-                        when(expansion.code) {
+                        when (expansion.code) {
                             "sm75" -> {
                                 val background = ColorDrawable(it)
                                 val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
@@ -290,7 +290,18 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         }
 
         fun createIntent(context: Context, setCode: String): Intent {
-            val expansion = Expansion(setCode, null, "", "", 300, false, false, "", "", "https://images.pokemontcg.io/$setCode/logo.png")
+            val expansion = Expansion(
+                setCode,
+                null,
+                "",
+                "",
+                300,
+                false,
+                false,
+                "",
+                "",
+                "https://images.pokemontcg.io/$setCode/logo.png"
+            )
             return createIntent(context, expansion)
         }
     }

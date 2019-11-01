@@ -6,8 +6,8 @@ import dagger.Provides
 
 @Module
 class FilterableModule(
-        val filterIntentions: FilterIntentions,
-        val drawerInteractor: DrawerInteractor
+    val filterIntentions: FilterIntentions,
+    val drawerInteractor: DrawerInteractor
 ) {
 
     @Provides

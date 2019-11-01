@@ -11,18 +11,22 @@ import dagger.Provides
 @Module
 class UnifiedSearchModule(val fragment: SearchFragment) {
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideUi(): SearchUi = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideIntentions(): SearchUi.Intentions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideActions(): SearchUi.Actions = fragment
 
-    @Provides @FragmentScope
+    @Provides
+    @FragmentScope
     fun provideRenderer(
-            actions: SearchUi.Actions,
-            schedulers: AppSchedulers
+        actions: SearchUi.Actions,
+        schedulers: AppSchedulers
     ): SearchRenderer = SearchRenderer(actions, schedulers.main, schedulers.comp)
 }

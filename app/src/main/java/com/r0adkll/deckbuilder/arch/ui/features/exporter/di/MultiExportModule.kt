@@ -8,7 +8,7 @@ import dagger.Provides
 @Module
 class MultiExportModule(val exportTask: ExportTask) {
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideExportTask(): ExportTask = exportTask
-
 }

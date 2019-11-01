@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.r0adkll.deckbuilder">
+    package="com.r0adkll.deckbuilder"
+    >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,7 +15,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.DeckBuilder"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        >
 
         <activity android:name=".arch.ui.RouteActivity">
             <intent-filter>
@@ -23,7 +26,8 @@
 
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
+                android:resource="@xml/shortcuts"
+                />
         </activity>
 
         <activity android:name=".arch.ui.features.setup.SetupActivity" />
@@ -32,73 +36,92 @@
 
         <activity android:name=".arch.ui.features.home.HomeActivity" />
 
-        <activity android:name=".arch.ui.features.deckbuilder.DeckBuilderActivity"
+        <activity
+            android:name=".arch.ui.features.deckbuilder.DeckBuilderActivity"
             android:parentActivityName=".arch.ui.features.home.HomeActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity"
                 />
         </activity>
 
-        <activity android:name=".arch.ui.features.search.SearchActivity"/>
+        <activity android:name=".arch.ui.features.search.SearchActivity" />
 
-        <activity android:name=".arch.ui.features.carddetail.CardDetailActivity"
+        <activity
+            android:name=".arch.ui.features.carddetail.CardDetailActivity"
             android:theme="@style/Theme.DeckBuilder.Detail"
             />
 
-        <activity android:name=".arch.ui.features.exporter.DeckExportActivity"
+        <activity
+            android:name=".arch.ui.features.exporter.DeckExportActivity"
             android:theme="@style/Theme.DeckBuilder.Export"
             />
 
-        <activity android:name=".arch.ui.features.importer.DeckImportActivity"
+        <activity
+            android:name=".arch.ui.features.importer.DeckImportActivity"
             android:theme="@style/Theme.DeckBuilder.Export"
             />
 
-        <activity android:name=".arch.ui.features.settings.SettingsActivity"/>
+        <activity android:name=".arch.ui.features.settings.SettingsActivity" />
 
-        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
             android:theme="@style/Theme.DeckBuilder.OSS"
             />
 
-        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
             android:theme="@style/Theme.DeckBuilder.OSS"
             />
 
         <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
         <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
-        <activity android:name=".arch.ui.features.setbrowser.SetBrowserActivity"
-            android:theme="@style/Theme.DeckBuilder.Translucent" />
+        <activity
+            android:name=".arch.ui.features.setbrowser.SetBrowserActivity"
+            android:theme="@style/Theme.DeckBuilder.Translucent"
+            />
 
-        <activity android:name=".arch.ui.features.testing.DeckTestingActivity"
-            android:screenOrientation="sensorPortrait"/>
+        <activity
+            android:name=".arch.ui.features.testing.DeckTestingActivity"
+            android:screenOrientation="sensorPortrait"
+            />
 
-        <activity android:name=".arch.ui.ShortcutActivity"
+        <activity
+            android:name=".arch.ui.ShortcutActivity"
             android:noHistory="true"
             android:exported="true"
             android:theme="@style/Theme.DeckBuilder.Splash"
             />
 
         <activity android:name=".arch.ui.features.settings.offline.ManageOfflineActivity" />
-        <activity android:name=".arch.ui.features.collection.set.CollectionSetActivity"
-            android:theme="@style/Theme.DeckBuilder.Translucent" />
+        <activity
+            android:name=".arch.ui.features.collection.set.CollectionSetActivity"
+            android:theme="@style/Theme.DeckBuilder.Translucent"
+            />
 
-        <service android:name=".arch.data.features.offline.service.CacheService"
-                 android:exported="false" />
+        <service
+            android:name=".arch.data.features.offline.service.CacheService"
+            android:exported="false"
+            />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.r0adkll.deckbuilder.provider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/files" />
+                android:resource="@xml/files"
+                />
         </provider>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="7b1875458d267befd0938d565c22df19a3a7c047" />
+            android:value="7b1875458d267befd0938d565c22df19a3a7c047"
+            />
 
     </application>
 

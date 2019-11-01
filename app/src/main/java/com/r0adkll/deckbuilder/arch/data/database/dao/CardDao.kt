@@ -15,7 +15,8 @@ import io.reactivex.Single
 @Dao
 abstract class CardDao {
 
-    @Transaction @Query("SELECT * FROM cards WHERE id IN(:ids)")
+    @Transaction
+    @Query("SELECT * FROM cards WHERE id IN(:ids)")
     abstract fun getCards(ids: List<String>): Single<List<CardWithAttacks>>
 
     @RawQuery
@@ -42,7 +43,7 @@ abstract class CardDao {
             val chunkedIds = ids.chunked(900)
             Single.zip(chunkedIds.map { getCards(it) }) {
                 it.map { cards -> cards as List<CardWithAttacks> }
-                        .flatten()
+                    .flatten()
             }
         } else {
             getCards(ids)

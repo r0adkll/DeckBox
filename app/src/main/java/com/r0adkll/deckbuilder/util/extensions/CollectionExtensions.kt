@@ -1,11 +1,11 @@
 package com.r0adkll.deckbuilder.util.extensions
 
 fun <T1, T2> Collection<T1>.combine(other: Iterable<T2>): List<Pair<T1, T2>> {
-    return combine(other, {thisItem: T1, otherItem: T2 -> Pair(thisItem, otherItem) })
+    return combine(other, { thisItem: T1, otherItem: T2 -> Pair(thisItem, otherItem) })
 }
 
-fun <T1, T2, R> Collection<T1>.combine(other: Iterable<T2>, transformer: (thisItem: T1, otherItem:T2) -> R): List<R> {
-    return this.flatMap { thisItem -> other.map { otherItem -> transformer(thisItem, otherItem) }}
+fun <T1, T2, R> Collection<T1>.combine(other: Iterable<T2>, transformer: (thisItem: T1, otherItem: T2) -> R): List<R> {
+    return this.flatMap { thisItem -> other.map { otherItem -> transformer(thisItem, otherItem) } }
 }
 
 fun <T> Collection<T>.shuffle(iterations: Int): List<T> {
@@ -27,7 +27,7 @@ fun <T> Collection<T>.shuffle(iterations: Int): List<T> {
 fun <Item> List<Item>.findAndReplace(item: Item, selector: (Item) -> Boolean): List<Item> {
     val items = toMutableList()
     var didReplace = false
-    for(index in (0 until items.size)) {
+    for (index in (0 until items.size)) {
         if (selector(items[index])) {
             items[index] = item
             didReplace = true
@@ -45,7 +45,7 @@ fun <Item> List<Item>.findAndReplace(item: Item, selector: (Item) -> Boolean): L
 fun <Item> List<Item>.findAndUpdate(selector: (Item) -> Boolean, updater: (Item?) -> Item): List<Item> {
     val items = toMutableList()
     var didReplace = false
-    for(index in (0 until items.size)) {
+    for (index in (0 until items.size)) {
         if (selector(items[index])) {
             items[index] = updater(items[index])
             didReplace = true

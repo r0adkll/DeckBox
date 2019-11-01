@@ -12,7 +12,9 @@ import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 
 class CollectionProgressBar @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     var trackColor: Int = Color.WHITE

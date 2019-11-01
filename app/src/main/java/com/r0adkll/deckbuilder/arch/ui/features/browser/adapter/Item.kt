@@ -20,19 +20,19 @@ sealed class Item : RecyclerViewItem {
     }
 
     data class ExpansionSet(
-            val expansion: Expansion,
-            val offlineStatus: CacheStatus?
+        val expansion: Expansion,
+        val offlineStatus: CacheStatus?
     ) : Item() {
 
         override val layoutId: Int get() = R.layout.item_expansion
         override val itemId: Long get() = expansion.code.hashCode().toLong()
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSet -> new.expansion.code == expansion.code
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSet -> new.expansion == expansion && new.offlineStatus == offlineStatus
             else -> false
         }

@@ -20,12 +20,12 @@ import com.r0adkll.deckbuilder.util.bindView
 import timber.log.Timber
 
 class PokemonCardViewHolder(
-        itemView: View,
-        val displayWhenOne: Boolean = false,
-        val startDragImmediately: Boolean = false,
-        val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
-        val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
-): RecyclerView.ViewHolder(itemView) {
+    itemView: View,
+    val displayWhenOne: Boolean = false,
+    val startDragImmediately: Boolean = false,
+    val removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
+    val addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
+) : RecyclerView.ViewHolder(itemView) {
 
     val cardView: PokemonCardView by bindView(R.id.card)
     private val actionLayout: LinearLayout? by bindOptionalView(R.id.action_layout)
@@ -33,13 +33,14 @@ class PokemonCardViewHolder(
     private val actionAdd: ImageView? by bindOptionalView(R.id.action_add)
     val collectionCounter: TextView? by bindOptionalView(R.id.count)
 
-    fun bind(card: PokemonCard,
-             count: Int,
-             evolution: PokemonCardView.Evolution = PokemonCardView.Evolution.NONE,
-             isEditMode: Boolean = false,
-             collectionCount: Int = 0,
-             isCollectionMode: Boolean = false) {
-
+    fun bind(
+        card: PokemonCard,
+        count: Int,
+        evolution: PokemonCardView.Evolution = PokemonCardView.Evolution.NONE,
+        isEditMode: Boolean = false,
+        collectionCount: Int = 0,
+        isCollectionMode: Boolean = false
+    ) {
         cardView.displayCountWhenOne = displayWhenOne
         cardView.card = card
         cardView.count = count
@@ -56,35 +57,40 @@ class PokemonCardViewHolder(
             cardView.alpha = 1f
         }
 
-        actionLayout?.isVisible = (isEditMode && !displayWhenOne) || isEditMode && ((displayWhenOne && count > 0) || count > 1)
+        actionLayout?.isVisible = (isEditMode && !displayWhenOne) ||
+            isEditMode && ((displayWhenOne && count > 0) || count > 1)
         actionRemove?.setOnClickListener { removeCardClicks.accept(card) }
         actionAdd?.setOnClickListener { addCardClicks.accept(listOf(card)) }
 
         if (displayWhenOne && count > 0) {
             cardView.elevation = dp(8)
-        }
-        else {
+        } else {
             cardView.elevation = dp(4)
         }
     }
 
     companion object {
-        fun create(inflater: LayoutInflater,
-                   parent: ViewGroup,
-                   displayWhenOne: Boolean = false,
-                   startDragImmediately: Boolean = false,
-                   removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
-                   addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()): PokemonCardViewHolder {
+
+        fun create(
+            inflater: LayoutInflater,
+            parent: ViewGroup,
+            displayWhenOne: Boolean = false,
+            startDragImmediately: Boolean = false,
+            removeCardClicks: Relay<PokemonCard> = PublishRelay.create(),
+            addCardClicks: Relay<List<PokemonCard>> = PublishRelay.create()
+        ): PokemonCardViewHolder {
             val layout = if (startDragImmediately) R.layout.item_pokemon_card else R.layout.item_pokemon_card_collection
             val view = inflater.inflate(layout, parent, false)
             return PokemonCardViewHolder(view, displayWhenOne, startDragImmediately,
-                    removeCardClicks = removeCardClicks, addCardClicks = addCardClicks)
+                removeCardClicks = removeCardClicks, addCardClicks = addCardClicks)
         }
 
-        fun createHorizontal(inflater: LayoutInflater,
-                             parent: ViewGroup,
-                             displayWhenOne: Boolean = false,
-                             startDragImmediately: Boolean = false): PokemonCardViewHolder {
+        fun createHorizontal(
+            inflater: LayoutInflater,
+            parent: ViewGroup,
+            displayWhenOne: Boolean = false,
+            startDragImmediately: Boolean = false
+        ): PokemonCardViewHolder {
             val view = inflater.inflate(R.layout.item_pokemon_card_horizontal, parent, false)
             return PokemonCardViewHolder(view, displayWhenOne, startDragImmediately)
         }

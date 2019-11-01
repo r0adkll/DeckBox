@@ -55,5 +55,4 @@ interface AppComponent {
 
     fun searchComponentBuilder(): SearchComponent.Builder
     fun deckBuilderComponentBuilder(): DeckBuilderComponent.Builder
-
 }

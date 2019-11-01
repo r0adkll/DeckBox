@@ -8,10 +8,10 @@ object EntityMapper {
 
     fun to(entity: CollectionCountEntity): CollectionCount {
         return CollectionCount(
-                entity.cardId,
-                entity.count,
-                entity.set,
-                entity.series
+            entity.cardId,
+            entity.count,
+            entity.set,
+            entity.series
         )
     }
 
@@ -22,11 +22,11 @@ object EntityMapper {
     fun to(entity: FirebaseCollectionCountEntity, documentId: String? = null): CollectionCount {
         val isSourceOld = documentId?.length == 20 // This indicates the the entity was
         return CollectionCount(
-                entity.cardId,
-                entity.count,
-                entity.set,
-                entity.series,
-                isSourceOld
+            entity.cardId,
+            entity.count,
+            entity.set,
+            entity.series,
+            isSourceOld
         )
     }
 }

@@ -16,7 +16,9 @@ import com.r0adkll.deckbuilder.arch.domain.Format
  * i.e. Standard, Expanded, Unlimited, Theme (this is a special one
  */
 class PokemonFormatView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     var format: Format = Format.STANDARD
@@ -74,12 +76,13 @@ class PokemonFormatView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         drawRing(canvas)
-        when(format) {
+        when (format) {
             Format.STANDARD -> drawNodes(canvas, 135f, 315f)
             Format.EXPANDED -> drawNodes(canvas, 0f, 120f, 240f)
             Format.UNLIMITED -> drawNodes(canvas, 0f, 72f, 144f, 216f, 288f)
             Format.LEGACY -> drawNodes(canvas, 45f, 135f, 225f, 315f)
-            Format.THEME -> { /* Do Nothing */ }
+            Format.THEME -> { /* Do Nothing */
+            }
         }
     }
 

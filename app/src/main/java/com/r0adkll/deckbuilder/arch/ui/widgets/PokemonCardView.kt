@@ -34,7 +34,9 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class PokemonCardView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
 ) : ForegroundImageView(context, attrs, defStyle) {
 
     private val blackPaint: Paint = Paint()
@@ -226,8 +228,7 @@ class PokemonCardView @JvmOverloads constructor(
         val shadowBuilder = CardShadowBuilder(this, PointF(lastTouchX, lastTouchY))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             startDragAndDrop(clipData, shadowBuilder, state, 0)
-        }
-        else {
+        } else {
             startDrag(clipData, shadowBuilder, state, 0)
         }
 
@@ -236,15 +237,15 @@ class PokemonCardView @JvmOverloads constructor(
 
     private fun loadImage() {
         GlideApp.with(this)
-                .load(card?.imageUrl)
-                .placeholder(R.drawable.pokemon_card_back)
-                .into(this)
+            .load(card?.imageUrl)
+            .placeholder(R.drawable.pokemon_card_back)
+            .into(this)
     }
 
     @Suppress("NON_EXHAUSTIVE_WHEN")
     private fun drawEvolutionNotches(canvas: Canvas) {
         val y = boundsF.centerY()
-        when(evolution) {
+        when (evolution) {
             Evolution.START -> {
                 val x = 0f
                 canvas.drawCircle(x, y, punchRadius, punchPaint)
@@ -271,15 +272,21 @@ class PokemonCardView @JvmOverloads constructor(
 
             // Draw Text
             val text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                StaticLayout.Builder.obtain(count.toString(), 0, count.toString().length, countTextPaint, (countRadius * 2).toInt())
-                        .setAlignment(Layout.Alignment.ALIGN_CENTER)
-                        .setLineSpacing(0f, 1f)
-                        .setIncludePad(false)
-                        .build()
+                StaticLayout.Builder.obtain(
+                    count.toString(),
+                    0,
+                    count.toString().length,
+                    countTextPaint,
+                    (countRadius * 2).toInt()
+                )
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setLineSpacing(0f, 1f)
+                    .setIncludePad(false)
+                    .build()
             } else {
                 @Suppress("DEPRECATION")
                 StaticLayout(count.toString(), countTextPaint, (countRadius * 2).toInt(),
-                        Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+                    Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
             }
 
             canvas.save()
@@ -341,8 +348,8 @@ class PokemonCardView @JvmOverloads constructor(
      * Represents the state of a pokemon card drag and drop operation
      */
     data class DragState(
-            val view: PokemonCardView,
-            val isEdit: Boolean
+        val view: PokemonCardView,
+        val isEdit: Boolean
     )
 
     companion object {

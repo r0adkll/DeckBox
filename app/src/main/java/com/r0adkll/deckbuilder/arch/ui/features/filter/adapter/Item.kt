@@ -14,12 +14,12 @@ sealed class Item : RecyclerViewItem {
 
     data class Header(@StringRes val title: Int) : Item() {
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is Header -> new.title == title
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Header -> new.title == title
             else -> false
         }
@@ -30,12 +30,12 @@ sealed class Item : RecyclerViewItem {
 
     data class Field(val searchField: SearchField) : Item() {
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is Field -> true
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Field -> new.searchField == searchField
             else -> false
         }
@@ -45,16 +45,16 @@ sealed class Item : RecyclerViewItem {
     }
 
     data class Type(
-            val key: String,
-            val selected: List<io.pokemontcg.model.Type>
+        val key: String,
+        val selected: List<io.pokemontcg.model.Type>
     ) : Item() {
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is Type -> new.key == key
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Type -> new == this
             else -> false
         }
@@ -64,16 +64,16 @@ sealed class Item : RecyclerViewItem {
     }
 
     data class Attribute(
-            val attributes: List<FilterAttribute>,
-            val selected: List<FilterAttribute>
+        val attributes: List<FilterAttribute>,
+        val selected: List<FilterAttribute>
     ) : Item() {
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is Attribute -> true
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Attribute -> new == this
             else -> false
         }
@@ -83,19 +83,19 @@ sealed class Item : RecyclerViewItem {
     }
 
     sealed class Option<out T>(
-            open val key: String,
-            open val option: T,
-            open val isSelected: Boolean
+        open val key: String,
+        open val option: T,
+        open val isSelected: Boolean
     ) : Item() {
 
         abstract val text: String
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is Option<*> -> new.key == key
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Option<*> -> new == this
             else -> false
         }
@@ -103,9 +103,9 @@ sealed class Item : RecyclerViewItem {
         override val layoutId: Int = R.layout.item_filter_option
 
         data class ExpansionOption(
-                override val key: String,
-                override val option: Expansion,
-                override val isSelected: Boolean
+            override val key: String,
+            override val option: Expansion,
+            override val isSelected: Boolean
         ) : Option<Expansion>(key, option, isSelected) {
 
             override val itemId: Long = option.code.hashCode().toLong()
@@ -113,25 +113,24 @@ sealed class Item : RecyclerViewItem {
         }
 
         data class RarityOption(
-                override val key: String,
-                override val option: Rarity,
-                override val isSelected: Boolean
+            override val key: String,
+            override val option: Rarity,
+            override val isSelected: Boolean
         ) : Option<Rarity>(key, option, isSelected) {
 
             override val itemId: Long = option.hashCode().toLong()
             override val text: String = option.name.toLowerCase().capitalize()
         }
-
     }
 
     data class ViewMore(@StringRes val title: Int) : Item() {
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is ViewMore -> new.title == title
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is ViewMore -> new.title == title
             else -> false
         }
@@ -141,18 +140,18 @@ sealed class Item : RecyclerViewItem {
     }
 
     data class ValueRange(
-            val key: String,
-            val min: Int,
-            val max: Int,
-            val value: Value = Value(0, Modifier.NONE)
+        val key: String,
+        val min: Int,
+        val max: Int,
+        val value: Value = Value(0, Modifier.NONE)
     ) : Item() {
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is ValueRange -> new.key == key
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is ValueRange -> new == this
             else -> false
         }
@@ -161,8 +160,8 @@ sealed class Item : RecyclerViewItem {
         override val layoutId: Int = R.layout.item_filter_value_range
 
         data class Value(
-                val value: Int,
-                val modifier: Modifier
+            val value: Int,
+            val modifier: Modifier
         ) {
             fun toFilter(): String = if (value == 0 && modifier == Modifier.NONE) {
                 ""
@@ -171,14 +170,12 @@ sealed class Item : RecyclerViewItem {
             }
         }
 
-        enum class Modifier(val value: String){
+        enum class Modifier(val value: String) {
             NONE(""),
             LESS_THAN("lt"),
             LESS_THAN_EQUALS("lte"),
             GREATER_THAN("gt"),
             GREATER_THAN_EQUALS("gte")
         }
-
     }
-
 }

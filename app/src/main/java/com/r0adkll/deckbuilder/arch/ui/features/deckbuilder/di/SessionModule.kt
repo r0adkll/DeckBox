@@ -7,7 +7,8 @@ import javax.inject.Qualifier
 @Module
 class SessionModule(val sessionId: Long) {
 
-    @Provides @SessionId
+    @Provides
+    @SessionId
     fun provideSessionId(): Long = sessionId
 }
 

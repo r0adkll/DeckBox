@@ -11,18 +11,22 @@ import dagger.Provides
 @Module
 class CollectionSetModule(val activity: CollectionSetActivity) {
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideUi(): CollectionSetUi = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideIntentions(): CollectionSetUi.Intentions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideActions(): CollectionSetUi.Actions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideRenderer(
-            actions: CollectionSetUi.Actions,
-            schedulers: AppSchedulers
+        actions: CollectionSetUi.Actions,
+        schedulers: AppSchedulers
     ): CollectionSetRenderer = CollectionSetRenderer(actions, schedulers)
 }

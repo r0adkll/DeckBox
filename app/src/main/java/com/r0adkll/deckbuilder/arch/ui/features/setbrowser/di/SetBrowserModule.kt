@@ -11,18 +11,22 @@ import dagger.Provides
 @Module
 class SetBrowserModule(val activity: SetBrowserActivity) {
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideUi(): SetBrowserUi = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideIntentions(): SetBrowserUi.Intentions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideActions(): SetBrowserUi.Actions = activity
 
-    @Provides @ActivityScope
+    @Provides
+    @ActivityScope
     fun provideRenderer(
-            actions: SetBrowserUi.Actions,
-            schedulers: AppSchedulers
-    ) : SetBrowserRenderer = SetBrowserRenderer(actions, schedulers.main, schedulers.comp)
+        actions: SetBrowserUi.Actions,
+        schedulers: AppSchedulers
+    ): SetBrowserRenderer = SetBrowserRenderer(actions, schedulers.main, schedulers.comp)
 }

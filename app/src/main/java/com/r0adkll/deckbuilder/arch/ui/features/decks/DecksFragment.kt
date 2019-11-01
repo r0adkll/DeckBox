@@ -68,7 +68,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         super.onActivityCreated(savedInstanceState)
 
         adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks,
-                testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
+            testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
 
         adapter.itemClickListener = { item ->
             if (item is Item.DeckItem) {
@@ -90,7 +90,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
             lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     val item = adapter.currentList[position]
-                    return when(item) {
+                    return when (item) {
                         is Item.Preview -> 2
                         is Item.QuickStart -> 2
                         is Item.Header -> 2
@@ -114,43 +114,43 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         @SuppressLint("RxSubscribeOnError")
         disposables += shareClicks
-                .subscribe {
-                    Analytics.event(Event.SelectContent.Action("export_decklist"))
-                    val intent = MultiExportActivity.createIntent(activity!!, it)
-                    startActivity(intent)
-                }
+            .subscribe {
+                Analytics.event(Event.SelectContent.Action("export_decklist"))
+                val intent = MultiExportActivity.createIntent(activity!!, it)
+                startActivity(intent)
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += testClicks
-                .subscribe {
-                    Analytics.event(Event.SelectContent.Action("test_decklist"))
-                    val intent = DeckTestingActivity.createIntent(activity!!, it.id)
-                    startActivity(intent)
-                }
+            .subscribe {
+                Analytics.event(Event.SelectContent.Action("test_decklist"))
+                val intent = DeckTestingActivity.createIntent(activity!!, it.id)
+                startActivity(intent)
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += viewPreview
-                .subscribe { preview ->
-                    startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
-                }
+            .subscribe { preview ->
+                startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += dismissQuickStart
-                .subscribe {
-                    preferences.quickStart.set(false)
-                }
+            .subscribe {
+                preferences.quickStart.set(false)
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += quickStartClicks
-                .subscribe {
-                    createSession.accept(it)
-                }
+            .subscribe {
+                createSession.accept(it)
+            }
     }
 
     override fun setupComponent() {
         getComponent(HomeComponent::class)
-                .plus(DecksModule(this))
-                .inject(this)
+            .plus(DecksModule(this))
+            .inject(this)
 
         delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
@@ -177,11 +177,11 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
     override fun deleteClicks(): Observable<Deck> = deleteClicks.flatMap { deck ->
         DialogUtils.confirmDialog(activity!!,
-                Resource(R.string.dialog_delete_deck_title),
-                Resource(R.string.dialog_delete_deck_message, deck.name),
-                R.string.action_delete,
-                R.string.action_cancel)
-                .flatMap { if (it) Observable.just(deck) else Observable.empty() }
+            Resource(R.string.dialog_delete_deck_title),
+            Resource(R.string.dialog_delete_deck_message, deck.name),
+            R.string.action_delete,
+            R.string.action_cancel)
+            .flatMap { if (it) Observable.just(deck) else Observable.empty() }
     }
 
     override fun showLoading(isLoading: Boolean) {

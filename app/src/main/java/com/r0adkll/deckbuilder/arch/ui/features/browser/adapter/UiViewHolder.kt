@@ -23,10 +23,10 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
     abstract fun bind(item: I)
 
     class OutlineViewHolder(
-            itemView: View,
-            private val dismissClicks: Relay<Unit>,
-            private val downloadFormat: Relay<Format>
-    ): UiViewHolder<Item.OfflineOutline>(itemView) {
+        itemView: View,
+        private val dismissClicks: Relay<Unit>,
+        private val downloadFormat: Relay<Format>
+    ) : UiViewHolder<Item.OfflineOutline>(itemView) {
 
         private val actionDownloadStandard by bindView<Button>(R.id.actionDownloadStandard)
         private val actionDownloadExpanded by bindView<Button>(R.id.actionDownloadExpanded)
@@ -48,9 +48,9 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
     }
 
     class ExpansionViewHolder(
-            itemView: View,
-            private val downloadClicks: Relay<Expansion>
-    ): UiViewHolder<Item.ExpansionSet>(itemView) {
+        itemView: View,
+        private val downloadClicks: Relay<Expansion>
+    ) : UiViewHolder<Item.ExpansionSet>(itemView) {
 
         private val logo by bindView<ImageView>(R.id.logo)
         private val name by bindView<TextView>(R.id.name)
@@ -63,13 +63,14 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             name.text = item.expansion.name
             series.text = item.expansion.series
             date.text = string(R.string.expansion_released_date_format, item.expansion.releaseDate)
-            downloadProgress.isVisible = item.offlineStatus is CacheStatus.Downloading || item.offlineStatus == CacheStatus.Queued
+            downloadProgress.isVisible = item.offlineStatus is CacheStatus.Downloading ||
+                item.offlineStatus == CacheStatus.Queued
             downloadProgress.isIndeterminate = (item.offlineStatus as? CacheStatus.Downloading)?.progress == null
             downloadProgress.progress = when (item.offlineStatus) {
                 is CacheStatus.Downloading -> item.offlineStatus.progress?.times(100f)?.toInt() ?: 0
                 else -> 0
             }
-            actionDownload.setImageResource(when(item.offlineStatus) {
+            actionDownload.setImageResource(when (item.offlineStatus) {
                 CacheStatus.Queued -> R.drawable.ic_cloud_queue_24px
                 is CacheStatus.Downloading -> R.drawable.cloud_sync
                 CacheStatus.Cached -> R.drawable.ic_cloud_done_black_24dp
@@ -79,9 +80,9 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             if (logo.getTag(R.id.tag_expansion_logo) != item.expansion.logoUrl) {
                 itemView.setTag(R.id.tag_expansion_logo, item.expansion.logoUrl)
                 GlideApp.with(itemView)
-                        .load(item.expansion.logoUrl)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .into(logo)
+                    .load(item.expansion.logoUrl)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(logo)
             }
 
             actionDownload.setOnClickListener {
@@ -112,14 +113,14 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
 
         @Suppress("UNCHECKED_CAST")
         fun create(
-                itemView: View,
-                layoutId: Int,
-                downloadClicks: Relay<Expansion>,
-                dismissClicks: Relay<Unit>,
-                downloadFormat: Relay<Format>
+            itemView: View,
+            layoutId: Int,
+            downloadClicks: Relay<Expansion>,
+            dismissClicks: Relay<Unit>,
+            downloadFormat: Relay<Format>
         ): UiViewHolder<Item> {
             val viewType = ViewType.of(layoutId)
-            return when(viewType) {
+            return when (viewType) {
                 ViewType.OUTLINE -> OutlineViewHolder(itemView, dismissClicks, downloadFormat) as UiViewHolder<Item>
                 ViewType.EXPANSION -> ExpansionViewHolder(itemView, downloadClicks) as UiViewHolder<Item>
             }

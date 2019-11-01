@@ -6,10 +6,10 @@
         title="@string/tab_decks"
         />
     <!--<tab-->
-        <!--id="@+id/tab_community"-->
-        <!--icon="@drawable/ic_forum_black_24dp"-->
-        <!--title="@string/tab_community"-->
-        <!--/>-->
+    <!--id="@+id/tab_community"-->
+    <!--icon="@drawable/ic_forum_black_24dp"-->
+    <!--title="@string/tab_community"-->
+    <!--/>-->
     <tab
         id="@+id/tab_collection"
         icon="@drawable/ic_cards_outline"

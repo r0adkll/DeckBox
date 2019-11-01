@@ -27,23 +27,23 @@ object ExpansionPreviewRenderer {
 
     fun applyLogo(imageView: ImageView, spec: PreviewSpec.LogoSpec) {
         GlideApp.with(imageView)
-                .load(spec.url)
-                .into(imageView)
+            .load(spec.url)
+            .into(imageView)
         imageView.margins(spec.margins)
     }
 
     fun applyBackground(view: View, specs: List<PreviewSpec.DrawableSpec>): Disposable {
         val drawables = specs.map { createDrawable(view.context, it) }
         return Observable.merge(drawables)
-                .toList()
-                .map { LayerDrawable(it.toTypedArray()) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    it.setBounds(0, 0, view.width, view.height)
-                    view.background = it
-                }, {
-                    Timber.e(it, "Error applying preview spec background")
-                })
+            .toList()
+            .map { LayerDrawable(it.toTypedArray()) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.setBounds(0, 0, view.width, view.height)
+                view.background = it
+            }, {
+                Timber.e(it, "Error applying preview spec background")
+            })
     }
 
     fun applyForeground(imageView: ImageView, spec: PreviewSpec.DrawableSpec): Disposable? {
@@ -63,7 +63,7 @@ object ExpansionPreviewRenderer {
         // Due to Issue #56 - If it's an URL shortcut to using glide
         if (spec.source.type == "url") {
             var request = GlideApp.with(imageView)
-                    .load(spec.source.value)
+                .load(spec.source.value)
 
             spec.alpha?.let {
                 request = request.transform(AlphaTransformation(it))
@@ -74,17 +74,17 @@ object ExpansionPreviewRenderer {
             return null
         } else {
             return createDrawable(imageView.context, spec)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        imageView.setImageDrawable(it)
-                    }, {
-                        Timber.e(it, "Error loading foreground drawable")
-                    })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    imageView.setImageDrawable(it)
+                }, {
+                    Timber.e(it, "Error loading foreground drawable")
+                })
         }
     }
 
     private fun createDrawable(context: Context, spec: PreviewSpec.DrawableSpec): Observable<Drawable> {
-        return when(spec.source.type) {
+        return when (spec.source.type) {
             "base64" -> base64Drawable(context, spec)
             "url" -> urlDrawable(context, spec)
             "color" -> colorDrawable(spec)
@@ -94,30 +94,30 @@ object ExpansionPreviewRenderer {
 
     private fun base64Drawable(context: Context, spec: PreviewSpec.DrawableSpec): Observable<Drawable> {
         return Observable.just(spec.source.value)
-                .map {
-                    val bytes = Base64.decode(it, Base64.DEFAULT)
-                    BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                }
-                .map {
-                    BitmapDrawable(context.resources, it).apply {
-                        spec.tile?.let { tile ->
-                            setTileModeXY(tile.tileModeX, tile.tileModeY)
-                        }
-                        spec.source.density?.let { density ->
-                            setTargetDensity((context.resources.displayMetrics.densityDpi * density).toInt())
-                        }
-                        spec.alpha?.let { alpha ->
-                            this.alpha = (255f * alpha).toInt()
-                        }
-                    } as Drawable
-                }
-                .map { BackgroundDrawableWrapper(it) as Drawable }
-                .subscribeOn(Schedulers.computation())
+            .map {
+                val bytes = Base64.decode(it, Base64.DEFAULT)
+                BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            }
+            .map {
+                BitmapDrawable(context.resources, it).apply {
+                    spec.tile?.let { tile ->
+                        setTileModeXY(tile.tileModeX, tile.tileModeY)
+                    }
+                    spec.source.density?.let { density ->
+                        setTargetDensity((context.resources.displayMetrics.densityDpi * density).toInt())
+                    }
+                    spec.alpha?.let { alpha ->
+                        this.alpha = (255f * alpha).toInt()
+                    }
+                } as Drawable
+            }
+            .map { BackgroundDrawableWrapper(it) as Drawable }
+            .subscribeOn(Schedulers.computation())
     }
 
     private fun urlDrawable(context: Context, spec: PreviewSpec.DrawableSpec): Observable<Drawable> {
         var request = GlideApp.with(context)
-                .load(spec.source.value)
+            .load(spec.source.value)
 
         spec.alpha?.let {
             request = request.transform(AlphaTransformation(it))

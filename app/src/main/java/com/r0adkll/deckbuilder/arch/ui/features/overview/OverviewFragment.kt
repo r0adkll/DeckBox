@@ -42,7 +42,8 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
 
-    @JvmField @field:[Inject SessionId] var sessionIdByInject: Long = Session.NO_ID
+    @JvmField @field:[Inject SessionId]
+    var sessionIdByInject: Long = Session.NO_ID
     @Inject lateinit var presenter: OverviewPresenter
     @Inject lateinit var renderer: OverviewRenderer
 
@@ -85,8 +86,8 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
     override fun setupComponent() {
         getComponent(OverviewableComponent::class)
-                .plus(OverviewModule(this))
-                .inject(this)
+            .plus(OverviewModule(this))
+            .inject(this)
 
         delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
@@ -99,12 +100,12 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
-                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
+            .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
     }
 
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
-                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
+            .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
     }
 
     override fun showCards(cards: List<EvolutionChain>) {

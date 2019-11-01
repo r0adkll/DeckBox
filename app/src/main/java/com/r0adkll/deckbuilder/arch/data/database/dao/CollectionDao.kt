@@ -57,12 +57,12 @@ abstract class CollectionDao {
             count.count += 1
             updateCount(count)
             return count
-        } else if (card.expansion != null){
+        } else if (card.expansion != null) {
             val newCount = CollectionCountEntity(
-                    card.id,
-                    1,
-                    card.expansion.code,
-                    card.expansion.series
+                card.id,
+                1,
+                card.expansion.code,
+                card.expansion.series
             )
             insertCount(newCount)
             return newCount
@@ -90,10 +90,10 @@ abstract class CollectionDao {
         val missingCards = cards.filter { card -> existingCards.none { existing -> existing.cardId == card.id } }
         val newCountEntities = missingCards.map { card ->
             CollectionCountEntity(
-                    card.id,
-                    1,
-                    card.expansion!!.code,
-                    card.expansion.series
+                card.id,
+                1,
+                card.expansion!!.code,
+                card.expansion.series
             )
         }
         insertCounts(newCountEntities)

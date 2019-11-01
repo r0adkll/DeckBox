@@ -12,7 +12,9 @@ import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 
 class DotPageIndicator @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr), ViewPager.OnPageChangeListener {
 
     var index: Int = 0

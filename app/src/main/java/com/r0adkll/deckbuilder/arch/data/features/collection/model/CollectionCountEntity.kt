@@ -10,8 +10,8 @@ package com.r0adkll.deckbuilder.arch.data.features.collection.model
  * @param series the series that the set belongs to
  */
 class CollectionCountEntity(
-        val cardId: String = "",
-        var count: Int = 0,
-        val set: String = "",
-        val series: String = ""
+    val cardId: String = "",
+    var count: Int = 0,
+    val set: String = "",
+    val series: String = ""
 )

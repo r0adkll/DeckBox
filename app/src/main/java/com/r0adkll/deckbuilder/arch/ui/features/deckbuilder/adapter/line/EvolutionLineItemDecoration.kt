@@ -13,8 +13,8 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class EvolutionLineItemDecoration(
-        val context: Context,
-        val adapter: EvolutionLineAdapter
+    val context: Context,
+    val adapter: EvolutionLineAdapter
 ) : RecyclerView.ItemDecoration() {
 
     private val linkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -53,10 +53,13 @@ class EvolutionLineItemDecoration(
         adapter?.let { it ->
             (0 until it.itemCount).forEach { index ->
                 val state = this.adapter.getEvolutionState(index)
-                if (state.evolution == PokemonCardView.Evolution.END || state.evolution == PokemonCardView.Evolution.MIDDLE) {
+                if (state.evolution == PokemonCardView.Evolution.END ||
+                    state.evolution == PokemonCardView.Evolution.MIDDLE) {
                     val child = parent.getChildAt(index)
                     val nextChild = parent.getChildAt(index + 1)?.findViewById<PokemonCardView>(R.id.card)
-                    if (nextChild != null && (nextChild.evolution == PokemonCardView.Evolution.START || nextChild.evolution == PokemonCardView.Evolution.MIDDLE)) {
+                    if (nextChild != null &&
+                        (nextChild.evolution == PokemonCardView.Evolution.START ||
+                            nextChild.evolution == PokemonCardView.Evolution.MIDDLE)) {
                         // Render Link
                         val y = child.top + (child.height / 2f)
 
@@ -65,7 +68,7 @@ class EvolutionLineItemDecoration(
                         c.drawCircle(x1, y, linkRadius, linkPaint)
 
                         // End node
-                        val x2 = x1 + linkSpacing //nextChild.left.toFloat()
+                        val x2 = x1 + linkSpacing // nextChild.left.toFloat()
                         c.drawCircle(x2, y, linkRadius, linkPaint)
 
                         // Render connecting bar

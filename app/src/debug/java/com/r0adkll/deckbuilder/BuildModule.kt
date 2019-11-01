@@ -9,7 +9,8 @@ import dagger.multibindings.IntoSet
 @Module
 class BuildModule {
 
-    @Provides @AppScope
+    @Provides
+    @AppScope
     @IntoSet
     fun provideDebugAppDelegate(): AppDelegate = DebugAppDelegate()
 }

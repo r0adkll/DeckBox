@@ -1,9 +1,11 @@
 package com.r0adkll.deckbuilder.util.glide.palette;
 
 import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
+
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.ImageViewTarget;

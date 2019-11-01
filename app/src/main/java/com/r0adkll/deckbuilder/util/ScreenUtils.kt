@@ -13,7 +13,9 @@ object ScreenUtils {
 
     fun smallestWidth(resources: Resources, config: Config): Boolean = smallestWidth(resources, config.widthInDp)
 
-    fun orientation(resources: Resources, orientation: Int): Boolean = resources.configuration.orientation == orientation
+    fun orientation(resources: Resources, orientation: Int): Boolean {
+        return resources.configuration.orientation == orientation
+    }
 
     fun View.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)
     fun Context.smallestWidth(config: Config): Boolean = smallestWidth(this.resources, config)

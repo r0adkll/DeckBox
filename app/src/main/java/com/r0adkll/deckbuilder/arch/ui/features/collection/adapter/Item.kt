@@ -15,7 +15,7 @@ sealed class Item : RecyclerViewItem {
 
         override fun isItemSame(new: RecyclerViewItem): Boolean = new is Migration
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Migration -> new.isLoading == isLoading && new.error == error
             else -> false
         }
@@ -31,12 +31,12 @@ sealed class Item : RecyclerViewItem {
                 return result
             }
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSeries -> new.series == series
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSeries -> new.series == series && new.completion == completion
             else -> false
         }
@@ -52,12 +52,12 @@ sealed class Item : RecyclerViewItem {
                 return result
             }
 
-        override fun isItemSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSet -> new.expansion.code == expansion.code
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerViewItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSet -> new.expansion.code == expansion.code && new.count == count
             else -> false
         }

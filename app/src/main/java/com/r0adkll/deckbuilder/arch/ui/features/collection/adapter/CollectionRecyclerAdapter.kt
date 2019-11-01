@@ -8,10 +8,10 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class CollectionRecyclerAdapter(
-        context: Context,
-        private val migrateClicks: Relay<Unit>,
-        private val dismissClicks: () -> Unit,
-        private val onItemClickListener: (Item) -> Unit = { }
+    context: Context,
+    private val migrateClicks: Relay<Unit>,
+    private val dismissClicks: () -> Unit,
+    private val onItemClickListener: (Item) -> Unit = { }
 ) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)

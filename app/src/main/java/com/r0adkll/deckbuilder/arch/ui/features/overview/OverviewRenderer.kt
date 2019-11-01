@@ -12,19 +12,20 @@ import io.reactivex.Scheduler
 import java.util.*
 
 class OverviewRenderer(
-        actions: OverviewUi.Actions,
-        main: Scheduler,
-        comp: Scheduler
+    actions: OverviewUi.Actions,
+    main: Scheduler,
+    comp: Scheduler
 ) : UiBaseStateRenderer<OverviewUi.State, OverviewUi.State.Change, OverviewUi.Actions>(actions, main, comp) {
 
     @SuppressLint("RxSubscribeOnError")
     override fun onStart() {
 
         disposables += state
-                .map { it.cards }
-                .map(CardUtils.stackCards())
-                .map { EvolutionChain.build(it) }
-                .map { it.sortedWith(Comparator { lhs, rhs ->
+            .map { it.cards }
+            .map(CardUtils.stackCards())
+            .map { EvolutionChain.build(it) }
+            .map {
+                it.sortedWith(Comparator { lhs, rhs ->
                     // 0 - Sort by node size
                     val r0 = rhs.size.compareTo(lhs.size)
                     if (r0 == 0) {
@@ -38,7 +39,8 @@ class OverviewRenderer(
                                 when (lhsCard.supertype) {
                                     SuperType.POKEMON -> {
                                         // 2a - Pokemon - Sort National Dex Number
-                                        lhsCard.nationalPokedexNumber?.compareTo(rhsCard.nationalPokedexNumber ?: Int.MAX_VALUE) ?: 0
+                                        lhsCard.nationalPokedexNumber?.compareTo(rhsCard.nationalPokedexNumber
+                                            ?: Int.MAX_VALUE) ?: 0
                                     }
                                     SuperType.TRAINER -> {
                                         // 2b - Trainer -> Item > Supporter > Stadium > Tool
@@ -59,10 +61,11 @@ class OverviewRenderer(
                     } else {
                         r0
                     }
-                }) }
-                .distinctUntilChanged()
-                .addToLifecycle()
-                .subscribe { actions.showCards(it) }
+                })
+            }
+            .distinctUntilChanged()
+            .addToLifecycle()
+            .subscribe { actions.showCards(it) }
     }
 
     private fun compareSupertype(lhs: PokemonCard, rhs: PokemonCard): Int {
@@ -73,19 +76,19 @@ class OverviewRenderer(
         return lhs.subtype.weight(lhs.supertype).compareTo(rhs.subtype.weight(rhs.supertype))
     }
 
-    private fun SuperType.weight(): Int = when(this) {
+    private fun SuperType.weight(): Int = when (this) {
         SuperType.POKEMON -> 0
         SuperType.TRAINER -> 1
         else -> 2
     }
 
-    private fun SubType.weight(superType: SuperType): Int = when(superType) {
-        SuperType.ENERGY -> when(this) {
+    private fun SubType.weight(superType: SuperType): Int = when (superType) {
+        SuperType.ENERGY -> when (this) {
             SubType.BASIC -> 1
             SubType.SPECIAL -> 0
             else -> 0
         }
-        SuperType.TRAINER -> when(this) {
+        SuperType.TRAINER -> when (this) {
             SubType.ITEM -> 0
             SubType.SUPPORTER -> 1
             SubType.STADIUM -> 2

@@ -21,7 +21,9 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.NONE
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.START
 
 class EvolutionChainView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val inflater = LayoutInflater.from(context)
@@ -123,13 +125,12 @@ class EvolutionChainView @JvmOverloads constructor(
 
     @SuppressLint("NewApi")
     private fun configurePokemonCardViews() {
-        //removeAllViews() // ???
         evolutionChain?.let { chain ->
 
             var node = chain.first()
             var nodeIndex = 0
             var viewIndex = 0
-            while(node != null) {
+            while (node != null) {
                 node.cards.forEachIndexed { cardIndex, card ->
                     // Attempt to find existing view for index
                     var view = getChildAt(viewIndex)
@@ -216,7 +217,6 @@ class EvolutionChainView @JvmOverloads constructor(
                     getChildAt(i)?.let { removeView(it) }
                 }
             }
-
         }
     }
 
@@ -230,15 +230,12 @@ class EvolutionChainView @JvmOverloads constructor(
             if (hasNextNode && isLastCard) {
                 return END
             }
-        }
-        else {
+        } else {
             if (isFirstCard && isLastCard && hasNextNode) {
                 return MIDDLE
-            }
-            else if (isFirstCard) {
+            } else if (isFirstCard) {
                 return START
-            }
-            else if (isLastCard && hasNextNode) {
+            } else if (isLastCard && hasNextNode) {
                 return END
             }
         }

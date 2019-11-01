@@ -34,6 +34,8 @@ import com.ftinc.kit.extensions.color
 import com.ftinc.kit.extensions.dip
 import com.ftinc.kit.extensions.dp
 import com.ftinc.kit.extensions.sp
+import com.ftinc.kit.util.bindLong
+import com.ftinc.kit.util.bindOptionalParcelable
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
@@ -53,8 +55,6 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
-import com.r0adkll.deckbuilder.util.bindLong
-import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.extensions.drawable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import io.reactivex.Observable
@@ -139,7 +139,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
                 // DRAGONS: this is dubious because we are manipulating the view state outside of MVI
                 val latestProduct = state.products?.maxBy { it.recordedAt }
                 showPrices(latestProduct?.price?.low, latestProduct?.price?.market,
-                        latestProduct?.price?.high)
+                    latestProduct?.price?.high)
             }
         }
 
@@ -186,7 +186,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_add -> {
                 Analytics.event(Event.SelectContent.Action("detail_add_card", card?.name))
                 addCardClicks.accept(Unit)
@@ -203,7 +203,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     override fun setupComponent() {
         DeckApp.component.plus(CardDetailModule(this))
-                .inject(this)
+            .inject(this)
 
         delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
         delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
@@ -224,16 +224,16 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     override fun incrementCollectionCount(): Observable<Unit> {
         return actionAddCollection.clicks()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Collection.Increment(card?.id ?: ""))
-                }
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Collection.Increment(card?.id ?: ""))
+            }
     }
 
     override fun decrementCollectionCount(): Observable<Unit> {
         return actionRemoveCollection.clicks()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Collection.Decrement(card?.id ?: ""))
-                }
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Collection.Decrement(card?.id ?: ""))
+            }
     }
 
     override fun showCopies(count: Int?) {
@@ -244,7 +244,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun showValidation(format: Format) {
-        deckFormat.setText(when(format) {
+        deckFormat.setText(when (format) {
             Format.STANDARD -> R.string.format_standard
             Format.EXPANDED -> R.string.format_expanded
             else -> R.string.format_unlimited
@@ -253,7 +253,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     override fun showCollectionCount(count: Int) {
         actionRemoveCollection.isInvisible = count <= 0
-        collectionCount.text = count.toString() //getString(R.string.card_detail_collection_count_format, count)
+        collectionCount.text = count.toString()
     }
 
     override fun showPrices(lowPrice: Double?, marketPrice: Double?, highPrice: Double?) {
@@ -372,7 +372,10 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             val spannable = SpannableString(card.name)
             val prismIndex = card.name.indexOf("◇")
             if (prismIndex != -1) {
-                spannable.setSpan(ImageSpan(this@CardDetailActivity, R.drawable.ic_prism_star), prismIndex, prismIndex + 1, 0)
+                spannable.setSpan(ImageSpan(
+                    this@CardDetailActivity,
+                    R.drawable.ic_prism_star
+                ), prismIndex, prismIndex + 1, 0)
             }
             cardTitle.text = spannable
             cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
@@ -391,19 +394,30 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             emptyView.isVisible = true
             emptyView.state = EmptyView.State.LOADING
             var request = GlideApp.with(this)
-                    .load(card.imageUrlHiRes)
-                    .transition(withCrossFade())
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                            emptyView.setMessage(R.string.image_loading_error)
-                            return false
-                        }
+                .load(card.imageUrlHiRes)
+                .transition(withCrossFade())
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        emptyView.setMessage(R.string.image_loading_error)
+                        return false
+                    }
 
-                        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                            emptyView.isGone = true
-                            return false
-                        }
-                    })
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        emptyView.isGone = true
+                        return false
+                    }
+                })
 
             if (slidingLayout == null) {
                 request = request.placeholder(R.drawable.pokemon_card_back)
@@ -414,9 +428,9 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
             // Load expansion symbol
             GlideApp.with(this)
-                    .load(card.expansion?.symbolUrl)
-                    .transition(withCrossFade())
-                    .into(expansionSymbol)
+                .load(card.expansion?.symbolUrl)
+                .transition(withCrossFade())
+                .into(expansionSymbol)
         }
     }
 
@@ -425,18 +439,22 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         const val EXTRA_SESSION_ID = "CardDetailActivity.SessionId"
         private val ONLY_NUMBER_REGEX by lazy { "^[0-9]+".toRegex() }
 
-        fun createIntent(context: Context,
-                         card: PokemonCard,
-                         sessionId: Long? = null): Intent {
+        fun createIntent(
+            context: Context,
+            card: PokemonCard,
+            sessionId: Long? = null
+        ): Intent {
             val intent = Intent(context, CardDetailActivity::class.java)
             intent.putExtra(EXTRA_CARD, card)
             sessionId?.let { if (it != Session.NO_ID) intent.putExtra(EXTRA_SESSION_ID, it) }
             return intent
         }
 
-        fun show(context: Activity,
-                 view: PokemonCardView,
-                 sessionId: Long? = null) {
+        fun show(
+            context: Activity,
+            view: PokemonCardView,
+            sessionId: Long? = null
+        ) {
             if (view.card != null) {
                 val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
                 val intent = createIntent(context, view.card!!, sessionId)

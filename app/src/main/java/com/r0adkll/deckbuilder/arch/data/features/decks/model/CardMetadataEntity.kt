@@ -11,10 +11,10 @@ package com.r0adkll.deckbuilder.arch.data.features.decks.model
  * @param previewSet the set that this preview is from.
  */
 class CardMetadataEntity(
-        val id: String = "",
-        val superType: String = "",
-        val imageUrl: String = "",
-        val imageUrlHiRes: String = "",
-        val count: Int = 0,
-        val previewSet: String? = null
+    val id: String = "",
+    val superType: String = "",
+    val imageUrl: String = "",
+    val imageUrlHiRes: String = "",
+    val count: Int = 0,
+    val previewSet: String? = null
 )

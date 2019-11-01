@@ -79,7 +79,7 @@ class SetupActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
+        when (requestCode) {
             RC_SIGN_IN -> {
                 val result = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleSignInResult(result)
@@ -89,9 +89,9 @@ class SetupActivity : BaseActivity() {
 
     private fun setupClient() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
@@ -113,27 +113,27 @@ class SetupActivity : BaseActivity() {
             val account = completionTask.getResult(ApiException::class.java)!!
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             firebaseAuth.signInWithCredential(credential)
-                    .addOnFailureListener {
-                        Timber.e(it, "Some critical error occurred when trying to sign in")
-                        snackbar("Uh-oh! Something happened, unable to sign-in")
-                    }
-                    .addOnCompleteListener { r ->
-                        if (r.isSuccessful) {
-                            // Auto-grab the user's name from their account
-                            r.result?.user?.displayName?.let {
-                                preferences.playerName.set(it)
-                            }
-                            r.result?.user?.uid?.let {
-                                Analytics.userId(it)
-                            }
-                            Analytics.event(Event.Login.Google)
-                            startActivity(HomeActivity.createIntent(this@SetupActivity))
-                            finish()
-                        } else {
-                            Timber.e(r.exception, "Authentication Failed: ${r.result}")
-                            snackbar("Authentication failed")
+                .addOnFailureListener {
+                    Timber.e(it, "Some critical error occurred when trying to sign in")
+                    snackbar("Uh-oh! Something happened, unable to sign-in")
+                }
+                .addOnCompleteListener { r ->
+                    if (r.isSuccessful) {
+                        // Auto-grab the user's name from their account
+                        r.result?.user?.displayName?.let {
+                            preferences.playerName.set(it)
                         }
+                        r.result?.user?.uid?.let {
+                            Analytics.userId(it)
+                        }
+                        Analytics.event(Event.Login.Google)
+                        startActivity(HomeActivity.createIntent(this@SetupActivity))
+                        finish()
+                    } else {
+                        Timber.e(r.exception, "Authentication Failed: ${r.result}")
+                        snackbar("Authentication failed")
                     }
+                }
         } catch (e: ApiException) {
             Timber.e("Authentication Failed: ${e.message}")
             snackbar("Authenticated failed")
