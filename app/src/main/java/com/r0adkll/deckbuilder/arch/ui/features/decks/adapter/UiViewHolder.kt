@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.ftinc.kit.arch.util.bindView
 import com.ftinc.kit.arch.util.plusAssign
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -29,8 +30,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewT
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.PREVIEW
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.QUICK_START
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
-import com.r0adkll.deckbuilder.util.CardUtils
-import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.ftinc.kit.arch.util.bindView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
@@ -13,7 +14,6 @@ import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line.EvolutionLineItemDecoration
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line.EvolutionLineRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.util.bindView
 
 class EvolutionChainViewHolder(
     itemView: View,

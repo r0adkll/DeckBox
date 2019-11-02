@@ -60,7 +60,11 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
         collectionRecycler.adapter = adapter
         (collectionRecycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         (collectionRecycler.layoutManager as? GridLayoutManager)?.apply {
-            spanCount = if (smallestWidth(requireContext().resources, ScreenUtils.Config.TABLET_10)) 6 else 3
+            spanCount = if (smallestWidth(requireContext().resources, ScreenUtils.Config.TABLET_10)) {
+                TABLET_SPAN_COUNT
+            } else {
+                PHONE_SPAN_COUNT
+            }
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (adapter.currentList[position]) {
@@ -112,6 +116,8 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
     }
 
     companion object {
+        private const val TABLET_SPAN_COUNT = 6
+        private const val PHONE_SPAN_COUNT = 3
 
         fun newInstance(): CollectionFragment = CollectionFragment()
     }

@@ -9,6 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.ftinc.kit.arch.util.bindView
 import com.ftinc.kit.extensions.string
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -16,7 +17,6 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
-import com.r0adkll.deckbuilder.util.bindView
 
 sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

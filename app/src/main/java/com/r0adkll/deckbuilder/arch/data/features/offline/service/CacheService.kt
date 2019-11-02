@@ -1,3 +1,5 @@
+@file:Suppress("TooGenericExceptionCaught")
+
 package com.r0adkll.deckbuilder.arch.data.features.offline.service
 
 import android.annotation.TargetApi
@@ -87,7 +89,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                 updateCacheStatus(expansion.code to CacheStatus.Cached)
                 showExpansionNotification(expansion, CacheStatus.Cached)
             } catch (e: Exception) {
-                Timber.e("Something went wrong when trying to cache ${expansion.name} card data")
+                Timber.e(e, "Something went wrong when trying to cache ${expansion.name} card data")
                 showExpansionNotification(expansion, null)
                 updateCacheStatus(expansion.code to CacheStatus.Empty)
             }

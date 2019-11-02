@@ -4,7 +4,6 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
-import com.r0adkll.deckbuilder.util.extensions.combineLatest
 import com.r0adkll.deckbuilder.util.helper.Connectivity
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable

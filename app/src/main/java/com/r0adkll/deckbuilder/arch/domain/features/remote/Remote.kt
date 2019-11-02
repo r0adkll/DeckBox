@@ -1,6 +1,11 @@
 package com.r0adkll.deckbuilder.arch.domain.features.remote
 
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.*
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.BanList
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersion
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.LegalOverrides
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.Reprints
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
 
 /**
  * Wrapper around Firebase Remote Configuration SDK

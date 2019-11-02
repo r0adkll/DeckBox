@@ -6,7 +6,6 @@ import com.ftinc.kit.arch.util.mapNullable
 import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.extensions.combine
 import com.r0adkll.deckbuilder.util.stack
 import io.pokemontcg.model.SuperType

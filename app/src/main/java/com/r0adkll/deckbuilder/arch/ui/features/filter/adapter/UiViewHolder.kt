@@ -13,6 +13,8 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.ftinc.kit.arch.util.bindView
+import com.ftinc.kit.arch.util.bindViews
 import com.ftinc.kit.extensions.color
 import com.ftinc.kit.extensions.dp
 import com.jakewharton.rxrelay2.Relay
@@ -40,8 +42,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.View
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.VIEW_MORE
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
 import com.r0adkll.deckbuilder.arch.ui.widgets.SeekBarIndicatorView
-import com.r0adkll.deckbuilder.util.bindView
-import com.r0adkll.deckbuilder.util.bindViews
 import io.pokemontcg.model.Type
 import timber.log.Timber
 
@@ -88,7 +88,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
      */
     class TypeViewHolder(
         itemView: View,
-        private val typeClicks: Relay<Pair<String, io.pokemontcg.model.Type>>
+        private val typeClicks: Relay<Pair<String, Type>>
     ) : UiViewHolder<Item.Type>(itemView) {
 
         private val types: List<PokemonTypeView> by bindViews(
@@ -214,7 +214,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
 
     class ValueRangeViewHolder(
         itemView: View,
-        private val valueRangeChange: Relay<Pair<String, Item.ValueRange.Value>>
+        private val valueRangeChange: Relay<Pair<String, Value>>
     ) : UiViewHolder<Item.ValueRange>(itemView) {
 
         private val seekBar: SeekBar by bindView(R.id.seekBar)

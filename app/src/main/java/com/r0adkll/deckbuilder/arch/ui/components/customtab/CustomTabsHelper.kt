@@ -98,6 +98,7 @@ object CustomTabsHelper {
      * @param intent The intent to check with.
      * @return Whether there is a specialized handler for the given intent.
      */
+    @Suppress("TooGenericExceptionCaught")
     private fun hasSpecializedHandlerIntents(context: Context, intent: Intent): Boolean {
         try {
             val pm: PackageManager = context.packageManager
@@ -113,8 +114,8 @@ object CustomTabsHelper {
                 if (resolveInfo.activityInfo == null) continue
                 return true
             }
-        } catch (e: RuntimeException) {
-            Timber.e("Runtime exception while getting specialized handlers")
+        } catch (error: RuntimeException) {
+            Timber.e(error, "Runtime exception while getting specialized handlers")
         }
         return false
     }

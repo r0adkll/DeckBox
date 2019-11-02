@@ -15,7 +15,7 @@ class AlphaTransformation(val alpha: Float) : BitmapTransformation() {
     private val paint = Paint()
 
     init {
-        paint.alpha = (255f * alpha).toInt()
+        paint.alpha = (MAX_ALPHA * alpha).toInt()
     }
 
     public override fun transform(pool: BitmapPool, toTransform: Bitmap, outWidth: Int, outHeight: Int): Bitmap {
@@ -38,6 +38,7 @@ class AlphaTransformation(val alpha: Float) : BitmapTransformation() {
     }
 
     companion object {
+        private const val MAX_ALPHA = 255f
         private const val ID = "com.r0adkll.deckbuilder.util.glide.AlphaTransformation"
         private val ID_BYTES = ID.toByteArray(Charset.forName("UTF-8"))
     }

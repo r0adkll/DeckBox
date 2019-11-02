@@ -3,18 +3,8 @@ package com.r0adkll.deckbuilder.arch.ui.features.setbrowser
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.Shader
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.LayerDrawable
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.ColorInt
-import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
@@ -34,6 +24,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.palette.ExpansionPaletteAction
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
@@ -86,7 +77,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         GlideApp.with(this)
             .`as`(PaletteBitmap::class.java)
             .load(expansion.logoUrl)
-            .into(PaletteBitmapViewTarget(logo, listOf(TargetPaletteAction())))
+            .into(PaletteBitmapViewTarget(logo, listOf(
+                ExpansionPaletteAction(backdrop, expansion, contrastListener = this::setNavigationColor)
+            )))
 
         // listen for tab changes
         // FIXME: Hack
@@ -214,69 +207,12 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         emptyView.setMessage(R.string.empty_set_browse_message)
     }
 
-    inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
-        override fun execute(palette: androidx.palette.graphics.Palette?) {
-            palette?.let { p ->
-                if (expansion.code != "sm5") {
-                    p.vibrantSwatch?.rgb?.let {
-                        when (expansion.code) {
-                            "sm75" -> {
-                                val background = ColorDrawable(it)
-                                val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
-                                val foreground = BitmapDrawable(resources, pattern).apply {
-                                    setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-                                    setTargetDensity(resources.displayMetrics.densityDpi * 4)
-                                }
-                                backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
-                                setNavigationColor(it)
-                            }
-                            "sm8" -> {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    backdrop.setImageResource(R.drawable.dr_smlt_header)
-                                    setNavigationColor(Color.BLACK)
-                                } else {
-                                    backdrop.imageTintList = ColorStateList.valueOf(it)
-                                    backdrop.imageTintMode = PorterDuff.Mode.ADD
-                                    setNavigationColor(it)
-                                }
-                            }
-                            "sm9" -> {
-                                backdrop.setImageResource(R.drawable.dr_smtu_background)
-                                setNavigationColor(Color.BLACK)
-                            }
-                            "sm10", "sm11", "sm115", "sma", "sm12", "det1" -> {
-                                backdrop.setImageResource(R.drawable.dr_smtu_background)
-                                backdrop.imageTintList = ColorStateList.valueOf(it)
-                                backdrop.imageTintMode = PorterDuff.Mode.ADD
-                                setNavigationColor(it)
-                            }
-                            else -> {
-                                backdrop.imageTintList = ColorStateList.valueOf(it)
-                                backdrop.imageTintMode = PorterDuff.Mode.ADD
-                                setNavigationColor(it)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private fun setNavigationColor(@ColorInt navigationColor: Int) {
-            // Calculate control color
-            if (ColorUtils.calculateContrast(Color.WHITE, navigationColor) < 3.0) {
-                val color = color(R.color.black87)
-                val secondaryColor = color(R.color.black54)
-                appbar?.navigationIcon?.setTint(color)
-                tabs.setTabTextColors(secondaryColor, color)
-                tabs.setSelectedTabIndicatorColor(color)
-            } else {
-                val color = Color.WHITE
-                val secondaryColor = color(R.color.white70)
-                appbar?.navigationIcon?.setTint(color)
-                tabs.setTabTextColors(secondaryColor, color)
-                tabs.setSelectedTabIndicatorColor(color)
-            }
-        }
+    private fun setNavigationColor(isLight: Boolean) {
+        val color = if (isLight) color(R.color.black87) else Color.WHITE
+        val secondaryColor = if (isLight) color(R.color.black54) else color(R.color.white70)
+        appbar?.navigationIcon?.setTint(color)
+        tabs.setTabTextColors(secondaryColor, color)
+        tabs.setSelectedTabIndicatorColor(color)
     }
 
     companion object {

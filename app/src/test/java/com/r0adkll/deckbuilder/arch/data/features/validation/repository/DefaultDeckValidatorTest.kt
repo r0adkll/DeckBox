@@ -1,9 +1,9 @@
 package com.r0adkll.deckbuilder.arch.data.features.validation.repository
 
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.BanList
@@ -13,7 +13,14 @@ import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.tools.ModelUtils.EXPANSIONS
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
 import io.reactivex.Observable
-import org.amshove.kluent.*
+import org.amshove.kluent.When
+import org.amshove.kluent.calling
+import org.amshove.kluent.itReturns
+import org.amshove.kluent.mock
+import org.amshove.kluent.shouldBeEmpty
+import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldNotBeNull
 import org.junit.Before
 import org.junit.Test
 

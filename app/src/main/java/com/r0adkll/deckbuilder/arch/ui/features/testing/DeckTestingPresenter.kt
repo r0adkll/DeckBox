@@ -5,7 +5,7 @@ import com.r0adkll.deckbuilder.arch.data.features.testing.InvalidDeckException
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
-import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State.*
+import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State.Change
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber

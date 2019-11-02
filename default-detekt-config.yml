@@ -113,7 +113,7 @@ empty-blocks:
   EmptyForBlock:
     active: true
   EmptyFunctionBlock:
-    active: true
+    active: false
     ignoreOverriddenFunctions: false
   EmptyIfBlock:
     active: true
@@ -369,7 +369,7 @@ performance:
     active: true
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
   SpreadOperator:
-    active: true
+    active: false
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
   UnnecessaryTemporaryInstantiation:
     active: true

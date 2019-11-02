@@ -34,6 +34,7 @@ interface CollectionUi : Ui<CollectionUi.State, CollectionUi.State.Change> {
         val counts: List<CollectionCount>
     ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
+        @Suppress("ComplexMethod")
         override fun reduce(change: Change): Ui.State<Change> = when (change) {
             Change.IsLoading -> copy(isLoading = true, error = null)
             is Change.Error -> copy(error = change.description, isLoading = false)

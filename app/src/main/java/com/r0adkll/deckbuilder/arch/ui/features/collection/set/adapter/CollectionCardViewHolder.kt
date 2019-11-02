@@ -7,12 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.ftinc.kit.arch.util.bindView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.util.bindView
 
 class CollectionCardViewHolder(
     itemView: View,

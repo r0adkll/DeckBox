@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.arch.util.bindView
 import com.ftinc.kit.recycler.RecyclerViewItem
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
@@ -26,8 +27,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.QuickStartRecyclerAdapter.QuickStartViewHolder.ViewType.DECK
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.QuickStartRecyclerAdapter.QuickStartViewHolder.ViewType.PLACEHOLDER
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
-import com.r0adkll.deckbuilder.util.CardUtils
-import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.stack
 
 class QuickStartRecyclerAdapter(

@@ -66,7 +66,7 @@ class PlaymatView @JvmOverloads constructor(
         // Draw all the silhouttes
         val baseX = silhouetteMargin
         val baseY = measuredHeight - (silhouetteMargin + silhouetteHeight)
-        (0 until 5).forEach {
+        for (it in 0 until 5) {
             val offsetX = (it * silhouetteWidth) + (it * silhouetteMarginInside)
             drawCardSilhouette(canvas, baseX + offsetX, baseY)
         }

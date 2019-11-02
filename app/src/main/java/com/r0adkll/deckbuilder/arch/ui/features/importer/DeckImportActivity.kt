@@ -148,27 +148,25 @@ class DeckImportActivity : BaseActivity(), DeckImportUi, DeckImportUi.Intentions
     }
 
     private fun detectClipBoard() {
-        if (clipboardManager.hasPrimaryClip()) {
-            clipboardManager.primaryClip?.let { clip ->
-                if (clip.itemCount > 0) {
-                    val lines = clip.getItemAt(0).text?.split("\n")
-                    if (lines?.any { importLineValidator.validate(it) != null } == true) {
-                        // Some valid deck format found, suggest paste
-                        if (clipboardSnackBar?.isShownOrQueued == false) {
-                            clipboardSnackBar?.setText(R.string.import_clipboard_found_message)
-                            clipboardSnackBar?.setActionTextColor(color(R.color.primaryColor))
-                            clipboardSnackBar?.setAction(R.string.action_paste) {
-                                deckList.setText(clip.getItemAt(0).text)
-                            }
-                        } else {
-                            clipboardSnackBar = Snackbar.make(deckList, R.string.import_clipboard_found_message,
-                                Snackbar.LENGTH_INDEFINITE)
-                            clipboardSnackBar?.setActionTextColor(color(R.color.primaryColor))
-                            clipboardSnackBar?.setAction(R.string.action_paste) {
-                                deckList.setText(clip.getItemAt(0).text)
-                            }
-                            clipboardSnackBar?.show()
+        clipboardManager.primaryClip?.let { clip ->
+            if (clip.itemCount > 0) {
+                val lines = clip.getItemAt(0).text?.split("\n")
+                if (lines?.any { importLineValidator.validate(it) != null } == true) {
+                    // Some valid deck format found, suggest paste
+                    if (clipboardSnackBar?.isShownOrQueued == false) {
+                        clipboardSnackBar?.setText(R.string.import_clipboard_found_message)
+                        clipboardSnackBar?.setActionTextColor(color(R.color.primaryColor))
+                        clipboardSnackBar?.setAction(R.string.action_paste) {
+                            deckList.setText(clip.getItemAt(0).text)
                         }
+                    } else {
+                        clipboardSnackBar = Snackbar.make(deckList, R.string.import_clipboard_found_message,
+                            Snackbar.LENGTH_INDEFINITE)
+                        clipboardSnackBar?.setActionTextColor(color(R.color.primaryColor))
+                        clipboardSnackBar?.setAction(R.string.action_paste) {
+                            deckList.setText(clip.getItemAt(0).text)
+                        }
+                        clipboardSnackBar?.show()
                     }
                 }
             }

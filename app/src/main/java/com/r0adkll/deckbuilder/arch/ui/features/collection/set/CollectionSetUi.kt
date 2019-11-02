@@ -45,6 +45,7 @@ interface CollectionSetUi : Ui<State, Change> {
         val searchFilter: Filter
             get() = Filter.DEFAULT.copy(expansions = listOf(expansion!!), pageSize = 1000)
 
+        @Suppress("ComplexMethod")
         override fun reduce(change: Change): Ui.State<Change> = when (change) {
             Change.IsLoading -> copy(isLoading = true, error = null)
             is Change.Error -> copy(error = change.description, isLoading = false)
@@ -52,28 +53,16 @@ interface CollectionSetUi : Ui<State, Change> {
             is Change.Counts -> copy(counts = change.counts)
             is Change.CountsUpdated -> copy(counts = updateCounts(change.counts))
             is Change.CountChanged -> copy(counts = counts.findAndUpdate(
-                { it.id == change.card.id && !it.isSourceOld },
-                {
-                    CollectionCount(
-                        change.card.id,
-                        (it?.count ?: 0) + change.count,
-                        change.card.expansion?.code ?: it?.set ?: "",
-                        change.card.expansion?.series ?: it?.series ?: ""
-                    )
-                }))
+                { it.id == change.card.id && !it.isSourceOld }, {
+                updateCountFromChange(change.card, it, change.count)
+            }))
             is Change.CountsChanged -> {
                 var changedCounts = counts
                 change.cards.forEach { changedCard ->
                     changedCounts = counts.findAndUpdate(
-                        { it.id == changedCard.id && !it.isSourceOld },
-                        {
-                            CollectionCount(
-                                changedCard.id,
-                                (it?.count ?: 0) + change.count,
-                                changedCard.expansion?.code ?: it?.set ?: "",
-                                changedCard.expansion?.series ?: it?.series ?: ""
-                            )
-                        })
+                        { it.id == changedCard.id && !it.isSourceOld }, {
+                        updateCountFromChange(changedCard, it, change.count)
+                    })
                 }
                 copy(counts = changedCounts)
             }
@@ -119,6 +108,15 @@ interface CollectionSetUi : Ui<State, Change> {
 
             val DEFAULT by lazy {
                 State(false, null, null, emptyList(), emptyList(), false)
+            }
+
+            fun updateCountFromChange(card: PokemonCard, previous: CollectionCount?, change: Int): CollectionCount {
+                return CollectionCount(
+                    card.id,
+                    (previous?.count ?: 0) + change,
+                    card.expansion?.code ?: previous?.set ?: "",
+                    card.expansion?.series ?: previous?.series ?: ""
+                )
             }
         }
     }

@@ -4,8 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
-import org.junit.Assert.*
-
 class ObservableThreadTest {
 
     @Test

@@ -8,13 +8,14 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.arch.util.bindView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.ProgressLinearLayout
-import com.r0adkll.deckbuilder.util.bindView
 import com.r0adkll.deckbuilder.util.extensions.max
-import kotlin.math.roundToInt
+import com.r0adkll.deckbuilder.util.extensions.readablePercentage
+import com.r0adkll.deckbuilder.util.extensions.safePercentage
 
 sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -63,7 +64,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         override fun bind(item: Item.ExpansionSeries) {
             title.text = item.series
             completion.text = itemView.context.getString(R.string.completion_format,
-                item.completion.times(100f).roundToInt().coerceIn(0, 100))
+                item.completion.readablePercentage)
         }
     }
 
@@ -79,8 +80,8 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
                 .load(item.expansion.logoUrl)
                 .into(logo)
 
-            val completionProgress = (item.count.toFloat() / item.expansion.totalCards.toFloat())
-                .coerceIn(0f, 1f)
+            @Suppress("MagicNumber")
+            val completionProgress = (item.count.toFloat() / item.expansion.totalCards.toFloat()).safePercentage
 
             count.text = itemView.context.getString(
                 R.string.completion_count_format,
@@ -88,7 +89,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
                 item.expansion.totalCards.max(item.count)
             )
             completion.text = itemView.context.getString(R.string.completion_format,
-                completionProgress.times(100f).roundToInt())
+                completionProgress.readablePercentage)
             progress.progress = completionProgress
         }
     }

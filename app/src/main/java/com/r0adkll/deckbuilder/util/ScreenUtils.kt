@@ -2,9 +2,9 @@ package com.r0adkll.deckbuilder.util
 
 import android.content.Context
 import android.content.res.Resources
-import androidx.fragment.app.Fragment
 import android.view.View
 
+@Suppress("MagicNumber")
 object ScreenUtils {
 
     fun smallestWidth(resources: Resources, widthInDp: Int): Boolean {

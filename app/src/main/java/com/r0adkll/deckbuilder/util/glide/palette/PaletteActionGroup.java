@@ -3,6 +3,8 @@ package com.r0adkll.deckbuilder.util.glide.palette;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
@@ -10,16 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
 
-import android.view.View;
-import android.widget.TextView;
-
 import com.bumptech.glide.util.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget.*;
-import static com.r0adkll.deckbuilder.util.glide.palette.PaletteTargetBuilder.*;
+import static com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget.PaletteAction;
+import static com.r0adkll.deckbuilder.util.glide.palette.PaletteTargetBuilder.ReusableSwatchBuilder;
+import static com.r0adkll.deckbuilder.util.glide.palette.PaletteTargetBuilder.SwatchBuilder;
 
 /**
  * Builder and executor of basic Swatch applications to Views.

@@ -207,7 +207,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                     Timber.i("""Showing Hand (width: $width, height: $height, outerMargin: $outerMargin, 
                         |lowerOuterMargin: $lowerOuterMargin, 
                         |innerMargin: $innerMargin, cardWidth: $cardWidth)""".trimMargin())
-                    (0 until 4).forEach {
+                    for (it in 0 until 4) {
                         val x = outerMargin + (it * cardWidth) + (it * innerMargin)
                         val y = (height / 2f) + ((cardWidth * PokemonCardView.RATIO) + innerMargin / 2f) + dp(8f)
                         Timber.i("Card($it) [x: $x, y: $y]")
@@ -234,7 +234,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
                         }
                     }
 
-                    (0 until 3).forEach {
+                    for (it in 0 until 3) {
                         val x = lowerOuterMargin + (it * cardWidth) + (it * innerMargin)
                         val y = (height / 2f) - (innerMargin / 2f)
                         Timber.i("Card(${it + 4}) [x: $x, y: $y]")

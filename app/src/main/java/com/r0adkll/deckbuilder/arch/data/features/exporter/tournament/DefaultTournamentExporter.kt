@@ -27,7 +27,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Ag
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.util.AgeDivisionUtils
-import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.stack
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType

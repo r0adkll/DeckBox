@@ -3,19 +3,10 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection.set
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.Shader
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.LayerDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.annotation.ColorInt
-import androidx.core.graphics.ColorUtils
 import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -23,6 +14,8 @@ import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.extensions.color
 import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.smallestWidth
+import com.ftinc.kit.util.ScreenUtils
 import com.ftinc.kit.util.bindParcelable
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -32,14 +25,13 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
+import com.r0adkll.deckbuilder.arch.ui.components.palette.ExpansionPaletteAction
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.adapter.CollectionSetRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetModule
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.util.ScreenUtils
-import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
@@ -47,10 +39,6 @@ import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_collection_set.*
-import kotlinx.android.synthetic.main.activity_collection_set.backdrop
-import kotlinx.android.synthetic.main.activity_collection_set.emptyView
-import kotlinx.android.synthetic.main.activity_collection_set.logo
-import kotlinx.android.synthetic.main.activity_collection_set.recycler
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -78,7 +66,9 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         GlideApp.with(this)
             .`as`(PaletteBitmap::class.java)
             .load(expansion.logoUrl)
-            .into(PaletteBitmapViewTarget(logo, listOf(TargetPaletteAction())))
+            .into(PaletteBitmapViewTarget(logo, listOf(
+                ExpansionPaletteAction(backdrop, expansion, contrastListener = this::setNavigationColor)
+            )))
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = " "
@@ -221,82 +211,17 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         }
     }
 
-    inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
-        override fun execute(palette: androidx.palette.graphics.Palette?) {
-            palette?.let { p ->
-                p.vibrantSwatch?.rgb?.let {
-                    when (expansion.code) {
-                        "sm75" -> {
-                            val background = ColorDrawable(it)
-                            val pattern = BitmapFactory.decodeResource(resources, R.drawable.dr_scales_pattern)
-                            val foreground = BitmapDrawable(resources, pattern).apply {
-                                setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-                                setTargetDensity(resources.displayMetrics.densityDpi * 4)
-                            }
-                            backdrop.setImageDrawable(LayerDrawable(arrayOf(background, foreground)))
-                            setNavigationColor(it)
-                        }
-                        "sm8" -> {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                backdrop.setImageResource(R.drawable.dr_smlt_header)
-                                setNavigationColor(Color.BLACK)
-                            } else {
-                                backdrop.imageTintList = ColorStateList.valueOf(it)
-                                backdrop.imageTintMode = PorterDuff.Mode.ADD
-                                setNavigationColor(it)
-                            }
-                        }
-                        "sm9" -> {
-                            backdrop.setImageResource(R.drawable.dr_smtu_background)
-                            setNavigationColor(Color.BLACK)
-                        }
-                        "sm10", "sm11", "sm115", "sma", "sm12", "det1" -> {
-                            backdrop.setImageResource(R.drawable.dr_smtu_background)
-                            backdrop.imageTintList = ColorStateList.valueOf(it)
-                            backdrop.imageTintMode = PorterDuff.Mode.ADD
-                            setNavigationColor(it)
-                        }
-                        "sm5" -> {
-                            setNavigationColor(Color.BLACK)
-                        }
-                        else -> {
-                            backdrop.imageTintList = ColorStateList.valueOf(it)
-                            backdrop.imageTintMode = PorterDuff.Mode.ADD
-                            setNavigationColor(it)
-                        }
-                    }
-                } ?: setNavigationColor(Color.BLACK)
-            }
-        }
-
-        private fun setNavigationColor(@ColorInt navigationColor: Int) {
-            // Calculate control color
-            if (ColorUtils.calculateContrast(Color.WHITE, navigationColor) < 3.0) {
-                val color = color(R.color.black87)
-                val secondaryColor = color(R.color.black54)
-                appbar?.navigationIcon?.setTint(color)
-                progressCompletion.setTextColor(color)
-                progressBar.borderColor = color
-                progressBar.trackColor = secondaryColor
-                val size = appbar?.menu?.size() ?: 0
-                (0 until size).forEach {
-                    appbar?.menu?.getItem(it)?.let { item ->
-                        MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(color))
-                    }
-                }
-            } else {
-                val color = Color.WHITE
-                val secondaryColor = color(R.color.white50)
-                appbar?.navigationIcon?.setTint(color)
-                progressCompletion.setTextColor(color)
-                progressBar.borderColor = color
-                progressBar.trackColor = secondaryColor
-                val size = appbar?.menu?.size() ?: 0
-                (0 until size).forEach {
-                    appbar?.menu?.getItem(it)?.let { item ->
-                        MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(color))
-                    }
-                }
+    private fun setNavigationColor(isLight: Boolean) {
+        val color = if (isLight) color(R.color.black87) else Color.WHITE
+        val secondaryColor = if (isLight) color(R.color.black54) else color(R.color.white50)
+        appbar?.navigationIcon?.setTint(color)
+        progressCompletion.setTextColor(color)
+        progressBar.borderColor = color
+        progressBar.trackColor = secondaryColor
+        val size = appbar?.menu?.size() ?: 0
+        (0 until size).forEach {
+            appbar?.menu?.getItem(it)?.let { item ->
+                MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(color))
             }
         }
     }

@@ -11,6 +11,8 @@ import io.reactivex.Observable
 
 object DialogUtils {
 
+    private const val INPUT_MARGIN = 20f
+
     fun confirmDialog(
         context: Context,
         title: DialogText,
@@ -58,8 +60,8 @@ object DialogUtils {
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
             )
-            lp.marginStart = context.dip(20f)
-            lp.marginEnd = context.dip(20f)
+            lp.marginStart = context.dip(INPUT_MARGIN)
+            lp.marginEnd = context.dip(INPUT_MARGIN)
             view.addView(input, lp)
 
             val builder = AlertDialog.Builder(context)

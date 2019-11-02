@@ -30,11 +30,12 @@ import com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
+import com.r0adkll.deckbuilder.util.extensions.partialPercentage
+import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 class HomeActivity : BaseActivity(),
     HasComponent<HomeComponent>,
@@ -140,17 +141,16 @@ class HomeActivity : BaseActivity(),
     }
 
     override fun setOverallProgress(progress: Float) {
-        progressCompletion.text = getString(R.string.completion_format,
-            (progress.times(100f).roundToInt().coerceIn(0, 100)))
+        progressCompletion.text = getString(R.string.completion_format, progress.readablePercentage)
         progressView.progress = progress
     }
 
     private fun interpolateProgressLayout(progress: Float) {
         // 0: hidden, 1: shown
-        progressLayout.alpha = (progress - .8f).coerceAtLeast(0f) / .2f
+        progressLayout.alpha = progress.partialPercentage(PROGRESS_FADE_SEGMENT)
 
         val translationY = (progress * progressLayout.height)
-        val height = dip(56f) + translationY
+        val height = dip(APPROX_APPBAR_HEIGHT) + translationY
         appBarLayout.layoutHeight(height.toInt())
         progressLayout.translationY = translationY
     }
@@ -170,6 +170,8 @@ class HomeActivity : BaseActivity(),
     }
 
     companion object {
+        private const val APPROX_APPBAR_HEIGHT = 56f
+        private const val PROGRESS_FADE_SEGMENT = 0.2f
 
         fun createIntent(context: Context): Intent = Intent(context, HomeActivity::class.java)
     }

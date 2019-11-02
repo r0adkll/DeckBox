@@ -21,10 +21,9 @@ import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentInfo;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
-
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;

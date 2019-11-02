@@ -4,7 +4,13 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
-import org.amshove.kluent.*
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldEqualTo
+import org.amshove.kluent.shouldNotBeNull
+import org.amshove.kluent.shouldNotEqual
 import org.junit.Test
 
 /* ktlint-disable max-line-length */

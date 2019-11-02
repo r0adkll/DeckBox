@@ -1,6 +1,11 @@
 package com.r0adkll.deckbuilder.arch.data.database
 
-import com.r0adkll.deckbuilder.arch.data.database.util.*
+import com.r0adkll.deckbuilder.arch.data.database.util.Query
+import com.r0adkll.deckbuilder.arch.data.database.util.eq
+import com.r0adkll.deckbuilder.arch.data.database.util.gt
+import com.r0adkll.deckbuilder.arch.data.database.util.like
+import com.r0adkll.deckbuilder.arch.data.database.util.lt
+import com.r0adkll.deckbuilder.arch.data.database.util.notNull
 import io.pokemontcg.model.SubType
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test

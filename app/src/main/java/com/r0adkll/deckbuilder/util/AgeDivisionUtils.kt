@@ -3,9 +3,12 @@ package com.r0adkll.deckbuilder.util
 import android.content.Context
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
-import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision.*
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision.JUNIOR
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision.MASTERS
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision.SENIOR
 import java.util.*
 
+@Suppress("MagicNumber")
 object AgeDivisionUtils {
 
     val seasonYear: Int

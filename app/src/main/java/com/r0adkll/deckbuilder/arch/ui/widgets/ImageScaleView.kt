@@ -2,10 +2,8 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
 import android.util.AttributeSet
-
-import com.r0adkll.deckbuilder.R
-
 import androidx.appcompat.widget.AppCompatImageView
+import com.r0adkll.deckbuilder.R
 import kotlin.math.max
 
 /**
