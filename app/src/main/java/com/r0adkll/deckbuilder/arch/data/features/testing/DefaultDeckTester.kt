@@ -91,7 +91,7 @@ class DefaultDeckTester @Inject constructor(
             deck.shuffle()
         }
 
-        return deck.subList(0, 7)
+        return deck.subList(0, DEFAULT_HAND_SIZE)
     }
 
     private fun test(cards: List<PokemonCard>, iterations: Int): TestResults {

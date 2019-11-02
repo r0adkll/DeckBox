@@ -12,6 +12,7 @@ import com.r0adkll.deckbuilder.util.extensions.isLight
 /**
  * Expansion action for SM7.5, Dragon Majesty
  */
+@Suppress("MagicNumber")
 object DragonMajestyExpansionAction : ExpansionAction {
 
     override fun isForExpansion(code: String): Boolean {

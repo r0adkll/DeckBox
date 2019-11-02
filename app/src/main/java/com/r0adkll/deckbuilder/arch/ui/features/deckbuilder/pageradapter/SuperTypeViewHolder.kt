@@ -44,9 +44,9 @@ abstract class SuperTypeViewHolder<out A : EmptyViewListAdapter<*, *>>(
         get() {
             return if (ScreenUtils.orientation(itemView.resources, Configuration.ORIENTATION_PORTRAIT) ||
                 ScreenUtils.smallestWidth(itemView.resources, ScreenUtils.Config.TABLET_10)) {
-                3
+                TABLET_SPAN_SIZE
             } else {
-                5
+                PHONE_SPAN_SIZE
             }
         }
 
@@ -68,6 +68,11 @@ abstract class SuperTypeViewHolder<out A : EmptyViewListAdapter<*, *>>(
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
         (recycler.itemAnimator as androidx.recyclerview.widget.SimpleItemAnimator).supportsChangeAnimations = false
+    }
+
+    companion object {
+        private const val TABLET_SPAN_SIZE = 3
+        private const val PHONE_SPAN_SIZE = 5
     }
 }
 
@@ -155,6 +160,7 @@ class PokemonViewHolder(
  * The [SuperTypeViewHolder] implementation for both Energy and Supporter cards in the deckbuilding
  * interface
  */
+@Suppress("MagicNumber")
 class TrainerEnergyViewHolder(
     itemView: View,
     emptyIcon: Int,
@@ -195,7 +201,6 @@ class TrainerEnergyViewHolder(
         }
         adapter.submitList(sorted)
         adapter.itemViewClickListener = { view, _ ->
-            // FIXME: Do something about this atrocity
             val card = view.findViewById<PokemonCardView>(R.id.card)
             pokemonCardClicks.accept(card)
         }

@@ -221,6 +221,11 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
 
     companion object {
 
+        private val retreatCostRange = 0..4
+        private val attackCostRange = 0..5
+        private val attackDmgRange = 0..300
+        private val hpRange = 0..250
+
         val DEFAULT by lazy {
             createPokemon(emptyList(), STANDARD)
         }
@@ -271,10 +276,13 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     )),
                     Spec.ExpansionSpec(expansions, visibility),
                     Spec.RaritySpec(Rarity.values().toList()),
-                    Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost, 0, 4),
-                    Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost, 0, 5),
-                    Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage, 0, 300),
-                    Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, 0, 250),
+                    Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost,
+                        retreatCostRange.first, retreatCostRange.last),
+                    Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost,
+                        attackCostRange.first, attackCostRange.last),
+                    Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage,
+                        attackDmgRange.first, attackDmgRange.last),
+                    Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, hpRange.first, hpRange.last),
                     Spec.TypeSpec("weaknesses", R.string.filter_header_weaknesses),
                     Spec.TypeSpec("resistances", R.string.filter_header_resistances)
                 )
@@ -305,10 +313,13 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     )),
                     Spec.ExpansionSpec(expansions, visibility),
                     Spec.RaritySpec(Rarity.values().toList()),
-                    Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost, 0, 4),
-                    Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost, 0, 5),
-                    Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage, 0, 300),
-                    Spec.ValueRangeSpec("hp", R.string.filter_header_hp, 0, 250),
+                    Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost,
+                        retreatCostRange.first, retreatCostRange.last),
+                    Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost,
+                        attackCostRange.first, attackCostRange.last),
+                    Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage,
+                        attackDmgRange.first, attackDmgRange.last),
+                    Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, hpRange.first, hpRange.last),
                     Spec.TypeSpec("weaknesses", R.string.filter_header_weaknesses),
                     Spec.TypeSpec("resistances", R.string.filter_header_resistances)
                 )

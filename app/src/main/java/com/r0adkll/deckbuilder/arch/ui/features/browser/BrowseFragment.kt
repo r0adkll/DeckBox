@@ -54,20 +54,20 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = ExpansionRecyclerAdapter(activity!!, downloadClicks, dismissClicks, downloadFormatClicks) {
+        adapter = ExpansionRecyclerAdapter(requireActivity(), downloadClicks, dismissClicks, downloadFormatClicks) {
             when (it) {
                 is Item.ExpansionSet -> {
                     Analytics.event(Event.SelectContent.BrowseExpansionSet(it.expansion.code))
-                    val intent = SetBrowserActivity.createIntent(activity!!, it.expansion)
+                    val intent = SetBrowserActivity.createIntent(requireActivity(), it.expansion)
                     startActivity(intent)
                 }
             }
         }
         adapter.emptyView = emptyView
         recycler.layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            GridLayoutManager(activity!!, 3)
+            GridLayoutManager(requireActivity(), TABLET_SPAN_SIZE)
         } else {
-            LinearLayoutManager(activity!!)
+            LinearLayoutManager(requireActivity())
         }
         recycler.adapter = adapter
         (recycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
@@ -132,7 +132,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
                     }
                 }
                 Analytics.event(Event.SelectContent.Action("download_format", format.name))
-                DialogUtils.confirmDialog(activity!!,
+                DialogUtils.confirmDialog(requireActivity(),
                     Resource(R.string.dialog_confirm_download_format, formatName),
                     Resource(R.string.dialog_confirm_download_format_message, expansions.size, formatName),
                     R.string.action_download, android.R.string.cancel)
@@ -177,6 +177,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
     }
 
     companion object {
+        private const val TABLET_SPAN_SIZE = 3
 
         fun newInstance(): BrowseFragment = BrowseFragment()
     }

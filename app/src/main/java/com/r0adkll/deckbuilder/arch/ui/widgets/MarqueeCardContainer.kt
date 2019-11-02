@@ -16,6 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
+@Suppress("MagicNumber")
 class MarqueeCardContainer @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

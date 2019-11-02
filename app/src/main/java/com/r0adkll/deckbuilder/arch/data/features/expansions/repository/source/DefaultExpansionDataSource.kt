@@ -45,7 +45,7 @@ class DefaultExpansionDataSource @Inject constructor(
     private fun network(): Observable<List<Expansion>> {
         return api.set()
             .where {
-                pageSize = 200
+                pageSize = MAX_PAGE_SIZE
             }
             .observeAll()
             .map { it.map { SetMapper.to(it) } }
@@ -62,5 +62,9 @@ class DefaultExpansionDataSource @Inject constructor(
 
     private fun memory(): Observable<List<Expansion>> {
         return memoryCache.getExpansions()
+    }
+
+    companion object {
+        private const val MAX_PAGE_SIZE = 1000
     }
 }

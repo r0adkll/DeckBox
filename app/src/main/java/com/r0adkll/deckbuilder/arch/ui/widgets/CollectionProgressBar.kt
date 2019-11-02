@@ -62,6 +62,7 @@ class CollectionProgressBar @JvmOverloads constructor(
         a.recycle()
 
         if (isInEditMode) {
+            @Suppress("MagicNumber")
             progress = .33f
         }
     }

@@ -31,12 +31,12 @@ class CardSwitcher : ViewSwitcher {
         setInAnimation(context, android.R.anim.slide_in_left)
         setOutAnimation(context, android.R.anim.slide_out_right)
 
-        var lp = LayoutParams(dip(400), LayoutParams.WRAP_CONTENT)
+        var lp = LayoutParams(dip(CARD_SIZE), LayoutParams.WRAP_CONTENT)
         lp.gravity = Gravity.CENTER
         card1 = PokemonCardView(context)
         addView(card1, lp)
 
-        lp = LayoutParams(dip(400), LayoutParams.WRAP_CONTENT)
+        lp = LayoutParams(dip(CARD_SIZE), LayoutParams.WRAP_CONTENT)
         lp.gravity = Gravity.CENTER
         card2 = PokemonCardView(context)
         addView(card2, lp)
@@ -125,6 +125,7 @@ class CardSwitcher : ViewSwitcher {
 
     companion object {
         private const val INTERVAL = 6000L
+        private const val CARD_SIZE = 400
 
         val SHUFFLED_CARDS by lazy {
             val cards = mutableListOf(*CardUtils.CARDS)

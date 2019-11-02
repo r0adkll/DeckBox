@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint

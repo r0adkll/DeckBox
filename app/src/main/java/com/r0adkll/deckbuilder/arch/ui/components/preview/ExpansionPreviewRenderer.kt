@@ -25,6 +25,8 @@ import timber.log.Timber
 
 object ExpansionPreviewRenderer {
 
+    private const val MAX_ALPHA_INT = 255f
+
     fun applyLogo(imageView: ImageView, spec: PreviewSpec.LogoSpec) {
         GlideApp.with(imageView)
             .load(spec.url)
@@ -107,7 +109,7 @@ object ExpansionPreviewRenderer {
                         setTargetDensity((context.resources.displayMetrics.densityDpi * density).toInt())
                     }
                     spec.alpha?.let { alpha ->
-                        this.alpha = (255f * alpha).toInt()
+                        this.alpha = (MAX_ALPHA_INT * alpha).toInt()
                     }
                 } as Drawable
             }
@@ -130,7 +132,7 @@ object ExpansionPreviewRenderer {
         val color = Color.parseColor(spec.source.value)
         val drawable = ColorDrawable(color)
         spec.alpha?.let {
-            drawable.alpha = (255f * it).toInt()
+            drawable.alpha = (MAX_ALPHA_INT * it).toInt()
         }
         return Observable.just(drawable)
     }

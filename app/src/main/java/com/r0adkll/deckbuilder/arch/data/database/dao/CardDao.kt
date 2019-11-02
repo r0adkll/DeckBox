@@ -36,8 +36,8 @@ abstract class CardDao {
 
     @Suppress("UNCHECKED_CAST")
     open fun getCardsSplit(ids: List<String>): Single<List<CardWithAttacks>> {
-        return if (ids.size > 900) {
-            val chunkedIds = ids.chunked(900)
+        return if (ids.size > MAX_SIZE) {
+            val chunkedIds = ids.chunked(MAX_SIZE)
             Single.zip(chunkedIds.map { getCards(it) }) {
                 it.map { cards -> cards as List<CardWithAttacks> }
                     .flatten()
@@ -58,5 +58,9 @@ abstract class CardDao {
         if (insertCard(card.card) > 0L) {
             insertAttacks(card.attacks)
         }
+    }
+
+    companion object {
+        const val MAX_SIZE = 900
     }
 }

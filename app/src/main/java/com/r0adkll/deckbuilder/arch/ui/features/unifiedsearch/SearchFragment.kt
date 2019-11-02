@@ -5,11 +5,6 @@ import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
-import android.view.animation.RotateAnimation
-import android.view.animation.TranslateAnimation
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
@@ -73,13 +68,12 @@ class SearchFragment : BaseFragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = SearchResultsRecyclerAdapter(activity!!, true)
+        adapter = SearchResultsRecyclerAdapter(requireActivity(), true)
         adapter.emptyView = emptyView
-        adapter.onItemClickListener = { v, _ ->
-            // FIXME: Do something about this god-awful mess
-            val card = v.findViewById<PokemonCardView>(R.id.card)
-            Analytics.event(Event.SelectContent.PokemonCard(card.card?.id ?: "unknown"))
-            CardDetailActivity.show(activity!!, card)
+        adapter.onItemClickListener = { v, card ->
+            val cardView = v.findViewById<PokemonCardView>(R.id.card)
+            Analytics.event(Event.SelectContent.PokemonCard(card.id))
+            CardDetailActivity.show(requireActivity(), cardView)
         }
 
         actionFilter.setOnClickListener {
@@ -88,10 +82,10 @@ class SearchFragment : BaseFragment(),
             ImeUtils.hideIme(searchView)
         }
 
-        recycler.layoutManager = GridLayoutManager(activity!!, 6)
+        recycler.layoutManager = GridLayoutManager(requireActivity(), SPAN_COUNT)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
-        recycler.setItemViewCacheSize(20)
+        recycler.setItemViewCacheSize(ITEM_VIEW_CACHE)
 
         recycler.addOnScrollListener(KeyboardScrollHideListener(searchView))
 
@@ -142,7 +136,7 @@ class SearchFragment : BaseFragment(),
     override fun searchCards(): Observable<String> {
         return searchView.queryTextChanges()
             .map { it.toString() }
-            .uiDebounce(500L)
+            .uiDebounce(TYPING_DEBOUNCE)
             .doOnNext {
                 Analytics.event(Event.Search(it))
                 if (it.isBlank()) toolbarScrollListener.reset()
@@ -192,34 +186,7 @@ class SearchFragment : BaseFragment(),
         drawer.closeDrawer(GravityCompat.END)
     }
 
-    fun wiggleCard(card: PokemonCard) {
-        val adapterPosition = adapter.indexOf(card)
-        if (adapterPosition != RecyclerView.NO_POSITION) {
-            val layoutManager = recycler.layoutManager as GridLayoutManager
-            val childIndex = adapterPosition - layoutManager.findFirstVisibleItemPosition()
-            val child = layoutManager.getChildAt(childIndex)
-            child?.let {
-                val rotateAnim = RotateAnimation(-5f, 5f, Animation.RELATIVE_TO_SELF, .5f,
-                    Animation.RELATIVE_TO_SELF, .5f)
-                rotateAnim.repeatCount = 3
-                rotateAnim.repeatMode = Animation.REVERSE
-                rotateAnim.duration = 50
-
-                val transAnim = TranslateAnimation(0f, 0f, 0f, -it.dp(8))
-                transAnim.repeatCount = 1
-                transAnim.repeatMode = Animation.REVERSE
-                transAnim.duration = 100
-
-                val set = AnimationSet(true)
-                set.addAnimation(rotateAnim)
-                set.addAnimation(transAnim)
-                set.interpolator = AccelerateDecelerateInterpolator()
-
-                it.startAnimation(set)
-            }
-        }
-    }
-
+    @Suppress("MagicNumber")
     class ToolbarScrollListener(
         private val toolBar: View
     ) : RecyclerView.OnScrollListener() {
@@ -239,6 +206,8 @@ class SearchFragment : BaseFragment(),
     }
 
     companion object {
-        const val TAG = "UnifiedSearchFragment"
+        private const val SPAN_COUNT = 6
+        private const val ITEM_VIEW_CACHE = 20
+        private const val TYPING_DEBOUNCE = 500L
     }
 }

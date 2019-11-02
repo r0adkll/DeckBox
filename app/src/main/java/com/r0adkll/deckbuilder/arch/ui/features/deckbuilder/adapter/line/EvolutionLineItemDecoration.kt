@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
 import android.content.Context

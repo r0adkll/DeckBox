@@ -97,6 +97,7 @@ class QuickStartRecyclerAdapter(
         }
     }
 
+    @Suppress("MagicNumber")
     sealed class QuickStartViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         abstract fun bind(item: I)

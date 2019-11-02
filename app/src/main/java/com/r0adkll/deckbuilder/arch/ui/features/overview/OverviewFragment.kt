@@ -64,7 +64,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
         adapter = OverviewRecyclerAdapter(requireContext(), cardClicks, editCardIntentions)
         adapter.emptyView = emptyView
-        val spanCount = if (orientation(ORIENTATION_LANDSCAPE)) 7 else 4
+        val spanCount = if (orientation(ORIENTATION_LANDSCAPE)) LANDSCAPE_SPAN_SIZE else PORTRAIT_SPAN_SIZE
         val layoutManager = GridLayoutManager(requireContext(), spanCount)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -131,6 +131,8 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
     companion object {
         const val TAG = "OverviewFragment"
         private const val EXTRA_SESSION_ID = "OverviewFragment.SessionId"
+        private const val LANDSCAPE_SPAN_SIZE = 7
+        private const val PORTRAIT_SPAN_SIZE = 4
 
         fun newInstance(sessionId: Long): OverviewFragment {
             val fragment = OverviewFragment()

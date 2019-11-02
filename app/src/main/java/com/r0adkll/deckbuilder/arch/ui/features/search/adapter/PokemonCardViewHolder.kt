@@ -17,7 +17,6 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import timber.log.Timber
 
 class PokemonCardViewHolder(
     itemView: View,
@@ -50,11 +49,14 @@ class PokemonCardViewHolder(
         if (isCollectionMode) {
             collectionCounter?.isVisible = true
             collectionCounter?.text = "$collectionCount"
-            cardView.imageAlpha = if (collectionCount >= count) 255 else 102
-            Timber.v("Binding(id=${card.id}, collection=$collectionCount, count=$count, resultAlpha=${cardView.alpha}")
+            cardView.imageAlpha = if (collectionCount >= count) {
+                COLLECTION_COMPLETE_ALPHA
+            } else {
+                COLLECTION_MISSING_ALPHA
+            }
         } else {
             collectionCounter?.isGone = true
-            cardView.alpha = 1f
+            cardView.alpha = MAX_ALPHA
         }
 
         actionLayout?.isVisible = (isEditMode && !displayWhenOne) ||
@@ -63,13 +65,18 @@ class PokemonCardViewHolder(
         actionAdd?.setOnClickListener { addCardClicks.accept(listOf(card)) }
 
         if (displayWhenOne && count > 0) {
-            cardView.elevation = dp(8)
+            cardView.elevation = dp(ELEVATION_WITH_COUNT)
         } else {
-            cardView.elevation = dp(4)
+            cardView.elevation = dp(ELEVATION_WHEN_EMPTY)
         }
     }
 
     companion object {
+        private const val MAX_ALPHA = 1f
+        private const val COLLECTION_COMPLETE_ALPHA = 255
+        private const val COLLECTION_MISSING_ALPHA = 102
+        private const val ELEVATION_WITH_COUNT = 8
+        private const val ELEVATION_WHEN_EMPTY = 4
 
         fun create(
             inflater: LayoutInflater,

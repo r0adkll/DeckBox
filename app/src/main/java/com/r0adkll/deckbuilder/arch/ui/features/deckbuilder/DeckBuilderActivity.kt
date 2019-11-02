@@ -20,7 +20,7 @@ import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.arch.util.plusAssign
 import com.ftinc.kit.arch.util.uiDebounce
-import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dimenPixelSize
 import com.ftinc.kit.extensions.dp
 import com.ftinc.kit.extensions.snackbar
 import com.ftinc.kit.util.bindBoolean
@@ -81,7 +81,10 @@ class DeckBuilderActivity : BaseActivity(),
     DeckBuilderUi.Intentions,
     DeckBuilderUi.Actions {
 
+    @Suppress("MagicNumber")
     inner class DeckBuilderPanelSlideListener : SlidingUpPanelLayout.PanelSlideListener {
+        private val defaultOffset: Float by lazy { dp(22f) }
+
         override fun onPanelSlide(panel: View, slideOffset: Float) {
             interpolateBottomBar(panel, slideOffset)
             interpolatePanelIndicator(slideOffset)
@@ -156,14 +159,11 @@ class DeckBuilderActivity : BaseActivity(),
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
     private val editOverviewClicks: Relay<Boolean> = PublishRelay.create()
 
-    private val iconOffset: Float by lazy { dp(12f) }
-    private val defaultOffset: Float by lazy { dp(22f) }
-
-    private val panelSlideListener = DeckBuilderPanelSlideListener()
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
     private lateinit var customTabBrowser: CustomTabBrowser
+    private val panelSlideListener = DeckBuilderPanelSlideListener()
     private var savingSnackBar: Snackbar? = null
     private var pendingImport: List<PokemonCard>? = null
 
@@ -208,7 +208,7 @@ class DeckBuilderActivity : BaseActivity(),
 
         adapter = DeckBuilderPagerAdapter(this, pokemonCardClicks, editCardIntentions)
         pager.adapter = adapter
-        pager.offscreenPageLimit = 3
+        pager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
         tabs.setupWithViewPager(pager)
 
         // Setup Listeners
@@ -552,7 +552,11 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun showPrices(low: Double?, market: Double?, high: Double?) {
         val isVisible = low != null || market != null || high != null
-        divider.margins(top = if (isVisible) dip(16f) else dip(8f))
+        divider.margins(top = if (isVisible) {
+            dimenPixelSize(R.dimen.margin_small)
+        } else {
+            dimenPixelSize(R.dimen.margin_tiny)
+        })
         costsLayout.isVisible = isVisible
         priceLow.text = low?.formatPrice() ?: "n/a"
         priceMarket.text = market?.formatPrice() ?: "n/a"
@@ -648,6 +652,7 @@ class DeckBuilderActivity : BaseActivity(),
     companion object {
         private const val EXTRA_IS_NEW = "DeckBuilderActivity.IsNew"
         private const val EXTRA_SESSION_ID = "DeckBuilderActivity.SessionId"
+        private const val OFFSCREEN_PAGE_LIMIT = 3
 
         private fun createIntent(context: Context): Intent = Intent(context, DeckBuilderActivity::class.java)
 

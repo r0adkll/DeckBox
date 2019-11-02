@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class StackedPokemonCard(
     val card: PokemonCard,
-    val count: Int,
+    val count: Int = 1,
     val collection: Int? = null
 ) : Parcelable {
 

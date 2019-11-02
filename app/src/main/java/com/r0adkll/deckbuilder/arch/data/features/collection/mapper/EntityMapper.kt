@@ -6,6 +6,8 @@ import com.r0adkll.deckbuilder.arch.data.features.collection.model.CollectionCou
 
 object EntityMapper {
 
+    private const val LEGACY_DOCUMENT_ID_LENGTH = 20
+
     fun to(entity: CollectionCountEntity): CollectionCount {
         return CollectionCount(
             entity.cardId,
@@ -20,7 +22,7 @@ object EntityMapper {
     }
 
     fun to(entity: FirebaseCollectionCountEntity, documentId: String? = null): CollectionCount {
-        val isSourceOld = documentId?.length == 20 // This indicates the the entity was
+        val isSourceOld = documentId?.length == LEGACY_DOCUMENT_ID_LENGTH
         return CollectionCount(
             entity.cardId,
             entity.count,

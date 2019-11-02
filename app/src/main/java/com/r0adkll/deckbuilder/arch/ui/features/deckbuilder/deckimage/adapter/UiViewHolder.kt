@@ -10,6 +10,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
+@Suppress("MagicNumber")
 sealed class UiViewHolder<in I : DeckImage>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I, isSelected: Boolean?)

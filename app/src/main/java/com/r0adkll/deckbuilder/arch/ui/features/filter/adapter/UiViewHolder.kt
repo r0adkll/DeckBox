@@ -125,6 +125,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
     /**
      * Recycler UI Item for [Item.Attribute]
      */
+    @Suppress("MagicNumber")
     class AttributesViewHolder(
         itemView: View,
         private val attributeClicks: Relay<FilterAttribute>
@@ -279,6 +280,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
             else -> NONE
         }
 
+        @Suppress("MagicNumber")
         private fun ImageView.select(isSelected: Boolean) {
             this.alpha = if (isSelected) 1f else 0.26f
             this.imageTintList = ColorStateList.valueOf(color(

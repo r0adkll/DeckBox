@@ -84,17 +84,17 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         adapter.emptyView = empty_view
 
         recycler.layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL)
+            StaggeredGridLayoutManager(TABLET_SPAN_SIZE, StaggeredGridLayoutManager.VERTICAL)
         } else {
-            val lm = GridLayoutManager(activity, 2)
+            val lm = GridLayoutManager(activity, PHONE_SPAN_SIZE)
             lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     val item = adapter.currentList[position]
                     return when (item) {
-                        is Item.Preview -> 2
-                        is Item.QuickStart -> 2
-                        is Item.Header -> 2
-                        else -> 1
+                        is Item.Preview -> PHONE_SPAN_SIZE
+                        is Item.QuickStart -> PHONE_SPAN_SIZE
+                        is Item.Header -> PHONE_SPAN_SIZE
+                        else -> SINGLE_SPAN_SIZE
                     }
                 }
             }
@@ -213,6 +213,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
     companion object {
+        private const val TABLET_SPAN_SIZE = 6
+        private const val PHONE_SPAN_SIZE = 2
+        private const val SINGLE_SPAN_SIZE = 1
 
         fun newInstance(): DecksFragment = DecksFragment()
     }

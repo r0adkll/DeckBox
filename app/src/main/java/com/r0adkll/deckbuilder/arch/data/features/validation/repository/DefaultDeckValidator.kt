@@ -112,6 +112,7 @@ class DefaultDeckValidator @Inject constructor(
         }
     }
 
+    @Suppress("MagicNumber")
     private fun PokemonCard.reprintHash(): Long {
         return (this.name.hashCode().toLong() * 31L) +
             (this.text?.hashCode()?.toLong() ?: 0L * 31L)

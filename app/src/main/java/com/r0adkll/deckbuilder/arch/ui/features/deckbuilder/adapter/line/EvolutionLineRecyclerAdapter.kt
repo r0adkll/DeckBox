@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
 import android.content.Context
@@ -133,21 +135,23 @@ class EvolutionLineRecyclerAdapter(
         val isFirstCard = cardIndex == 0
         val isLastCard = cardIndex == node.cards.size - 1
         val hasNextNode = nodeIndex < chain.nodes.size - 1
-        if (isFirstNode) {
+        return if (isFirstNode) {
             if (hasNextNode && isLastCard) {
-                return PokemonCardView.Evolution.END
+                PokemonCardView.Evolution.END
+            } else {
+                PokemonCardView.Evolution.NONE
             }
         } else {
             if (isFirstCard && isLastCard && hasNextNode) {
-                return PokemonCardView.Evolution.MIDDLE
+                PokemonCardView.Evolution.MIDDLE
             } else if (isFirstCard) {
-                return PokemonCardView.Evolution.START
+                PokemonCardView.Evolution.START
             } else if (isLastCard && hasNextNode) {
-                return PokemonCardView.Evolution.END
+                PokemonCardView.Evolution.END
+            } else {
+                PokemonCardView.Evolution.NONE
             }
         }
-
-        return PokemonCardView.Evolution.NONE
     }
 
     interface OnPokemonCardViewClickListener {

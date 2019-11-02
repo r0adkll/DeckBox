@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import android.app.Activity
@@ -54,6 +56,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.marketplace.ProductSparkAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
+import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
 import com.r0adkll.deckbuilder.util.extensions.drawable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
@@ -264,7 +267,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun showPriceHistory(products: List<Product>) {
-        priceSparkline.isVisible = products.isNotEmpty()
+        priceSparkline.isVisible = products.size > 1
         priceSparkline.adapter = ProductSparkAdapter(products)
 
         // Prepare our product url to load
@@ -370,7 +373,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         card?.let { card ->
             // Set title + Subtitle
             val spannable = SpannableString(card.name)
-            val prismIndex = card.name.indexOf("◇")
+            val prismIndex = card.name.indexOf(CardUtils.PRISM_SYMBOL)
             if (prismIndex != -1) {
                 spannable.setSpan(ImageSpan(
                     this@CardDetailActivity,

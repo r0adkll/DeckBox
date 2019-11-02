@@ -1,3 +1,5 @@
+@file:Suppress("ReturnCount", "MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
 /**

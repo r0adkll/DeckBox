@@ -61,7 +61,7 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
 
         adapter.emptyView = emptyView
         recycler.adapter = adapter
-        recycler.layoutManager = GridLayoutManager(requireContext(), 3)
+        recycler.layoutManager = GridLayoutManager(requireContext(), GRID_SPAN_SIZE)
         recycler.itemAnimator = null
 
         renderer.start()
@@ -123,18 +123,22 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
     }
 
     private fun <C : Any> getComponent(componentType: KClass<C>): C {
-        if (parentFragment is HasComponent<*>) {
-            return componentType.java.cast((parentFragment as HasComponent<*>).getComponent())!!
-        } else if (activity is HasComponent<*>) {
-            return componentType.java.cast((activity as HasComponent<*>).getComponent())!!
+        return when {
+            parentFragment is HasComponent<*> -> {
+                componentType.java.cast((parentFragment as HasComponent<*>).getComponent())!!
+            }
+            activity is HasComponent<*> -> {
+                componentType.java.cast((activity as HasComponent<*>).getComponent())!!
+            }
+            else -> componentType.java.cast((activity as HasComponent<*>).getComponent())!!
         }
-        return componentType.java.cast((activity as HasComponent<*>).getComponent())!!
     }
 
     companion object {
         const val TAG = "DeckImagePicker"
         private const val EXTRA_SESSION_ID = "DeckImagePickerFragment.SessionId"
         private const val EXTRA_DECK_IMAGE = "DeckImagePickerFragment.DeckImage"
+        private const val GRID_SPAN_SIZE = 3
 
         fun newInstance(sessionId: Long, image: DeckImage? = null): DeckImagePickerFragment {
             val fragment = DeckImagePickerFragment()

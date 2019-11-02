@@ -28,7 +28,10 @@ class ProgressLinearLayout @JvmOverloads constructor(
         paint.color = color(R.color.secondaryColor)
         paint.style = Paint.Style.FILL
 
-        if (isInEditMode) progress = .25f
+        @Suppress("MagicNumber")
+        if (isInEditMode) {
+            progress = .25f
+        }
     }
 
     override fun onDraw(canvas: Canvas) {

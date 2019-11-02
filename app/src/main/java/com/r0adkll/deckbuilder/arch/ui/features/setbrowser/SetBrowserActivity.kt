@@ -26,6 +26,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.components.palette.ExpansionPaletteAction
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
+import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter
@@ -65,6 +66,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_browser)
 
+        @Suppress("MagicNumber")
         state = state.copy(
             setCode = expansion.code,
             pageSize = expansion.totalCards + 100 /* Hack to account for secret rares */
@@ -81,8 +83,6 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 ExpansionPaletteAction(backdrop, expansion, contrastListener = this::setNavigationColor)
             )))
 
-        // listen for tab changes
-        // FIXME: Hack
         BrowseFilter.values().forEachIndexed { index, browseFilter ->
             tabs.getTabAt(index)?.tag = browseFilter.name
         }
@@ -108,6 +108,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
 
+        @Suppress("MagicNumber")
         appBarLayout.doOnApplyWindowInsets { _, insets, _ ->
             statusBarHeight = insets.systemWindowInsetTop
             appBarLayout.addLayoutHeight(statusBarHeight - dip(24f))
@@ -116,6 +117,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             logo?.margins(top = (statusBarHeight - dip(24f)) / 2)
         }
 
+        @Suppress("MagicNumber")
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { view, offset ->
             val height = view.height.toFloat() - ((appbar?.height ?: 0) + statusBarHeight)
             val percent = offset.toFloat() / height
@@ -135,7 +137,11 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 CardDetailActivity.show(this, it)
             }
 
-        val spanCount = if (smallestWidth(TABLET_10)) 9 else 3
+        val spanCount = if (smallestWidth(TABLET_10)) {
+            CollectionSetActivity.TABLET_SPAN_COUNT
+        } else {
+            CollectionSetActivity.PHONE_SPAN_COUNT
+        }
         adapter = PokemonBuilderRecyclerAdapter(this, spanCount, EditCardIntentions(), cardClicks)
         adapter.emptyView = emptyView
         recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, spanCount)
@@ -171,6 +177,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         }
     }
 
+    @Suppress("MagicNumber")
     override fun hideFilters(vararg filters: BrowseFilter) {
         filters.forEach { filter ->
             for (i in (0 until tabs.tabCount)) {
@@ -188,7 +195,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     }
 
     override fun setCards(cards: List<PokemonCard>) {
-        adapter.submitList(cards.map { PokemonItem.Single(StackedPokemonCard(it, 1)) })
+        adapter.submitList(cards.map { PokemonItem.Single(StackedPokemonCard(it)) })
     }
 
     override fun showLoading(isLoading: Boolean) {
@@ -216,7 +223,8 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     }
 
     companion object {
-        const val EXTRA_EXPANSION = "SetBrowserActivity.Expansion"
+        private const val EXTRA_EXPANSION = "SetBrowserActivity.Expansion"
+        private const val DEFAULT_SET_SIZE = 1000
 
         fun createIntent(context: Context, expansion: Expansion): Intent {
             val intent = Intent(context, SetBrowserActivity::class.java)
@@ -226,16 +234,9 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
         fun createIntent(context: Context, setCode: String): Intent {
             val expansion = Expansion(
-                setCode,
-                null,
-                "",
-                "",
-                300,
-                false,
-                false,
-                "",
-                "",
-                "https://images.pokemontcg.io/$setCode/logo.png"
+                code = setCode,
+                totalCards = DEFAULT_SET_SIZE,
+                logoUrl = "https://images.pokemontcg.io/$setCode/logo.png"
             )
             return createIntent(context, expansion)
         }

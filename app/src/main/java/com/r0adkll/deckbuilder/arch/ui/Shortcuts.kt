@@ -30,6 +30,10 @@ import timber.log.Timber
  */
 object Shortcuts {
 
+    private const val MAX_SHORT_LABEL_LENGTH = 10
+    private const val MAX_LONG_LABEL_LENGTH = 25
+    private const val DECK_IMAGE_SIZE_DP = 44f
+    private const val CUSTOM_DECK_IMAGE_SIZE_DP = 128f
     const val CREATE_DECK_ID = "create-new-deck"
 
     /**
@@ -49,8 +53,8 @@ object Shortcuts {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             val shortcutManager = context.shortcutManager()
 
-            val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(10) else "Deck"
-            val longLabel = if (deck.name.isNotEmpty()) deck.name.take(25) else "Deck with no name"
+            val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(MAX_SHORT_LABEL_LENGTH) else "Deck"
+            val longLabel = if (deck.name.isNotEmpty()) deck.name.take(MAX_LONG_LABEL_LENGTH) else "Deck with no name"
 
             val shortcut = ShortcutInfo.Builder(context, deck.id)
                 .setShortLabel(shortLabel)
@@ -116,7 +120,7 @@ object Shortcuts {
      */
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     private fun generateDeckImage(context: Context, deck: Deck) {
-        val size = context.dip(44f)
+        val size = context.dip(DECK_IMAGE_SIZE_DP)
 
         deck.image?.let { image ->
             when (image) {
@@ -140,7 +144,7 @@ object Shortcuts {
                     view.primaryType = image.type1
                     view.secondaryType = image.type2
 
-                    val viewSize = context.dip(128f)
+                    val viewSize = context.dip(CUSTOM_DECK_IMAGE_SIZE_DP)
                     val measureWidth = View.MeasureSpec.makeMeasureSpec(viewSize, View.MeasureSpec.EXACTLY)
                     val measuredHeight = View.MeasureSpec.makeMeasureSpec(viewSize, View.MeasureSpec.EXACTLY)
 
@@ -175,8 +179,8 @@ object Shortcuts {
         val shortcutManager = context.shortcutManager()
         val shortcut = shortcutManager.dynamicShortcuts.find { it.id == deck.id }
         if (shortcut != null) {
-            val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(10) else "Deck"
-            val longLabel = if (deck.name.isNotEmpty()) deck.name.take(25) else "Deck with no name"
+            val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(MAX_SHORT_LABEL_LENGTH) else "Deck"
+            val longLabel = if (deck.name.isNotEmpty()) deck.name.take(MAX_LONG_LABEL_LENGTH) else "Deck with no name"
 
             val updatedShortcut = ShortcutInfo.Builder(context, deck.id)
                 .setShortLabel(shortLabel)

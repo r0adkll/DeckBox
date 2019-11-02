@@ -44,6 +44,8 @@ class DeckApp : Application() {
 
         // Setup Glide to allow for custom tag id's so we can set tags to images for our own purpose
         ViewTarget.setTagId(R.id.glide_tag_id)
+
+        @Suppress("MagicNumber")
         EmptyView.defaultMessageTextSizeSp = 20
     }
 

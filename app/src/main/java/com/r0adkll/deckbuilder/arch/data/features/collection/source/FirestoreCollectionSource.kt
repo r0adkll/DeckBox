@@ -174,14 +174,14 @@ class FirestoreCollectionSource @Inject constructor(
                     val legacyCounts = counts.filter { count -> count.second.isSourceOld }
                     if (legacyCounts.isNotEmpty()) {
                         // Since we are writing and deleting each count
-                        val batchCount = ceil(legacyCounts.size.toFloat() / 250f).toInt()
+                        val batchCount = ceil(legacyCounts.size.toFloat() / HALF_BATCH_SIZE).toInt()
                         val batches = ArrayList<WriteBatch>(batchCount)
                         for (i in 0 until batchCount) {
                             Timber.i("Legacy collection counts(${legacyCounts.size}) found! Migrating...")
                             val batch = FirebaseFirestore.getInstance().batch()
 
-                            val start = i * 250
-                            val end = start + (legacyCounts.size - start).coerceAtMost(250)
+                            val start = i * HALF_BATCH_SIZE
+                            val end = start + (legacyCounts.size - start).coerceAtMost(HALF_BATCH_SIZE)
                             for (index in start until end) {
                                 val legacyCountPair = legacyCounts[index]
                                 Timber.d("""Migrating Id(${legacyCountPair.first}) to 
@@ -220,15 +220,15 @@ class FirestoreCollectionSource @Inject constructor(
      */
     fun putCounts(counts: List<CollectionCount>): Observable<Unit> {
         return getUserCardCollection()?.let { collection ->
-            val batchCount = ceil(counts.size.toFloat() / 500f).toInt()
+            val batchCount = ceil(counts.size.toFloat() / BATCH_SIZE).toInt()
             val batches = ArrayList<WriteBatch>(batchCount)
 
             for (i in 0 until batchCount) {
                 Timber.i("Collection counts(${counts.size}) found! Migrating...")
                 val batch = FirebaseFirestore.getInstance().batch()
 
-                val start = i * 500
-                val end = start + (counts.size - start).coerceAtMost(500)
+                val start = i * BATCH_SIZE
+                val end = start + (counts.size - start).coerceAtMost(BATCH_SIZE)
                 for (index in start until end) {
                     val count = counts[index]
                     val documentRef = collection.document(count.id)
@@ -273,5 +273,8 @@ class FirestoreCollectionSource @Inject constructor(
         private const val COLLECTION_USERS = "decks"
         private const val COLLECTION_OFFLINE_USERS = "offline_users"
         private const val COLLECTION_COLLECTION = "collection"
+
+        private const val BATCH_SIZE = 500
+        private const val HALF_BATCH_SIZE = 250
     }
 }

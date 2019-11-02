@@ -43,7 +43,7 @@ class NetworkCardDataSource(
         return api.card()
             .where {
                 id = ids.joinToString("|")
-                pageSize = 1000
+                pageSize = MAX_PAGE_SIZE
             }
             .observeAll()
             .doOnNext { cache.putCards(it) }
@@ -81,5 +81,9 @@ class NetworkCardDataSource(
             .observeAll()
             .doOnNext { cache.putCards(it) }
             .subscribeOn(schedulers.network)
+    }
+
+    companion object {
+        private const val MAX_PAGE_SIZE = 1000
     }
 }

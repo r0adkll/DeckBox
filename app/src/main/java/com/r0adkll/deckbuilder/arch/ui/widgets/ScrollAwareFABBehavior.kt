@@ -13,7 +13,7 @@ class ScrollAwareFABBehavior(
     attrs: AttributeSet
 ) : CoordinatorLayout.Behavior<FloatingActionButton>() {
 
-    private val maxTransY = context.dp(56f + 16f)
+    private val maxTransY = context.dp(MAX_TRANSLATION_Y)
 
     override fun onStartNestedScroll(
         coordinatorLayout: CoordinatorLayout,
@@ -48,5 +48,9 @@ class ScrollAwareFABBehavior(
 
         val transY = (child.translationY + dY).coerceIn(0f..maxTransY)
         child.translationY = transY
+    }
+
+    companion object {
+        private const val MAX_TRANSLATION_Y = 72F
     }
 }

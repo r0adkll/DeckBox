@@ -34,13 +34,13 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.margins
+import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_collection_set.*
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.Intentions, CollectionSetUi.Actions {
 
@@ -89,11 +89,16 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         )
         adapter.emptyView = emptyView
 
-        val spanCount = if (smallestWidth(ScreenUtils.Config.TABLET_10)) 9 else 3
+        val spanCount = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
+            TABLET_SPAN_COUNT
+        } else {
+            PHONE_SPAN_COUNT
+        }
         recycler.adapter = adapter
         recycler.layoutManager = GridLayoutManager(this, spanCount)
         (recycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
+        @Suppress("MagicNumber")
         appbar?.doOnApplyWindowInsets { _, insets, _ ->
             statusBarHeight = insets.systemWindowInsetTop
             appbar?.margins(top = statusBarHeight)
@@ -183,8 +188,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     override fun showOverallProgress(progress: Float) {
         progressBar.progress = progress
-        progressCompletion.text = getString(R.string.completion_format,
-            progress.times(100f).roundToInt().coerceIn(0, 100))
+        progressCompletion.text = getString(R.string.completion_format, progress.readablePercentage)
     }
 
     override fun showCollection(cards: List<StackedPokemonCard>) {
@@ -228,6 +232,8 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
     companion object {
         private const val EXTRA_EXPANSION = "CollectionSetActivity.Expansion"
+        const val TABLET_SPAN_COUNT = 9
+        const val PHONE_SPAN_COUNT = 3
 
         fun createIntent(context: Context, expansion: Expansion): Intent {
             val intent = Intent(context, CollectionSetActivity::class.java)

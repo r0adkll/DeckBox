@@ -17,6 +17,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
+import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 
 sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -67,7 +68,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
                 item.offlineStatus == CacheStatus.Queued
             downloadProgress.isIndeterminate = (item.offlineStatus as? CacheStatus.Downloading)?.progress == null
             downloadProgress.progress = when (item.offlineStatus) {
-                is CacheStatus.Downloading -> item.offlineStatus.progress?.times(100f)?.toInt() ?: 0
+                is CacheStatus.Downloading -> item.offlineStatus.progress?.readablePercentage ?: 0
                 else -> 0
             }
             actionDownload.setImageResource(when (item.offlineStatus) {

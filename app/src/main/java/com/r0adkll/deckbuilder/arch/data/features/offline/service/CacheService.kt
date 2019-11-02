@@ -26,6 +26,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.util.extensions.bytes
+import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
 import timber.log.Timber
@@ -128,7 +129,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             updateCacheStatus(expansion.code to CacheStatus.Downloading(progress))
 
             // Throttle notification calls or the system will start filtering us
-            if (throttle.elapsed(TimeUnit.MILLISECONDS) > 200L) {
+            if (throttle.elapsed(TimeUnit.MILLISECONDS) > NOTIFICATION_THROTTLE_MS) {
                 showExpansionNotification(expansion, CacheStatus.Downloading(progress))
                 throttle.reset().start()
             }
@@ -189,8 +190,8 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             .setPriority(NotificationCompat.PRIORITY_LOW)
 
         if (status != null && status is CacheStatus.Downloading) {
-            val progress = status.progress?.times(100f)?.toInt() ?: 0
-            builder.setProgress(100, progress, progress == 0)
+            val progress = status.progress?.readablePercentage ?: 0
+            builder.setProgress(MAX_PROGRESS, progress, progress == 0)
         } else {
             builder.setProgress(0, 0, false)
         }
@@ -203,6 +204,8 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         private const val CHANNEL_ID = "deckbox-notifications"
         private const val NOTIFICATION_ID = 100
         private const val PAGE_SIZE = 1000
+        private const val NOTIFICATION_THROTTLE_MS = 200L
+        private const val MAX_PROGRESS = 100
 
         fun start(context: Context, request: DownloadRequest) {
             val intent = Intent(context, CacheService::class.java)

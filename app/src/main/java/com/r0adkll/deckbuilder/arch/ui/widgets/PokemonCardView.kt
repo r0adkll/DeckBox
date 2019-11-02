@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint
@@ -166,7 +168,7 @@ class PokemonCardView @JvmOverloads constructor(
                     cachedWidth = width
                     cachedHeight = height
                 } catch (e: OutOfMemoryError) {
-                    Timber.w(e) // FIXME: Critical error report
+                    Timber.w(e) // Critical error report
                     return
                 }
             }

@@ -10,6 +10,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFi
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.PRISM
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.TAG_TEAM
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter.TRAINER
+import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.extensions.sortableNumber
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
@@ -21,6 +22,7 @@ class SetBrowserRenderer(
     comp: Scheduler
 ) : UiBaseStateRenderer<SetBrowserUi.State, SetBrowserUi.State.Change, SetBrowserUi.Actions>(actions, main, comp) {
 
+    @Suppress("MagicNumber")
     @SuppressLint("RxSubscribeOnError")
     override fun onStart() {
 
@@ -62,7 +64,7 @@ class SetBrowserRenderer(
                             ENERGY -> it.supertype == SuperType.ENERGY
                             GX -> it.subtype == SubType.GX
                             TAG_TEAM -> it.subtype == SubType.TAG_TEAM
-                            PRISM -> it.name.contains("◇")
+                            PRISM -> it.name.contains(CardUtils.PRISM_SYMBOL)
                         }
                     }
             }

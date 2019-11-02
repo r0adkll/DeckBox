@@ -98,7 +98,7 @@ object CustomTabsHelper {
      * @param intent The intent to check with.
      * @return Whether there is a specialized handler for the given intent.
      */
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
     private fun hasSpecializedHandlerIntents(context: Context, intent: Intent): Boolean {
         try {
             val pm: PackageManager = context.packageManager

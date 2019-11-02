@@ -55,8 +55,8 @@ class DefaultTournamentExporter @Inject constructor(
 
     private fun createDocument(context: Context, cards: List<PokemonCard>, name: String, playerInfo: PlayerInfo): File {
         val margin = context.pt(MARGIN.toFloat()).toInt()
-        val width = context.pt(WIDTH.toFloat() * 0.75f).toInt()
-        val height = context.pt(HEIGHT.toFloat() * 0.75f).toInt()
+        val width = context.pt(WIDTH.toFloat() * DOCUMENT_SIZE_SCALE).toInt()
+        val height = context.pt(HEIGHT.toFloat() * DOCUMENT_SIZE_SCALE).toInt()
         val content = Rect(margin, margin, width - margin, height - margin)
 
         val document = PdfDocument()
@@ -133,12 +133,12 @@ class DefaultTournamentExporter @Inject constructor(
         stackedGroups[SuperType.POKEMON]
             ?.sortedByDescending { it.count }
             ?.let {
-                if (stacked.size >= 31) {
+                if (stacked.size >= MAX_COLUMN_SIZE) {
                     extraColumn.isVisible = true
 
-                    if (it.size >= 34) {
-                        val pokemon1 = it.subList(0, 34)
-                        val pokemon2 = it.subList(34, it.size)
+                    if (it.size >= MAX_POKEMON_COLUMN_SIZE) {
+                        val pokemon1 = it.subList(0, MAX_POKEMON_COLUMN_SIZE)
+                        val pokemon2 = it.subList(MAX_POKEMON_COLUMN_SIZE, it.size)
 
                         pokemon1.map { createRow(inflater, view, it) }
                             .forEach { tablePokemon.addView(it) }
@@ -221,9 +221,11 @@ class DefaultTournamentExporter @Inject constructor(
     }
 
     companion object {
-
-        const val WIDTH = 612 // 8"
-        const val HEIGHT = 792 // 11"
-        const val MARGIN = 32 // 1/2"
+        private const val MAX_COLUMN_SIZE = 31
+        private const val MAX_POKEMON_COLUMN_SIZE = 34
+        private const val DOCUMENT_SIZE_SCALE = 0.75f
+        private const val WIDTH = 612 // 8"
+        private const val HEIGHT = 792 // 11"
+        private const val MARGIN = 32 // 1/2"
     }
 }

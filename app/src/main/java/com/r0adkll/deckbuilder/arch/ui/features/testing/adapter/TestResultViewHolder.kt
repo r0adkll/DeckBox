@@ -12,6 +12,7 @@ import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.TestResultProgressView
 
+@Suppress("MagicNumber")
 class TestResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val background: TestResultProgressView by bindView(R.id.background)

@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
 import android.content.Context
@@ -151,7 +153,6 @@ class ResultsPagerAdapter(
                     editCardIntentions.addCardClicks.accept(listOf(card))
                 }
                 adapter.onItemLongClickListener = { view, _ ->
-                    // TODO: Fix this atrocity
                     val card = view.findViewById<PokemonCardView>(R.id.card)
                     pokemonCardLongClicks.accept(card)
                     true

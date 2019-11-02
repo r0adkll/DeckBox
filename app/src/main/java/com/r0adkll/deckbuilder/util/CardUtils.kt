@@ -10,6 +10,7 @@ import io.pokemontcg.model.Type
 
 object CardUtils {
 
+    val PRISM_SYMBOL = "◇"
     val CARDS: Array<String> = arrayOf(
         "https://images.pokemontcg.io/sm10/1.png",
         "https://images.pokemontcg.io/sm115/54.png",

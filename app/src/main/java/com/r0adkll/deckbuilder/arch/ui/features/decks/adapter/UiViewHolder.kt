@@ -115,7 +115,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             val items = if (item.quickStart.templates.isNotEmpty()) {
                 item.quickStart.templates.map { QuickStartRecyclerAdapter.Item.Template(it) }
             } else {
-                (0 until 5).map { QuickStartRecyclerAdapter.Item.Placeholder(it) }
+                (0 until PLACEHOLDER_COUNT).map { QuickStartRecyclerAdapter.Item.Placeholder(it) }
             }
 
             adapter.submitList(items)
@@ -123,6 +123,10 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             actionDismiss.setOnClickListener {
                 dismissQuickStart.accept(Unit)
             }
+        }
+
+        companion object {
+            private const val PLACEHOLDER_COUNT = 5
         }
     }
 

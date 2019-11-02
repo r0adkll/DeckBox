@@ -53,22 +53,24 @@ abstract class CollectionDao {
     @Transaction
     open fun incrementCount(card: PokemonCard): CollectionCountEntity? {
         val count = count(card.id)
-        if (count != null) {
-            count.count += 1
-            updateCount(count)
-            return count
-        } else if (card.expansion != null) {
-            val newCount = CollectionCountEntity(
-                card.id,
-                1,
-                card.expansion.code,
-                card.expansion.series
-            )
-            insertCount(newCount)
-            return newCount
+        return when {
+            count != null -> {
+                count.count += 1
+                updateCount(count)
+                count
+            }
+            card.expansion != null -> {
+                val newCount = CollectionCountEntity(
+                    card.id,
+                    1,
+                    card.expansion.code,
+                    card.expansion.series
+                )
+                insertCount(newCount)
+                newCount
+            }
+            else -> null
         }
-
-        return null
     }
 
     @Transaction

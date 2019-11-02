@@ -20,6 +20,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.MIDDLE
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.NONE
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.START
 
+@Suppress("MagicNumber")
 class EvolutionChainView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -226,21 +227,20 @@ class EvolutionChainView @JvmOverloads constructor(
         val isFirstCard = cardIndex == 0
         val isLastCard = cardIndex == node.cards.size - 1
         val hasNextNode = nodeIndex < chain.nodes.size - 1
-        if (isFirstNode) {
+        return if (isFirstNode) {
             if (hasNextNode && isLastCard) {
-                return END
+                END
+            } else {
+                NONE
             }
         } else {
-            if (isFirstCard && isLastCard && hasNextNode) {
-                return MIDDLE
-            } else if (isFirstCard) {
-                return START
-            } else if (isLastCard && hasNextNode) {
-                return END
+            when {
+                isFirstCard && isLastCard && hasNextNode -> MIDDLE
+                isFirstCard -> START
+                isLastCard && hasNextNode -> END
+                else -> NONE
             }
         }
-
-        return NONE
     }
 
     interface OnPokemonCardClickListener {
