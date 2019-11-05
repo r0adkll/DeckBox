@@ -5,6 +5,7 @@ import com.r0adkll.deckbuilder.arch.data.features.testing.InvalidDeckException
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
+import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State.Change
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -17,9 +18,10 @@ class DeckTestingPresenter @Inject constructor(
     val tester: DeckTester,
     val deckRepository: DeckRepository,
     val editRepository: EditRepository
-) : UiPresenter<DeckTestingUi.State, DeckTestingUi.State.Change>(ui) {
+) : UiPresenter<State, Change>(ui) {
 
-    override fun smashObservables(): Observable<DeckTestingUi.State.Change> {
+    @Suppress("ComplexMethod")
+    override fun smashObservables(): Observable<Change> {
 
         val loadMetaData = when {
             ui.state.sessionId != null -> editRepository.getSession(ui.state.sessionId!!)

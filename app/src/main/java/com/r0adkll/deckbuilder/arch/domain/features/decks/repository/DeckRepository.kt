@@ -11,6 +11,7 @@ interface DeckRepository {
 
     fun getDecks(): Observable<List<Deck>>
 
+    @Suppress("LongParameterList")
     fun persistDeck(
         id: String?,
         cards: List<PokemonCard>,

@@ -15,6 +15,7 @@ class CardDetailRenderer(
     main: Scheduler
 ) : DisposableStateRenderer<CardDetailUi.State>(main, comp) {
 
+    @Suppress("LongMethod")
     @SuppressLint("RxSubscribeOnError")
     override fun start() {
 

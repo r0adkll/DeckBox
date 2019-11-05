@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
 import android.net.Uri

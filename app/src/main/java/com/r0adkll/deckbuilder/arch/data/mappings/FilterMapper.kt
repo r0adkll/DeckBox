@@ -5,6 +5,7 @@ import io.pokemontcg.requests.CardQueryBuilder
 
 object FilterMapper {
 
+    @Suppress("ComplexMethod")
     fun to(filter: Filter): CardQueryBuilder {
         val builder = CardQueryBuilder()
 

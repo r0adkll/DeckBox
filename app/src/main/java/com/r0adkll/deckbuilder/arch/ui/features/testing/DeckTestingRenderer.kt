@@ -1,5 +1,3 @@
-@file:Suppress("MagicNumber")
-
 package com.r0adkll.deckbuilder.arch.ui.features.testing
 
 import android.annotation.SuppressLint
@@ -17,6 +15,7 @@ class DeckTestingRenderer(
     comp: Scheduler
 ) : UiBaseStateRenderer<DeckTestingUi.State, DeckTestingUi.State.Change, DeckTestingUi.Actions>(actions, main, comp) {
 
+    @Suppress("MagicNumber", "LongMethod", "ComplexMethod")
     @SuppressLint("RxSubscribeOnError")
     override fun onStart() {
 

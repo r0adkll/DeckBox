@@ -167,6 +167,60 @@ class DeckBuilderActivity : BaseActivity(),
     private var savingSnackBar: Snackbar? = null
     private var pendingImport: List<PokemonCard>? = null
 
+    private val navigationClickListener = View.OnClickListener {
+        if (state.isChanged) {
+            Analytics.event(Event.SelectContent.Action("close_deck_editor"))
+            AlertDialog.Builder(this)
+                .setTitle(R.string.deckbuilder_unsaved_changes_title)
+                .setMessage(R.string.deckbuilder_unsaved_changes_message)
+                .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
+                    Analytics.event(Event.SelectContent.Action("discarded_changes"))
+                    dialog.dismiss()
+                    supportFinishAfterTransition()
+                }
+                .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
+                    Analytics.event(Event.SelectContent.Action("kept_changes"))
+                    dialog.dismiss()
+                }
+                .show()
+        } else {
+            supportFinishAfterTransition()
+        }
+    }
+
+    private val fabClickListener = View.OnClickListener {
+        if (fragmentSwitcher == null) {
+            val superType = when (tabs.selectedTabPosition) {
+                0 -> SuperType.POKEMON
+                1 -> SuperType.TRAINER
+                2 -> SuperType.ENERGY
+                else -> SuperType.POKEMON
+            }
+            Analytics.event(Event.SelectContent.Action("add_new_card"))
+            startActivity(SearchActivity.createIntent(this, sessionId, superType))
+        } else {
+            // Show the overview fragment
+            editOverviewClicks.accept(true)
+        }
+    }
+
+    private val infoBarClickListener = View.OnClickListener {
+        var normalOperation = true
+        if (fragmentSwitcher != null) {
+            if (fragmentSwitcher!!.displayedChild == 1 /* Overview */) {
+                editOverviewClicks.accept(false)
+                normalOperation = false
+            }
+        }
+
+        if (normalOperation) {
+            imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
+            imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
+            slidingLayout.panelState = COLLAPSED
+        }
+    }
+
+    @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
@@ -180,26 +234,7 @@ class DeckBuilderActivity : BaseActivity(),
             inputDeckName.requestFocus()
             imm.showSoftInput(inputDeckName, 0)
         }
-        appbar?.setNavigationOnClickListener {
-            if (state.isChanged) {
-                Analytics.event(Event.SelectContent.Action("close_deck_editor"))
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.deckbuilder_unsaved_changes_title)
-                    .setMessage(R.string.deckbuilder_unsaved_changes_message)
-                    .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
-                        Analytics.event(Event.SelectContent.Action("discarded_changes"))
-                        dialog.dismiss()
-                        supportFinishAfterTransition()
-                    }
-                    .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
-                        Analytics.event(Event.SelectContent.Action("kept_changes"))
-                        dialog.dismiss()
-                    }
-                    .show()
-            } else {
-                supportFinishAfterTransition()
-            }
-        }
+        appbar?.setNavigationOnClickListener(navigationClickListener)
 
         // Setup pager
         ruleAdapter = RuleRecyclerAdapter(this)
@@ -211,22 +246,9 @@ class DeckBuilderActivity : BaseActivity(),
         pager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
         tabs.setupWithViewPager(pager)
 
-        // Setup Listeners
-        fab.setOnClickListener {
-            if (fragmentSwitcher == null) {
-                val superType = when (tabs.selectedTabPosition) {
-                    0 -> SuperType.POKEMON
-                    1 -> SuperType.TRAINER
-                    2 -> SuperType.ENERGY
-                    else -> SuperType.POKEMON
-                }
-                Analytics.event(Event.SelectContent.Action("add_new_card"))
-                startActivity(SearchActivity.createIntent(this, sessionId, superType))
-            } else {
-                // Show the overview fragment
-                editOverviewClicks.accept(true)
-            }
-        }
+        fab.setOnClickListener(fabClickListener)
+        slidingLayout.addPanelSlideListener(panelSlideListener)
+        infoBar.setNavigationOnClickListener(infoBarClickListener)
 
         tabletDropZone?.let {
             TabletDragListener.attach(it, pager) { card ->
@@ -245,27 +267,8 @@ class DeckBuilderActivity : BaseActivity(),
             }
         })
 
-        slidingLayout.addPanelSlideListener(panelSlideListener)
-
-        infoBar.setNavigationOnClickListener {
-            var normalOperation = true
-            if (fragmentSwitcher != null) {
-                if (fragmentSwitcher!!.displayedChild == 1 /* Overview */) {
-                    editOverviewClicks.accept(false)
-                    normalOperation = false
-                }
-            }
-
-            if (normalOperation) {
-                imm.hideSoftInputFromWindow(inputDeckName.windowToken, 0)
-                imm.hideSoftInputFromWindow(inputDeckDescription.windowToken, 0)
-                slidingLayout.panelState = COLLAPSED
-            }
-        }
-
         state = state.copy(sessionId = sessionId)
 
-        @SuppressLint("RxSubscribeOnError")
         disposables += pokemonCardClicks
             .uiDebounce()
             .observeOn(AndroidSchedulers.mainThread())
@@ -274,7 +277,6 @@ class DeckBuilderActivity : BaseActivity(),
                 CardDetailActivity.show(this, it, sessionId)
             }
 
-        @SuppressLint("RxSubscribeOnError")
         disposables += actionDeckImage.clicks()
             .uiDebounce()
             .observeOn(AndroidSchedulers.mainThread())
@@ -282,9 +284,6 @@ class DeckBuilderActivity : BaseActivity(),
                 DeckImagePickerFragment.newInstance(sessionId, state.image)
                     .show(supportFragmentManager, DeckImagePickerFragment.TAG)
             }
-
-        deckFormat.setOnClickListener {
-        }
 
         actionBuy.isVisible = remote.marketplaceMassEntryEnabled
         actionBuy.setOnClickListener {

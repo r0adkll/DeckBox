@@ -49,6 +49,7 @@ interface DecksUi : Ui<DecksUi.State, DecksUi.State.Change> {
         val sessionId: Long?
     ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
+        @Suppress("ComplexMethod")
         override fun reduce(change: Change): State = when (change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             Change.DeckDeleted -> this

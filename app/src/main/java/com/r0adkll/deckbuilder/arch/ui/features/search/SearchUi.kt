@@ -73,6 +73,7 @@ interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
 
         fun current(): Result? = results[category]
 
+        @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth")
         override fun reduce(change: Change): State = when (change) {
             is Change.IsLoading -> {
                 val newResults = results.toMutableMap()

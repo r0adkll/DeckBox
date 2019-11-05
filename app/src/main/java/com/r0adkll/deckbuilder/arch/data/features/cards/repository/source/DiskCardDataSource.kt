@@ -4,11 +4,14 @@ import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
+import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
+import javax.inject.Inject
 
-class DiskCardDataSource(
+@AppScope
+class DiskCardDataSource @Inject constructor(
     val cache: CardCache,
     val schedulers: AppSchedulers
 ) : CardDataSource {

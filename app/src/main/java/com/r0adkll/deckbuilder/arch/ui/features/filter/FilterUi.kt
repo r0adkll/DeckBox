@@ -96,6 +96,7 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
         val expansions: List<Expansion>
     ) : Ui.State<State.Change>, Parcelable {
 
+        @Suppress("LongMethod", "ComplexMethod")
         override fun reduce(change: Change): State = when (change) {
             is ExpansionsLoaded -> {
                 val newFilters = filters.toMutableMap()

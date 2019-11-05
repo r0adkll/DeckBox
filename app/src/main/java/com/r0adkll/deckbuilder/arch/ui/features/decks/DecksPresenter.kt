@@ -33,6 +33,7 @@ class DecksPresenter @Inject constructor(
     val preferences: AppPreferences
 ) : UiPresenter<State, Change>(ui) {
 
+    @Suppress("LongMethod")
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
         val loadDecks = deckRepository.getDecks()

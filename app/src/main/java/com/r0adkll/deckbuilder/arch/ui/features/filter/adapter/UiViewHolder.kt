@@ -145,8 +145,15 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                     is FilterAttribute.ContainsAttribute -> attr.attribute
                     is FilterAttribute.ExpansionAttribute -> attr.format.name.toLowerCase().capitalize()
                 }
-                view.setTextColor(color(if (isChecked) R.color.white else R.color.black87))
-                view.elevation = if (isChecked) dp(4) else 0f
+
+                if (isChecked) {
+                    view.setTextColor(color(R.color.white))
+                    view.elevation = dp(4)
+                } else {
+                    view.setTextColor(color(R.color.black87))
+                    view.elevation = 0f
+                }
+
                 view.isChecked = isChecked
                 view.setOnClickListener {
                     attributeClicks.accept(attr)

@@ -43,6 +43,45 @@ class DefaultTournamentExporter @Inject constructor(
     val editRepository: EditRepository
 ) : TournamentExporter {
 
+    private class ViewHolder(val parent: ViewGroup) {
+
+        val formatStandard = parent.findViewById<ImageView>(R.id.formatStandard)
+        val formatExpanded = parent.findViewById<ImageView>(R.id.formatExpanded)
+        val playerName = parent.findViewById<EditText>(R.id.playerName)
+        val playerId = parent.findViewById<EditText>(R.id.playerID)
+        val dateOfBirth = parent.findViewById<EditText>(R.id.dateOfBirth)
+        val ageJunior = parent.findViewById<ImageView>(R.id.optionAgeDivisionJunior)
+        val ageSenior = parent.findViewById<ImageView>(R.id.optionAgeDivisionSenior)
+        val ageMaster = parent.findViewById<ImageView>(R.id.optionAgeDivisionMasters)
+        val ageJuniorLabel = parent.findViewById<TextView>(R.id.optionAgeDivisionJuniorLabel)
+        val ageSeniorLabel = parent.findViewById<TextView>(R.id.optionAgeDivisionSeniorLabel)
+        val ageMasterLabel = parent.findViewById<TextView>(R.id.optionAgeDivisionMastersLabel)
+        val extraColumn = parent.findViewById<LinearLayout>(R.id.extraColumn)
+        val tablePokemon = parent.findViewById<TableLayout>(R.id.tablePokemon)
+        val tablePokemon2 = parent.findViewById<TableLayout>(R.id.tablePokemon2)
+        val tablePokemon2Title = parent.findViewById<TextView>(R.id.tablePokemon2Title)
+        val tableTrainer = parent.findViewById<TableLayout>(R.id.tableTrainer)
+        val tableEnergy = parent.findViewById<TableLayout>(R.id.tableEnergy)
+
+        fun setAgeDivision(ageDivision: AgeDivision) {
+            when (ageDivision) {
+                AgeDivision.JUNIOR -> ageJunior
+                    .setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
+                AgeDivision.SENIOR -> ageSenior
+                    .setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
+                AgeDivision.MASTERS -> ageMaster
+                    .setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
+            }
+        }
+
+        fun setFormat(format: Format) {
+            when (format) {
+                Format.STANDARD -> formatStandard.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
+                Format.EXPANDED -> formatExpanded.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
+            }
+        }
+    }
+
     override fun export(activityContext: Context, task: ExportTask, playerInfo: PlayerInfo): Observable<File> {
         return when {
             task.deckId != null -> deckRepository.getDeck(task.deckId)
@@ -89,83 +128,24 @@ class DefaultTournamentExporter @Inject constructor(
     private fun printDeck(cards: List<PokemonCard>, playerInfo: PlayerInfo, canvas: Canvas, context: Context) {
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.layout_tournament_pdf, null, false) as LinearLayout
+        val viewHolder = ViewHolder(view)
 
-        val formatStandard = view.findViewById<ImageView>(R.id.formatStandard)
-        val formatExpanded = view.findViewById<ImageView>(R.id.formatExpanded)
-        val playerName = view.findViewById<EditText>(R.id.playerName)
-        val playerId = view.findViewById<EditText>(R.id.playerID)
-        val dateOfBirth = view.findViewById<EditText>(R.id.dateOfBirth)
-        val ageJunior = view.findViewById<ImageView>(R.id.optionAgeDivisionJunior)
-        val ageSenior = view.findViewById<ImageView>(R.id.optionAgeDivisionSenior)
-        val ageMaster = view.findViewById<ImageView>(R.id.optionAgeDivisionMasters)
-        val ageJuniorLabel = view.findViewById<TextView>(R.id.optionAgeDivisionJuniorLabel)
-        val ageSeniorLabel = view.findViewById<TextView>(R.id.optionAgeDivisionSeniorLabel)
-        val ageMasterLabel = view.findViewById<TextView>(R.id.optionAgeDivisionMastersLabel)
-        val extraColumn = view.findViewById<LinearLayout>(R.id.extraColumn)
-        val tablePokemon = view.findViewById<TableLayout>(R.id.tablePokemon)
-        val tablePokemon2 = view.findViewById<TableLayout>(R.id.tablePokemon2)
-        val tablePokemon2Title = view.findViewById<TextView>(R.id.tablePokemon2Title)
-        val tableTrainer = view.findViewById<TableLayout>(R.id.tableTrainer)
-        val tableEnergy = view.findViewById<TableLayout>(R.id.tableEnergy)
+        viewHolder.ageJuniorLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.JUNIOR)
+        viewHolder.ageSeniorLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.SENIOR)
+        viewHolder.ageMasterLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.MASTERS)
 
-        ageJuniorLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.JUNIOR)
-        ageSeniorLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.SENIOR)
-        ageMasterLabel.text = AgeDivisionUtils.divisionLabel(context, AgeDivision.MASTERS)
-
-        when (playerInfo.format) {
-            Format.STANDARD -> formatStandard.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
-            Format.EXPANDED -> formatExpanded.setImageResource(R.drawable.ic_checkbox_marked_outline_black_24dp)
-        }
-
-        when (playerInfo.ageDivision) {
-            AgeDivision.JUNIOR -> ageJunior.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
-            AgeDivision.SENIOR -> ageSenior.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
-            AgeDivision.MASTERS -> ageMaster.setImageResource(R.drawable.ic_checkbox_marked_circle_outline_black_24dp)
-        }
-
-        playerName.setText(playerInfo.name)
-        playerId.setText(playerInfo.id)
-        dateOfBirth.setText(playerInfo.displayDate())
+        viewHolder.setFormat(playerInfo.format)
+        viewHolder.setAgeDivision(playerInfo.ageDivision)
+        viewHolder.playerName.setText(playerInfo.name)
+        viewHolder.playerId.setText(playerInfo.id)
+        viewHolder.dateOfBirth.setText(playerInfo.displayDate())
 
         val stacked = cards.stack()
         val stackedGroups = stacked.groupBy { it.card.supertype }
 
-        stackedGroups[SuperType.POKEMON]
-            ?.sortedByDescending { it.count }
-            ?.let {
-                if (stacked.size >= MAX_COLUMN_SIZE) {
-                    extraColumn.isVisible = true
-
-                    if (it.size >= MAX_POKEMON_COLUMN_SIZE) {
-                        val pokemon1 = it.subList(0, MAX_POKEMON_COLUMN_SIZE)
-                        val pokemon2 = it.subList(MAX_POKEMON_COLUMN_SIZE, it.size)
-
-                        pokemon1.map { createRow(inflater, view, it) }
-                            .forEach { tablePokemon.addView(it) }
-
-                        pokemon2.map { createRow(inflater, view, it) }
-                            .forEach { tablePokemon2.addView(it) }
-                    } else {
-                        tablePokemon2.isGone = true
-                        it.map { createRow(inflater, view, it) }
-                            .forEach { tablePokemon.addView(it) }
-                    }
-                } else {
-                    tablePokemon2Title.setText(R.string.tournament_pdf_table_pokemon)
-                    it.map { createRow(inflater, view, it) }
-                        .forEach { tablePokemon2.addView(it) }
-                }
-            }
-
-        stackedGroups[SuperType.TRAINER]?.reduce()
-            ?.sortedByDescending { it.count }
-            ?.map { createRow(inflater, view, it) }
-            ?.forEach { tableTrainer.addView(it) }
-
-        stackedGroups[SuperType.ENERGY]?.reduce()
-            ?.sortedByDescending { it.count }
-            ?.map { createRow(inflater, view, it) }
-            ?.forEach { tableEnergy.addView(it) }
+        addPokemon(inflater, stackedGroups[SuperType.POKEMON], viewHolder, stacked.size)
+        addSuperType(inflater, stackedGroups[SuperType.TRAINER], view, viewHolder.tableTrainer)
+        addSuperType(inflater, stackedGroups[SuperType.ENERGY], view, viewHolder.tableEnergy)
 
         val width = canvas.width
         val height = canvas.height
@@ -177,6 +157,60 @@ class DefaultTournamentExporter @Inject constructor(
         view.measure(measureWidth, measuredHeight)
         view.layout(0, 0, width, height)
         view.draw(canvas)
+    }
+
+    private fun addPokemon(
+        inflater: LayoutInflater,
+        pokemon: List<StackedPokemonCard>?,
+        viewHolder: ViewHolder,
+        stackSize: Int
+    ) {
+        pokemon
+            ?.sortedByDescending { it.count }
+            ?.let {
+                if (stackSize >= MAX_COLUMN_SIZE) {
+                    addSplitPokemon(inflater, pokemon, viewHolder)
+                } else {
+                    viewHolder.tablePokemon2Title.setText(R.string.tournament_pdf_table_pokemon)
+                    it.map { createRow(inflater, viewHolder.parent, it) }
+                        .forEach { viewHolder.tablePokemon2.addView(it) }
+                }
+            }
+    }
+
+    private fun addSplitPokemon(
+        inflater: LayoutInflater,
+        pokemon: List<StackedPokemonCard>,
+        viewHolder: ViewHolder
+    ) {
+        viewHolder.extraColumn.isVisible = true
+
+        if (pokemon.size >= MAX_POKEMON_COLUMN_SIZE) {
+            val pokemon1 = pokemon.subList(0, MAX_POKEMON_COLUMN_SIZE)
+            val pokemon2 = pokemon.subList(MAX_POKEMON_COLUMN_SIZE, pokemon.size)
+
+            pokemon1.map { createRow(inflater, viewHolder.parent, it) }
+                .forEach { viewHolder.tablePokemon.addView(it) }
+
+            pokemon2.map { createRow(inflater, viewHolder.parent, it) }
+                .forEach { viewHolder.tablePokemon2.addView(it) }
+        } else {
+            viewHolder.tablePokemon2.isGone = true
+            pokemon.map { createRow(inflater, viewHolder.parent, it) }
+                .forEach { viewHolder.tablePokemon.addView(it) }
+        }
+    }
+
+    private fun addSuperType(
+        inflater: LayoutInflater,
+        stackedCards: List<StackedPokemonCard>?,
+        parent: ViewGroup,
+        table: TableLayout
+    ) {
+        stackedCards?.reduce()
+            ?.sortedByDescending { it.count }
+            ?.map { createRow(inflater, parent, it) }
+            ?.forEach { table.addView(it) }
     }
 
     private fun createRow(inflater: LayoutInflater, parent: ViewGroup, card: StackedPokemonCard): View {

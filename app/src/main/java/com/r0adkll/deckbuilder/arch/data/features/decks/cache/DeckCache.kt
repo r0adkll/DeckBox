@@ -11,6 +11,7 @@ interface DeckCache {
 
     fun getDecks(): Observable<List<Deck>>
 
+    @Suppress("LongParameterList")
     fun putDeck(
         id: String?,
         cards: List<PokemonCard>,

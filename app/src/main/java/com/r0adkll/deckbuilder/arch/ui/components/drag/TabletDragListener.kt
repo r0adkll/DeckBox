@@ -30,6 +30,7 @@ class TabletDragListener(
     private var lastPage: Int = 0
     private var wiggleAnimator: ObjectAnimator? = null
 
+    @Suppress("ComplexMethod")
     override fun onDrag(v: View, event: DragEvent): Boolean {
         val state = event.localState as PokemonCardView.DragState
 

@@ -27,7 +27,7 @@ class PokemonCardsRecyclerAdapter(
 
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         val card = getItem(i)
-        vh.bind(card, 0)
+        vh.bind(card.stacked())
         vh.cardView.setOnClickListener {
             onViewItemClickListener(it as PokemonCardView, card)
         }

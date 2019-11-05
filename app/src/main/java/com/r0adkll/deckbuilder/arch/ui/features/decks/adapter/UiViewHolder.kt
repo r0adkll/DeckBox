@@ -238,7 +238,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
 
     companion object {
 
-        @Suppress("UNCHECKED_CAST")
+        @Suppress("UNCHECKED_CAST", "LongParameterList")
         fun create(
             itemView: View,
             layoutId: Int,

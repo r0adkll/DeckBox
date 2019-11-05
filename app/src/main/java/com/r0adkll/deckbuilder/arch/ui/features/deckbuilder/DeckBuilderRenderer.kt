@@ -19,6 +19,7 @@ class DeckBuilderRenderer(
     comp: Scheduler
 ) : DisposableStateRenderer<DeckBuilderUi.State>(main, comp) {
 
+    @Suppress("LongMethod")
     @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
@@ -139,31 +140,7 @@ class DeckBuilderRenderer(
             .subscribe { actions.showDeckCollectionOnly(it) }
 
         disposables += state
-            .mapNullable { s ->
-                if (s.products.isNotEmpty()) {
-                    val sumType = if (s.collectionOnly) EXCLUDE_COLLECTION else NO_COLLECTION
-                    val allCards = s.allCardsStackedWithCollection
-
-                    val low = allCards.computeSum(s.products, sumType) { it.price?.low }
-                    val market = allCards.computeSum(s.products, sumType) { it.price?.market }
-                    val high = allCards.computeSum(s.products, sumType) { it.price?.high }
-
-                    val lowCollection = if (s.collectionOnly) {
-                        allCards.computeSum(s.products, ONLY_COLLECTION) { it.price?.low }
-                    } else null
-                    val marketCollection = if (s.collectionOnly) {
-                        allCards.computeSum(s.products, ONLY_COLLECTION) { it.price?.market }
-                    } else null
-                    val highCollection = if (s.collectionOnly) {
-                        allCards.computeSum(s.products, ONLY_COLLECTION) { it.price?.high }
-                    } else null
-
-                    MarketPrices(low, market, high,
-                        lowCollection, marketCollection, highCollection)
-                } else {
-                    null
-                }
-            }
+            .mapNullable { buildMarketPrices(it) }
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe { marketPrice ->
@@ -194,6 +171,36 @@ class DeckBuilderRenderer(
         val collectionMarket: Double? = null,
         val collectionHigh: Double? = null
     )
+
+    private fun buildMarketPrices(state: DeckBuilderUi.State): MarketPrices? {
+        return if (state.products.isNotEmpty()) {
+            val sumType = if (state.collectionOnly) EXCLUDE_COLLECTION else NO_COLLECTION
+            val allCards = state.allCardsStackedWithCollection
+
+            val low = allCards.computeSum(state.products, sumType) { it.price?.low }
+            val market = allCards.computeSum(state.products, sumType) { it.price?.market }
+            val high = allCards.computeSum(state.products, sumType) { it.price?.high }
+
+            val lowCollection = computeIf(state.collectionOnly) {
+                allCards.computeSum(state.products, ONLY_COLLECTION) { it.price?.low }
+            }
+            val marketCollection = computeIf(state.collectionOnly) {
+                allCards.computeSum(state.products, ONLY_COLLECTION) { it.price?.market }
+            }
+            val highCollection = computeIf(state.collectionOnly) {
+                allCards.computeSum(state.products, ONLY_COLLECTION) { it.price?.high }
+            }
+
+            MarketPrices(low, market, high,
+                lowCollection, marketCollection, highCollection)
+        } else {
+            null
+        }
+    }
+
+    private fun computeIf(value: Boolean, compute: () -> Double): Double? {
+        return if (value) compute() else null
+    }
 
     private fun List<StackedPokemonCard>.computeSum(
         products: Map<String, Product>,

@@ -53,8 +53,8 @@ object Shortcuts {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             val shortcutManager = context.shortcutManager()
 
-            val shortLabel = if (deck.name.isNotEmpty()) deck.name.take(MAX_SHORT_LABEL_LENGTH) else "Deck"
-            val longLabel = if (deck.name.isNotEmpty()) deck.name.take(MAX_LONG_LABEL_LENGTH) else "Deck with no name"
+            val shortLabel = deck.name.take(MAX_SHORT_LABEL_LENGTH).ifEmpty { "Deck" }
+            val longLabel = deck.name.take(MAX_LONG_LABEL_LENGTH).ifEmpty { "Deck with no name" }
 
             val shortcut = ShortcutInfo.Builder(context, deck.id)
                 .setShortLabel(shortLabel)
@@ -71,16 +71,7 @@ object Shortcuts {
                 shortcutManager.updateShortcuts(listOf(shortcut))
                 generateDeckImage(context, deck)
             } else {
-
-                // Determine if we need to drop a shortcut
-                if (shortcutManager.dynamicShortcuts.size + shortcutManager.manifestShortcuts.size >=
-                    shortcutManager.maxShortcutCountPerActivity) {
-                    // Remove the last dynamic shortcut
-                    shortcutManager.dynamicShortcuts.lastOrNull()?.let {
-                        shortcutManager.removeDynamicShortcuts(listOf(it.id))
-                    }
-                }
-
+                trimShortcuts(shortcutManager)
                 shortcutManager.addDynamicShortcuts(listOf(shortcut))
                 generateDeckImage(context, deck)
             }
@@ -111,6 +102,19 @@ object Shortcuts {
             val shortcutManager = context.shortcutManager()
             if (shortcutManager.dynamicShortcuts.size + shortcutManager.manifestShortcuts.size > 0) {
                 shortcutManager.removeAllDynamicShortcuts()
+            }
+        }
+    }
+
+    /**
+     * Trim the shortcuts based on max shortcut count
+     */
+    @RequiresApi(Build.VERSION_CODES.N_MR1)
+    private fun trimShortcuts(shortcutManager: ShortcutManager) {
+        if (shortcutManager.dynamicShortcuts.size + shortcutManager.manifestShortcuts.size >=
+            shortcutManager.maxShortcutCountPerActivity) {
+            shortcutManager.dynamicShortcuts.lastOrNull()?.let {
+                shortcutManager.removeDynamicShortcuts(listOf(it.id))
             }
         }
     }

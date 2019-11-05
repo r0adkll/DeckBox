@@ -40,8 +40,7 @@ class StackedPokemonRecyclerAdapter(
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         val card = getItem(i)
         vh.bind(
-            card.card,
-            card.count,
+            card,
             isEditMode = isEditing,
             isCollectionMode = isCollectionEnabled,
             collectionCount = card.collection ?: 0

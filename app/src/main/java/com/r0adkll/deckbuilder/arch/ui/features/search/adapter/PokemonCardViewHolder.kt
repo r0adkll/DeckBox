@@ -16,6 +16,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class PokemonCardViewHolder(
@@ -33,23 +34,22 @@ class PokemonCardViewHolder(
     val collectionCounter: TextView? by bindOptionalView(R.id.count)
 
     fun bind(
-        card: PokemonCard,
-        count: Int,
+        stackedCard: StackedPokemonCard,
         evolution: PokemonCardView.Evolution = PokemonCardView.Evolution.NONE,
         isEditMode: Boolean = false,
         collectionCount: Int = 0,
         isCollectionMode: Boolean = false
     ) {
         cardView.displayCountWhenOne = displayWhenOne
-        cardView.card = card
-        cardView.count = count
+        cardView.card = stackedCard.card
+        cardView.count = stackedCard.count
         cardView.startDragImmediately = startDragImmediately
         cardView.evolution = evolution
 
         if (isCollectionMode) {
             collectionCounter?.isVisible = true
             collectionCounter?.text = "$collectionCount"
-            cardView.imageAlpha = if (collectionCount >= count) {
+            cardView.imageAlpha = if (collectionCount >= stackedCard.count) {
                 COLLECTION_COMPLETE_ALPHA
             } else {
                 COLLECTION_MISSING_ALPHA
@@ -60,11 +60,11 @@ class PokemonCardViewHolder(
         }
 
         actionLayout?.isVisible = (isEditMode && !displayWhenOne) ||
-            isEditMode && ((displayWhenOne && count > 0) || count > 1)
-        actionRemove?.setOnClickListener { removeCardClicks.accept(card) }
-        actionAdd?.setOnClickListener { addCardClicks.accept(listOf(card)) }
+            isEditMode && ((displayWhenOne && stackedCard.count > 0) || stackedCard.count > 1)
+        actionRemove?.setOnClickListener { removeCardClicks.accept(stackedCard.card) }
+        actionAdd?.setOnClickListener { addCardClicks.accept(listOf(stackedCard.card)) }
 
-        if (displayWhenOne && count > 0) {
+        if (displayWhenOne && stackedCard.count > 0) {
             cardView.elevation = dp(ELEVATION_WITH_COUNT)
         } else {
             cardView.elevation = dp(ELEVATION_WHEN_EMPTY)
@@ -78,6 +78,7 @@ class PokemonCardViewHolder(
         private const val ELEVATION_WITH_COUNT = 8
         private const val ELEVATION_WHEN_EMPTY = 4
 
+        @Suppress("LongParameterList")
         fun create(
             inflater: LayoutInflater,
             parent: ViewGroup,

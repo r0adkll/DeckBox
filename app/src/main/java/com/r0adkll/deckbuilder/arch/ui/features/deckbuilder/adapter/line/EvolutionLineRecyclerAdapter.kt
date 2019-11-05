@@ -62,8 +62,7 @@ class EvolutionLineRecyclerAdapter(
         evolution.getItem(position)?.let { card ->
             val evolution = getEvolutionState(position)
             holder.bind(
-                card.card,
-                card.count,
+                card,
                 evolution.evolution,
                 isEditing,
                 card.collection ?: 0,
@@ -135,21 +134,16 @@ class EvolutionLineRecyclerAdapter(
         val isFirstCard = cardIndex == 0
         val isLastCard = cardIndex == node.cards.size - 1
         val hasNextNode = nodeIndex < chain.nodes.size - 1
-        return if (isFirstNode) {
-            if (hasNextNode && isLastCard) {
-                PokemonCardView.Evolution.END
-            } else {
-                PokemonCardView.Evolution.NONE
+        return when {
+            isFirstNode -> when {
+                hasNextNode && isLastCard -> PokemonCardView.Evolution.END
+                else -> PokemonCardView.Evolution.NONE
             }
-        } else {
-            if (isFirstCard && isLastCard && hasNextNode) {
-                PokemonCardView.Evolution.MIDDLE
-            } else if (isFirstCard) {
-                PokemonCardView.Evolution.START
-            } else if (isLastCard && hasNextNode) {
-                PokemonCardView.Evolution.END
-            } else {
-                PokemonCardView.Evolution.NONE
+            else -> when {
+                isFirstCard && isLastCard && hasNextNode -> PokemonCardView.Evolution.MIDDLE
+                isFirstCard -> PokemonCardView.Evolution.START
+                isLastCard && hasNextNode -> PokemonCardView.Evolution.END
+                else -> PokemonCardView.Evolution.NONE
             }
         }
     }

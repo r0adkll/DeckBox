@@ -52,8 +52,7 @@ class PokemonBuilderRecyclerAdapter(
             is PokemonCardViewHolder -> {
                 val single = (item as PokemonItem.Single).card
                 vh.bind(
-                    single.card,
-                    single.count,
+                    single,
                     isEditMode = isEditing,
                     collectionCount = single.collection ?: 0,
                     isCollectionMode = isCollectionEnabled

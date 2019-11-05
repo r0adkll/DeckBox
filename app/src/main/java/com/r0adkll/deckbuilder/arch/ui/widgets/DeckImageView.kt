@@ -1,4 +1,4 @@
-@file:Suppress("MagicNumber")
+@file:Suppress("MagicNumber", "ComplexMethod")
 
 package com.r0adkll.deckbuilder.arch.ui.widgets
 

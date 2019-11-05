@@ -69,6 +69,7 @@ abstract class DeckDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertJoins(joins: List<DeckCardJoin>)
 
+    @Suppress("LongParameterList")
     @Transaction
     open fun insertDeckWithCards(
         id: Long?,

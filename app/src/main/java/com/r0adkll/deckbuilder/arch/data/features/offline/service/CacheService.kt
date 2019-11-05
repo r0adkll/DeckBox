@@ -10,6 +10,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.annotation.DrawableRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ftinc.kit.arch.util.retryWithBackoff
@@ -35,14 +36,10 @@ import javax.inject.Inject
 
 class CacheService : IntentService("DeckBox-Cache-Service") {
 
-    @Inject
-    lateinit var api: Pokemon
-    @Inject
-    lateinit var preferences: AppPreferences
-    @Inject
-    lateinit var offlineStatusConsumer: OfflineStatusConsumer
-    @Inject
-    lateinit var cardCache: CardCache
+    @Inject lateinit var api: Pokemon
+    @Inject lateinit var preferences: AppPreferences
+    @Inject lateinit var offlineStatusConsumer: OfflineStatusConsumer
+    @Inject lateinit var cardCache: CardCache
 
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
 
@@ -155,25 +152,12 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?) {
         createChannel()
 
-        val title = when (status) {
-            CacheStatus.Empty -> getString(R.string.notification_caching_title_start)
-            CacheStatus.Queued -> getString(R.string.notification_caching_queued_title)
-            is CacheStatus.Downloading -> getString(R.string.notification_caching_title)
-            CacheStatus.Cached -> getString(R.string.notification_caching_title_finished)
-            else -> getString(R.string.notification_caching_title_error)
-        }
-
-        val text = when (status) {
-            null -> getString(R.string.notification_caching_text_error)
-            CacheStatus.Empty -> getString(R.string.notification_caching_text)
-            CacheStatus.Cached -> getString(R.string.notification_expansion_cached_text_format, expansion.name)
-            else -> expansion.name
-        }
-
+        val title = getTitle(status)
+        val text = getText(expansion, status)
         val intent = RouteActivity.createIntent(this)
         val pending = PendingIntent.getActivity(this, 0, intent, 0)
 
-        val isOngoing = status != null && (status != CacheStatus.Cached)
+        val isOngoing = status != null && status != CacheStatus.Cached
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(text)
@@ -182,21 +166,49 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             .setOngoing(isOngoing)
             .setOnlyAlertOnce(true)
             .setSound(null)
-            .setSmallIcon(when (status is CacheStatus.Downloading) {
-                true -> android.R.drawable.stat_sys_download
-                else -> android.R.drawable.stat_sys_download_done
-            })
+            .setSmallIcon(getSmallIcon(status))
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
             .setPriority(NotificationCompat.PRIORITY_LOW)
-
-        if (status != null && status is CacheStatus.Downloading) {
-            val progress = status.progress?.readablePercentage ?: 0
-            builder.setProgress(MAX_PROGRESS, progress, progress == 0)
-        } else {
-            builder.setProgress(0, 0, false)
-        }
+            .setProgress(status)
 
         notificationManager.notify(NOTIFICATION_ID, builder.build())
+    }
+
+    private fun getTitle(status: CacheStatus?): String {
+        return when (status) {
+            CacheStatus.Empty -> getString(R.string.notification_caching_title_start)
+            CacheStatus.Queued -> getString(R.string.notification_caching_queued_title)
+            is CacheStatus.Downloading -> getString(R.string.notification_caching_title)
+            CacheStatus.Cached -> getString(R.string.notification_caching_title_finished)
+            else -> getString(R.string.notification_caching_title_error)
+        }
+    }
+
+    private fun getText(expansion: Expansion, status: CacheStatus?): String {
+        return when (status) {
+            null -> getString(R.string.notification_caching_text_error)
+            CacheStatus.Empty -> getString(R.string.notification_caching_text)
+            CacheStatus.Cached -> getString(R.string.notification_expansion_cached_text_format, expansion.name)
+            else -> expansion.name
+        }
+    }
+
+    @DrawableRes
+    private fun getSmallIcon(status: CacheStatus?): Int {
+        return if (status is CacheStatus.Downloading) {
+            android.R.drawable.stat_sys_download
+        } else {
+            android.R.drawable.stat_sys_download_done
+        }
+    }
+
+    private fun NotificationCompat.Builder.setProgress(status: CacheStatus?): NotificationCompat.Builder {
+        return if (status != null && status is CacheStatus.Downloading) {
+            val progress = status.progress?.readablePercentage ?: 0
+            setProgress(MAX_PROGRESS, progress, progress == 0)
+        } else {
+            setProgress(0, 0, false)
+        }
     }
 
     companion object {

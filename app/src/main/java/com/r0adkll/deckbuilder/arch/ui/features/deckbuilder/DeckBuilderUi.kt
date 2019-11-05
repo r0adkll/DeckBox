@@ -83,6 +83,7 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
         val allCardsStackedWithCollection: List<StackedPokemonCard>
             get() = allCards.stack(collectionCounts)
 
+        @Suppress("ComplexMethod")
         override fun reduce(change: Change): State = when (change) {
             Change.Saving -> copy(isSaving = true, error = null)
             Change.Saved -> copy(isSaving = false)

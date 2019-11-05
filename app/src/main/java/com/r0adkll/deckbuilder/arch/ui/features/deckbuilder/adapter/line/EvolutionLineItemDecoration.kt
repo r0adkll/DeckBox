@@ -59,25 +59,29 @@ class EvolutionLineItemDecoration(
                     state.evolution == PokemonCardView.Evolution.MIDDLE) {
                     val child = parent.getChildAt(index)
                     val nextChild = parent.getChildAt(index + 1)?.findViewById<PokemonCardView>(R.id.card)
-                    if (nextChild != null &&
-                        (nextChild.evolution == PokemonCardView.Evolution.START ||
-                            nextChild.evolution == PokemonCardView.Evolution.MIDDLE)) {
-                        // Render Link
-                        val y = child.top + (child.height / 2f)
-
-                        // Start node
-                        val x1 = child.right.toFloat()
-                        c.drawCircle(x1, y, linkRadius, linkPaint)
-
-                        // End node
-                        val x2 = x1 + linkSpacing // nextChild.left.toFloat()
-                        c.drawCircle(x2, y, linkRadius, linkPaint)
-
-                        // Render connecting bar
-                        c.drawLine(x1, y, x2, y, linkBarPaint)
-                    }
+                    drawEvolutionLink(c, child, nextChild)
                 }
             }
+        }
+    }
+
+    private fun drawEvolutionLink(c: Canvas, child: View, nextChild: PokemonCardView?) {
+        if (nextChild != null &&
+            (nextChild.evolution == PokemonCardView.Evolution.START ||
+                nextChild.evolution == PokemonCardView.Evolution.MIDDLE)) {
+            // Render Link
+            val y = child.top + (child.height / 2f)
+
+            // Start node
+            val x1 = child.right.toFloat()
+            c.drawCircle(x1, y, linkRadius, linkPaint)
+
+            // End node
+            val x2 = x1 + linkSpacing // nextChild.left.toFloat()
+            c.drawCircle(x2, y, linkRadius, linkPaint)
+
+            // Render connecting bar
+            c.drawLine(x1, y, x2, y, linkBarPaint)
         }
     }
 }

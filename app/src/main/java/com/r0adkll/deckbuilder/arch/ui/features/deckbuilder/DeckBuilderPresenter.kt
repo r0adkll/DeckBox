@@ -27,6 +27,7 @@ class DeckBuilderPresenter @Inject constructor(
 
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
+        subscribeDirectIntentions()
 
         val observeSession = repository.observeSession(ui.state.sessionId)
             .flatMap { session ->
@@ -52,6 +53,28 @@ class DeckBuilderPresenter @Inject constructor(
             .map { Change.CollectionCounts(it) as Change }
             .onErrorReturn(handleUnknownError)
 
+        val editDeck = intentions.editDeckClicks()
+            .map { Change.Editing(it) as Change }
+
+        val editOverview = intentions.editOverviewClicks()
+            .map { Change.Overview(it) as Change }
+
+        val saveDeck = intentions.saveDeck()
+            .flatMap {
+                repository.persistSession(ui.state.sessionId)
+                    .map { Change.Saved as Change }
+                    .startWith(Change.Saving as Change)
+                    .onErrorReturn(handlePersistError)
+            }
+
+        return observeSession
+            .mergeWith(observeCollection)
+            .mergeWith(editDeck)
+            .mergeWith(editOverview)
+            .mergeWith(saveDeck)
+    }
+
+    private fun subscribeDirectIntentions() {
         disposables += intentions.addCards()
             .flatMap { repository.addCards(ui.state.sessionId, it) }
             .observeOn(AndroidSchedulers.mainThread())
@@ -86,26 +109,6 @@ class DeckBuilderPresenter @Inject constructor(
             .subscribe({
                 Timber.d("Collection Only changed!")
             }, { t -> Timber.e(t, "Error changing collection only") })
-
-        val editDeck = intentions.editDeckClicks()
-            .map { Change.Editing(it) as Change }
-
-        val editOverview = intentions.editOverviewClicks()
-            .map { Change.Overview(it) as Change }
-
-        val saveDeck = intentions.saveDeck()
-            .flatMap {
-                repository.persistSession(ui.state.sessionId)
-                    .map { Change.Saved as Change }
-                    .startWith(Change.Saving as Change)
-                    .onErrorReturn(handlePersistError)
-            }
-
-        return observeSession
-            .mergeWith(observeCollection)
-            .mergeWith(editDeck)
-            .mergeWith(editOverview)
-            .mergeWith(saveDeck)
     }
 
     companion object {

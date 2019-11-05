@@ -143,6 +143,7 @@ class PokemonCardView @JvmOverloads constructor(
         return changed
     }
 
+    @Suppress("ComplexMethod")
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         val width = bounds.width()

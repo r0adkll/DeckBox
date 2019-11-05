@@ -20,7 +20,7 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.MIDDLE
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.NONE
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.START
 
-@Suppress("MagicNumber")
+@Suppress("MagicNumber", "LongMethod", "ComplexMethod", "NestedBlockDepth")
 class EvolutionChainView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

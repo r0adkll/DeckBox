@@ -4,7 +4,9 @@ package com.r0adkll.deckbuilder.internal.di
 
 import com.r0adkll.deckbuilder.BuildModule
 import com.r0adkll.deckbuilder.DeckApp
+import com.r0adkll.deckbuilder.arch.data.CacheModule
 import com.r0adkll.deckbuilder.arch.data.DataModule
+import com.r0adkll.deckbuilder.arch.data.RepositoryModule
 import com.r0adkll.deckbuilder.arch.data.features.offline.service.CacheService
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.arch.ui.ShortcutActivity
@@ -34,7 +36,13 @@ import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import dagger.Component
 
 @AppScope
-@Component(modules = [AppModule::class, BuildModule::class, DataModule::class])
+@Component(modules = [
+    AppModule::class,
+    BuildModule::class,
+    DataModule::class,
+    CacheModule::class,
+    RepositoryModule::class
+])
 interface AppComponent {
 
     fun inject(app: DeckApp)

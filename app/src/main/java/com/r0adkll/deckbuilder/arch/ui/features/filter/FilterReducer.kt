@@ -69,18 +69,16 @@ object FilterReducer {
         val isExpandedSelected = this.expansions.containsAll(expansions.expanded())
 
         return when (format) {
-            Format.STANDARD -> if ((!isStandardSelected && !isExpandedSelected) ||
-                (isStandardSelected && isExpandedSelected)) {
-                this.copy(expansions = expansions.standard())
-            } else if (isStandardSelected && !isExpandedSelected) {
-                this.copy(expansions = emptyList())
-            } else {
-                this
+            Format.STANDARD -> when {
+                !isStandardSelected && !isExpandedSelected || isStandardSelected && isExpandedSelected -> {
+                    this.copy(expansions = expansions.standard())
+                }
+                isStandardSelected && !isExpandedSelected -> this.copy(expansions = emptyList())
+                else -> this
             }
-            Format.EXPANDED -> if (!isExpandedSelected) {
-                this.copy(expansions = expansions.expanded())
-            } else {
-                this.copy(expansions = emptyList())
+            Format.EXPANDED -> when {
+                !isExpandedSelected -> this.copy(expansions = expansions.expanded())
+                else -> this.copy(expansions = emptyList())
             }
             else -> this
         }

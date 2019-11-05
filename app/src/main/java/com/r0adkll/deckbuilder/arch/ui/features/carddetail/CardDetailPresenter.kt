@@ -26,6 +26,7 @@ class CardDetailPresenter @Inject constructor(
     val validator: DeckValidator
 ) : UiPresenter<State, Change>(ui) {
 
+    @Suppress("LongMethod")
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
 

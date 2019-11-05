@@ -51,6 +51,7 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
         val hasCopies: Boolean
             get() = count?.let { it > 0 } == true
 
+        @Suppress("ComplexMethod")
         override fun reduce(change: Change): State = when (change) {
             is Change.Error -> this.copy(error = error)
             is Change.CountChanged -> this.copy(count = change.count)

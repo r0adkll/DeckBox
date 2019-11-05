@@ -32,4 +32,7 @@ data class PokemonCard(
     val ability: Ability?,
     val isCached: Boolean = false,
     val isPreview: Boolean = false
-) : Parcelable
+) : Parcelable {
+
+    fun stacked(count: Int = 0): StackedPokemonCard = StackedPokemonCard(this, count)
+}
