@@ -29,7 +29,7 @@ class SearchResultsRecyclerAdapter(
     override fun onBindViewHolder(vh: PokemonCardViewHolder, i: Int) {
         val card = getItem(i)
         val count = selectedCards.count { it.id == card.id }
-        vh.bind(card, count, isEditMode = true)
+        vh.bind(card.stacked(count), isEditMode = true)
 
         vh.itemView.setOnClickListener {
             onItemClickListener(it, card)
