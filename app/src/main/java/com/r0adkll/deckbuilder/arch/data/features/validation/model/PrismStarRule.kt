@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.data.features.validation.model
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
+import com.r0adkll.deckbuilder.util.CardUtils
 
 class PrismStarRule : Rule {
 

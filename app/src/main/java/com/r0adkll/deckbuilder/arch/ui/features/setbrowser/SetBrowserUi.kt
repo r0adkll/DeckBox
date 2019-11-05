@@ -19,17 +19,7 @@ interface SetBrowserUi : Ui<SetBrowserUi.State, SetBrowserUi.State.Change> {
 
         fun setFilter(filter: BrowseFilter)
         fun setCards(cards: List<PokemonCard>)
-        fun hideFilters(vararg filters: BrowseFilter)
-    }
-
-    enum class BrowseFilter {
-        ALL,
-        POKEMON,
-        TRAINER,
-        ENERGY,
-        GX,
-        TAG_TEAM,
-        PRISM
+        fun setFilters(filters: List<BrowseFilter>)
     }
 
     @Parcelize
@@ -52,7 +42,7 @@ interface SetBrowserUi : Ui<SetBrowserUi.State, SetBrowserUi.State.Change> {
         sealed class Change(logText: String) : Ui.State.Change(logText) {
             object IsLoading : Change("network -> loading cards from set")
             class Error(val description: String) : Change("error -> $description")
-            class FilterChanged(val filter: BrowseFilter) : Change("user -> filter changed: ${filter.name}")
+            class FilterChanged(val filter: BrowseFilter) : Change("user -> filter changed: $filter")
             class CardsLoaded(val cards: List<PokemonCard>) : Change("network -> ${cards.size} cards loaded")
         }
 
@@ -63,7 +53,7 @@ interface SetBrowserUi : Ui<SetBrowserUi.State, SetBrowserUi.State.Change> {
         companion object {
 
             val DEFAULT by lazy {
-                State("sm12", false, null, emptyList(), BrowseFilter.ALL)
+                State("sm12", false, null, emptyList(), BrowseFilter.AllFilter())
             }
         }
     }

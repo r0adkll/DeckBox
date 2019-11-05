@@ -74,7 +74,7 @@ import dagger.multibindings.IntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
-import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
+import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import java.util.concurrent.Executors
 
@@ -113,7 +113,7 @@ class DataModule {
 
     @Provides @AppScope
     fun providePokemonApiConfig(): Config {
-        val level = if (BuildConfig.DEBUG) BODY else NONE
+        val level = if (BuildConfig.DEBUG) HEADERS else NONE
         return Config(logLevel = level)
     }
 

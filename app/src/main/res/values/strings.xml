@@ -298,4 +298,11 @@
     <string name="card_info_resistance">Resistance</string>
     <string name="card_info_weakness">Weakness</string>
     <string name="card_info_ability">Ability:</string>
+    <string name="tab_ex">EX</string>
+    <string name="tab_mega">MEGA</string>
+    <string name="tab_item">Item</string>
+    <string name="tab_stadium">Stadium</string>
+    <string name="tab_supporter">Supporter</string>
+    <string name="tab_tool">Tool</string>
+    <string name="tab_break">BREAK</string>
 </resources>

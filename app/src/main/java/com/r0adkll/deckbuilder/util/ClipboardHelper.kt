@@ -4,7 +4,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import com.r0adkll.deckbuilder.arch.data.features.importer.parser.LineValidator
 
-object ClipboardHelper  {
+object ClipboardHelper {
 
     @Suppress("NestedBlockDepth")
     fun getDeckInClipboard(context: Context): String? {
@@ -16,7 +16,7 @@ object ClipboardHelper  {
                 val clipText = primaryClip.getItemAt(index)?.coerceToText(context)?.toString()
                 if (clipText != null) {
                     val clipLines = clipText.split("\n")
-                    if (clipLines.any { lineValidator.validate(it) != null}){
+                    if (clipLines.any { lineValidator.validate(it) != null }) {
                         return clipText
                     }
                 }

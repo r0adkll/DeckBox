@@ -29,7 +29,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.CollectionSetActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonBuilderRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
-import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.BrowseFilter
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di.SetBrowserModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -83,25 +82,12 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
                 ExpansionPaletteAction(backdrop, expansion, contrastListener = this::setNavigationColor)
             )))
 
-        BrowseFilter.values().forEachIndexed { index, browseFilter ->
-            tabs.getTabAt(index)?.tag = browseFilter.name
-        }
-
-        tabs.tabMode = if (smallestWidth(TABLET_10)) TabLayout.MODE_FIXED else TabLayout.MODE_SCROLLABLE
+        tabs.tabMode = TabLayout.MODE_AUTO
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                val filter = when (tab.tag as? String) {
-                    "ALL" -> BrowseFilter.ALL
-                    "POKEMON" -> BrowseFilter.POKEMON
-                    "TRAINER" -> BrowseFilter.TRAINER
-                    "ENERGY" -> BrowseFilter.ENERGY
-                    "GX" -> BrowseFilter.GX
-                    "PRISM" -> BrowseFilter.PRISM
-                    "TAG_TEAM" -> BrowseFilter.TAG_TEAM
-                    else -> BrowseFilter.ALL
-                }
+                val filter = tab.tag as? BrowseFilter
                 filterChanges.accept(filter)
-                Analytics.event(Event.SelectContent.Action("expansion_filter", filter.name))
+                Analytics.event(Event.SelectContent.Action("expansion_filter", filter.toString()))
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -169,28 +155,21 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
     override fun setFilter(filter: BrowseFilter) {
         for (i in (0 until tabs.tabCount)) {
             val tab = tabs.getTabAt(i)
-            val tag = tab?.tag as? String
-            if (tag?.equals(filter.name, true) == true) {
+            val tag = tab?.tag
+            if (tag == filter) {
                 tab.select()
                 break
             }
         }
     }
 
-    @Suppress("MagicNumber")
-    override fun hideFilters(vararg filters: BrowseFilter) {
+    override fun setFilters(filters: List<BrowseFilter>) {
+        tabs.removeAllTabs()
         filters.forEach { filter ->
-            for (i in (0 until tabs.tabCount)) {
-                val tag = tabs.getTabAt(i)?.tag as? String
-                if (tag?.equals(filter.name, true) == true) {
-                    tabs.removeTabAt(i)
-                    break
-                }
-            }
-        }
-
-        if (!smallestWidth(TABLET_10) && tabs.tabCount <= 4) {
-            tabs.tabMode = TabLayout.MODE_FIXED
+            val tab = tabs.newTab()
+            tab.setText(filter.title)
+            tab.tag = filter
+            tabs.addTab(tab)
         }
     }
 
