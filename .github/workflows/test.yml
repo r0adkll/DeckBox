@@ -1,26 +1,59 @@
-name: Build Status
+name: Testing & Linters
 
-on:
+on: 
   push:
-    branches:
+    branches: 
+      - master
+  pull_request:
+    branches: 
       - master
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
+    - uses: actions/checkout@v1
+    - name: Setup Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
 
-      - name: Setup Secrets
-        run: |
-          echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
-        env:
-          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
+    - name: Setup Secrets
+      run: |
+        echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
+      env:
+        GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      
+    - name: Run Tests and Linters
+      run: |
+        ./gradlew lint 
+        ./gradlew ktlintCheck
+        ./gradlew detekt
+        ./gradlew test
+      
+    # =======================================
+    # Install and run Danger ONLY if this was 
+    # triggered by a PR
+    # =======================================
+        
+    - name: Setup Ruby
+      if: github.event_name == 'pull_request'
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: '2.x'
 
-      - name: Run Tests and Linters
-        run: ./gradlew lint test
+    - name: Install Bundler
+      if: github.event_name == 'pull_request'
+      run: |
+        gem install bundler
+        
+    - name: Run Danger
+      if: github.event_name == 'pull_request'
+      uses: MeilCli/danger-action@v1
+      with:
+        plugins_file: 'Gemfile'
+        danger_file: 'Dangerfile'
+        danger_id: 'danger-pr'
+      env:
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.DECKBOX_BOT_TOKEN }}
