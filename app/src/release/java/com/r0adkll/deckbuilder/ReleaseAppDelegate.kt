@@ -2,7 +2,7 @@ package com.r0adkll.deckbuilder
 
 import android.app.Application
 import com.crashlytics.android.Crashlytics
-import com.r0adkll.deckbuilder.internal.AppDelegate
+import com.ftinc.kit.app.AppDelegate
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.firebase.FirebaseAnalyticInterface
 import com.r0adkll.deckbuilder.util.CrashlyticsAnalyticInterface

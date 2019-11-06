@@ -4,9 +4,9 @@ package com.r0adkll.deckbuilder
 
 import android.app.Application
 import com.bumptech.glide.request.target.ViewTarget
+import com.ftinc.kit.app.AppDelegate
 import com.ftinc.kit.widget.EmptyView
 import com.google.firebase.FirebaseApp
-import com.r0adkll.deckbuilder.internal.AppDelegate
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.LoggingAnalyticInterface
 import com.r0adkll.deckbuilder.internal.di.AppComponent

@@ -21,7 +21,6 @@ import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentInfo;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -31,6 +30,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import timber.log.Timber;
 
 public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
 
@@ -127,14 +128,13 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
                 }
             } catch (Exception e) {
                 callback.onWriteFailed(e.getMessage());
-                Log.e(getClass().getSimpleName(), "Exception printing PDF", e);
+                Timber.e(e, "Exception printing PDF");
             } finally {
                 try {
                     in.close();
                     out.close();
                 } catch (IOException e) {
-                    Log.e(getClass().getSimpleName(),
-                            "Exception cleaning up from printing PDF", e);
+                    Timber.e(e, "Exception cleaning up from printing PDF");
                 }
             }
         }

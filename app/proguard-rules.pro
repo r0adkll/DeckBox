@@ -14,8 +14,22 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ---== App Rules ==---
+# Models
+-keep public class com.r0adkll.deckbuilder.arch.data.database.entities.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.data.database.relations.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.data.features.collection.model.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.data.features.community.model.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.data.features.decks.model.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.data.features.marketplace.model.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.domain.features.remote.model.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.domain.expansions.model.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.domain.features.importer.model.** { *; }
+-keep public class com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.** { *; }
+
+
+# pokemontcg.io kotlin sdk rules
+-keep public class io.pokemontcg.internal.api.** { *; }
