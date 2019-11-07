@@ -1,10 +1,22 @@
-package com.r0adkll.deckbuilder.arch.ui.widgets
+@file:Suppress("MagicNumber")
 
+package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Outline
+import android.graphics.Paint
+import android.graphics.Point
+import android.graphics.PointF
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
@@ -13,9 +25,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewOutlineProvider
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.spToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.extensions.sp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
@@ -23,9 +35,10 @@ import timber.log.Timber
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-
 class PokemonCardView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
 ) : ForegroundImageView(context, attrs, defStyle) {
 
     private val blackPaint: Paint = Paint()
@@ -44,9 +57,9 @@ class PokemonCardView @JvmOverloads constructor(
     private var cachedWidth: Int = 0
     private var cachedHeight: Int = 0
 
-    private val radius = dpToPx(4f)
-    private val punchRadius = dpToPx(10f)
-    private val countRadius = dpToPx(16f)
+    private val radius = dp(4)
+    private val punchRadius = dp(10)
+    private val countRadius = dp(16)
 
     private var lastTouchX: Float = 0f
     private var lastTouchY: Float = 1f
@@ -92,8 +105,8 @@ class PokemonCardView @JvmOverloads constructor(
         punchPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         maskedPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         countPaint.color = color(R.color.primaryColor)
-        countPaint.setShadowLayer(dpToPx(4f), 0f, -1f, color(R.color.black54))
-        countTextPaint.textSize = spToPx(12f)
+        countPaint.setShadowLayer(dp(4), 0f, -1f, color(R.color.black54))
+        countTextPaint.textSize = sp(12)
         countTextPaint.color = color(R.color.white)
 
         // Always want a cache allocated.
@@ -107,7 +120,7 @@ class PokemonCardView @JvmOverloads constructor(
         }
 
         setImageResource(R.drawable.pokemon_card_back)
-        elevation = dpToPx(4f)
+        elevation = dp(4)
         outlineProvider = CardOutlineProvider(radius)
     }
 
@@ -130,6 +143,7 @@ class PokemonCardView @JvmOverloads constructor(
         return changed
     }
 
+    @Suppress("ComplexMethod")
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         val width = bounds.width()
@@ -155,7 +169,7 @@ class PokemonCardView @JvmOverloads constructor(
                     cachedWidth = width
                     cachedHeight = height
                 } catch (e: OutOfMemoryError) {
-                    Timber.w(e) // FIXME: Critical error report
+                    Timber.w(e) // Critical error report
                     return
                 }
             }
@@ -179,7 +193,7 @@ class PokemonCardView @JvmOverloads constructor(
         }
 
         // Draw from cache
-        canvas.drawBitmap(cacheBitmap!!, bounds!!.left.toFloat(), bounds!!.top.toFloat(), null)
+        canvas.drawBitmap(cacheBitmap!!, bounds.left.toFloat(), bounds.top.toFloat(), null)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -217,8 +231,7 @@ class PokemonCardView @JvmOverloads constructor(
         val shadowBuilder = CardShadowBuilder(this, PointF(lastTouchX, lastTouchY))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             startDragAndDrop(clipData, shadowBuilder, state, 0)
-        }
-        else {
+        } else {
             startDrag(clipData, shadowBuilder, state, 0)
         }
 
@@ -227,15 +240,15 @@ class PokemonCardView @JvmOverloads constructor(
 
     private fun loadImage() {
         GlideApp.with(this)
-                .load(card?.imageUrl)
-                .placeholder(R.drawable.pokemon_card_back)
-                .into(this)
+            .load(card?.imageUrl)
+            .placeholder(R.drawable.pokemon_card_back)
+            .into(this)
     }
 
     @Suppress("NON_EXHAUSTIVE_WHEN")
     private fun drawEvolutionNotches(canvas: Canvas) {
         val y = boundsF.centerY()
-        when(evolution) {
+        when (evolution) {
             Evolution.START -> {
                 val x = 0f
                 canvas.drawCircle(x, y, punchRadius, punchPaint)
@@ -262,19 +275,25 @@ class PokemonCardView @JvmOverloads constructor(
 
             // Draw Text
             val text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                StaticLayout.Builder.obtain(count.toString(), 0, count.toString().length, countTextPaint, (countRadius * 2).toInt())
-                        .setAlignment(Layout.Alignment.ALIGN_CENTER)
-                        .setLineSpacing(0f, 1f)
-                        .setIncludePad(false)
-                        .build()
+                StaticLayout.Builder.obtain(
+                    count.toString(),
+                    0,
+                    count.toString().length,
+                    countTextPaint,
+                    (countRadius * 2).toInt()
+                )
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setLineSpacing(0f, 1f)
+                    .setIncludePad(false)
+                    .build()
             } else {
                 @Suppress("DEPRECATION")
                 StaticLayout(count.toString(), countTextPaint, (countRadius * 2).toInt(),
-                        Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+                    Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
             }
 
             canvas.save()
-            canvas.translate(x - countRadius, y - countTextPaint.textSize - dpToPx(2f))
+            canvas.translate(x - countRadius, y - countTextPaint.textSize - dp(2))
             text.draw(canvas)
             canvas.restore()
         }
@@ -298,7 +317,6 @@ class PokemonCardView @JvmOverloads constructor(
         private var bitmapCache: Bitmap? = null
         private var canvasCache: Canvas? = null
         private val destRect: Rect = Rect()
-
 
         override fun onProvideShadowMetrics(outShadowSize: Point, outShadowTouchPoint: Point) {
             view?.let {
@@ -324,7 +342,6 @@ class PokemonCardView @JvmOverloads constructor(
             }
         }
 
-
         companion object {
             private const val SHADOW_SIZE_RATIO = 1.25f
         }
@@ -334,8 +351,8 @@ class PokemonCardView @JvmOverloads constructor(
      * Represents the state of a pokemon card drag and drop operation
      */
     data class DragState(
-            val view: PokemonCardView,
-            val isEdit: Boolean
+        val view: PokemonCardView,
+        val isEdit: Boolean
     )
 
     companion object {

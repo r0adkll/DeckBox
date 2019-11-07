@@ -4,11 +4,9 @@ import com.r0adkll.deckbuilder.arch.data.features.importer.model.CardSpec
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import java.io.StringReader
 
-
 class DeckListParser {
 
     private val validator = LineValidator()
-
 
     fun parse(expansions: List<Expansion>, deckList: String): List<CardSpec> {
         val reader = StringReader(deckList)
@@ -32,13 +30,11 @@ class DeckListParser {
         return cards
     }
 
-
     private fun parseCount(line: String): Int? {
         val parts = line.trim().split(" ")
         val count = parts.firstOrNull()
         return count?.toIntOrNull()
     }
-
 
     private fun parseSetInformation(line: String): Pair<String, String> {
         val parts = line.trim().split(" ")
@@ -47,13 +43,11 @@ class DeckListParser {
         return Pair(set, number)
     }
 
-
     private fun parseName(line: String): String {
         val parts = line.trim().split(" ").toMutableList()
         val nameParts = parts
-                .drop(1) // Drop the card count
-                .dropLast(2) // Drop the set information
+            .drop(1) // Drop the card count
+            .dropLast(2) // Drop the set information
         return nameParts.joinToString(" ")
     }
-
 }

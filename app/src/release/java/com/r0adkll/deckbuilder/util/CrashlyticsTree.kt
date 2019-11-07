@@ -1,16 +1,13 @@
 package com.r0adkll.deckbuilder.util
 
-
 import com.crashlytics.android.Crashlytics
 import timber.log.Timber
-
 
 class CrashlyticsTree : Timber.DebugTree() {
 
     override fun e(t: Throwable) {
         Crashlytics.logException(t)
     }
-
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         if (message.length < MAX_LOG_LENGTH) {
@@ -33,7 +30,6 @@ class CrashlyticsTree : Timber.DebugTree() {
             i++
         }
     }
-
 
     companion object {
         private val MAX_LOG_LENGTH = 4000

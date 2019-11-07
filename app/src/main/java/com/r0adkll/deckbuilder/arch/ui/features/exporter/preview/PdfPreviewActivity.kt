@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter.preview
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -10,28 +9,26 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.print.PrintAttributes
 import android.print.PrintManager
-import androidx.core.content.FileProvider
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.content.FileProvider
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.util.bindSerializable
 import com.jakewharton.rxbinding2.view.clicks
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.PdfDocumentAdapter
-import com.r0adkll.deckbuilder.util.bindSerializable
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import kotlinx.android.synthetic.main.activity_pdf_preview.*
 import java.io.File
 import java.io.IOException
 
-
 class PdfPreviewActivity : BaseActivity() {
 
-    private val file: File by bindSerializable(EXTRA_FILE)
+    private val file by bindSerializable<File>(EXTRA_FILE)
     private val printManager: PrintManager by lazy {
         getSystemService(Context.PRINT_SERVICE) as PrintManager
     }
@@ -40,20 +37,19 @@ class PdfPreviewActivity : BaseActivity() {
     private var fileDescriptor: ParcelFileDescriptor? = null
     private var currentPage: PdfRenderer.Page? = null
 
-
     @SuppressLint("RxSubscribeOnError")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdf_preview)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = file.name
+        supportActionBar?.title = file?.name
         appbar?.setNavigationOnClickListener {
             supportFinishAfterTransition()
         }
 
         disposables += actionPrint.clicks()
-                .subscribe { printFile() }
+            .subscribe { printFile() }
 
         try {
             openRenderer()
@@ -64,18 +60,16 @@ class PdfPreviewActivity : BaseActivity() {
         }
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_export_tournament, menu)
         return true
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_share -> {
                 Analytics.event(Event.SelectContent.Action("share_tournament_decklist"))
-                val uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file)
+                val uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file!!)
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.putExtra(Intent.EXTRA_STREAM, uri)
                 intent.type = "application/pdf"
@@ -87,7 +81,6 @@ class PdfPreviewActivity : BaseActivity() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         try {
@@ -95,25 +88,22 @@ class PdfPreviewActivity : BaseActivity() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        file.deleteOnExit()
+        file?.deleteOnExit()
     }
 
-
-    override fun setupComponent(component: AppComponent) {
+    override fun setupComponent() {
     }
-
 
     private fun printFile() {
         Analytics.event(Event.SelectContent.Action("print_decklist"))
 
         val jobName = "DeckBox Deck list"
         val attrs = PrintAttributes.Builder()
-                .setMediaSize(PrintAttributes.MediaSize.NA_LETTER)
-                .build()
+            .setMediaSize(PrintAttributes.MediaSize.NA_LETTER)
+            .build()
 
-        printManager.print(jobName, PdfDocumentAdapter(this, file), attrs)
+        printManager.print(jobName, PdfDocumentAdapter(this, file!!), attrs)
     }
-
 
     /**
      * Sets up a [android.graphics.pdf.PdfRenderer] and related resources.
@@ -138,7 +128,6 @@ class PdfPreviewActivity : BaseActivity() {
         renderer?.close()
         fileDescriptor?.close()
     }
-
 
     /**
      * Shows the specified page of PDF to the screen.
@@ -168,7 +157,6 @@ class PdfPreviewActivity : BaseActivity() {
         // We are ready to show the Bitmap to user.
         image.setImageBitmap(bitmap)
     }
-
 
     companion object {
         const val EXTRA_FILE = "PdfPreviewActivity.File"

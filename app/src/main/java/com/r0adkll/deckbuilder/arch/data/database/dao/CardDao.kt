@@ -1,18 +1,22 @@
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
-
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.room.Transaction
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import io.reactivex.Single
 
-
 @Dao
 abstract class CardDao {
 
-    @Transaction @Query("SELECT * FROM cards WHERE id IN(:ids)")
+    @Transaction
+    @Query("SELECT * FROM cards WHERE id IN(:ids)")
     abstract fun getCards(ids: List<String>): Single<List<CardWithAttacks>>
 
     @RawQuery
@@ -30,16 +34,13 @@ abstract class CardDao {
     @Query("DELETE FROM cards")
     abstract fun clear()
 
-    @Query("DELETE FROM cards WHERE isPreview = 1")
-    abstract fun clearPreviewCards(): Single<Int>
-
     @Suppress("UNCHECKED_CAST")
     open fun getCardsSplit(ids: List<String>): Single<List<CardWithAttacks>> {
-        return if (ids.size > 900) {
-            val chunkedIds = ids.chunked(900)
+        return if (ids.size > MAX_SIZE) {
+            val chunkedIds = ids.chunked(MAX_SIZE)
             Single.zip(chunkedIds.map { getCards(it) }) {
                 it.map { cards -> cards as List<CardWithAttacks> }
-                        .flatten()
+                    .flatten()
             }
         } else {
             getCards(ids)
@@ -57,5 +58,9 @@ abstract class CardDao {
         if (insertCard(card.card) > 0L) {
             insertAttacks(card.attacks)
         }
+    }
+
+    companion object {
+        const val MAX_SIZE = 900
     }
 }

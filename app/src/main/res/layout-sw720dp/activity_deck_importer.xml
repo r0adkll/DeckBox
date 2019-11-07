@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/appbar"
@@ -13,11 +14,10 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:elevation="@dimen/appbar_elevation"
+        android:elevation="6dp"
         app:navigationIcon="@drawable/ic_close_white_24dp"
         app:title="@string/activity_deck_import"
         />
-
 
     <LinearLayout
         android:id="@+id/error"
@@ -28,7 +28,8 @@
         android:background="@color/red_400"
         android:gravity="center_vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        >
 
         <TextView
             android:id="@+id/errorMessage"
@@ -55,7 +56,6 @@
 
     </LinearLayout>
 
-
     <EditText
         android:id="@+id/deckList"
         android:layout_width="match_parent"
@@ -79,8 +79,6 @@
         android:visibility="gone"
         tools:visibility="visible"
         />
-
-
 
     <View
         android:id="@+id/action_divider"

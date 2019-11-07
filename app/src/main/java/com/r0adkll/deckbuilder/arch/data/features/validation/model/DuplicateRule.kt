@@ -10,8 +10,10 @@ class DuplicateRule : Rule {
 
     override fun check(cards: List<PokemonCard>): Int? {
         val groups = cards.groupBy { it.name }
-        val invalidGroups = groups.values.find { it.size > MAX_COUNT &&
-                !(it.first().supertype == SuperType.ENERGY && it.first().subtype == SubType.BASIC)  }
+        val invalidGroups = groups.values.find {
+            it.size > MAX_COUNT &&
+                !(it.first().supertype == SuperType.ENERGY && it.first().subtype == SubType.BASIC)
+        }
 
         return if (invalidGroups == null) {
             null

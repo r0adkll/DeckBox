@@ -4,7 +4,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadReques
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
 import io.reactivex.Observable
 
-
 interface OfflineRepository {
 
     /**

@@ -1,12 +1,12 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.ftinc.kit.arch.util.bindView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
@@ -14,18 +14,15 @@ import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line.EvolutionLineItemDecoration
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line.EvolutionLineRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.util.bindView
-
 
 class EvolutionChainViewHolder(
-        itemView: View,
-        private val spanCount: Int,
-        private val editCardIntentions: EditCardIntentions,
-        private val pokemonCardClicks: Relay<PokemonCardView>
-): RecyclerView.ViewHolder(itemView) {
+    itemView: View,
+    private val spanCount: Int,
+    private val editCardIntentions: EditCardIntentions,
+    private val pokemonCardClicks: Relay<PokemonCardView>
+) : RecyclerView.ViewHolder(itemView) {
 
     private val recyclerView by bindView<RecyclerView>(R.id.recycler)
-
 
     fun bind(evolutionChain: EvolutionChain, isEditing: Boolean, isCollectionEnabled: Boolean) {
 
@@ -40,8 +37,7 @@ class EvolutionChainViewHolder(
         }
 
         val adapter = recyclerView.adapter as EvolutionLineRecyclerAdapter
-        val forceChange = adapter.isEditing != isEditing
-                || adapter.isCollectionEnabled != isCollectionEnabled
+        val forceChange = adapter.isEditing != isEditing || adapter.isCollectionEnabled != isCollectionEnabled
         if (forceChange) {
             adapter.evolution = evolutionChain
             adapter.isEditing = isEditing
@@ -52,17 +48,17 @@ class EvolutionChainViewHolder(
         }
     }
 
-
     companion object {
 
-        fun create(inflater: LayoutInflater,
-                   parent: ViewGroup?,
-                   spanCount: Int,
-                   editCardIntentions: EditCardIntentions,
-                   pokemonCardClicks: Relay<PokemonCardView>
+        fun create(
+            inflater: LayoutInflater,
+            parent: ViewGroup?,
+            spanCount: Int,
+            editCardIntentions: EditCardIntentions,
+            pokemonCardClicks: Relay<PokemonCardView>
         ): EvolutionChainViewHolder {
             return EvolutionChainViewHolder(inflater.inflate(R.layout.item_evolution_chain, parent, false),
-                    spanCount, editCardIntentions, pokemonCardClicks)
+                spanCount, editCardIntentions, pokemonCardClicks)
         }
     }
 }

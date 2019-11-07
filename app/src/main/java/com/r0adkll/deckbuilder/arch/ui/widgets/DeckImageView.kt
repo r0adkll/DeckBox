@@ -1,24 +1,35 @@
+@file:Suppress("MagicNumber", "ComplexMethod")
+
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Outline
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
-import androidx.annotation.ColorInt
-import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
-import com.ftinc.kit.kotlin.extensions.drawable
+import androidx.annotation.ColorInt
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.extensions.drawable
 import com.r0adkll.deckbuilder.R
 import io.pokemontcg.model.Type
 
-
 class DeckImageView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : ImageScaleView(context, attrs, defStyleAttr) {
 
     private val mBlackPaint: Paint
@@ -53,11 +64,10 @@ class DeckImageView @JvmOverloads constructor(
             scaleType = ScaleType.MATRIX
         }
 
-
     init {
         // Attribute initialization
         val a = context.obtainStyledAttributes(attrs, R.styleable.DeckImageView,
-                defStyleAttr, 0)
+            defStyleAttr, 0)
 
         mMaskDrawable = a.getDrawable(R.styleable.DeckImageView_maskDrawable)
         if (mMaskDrawable != null) {
@@ -70,10 +80,10 @@ class DeckImageView @JvmOverloads constructor(
         }
 
         mDesaturateOnPress = a.getBoolean(R.styleable.DeckImageView_desaturateOnPress,
-                mDesaturateOnPress)
+            mDesaturateOnPress)
 
         val pokeType = a.getInteger(R.styleable.DeckImageView_primaryType, -1)
-        primaryType = when(pokeType) {
+        primaryType = when (pokeType) {
             0 -> Type.COLORLESS
             1 -> Type.FIRE
             2 -> Type.GRASS
@@ -89,7 +99,7 @@ class DeckImageView @JvmOverloads constructor(
         }
 
         val pokeType2 = a.getInteger(R.styleable.DeckImageView_secondaryType, -1)
-        secondaryType = when(pokeType2) {
+        secondaryType = when (pokeType2) {
             0 -> Type.COLORLESS
             1 -> Type.FIRE
             2 -> Type.GRASS
@@ -127,9 +137,8 @@ class DeckImageView @JvmOverloads constructor(
             mDesaturateColorFilter = ColorMatrixColorFilter(cm)
         }
 
-        outlineProvider = CardOutlineProvider(dpToPx(4f))
+        outlineProvider = CardOutlineProvider(dp(4))
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -140,10 +149,9 @@ class DeckImageView @JvmOverloads constructor(
         }
     }
 
-
-    override fun setFrame(l: Int, t: Int, r: Int, b: Int): Boolean {
-        val changed = super.setFrame(l, t, r, b)
-        mBounds = Rect(0, 0, r - l, b - t)
+    override fun setFrame(frameLeft: Int, frameTop: Int, frameRight: Int, frameBottom: Int): Boolean {
+        val changed = super.setFrame(frameLeft, frameTop, frameRight, frameBottom)
+        mBounds = Rect(0, 0, frameRight - frameLeft, frameBottom - frameTop)
         mBoundsF = RectF(mBounds)
 
         if (mBorderDrawable != null) {
@@ -159,7 +167,6 @@ class DeckImageView @JvmOverloads constructor(
 
         return changed
     }
-
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
@@ -221,11 +228,10 @@ class DeckImageView @JvmOverloads constructor(
 
         // Draw from cache
         canvas.drawBitmap(mCacheBitmap!!,
-                mBounds?.left?.toFloat() ?: 0f,
-                mBounds?.top?.toFloat() ?: 0f,
-                null)
+            mBounds?.left?.toFloat() ?: 0f,
+            mBounds?.top?.toFloat() ?: 0f,
+            null)
     }
-
 
     override fun drawableStateChanged() {
         super.drawableStateChanged()
@@ -240,7 +246,6 @@ class DeckImageView @JvmOverloads constructor(
         }
     }
 
-
     override fun invalidateDrawable(who: Drawable) {
         if (who === mBorderDrawable || who === mMaskDrawable) {
             invalidate()
@@ -249,18 +254,15 @@ class DeckImageView @JvmOverloads constructor(
         }
     }
 
-
     override fun verifyDrawable(who: Drawable): Boolean {
         return who === mBorderDrawable || who === mMaskDrawable || super.verifyDrawable(who)
     }
-
 
     fun clear() {
         primaryType = null
         secondaryType = null
         setImageDrawable(null)
     }
-
 
     private fun drawTypes(canvas: Canvas): Boolean {
         if (primaryType == null) return false
@@ -271,7 +273,7 @@ class DeckImageView @JvmOverloads constructor(
         // Render the first type
         primaryType?.let {
             val typeDrawable = getTypeDrawable(it)
-            typeDrawable.setBounds(0, 0, dipToPx(24f), dipToPx(24f))
+            typeDrawable.setBounds(0, 0, dip(24), dip(24))
             mTypePaint.color = getTypeColor(it)
             primaryTypeRect.set(0, 0, if (secondaryType == null) width else width / 2, height)
             canvas.drawRect(primaryTypeRect, mTypePaint)
@@ -287,7 +289,7 @@ class DeckImageView @JvmOverloads constructor(
         // Render the second type
         secondaryType?.let {
             val typeDrawable2 = getTypeDrawable(it)
-            typeDrawable2.setBounds(0, 0, dipToPx(24f), dipToPx(24f))
+            typeDrawable2.setBounds(0, 0, dip(24), dip(24))
             mTypePaint.color = getTypeColor(it)
             secondaryTypeRect.set(width / 2, 0, width, height)
             canvas.drawRect(secondaryTypeRect, mTypePaint)
@@ -303,9 +305,8 @@ class DeckImageView @JvmOverloads constructor(
         return true
     }
 
-
     @ColorInt
-    private fun getTypeColor(type: Type): Int = color(when(type) {
+    private fun getTypeColor(type: Type): Int = color(when (type) {
         Type.COLORLESS -> R.color.poketype_colorless
         Type.FIRE -> R.color.poketype_fire
         Type.GRASS -> R.color.poketype_grass
@@ -320,8 +321,7 @@ class DeckImageView @JvmOverloads constructor(
         else -> R.color.poketype_colorless
     })
 
-
-    private fun getTypeDrawable(type: Type): Drawable = drawable(when(type) {
+    private fun getTypeDrawable(type: Type): Drawable = drawable(when (type) {
         Type.COLORLESS -> R.drawable.ic_poketype_colorless
         Type.FIRE -> R.drawable.ic_poketype_fire
         Type.GRASS -> R.drawable.ic_poketype_grass
@@ -335,7 +335,6 @@ class DeckImageView @JvmOverloads constructor(
         Type.DARKNESS -> R.drawable.ic_poketype_dark
         else -> R.drawable.ic_poketype_colorless
     })!!
-
 
     class CardOutlineProvider(private val radius: Float) : ViewOutlineProvider() {
         override fun getOutline(view: View, outline: Outline) {

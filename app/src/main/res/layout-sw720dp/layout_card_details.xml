@@ -22,7 +22,7 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textSize="@dimen/display_1"
+            android:textSize="@dimen/font_display1"
             tools:text="Mew &amp; Mewtwo-GX"
             />
 

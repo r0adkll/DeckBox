@@ -2,16 +2,16 @@ package com.r0adkll.deckbuilder.arch.ui.features.filter.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
-import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItemCallback
+import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.recycler.EmptyViewListAdapter
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterIntentions
 
 class FilterRecyclerAdapter(
-        context: Context,
-        private val intentions: FilterIntentions
-) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerItemCallback()) {
+    context: Context,
+    private val intentions: FilterIntentions
+) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)
 

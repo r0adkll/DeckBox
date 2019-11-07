@@ -12,13 +12,11 @@ import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
-import com.r0adkll.deckbuilder.internal.analytics.UserProperty
 import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL
 import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_GOOGLE
 import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_LOCAL
 import com.r0adkll.deckbuilder.internal.analytics.UserProperty.LEVEL_OFFLINE_LEGACY
 import javax.inject.Inject
-
 
 class RouteActivity : AppCompatActivity() {
 
@@ -26,7 +24,6 @@ class RouteActivity : AppCompatActivity() {
 
     @Inject lateinit var preferences: AppPreferences
     @Inject lateinit var remote: Remote
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +40,7 @@ class RouteActivity : AppCompatActivity() {
             }
 
             startActivity(HomeActivity.createIntent(this))
-        }
-        else {
+        } else {
             Shortcuts.clearShortcuts(this)
             startActivity(SetupActivity.createIntent(this))
         }
@@ -52,11 +48,10 @@ class RouteActivity : AppCompatActivity() {
         finish()
     }
 
-
     private fun isSignedIn(): Boolean {
-        return firebase.currentUser != null
-                || !preferences.deviceId.isNullOrBlank()
-                || (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())
+        return firebase.currentUser != null ||
+            !preferences.deviceId.isNullOrBlank() ||
+            (preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank())
     }
 
     private fun setUserLevelProperty() {
@@ -79,7 +74,6 @@ class RouteActivity : AppCompatActivity() {
         // Set the last version that was installed for future compat checks
         preferences.lastVersion = BuildConfig.VERSION_CODE
     }
-
 
     companion object {
 

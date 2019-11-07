@@ -5,6 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ExportTask(
-        val deckId: String?,
-        val sessionId: Long?
+    val deckId: String?,
+    val sessionId: Long?
 ) : Parcelable

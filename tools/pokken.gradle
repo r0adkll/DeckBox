@@ -9,17 +9,15 @@ buildscript {
 }
 
 
-import io.pokemontcg.model.CardSet
-import io.pokemontcg.requests.CardQueryBuilder
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
+import io.pokemontcg.model.CardSet
+import io.pokemontcg.requests.CardQueryBuilder
 import io.pokemontcg.requests.CardSetQueryBuilder
 import kotlin.Unit
 import kotlin.jvm.functions.Function1
 
 import java.text.SimpleDateFormat
-import java.util.function.Consumer
-
 
 /**
  * Custom task to output a random list of pokemon card images for use in [app/src/main/java/com/r0adkll/deckbuilder/util/CardUtils.kt]
@@ -32,7 +30,7 @@ task pokePrint {
             @Override
             Unit invoke(CardQueryBuilder cardQueryBuilder) {
                 cardQueryBuilder.pageSize = 1000
-                cardQueryBuilder.setCode = "sm5|sm6|sm7|sm75|sm8"
+                cardQueryBuilder.setCode = "sm11|sm115|sm10"
                 return null
             }
         }).all()
@@ -66,11 +64,11 @@ task countExpansionGroups {
         def sumPart2 = 0
         def sumPart3 = 0
 
-        for (CardSet set: sets) {
+        for (CardSet set : sets) {
             def setRD = df.parse(set.releaseDate)
             if (setRD.before(firstCutoffDate) || setRD == firstCutoffDate) {
                 sumPart1 += set.totalCards
-            } else if (setRD.after(firstCutoffDate) && (setRD.before(secondCutoffDate) || setRD == secondCutoffDate)){
+            } else if (setRD.after(firstCutoffDate) && (setRD.before(secondCutoffDate) || setRD == secondCutoffDate)) {
                 sumPart2 += set.totalCards
             } else {
                 sumPart3 += set.totalCards

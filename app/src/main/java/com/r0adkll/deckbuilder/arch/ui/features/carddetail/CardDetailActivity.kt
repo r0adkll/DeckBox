@@ -1,5 +1,6 @@
-package com.r0adkll.deckbuilder.arch.ui.features.carddetail
+@file:Suppress("MagicNumber")
 
+package com.r0adkll.deckbuilder.arch.ui.features.carddetail
 
 import android.app.Activity
 import android.content.Context
@@ -7,8 +8,6 @@ import android.content.Intent
 import android.graphics.DashPathEffect
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.core.app.ActivityOptionsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
@@ -19,34 +18,46 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.evernote.android.state.State
-import com.ftinc.kit.kotlin.extensions.*
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
+import com.ftinc.kit.extensions.sp
+import com.ftinc.kit.util.bindLong
+import com.ftinc.kit.util.bindOptionalParcelable
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
+import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.marketplace.ProductSparkAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
+import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
-import com.r0adkll.deckbuilder.util.bindLong
-import com.r0adkll.deckbuilder.util.bindOptionalParcelable
 import com.r0adkll.deckbuilder.util.extensions.drawable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import io.reactivex.Observable
@@ -56,7 +67,6 @@ import kotlinx.android.synthetic.main.layout_card_information.*
 import kotlinx.android.synthetic.main.layout_collection_count_adjuster.*
 import kotlinx.android.synthetic.main.layout_marketplace.*
 import javax.inject.Inject
-
 
 class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions, CardDetailUi.Actions {
 
@@ -75,7 +85,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     private lateinit var variantsAdapter: PokemonCardsRecyclerAdapter
     private lateinit var evolvesFromAdapter: PokemonCardsRecyclerAdapter
     private lateinit var evolvesToAdapter: PokemonCardsRecyclerAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,7 +130,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
         actionClose?.setOnClickListener { finish() }
 
-        priceSparkline.baseLinePaint.pathEffect = DashPathEffect(floatArrayOf(dpToPx(4f), dpToPx(4f)), 0f)
+        priceSparkline.baseLinePaint.pathEffect = DashPathEffect(floatArrayOf(dp(4f), dp(4f)), 0f)
         priceSparkline.setScrubListener {
             val product = it as? Product
             if (product != null) {
@@ -133,7 +142,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
                 // DRAGONS: this is dubious because we are manipulating the view state outside of MVI
                 val latestProduct = state.products?.maxBy { it.recordedAt }
                 showPrices(latestProduct?.price?.low, latestProduct?.price?.market,
-                        latestProduct?.price?.high)
+                    latestProduct?.price?.high)
             }
         }
 
@@ -150,15 +159,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             Analytics.event(Event.SelectContent.Action("market_price_info"))
             MarketplaceHelper.showMarketPriceExplanationDialog(this)
         }
-
-        renderer.start()
-        presenter.start()
-    }
-
-    override fun onDestroy() {
-        presenter.stop()
-        renderer.stop()
-        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -189,7 +189,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_add -> {
                 Analytics.event(Event.SelectContent.Action("detail_add_card", card?.name))
                 addCardClicks.accept(Unit)
@@ -204,9 +204,12 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         }
     }
 
-    override fun setupComponent(component: AppComponent) {
-        component.plus(CardDetailModule(this))
-                .inject(this)
+    override fun setupComponent() {
+        DeckApp.component.plus(CardDetailModule(this))
+            .inject(this)
+
+        delegates += StatefulActivityDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulActivityDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
     override fun render(state: CardDetailUi.State) {
@@ -224,16 +227,16 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     override fun incrementCollectionCount(): Observable<Unit> {
         return actionAddCollection.clicks()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Collection.Increment(card?.id ?: ""))
-                }
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Collection.Increment(card?.id ?: ""))
+            }
     }
 
     override fun decrementCollectionCount(): Observable<Unit> {
         return actionRemoveCollection.clicks()
-                .doOnNext {
-                    Analytics.event(Event.SelectContent.Collection.Decrement(card?.id ?: ""))
-                }
+            .doOnNext {
+                Analytics.event(Event.SelectContent.Collection.Decrement(card?.id ?: ""))
+            }
     }
 
     override fun showCopies(count: Int?) {
@@ -244,7 +247,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun showValidation(format: Format) {
-        deckFormat.setText(when(format) {
+        deckFormat.setText(when (format) {
             Format.STANDARD -> R.string.format_standard
             Format.EXPANDED -> R.string.format_expanded
             else -> R.string.format_unlimited
@@ -252,19 +255,19 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     }
 
     override fun showCollectionCount(count: Int) {
-        actionRemoveCollection.setVisibleWeak(count > 0)
-        collectionCount.text = count.toString() //getString(R.string.card_detail_collection_count_format, count)
+        actionRemoveCollection.isInvisible = count <= 0
+        collectionCount.text = count.toString()
     }
 
     override fun showPrices(lowPrice: Double?, marketPrice: Double?, highPrice: Double?) {
-        costsLayout.setVisible(lowPrice != null || marketPrice != null || highPrice != null)
+        costsLayout.isVisible = lowPrice != null || marketPrice != null || highPrice != null
         priceLow.text = lowPrice?.formatPrice() ?: "n/a"
         priceMarket.text = marketPrice?.formatPrice() ?: "n/a"
         priceHigh.text = highPrice?.formatPrice() ?: "n/a"
     }
 
     override fun showPriceHistory(products: List<Product>) {
-        priceSparkline.setVisible(products.isNotEmpty())
+        priceSparkline.isVisible = products.size > 1
         priceSparkline.adapter = ProductSparkAdapter(products)
 
         // Prepare our product url to load
@@ -277,40 +280,40 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     override fun showVariants(cards: List<PokemonCard>) {
         variantsAdapter.submitList(cards)
-        variantsDivider?.setVisible(cards.isNotEmpty())
-        variantsHeader.setVisible(cards.isNotEmpty())
-        variantsRecycler.setVisible(cards.isNotEmpty())
+        variantsDivider?.isVisible = cards.isNotEmpty()
+        variantsHeader.isVisible = cards.isNotEmpty()
+        variantsRecycler.isVisible = cards.isNotEmpty()
     }
 
     override fun showEvolvesFrom(cards: List<PokemonCard>) {
         evolvesFromAdapter.submitList(cards)
-        evolvesDivider?.setVisible(cards.isNotEmpty())
-        evolvesHeader.setVisible(cards.isNotEmpty())
-        evolvesRecycler.setVisible(cards.isNotEmpty())
+        evolvesDivider?.isVisible = cards.isNotEmpty()
+        evolvesHeader.isVisible = cards.isNotEmpty()
+        evolvesRecycler.isVisible = cards.isNotEmpty()
     }
 
     override fun showEvolvesTo(cards: List<PokemonCard>) {
         evolvesToAdapter.submitList(cards)
-        evolvesToDivider?.setVisible(cards.isNotEmpty())
-        evolvesToHeader.setVisible(cards.isNotEmpty())
-        evolvesToRecycler.setVisible(cards.isNotEmpty())
+        evolvesToDivider?.isVisible = cards.isNotEmpty()
+        evolvesToHeader.isVisible = cards.isNotEmpty()
+        evolvesToRecycler.isVisible = cards.isNotEmpty()
     }
 
     override fun hideCollectionCounter() {
-        collectionCounter.gone()
+        collectionCounter.isGone = true
     }
 
     override fun showCardInformation(card: PokemonCard) {
-        cardInformation.visible()
+        cardInformation.isVisible = true
 
         // Set Ability
         if (card.ability != null) {
             abilityName.text = card.ability.name
             abilityText.text = card.ability.text
         } else {
-            abilityLabel.gone()
-            abilityName.gone()
-            abilityText.gone()
+            abilityLabel.isGone = true
+            abilityName.isGone = true
+            abilityText.isGone = true
         }
 
         // Set Attacks
@@ -324,43 +327,43 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
                 val energy = ImageView(this)
                 energy.setImageResource(cost.drawable)
                 val lp = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-                lp.marginEnd = dipToPx(8f)
+                lp.marginEnd = dip(8f)
                 attackEnergies.addView(energy, lp)
             }
 
             attackName.text = attack.name
             attackDamage.text = attack.damage
-            attackText.setVisible(!attack.text.isNullOrBlank())
+            attackText.isVisible = !attack.text.isNullOrBlank()
             attackText.text = attack.text
             attacks.addView(itemView)
         }
 
         // Set Card Text
-        cardText.setVisible(!card.text.isNullOrEmpty())
+        cardText.isVisible = !card.text.isNullOrEmpty()
         cardText.text = card.text?.joinToString("\n")
 
         // Set Card Weakness
-        cardWeaknessLayout.setVisible(!card.weaknesses.isNullOrEmpty())
+        cardWeaknessLayout.isVisible = !card.weaknesses.isNullOrEmpty()
         card.weaknesses?.first()?.let { effect ->
             cardWeakness.text = effect.value
             cardWeakness.setCompoundDrawablesRelativeWithIntrinsicBounds(effect.type.drawable, 0, 0, 0)
         }
 
         // Set Card Resistance
-        cardResistanceLayout.setVisible(!card.resistances.isNullOrEmpty())
+        cardResistanceLayout.isVisible = !card.resistances.isNullOrEmpty()
         card.resistances?.first()?.let { effect ->
             cardResistance.text = effect.value
             cardResistance.setCompoundDrawablesRelativeWithIntrinsicBounds(effect.type.drawable, 0, 0, 0)
         }
 
         // Set Retreat
-        cardRetreatLayout.setVisible(!card.retreatCost.isNullOrEmpty())
+        cardRetreatLayout.isVisible = !card.retreatCost.isNullOrEmpty()
         card.retreatCost?.let { cost ->
             cost.forEach { type ->
                 val energy = ImageView(this)
                 energy.setImageResource(type.drawable)
                 val lp = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-                lp.marginEnd = dipToPx(8f)
+                lp.marginEnd = dip(8f)
                 cardRetreat.addView(energy, lp)
             }
         }
@@ -370,9 +373,12 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         card?.let { card ->
             // Set title + Subtitle
             val spannable = SpannableString(card.name)
-            val prismIndex = card.name.indexOf("◇")
+            val prismIndex = card.name.indexOf(CardUtils.PRISM_SYMBOL)
             if (prismIndex != -1) {
-                spannable.setSpan(ImageSpan(this@CardDetailActivity, R.drawable.ic_prism_star), prismIndex, prismIndex + 1, 0)
+                spannable.setSpan(ImageSpan(
+                    this@CardDetailActivity,
+                    R.drawable.ic_prism_star
+                ), prismIndex, prismIndex + 1, 0)
             }
             cardTitle.text = spannable
             cardSubtitle.text = card.expansion?.name ?: "Unknown Expansion"
@@ -380,7 +386,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             // Set card number
             cardNumber.text = if (ONLY_NUMBER_REGEX.containsMatchIn(card.number)) {
                 SpannableString("${card.number} of ${card.expansion?.totalCards}").apply {
-                    setSpan(AbsoluteSizeSpan(spToPx(12f).toInt()), card.number.length, card.number.length + 3, 0)
+                    setSpan(AbsoluteSizeSpan(sp(12f).toInt()), card.number.length, card.number.length + 3, 0)
                     setSpan(ForegroundColorSpan(color(R.color.black54)), card.number.length, card.number.length + 3, 0)
                 }
             } else {
@@ -388,56 +394,70 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             }
 
             // Load card image
-            emptyView.visible()
-            emptyView.setLoading(true)
+            emptyView.isVisible = true
+            emptyView.state = EmptyView.State.LOADING
             var request = GlideApp.with(this)
-                    .load(card.imageUrlHiRes)
-                    .transition(withCrossFade())
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                            emptyView.setEmptyMessage(R.string.image_loading_error)
-                            return false
-                        }
+                .load(card.imageUrlHiRes)
+                .transition(withCrossFade())
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        emptyView.setMessage(R.string.image_loading_error)
+                        return false
+                    }
 
-                        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                            emptyView.gone()
-                            return false
-                        }
-                    })
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        emptyView.isGone = true
+                        return false
+                    }
+                })
 
             if (slidingLayout == null) {
                 request = request.placeholder(R.drawable.pokemon_card_back)
             }
 
+            @Suppress("PLUGIN_WARNING")
             request.into(image ?: tabletImage)
 
             // Load expansion symbol
             GlideApp.with(this)
-                    .load(card.expansion?.symbolUrl)
-                    .transition(withCrossFade())
-                    .into(expansionSymbol)
+                .load(card.expansion?.symbolUrl)
+                .transition(withCrossFade())
+                .into(expansionSymbol)
         }
     }
-
 
     companion object {
         const val EXTRA_CARD = "CardDetailActivity.Card"
         const val EXTRA_SESSION_ID = "CardDetailActivity.SessionId"
         private val ONLY_NUMBER_REGEX by lazy { "^[0-9]+".toRegex() }
 
-
-        fun createIntent(context: Context,
-                         card: PokemonCard,
-                         sessionId: Long? = null): Intent {
+        fun createIntent(
+            context: Context,
+            card: PokemonCard,
+            sessionId: Long? = null
+        ): Intent {
             val intent = Intent(context, CardDetailActivity::class.java)
             intent.putExtra(EXTRA_CARD, card)
             sessionId?.let { if (it != Session.NO_ID) intent.putExtra(EXTRA_SESSION_ID, it) }
             return intent
         }
 
-        fun show(context: Activity,
-                 view: PokemonCardView,
-                 sessionId: Long? = null) {
+        fun show(
+            context: Activity,
+            view: PokemonCardView,
+            sessionId: Long? = null
+        ) {
             if (view.card != null) {
                 val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
                 val intent = createIntent(context, view.card!!, sessionId)

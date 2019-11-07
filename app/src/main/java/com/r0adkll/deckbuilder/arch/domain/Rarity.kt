@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.domain
 
-
 enum class Rarity(val key: String) {
     COMMON("Common"),
     UNCOMMON("Uncommon"),

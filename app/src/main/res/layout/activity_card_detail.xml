@@ -56,9 +56,11 @@
         android:id="@+id/contentScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/dr_bottom_sheet">
+        android:background="@drawable/dr_bottom_sheet"
+        >
 
-        <include layout="@layout/layout_card_details"
+        <include
+            layout="@layout/layout_card_details"
             android:id="@+id/cardDetails"
             />
 

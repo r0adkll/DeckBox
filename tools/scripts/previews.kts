@@ -36,7 +36,7 @@ hr
 @file:DependsOn("com.google.code.gson:gson:2.8.5")
 @file:DependsOn("com.squareup.okio:okio:2.4.0")
 @file:DependsOn("com.squareup.okhttp3:okhttp:4.1.1")
-@file:MavenRepository("maven-central","http://central.maven.org/maven2/")
+@file:MavenRepository("maven-central", "http://central.maven.org/maven2/")
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -55,7 +55,6 @@ import java.net.URL
 import java.util.*
 import kotlin.system.exitProcess
 
-
 /*
  * Configuration
  */
@@ -72,11 +71,12 @@ val setCode = args[1]     // i.e. sm12 or sm115
 val series = args[2]      // i.e. Sun & Moon
 val set = args[3]         // i.e. Unified Minds
 val outputPath = args[4]  // i.e. ~/Documents/Pokemon/sm12
-val countOffset = args.getOrNull(5)?.toIntOrNull() ?: 0 // i.e. 34, used to offset the index counting
+val countOffset = args.getOrNull(5)?.toIntOrNull()
+    ?: 0 // i.e. 34, used to offset the index counting
 val domainUrl = "https://deckboxtcg.app"
 
 println(
-        """
+    """
             ||========================================================
             || Page URL: $pageUrl
             || Set Code: $setCode
@@ -89,9 +89,9 @@ println(
 )
 
 val gson = GsonBuilder()
-        .setPrettyPrinting()
-        .disableHtmlEscaping()
-        .create()
+    .setPrettyPrinting()
+    .disableHtmlEscaping()
+    .create()
 val okHttpClient = OkHttpClient()
 
 // Verify output path is directory
@@ -123,9 +123,9 @@ outputFile.createNewFile()
 fun downloadImage(url: String, name: String): String {
     val outputFile = File(imagesOutputDir, name)
     val call = okHttpClient.newCall(Request.Builder()
-            .url(url)
-            .get()
-            .build())
+        .url(url)
+        .get()
+        .build())
 
     try {
         val response = call.execute()
@@ -148,57 +148,57 @@ fun String.ext(): String {
 }
 
 class Expansion(
-        val code: String,
-        val ptcgoCode: String,
-        val name: String,
-        val series: String,
-        val totalCards: Int,
-        val standardLegal: Boolean,
-        val expandedLegal: Boolean,
-        val releaseDate: String,
-        val symbolUrl: String,
-        val logoUrl: String
+    val code: String,
+    val ptcgoCode: String,
+    val name: String,
+    val series: String,
+    val totalCards: Int,
+    val standardLegal: Boolean,
+    val expandedLegal: Boolean,
+    val releaseDate: String,
+    val symbolUrl: String,
+    val logoUrl: String
 )
 
 class Ability(
-        val name: String,
-        var text: String = "",
-        val type: String? = "Ability"
+    val name: String,
+    var text: String = "",
+    val type: String? = "Ability"
 )
 
 class Attack(
-        val cost: List<String>?,
-        val name: String,
-        val text: String?,
-        val damage: String?,
-        val convertedEnergyCost: Int
+    val cost: List<String>?,
+    val name: String,
+    val text: String?,
+    val damage: String?,
+    val convertedEnergyCost: Int
 )
 
 data class Effect(val type: String, val value: String)
 
 data class Card(
-        var id: String = "",
-        var name: String = "",
-        var nationalPokedexNumber: Int? = null,
-        var imageUrl: String = "",
-        var imageUrlHiRes: String = "",
-        var types: List<String>? = null,
-        var supertype: String = "",
-        var subtype: String = "",
-        var evolvesFrom: String? = null,
-        var hp: String? = null,
-        var retreatCost: List<String>? = null,
-        var number: String = "",
-        var artist: String? = null,
-        var rarity: String? = null,
-        var series: String = "",
-        var set: String = "",
-        var setCode: String = "",
-        var text: MutableList<String>? = null,
-        var attacks: MutableList<Attack>? = null,
-        var weaknesses: List<Effect>? = null,
-        var resistances: List<Effect>? = null,
-        var ability: Ability? = null
+    var id: String = "",
+    var name: String = "",
+    var nationalPokedexNumber: Int? = null,
+    var imageUrl: String = "",
+    var imageUrlHiRes: String = "",
+    var types: List<String>? = null,
+    var supertype: String = "",
+    var subtype: String = "",
+    var evolvesFrom: String? = null,
+    var hp: String? = null,
+    var retreatCost: List<String>? = null,
+    var number: String = "",
+    var artist: String? = null,
+    var rarity: String? = null,
+    var series: String = "",
+    var set: String = "",
+    var setCode: String = "",
+    var text: MutableList<String>? = null,
+    var attacks: MutableList<Attack>? = null,
+    var weaknesses: List<Effect>? = null,
+    var resistances: List<Effect>? = null,
+    var ability: Ability? = null
 )
 
 /*
@@ -290,7 +290,7 @@ inner class PartNode(card: Card) : CardTagNode(card) {
 
     val RETREAT_REGEX = "(?<=Retreat: )\\d+".toRegex()
 
-    fun String.type(): String? = when(this.toUpperCase()) {
+    fun String.type(): String? = when (this.toUpperCase()) {
         "C" -> "Colorless"
         "D" -> "Darkness"
         "N" -> "Dragon"
@@ -354,8 +354,8 @@ inner class PartNode(card: Card) : CardTagNode(card) {
                             val matches = ENERGY_ITEM_REGEX.findAll(text)
                             val energy = matches.map {
                                 it.value.replace("[", "")
-                                        .replace("]", "")
-                                        .type()
+                                    .replace("]", "")
+                                    .type()
                             }.filterNotNull().toList()
 
                             // Remove Energy from text
@@ -385,14 +385,14 @@ inner class PartNode(card: Card) : CardTagNode(card) {
                             val weaknessType = WEAKNESS_REGEX.find(text)?.value
                             if (weaknessType != null) {
                                 card.weaknesses = listOf(
-                                        Effect(weaknessType, "×2")
+                                    Effect(weaknessType, "×2")
                                 )
                             }
                         } else if (text.startsWith("Resistance:", true)) {
                             val resistanceType = RESISTANCE_REGEX.find(text)?.value
                             if (resistanceType != null) {
                                 card.resistances = listOf(
-                                        Effect(resistanceType, "-20")
+                                    Effect(resistanceType, "-20")
                                 )
                             }
                         } else if (text.startsWith("Retreat:", true)) {
@@ -424,8 +424,8 @@ inner class PartNode(card: Card) : CardTagNode(card) {
     private fun String?.wasTypingText(): Boolean {
         return this?.let {
             it.contains("– Trainer") ||
-                    it.contains("– Special Energy") ||
-                    TYPE_REGEX.containsMatchIn(it)
+                it.contains("– Special Energy") ||
+                TYPE_REGEX.containsMatchIn(it)
         } ?: false
     }
 }
@@ -461,11 +461,11 @@ inner class BlockNode : TagNode {
 
     private fun startNewCard(): Card {
         return Card(
-                id = "$setCode-${cards.size + 1}",
-                number = "${countOffset + cards.size + 1}",
-                setCode = setCode,
-                series = series,
-                set = set
+            id = "$setCode-${cards.size + 1}",
+            number = "${countOffset + cards.size + 1}",
+            setCode = setCode,
+            series = series,
+            set = set
         )
     }
 }
@@ -546,7 +546,6 @@ encapsulatedSpans.forEach { span ->
 
     span.remove()
 }
-
 
 fun printNodeTree(elements: Elements, name: String = "nodes.txt") {
     val scriptDir = File(".")

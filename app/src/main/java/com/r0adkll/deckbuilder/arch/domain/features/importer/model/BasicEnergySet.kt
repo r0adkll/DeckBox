@@ -1,15 +1,24 @@
+@file:Suppress("ComplexMethod")
+
 package com.r0adkll.deckbuilder.arch.domain.features.importer.model
 
 import io.pokemontcg.model.Type
-import io.pokemontcg.model.Type.*
-
+import io.pokemontcg.model.Type.DARKNESS
+import io.pokemontcg.model.Type.FAIRY
+import io.pokemontcg.model.Type.FIGHTING
+import io.pokemontcg.model.Type.FIRE
+import io.pokemontcg.model.Type.GRASS
+import io.pokemontcg.model.Type.LIGHTNING
+import io.pokemontcg.model.Type.METAL
+import io.pokemontcg.model.Type.PSYCHIC
+import io.pokemontcg.model.Type.WATER
 
 sealed class BasicEnergySet {
 
     abstract fun convert(type: Type): String?
 
     object SunMoon : BasicEnergySet() {
-        override fun convert(type: Type): String? = when(type) {
+        override fun convert(type: Type): String? = when (type) {
             GRASS -> "sm1-164"
             FIRE -> "sm1-165"
             WATER -> "sm1-166"
@@ -24,7 +33,7 @@ sealed class BasicEnergySet {
     }
 
     object XY : BasicEnergySet() {
-        override fun convert(type: Type): String? = when(type) {
+        override fun convert(type: Type): String? = when (type) {
             GRASS -> "xy1-132"
             FIRE -> "xy1-133"
             WATER -> "xy1-134"
@@ -38,9 +47,8 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object Generations : BasicEnergySet() {
-        override fun convert(type: Type): String? = when(type) {
+        override fun convert(type: Type): String? = when (type) {
             GRASS -> "g1-75"
             FIRE -> "g1-76"
             WATER -> "g1-77"
@@ -54,9 +62,8 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object Evolutions : BasicEnergySet() {
-        override fun convert(type: Type): String? = when(type) {
+        override fun convert(type: Type): String? = when (type) {
             GRASS -> "xy12-91"
             FIRE -> "xy12-92"
             WATER -> "xy12-93"
@@ -70,9 +77,8 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object ECard : BasicEnergySet() {
-        override fun convert(type: Type): String? = when(type) {
+        override fun convert(type: Type): String? = when (type) {
             GRASS -> "ecard1-162"
             FIRE -> "ecard1-161"
             WATER -> "ecard1-165"
@@ -83,9 +89,8 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object Emerald : BasicEnergySet() {
-        override fun convert(type: Type): String? = when(type) {
+        override fun convert(type: Type): String? = when (type) {
             GRASS -> "ex9-101"
             FIRE -> "ex9-102"
             WATER -> "ex9-103"
@@ -96,9 +101,8 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object Legends : BasicEnergySet() {
-        override fun convert(type: Type): String? = when(type) {
+        override fun convert(type: Type): String? = when (type) {
             GRASS -> "col1-88"
             FIRE -> "col1-89"
             WATER -> "col1-90"
@@ -111,9 +115,8 @@ sealed class BasicEnergySet {
         }
     }
 
-
     object HGSS : BasicEnergySet() {
-        override fun convert(type: Type): String? = when(type) {
+        override fun convert(type: Type): String? = when (type) {
             GRASS -> "hgss1-115"
             FIRE -> "hgss1-116"
             WATER -> "hgss1-117"
@@ -125,6 +128,4 @@ sealed class BasicEnergySet {
             else -> null
         }
     }
-
-
 }

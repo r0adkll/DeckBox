@@ -1,6 +1,5 @@
 #!/usr/bin/env kscript
 
-
 /*
  * Bulbapedia Info:
  * URL: https://bulbapedia.bulbagarden.net/wiki/Hidden_Fates_(TCG)
@@ -30,7 +29,7 @@
 @file:DependsOn("com.google.code.gson:gson:2.8.5")
 @file:DependsOn("com.squareup.okio:okio:2.4.0")
 @file:DependsOn("com.squareup.okhttp3:okhttp:4.1.1")
-@file:MavenRepository("maven-central","http://central.maven.org/maven2/")
+@file:MavenRepository("maven-central", "http://central.maven.org/maven2/")
 
 import DependsOn
 import MavenRepository
@@ -51,9 +50,9 @@ import java.net.URL
 data class OverrideCard(val id: String, val sourceId: String, val sourceSetCode: String)
 
 val gson = GsonBuilder()
-        .setPrettyPrinting()
-        .disableHtmlEscaping()
-        .create()
+    .setPrettyPrinting()
+    .disableHtmlEscaping()
+    .create()
 
 val pokemon = Pokemon(Config(logLevel = HttpLoggingInterceptor.Level.NONE))
 
@@ -84,45 +83,46 @@ fun fuzzyMatchSet(name: String): CardSet? {
 }
 
 val shinyMappings = shinyPokemon.subList(1, shinyPokemon.size - 1)
-        .map { pokemon ->
-            val number = shinyNumberRegex.find(pokemon.select("td:nth-child(1)").text())?.value?.trim() ?: "Unknown"
-            val url = pokemon.select("td:nth-child(3) > a").first().absUrl("href")
+    .map { pokemon ->
+        val number = shinyNumberRegex.find(pokemon.select("td:nth-child(1)").text())?.value?.trim()
+            ?: "Unknown"
+        val url = pokemon.select("td:nth-child(3) > a").first().absUrl("href")
 
-            val sourceDocument = Jsoup.parse(URL(url), 30000)
-            val sourceTitle = sourceDocument.select("#firstHeading").text().trim()
+        val sourceDocument = Jsoup.parse(URL(url), 30000)
+        val sourceTitle = sourceDocument.select("#firstHeading").text().trim()
 
-            val titleMatch = pokemonNameSetNumberRegex.find(sourceTitle)
-            val name = titleMatch?.value ?: "Unknown"
-            val setNumber = titleMatch?.groupValues?.get(2) ?: ""
-            val sourceNumber = "\\d+".toRegex().find(setNumber)?.value
-            val sourceExpansion = setNumber.replace("\\d+".toRegex(), "").trim()
+        val titleMatch = pokemonNameSetNumberRegex.find(sourceTitle)
+        val name = titleMatch?.value ?: "Unknown"
+        val setNumber = titleMatch?.groupValues?.get(2) ?: ""
+        val sourceNumber = "\\d+".toRegex().find(setNumber)?.value
+        val sourceExpansion = setNumber.replace("\\d+".toRegex(), "").trim()
 
 //            println("Title [$sourceTitle]")
 //            println("    Groups: ${titleMatch?.groupValues}")
 
-            // Now find expansion
-            var set = fuzzyMatchSet(sourceExpansion)
-            if (set != null && set.series != "Sun & Moon") {
-                // Shit, the site link to the first iteration of the card, now we need to query for it's newest generation that is HF
-                println("Crap! Searching for newer set...")
-                val setTables = pokemon.select("#mw-content-text > table:nth-child(1) > tbody > tr:nth-child(3) > td > table")
-                val table = setTables.getOrNull(setTables.size - 3)
-                if (table != null) {
-                    val setTitle = table.select("tbody > tr:nth-child(1) > td:nth-child(2) > a").firstOrNull()?.text()
-                    if (setTitle != null) {
-                        set = fuzzyMatchSet(setTitle)
-                    }
+        // Now find expansion
+        var set = fuzzyMatchSet(sourceExpansion)
+        if (set != null && set.series != "Sun & Moon") {
+            // Shit, the site link to the first iteration of the card, now we need to query for it's newest generation that is HF
+            println("Crap! Searching for newer set...")
+            val setTables = pokemon.select("#mw-content-text > table:nth-child(1) > tbody > tr:nth-child(3) > td > table")
+            val table = setTables.getOrNull(setTables.size - 3)
+            if (table != null) {
+                val setTitle = table.select("tbody > tr:nth-child(1) > td:nth-child(2) > a").firstOrNull()?.text()
+                if (setTitle != null) {
+                    set = fuzzyMatchSet(setTitle)
                 }
             }
-
-            println("Pokemon($name, id=$shinyVaultSetPrefix-$number) found Source(${set?.code}-${if (set?.code == "smp") "sm" else ""}$sourceNumber) for ($sourceExpansion - $sourceNumber)")
-
-            OverrideCard(
-                    "$shinyVaultSetPrefix-$number",
-                    "${set?.code}-${if (set?.code == "smp") "sm" else ""}$sourceNumber",
-                    set?.code ?: "Unknown"
-            )
         }
+
+        println("Pokemon($name, id=$shinyVaultSetPrefix-$number) found Source(${set?.code}-${if (set?.code == "smp") "sm" else ""}$sourceNumber) for ($sourceExpansion - $sourceNumber)")
+
+        OverrideCard(
+            "$shinyVaultSetPrefix-$number",
+            "${set?.code}-${if (set?.code == "smp") "sm" else ""}$sourceNumber",
+            set?.code ?: "Unknown"
+        )
+    }
 
 val outputFile = File(File("."), "shinyOverrides.json")
 if (outputFile.exists()) {
@@ -133,8 +133,8 @@ outputFile.createNewFile()
 val overrideJson = gson.toJson(shinyMappings)
 
 outputFile.outputStream().bufferedWriter()
-        .use {
-            it.write(overrideJson)
-            it.flush()
-        }
+    .use {
+        it.write(overrideJson)
+        it.flush()
+    }
 

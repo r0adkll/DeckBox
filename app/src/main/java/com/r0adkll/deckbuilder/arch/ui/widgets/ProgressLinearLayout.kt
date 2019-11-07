@@ -5,12 +5,13 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.R
 
-
 class ProgressLinearLayout @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     var progress: Float = 0f
@@ -27,9 +28,11 @@ class ProgressLinearLayout @JvmOverloads constructor(
         paint.color = color(R.color.secondaryColor)
         paint.style = Paint.Style.FILL
 
-        if (isInEditMode) progress = .25f
+        @Suppress("MagicNumber")
+        if (isInEditMode) {
+            progress = .25f
+        }
     }
-
 
     override fun onDraw(canvas: Canvas) {
         val progressHeight = height * progress

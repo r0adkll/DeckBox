@@ -5,12 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_layout"
@@ -24,11 +26,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:outlineProvider="background"
-                android:elevation="@dimen/appbar_elevation"
+                android:elevation="6dp"
                 android:background="@color/transparent"
                 android:theme="@style/ThemeOverlay.DeckBuilder.Search"
                 android:fitsSystemWindows="true"
-                tools:ignore="UnusedAttribute">
+                tools:ignore="UnusedAttribute"
+                >
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/searchView"
@@ -46,7 +49,8 @@
                     android:layout_width="96dp"
                     android:layout_height="match_parent"
                     android:paddingStart="4dp"
-                    android:background="@android:color/transparent">
+                    android:background="@android:color/transparent"
+                    >
 
                     <ImageButton
                         android:id="@+id/searchback"

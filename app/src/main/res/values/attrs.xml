@@ -5,15 +5,8 @@
         <attr name="collectionAdjusterTint" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="AspectRatioImageView">
-        <attr name="ratioType" format="enum">
-            <enum name="width" value="0" />
-            <enum name="height" value="1" />
-        </attr>
-    </declare-styleable>
-
     <declare-styleable name="ForegroundImageView">
-        <attr name="android:foreground"/>
+        <attr name="android:foreground" />
     </declare-styleable>
 
     <declare-styleable name="PokemonTypeView">
@@ -65,22 +58,6 @@
             <enum name="fairy" value="9" />
             <enum name="darkness" value="10" />
         </attr>
-    </declare-styleable>
-
-
-    <declare-styleable name="PokemonFormatView">
-        <attr name="format" format="enum">
-            <enum name="standard" value="0" />
-            <enum name="expanded" value="1" />
-            <enum name="unlimited" value="2" />
-            <enum name="legacy" value="3" />
-            <enum name="theme" value="4" />
-        </attr>
-        <attr name="strokeWidth" format="dimension|reference" />
-        <attr name="strokeColor" format="color|reference" />
-        <attr name="fillColor" format="color|reference" />
-        <attr name="ringPadding" format="dimension|reference" />
-        <attr name="nodeSize" format="dimension|reference" />
     </declare-styleable>
 
     <declare-styleable name="MarqueeCardContainer">

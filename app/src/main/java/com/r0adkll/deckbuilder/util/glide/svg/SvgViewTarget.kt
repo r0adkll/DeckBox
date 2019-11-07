@@ -6,7 +6,6 @@ import com.bumptech.glide.request.target.ImageViewTarget
 import com.caverock.androidsvg.SVG
 import timber.log.Timber
 
-
 class SvgViewTarget(imageView: ImageView) : ImageViewTarget<SVG>(imageView) {
 
     override fun setResource(resource: SVG?) {

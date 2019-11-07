@@ -3,19 +3,23 @@ package com.r0adkll.deckbuilder.arch.ui.features.overview
 import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ftinc.kit.kotlin.utils.bindLong
-import com.ftinc.kit.kotlin.utils.bundle
+import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.GridLayoutManager
+import com.ftinc.kit.arch.presentation.BaseFragment
+import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.util.bindLong
+import com.ftinc.kit.util.bundle
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.SessionId
@@ -26,11 +30,9 @@ import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ScreenUtils.orientation
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_overview.*
 import javax.inject.Inject
-
 
 class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, OverviewUi.Actions {
 
@@ -40,7 +42,8 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val cardClicks: Relay<PokemonCardView> = PublishRelay.create()
 
-    @JvmField @field:[Inject SessionId] var sessionIdByInject: Long = Session.NO_ID
+    @JvmField @field:[Inject SessionId]
+    var sessionIdByInject: Long = Session.NO_ID
     @Inject lateinit var presenter: OverviewPresenter
     @Inject lateinit var renderer: OverviewRenderer
 
@@ -53,7 +56,6 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
             sessionIdByIntent
         }
 
-
     @SuppressLint("RxSubscribeOnError")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -62,7 +64,7 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
 
         adapter = OverviewRecyclerAdapter(requireContext(), cardClicks, editCardIntentions)
         adapter.emptyView = emptyView
-        val spanCount = if (orientation(ORIENTATION_LANDSCAPE)) 7 else 4
+        val spanCount = if (orientation(ORIENTATION_LANDSCAPE)) LANDSCAPE_SPAN_SIZE else PORTRAIT_SPAN_SIZE
         val layoutManager = GridLayoutManager(requireContext(), spanCount)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -78,77 +80,59 @@ class OverviewFragment : BaseFragment(), OverviewUi, OverviewUi.Intentions, Over
         }
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_overview, container, false)
     }
 
-
     override fun setupComponent() {
         getComponent(OverviewableComponent::class)
-                .plus(OverviewModule(this))
-                .inject(this)
+            .plus(OverviewModule(this))
+            .inject(this)
 
-//        addDelegate(RendererFragmentDelegate(renderer))
-//        addDelegate(PresenterFragmentDelegate(presenter))
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
     }
-
-    override fun onStart() {
-        super.onStart()
-        renderer.start()
-        presenter.start()
-    }
-
-
-    override fun onStop() {
-        presenter.stop()
-        renderer.stop()
-        super.onStop()
-    }
-
 
     override fun render(state: OverviewUi.State) {
         this.state = state
         renderer.render(state)
     }
 
-
     override fun addCards(): Observable<List<PokemonCard>> {
         return editCardIntentions.addCardClicks
-                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
+            .doOnNext { Analytics.event(Event.SelectContent.Action("edit_add_card")) }
     }
-
 
     override fun removeCard(): Observable<PokemonCard> {
         return editCardIntentions.removeCardClicks
-                .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
+            .doOnNext { Analytics.event(Event.SelectContent.Action("edit_remove_card")) }
     }
-
 
     override fun showCards(cards: List<EvolutionChain>) {
         adapter.submitList(cards)
     }
 
-
     override fun showLoading(isLoading: Boolean) {
-        emptyView.setLoading(isLoading)
+        emptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
-
 
     override fun showError(description: String) {
-        emptyView.emptyMessage = description
+        emptyView.message = description
     }
-
 
     override fun hideError() {
-        emptyView.setEmptyMessage(R.string.empty_deck_overview)
+        emptyView.setMessage(R.string.empty_deck_overview)
     }
-
 
     companion object {
         const val TAG = "OverviewFragment"
         private const val EXTRA_SESSION_ID = "OverviewFragment.SessionId"
-
+        private const val LANDSCAPE_SPAN_SIZE = 7
+        private const val PORTRAIT_SPAN_SIZE = 4
 
         fun newInstance(sessionId: Long): OverviewFragment {
             val fragment = OverviewFragment()

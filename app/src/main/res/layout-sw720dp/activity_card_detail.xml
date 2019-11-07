@@ -15,7 +15,8 @@
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <com.r0adkll.deckbuilder.arch.ui.widgets.PokemonImageView
             android:id="@+id/tabletImage"
@@ -24,7 +25,8 @@
             android:elevation="4dp"
             android:scaleType="centerCrop"
             android:src="@drawable/pokemon_card_back"
-            android:transitionName="cardImage" />
+            android:transitionName="cardImage"
+            />
 
         <com.ftinc.kit.widget.EmptyView
             android:id="@+id/emptyView"
@@ -37,7 +39,8 @@
             app:emptyIconColor="@color/white70"
             app:emptyMessage="Error loading image"
             app:emptyMessageColor="@color/white"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            />
 
         <!--<android.support.v7.widget.Toolbar-->
         <!--android:id="@+id/appbar"-->
@@ -62,7 +65,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageLayout"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.0"
+        >
 
         <include layout="@layout/layout_card_details" />
 

@@ -1,11 +1,9 @@
 package com.r0adkll.deckbuilder
 
-
 import android.app.Application
 import com.facebook.stetho.Stetho
-import com.r0adkll.deckbuilder.internal.AppDelegate
+import com.ftinc.kit.app.AppDelegate
 import timber.log.Timber
-
 
 class DebugAppDelegate : AppDelegate {
 

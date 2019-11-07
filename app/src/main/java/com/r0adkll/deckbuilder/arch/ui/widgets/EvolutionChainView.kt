@@ -4,37 +4,40 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.ftinc.kit.kotlin.extensions.color
-import com.ftinc.kit.kotlin.extensions.dipToPx
-import com.ftinc.kit.kotlin.extensions.dpToPx
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.dip
+import com.ftinc.kit.extensions.dp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.*
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.END
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.MIDDLE
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.NONE
+import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView.Evolution.START
 
-
+@Suppress("MagicNumber", "LongMethod", "ComplexMethod", "NestedBlockDepth")
 class EvolutionChainView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val inflater = LayoutInflater.from(context)
     private val linkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val linkBarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private var defaultCardWidth: Int = dipToPx(156f)
+    private var defaultCardWidth: Int = dip(156)
     private var cardWidth: Int = defaultCardWidth
-    private val linkSpacing: Int = dipToPx(24f)
-    private val stageSpacing: Int = dipToPx(16f)
-    private val nodeSpacing: Int = dipToPx(4f)
-    private val chainSpacing: Int = dipToPx(8f)
-    private val linkRadius: Float = dpToPx(8f)
+    private val linkSpacing: Int = dip(24)
+    private val stageSpacing: Int = dip(16)
+    private val nodeSpacing: Int = dip(4)
+    private val chainSpacing: Int = dip(8)
+    private val linkRadius: Float = dp(8)
 
     private var pokemonCardClickListener: OnPokemonCardClickListener? = null
     private var pokemonCardEditListener: OnPokemonEditListener? = null
@@ -47,11 +50,10 @@ class EvolutionChainView @JvmOverloads constructor(
 
     var dragAndDropEnabled: Boolean = false
 
-
     init {
         orientation = HORIZONTAL
         setWillNotDraw(false)
-        defaultCardWidth = (dipToPx(382f) - (2 * stageSpacing + 2 * linkSpacing)) / 3
+        defaultCardWidth = (dip(382) - (2 * stageSpacing + 2 * linkSpacing)) / 3
         cardWidth = defaultCardWidth
 
         linkPaint.color = color(R.color.primaryColor)
@@ -61,7 +63,6 @@ class EvolutionChainView @JvmOverloads constructor(
         linkBarPaint.style = Paint.Style.STROKE
         linkBarPaint.strokeWidth = linkRadius
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -76,7 +77,6 @@ class EvolutionChainView @JvmOverloads constructor(
             }
         }
     }
-
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
@@ -104,7 +104,6 @@ class EvolutionChainView @JvmOverloads constructor(
         }
     }
 
-
     fun setOnPokemonCardClickListener(listener: (PokemonCardView) -> Unit) {
         pokemonCardClickListener = object : OnPokemonCardClickListener {
             override fun onPokemonCardClicked(view: PokemonCardView, card: PokemonCard) {
@@ -112,7 +111,6 @@ class EvolutionChainView @JvmOverloads constructor(
             }
         }
     }
-
 
     fun setOnPokemonCardEditListener(onAdd: (PokemonCard) -> Unit, onRemove: (PokemonCard) -> Unit) {
         pokemonCardEditListener = object : OnPokemonEditListener {
@@ -126,16 +124,14 @@ class EvolutionChainView @JvmOverloads constructor(
         }
     }
 
-
     @SuppressLint("NewApi")
     private fun configurePokemonCardViews() {
-        //removeAllViews() // ???
         evolutionChain?.let { chain ->
 
             var node = chain.first()
             var nodeIndex = 0
             var viewIndex = 0
-            while(node != null) {
+            while (node != null) {
                 node.cards.forEachIndexed { cardIndex, card ->
                     // Attempt to find existing view for index
                     var view = getChildAt(viewIndex)
@@ -177,7 +173,7 @@ class EvolutionChainView @JvmOverloads constructor(
                     cardView.layoutParams = clp
 
                     val alp = actionLayout.layoutParams as MarginLayoutParams
-                    alp.bottomMargin = dipToPx(24f)
+                    alp.bottomMargin = dip(24)
                     actionLayout.layoutParams = alp
 
                     // Calculate approximate cardWidth
@@ -222,10 +218,8 @@ class EvolutionChainView @JvmOverloads constructor(
                     getChildAt(i)?.let { removeView(it) }
                 }
             }
-
         }
     }
-
 
     private fun getEvolutionState(chain: EvolutionChain, nodeIndex: Int, cardIndex: Int): PokemonCardView.Evolution {
         val node = chain.nodes[nodeIndex]
@@ -233,32 +227,26 @@ class EvolutionChainView @JvmOverloads constructor(
         val isFirstCard = cardIndex == 0
         val isLastCard = cardIndex == node.cards.size - 1
         val hasNextNode = nodeIndex < chain.nodes.size - 1
-        if (isFirstNode) {
+        return if (isFirstNode) {
             if (hasNextNode && isLastCard) {
-                return END
+                END
+            } else {
+                NONE
+            }
+        } else {
+            when {
+                isFirstCard && isLastCard && hasNextNode -> MIDDLE
+                isFirstCard -> START
+                isLastCard && hasNextNode -> END
+                else -> NONE
             }
         }
-        else {
-            if (isFirstCard && isLastCard && hasNextNode) {
-                return MIDDLE
-            }
-            else if (isFirstCard) {
-                return START
-            }
-            else if (isLastCard && hasNextNode) {
-                return END
-            }
-        }
-
-        return NONE
     }
-
 
     interface OnPokemonCardClickListener {
 
         fun onPokemonCardClicked(view: PokemonCardView, card: PokemonCard)
     }
-
 
     interface OnPokemonEditListener {
 

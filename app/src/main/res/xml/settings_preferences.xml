@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <PreferenceCategory android:title="@string/pref_category_account">
 
@@ -12,9 +13,7 @@
             android:icon="@drawable/common_google_signin_btn_icon_light"
             />
 
-        <com.r0adkll.deckbuilder.arch.ui.features.settings.ProfilePreference
-            android:key="pref_account_profile"
-            />
+        <com.r0adkll.deckbuilder.arch.ui.features.settings.ProfilePreference android:key="pref_account_profile" />
 
         <Preference
             android:key="pref_account_migrate_collection"
@@ -30,33 +29,13 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:key="pref_category_preview"
-        android:title="@string/pref_category_preview"
-        app:isPreferenceVisible="false"
-        tools:isPreferenceVisible="true">
-
-        <Preference
-            android:key="pref_preview_version"
-            android:title="Current preview expansion"
-            android:summary="Sun &amp; Moon: Cosmic Eclipse"
-            />
-
-        <SwitchPreferenceCompat
-            android:key="pref_preview_expansions"
-            android:title="@string/pref_preview_expansions_title"
-            android:summary="@string/pref_preview_expansions_summary"
-            />
-
-    </PreferenceCategory>
-
     <!--<PreferenceCategory android:title="@string/pref_category_cache">-->
 
-        <!--<Preference-->
-            <!--android:key="pref_cache_manage"-->
-            <!--android:title="@string/pref_cache_manage_title"-->
-            <!--android:summary="@string/pref_cache_manage_summary"-->
-            <!--/>-->
+    <!--<Preference-->
+    <!--android:key="pref_cache_manage"-->
+    <!--android:title="@string/pref_cache_manage_title"-->
+    <!--android:summary="@string/pref_cache_manage_summary"-->
+    <!--/>-->
 
     <!--</PreferenceCategory>-->
 
@@ -72,16 +51,15 @@
             android:key="pref_reset_quickstart"
             android:title="@string/pref_help_quickstart_title"
             android:summary="@string/pref_help_quickstart_summary"
-            android:visible="false"
+            app:isPreferenceVisible="false"
             />
 
         <Preference
             android:key="pref_reset_offline_outline"
             android:title="@string/pref_help_offline_outline_title"
             android:summary="@string/pref_help_offline_outline_summary"
-            android:visible="false"
+            app:isPreferenceVisible="false"
             />
-
 
     </PreferenceCategory>
 
@@ -118,18 +96,23 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:key="pref_category_developer"
-        android:title="@string/pref_category_developer">
+    <PreferenceCategory
+        android:key="pref_category_developer"
+        android:title="@string/pref_category_developer"
+        >
 
-        <Preference android:key="pref_developer_reset_preview"
+        <Preference
+            android:key="pref_developer_reset_preview"
             android:title="@string/pref_developer_resetpreview"
             />
 
-        <Preference android:key="pref_developer_user_id"
+        <Preference
+            android:key="pref_developer_user_id"
             android:title="@string/pref_developer_user_id_title"
             />
 
-        <EditTextPreference android:key="pref_developer_test_user_id"
+        <EditTextPreference
+            android:key="pref_developer_test_user_id"
             android:title="Enter test user Id"
             android:summary="Enter a user's id that we will use in place of your own for testing"
             />

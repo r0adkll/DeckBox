@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder
 
-
 import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
@@ -16,19 +15,25 @@ import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapTranscoder
 import com.r0adkll.deckbuilder.util.glide.svg.SvgDecoder
 import java.io.InputStream
 
-
 @GlideModule
 class DeckGlideModule : AppGlideModule() {
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
-        builder.setSourceExecutor(GlideExecutor.newSourceExecutor(4, "glide-multi-executor", GlideExecutor.UncaughtThrowableStrategy.IGNORE))
+        builder.setSourceExecutor(GlideExecutor.newSourceExecutor(THREAD_COUNT, EXTRACTOR_NAME,
+            GlideExecutor.UncaughtThrowableStrategy.IGNORE))
 
-        val diskCacheSize = 1024L * 1024L * 500L
-        builder.setDiskCache(InternalCacheDiskCacheFactory(context, diskCacheSize))
+        builder.setDiskCache(InternalCacheDiskCacheFactory(context, DISK_CACHE_SIZE_IN_BYTES))
     }
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         registry.register(Bitmap::class.java, PaletteBitmap::class.java, PaletteBitmapTranscoder(glide))
         registry.append(InputStream::class.java, SVG::class.java, SvgDecoder())
+    }
+
+    companion object {
+
+        private const val DISK_CACHE_SIZE_IN_BYTES = 1024L * 1024L * 500L
+        private const val THREAD_COUNT = 4
+        private const val EXTRACTOR_NAME = "glide-multi-executor"
     }
 }

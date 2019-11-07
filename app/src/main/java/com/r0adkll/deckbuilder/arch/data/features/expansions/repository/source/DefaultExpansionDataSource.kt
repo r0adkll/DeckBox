@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source
 
-
 import android.annotation.SuppressLint
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.expansions.cache.ExpansionCache
@@ -19,22 +18,22 @@ import javax.inject.Inject
 @SuppressLint("CheckResult")
 @AppScope
 class DefaultExpansionDataSource @Inject constructor(
-        val api: Pokemon,
-        val preferences: AppPreferences,
-        val schedulers: AppSchedulers
+    val api: Pokemon,
+    val preferences: AppPreferences,
+    val schedulers: AppSchedulers
 ) : ExpansionDataSource {
 
     private val memoryCache: ExpansionCache = InMemoryExpansionCache()
     private val diskCache: ExpansionCache = PreferenceExpansionCache(preferences, AppPreferences::expansions)
 
     override fun getExpansions(source: Source): Observable<List<Expansion>> {
-        return when(source) {
+        return when (source) {
             Source.ALL -> Observable.concat(memory(), disk(), network())
             Source.LOCAL -> Observable.concat(memory(), disk())
             Source.NETWORK -> network()
         }
-                .takeUntil { it.isNotEmpty() }
-                .filter { it.isNotEmpty() }
+            .takeUntil { it.isNotEmpty() }
+            .filter { it.isNotEmpty() }
     }
 
     override fun refreshExpansions(): Observable<List<Expansion>> {
@@ -45,23 +44,27 @@ class DefaultExpansionDataSource @Inject constructor(
 
     private fun network(): Observable<List<Expansion>> {
         return api.set()
-                .where {
-                    pageSize = 200
-                }
-                .observeAll()
-                .map { it.map { SetMapper.to(it) } }
-                .doOnNext { diskCache.putExpansions(it) }
-                .doOnNext { memoryCache.putExpansions(it) }
-                .subscribeOn(schedulers.network)
-                .doOnNext { Timber.d("Expansion::Network::getDecks():Thread(${Thread.currentThread().name})") }
+            .where {
+                pageSize = MAX_PAGE_SIZE
+            }
+            .observeAll()
+            .map { it.map { SetMapper.to(it) } }
+            .doOnNext { diskCache.putExpansions(it) }
+            .doOnNext { memoryCache.putExpansions(it) }
+            .subscribeOn(schedulers.network)
+            .doOnNext { Timber.d("Expansion::Network::getDecks():Thread(${Thread.currentThread().name})") }
     }
 
     private fun disk(): Observable<List<Expansion>> {
         return diskCache.getExpansions()
-                .doOnNext { memoryCache.putExpansions(it) }
+            .doOnNext { memoryCache.putExpansions(it) }
     }
 
     private fun memory(): Observable<List<Expansion>> {
         return memoryCache.getExpansions()
+    }
+
+    companion object {
+        private const val MAX_PAGE_SIZE = 1000
     }
 }

@@ -1,9 +1,9 @@
 package com.r0adkll.deckbuilder.arch.ui.features.overview.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
@@ -11,15 +11,13 @@ import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.widgets.EvolutionChainView
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
-
 class OverviewViewHolder(
-        itemView: View,
-        private val cardClicks: Relay<PokemonCardView>,
-        private val editCardIntentions: EditCardIntentions
-) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    itemView: View,
+    private val cardClicks: Relay<PokemonCardView>,
+    private val editCardIntentions: EditCardIntentions
+) : RecyclerView.ViewHolder(itemView) {
 
     private val chainView = itemView as EvolutionChainView
-
 
     fun bind(evolutionChain: EvolutionChain) {
         chainView.evolutionChain = evolutionChain
@@ -33,14 +31,19 @@ class OverviewViewHolder(
         }
     }
 
-
     companion object {
 
-        fun create(inflater: LayoutInflater,
-                   parent: ViewGroup,
-                   cardClicks: Relay<PokemonCardView>,
-                   editCardIntentions: EditCardIntentions): OverviewViewHolder {
-            return OverviewViewHolder(inflater.inflate(R.layout.item_overview, parent, false), cardClicks, editCardIntentions)
+        fun create(
+            inflater: LayoutInflater,
+            parent: ViewGroup,
+            cardClicks: Relay<PokemonCardView>,
+            editCardIntentions: EditCardIntentions
+        ): OverviewViewHolder {
+            return OverviewViewHolder(
+                inflater.inflate(R.layout.item_overview, parent, false),
+                cardClicks,
+                editCardIntentions
+            )
         }
     }
 }

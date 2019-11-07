@@ -1,57 +1,50 @@
 package com.r0adkll.deckbuilder.arch.ui.features.setup
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.WindowManager
-import androidx.core.content.IntentCompat
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.snackbar
 import com.ftinc.kit.util.IntentUtils
-import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.auth.api.signin.GoogleSignInResult
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
-import com.r0adkll.deckbuilder.util.RxFirebase
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_setup.*
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+class SetupActivity : BaseActivity() {
 
     private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private var googleClient: GoogleApiClient? = null
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     @Inject lateinit var preferences: AppPreferences
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setup)
         setupClient()
 
-        action_signin.isEnabled = false
-        action_signin.setOnClickListener {
+        actionSignIn.setOnClickListener {
             signIn()
         }
 
-        action_continue.setOnClickListener {
-            signInAnonymously()
+        actionContinue.setOnClickListener {
+            signInOffline()
         }
 
         cardSwitcher?.let {
@@ -65,7 +58,7 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             window.statusBarColor = primaryDarkColor?.rgb ?: color(R.color.primaryDarkColor)
             setupTitle?.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
             setupSubtitle?.setTextColor(primaryColor?.bodyTextColor ?: color(R.color.white))
-            action_continue.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
+            actionContinue.setTextColor(primaryColor?.titleTextColor ?: color(R.color.white))
         }
 
         actionPrivacyPolicy.setOnClickListener {
@@ -80,94 +73,33 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
         }
     }
 
+    override fun setupComponent() {
+        DeckApp.component.inject(this)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
+        when (requestCode) {
             RC_SIGN_IN -> {
-                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+                val result = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleSignInResult(result)
             }
-            RC_PLAY_SERVICES_ERROR -> {
-                setupClient()
-            }
         }
     }
-
-
-    override fun setupComponent(component: AppComponent) {
-        component.inject(this)
-    }
-
-
-    override fun onConnectionFailed(p0: ConnectionResult) {
-        Timber.e("onConnectionFailed(${p0.errorCode} :: ${p0.errorMessage}")
-        p0.startResolutionForResult(this, RC_PLAY_SERVICES_ERROR)
-    }
-
-
-    override fun onConnected(p0: Bundle?) {
-        Timber.i("onConnected($p0)")
-        action_signin.isEnabled = true
-    }
-
-
-    override fun onConnectionSuspended(p0: Int) {
-        Timber.i("onConnectionSuspended($p0)")
-    }
-
 
     private fun setupClient() {
-        val result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
-        if (result == ConnectionResult.SUCCESS) {
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
 
-            googleClient = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this, this)
-                    .addConnectionCallbacks(this)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build()
-        } else {
-            GoogleApiAvailability.getInstance().showErrorDialogFragment(this, result, RC_PLAY_SERVICES_ERROR)
-        }
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
-
 
     private fun signIn() {
-        if (googleClient?.isConnected == true) {
-            val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleClient)
-            startActivityForResult(signInIntent, RC_SIGN_IN)
-        } else if (googleClient != null && googleClient?.isConnecting != true) {
-            // We should probably attempt to re-setup the client here
-            setupClient()
-        }
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
-
-
-    private fun signInAnonymously() {
-//        try {
-//            disposables += RxFirebase.from(firebaseAuth.signInAnonymously())
-//                    .subscribe({
-//                        Analytics.event(Event.Login.Anonymous)
-//                        startActivity(HomeActivity.createIntent(this@SetupActivity))
-//                        finish()
-//                    }, {
-//                        Timber.e(it)
-//                        Timber.i("Anonymous signin failed, generate an offline device id")
-//                        signInOffline()
-//                    })
-//        } catch (e: Exception) {
-//            Timber.e(e)
-//            Timber.i("Anonymous signin failed, generate an offline device id")
-//            signInOffline()
-//        }
-
-        signInOffline()
-    }
-
 
     private fun signInOffline() {
         preferences.offlineId.set(UUID.randomUUID().toString())
@@ -176,48 +108,40 @@ class SetupActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
         finish()
     }
 
-
-    private fun handleSignInResult(result: GoogleSignInResult) {
+    private fun handleSignInResult(completionTask: Task<GoogleSignInAccount>) {
         try {
-            if (result.isSuccess) {
-                val acct = result.signInAccount
-                val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
-                firebaseAuth.signInWithCredential(credential)
-                        .addOnFailureListener {
-                            Timber.e(it, "Some critical error occurred when trying to sign in")
-                            snackbar("Uh-oh! Something happened, unable to sign-in")
+            val account = completionTask.getResult(ApiException::class.java)!!
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            firebaseAuth.signInWithCredential(credential)
+                .addOnFailureListener {
+                    Timber.e(it, "Some critical error occurred when trying to sign in")
+                    snackbar("Uh-oh! Something happened, unable to sign-in")
+                }
+                .addOnCompleteListener { r ->
+                    if (r.isSuccessful) {
+                        // Auto-grab the user's name from their account
+                        r.result?.user?.displayName?.let {
+                            preferences.playerName.set(it)
                         }
-                        .addOnCompleteListener { r ->
-                            if (r.isSuccessful) {
-                                // Auto-grab the user's name from their account
-                                r.result?.user?.displayName?.let {
-                                    preferences.playerName.set(it)
-                                }
-                                r.result?.user?.uid?.let {
-                                    Analytics.userId(it)
-                                }
-                                Analytics.event(Event.Login.Google)
-                                startActivity(HomeActivity.createIntent(this@SetupActivity))
-                                finish()
-                            } else {
-                                Timber.e(r.exception, "Authentication Failed: ${r.result}")
-                                snackbar("Authentication failed")
-                            }
+                        r.result?.user?.uid?.let {
+                            Analytics.userId(it)
                         }
-            } else {
-                Timber.e("Authentication Failed: ${result.status}")
-                snackbar("Authenticated failed")
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-            snackbar("Unable to sign in with your Google account")
+                        Analytics.event(Event.Login.Google)
+                        startActivity(HomeActivity.createIntent(this@SetupActivity))
+                        finish()
+                    } else {
+                        Timber.e(r.exception, "Authentication Failed: ${r.result}")
+                        snackbar("Authentication failed")
+                    }
+                }
+        } catch (e: ApiException) {
+            Timber.e("Authentication Failed: ${e.message}")
+            snackbar("Authenticated failed")
         }
     }
 
-
     companion object {
         const val RC_SIGN_IN = 100
-        const val RC_PLAY_SERVICES_ERROR = 10
 
         fun createIntent(context: Context): Intent = Intent(context, SetupActivity::class.java)
     }

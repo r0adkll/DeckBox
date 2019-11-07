@@ -1,19 +1,19 @@
 package com.r0adkll.deckbuilder.util.glide.palette;
 
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.util.Preconditions;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 
 /**
  * A builder to easily handle the different swatches and set the background and text colors.

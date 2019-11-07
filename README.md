@@ -2,7 +2,7 @@
 <img src="art/github_preview.png" width="100%" />
 </p> 
 
-[![Build Status](https://app.bitrise.io/app/5d3a8885ec39a72b/status.svg?token=H8Sqp47-k-Ed-tkOkBFSSA&branch=development)](https://app.bitrise.io/app/5d3a8885ec39a72b)
+[![Build Status](https://github.com/r0adkll/DeckBox/workflows/Build%20Status/badge.svg)](https://github.com/r0adkll/DeckBox/actions) &nbsp; [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
 
 **DeckBox** is an unofficial deck building app for creating and managing your Pokémon TCG decklists. Whether you are building and tweaking the top decks in the meta or just experimenting with some spicy rogue decks, search through a large collection of Pokémon cards that span from the latest expansion all the way back to the base set
 
@@ -17,7 +17,6 @@ View the progress of upcoming and currently worked on features for this project.
 <a href="https://play.google.com/store/apps/details?id=com.r0adkll.deckbuilder"><img src="https://cdn.rawgit.com/steverichey/google-play-badge-svg/master/img/en_get.svg" width="300px" align="center"/>
 </a>
 </p>
-
 
 ## API
 [![pokemontcg-developers on discord](https://img.shields.io/badge/discord-pokemontcg--developers-738bd7.svg)](https://discord.gg/dpsTCvg)  

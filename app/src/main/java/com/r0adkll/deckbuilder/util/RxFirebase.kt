@@ -1,30 +1,24 @@
 package com.r0adkll.deckbuilder.util
 
-
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import timber.log.Timber
 import java.util.concurrent.Executor
-import kotlin.reflect.KClass
-
 
 object RxFirebase {
 
     fun <T : Any> Task<T>.asObservable(executor: Executor): Observable<T> {
-        return RxFirebase.from(this, executor)
+        return from(this, executor)
     }
 
     fun Task<Void>.asVoidObservable(executor: Executor): Observable<Unit> {
-        return RxFirebase.fromVoid(this, executor)
+        return fromVoid(this, executor)
     }
 
     inline fun <reified T : Any> Query.observeAs(): Flowable<List<T>> {
@@ -43,7 +37,6 @@ object RxFirebase {
             source.setCancellable {
                 registration.remove()
             }
-
         }, BackpressureStrategy.BUFFER)
     }
 
@@ -68,18 +61,16 @@ object RxFirebase {
             source.setCancellable {
                 registration.remove()
             }
-
         }, BackpressureStrategy.BUFFER)
     }
-
 
     /**
      * Create an observable for any [Task] spawned from Firebase operation
      */
-    fun <T : Any> from(task: Task<T>) : Observable<T> {
+    fun <T : Any> from(task: Task<T>): Observable<T> {
         return Observable.create { emitter ->
             val successListener = OnSuccessListener<T> {
-                if(!emitter.isDisposed) {
+                if (!emitter.isDisposed) {
                     Timber.d("RxFirebase::from::onSuccess($it)")
                     emitter.onNext(it)
                     emitter.onComplete()
@@ -87,7 +78,7 @@ object RxFirebase {
             }
 
             val failureListener = OnFailureListener {
-                if(!emitter.isDisposed) {
+                if (!emitter.isDisposed) {
                     Timber.w("RxFirebase::from::onFailure($it)")
                     emitter.onError(it)
                 }
@@ -98,14 +89,13 @@ object RxFirebase {
         }
     }
 
-
     /**
      * Create an observable for any [Task] spawned from Firebase operation
      */
-    fun <T : Any> from(task: Task<T>, executor: Executor) : Observable<T> {
+    fun <T : Any> from(task: Task<T>, executor: Executor): Observable<T> {
         return Observable.create { emitter ->
             val successListener = OnSuccessListener<T> {
-                if(!emitter.isDisposed) {
+                if (!emitter.isDisposed) {
                     Timber.d("RxFirebase::from::onSuccess($it)")
                     emitter.onNext(it)
                     emitter.onComplete()
@@ -113,7 +103,7 @@ object RxFirebase {
             }
 
             val failureListener = OnFailureListener {
-                if(!emitter.isDisposed) {
+                if (!emitter.isDisposed) {
                     Timber.w("RxFirebase::from::onFailure($it)")
                     emitter.onError(it)
                 }
@@ -124,14 +114,13 @@ object RxFirebase {
         }
     }
 
-
     /**
      * Create an observable for any [Task] spawned from Firebase operation
      */
-    fun fromVoid(task: Task<Void>) : Observable<Unit> {
+    fun fromVoid(task: Task<Void>): Observable<Unit> {
         return Observable.create { emitter ->
             val successListener = OnSuccessListener<Void> {
-                if(!emitter.isDisposed) {
+                if (!emitter.isDisposed) {
                     Timber.d("RxFirebase::from::onSuccess($it)")
                     emitter.onNext(Unit)
                     emitter.onComplete()
@@ -139,7 +128,7 @@ object RxFirebase {
             }
 
             val failureListener = OnFailureListener {
-                if(!emitter.isDisposed) {
+                if (!emitter.isDisposed) {
                     Timber.w("RxFirebase::from::onFailure($it)")
                     emitter.onError(it)
                 }
@@ -150,14 +139,13 @@ object RxFirebase {
         }
     }
 
-
     /**
      * Create an observable for any [Task] spawned from Firebase operation
      */
-    fun fromVoid(task: Task<Void>, executor: Executor) : Observable<Unit> {
+    fun fromVoid(task: Task<Void>, executor: Executor): Observable<Unit> {
         return Observable.create { emitter ->
             val successListener = OnSuccessListener<Void> {
-                if(!emitter.isDisposed) {
+                if (!emitter.isDisposed) {
                     Timber.d("RxFirebase::from::onSuccess($it)")
                     emitter.onNext(Unit)
                     emitter.onComplete()
@@ -165,7 +153,7 @@ object RxFirebase {
             }
 
             val failureListener = OnFailureListener {
-                if(!emitter.isDisposed) {
+                if (!emitter.isDisposed) {
                     Timber.w("RxFirebase::from::onFailure($it)")
                     emitter.onError(it)
                 }

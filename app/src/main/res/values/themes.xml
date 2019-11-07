@@ -14,8 +14,7 @@
 
     </style>
 
-    <style name="Theme.DeckBuilder" parent="Base.Theme.DeckBuilder">
-    </style>
+    <style name="Theme.DeckBuilder" parent="Base.Theme.DeckBuilder"></style>
 
     <style name="Theme.DeckBuilder.Splash">
         <item name="android:windowBackground">@drawable/splash_screen</item>
@@ -35,8 +34,7 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
-    <style name="Theme.DeckBuilder.Export">
-    </style>
+    <style name="Theme.DeckBuilder.Export"></style>
 
     <style name="Theme.DeckBuilder.Translucent">
         <item name="android:windowTranslucentStatus">true</item>

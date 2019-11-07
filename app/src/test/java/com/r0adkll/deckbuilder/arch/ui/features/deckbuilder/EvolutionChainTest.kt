@@ -4,19 +4,25 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
-import org.amshove.kluent.*
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldEqualTo
+import org.amshove.kluent.shouldNotBeNull
+import org.amshove.kluent.shouldNotEqual
 import org.junit.Test
 
-
+/* ktlint-disable max-line-length */
 class EvolutionChainTest {
 
     @Test
     fun testListEquality() {
         val chain1 = EvolutionChain.build(listOf(
-                createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
+            createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
         ))
         val chain2 = EvolutionChain.build(listOf(
-                createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
+            createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
         ))
 
         chain1 shouldEqual chain2
@@ -25,10 +31,10 @@ class EvolutionChainTest {
     @Test
     fun testListInequalityViaCollectionCount() {
         val chain1 = EvolutionChain.build(listOf(
-                createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
+            createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 1)
         ))
         val chain2 = EvolutionChain.build(listOf(
-                createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 4)
+            createPokemonCard().copy(id = "sm1-1", name = "Eevee").stack(collection = 4)
         ))
 
         chain1 shouldNotEqual chain2
@@ -46,7 +52,6 @@ class EvolutionChainTest {
         chain.nodes[0].cards[0].shouldEqual(pokemon.stack())
     }
 
-
     @Test
     fun testAddEvolutionPokemon() {
         val pokemon = createPokemonCard().copy(id = "sm1-5", name = "Eevee")
@@ -61,7 +66,6 @@ class EvolutionChainTest {
         chain.first()!!.name?.shouldBeEqualTo("Eevee")
         chain.last()!!.name?.shouldBeEqualTo("Espeon-GX")
     }
-
 
     @Test
     fun testAddBasicOutOfOrder() {
@@ -79,7 +83,6 @@ class EvolutionChainTest {
         chain.last().shouldNotBeNull()
         chain.last()?.name?.shouldBeEqualTo("Espeon-GX")
     }
-
 
     @Test
     fun testAddMultipleBasic() {
@@ -105,7 +108,6 @@ class EvolutionChainTest {
         chain.last()!!.evolvesFrom?.shouldBeEqualTo("Eevee")
     }
 
-
     @Test
     fun testIsChainForCard() {
         val pokemon1 = createPokemonCard().copy(id = "sm1-6", name = "Eevee")
@@ -122,14 +124,13 @@ class EvolutionChainTest {
         chain.isChainFor(pokemonDiff.stack()).shouldBeFalse()
     }
 
-
     @Test
     fun testBuildChainList() {
         val pokemons = listOf(
-                createPokemonCard().copy(id = "sm1-6", name = "Eevee"),
-                createPokemonCard().copy(id = "sm1-10", name = "Umbreon-GX", evolvesFrom = "Eevee"),
-                createPokemonCard().copy(id = "sm1-11", name = "Espeon-GX", evolvesFrom = "Eevee"),
-                createPokemonCard().copy(id = "sm2-20", name = "Tapu Lele")
+            createPokemonCard().copy(id = "sm1-6", name = "Eevee"),
+            createPokemonCard().copy(id = "sm1-10", name = "Umbreon-GX", evolvesFrom = "Eevee"),
+            createPokemonCard().copy(id = "sm1-11", name = "Espeon-GX", evolvesFrom = "Eevee"),
+            createPokemonCard().copy(id = "sm2-20", name = "Tapu Lele")
         )
 
         val chains = EvolutionChain.build(pokemons.map { it.stack() })
@@ -139,13 +140,12 @@ class EvolutionChainTest {
         chains[1].nodes.size.shouldEqualTo(1)
     }
 
-
     @Test
     fun testStage2OutOfOrderChainBuilding() {
         val pokemons = listOf(
-                createPokemonCard().copy(id = "sm3-10", name = "Alolan Golem-GX", evolvesFrom = "Alolan Graveler", nationalPokedexNumber = 10).stack(),
-                createPokemonCard().copy(id = "sm3-9", name = "Alolan Graveler", evolvesFrom = "Alolan Geodude", nationalPokedexNumber = 9).stack(),
-                createPokemonCard().copy(id = "sm3-8", name = "Alolan Geodude", nationalPokedexNumber = 8).stack()
+            createPokemonCard().copy(id = "sm3-10", name = "Alolan Golem-GX", evolvesFrom = "Alolan Graveler", nationalPokedexNumber = 10).stack(),
+            createPokemonCard().copy(id = "sm3-9", name = "Alolan Graveler", evolvesFrom = "Alolan Geodude", nationalPokedexNumber = 9).stack(),
+            createPokemonCard().copy(id = "sm3-8", name = "Alolan Geodude", nationalPokedexNumber = 8).stack()
         )
 
         val chains = EvolutionChain.build(pokemons)
@@ -155,15 +155,13 @@ class EvolutionChainTest {
         chains[0].nodes[0].cards.contains(pokemons[2]).shouldBeTrue()
         chains[0].nodes[1].cards.contains(pokemons[1]).shouldBeTrue()
         chains[0].nodes[2].cards.contains(pokemons[0]).shouldBeTrue()
-
     }
-
 
     @Test
     fun testShortStage2OutOfOrderChainBuilding() {
         val pokemons = listOf(
-                createPokemonCard().copy(id = "sm3-10", name = "Alolan Golem-GX", evolvesFrom = "Alolan Graveler", nationalPokedexNumber = 10).stack(),
-                createPokemonCard().copy(id = "sm3-9", name = "Alolan Graveler", evolvesFrom = "Alolan Geodude", nationalPokedexNumber = 9).stack()
+            createPokemonCard().copy(id = "sm3-10", name = "Alolan Golem-GX", evolvesFrom = "Alolan Graveler", nationalPokedexNumber = 10).stack(),
+            createPokemonCard().copy(id = "sm3-9", name = "Alolan Graveler", evolvesFrom = "Alolan Geodude", nationalPokedexNumber = 9).stack()
         )
 
         val chains = EvolutionChain.build(pokemons)
@@ -172,16 +170,14 @@ class EvolutionChainTest {
         chains[0].nodes.size.shouldEqualTo(2)
         chains[0].nodes[0].cards.contains(pokemons[1]).shouldBeTrue()
         chains[0].nodes[1].cards.contains(pokemons[0]).shouldBeTrue()
-
     }
-
 
     @Test
     fun testBreakEvolutionChain() {
         val pokemons = listOf(
-                createPokemonCard().copy(id = "xy11-6", name = "Yanma", nationalPokedexNumber = 193).stack(),
-                createPokemonCard().copy(id = "xy11-8", name = "Yanmega BREAK", nationalPokedexNumber = 469, evolvesFrom = "Yanmega").stack(),
-                createPokemonCard().copy(id = "xy11-7", name = "Yanmega", nationalPokedexNumber = 469, evolvesFrom = "Yanma").stack()
+            createPokemonCard().copy(id = "xy11-6", name = "Yanma", nationalPokedexNumber = 193).stack(),
+            createPokemonCard().copy(id = "xy11-8", name = "Yanmega BREAK", nationalPokedexNumber = 469, evolvesFrom = "Yanmega").stack(),
+            createPokemonCard().copy(id = "xy11-7", name = "Yanmega", nationalPokedexNumber = 469, evolvesFrom = "Yanma").stack()
         )
 
         val chains = EvolutionChain.build(pokemons)
@@ -196,12 +192,11 @@ class EvolutionChainTest {
     @Test
     fun testCommonFossilChains() {
         val pokemons = listOf(
-                createPokemonCard("Omanyte").copy(id = "sm5-100", nationalPokedexNumber = 138, evolvesFrom = "Unidentified Fossil").stack(),
-                createPokemonCard("Aerodactyl-GX").copy(id = "sm11-106", nationalPokedexNumber = 142, evolvesFrom = "Unidentified Fossil").stack(),
-                createPokemonCard("Cranidos").copy(id = "sm5-64", nationalPokedexNumber = 408, evolvesFrom = "Unidentified Fossil").stack(),
-                createPokemonCard("Omastar").copy(id = "sm9-76", nationalPokedexNumber = 139, evolvesFrom = "Omanyte").stack()
+            createPokemonCard("Omanyte").copy(id = "sm5-100", nationalPokedexNumber = 138, evolvesFrom = "Unidentified Fossil").stack(),
+            createPokemonCard("Aerodactyl-GX").copy(id = "sm11-106", nationalPokedexNumber = 142, evolvesFrom = "Unidentified Fossil").stack(),
+            createPokemonCard("Cranidos").copy(id = "sm5-64", nationalPokedexNumber = 408, evolvesFrom = "Unidentified Fossil").stack(),
+            createPokemonCard("Omastar").copy(id = "sm9-76", nationalPokedexNumber = 139, evolvesFrom = "Omanyte").stack()
         )
-
         val chains = EvolutionChain.build(pokemons)
 
         chains.size shouldEqualTo 3
@@ -214,3 +209,4 @@ class EvolutionChainTest {
 
     fun PokemonCard.stack(count: Int = 1, collection: Int? = null): StackedPokemonCard = StackedPokemonCard(this, count, collection)
 }
+/* ktlint-enable max-line-length */

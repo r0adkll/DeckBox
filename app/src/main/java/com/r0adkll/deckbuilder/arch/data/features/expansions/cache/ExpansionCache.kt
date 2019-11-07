@@ -1,9 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.expansions.cache
 
-
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import io.reactivex.Observable
-
 
 interface ExpansionCache {
 

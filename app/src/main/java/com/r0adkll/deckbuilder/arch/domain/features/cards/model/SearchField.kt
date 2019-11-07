@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 
-
 enum class SearchField {
     NAME,
     TEXT,

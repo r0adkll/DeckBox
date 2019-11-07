@@ -1,17 +1,17 @@
 package com.r0adkll.deckbuilder.arch.ui.components.drag
 
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import android.view.DragEvent
 import android.view.View
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.color
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator
+import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 
 class EditDragListener(
-        private val dropZone: View,
-        dropListener: DropListener
+    private val dropZone: View,
+    dropListener: DropListener
 ) : View.OnDragListener {
 
     private val actionAdd: TextView by lazy { dropZone.findViewById<TextView>(R.id.dropZoneAdd) }
@@ -48,23 +48,23 @@ class EditDragListener(
 
     private fun showDropZone() {
         dropZone.animate()
-                .translationY(0f)
-                .setDuration(ANIM_DURATION)
-                .setInterpolator(FastOutLinearInInterpolator())
-                .start()
+            .translationY(0f)
+            .setDuration(ANIM_DURATION)
+            .setInterpolator(FastOutLinearInInterpolator())
+            .start()
     }
 
     private fun hideDropZone() {
         dropZone.animate()
-                .translationY(dropZone.resources.getDimension(R.dimen.dropzone_height_inverse))
-                .setDuration(ANIM_DURATION)
-                .setInterpolator(FastOutLinearInInterpolator())
-                .start()
+            .translationY(dropZone.resources.getDimension(R.dimen.dropzone_height_inverse))
+            .setDuration(ANIM_DURATION)
+            .setInterpolator(FastOutLinearInInterpolator())
+            .start()
     }
 
     private class AddDragListener(
-            val actionAdd: View,
-            val listener: DropListener
+        val actionAdd: View,
+        val listener: DropListener
     ) : View.OnDragListener {
 
         private val selectedColor by lazy { actionAdd.color(R.color.dropzone_green_selected) }
@@ -110,8 +110,8 @@ class EditDragListener(
     }
 
     private class RemoveDragListener(
-            val actionRemove: View,
-            val listener: DropListener
+        val actionRemove: View,
+        val listener: DropListener
     ) : View.OnDragListener {
 
         private val selectedColor by lazy { actionRemove.color(R.color.dropzone_red_selected) }

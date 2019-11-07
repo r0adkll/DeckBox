@@ -3,11 +3,12 @@ package com.r0adkll.deckbuilder.arch.data.features.validation.model
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
+import com.r0adkll.deckbuilder.util.CardUtils
 
 class PrismStarRule : Rule {
 
     override fun check(cards: List<PokemonCard>): Int? {
-        val groups = cards.filter { it.name.contains("◇") }.groupBy { it.name }
+        val groups = cards.filter { it.name.contains(CardUtils.PRISM_SYMBOL) }.groupBy { it.name }
         val invalidGroups = groups.values.find { it.size > MAX_COUNT }
 
         return if (invalidGroups == null) {

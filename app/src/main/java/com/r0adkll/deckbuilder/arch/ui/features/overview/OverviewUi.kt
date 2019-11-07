@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 
-
 interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
 
     interface Intentions {
@@ -19,25 +18,23 @@ interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
         fun removeCard(): Observable<PokemonCard>
     }
 
-
     interface Actions : BaseActions {
 
         fun showCards(cards: List<EvolutionChain>)
     }
 
-
     @PaperParcel
     data class State @JvmOverloads constructor(
-            override val isLoading: Boolean,
-            override val error: String?,
+        override val isLoading: Boolean,
+        override val error: String?,
 
-            // The identifiers by which cards are loaded, these are set before 'start()' is called
-            val sessionId: Long,
+        // The identifiers by which cards are loaded, these are set before 'start()' is called
+        val sessionId: Long,
 
-            @Transient val cards: List<PokemonCard> = emptyList()
+        @Transient val cards: List<PokemonCard> = emptyList()
     ) : BaseState<State.Change>(isLoading, error), PaperParcelable {
 
-        override fun reduce(change: Change): Ui.State<Change> = when(change) {
+        override fun reduce(change: Change): Ui.State<Change> = when (change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.CardsLoaded -> this.copy(cards = change.cards, isLoading = false)
@@ -54,7 +51,8 @@ interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
         }
 
         companion object {
-            @JvmField val CREATOR = PaperParcelOverviewUi_State.CREATOR
+            @JvmField
+            val CREATOR = PaperParcelOverviewUi_State.CREATOR
 
             val DEFAULT by lazy {
                 State(false, null, Session.NO_ID, emptyList())

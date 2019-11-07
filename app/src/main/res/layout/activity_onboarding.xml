@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary">
+    android:background="?attr/colorPrimary"
+    >
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
@@ -16,7 +17,8 @@
         android:id="@+id/actions"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        >
 
         <Button
             style="@style/Widget.AppCompat.Button.Borderless"

@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.importer.repository
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import io.reactivex.Observable
 
-
 interface Importer {
 
     /**

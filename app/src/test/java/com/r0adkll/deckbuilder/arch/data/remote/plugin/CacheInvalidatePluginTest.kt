@@ -8,7 +8,16 @@ import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersio
 import com.r0adkll.deckbuilder.tools.ModelUtils.EXPANSIONS
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
-import org.amshove.kluent.*
+import org.amshove.kluent.Verify
+import org.amshove.kluent.When
+import org.amshove.kluent.any
+import org.amshove.kluent.called
+import org.amshove.kluent.calling
+import org.amshove.kluent.itReturns
+import org.amshove.kluent.mock
+import org.amshove.kluent.on
+import org.amshove.kluent.that
+import org.amshove.kluent.was
 import org.junit.Before
 import org.junit.Test
 
@@ -44,7 +53,8 @@ class CacheInvalidatePluginTest {
     @Test
     fun testInvalidateByMissingExpansion() {
         When calling remote.expansionVersion itReturns ExpansionVersion(1, "sm8")
-        When calling expansionDataSource.getExpansions(any()) itReturns Observable.just(EXPANSIONS.filter { it.code != "sm8" })
+        When calling expansionDataSource.getExpansions(any()) itReturns
+            Observable.just(EXPANSIONS.filter { it.code != "sm8" })
         When calling expansionDataSource.refreshExpansions() itReturns Observable.just(EXPANSIONS.toList())
         When calling preferences.expansionsVersion itReturns 1
         val plugin = CacheInvalidatePlugin(expansionDataSource, preferences, schedulers)

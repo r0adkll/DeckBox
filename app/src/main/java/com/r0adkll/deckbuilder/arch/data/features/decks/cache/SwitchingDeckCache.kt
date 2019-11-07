@@ -7,14 +7,13 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import io.reactivex.Observable
 import javax.inject.Inject
 
-
 class SwitchingDeckCache @Inject constructor(
-        val roomDeckCache: RoomDeckCache,
-        val firestoreDeckCache: FirestoreDeckCache,
-        val preferences: AppPreferences
-): DeckCache {
+    val roomDeckCache: RoomDeckCache,
+    val firestoreDeckCache: FirestoreDeckCache,
+    val preferences: AppPreferences
+) : DeckCache {
 
-    override fun getDeck(id: String): Observable<Deck> = when(isOffline()) {
+    override fun getDeck(id: String): Observable<Deck> = when (isOffline()) {
         true -> roomDeckCache.getDeck(id)
         else -> firestoreDeckCache.getDeck(id)
     }
@@ -27,23 +26,23 @@ class SwitchingDeckCache @Inject constructor(
     }
 
     override fun putDeck(
-            id: String?,
-            cards: List<PokemonCard>,
-            name: String,
-            description: String?,
-            image: DeckImage?,
-            collectionOnly: Boolean
-    ): Observable<Deck> = when(isOffline()) {
+        id: String?,
+        cards: List<PokemonCard>,
+        name: String,
+        description: String?,
+        image: DeckImage?,
+        collectionOnly: Boolean
+    ): Observable<Deck> = when (isOffline()) {
         true -> roomDeckCache.putDeck(id, cards, name, description, image, collectionOnly)
         else -> firestoreDeckCache.putDeck(id, cards, name, description, image, collectionOnly)
     }
 
-    override fun deleteDeck(deck: Deck): Observable<Unit> = when(isOffline()) {
+    override fun deleteDeck(deck: Deck): Observable<Unit> = when (isOffline()) {
         true -> roomDeckCache.deleteDeck(deck)
         else -> firestoreDeckCache.deleteDeck(deck)
     }
 
-    override fun duplicateDeck(deck: Deck): Observable<Unit> = when(isOffline()) {
+    override fun duplicateDeck(deck: Deck): Observable<Unit> = when (isOffline()) {
         true -> roomDeckCache.duplicateDeck(deck)
         else -> firestoreDeckCache.duplicateDeck(deck)
     }

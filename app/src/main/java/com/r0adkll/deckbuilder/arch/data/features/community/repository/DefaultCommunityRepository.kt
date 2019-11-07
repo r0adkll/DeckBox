@@ -7,10 +7,9 @@ import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
 import javax.inject.Inject
 
-
 class DefaultCommunityRepository @Inject constructor(
-        val cache: CommunityCache,
-        val schedulers: AppSchedulers
+    val cache: CommunityCache,
+    val schedulers: AppSchedulers
 ) : CommunityRepository {
 
     override fun getDeckTemplates(): Observable<List<DeckTemplate>> {

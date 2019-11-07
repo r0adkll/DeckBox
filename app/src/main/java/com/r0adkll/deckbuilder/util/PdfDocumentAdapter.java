@@ -14,7 +14,6 @@
 
 package com.r0adkll.deckbuilder.util;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -22,8 +21,8 @@ import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentInfo;
+
 import androidx.annotation.NonNull;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,18 +31,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
+import timber.log.Timber;
 
 public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
 
     private final File file;
 
-
     public PdfDocumentAdapter(@NonNull Context context, @NonNull File file) {
         super(context);
         this.file = file;
     }
-
 
     @Override
     LayoutJob buildLayoutJob(PrintAttributes oldAttributes,
@@ -54,7 +51,6 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
                 cancellationSignal, callback, extras, file));
     }
 
-
     @Override
     WriteJob buildWriteJob(PageRange[] pages,
                            ParcelFileDescriptor destination,
@@ -64,11 +60,9 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
                 callback, ctxt, file));
     }
 
-
     private static class PdfLayoutJob extends LayoutJob {
 
         private final File file;
-
 
         PdfLayoutJob(PrintAttributes oldAttributes,
                      PrintAttributes newAttributes,
@@ -100,7 +94,6 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
 
         private final File file;
 
-
         PdfWriteJob(PageRange[] pages,
                     ParcelFileDescriptor destination,
                     CancellationSignal cancellationSignal,
@@ -110,7 +103,6 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
             super(pages, destination, cancellationSignal, callback, context);
             this.file = file;
         }
-
 
         @Override
         public void run() {
@@ -136,14 +128,13 @@ public class PdfDocumentAdapter extends ThreadedPrintDocumentAdapter {
                 }
             } catch (Exception e) {
                 callback.onWriteFailed(e.getMessage());
-                Log.e(getClass().getSimpleName(), "Exception printing PDF", e);
+                Timber.e(e, "Exception printing PDF");
             } finally {
                 try {
                     in.close();
                     out.close();
                 } catch (IOException e) {
-                    Log.e(getClass().getSimpleName(),
-                            "Exception cleaning up from printing PDF", e);
+                    Timber.e(e, "Exception cleaning up from printing PDF");
                 }
             }
         }

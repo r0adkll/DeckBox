@@ -1,32 +1,38 @@
 package com.r0adkll.deckbuilder.arch.ui.features.decks.adapter
 
-
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupMenu
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.ftinc.kit.kotlin.extensions.setVisible
+import com.ftinc.kit.arch.util.bindView
+import com.ftinc.kit.arch.util.plusAssign
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.ui.components.preview.ExpansionPreviewRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.*
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.DECK
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.HEADER
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.PREVIEW
+import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.QUICK_START
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
-import com.r0adkll.deckbuilder.util.CardUtils
-import com.r0adkll.deckbuilder.util.bindView
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
+import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-
 
 sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), Disposable {
 
@@ -42,11 +48,10 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         disposables.clear()
     }
 
-
     class PreviewViewHolder(
-            itemView: View,
-            private val dismissPreview: Relay<Unit>,
-            private val viewPreview: Relay<ExpansionPreview>
+        itemView: View,
+        private val dismissPreview: Relay<Unit>,
+        private val viewPreview: Relay<ExpansionPreview>
     ) : UiViewHolder<Item.Preview>(itemView) {
 
         private val background by bindView<LinearLayout>(R.id.background)
@@ -56,7 +61,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         private val description by bindView<TextView>(R.id.description)
         private val actionDismiss by bindView<Button>(R.id.actionDismiss)
         private val actionView by bindView<Button>(R.id.actionView)
-
 
         override fun bind(item: Item.Preview) {
             val spec = item.spec.preview
@@ -90,16 +94,14 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         }
     }
 
-
     class QuickViewHolder(
-            itemView: View,
-            private val quickStart: Relay<Deck>,
-            private val dismissQuickStart: Relay<Unit>
+        itemView: View,
+        private val quickStart: Relay<Deck>,
+        private val dismissQuickStart: Relay<Unit>
     ) : UiViewHolder<Item.QuickStart>(itemView) {
 
         private val recycler by bindView<RecyclerView>(R.id.recycler)
         private val actionDismiss by bindView<Button>(R.id.actionDismiss)
-
 
         override fun bind(item: Item.QuickStart) {
             // Setup recycler
@@ -113,23 +115,26 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             val items = if (item.quickStart.templates.isNotEmpty()) {
                 item.quickStart.templates.map { QuickStartRecyclerAdapter.Item.Template(it) }
             } else {
-                (0 until 5).map { QuickStartRecyclerAdapter.Item.Placeholder(it) }
+                (0 until PLACEHOLDER_COUNT).map { QuickStartRecyclerAdapter.Item.Placeholder(it) }
             }
 
-            adapter.setQuickStartItems(items)
+            adapter.submitList(items)
 
             actionDismiss.setOnClickListener {
                 dismissQuickStart.accept(Unit)
             }
         }
+
+        companion object {
+            private const val PLACEHOLDER_COUNT = 5
+        }
     }
 
     class HeaderViewHolder(
-            itemView: View
+        itemView: View
     ) : UiViewHolder<Item.Header>(itemView) {
 
         private val text by bindView<TextView>(R.id.title)
-
 
         override fun bind(item: Item.Header) {
             text.text = item.text
@@ -137,11 +142,11 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
     }
 
     class DeckViewHolder(
-            itemView: View,
-            private val shareClicks: Relay<Deck>,
-            private val duplicateClicks: Relay<Deck>,
-            private val testClicks: Relay<Deck>,
-            private val deleteClicks: Relay<Deck>
+        itemView: View,
+        private val shareClicks: Relay<Deck>,
+        private val duplicateClicks: Relay<Deck>,
+        private val testClicks: Relay<Deck>,
+        private val deleteClicks: Relay<Deck>
     ) : UiViewHolder<Item.DeckItem>(itemView) {
 
         private val image by bindView<DeckImageView>(R.id.image)
@@ -152,23 +157,22 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         private val actionMore by bindView<ImageView>(R.id.action_more)
         private val actionTest by bindView<ImageView>(R.id.action_test)
 
-
         @SuppressLint("ClickableViewAccessibility")
         override fun bind(item: Item.DeckItem) {
             image.topCropEnabled = true
 
             val deck = item.validatedDeck.deck
             title.text = deck.name
-            error.setVisible(deck.isMissingCards)
-            loading.setVisible(item.isLoading)
+            error.isVisible = deck.isMissingCards
+            loading.isVisible = item.isLoading
 
             deck.image?.let {
-                when(it) {
+                when (it) {
                     is DeckImage.Pokemon -> {
                         GlideApp.with(itemView)
-                                .load(it.imageUrl)
-                                .placeholder(R.drawable.pokemon_card_back)
-                                .into(image)
+                            .load(it.imageUrl)
+                            .placeholder(R.drawable.pokemon_card_back)
+                            .into(image)
                     }
                     is DeckImage.Type -> {
                         image.primaryType = it.type1
@@ -177,17 +181,21 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
                 }
             } ?: mostProminentCard(deck.cards)?.let {
                 GlideApp.with(itemView)
-                        .load(it.imageUrl)
-                        .placeholder(R.drawable.pokemon_card_back)
-                        .into(image)
+                    .load(it.imageUrl)
+                    .placeholder(R.drawable.pokemon_card_back)
+                    .into(image)
             }
 
             val popupMenu = PopupMenu(itemView.context, actionMore)
             popupMenu.inflate(R.menu.deck_actions)
             popupMenu.setOnMenuItemClickListener { menuItem ->
-                when(menuItem.itemId) {
-                    R.id.action_duplicate -> { duplicateClicks.accept(deck); true }
-                    R.id.action_delete -> { deleteClicks.accept(deck); true }
+                when (menuItem.itemId) {
+                    R.id.action_duplicate -> {
+                        duplicateClicks.accept(deck); true
+                    }
+                    R.id.action_delete -> {
+                        deleteClicks.accept(deck); true
+                    }
                     else -> false
                 }
             }
@@ -201,15 +209,13 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             actionTest.setOnClickListener { testClicks.accept(deck) }
         }
 
-
         private fun mostProminentCard(cards: List<PokemonCard>): PokemonCard? {
-            val stacks = CardUtils.stackCards().invoke(cards)
+            val stacks = cards.stack()
             val evolutions = EvolutionChain.build(stacks)
             val largestEvolutionLine = evolutions.maxBy { it.size }
             return largestEvolutionLine?.last()?.cards?.firstOrNull()?.card
         }
     }
-
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         PREVIEW(R.layout.item_set_preview),
@@ -221,33 +227,41 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             val VALUES by lazy { values() }
 
             fun of(layoutId: Int): ViewType {
-                val match = VALUES.firstOrNull { it.layoutId == layoutId }
-                match?.let { return match }
-
-                throw EnumConstantNotPresentException(ViewType::class.java, "could not find view type for $layoutId")
+                return VALUES.find { it.layoutId == layoutId }
+                    ?: throw EnumConstantNotPresentException(
+                        ViewType::class.java,
+                        "could not find view type for $layoutId"
+                    )
             }
         }
     }
 
-
     companion object {
 
-        @Suppress("UNCHECKED_CAST")
-        fun create(itemView: View,
-                   layoutId: Int,
-                   shareClicks: Relay<Deck>,
-                   duplicateClicks: Relay<Deck>,
-                   testClicks: Relay<Deck>,
-                   deleteClicks: Relay<Deck>,
-                   dismissPreview: Relay<Unit>,
-                   viewPreview: Relay<ExpansionPreview>,
-                   quickStart: Relay<Deck>,
-                   dismissQuickStart: Relay<Unit>): UiViewHolder<Item> {
-            return when(ViewType.of(layoutId)) {
+        @Suppress("UNCHECKED_CAST", "LongParameterList")
+        fun create(
+            itemView: View,
+            layoutId: Int,
+            shareClicks: Relay<Deck>,
+            duplicateClicks: Relay<Deck>,
+            testClicks: Relay<Deck>,
+            deleteClicks: Relay<Deck>,
+            dismissPreview: Relay<Unit>,
+            viewPreview: Relay<ExpansionPreview>,
+            quickStart: Relay<Deck>,
+            dismissQuickStart: Relay<Unit>
+        ): UiViewHolder<Item> {
+            return when (ViewType.of(layoutId)) {
                 PREVIEW -> PreviewViewHolder(itemView, dismissPreview, viewPreview) as UiViewHolder<Item>
                 QUICK_START -> QuickViewHolder(itemView, quickStart, dismissQuickStart) as UiViewHolder<Item>
                 HEADER -> HeaderViewHolder(itemView) as UiViewHolder<Item>
-                DECK -> DeckViewHolder(itemView, shareClicks, duplicateClicks, testClicks, deleteClicks) as UiViewHolder<Item>
+                DECK -> DeckViewHolder(
+                    itemView,
+                    shareClicks,
+                    duplicateClicks,
+                    testClicks,
+                    deleteClicks
+                ) as UiViewHolder<Item>
             }
         }
     }

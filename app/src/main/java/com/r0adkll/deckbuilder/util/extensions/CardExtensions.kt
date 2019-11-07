@@ -4,11 +4,10 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 
-
 fun Iterable<PokemonCard>.isMulligan(): Boolean {
     return this.none {
-        it.supertype == SuperType.POKEMON
-                && (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank())
+        it.supertype == SuperType.POKEMON &&
+            (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank())
     }
 }
 
@@ -20,8 +19,8 @@ internal val sortableNumberRegex by lazy {
  */
 val PokemonCard.sortableNumber: Int
     get() = sortableNumberRegex.find(number)?.value?.toIntOrNull()
-            ?: number.replace("a", "", true)
-                    .replace("sm", "", true)
-                    .replace("sv", "", true)
-                    .replace("rc", "", true)
-                    .toIntOrNull() ?: -1
+        ?: number.replace("a", "", true)
+            .replace("sm", "", true)
+            .replace("sv", "", true)
+            .replace("rc", "", true)
+            .toIntOrNull() ?: -1

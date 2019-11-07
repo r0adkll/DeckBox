@@ -4,7 +4,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.robinhood.spark.SparkAdapter
 
 class ProductSparkAdapter(
-        private val products: List<Product>
+    private val products: List<Product>
 ) : SparkAdapter() {
 
     private val baseLine = products.maxBy { it.recordedAt }?.marketPrice?.toFloat()

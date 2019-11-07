@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -7,13 +8,12 @@
     tools:padding="16dp"
     >
 
-
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/tournament_pdf_title"
-        android:textSize="@dimen/display_1"
+        android:textSize="@dimen/font_display1"
         android:textColor="@color/black"
         android:textStyle="bold"
         />
@@ -22,7 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,7 +39,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginStart="24dp">
+            android:layout_marginStart="24dp"
+            >
 
             <ImageView
                 android:id="@+id/formatStandard"
@@ -60,14 +62,13 @@
 
         </LinearLayout>
 
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="8dp"
+            >
 
             <ImageView
                 android:id="@+id/formatExpanded"
@@ -103,13 +104,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        >
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -179,13 +182,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="8dp">
+                android:paddingTop="8dp"
+                >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    >
 
                     <ImageView
                         android:id="@+id/optionAgeDivisionJunior"
@@ -207,7 +212,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    >
 
                     <ImageView
                         android:id="@+id/optionAgeDivisionSenior"
@@ -229,7 +235,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    >
 
                     <ImageView
                         android:id="@+id/optionAgeDivisionMasters"
@@ -267,19 +274,22 @@
             android:layout_height="wrap_content"
             android:layout_weight="7"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            >
 
             <TableLayout
                 android:id="@+id/tablePokemon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp">
+                android:layout_marginStart="16dp"
+                >
 
                 <TableRow android:background="#CCC">
 
                     <TextView
                         android:text="@string/tournament_pdf_table_pokemon"
-                        style="@style/TextAppearance.Deck.Pdf.TableTitle" />
+                        style="@style/TextAppearance.Deck.Pdf.TableTitle"
+                        />
 
                 </TableRow>
 
@@ -342,21 +352,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <TableLayout
                 android:id="@+id/tablePokemon2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                >
 
                 <TableRow android:background="#CCC">
 
                     <TextView
                         android:id="@+id/tablePokemon2Title"
                         android:text="@string/tournament_pdf_table_pokemon_contd"
-                        style="@style/TextAppearance.Deck.Pdf.TableTitle" />
+                        style="@style/TextAppearance.Deck.Pdf.TableTitle"
+                        />
 
                 </TableRow>
 
@@ -417,13 +430,15 @@
                 android:id="@+id/tableTrainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp">
+                android:layout_marginStart="16dp"
+                >
 
                 <TableRow android:background="#CCC">
 
                     <TextView
                         android:text="@string/tournament_pdf_table_trainer"
-                        style="@style/TextAppearance.Deck.Pdf.TableTitle" />
+                        style="@style/TextAppearance.Deck.Pdf.TableTitle"
+                        />
 
                 </TableRow>
 
@@ -459,13 +474,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                >
 
                 <TableRow android:background="#CCC">
 
                     <TextView
                         android:text="@string/tournament_pdf_table_energy"
-                        style="@style/TextAppearance.Deck.Pdf.TableTitle" />
+                        style="@style/TextAppearance.Deck.Pdf.TableTitle"
+                        />
 
                 </TableRow>
 

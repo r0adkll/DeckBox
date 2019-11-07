@@ -20,7 +20,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
 import timber.log.Timber
 import java.util.*
 
@@ -74,24 +73,29 @@ object CustomTabsHelper {
 
         // Now packagesSupportingCustomTabs contains all apps that can handle both VIEW intents
         // and service calls.
-        if (packagesSupportingCustomTabs.isEmpty()) {
-            sPackageNameToUse = null
-        } else if (packagesSupportingCustomTabs.size == 1) {
-            sPackageNameToUse = packagesSupportingCustomTabs[0]
-        } else if (!TextUtils.isEmpty(defaultViewHandlerPackageName)
-                && !hasSpecializedHandlerIntents(context, activityIntent)
-                && packagesSupportingCustomTabs.contains(defaultViewHandlerPackageName)) {
-            sPackageNameToUse = defaultViewHandlerPackageName
-        } else if (packagesSupportingCustomTabs.contains(STABLE_PACKAGE)) {
-            sPackageNameToUse = STABLE_PACKAGE
-        } else if (packagesSupportingCustomTabs.contains(BETA_PACKAGE)) {
-            sPackageNameToUse = BETA_PACKAGE
-        } else if (packagesSupportingCustomTabs.contains(DEV_PACKAGE)) {
-            sPackageNameToUse = DEV_PACKAGE
-        } else if (packagesSupportingCustomTabs.contains(LOCAL_PACKAGE)) {
-            sPackageNameToUse = LOCAL_PACKAGE
-        }
+        applySupportingPackages(context, activityIntent, packagesSupportingCustomTabs, defaultViewHandlerPackageName)
         return sPackageNameToUse
+    }
+
+    private fun applySupportingPackages(
+        context: Context,
+        activityIntent: Intent,
+        packagesSupportingCustomTabs: List<String>,
+        defaultViewHandlerPackageName: String?
+    ) {
+        when {
+            packagesSupportingCustomTabs.isEmpty() -> sPackageNameToUse = null
+            packagesSupportingCustomTabs.size == 1 -> sPackageNameToUse = packagesSupportingCustomTabs[0]
+            !TextUtils.isEmpty(defaultViewHandlerPackageName) &&
+                !hasSpecializedHandlerIntents(context, activityIntent) &&
+                packagesSupportingCustomTabs.contains(defaultViewHandlerPackageName) -> {
+                sPackageNameToUse = defaultViewHandlerPackageName
+            }
+            packagesSupportingCustomTabs.contains(STABLE_PACKAGE) -> sPackageNameToUse = STABLE_PACKAGE
+            packagesSupportingCustomTabs.contains(BETA_PACKAGE) -> sPackageNameToUse = BETA_PACKAGE
+            packagesSupportingCustomTabs.contains(DEV_PACKAGE) -> sPackageNameToUse = DEV_PACKAGE
+            packagesSupportingCustomTabs.contains(LOCAL_PACKAGE) -> sPackageNameToUse = LOCAL_PACKAGE
+        }
     }
 
     /**
@@ -99,12 +103,13 @@ object CustomTabsHelper {
      * @param intent The intent to check with.
      * @return Whether there is a specialized handler for the given intent.
      */
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
     private fun hasSpecializedHandlerIntents(context: Context, intent: Intent): Boolean {
         try {
             val pm: PackageManager = context.packageManager
             val handlers: List<ResolveInfo>? = pm.queryIntentActivities(
-                    intent,
-                    PackageManager.GET_RESOLVED_FILTER)
+                intent,
+                PackageManager.GET_RESOLVED_FILTER)
             if (handlers == null || handlers.isEmpty()) {
                 return false
             }
@@ -114,8 +119,8 @@ object CustomTabsHelper {
                 if (resolveInfo.activityInfo == null) continue
                 return true
             }
-        } catch (e: RuntimeException) {
-            Timber.e("Runtime exception while getting specialized handlers")
+        } catch (error: RuntimeException) {
+            Timber.e(error, "Runtime exception while getting specialized handlers")
         }
         return false
     }

@@ -5,13 +5,11 @@ import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 fun Date.toCalendar(): Calendar {
     val c = Calendar.getInstance()
     c.time = this
     return c
 }
-
 
 fun Calendar.clearTime(): Calendar {
     val current = Calendar.getInstance()
@@ -27,7 +25,6 @@ fun Calendar.clearTime(): Calendar {
     return current
 }
 
-
 fun Calendar.setDate(year: Int, month: Int, dayOfMonth: Int): Calendar {
     this.clearTime()
     this[Calendar.YEAR] = year
@@ -36,12 +33,11 @@ fun Calendar.setDate(year: Int, month: Int, dayOfMonth: Int): Calendar {
     return this
 }
 
-
 fun String.iso8601(): Long {
     return ISO8601Utils.parse(this, ParsePosition(0)).time
 }
 
 fun String.fromReleaseDate(): Long {
     val df = SimpleDateFormat("MM/dd/yyyy", Locale.US)
-    return df.parse(this).time
+    return df.parse(this)?.time ?: 0L
 }

@@ -12,21 +12,21 @@ import io.reactivex.functions.BiFunction
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
-
 class DefaultAccountRepository @Inject constructor(
-        val roomDeckCache: RoomDeckCache,
-        val roomCollectionCache: RoomCollectionSource,
-        val firestoreDeckCache: FirestoreDeckCache,
-        val firestoreCollectionCache: FirestoreCollectionSource,
-        val preferences: AppPreferences,
-        val schedulers: AppSchedulers
-): AccountRepository {
+    val roomDeckCache: RoomDeckCache,
+    val roomCollectionCache: RoomCollectionSource,
+    val firestoreDeckCache: FirestoreDeckCache,
+    val firestoreCollectionCache: FirestoreCollectionSource,
+    val preferences: AppPreferences,
+    val schedulers: AppSchedulers
+) : AccountRepository {
 
     override fun migrateAccount(): Observable<Unit> {
-        // Figure out the account type that we need to migrate
         return when {
-            preferences.deviceId != null -> migrateLegacyOfflineAccount() // Legacy unlinked Firestore account
-            preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank() -> migrateOfflineAccount() // New room based offline account
+            // Legacy unlinked Firestore account
+            preferences.deviceId != null -> migrateLegacyOfflineAccount()
+            // New room based offline account
+            preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank() -> migrateOfflineAccount()
             else -> Observable.error(InvalidParameterException("No found to migrate"))
         }
     }
@@ -41,8 +41,8 @@ class DefaultAccountRepository @Inject constructor(
 
     private fun migrateLegacyOfflineAccount(): Observable<Unit> {
         return firestoreDeckCache.migrateOfflineDecks()
-                .doOnNext { preferences.deviceId = null }
-                .subscribeOn(schedulers.firebase)
+            .doOnNext { preferences.deviceId = null }
+            .subscribeOn(schedulers.firebase)
     }
 
     private fun migrateOfflineAccount(): Observable<Unit> {
@@ -55,28 +55,28 @@ class DefaultAccountRepository @Inject constructor(
 
     private fun migrateOfflineDecks(): Observable<Unit> {
         return roomDeckCache.getDecks()
-                .take(1)
-                .flatMap {
-                    firestoreDeckCache.putDecks(it)
-                            .subscribeOn(schedulers.firebase)
-                            .observeOn(schedulers.database)
-                            .doOnNext {
-                                roomDeckCache.deleteAll()
-                            }
-                }
-                .subscribeOn(schedulers.database)
+            .take(1)
+            .flatMap {
+                firestoreDeckCache.putDecks(it)
+                    .subscribeOn(schedulers.firebase)
+                    .observeOn(schedulers.database)
+                    .doOnNext {
+                        roomDeckCache.deleteAll()
+                    }
+            }
+            .subscribeOn(schedulers.database)
     }
 
     private fun migrateOfflineCollectionCounts(): Observable<Unit> {
         return roomCollectionCache.getAll()
-                .flatMapObservable {
-                    firestoreCollectionCache.putCounts(it)
-                            .subscribeOn(schedulers.firebase)
-                            .observeOn(schedulers.database)
-                            .doOnNext {
-                                roomCollectionCache.deleteAll()
-                            }
-                }
-                .subscribeOn(schedulers.database)
+            .flatMapObservable {
+                firestoreCollectionCache.putCounts(it)
+                    .subscribeOn(schedulers.firebase)
+                    .observeOn(schedulers.database)
+                    .doOnNext {
+                        roomCollectionCache.deleteAll()
+                    }
+            }
+            .subscribeOn(schedulers.database)
     }
 }

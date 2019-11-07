@@ -1,18 +1,23 @@
 package com.r0adkll.deckbuilder.internal.analytics.firebase
 
-
 import android.content.Context
 import android.os.Bundle
 import android.provider.Settings
-import com.ftinc.kit.kotlin.utils.bundle
+import com.ftinc.kit.util.bundle
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.FirebaseAnalytics.Param.*
+import com.google.firebase.analytics.FirebaseAnalytics.Param.CONTENT_TYPE
+import com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_CATEGORY
+import com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_ID
+import com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_NAME
+import com.google.firebase.analytics.FirebaseAnalytics.Param.METHOD
+import com.google.firebase.analytics.FirebaseAnalytics.Param.SEARCH_TERM
+import com.google.firebase.analytics.FirebaseAnalytics.Param.VALUE
 import com.r0adkll.deckbuilder.internal.analytics.AnalyticInterface
 import com.r0adkll.deckbuilder.internal.analytics.Event
 
-
+@Suppress("ComplexMethod")
 class FirebaseAnalyticInterface(
-        context: Context
+    context: Context
 ) : AnalyticInterface {
 
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
@@ -37,7 +42,7 @@ class FirebaseAnalyticInterface(
         firebaseAnalytics.logEvent(getEvent(event), getBundle(event))
     }
 
-    private fun getEvent(event: Event): String = when(event) {
+    private fun getEvent(event: Event): String = when (event) {
         is Event.Login -> FirebaseAnalytics.Event.LOGIN
         is Event.SignUp -> FirebaseAnalytics.Event.SIGN_UP
         is Event.SelectContent -> FirebaseAnalytics.Event.SELECT_CONTENT
@@ -50,7 +55,7 @@ class FirebaseAnalyticInterface(
         Event.TutorialComplete -> FirebaseAnalytics.Event.TUTORIAL_COMPLETE
     }
 
-    private fun getBundle(event: Event): Bundle = when(event) {
+    private fun getBundle(event: Event): Bundle = when (event) {
         Event.Login.Google -> bundle { METHOD to "google" }
         Event.Login.Anonymous -> bundle { METHOD to "anonymous" }
         Event.SignUp.Google -> bundle { METHOD to "google" }

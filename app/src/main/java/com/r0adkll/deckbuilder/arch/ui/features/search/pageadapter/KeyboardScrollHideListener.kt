@@ -1,9 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.r0adkll.deckbuilder.util.ImeUtils
-
 
 class KeyboardScrollHideListener(val view: View) : RecyclerView.OnScrollListener() {
 

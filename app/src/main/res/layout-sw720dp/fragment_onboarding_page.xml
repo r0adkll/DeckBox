@@ -21,14 +21,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        >
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="@dimen/display_2"
+            android:textSize="@dimen/font_display2"
             android:fontFamily="sans-serif-medium"
             tools:text="@string/onboarding_title_search"
             />

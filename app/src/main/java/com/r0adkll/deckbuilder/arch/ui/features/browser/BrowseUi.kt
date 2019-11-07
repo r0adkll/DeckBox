@@ -1,20 +1,16 @@
 package com.r0adkll.deckbuilder.arch.ui.features.browser
 
-
 import android.os.Parcelable
+import com.ftinc.kit.arch.presentation.BaseActions
+import com.ftinc.kit.arch.presentation.state.BaseState
+import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.browser.adapter.Item
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
-interface BrowseUi : StateRenderer<BrowseUi.State> {
-
-    val state: State
-
+interface BrowseUi : Ui<BrowseUi.State, BrowseUi.State.Change> {
 
     interface Intentions {
 
@@ -24,23 +20,21 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
         fun hideOfflineOutline(): Observable<Unit>
     }
 
-
     interface Actions : BaseActions {
 
         fun setExpansionsItems(items: List<Item>)
     }
 
-
     @Parcelize
     data class State(
-            val isLoading: Boolean,
-            val error: String?,
-            val expansions: List<Expansion>,
-            val offlineStatus: OfflineStatus?,
-            val offlineOutline: Boolean
-    ) : Parcelable {
+        override val isLoading: Boolean,
+        override val error: String?,
+        val expansions: List<Expansion>,
+        val offlineStatus: OfflineStatus?,
+        val offlineOutline: Boolean
+    ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when (change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.ExpansionsLoaded -> this.copy(expansions = change.expansions, isLoading = false)
@@ -48,20 +42,20 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
             is Change.OfflineOutline -> this.copy(offlineOutline = change.enabled)
         }
 
-
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String) : Ui.State.Change(logText) {
             object IsLoading : Change("network -> loading expansions")
             class Error(val description: String) : Change("error -> $description")
-            class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions(${expansions.size}) loaded")
+            class ExpansionsLoaded(
+                val expansions: List<Expansion>
+            ) : Change("network -> expansions(${expansions.size}) loaded")
             class OfflineStatusUpdated(val status: OfflineStatus) : Change("disk -> offline status($status)")
-            class OfflineOutline(val enabled: Boolean): Change("user -> offline outline($enabled)")
+            class OfflineOutline(val enabled: Boolean) : Change("user -> offline outline($enabled)")
         }
-
 
         override fun toString(): String {
-            return "State(isLoading=$isLoading, error=$error, expansions=${expansions.map { it.code }}, offlineStats=$offlineStatus, offlineOutline=$offlineOutline)"
+            return "State(isLoading=$isLoading, error=$error, expansions=${expansions.map { it.code }}, " +
+                "offlineStats=$offlineStatus, offlineOutline=$offlineOutline)"
         }
-
 
         companion object {
 
@@ -70,5 +64,4 @@ interface BrowseUi : StateRenderer<BrowseUi.State> {
             }
         }
     }
-
 }

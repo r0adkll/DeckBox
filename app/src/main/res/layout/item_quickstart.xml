@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
@@ -18,8 +19,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/actionDismiss"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -29,7 +30,8 @@
         android:elevation="@dimen/cardview_default_elevation"
         app:layout_constraintEnd_toEndOf="@+id/cardView2"
         app:layout_constraintStart_toStartOf="@+id/cardView2"
-        app:layout_constraintTop_toTopOf="@+id/cardView2">
+        app:layout_constraintTop_toTopOf="@+id/cardView2"
+        >
 
         <TextView
             android:id="@+id/title"
@@ -52,10 +54,10 @@
             android:paddingTop="4dp"
             android:paddingEnd="@dimen/padding_normal"
             android:paddingBottom="@dimen/padding_normal"
-            android:text="@string/deck_quickstart_message_extended" />
+            android:text="@string/deck_quickstart_message_extended"
+            />
 
     </LinearLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
@@ -74,7 +76,8 @@
         android:clipChildren="false"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_deck_placeholder" />
+        tools:listitem="@layout/item_deck_placeholder"
+        />
 
     <Button
         android:id="@+id/actionDismiss"
@@ -86,7 +89,7 @@
         android:text="@string/action_dismiss"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/cardView2"
-        app:layout_constraintTop_toBottomOf="@+id/recycler" />
-
+        app:layout_constraintTop_toBottomOf="@+id/recycler"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

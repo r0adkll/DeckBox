@@ -5,7 +5,6 @@ import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.Test
 
-
 class SizeRuleTest {
 
     @Test
@@ -28,7 +27,6 @@ class SizeRuleTest {
         result.shouldNotBeNull()
     }
 
-
     @Test
     fun shouldFailTooManySizeRule() {
         val cards = (0..100).map { ModelUtils.createPokemonCard() }
@@ -38,5 +36,4 @@ class SizeRuleTest {
 
         result.shouldNotBeNull()
     }
-
 }

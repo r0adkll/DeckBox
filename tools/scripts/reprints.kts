@@ -25,15 +25,15 @@ import java.io.File
 // Define hashing function
 fun Card.reprintHash(): Long {
     return (this.name.hashCode().toLong() * 31L) +
-            (this.text?.hashCode()?.toLong() ?: 0L * 31L)
+        (this.text?.hashCode()?.toLong() ?: 0L * 31L)
 }
 
 /**
  * The output json class representation
  */
 class Reprints(
-        val standardHashes: List<Long>,
-        val expandedHashes: List<Long>
+    val standardHashes: List<Long>,
+    val expandedHashes: List<Long>
 )
 
 /*
@@ -117,9 +117,9 @@ val expandedReprints = checkReprints("Expanded", unlimitedCards, expandedCards)
 
 // Compile output text
 val output =
-        "Standard Reprint Hashes (#${standardReprints.second.size})\n" +
+    "Standard Reprint Hashes (#${standardReprints.second.size})\n" +
         "-----------------------\n\n" +
-        standardReprints.second.joinToString(separator = "\n") { it.toString()} +
+        standardReprints.second.joinToString(separator = "\n") { it.toString() } +
         "\n\n" +
         "Standard Reprint Ids (#${standardReprints.first.size})\n" +
         "-----------------------\n\n" +

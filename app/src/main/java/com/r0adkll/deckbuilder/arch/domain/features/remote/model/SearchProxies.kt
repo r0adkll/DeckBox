@@ -22,7 +22,7 @@ data class SearchProxies(private val proxies: List<Proxy>) {
     }
 
     data class Proxy(
-            val regex: String,
-            val replacement: String
+        val regex: String,
+        val replacement: String
     )
 }

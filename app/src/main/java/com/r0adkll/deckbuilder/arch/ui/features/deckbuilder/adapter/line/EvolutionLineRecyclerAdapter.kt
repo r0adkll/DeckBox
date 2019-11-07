@@ -1,35 +1,34 @@
+@file:Suppress("MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.line
 
-
 import android.content.Context
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.ftinc.kit.kotlin.extensions.dipToPx
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.ftinc.kit.extensions.dip
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewBinding
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.PokemonCardViewHolder
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.extensions.layoutWidth
-import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.marginsRelative
-
 
 /**
  * A [RecyclerView.Adapter] for horizontally displaying an [EvolutionChain]
  */
 class EvolutionLineRecyclerAdapter(
-        val context: Context,
-        val editCardIntentions: EditCardIntentions,
-        val spanCount: Int
+    val context: Context,
+    val editCardIntentions: EditCardIntentions,
+    val spanCount: Int
 ) : RecyclerView.Adapter<PokemonCardViewHolder>(), EvolutionLineAdapter {
 
-    private val linkSpacing: Int = context.dipToPx(24f)
-    private val stageSpacing: Int = context.dipToPx(16f)
+    private val linkSpacing: Int = context.dip(24f)
+    private val stageSpacing: Int = context.dip(16f)
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -42,10 +41,9 @@ class EvolutionLineRecyclerAdapter(
         setHasStableIds(true)
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
         val vh = PokemonCardViewHolder.create(inflater, parent, false, false,
-                editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
+            editCardIntentions.removeCardClicks, editCardIntentions.addCardClicks)
 
         var parentWidth = parent.resources.getDimensionPixelSize(R.dimen.deck_building_width)
         if (parentWidth <= 0) {
@@ -60,17 +58,15 @@ class EvolutionLineRecyclerAdapter(
         return vh
     }
 
-
     override fun onBindViewHolder(holder: PokemonCardViewHolder, position: Int) {
         evolution.getItem(position)?.let { card ->
             val evolution = getEvolutionState(position)
             holder.bind(
-                    card.card,
-                    card.count,
-                    evolution.evolution,
-                    isEditing,
-                    card.collection ?: 0,
-                    isCollectionEnabled
+                card,
+                evolution.evolution,
+                isEditing,
+                card.collection ?: 0,
+                isCollectionEnabled
             )
 
             holder.itemView.setOnClickListener {
@@ -85,16 +81,13 @@ class EvolutionLineRecyclerAdapter(
         }
     }
 
-
     override fun getItemCount(): Int {
         return evolution?.size ?: 0
     }
 
-
     override fun getItemId(position: Int): Long {
         return evolution.getItem(position)?.card?.hashCode()?.toLong() ?: RecyclerView.NO_ID
     }
-
 
     override fun getEvolutionState(position: Int): EvolutionLineAdapter.State {
         return if (evolution != null) {
@@ -121,13 +114,11 @@ class EvolutionLineRecyclerAdapter(
         }
     }
 
-
     fun setEvolutionChain(chain: EvolutionChain) {
         val diff = calculateDiff(evolution, chain)
         evolution = diff.new.first()
         diff.diff.dispatchUpdatesTo(this)
     }
-
 
     fun setOnPokemonCardViewClickListener(listener: (PokemonCardView) -> Unit) {
         cardViewClickListener = object : OnPokemonCardViewClickListener {
@@ -137,39 +128,30 @@ class EvolutionLineRecyclerAdapter(
         }
     }
 
-
     private fun getEvolutionState(chain: EvolutionChain, nodeIndex: Int, cardIndex: Int): PokemonCardView.Evolution {
         val node = chain.nodes[nodeIndex]
         val isFirstNode = nodeIndex == 0
         val isFirstCard = cardIndex == 0
         val isLastCard = cardIndex == node.cards.size - 1
         val hasNextNode = nodeIndex < chain.nodes.size - 1
-        if (isFirstNode) {
-            if (hasNextNode && isLastCard) {
-                return PokemonCardView.Evolution.END
+        return when {
+            isFirstNode -> when {
+                hasNextNode && isLastCard -> PokemonCardView.Evolution.END
+                else -> PokemonCardView.Evolution.NONE
+            }
+            else -> when {
+                isFirstCard && isLastCard && hasNextNode -> PokemonCardView.Evolution.MIDDLE
+                isFirstCard -> PokemonCardView.Evolution.START
+                isLastCard && hasNextNode -> PokemonCardView.Evolution.END
+                else -> PokemonCardView.Evolution.NONE
             }
         }
-        else {
-            if (isFirstCard && isLastCard && hasNextNode) {
-                return PokemonCardView.Evolution.MIDDLE
-            }
-            else if (isFirstCard) {
-                return PokemonCardView.Evolution.START
-            }
-            else if (isLastCard && hasNextNode) {
-                return PokemonCardView.Evolution.END
-            }
-        }
-
-        return PokemonCardView.Evolution.NONE
     }
-
 
     interface OnPokemonCardViewClickListener {
 
         fun onClick(view: PokemonCardView)
     }
-
 
     companion object {
 
@@ -191,9 +173,9 @@ class EvolutionLineRecyclerAdapter(
                     return old?.let { oldChain ->
                         val oldItem = oldChain.getItem(oldItemPosition)!!
                         val newItem = new.getItem(newItemPosition)!!
-                        oldItem == newItem
-                                && oldItem.count == newItem.count
-                                && oldItem.collection == newItem.collection
+                        oldItem == newItem &&
+                            oldItem.count == newItem.count &&
+                            oldItem.collection == newItem.collection
                     } ?: false
                 }
 

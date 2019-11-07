@@ -1,22 +1,38 @@
+@file:Suppress("TooManyFunctions")
+
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
-
 import android.net.Uri
-import androidx.room.*
-import com.r0adkll.deckbuilder.arch.data.database.entities.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
+import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionCardJoin
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionChangeEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
-import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
+import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import io.reactivex.Flowable
-
 
 @Dao
 abstract class SessionDao {
 
-    @Transaction @Query("SELECT * FROM sessions WHERE uid = :sessionId")
+    @Transaction
+    @Query("SELECT * FROM sessions WHERE uid = :sessionId")
     abstract fun getSessionWithChanges(sessionId: Long): Flowable<SessionWithChanges>
 
-    @Transaction @Query("SELECT * FROM session_card_join INNER JOIN cards ON session_card_join.cardId = cards.id WHERE session_card_join.sessionId = :sessionId")
+    @Transaction
+    @Query("""
+        SELECT * FROM session_card_join 
+        INNER JOIN cards ON session_card_join.cardId = cards.id 
+        WHERE session_card_join.sessionId = :sessionId
+        """)
     abstract fun getSessionCards(sessionId: Long): Flowable<List<StackedCard>>
 
     @Query("SELECT * FROM session_card_join WHERE sessionId = :sessionId")
@@ -91,7 +107,6 @@ abstract class SessionDao {
     @Delete
     abstract fun deleteChanges(changes: List<SessionChangeEntity>)
 
-
     private fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {
         cards.forEach {
             insertCardWithAttacks(it)
@@ -109,7 +124,11 @@ abstract class SessionDao {
      */
 
     @Transaction
-    open fun insertNewSession(session: SessionEntity, cards: List<CardWithAttacks>, joins: List<SessionCardJoin>): Long {
+    open fun insertNewSession(
+        session: SessionEntity,
+        cards: List<CardWithAttacks>,
+        joins: List<SessionCardJoin>
+    ): Long {
         insertCardsWithAttacks(cards)
 
         val sessionId = insertSession(session)
@@ -156,7 +175,7 @@ abstract class SessionDao {
     }
 
     @Transaction
-    open fun insertRemoveChange(sessionId: Long, card: CardWithAttacks?, change: SessionChangeEntity){
+    open fun insertRemoveChange(sessionId: Long, card: CardWithAttacks?, change: SessionChangeEntity) {
         card?.let { insertCardWithAttacks(it) }
         insertChange(change)
 
@@ -196,8 +215,8 @@ abstract class SessionDao {
     open fun clearSearchSession(sessionId: Long, searchSessionId: String) {
         val changes = getChangesForSearchSession(sessionId, searchSessionId)
         val condensedChanges = changes.groupBy { it.cardId }
-                .mapValues { it.value.sumBy { it.change } }
-                .filter { it.value > 0 }
+            .mapValues { it.value.sumBy { it.change } }
+            .filter { it.value > 0 }
 
         val joins = getSessionCardJoins(sessionId, condensedChanges.map { it.key })
         val joinsToUpdate = ArrayList<SessionCardJoin>()

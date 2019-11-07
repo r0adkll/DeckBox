@@ -8,7 +8,7 @@
 @file:DependsOn("com.google.code.gson:gson:2.8.5")
 @file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.19")
 @file:DependsOn("com.google.firebase:firebase-admin:6.5.0")
-@file:MavenRepository("maven-central","http://central.maven.org/maven2/")
+@file:MavenRepository("maven-central", "http://central.maven.org/maven2/")
 
 @file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/decks/model/CardMetadataEntity.kt")
 @file:Include("../../app/src/main/java/com/r0adkll/deckbuilder/arch/data/features/importer/model/CardSpec.kt")
@@ -55,7 +55,6 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.min
 import kotlin.system.exitProcess
 
-
 /*
  * Configuration
  */
@@ -68,12 +67,10 @@ if (args.isEmpty()) {
 val firebaseConfigPath = args[0]
 val serviceAccount = FileInputStream(firebaseConfigPath)
 val options = FirebaseOptions.Builder()
-        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-        .setDatabaseUrl("https://deck-builder-1b711.firebaseio.com/")
-        .build()
+    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+    .setDatabaseUrl("https://deck-builder-1b711.firebaseio.com/")
+    .build()
 FirebaseApp.initializeApp(options)
-
-
 
 val pokemon = Pokemon(Config(logLevel = HttpLoggingInterceptor.Level.NONE))
 
@@ -87,35 +84,34 @@ val basicEnergySet = BasicEnergySet.SunMoon
  */
 
 class TournamentDeckTemplateEntity(
-        val rank: Int = 0,
-        val name: String = "",
-        val description: String = "",
-        val image: String? = null,
-        val author: String = "",
-        val authorCountry: String = "",
-        val deckInfo: List<DeckInfoEntity> = emptyList(),
-        val cardMetadata: List<CardMetadataEntity>? = null,
-        val tournament: TournamentEntity? = null,
-        val timestamp: Long = 0L
+    val rank: Int = 0,
+    val name: String = "",
+    val description: String = "",
+    val image: String? = null,
+    val author: String = "",
+    val authorCountry: String = "",
+    val deckInfo: List<DeckInfoEntity> = emptyList(),
+    val cardMetadata: List<CardMetadataEntity>? = null,
+    val tournament: TournamentEntity? = null,
+    val timestamp: Long = 0L
 )
 
 data class Tournament(
-        val name: String,
-        val date: String,
-        val country: String,
-        val format: String,
-        val playerCount: Int,
-        val players: List<Player>
+    val name: String,
+    val date: String,
+    val country: String,
+    val format: String,
+    val playerCount: Int,
+    val players: List<Player>
 )
 
 data class Player(
-        val place: Int,
-        val name: String,
-        val country: String,
-        val deckInfo: List<DeckInfoEntity>,
-        val deckList: String
+    val place: Int,
+    val name: String,
+    val country: String,
+    val deckInfo: List<DeckInfoEntity>,
+    val deckList: String
 )
-
 
 class DeckListParser {
     private val validator = LineValidator()
@@ -158,8 +154,8 @@ class DeckListParser {
     private fun parseName(line: String): String {
         val parts = line.trim().split(" ").toMutableList()
         val nameParts = parts
-                .drop(1) // Drop the card count
-                .dropLast(2) // Drop the set information
+            .drop(1) // Drop the card count
+            .dropLast(2) // Drop the set information
         return nameParts.joinToString(" ")
     }
 }
@@ -213,36 +209,36 @@ fun loadTournamentWinners(url: String, count: Int): List<Player> {
 
 fun find(ids: List<String>): List<Card> {
     return pokemon.card()
-            .where {
-                id = ids.joinToString("|")
-            }
-            .all()
+        .where {
+            id = ids.joinToString("|")
+        }
+        .all()
 }
 
 fun filterEnergy(): (CardSpec) -> Boolean {
     return { spec ->
         Type.VALUES.filter { it != Type.COLORLESS && it != Type.UNKNOWN && it != Type.DRAGON }
-                .find {
-                    spec.name.contains("${it.name} Energy", true) ||
-                            (spec.name.contains(it.name, true) && spec.set.contains("Energy", true))
-                } != null
+            .find {
+                spec.name.contains("${it.name} Energy", true) ||
+                    (spec.name.contains(it.name, true) && spec.set.contains("Energy", true))
+            } != null
     }
 }
 
 fun mapEnergy(): (CardSpec) -> Pair<CardSpec, String>? {
     return { spec ->
         val type = Type.VALUES.filter { it != Type.COLORLESS && it != Type.UNKNOWN && it != Type.DRAGON }
-                .find {
-                    spec.name.contains("${it.name} Energy", true) ||
-                            (spec.name.contains(it.name, true) && spec.set.contains("Energy", true))
-                }
+            .find {
+                spec.name.contains("${it.name} Energy", true) ||
+                    (spec.name.contains(it.name, true) && spec.set.contains("Energy", true))
+            }
         type?.let {
             basicEnergySet.convert(it)?.let { Pair(spec, it) }
         }
     }
 }
 
-fun Type.compact(): String = when(this) {
+fun Type.compact(): String = when (this) {
     Type.COLORLESS -> "C"
     Type.DARKNESS -> "D"
     Type.DRAGON -> "N"
@@ -284,11 +280,11 @@ fun List<Card>.stackCards(): List<Pair<Card, Int>> {
 }
 
 fun Pair<Card, Int>.entity(): CardMetadataEntity = CardMetadataEntity(
-        this.first.id,
-        this.first.supertype.displayName,
-        this.first.imageUrl,
-        this.first.imageUrlHiRes,
-        this.second
+    this.first.id,
+    this.first.supertype.displayName,
+    this.first.imageUrl,
+    this.first.imageUrlHiRes,
+    this.second
 )
 
 fun importDeckList(deckList: String): List<CardMetadataEntity> {
@@ -300,7 +296,7 @@ fun importDeckList(deckList: String): List<CardMetadataEntity> {
     val foundPokemon = find(ids)
     allCards += foundPokemon.flatMap { poke ->
         val count = cards.find { it.id == poke.id }?.count ?: 0
-        (0 until count).map { poke.copy()}
+        (0 until count).map { poke.copy() }
     }
 
     val expectedCount = cards.sumBy { it.count }
@@ -316,8 +312,8 @@ fun importDeckList(deckList: String): List<CardMetadataEntity> {
         val missingEnergy = missing.filter(filterEnergy())
         if (missingEnergy.isNotEmpty()) {
             val missingEnergyCards = missingEnergy.map(mapEnergy())
-                    .filter { it != null }
-                    .map { it!! }
+                .filter { it != null }
+                .map { it!! }
 
             val energyIds = missingEnergyCards.map { it.second }
 
@@ -338,7 +334,6 @@ fun importDeckList(deckList: String): List<CardMetadataEntity> {
         return allCards.stackCards().map { it.entity() }
     }
 }
-
 
 /*
  * Scrape the list of tournaments and decklists
@@ -379,7 +374,6 @@ rankingTable.forEach { row ->
     }
 }
 
-
 /*
  * Parse and import tournament decks into Firebase template models
  */
@@ -387,32 +381,32 @@ rankingTable.forEach { row ->
 @Suppress("ConvertCallChainIntoSequence")
 val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yy")
 val tournamentDeckTemplates = tournaments
-        .filter { it.players.isNotEmpty() }
-        .filter { it.format == "Standard" || it.format == "Expanded" }
-        .flatMap { tournament ->
-            tournament.players.map { player ->
-                // Parse decklist
-                val deckName = "${tournament.name} - Winner"
-                val deckListCards = importDeckList(player.deckList)
-                val dateTime = LocalDate.parse(tournament.date, dateFormatter)
-                TournamentDeckTemplateEntity(
-                        player.place,
-                        deckName,
-                        "",
-                        null,
-                        player.name,
-                        player.country,
-                        player.deckInfo,
-                        deckListCards,
-                        TournamentEntity(tournament.name, tournament.date, tournament.country, tournament.format, tournament.playerCount),
-                        dateTime.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000L
-                )
-            }
+    .filter { it.players.isNotEmpty() }
+    .filter { it.format == "Standard" || it.format == "Expanded" }
+    .flatMap { tournament ->
+        tournament.players.map { player ->
+            // Parse decklist
+            val deckName = "${tournament.name} - Winner"
+            val deckListCards = importDeckList(player.deckList)
+            val dateTime = LocalDate.parse(tournament.date, dateFormatter)
+            TournamentDeckTemplateEntity(
+                player.place,
+                deckName,
+                "",
+                null,
+                player.name,
+                player.country,
+                player.deckInfo,
+                deckListCards,
+                TournamentEntity(tournament.name, tournament.date, tournament.country, tournament.format, tournament.playerCount),
+                dateTime.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000L
+            )
         }
+    }
 
 val db = FirestoreClient.getFirestore()
 val collection =
-        db.collection("templates")
+    db.collection("templates")
         .document("tournaments")
         .collection("decks")
 

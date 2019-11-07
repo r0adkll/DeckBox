@@ -1,40 +1,44 @@
 package com.r0adkll.deckbuilder.arch.ui.widgets
 
-
 import android.content.Context
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import android.view.View
-import com.ftinc.kit.kotlin.extensions.dpToPx
-
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.ftinc.kit.extensions.dp
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 @Suppress("UNUSED_PARAMETER")
 class ScrollAwareFABBehavior(
-        context: Context,
-        attrs: AttributeSet
-) : androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior<com.google.android.material.floatingactionbutton.FloatingActionButton>() {
+    context: Context,
+    attrs: AttributeSet
+) : CoordinatorLayout.Behavior<FloatingActionButton>() {
 
-    private val maxTransY = context.dpToPx(56f + 16f)
+    private val maxTransY = context.dp(MAX_TRANSLATION_Y)
 
-
-    override fun onStartNestedScroll(coordinatorLayout: androidx.coordinatorlayout.widget.CoordinatorLayout,
-                                     child: com.google.android.material.floatingactionbutton.FloatingActionButton,
-                                     directTargetChild: View,
-                                     target: View,
-                                     nestedScrollAxes: Int,
-                                     nestedScrollType: Int): Boolean {
+    override fun onStartNestedScroll(
+        coordinatorLayout: CoordinatorLayout,
+        child: FloatingActionButton,
+        directTargetChild: View,
+        target: View,
+        nestedScrollAxes: Int,
+        nestedScrollType: Int
+    ): Boolean {
         return true
     }
 
-
-    override fun onNestedScroll(coordinatorLayout: androidx.coordinatorlayout.widget.CoordinatorLayout,
-                                child: com.google.android.material.floatingactionbutton.FloatingActionButton,
-                                target: View,
-                                dxConsumed: Int, dyConsumed: Int,
-                                dxUnconsumed: Int, dyUnconsumed: Int,
-                                nestedScrollType: Int) {
-        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, nestedScrollType)
+    override fun onNestedScroll(
+        coordinatorLayout: CoordinatorLayout,
+        child: FloatingActionButton,
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        type: Int,
+        consumed: IntArray
+    ) {
+        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
+            type, consumed)
 
         val dY = when {
             dyConsumed != 0 -> dyConsumed
@@ -44,5 +48,9 @@ class ScrollAwareFABBehavior(
 
         val transY = (child.translationY + dY).coerceIn(0f..maxTransY)
         child.translationY = transY
+    }
+
+    companion object {
+        private const val MAX_TRANSLATION_Y = 72F
     }
 }

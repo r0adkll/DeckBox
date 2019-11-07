@@ -1,6 +1,5 @@
 package com.r0adkll.deckbuilder.arch.ui.features.exporter
 
-
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -8,23 +7,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.ftinc.kit.arch.presentation.BaseActivity
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.extensions.snackbar
+import com.ftinc.kit.extensions.toast
 import com.ftinc.kit.util.IntentUtils
+import com.ftinc.kit.util.bindParcelable
+import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.util.AppSchedulers
-import com.r0adkll.deckbuilder.util.bindParcelable
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
-import com.r0adkll.deckbuilder.util.extensions.toast
 import kotlinx.android.synthetic.main.activity_deck_exporter.*
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class DeckExportActivity : BaseActivity() {
 
@@ -36,7 +34,6 @@ class DeckExportActivity : BaseActivity() {
 
     @Inject lateinit var schedulers: AppSchedulers
     @Inject lateinit var exporter: PtcgoExporter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,34 +52,32 @@ class DeckExportActivity : BaseActivity() {
         actionShare?.setOnClickListener {
             Analytics.event(Event.Share("deck"))
             val text = deckList.text.toString()
-            val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")
+            val intent = Intent.createChooser(IntentUtils.shareText("", text), "Share deck")
             startActivity(intent)
         }
 
         disposables += exporter.export(deck.cards, deck.name)
-                .subscribeOn(schedulers.comp)
-                .observeOn(schedulers.main)
-                .subscribe({
-                    deckList.text = it
-                }, {
-                    Timber.e(it)
-                    snackbar(R.string.error_exporting_deck)
-                })
+            .subscribeOn(schedulers.comp)
+            .observeOn(schedulers.main)
+            .subscribe({
+                deckList.text = it
+            }, {
+                Timber.e(it)
+                snackbar(R.string.error_exporting_deck)
+            })
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_deck_export, menu)
         return true
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_share -> {
                 Analytics.event(Event.Share("deck"))
                 val text = deckList.text.toString()
-                val intent = Intent.createChooser(IntentUtils.shareText(null, text), "Share deck")
+                val intent = Intent.createChooser(IntentUtils.shareText("", text), "Share deck")
                 startActivity(intent)
                 true
             }
@@ -90,11 +85,9 @@ class DeckExportActivity : BaseActivity() {
         }
     }
 
-
-    override fun setupComponent(component: AppComponent) {
-        component.inject(this)
+    override fun setupComponent() {
+        DeckApp.component.inject(this)
     }
-
 
     companion object {
         private const val EXTRA_DECK = "DeckExportActivity.Deck"

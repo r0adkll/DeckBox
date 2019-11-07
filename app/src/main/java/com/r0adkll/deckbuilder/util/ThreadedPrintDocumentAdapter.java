@@ -14,7 +14,6 @@
 
 package com.r0adkll.deckbuilder.util;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -25,7 +24,6 @@ import android.print.PrintDocumentAdapter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 
 abstract class ThreadedPrintDocumentAdapter extends
         PrintDocumentAdapter {

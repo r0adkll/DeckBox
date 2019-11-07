@@ -15,22 +15,22 @@ import java.security.InvalidParameterException
 import javax.inject.Inject
 
 class RoomDeckCache @Inject constructor(
-        val db: DeckDatabase,
-        val repository: ExpansionRepository
+    val db: DeckDatabase,
+    val repository: ExpansionRepository
 ) : DeckCache {
 
     override fun getDeck(id: String): Observable<Deck> {
         val deckId = id.toLongOrNull()
         return if (deckId != null) {
             repository.getExpansions()
-                    .flatMap { expansions ->
-                        val deck = db.decks().getDeck(deckId).toObservable()
-                        val cards = db.decks().getDeckCards(deckId).toObservable()
+                .flatMap { expansions ->
+                    val deck = db.decks().getDeck(deckId).toObservable()
+                    val cards = db.decks().getDeckCards(deckId).toObservable()
 
-                        Observable.combineLatest(deck, cards, BiFunction<DeckEntity, List<StackedCard>, Deck> { d, c ->
-                            RoomEntityMapper.to(d, c, expansions)
-                        })
-                    }
+                    Observable.combineLatest(deck, cards, BiFunction<DeckEntity, List<StackedCard>, Deck> { d, c ->
+                        RoomEntityMapper.to(d, c, expansions)
+                    })
+                }
         } else {
             Observable.error(InvalidParameterException("'id' is not a valid deckId"))
         }
@@ -38,30 +38,35 @@ class RoomDeckCache @Inject constructor(
 
     override fun getDecks(): Observable<List<Deck>> {
         return repository.getExpansions()
-                .switchMap { expansions ->
-                    val decks = db.decks().getDecks().toObservable()
-                    val deckCards = db.decks().getDeckCards().toObservable()
-
-                    Observable.combineLatest(decks, deckCards, BiFunction<List<DeckEntity>, List<DeckStackedCard>, List<Deck>> { d, c ->
+            .switchMap { expansions ->
+                val decks = db.decks().getDecks().toObservable()
+                val deckCards = db.decks().getDeckCards().toObservable()
+                Observable.combineLatest(
+                    decks,
+                    deckCards,
+                    BiFunction<List<DeckEntity>, List<DeckStackedCard>, List<Deck>> { d, c ->
                         d.map { deck ->
                             val cards = c.filter { it.deckId == deck.uid }
                             RoomEntityMapper.toDeck(deck, cards, expansions)
                         }
-                    })
-                }
+                    }
+                )
+            }
     }
 
     override fun putDeck(
-            id: String?,
-            cards: List<PokemonCard>,
-            name: String,
-            description: String?,
-            image: DeckImage?,
-            collectionOnly: Boolean
+        id: String?,
+        cards: List<PokemonCard>,
+        name: String,
+        description: String?,
+        image: DeckImage?,
+        collectionOnly: Boolean
     ): Observable<Deck> {
         return Observable.fromCallable {
-            val entity = db.decks().insertDeckWithCards(id?.toLongOrNull(), cards, name, description, image, collectionOnly)
-            Deck(entity.uid.toString(), name, description ?: "", image, collectionOnly, cards, false, entity.timestamp)
+            val entity = db.decks()
+                .insertDeckWithCards(id?.toLongOrNull(), cards, name, description, image, collectionOnly)
+            Deck(entity.uid.toString(), name, description
+                ?: "", image, collectionOnly, cards, false, entity.timestamp)
         }
     }
 
@@ -77,7 +82,7 @@ class RoomDeckCache @Inject constructor(
         }
     }
 
-    fun deleteAll(){
+    fun deleteAll() {
         db.decks().deleteAll()
     }
 }

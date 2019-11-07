@@ -3,13 +3,12 @@ package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-
 @Parcelize
 data class StackedPokemonCard(
-        val card: PokemonCard,
-        val count: Int,
-        val collection: Int? = null
-): Parcelable {
+    val card: PokemonCard,
+    val count: Int = 1,
+    val collection: Int? = null
+) : Parcelable {
 
     override fun equals(other: Any?): Boolean {
         if (this !== other) {

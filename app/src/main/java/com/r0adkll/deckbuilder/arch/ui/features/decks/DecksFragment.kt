@@ -2,18 +2,23 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ftinc.kit.arch.presentation.BaseFragment
+import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
+import com.ftinc.kit.arch.util.plusAssign
+import com.ftinc.kit.extensions.snackbar
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
-import com.r0adkll.deckbuilder.arch.ui.features.browse.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.decks.DecksUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.DecksRecyclerAdapter
@@ -21,15 +26,14 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item
 import com.r0adkll.deckbuilder.arch.ui.features.decks.di.DecksModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.MultiExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
+import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.SetBrowserActivity
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.DialogUtils
-import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.*
+import com.r0adkll.deckbuilder.util.DialogUtils.DialogText.Resource
 import com.r0adkll.deckbuilder.util.ScreenUtils
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
-import com.r0adkll.deckbuilder.util.extensions.plusAssign
-import com.r0adkll.deckbuilder.util.extensions.snackbar
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_decks.*
 import javax.inject.Inject
@@ -64,7 +68,8 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         super.onActivityCreated(savedInstanceState)
 
         adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks,
-                testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
+            testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
+
         adapter.itemClickListener = { item ->
             if (item is Item.DeckItem) {
                 Analytics.event(Event.SelectContent.Deck.Opened)
@@ -78,25 +83,24 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         }
         adapter.emptyView = empty_view
 
-        val layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
-            StaggeredGridLayoutManager(6, StaggeredGridLayoutManager.VERTICAL) as RecyclerView.LayoutManager
+        recycler.layoutManager = if (smallestWidth(ScreenUtils.Config.TABLET_10)) {
+            StaggeredGridLayoutManager(TABLET_SPAN_SIZE, StaggeredGridLayoutManager.VERTICAL)
         } else {
-            val lm = GridLayoutManager(activity, 2)
+            val lm = GridLayoutManager(activity, PHONE_SPAN_SIZE)
             lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     val item = adapter.currentList[position]
-                    return when(item) {
-                        is Item.Preview -> 2
-                        is Item.QuickStart -> 2
-                        is Item.Header -> 2
-                        else -> 1
+                    return when (item) {
+                        is Item.Preview -> PHONE_SPAN_SIZE
+                        is Item.QuickStart -> PHONE_SPAN_SIZE
+                        is Item.Header -> PHONE_SPAN_SIZE
+                        else -> SINGLE_SPAN_SIZE
                     }
                 }
             }
             lm
         }
 
-        recycler.layoutManager = layoutManager
         recycler.adapter = adapter
 
         fab.setOnClickListener {
@@ -110,55 +114,46 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         @SuppressLint("RxSubscribeOnError")
         disposables += shareClicks
-                .subscribe {
-                    Analytics.event(Event.SelectContent.Action("export_decklist"))
-                    val intent = MultiExportActivity.createIntent(activity!!, it)
-                    startActivity(intent)
-                }
+            .subscribe {
+                Analytics.event(Event.SelectContent.Action("export_decklist"))
+                val intent = MultiExportActivity.createIntent(activity!!, it)
+                startActivity(intent)
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += testClicks
-                .subscribe {
-                    Analytics.event(Event.SelectContent.Action("test_decklist"))
-                    val intent = DeckTestingActivity.createIntent(activity!!, it.id)
-                    startActivity(intent)
-                }
+            .subscribe {
+                Analytics.event(Event.SelectContent.Action("test_decklist"))
+                val intent = DeckTestingActivity.createIntent(activity!!, it.id)
+                startActivity(intent)
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += viewPreview
-                .subscribe { preview ->
-                    startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
-                }
+            .subscribe { preview ->
+                startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += dismissQuickStart
-                .subscribe {
-                    preferences.quickStart.set(false)
-                }
+            .subscribe {
+                preferences.quickStart.set(false)
+            }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += quickStartClicks
-                .subscribe {
-                    createSession.accept(it)
-                }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        renderer.start()
-        presenter.start()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        renderer.stop()
-        presenter.stop()
+            .subscribe {
+                createSession.accept(it)
+            }
     }
 
     override fun setupComponent() {
         getComponent(HomeComponent::class)
-                .plus(DecksModule(this))
-                .inject(this)
+            .plus(DecksModule(this))
+            .inject(this)
+
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
     override fun render(state: State) {
@@ -167,22 +162,34 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
     override fun createSession(): Observable<Deck> = createSession
+
     override fun createNewSession(): Observable<Unit> = createNewSession
+
     override fun clearSession(): Observable<Unit> = clearSession
-    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext { Analytics.event(Event.SelectContent.Action("dismiss_preview")) }
+
+    override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext {
+        Analytics.event(Event.SelectContent.Action("dismiss_preview"))
+    }
+
     override fun shareClicks(): Observable<Deck> = shareClicks
+
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
+
     override fun deleteClicks(): Observable<Deck> = deleteClicks.flatMap { deck ->
         DialogUtils.confirmDialog(activity!!,
-                Resource(R.string.dialog_delete_deck_title),
-                Resource(R.string.dialog_delete_deck_message, deck.name),
-                R.string.action_delete,
-                R.string.action_cancel)
-                .flatMap { if (it) Observable.just(deck) else Observable.empty() }
+            Resource(R.string.dialog_delete_deck_title),
+            Resource(R.string.dialog_delete_deck_message, deck.name),
+            R.string.action_delete,
+            R.string.action_cancel)
+            .flatMap { if (it) Observable.just(deck) else Observable.empty() }
     }
 
     override fun showLoading(isLoading: Boolean) {
-        empty_view.setLoading(isLoading)
+        empty_view.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     override fun showError(description: String) {
@@ -206,6 +213,9 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
     companion object {
+        private const val TABLET_SPAN_SIZE = 6
+        private const val PHONE_SPAN_SIZE = 2
+        private const val SINGLE_SPAN_SIZE = 1
 
         fun newInstance(): DecksFragment = DecksFragment()
     }

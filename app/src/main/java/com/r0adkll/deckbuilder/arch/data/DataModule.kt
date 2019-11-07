@@ -7,40 +7,14 @@ import androidx.room.Room
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
-import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountRepository
-import com.r0adkll.deckbuilder.arch.data.features.cards.cache.CardCache
-import com.r0adkll.deckbuilder.arch.data.features.cards.cache.RoomCardCache
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.CardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DefaultCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.DiskCardDataSource
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.NetworkCardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.cards.repository.source.PreviewCardDataSource
-import com.r0adkll.deckbuilder.arch.data.features.collection.source.FirestoreCollectionSource
-import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
-import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
-import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
-import com.r0adkll.deckbuilder.arch.data.features.community.cache.FirestoreCommunityCache
-import com.r0adkll.deckbuilder.arch.data.features.community.repository.DefaultCommunityRepository
-import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
-import com.r0adkll.deckbuilder.arch.data.features.decks.cache.SwitchingDeckCache
-import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
-import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RoomSessionCache
-import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
-import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.DefaultExpansionDataSource
-import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.DefaultExpansionRepository
-import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.PreviewExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExporter
 import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
-import com.r0adkll.deckbuilder.arch.data.features.marketplace.CachingMarketplaceRepository
-import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.FirestoreMarketplaceSource
-import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.MarketplaceSource
-import com.r0adkll.deckbuilder.arch.data.features.missingcard.repository.DefaultMissingCardRepository
-import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
-import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
-import com.r0adkll.deckbuilder.arch.data.features.preview.RemotePreviewRepository
 import com.r0adkll.deckbuilder.arch.data.features.testing.DefaultDeckTester
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
@@ -49,22 +23,10 @@ import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.repository.DefaultDeckValidator
 import com.r0adkll.deckbuilder.arch.data.remote.FirebaseRemote
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.CacheInvalidatePlugin
-import com.r0adkll.deckbuilder.arch.data.remote.plugin.PreviewCacheInvalidatePlugin
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
-import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
-import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
-import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
-import com.r0adkll.deckbuilder.arch.domain.features.community.repository.CommunityRepository
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
-import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
-import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.importer.repository.Importer
-import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
-import com.r0adkll.deckbuilder.arch.domain.features.missingcard.repository.MissingCardRepository
-import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
-import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
@@ -79,7 +41,7 @@ import dagger.multibindings.IntoSet
 import io.pokemontcg.Config
 import io.pokemontcg.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
-import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
+import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import java.util.concurrent.Executors
 
@@ -88,18 +50,10 @@ class DataModule {
 
     @Provides @AppScope @IntoSet
     fun provideCacheInvalidatePlugin(
-            defaultSource: DefaultExpansionDataSource,
-            preferences: AppPreferences,
-            schedulers: AppSchedulers
+        defaultSource: DefaultExpansionDataSource,
+        preferences: AppPreferences,
+        schedulers: AppSchedulers
     ): RemotePlugin = CacheInvalidatePlugin(defaultSource, preferences, schedulers)
-
-    @Provides @AppScope @IntoSet
-    fun providePreviewCacheInvalidatePlugin(
-            previewSource: PreviewExpansionDataSource,
-            db: DeckDatabase,
-            preferences: AppPreferences,
-            schedulers: AppSchedulers
-    ): RemotePlugin = PreviewCacheInvalidatePlugin(previewSource, db, preferences, schedulers)
 
     @Provides @AppScope
     fun provideSharedPreferences(context: Context): SharedPreferences {
@@ -107,7 +61,7 @@ class DataModule {
     }
 
     @Provides @AppScope
-    fun provideRxSharedPreferences(sharedPreferences: SharedPreferences) : RxSharedPreferences {
+    fun provideRxSharedPreferences(sharedPreferences: SharedPreferences): RxSharedPreferences {
         return RxSharedPreferences.create(sharedPreferences)
     }
 
@@ -116,17 +70,17 @@ class DataModule {
 
     @Provides @AppScope
     fun provideSchedulers(): AppSchedulers = AppSchedulers(
-            AndroidSchedulers.mainThread(),
-            io.reactivex.schedulers.Schedulers.io(),
-            io.reactivex.schedulers.Schedulers.computation(),
-            io.reactivex.schedulers.Schedulers.io(),
-            Executors.newSingleThreadExecutor(),
-            Executors.newSingleThreadExecutor()
+        AndroidSchedulers.mainThread(),
+        io.reactivex.schedulers.Schedulers.io(),
+        io.reactivex.schedulers.Schedulers.computation(),
+        io.reactivex.schedulers.Schedulers.io(),
+        Executors.newSingleThreadExecutor(),
+        Executors.newSingleThreadExecutor()
     )
 
     @Provides @AppScope
     fun providePokemonApiConfig(): Config {
-        val level = if (BuildConfig.DEBUG) BODY else NONE
+        val level = if (BuildConfig.DEBUG) HEADERS else NONE
         return Config(logLevel = level)
     }
 
@@ -138,36 +92,15 @@ class DataModule {
      * ---
      * 1. Initial Version
      * 2. Added collections support
-     * 3. Added 'isPreview' flag to 'cards' table
      */
     @Provides @AppScope
     fun provideRoomDatabase(context: Context): DeckDatabase {
         return Room.databaseBuilder(context, DeckDatabase::class.java, BuildConfig.DATABASE_NAME)
-                .addMigrations(
-                        DeckDatabase.MIGRATION_1_2,
-                        DeckDatabase.MIGRATION_2_3
-                )
-                .build()
+            .addMigrations(
+                DeckDatabase.MIGRATION_1_2
+            )
+            .build()
     }
-
-    /*
-     * Caching
-     */
-
-    @Provides @AppScope
-    fun provideCardCache(cache: RoomCardCache): CardCache = cache
-
-    @Provides @AppScope
-    fun provideDeckCache(cache: SwitchingDeckCache): DeckCache = cache
-
-    @Provides @AppScope
-    fun provideCommunityCache(cache: FirestoreCommunityCache): CommunityCache = cache
-
-    @Provides @AppScope
-    fun provideSessionCache(cache: RoomSessionCache): SessionCache = cache
-
-    @Provides @AppScope
-    fun provideOfflineStatusConsumer(consumer: DefaultOfflineRepository): OfflineStatusConsumer = consumer
 
     /*
      * Data Sources
@@ -175,78 +108,13 @@ class DataModule {
 
     @Provides @AppScope
     fun provideSearchDataSource(
-            api: Pokemon,
-            cache: CardCache,
-            repository: ExpansionRepository,
-            previewExpansionDataSource: PreviewExpansionDataSource,
-            remote: Remote,
-            schedulers: AppSchedulers,
-            preferences: AppPreferences,
-            connectivity: Connectivity
+        disk: DiskCardDataSource,
+        network: NetworkCardDataSource,
+        remote: Remote,
+        preferences: AppPreferences,
+        connectivity: Connectivity
     ): CardDataSource {
-        val disk = DiskCardDataSource(cache, schedulers)
-        val network = NetworkCardDataSource(api, repository, cache, remote, schedulers)
-        val preview = PreviewCardDataSource(previewExpansionDataSource, cache, remote, schedulers)
-        return DefaultCardDataSource(preferences, disk, network, preview, connectivity, remote)
-    }
-
-    /*
-     * Repositories
-     */
-
-    @Provides @AppScope
-    fun provideAccountRepository(repository: DefaultAccountRepository): AccountRepository = repository
-
-    @Provides @AppScope
-    fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository
-
-    @Provides @AppScope
-    fun provideCommunityRepository(repository: DefaultCommunityRepository): CommunityRepository = repository
-
-    @Provides @AppScope
-    fun provideEditRepository(repository: DefaultEditRepository): EditRepository = repository
-
-    @Provides @AppScope
-    fun provideExpansionRepository(
-            defaultSource: DefaultExpansionDataSource,
-            previewSource: PreviewExpansionDataSource,
-            preferences: AppPreferences,
-            remote: Remote
-    ): ExpansionRepository = DefaultExpansionRepository(defaultSource, previewSource, preferences, remote)
-
-    @Provides @AppScope
-    fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
-
-    @Provides @AppScope
-    fun provideMissingCardRepository(repository: DefaultMissingCardRepository): MissingCardRepository = repository
-
-    @Provides @AppScope
-    fun provideOfflineRepository(repository: DefaultOfflineRepository): OfflineRepository = repository
-
-    @Provides @AppScope
-    fun providePreviewRepository(repository: RemotePreviewRepository): PreviewRepository {
-//        if (BuildConfig.DEBUG) {
-//            return TestPreviewRepository()
-//        } else {
-            return repository
-//        }
-    }
-
-    @Provides @AppScope
-    fun provideMarketplaceRepository(schedulers: AppSchedulers): MarketplaceRepository {
-        return CachingMarketplaceRepository(
-                FirestoreMarketplaceSource(MarketplaceSource.Source.CACHE, schedulers),
-                FirestoreMarketplaceSource(MarketplaceSource.Source.NETWORK, schedulers)
-        )
-    }
-
-    @Provides @AppScope
-    fun provideCollectionRepository(
-            roomCollectionCache: RoomCollectionSource,
-            firestoreCollectionCache: FirestoreCollectionSource,
-            preferences: AppPreferences
-    ): CollectionRepository {
-        return DefaultCollectionRepository(roomCollectionCache, firestoreCollectionCache, preferences)
+        return DefaultCardDataSource(preferences, disk, network, connectivity, remote)
     }
 
     /*
@@ -255,12 +123,12 @@ class DataModule {
 
     @Provides @AppScope
     @ElementsIntoSet
-    fun provideDefaultRuleSet() : Set<Rule> {
+    fun provideDefaultRuleSet(): Set<Rule> {
         return setOf(
-                SizeRule(),
-                DuplicateRule(),
-                BasicRule(),
-                PrismStarRule()
+            SizeRule(),
+            DuplicateRule(),
+            BasicRule(),
+            PrismStarRule()
         )
     }
 
@@ -278,5 +146,4 @@ class DataModule {
 
     @Provides @AppScope
     fun provideTournamentExporter(exporter: DefaultTournamentExporter): TournamentExporter = exporter
-
 }

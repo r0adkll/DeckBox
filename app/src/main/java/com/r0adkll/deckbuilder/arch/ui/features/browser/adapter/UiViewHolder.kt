@@ -6,34 +6,32 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.ftinc.kit.kotlin.extensions.setVisible
-import com.ftinc.kit.kotlin.extensions.string
+import com.ftinc.kit.arch.util.bindView
+import com.ftinc.kit.extensions.string
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
-import com.r0adkll.deckbuilder.util.bindView
-
+import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 
 sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(item: I)
 
-
     class OutlineViewHolder(
-            itemView: View,
-            private val dismissClicks: Relay<Unit>,
-            private val downloadFormat: Relay<Format>
-    ): UiViewHolder<Item.OfflineOutline>(itemView) {
+        itemView: View,
+        private val dismissClicks: Relay<Unit>,
+        private val downloadFormat: Relay<Format>
+    ) : UiViewHolder<Item.OfflineOutline>(itemView) {
 
         private val actionDownloadStandard by bindView<Button>(R.id.actionDownloadStandard)
         private val actionDownloadExpanded by bindView<Button>(R.id.actionDownloadExpanded)
         private val actionHide by bindView<Button>(R.id.actionHide)
-
 
         override fun bind(item: Item.OfflineOutline) {
             actionHide.setOnClickListener {
@@ -50,11 +48,10 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         }
     }
 
-
     class ExpansionViewHolder(
-            itemView: View,
-            private val downloadClicks: Relay<Expansion>
-    ): UiViewHolder<Item.ExpansionSet>(itemView) {
+        itemView: View,
+        private val downloadClicks: Relay<Expansion>
+    ) : UiViewHolder<Item.ExpansionSet>(itemView) {
 
         private val logo by bindView<ImageView>(R.id.logo)
         private val name by bindView<TextView>(R.id.name)
@@ -63,18 +60,18 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         private val actionDownload by bindView<ImageView>(R.id.actionDownload)
         private val downloadProgress by bindView<ProgressBar>(R.id.downloadProgress)
 
-
         override fun bind(item: Item.ExpansionSet) {
             name.text = item.expansion.name
             series.text = item.expansion.series
             date.text = string(R.string.expansion_released_date_format, item.expansion.releaseDate)
-            downloadProgress.setVisible(item.offlineStatus is CacheStatus.Downloading || item.offlineStatus == CacheStatus.Queued)
+            downloadProgress.isVisible = item.offlineStatus is CacheStatus.Downloading ||
+                item.offlineStatus == CacheStatus.Queued
             downloadProgress.isIndeterminate = (item.offlineStatus as? CacheStatus.Downloading)?.progress == null
             downloadProgress.progress = when (item.offlineStatus) {
-                is CacheStatus.Downloading -> item.offlineStatus.progress?.times(100f)?.toInt() ?: 0
+                is CacheStatus.Downloading -> item.offlineStatus.progress?.readablePercentage ?: 0
                 else -> 0
             }
-            actionDownload.setImageResource(when(item.offlineStatus) {
+            actionDownload.setImageResource(when (item.offlineStatus) {
                 CacheStatus.Queued -> R.drawable.ic_cloud_queue_24px
                 is CacheStatus.Downloading -> R.drawable.cloud_sync
                 CacheStatus.Cached -> R.drawable.ic_cloud_done_black_24dp
@@ -84,9 +81,9 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             if (logo.getTag(R.id.tag_expansion_logo) != item.expansion.logoUrl) {
                 itemView.setTag(R.id.tag_expansion_logo, item.expansion.logoUrl)
                 GlideApp.with(itemView)
-                        .load(item.expansion.logoUrl)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .into(logo)
+                    .load(item.expansion.logoUrl)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(logo)
             }
 
             actionDownload.setOnClickListener {
@@ -96,7 +93,6 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             }
         }
     }
-
 
     private enum class ViewType(@LayoutRes val layoutId: Int) {
         OUTLINE(R.layout.item_expansion_outline),
@@ -114,19 +110,18 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
         }
     }
 
-
     companion object {
 
         @Suppress("UNCHECKED_CAST")
         fun create(
-                itemView: View,
-                layoutId: Int,
-                downloadClicks: Relay<Expansion>,
-                dismissClicks: Relay<Unit>,
-                downloadFormat: Relay<Format>
+            itemView: View,
+            layoutId: Int,
+            downloadClicks: Relay<Expansion>,
+            dismissClicks: Relay<Unit>,
+            downloadFormat: Relay<Format>
         ): UiViewHolder<Item> {
             val viewType = ViewType.of(layoutId)
-            return when(viewType) {
+            return when (viewType) {
                 ViewType.OUTLINE -> OutlineViewHolder(itemView, dismissClicks, downloadFormat) as UiViewHolder<Item>
                 ViewType.EXPANSION -> ExpansionViewHolder(itemView, downloadClicks) as UiViewHolder<Item>
             }

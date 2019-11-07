@@ -2,12 +2,9 @@ package com.r0adkll.deckbuilder.arch.ui.widgets
 
 import android.content.Context
 import android.util.AttributeSet
-
-import com.r0adkll.deckbuilder.R
-
 import androidx.appcompat.widget.AppCompatImageView
-
-
+import com.r0adkll.deckbuilder.R
+import kotlin.math.max
 
 /**
  * Scale to center top or scale to center bottom
@@ -15,9 +12,9 @@ import androidx.appcompat.widget.AppCompatImageView
  * @author sromku
  */
 open class ImageScaleView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
 ) : AppCompatImageView(context, attrs, defStyle) {
 
     var matrixType = MatrixCropType.NONE // default
@@ -26,7 +23,6 @@ open class ImageScaleView @JvmOverloads constructor(
         NONE(-1),
         TOP_CENTER(0),
         BOTTOM_CENTER(1);
-
 
         companion object {
 
@@ -62,31 +58,17 @@ open class ImageScaleView @JvmOverloads constructor(
     }
 
     override fun setFrame(frameLeft: Int, frameTop: Int, frameRight: Int, frameBottom: Int): Boolean {
-
         val drawable = drawable
         if (drawable != null && matrixType != MatrixCropType.NONE) {
-
             val frameWidth = (frameRight - frameLeft).toFloat()
             val frameHeight = (frameBottom - frameTop).toFloat()
 
             val originalImageWidth = getDrawable().intrinsicWidth.toFloat()
             val originalImageHeight = getDrawable().intrinsicHeight.toFloat()
 
-            var usedScaleFactor = 1f
-
-//            if (frameWidth > originalImageWidth || frameHeight > originalImageHeight) {
-                // If frame is bigger than image
-                // => Crop it, keep aspect ratio and position it at the bottom
-                // and
-                // center horizontally
-                val fitHorizontallyScaleFactor = frameWidth / originalImageWidth
-                val fitVerticallyScaleFactor = frameHeight / originalImageHeight
-
-                usedScaleFactor = Math.max(fitHorizontallyScaleFactor, fitVerticallyScaleFactor)
-//            } else {
-//                val fitHorizontallyScaleFactor = originalImageWidth / frameWidth
-//
-//            }
+            val fitHorizontallyScaleFactor = frameWidth / originalImageWidth
+            val fitVerticallyScaleFactor = frameHeight / originalImageHeight
+            val usedScaleFactor = max(fitHorizontallyScaleFactor, fitVerticallyScaleFactor)
 
             val newImageWidth = originalImageWidth * usedScaleFactor
             val newImageHeight = originalImageHeight * usedScaleFactor
@@ -96,8 +78,10 @@ open class ImageScaleView @JvmOverloads constructor(
 
             when (matrixType) {
                 MatrixCropType.TOP_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, 0f)
-                MatrixCropType.BOTTOM_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, frameHeight - newImageHeight)
-
+                MatrixCropType.BOTTOM_CENTER -> matrix.postTranslate(
+                    (frameWidth - newImageWidth) / 2,
+                    frameHeight - newImageHeight
+                )
                 else -> {
                 }
             }
@@ -110,25 +94,16 @@ open class ImageScaleView @JvmOverloads constructor(
     private fun recomputeImgMatrix() {
         val drawable = drawable
         if (drawable != null && matrixType != MatrixCropType.NONE) {
-
-            val frameWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-            val frameHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+            val frameWidth = width - paddingLeft - paddingRight
+            val frameHeight = height - paddingTop - paddingBottom
 
             val originalImageWidth = getDrawable().intrinsicWidth.toFloat()
             val originalImageHeight = getDrawable().intrinsicHeight.toFloat()
 
-            var usedScaleFactor = 1f
+            val fitHorizontallyScaleFactor = frameWidth / originalImageWidth
+            val fitVerticallyScaleFactor = frameHeight / originalImageHeight
 
-//            if (frameWidth > originalImageWidth || frameHeight > originalImageHeight) {
-                // If frame is bigger than image
-                // => Crop it, keep aspect ratio and position it at the bottom
-                // and
-                // center horizontally
-                val fitHorizontallyScaleFactor = frameWidth / originalImageWidth
-                val fitVerticallyScaleFactor = frameHeight / originalImageHeight
-
-                usedScaleFactor = Math.max(fitHorizontallyScaleFactor, fitVerticallyScaleFactor)
-//            }
+            val usedScaleFactor = max(fitHorizontallyScaleFactor, fitVerticallyScaleFactor)
 
             val newImageWidth = originalImageWidth * usedScaleFactor
             val newImageHeight = originalImageHeight * usedScaleFactor
@@ -138,8 +113,8 @@ open class ImageScaleView @JvmOverloads constructor(
 
             when (matrixType) {
                 MatrixCropType.TOP_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, 0f)
-                MatrixCropType.BOTTOM_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2, frameHeight - newImageHeight)
-
+                MatrixCropType.BOTTOM_CENTER -> matrix.postTranslate((frameWidth - newImageWidth) / 2,
+                    frameHeight - newImageHeight)
                 else -> {
                 }
             }
@@ -147,5 +122,4 @@ open class ImageScaleView @JvmOverloads constructor(
             imageMatrix = matrix
         }
     }
-
 }

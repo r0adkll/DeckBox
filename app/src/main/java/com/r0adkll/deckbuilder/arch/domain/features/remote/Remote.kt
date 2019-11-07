@@ -1,8 +1,11 @@
 package com.r0adkll.deckbuilder.arch.domain.features.remote
 
-
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.*
-
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.BanList
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersion
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.LegalOverrides
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.Reprints
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
 
 /**
  * Wrapper around Firebase Remote Configuration SDK
@@ -13,16 +16,12 @@ interface Remote {
      * This is the versioning string for the latest expansion set offered by the api. It's format as
      * follows: <version_code>.<expansion_code> e.g. 1.sm7
      *
-     * - version_code represents the version of the data that may change unrelated to new expansions (i.e. rotation legality changes)
-     * - expansion_code represents the latest available expansion in the set (i.e. sm7 - Celestial Storm) which can indicate if a new expansion was added
+     * - version_code represents the version of the data that may change unrelated to new expansions
+     *   (i.e. rotation legality changes)
+     * - expansion_code represents the latest available expansion in the set (i.e. sm7 - Celestial Storm)
+     *   which can indicate if a new expansion was added
      */
     val expansionVersion: ExpansionVersion?
-
-    /**
-     * This is the versioning string for the latest preview expansion that is exposed by my preview
-     * api microservice [DeckBox Preview API](https://github.com/r0adkll/DeckBox-Preview-API).
-     */
-    val previewExpansionVersion: PreviewExpansionVersion?
 
     /**
      * This is the spec for an expansion preview card that appears on the deck list screen to tell
@@ -48,8 +47,8 @@ interface Remote {
     val banList: BanList?
 
     /**
-     * This is a set of format legality overrides for special use cases. Such when a promo set is only partially legal, or
-     * special subsets are released in sets that don't follow the set's legality, such as the Shiny Vault
+     * This is a set of format legality overrides for special use cases. Such when a promo set is only partially legal,
+     * or special subsets are released in sets that don't follow the set's legality, such as the Shiny Vault
      * collection in Hidden Fates
      */
     val legalOverrides: LegalOverrides?

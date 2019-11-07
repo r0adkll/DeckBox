@@ -2,11 +2,15 @@ package com.r0adkll.deckbuilder.arch.data.remote
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.remote.plugin.RemotePlugin
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
-import com.r0adkll.deckbuilder.arch.domain.features.remote.model.*
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.BanList
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionVersion
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.LegalOverrides
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.Reprints
+import com.r0adkll.deckbuilder.arch.domain.features.remote.model.SearchProxies
 import com.r0adkll.deckbuilder.util.extensions.FirebaseRemotePreferences
 import com.r0adkll.deckbuilder.util.extensions.FirebaseRemotePreferences.RemoteBoolean
 import com.r0adkll.deckbuilder.util.extensions.FirebaseRemotePreferences.RemoteObject
@@ -17,8 +21,8 @@ import javax.inject.Inject
  * Wrapper around Firebase Remote Configuration SDK
  */
 class FirebaseRemote @Inject constructor(
-        val plugins: Set<@JvmSuppressWildcards RemotePlugin>
-): Remote, FirebaseRemotePreferences {
+    val plugins: Set<@JvmSuppressWildcards RemotePlugin>
+) : Remote, FirebaseRemotePreferences {
 
     /**
      * Property to access the Firebase Remote Config instance
@@ -30,11 +34,6 @@ class FirebaseRemote @Inject constructor(
      * @see Remote.expansionVersion
      */
     override val expansionVersion by RemoteObject(KEY_EXPANSION_VERSION, ExpansionVersion::class)
-
-    /**
-     * @see Remote.previewExpansionVersion
-     */
-    override val previewExpansionVersion by RemoteObject(KEY_PREVIEW_EXPANSION_VERSION, PreviewExpansionVersion::class)
 
     /**
      * @see Remote.expansionPreview
@@ -73,31 +72,31 @@ class FirebaseRemote @Inject constructor(
     override fun check() {
         Timber.d("Checking remote config values...")
         val settings = FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(CACHE_EXPIRATION)
-                .build()
+            .setMinimumFetchIntervalInSeconds(CACHE_EXPIRATION)
+            .build()
         remote.setConfigSettingsAsync(settings)
         remote.setDefaultsAsync(R.xml.remote_config_defaults)
-                .addOnCompleteListener {
-                    Timber.i("Remote Defaults Set!")
-                }
+            .addOnCompleteListener {
+                Timber.i("Remote Defaults Set!")
+            }
 
         remote.fetchAndActivate()
-                .addOnCompleteListener { _ ->
-                    Timber.i("Remote Config values fetched. Activating!")
-                    Timber.i("> Expansion Version: $expansionVersion")
-                    Timber.i("> Search Proxies: $searchProxies")
-                    Timber.i("> Preview: (version: ${expansionPreview?.version}, code: ${expansionPreview?.code})")
-                    Timber.i("> Reprints: Standard(${reprints?.standardHashes?.size}), Expanded(${reprints?.expandedHashes?.size})")
-                    Timber.i("> BanList: $banList")
-                    Timber.i("> Legal Overrides: ${legalOverrides?.singles?.size}")
-                    Timber.i("> TCGPlayer Mass Entry: $marketplaceMassEntryEnabled")
-                    plugins.forEach { it.onFetchActivated(this@FirebaseRemote) }
-                }
+            .addOnCompleteListener { _ ->
+                Timber.i("Remote Config values fetched. Activating!")
+                Timber.i("> Expansion Version: $expansionVersion")
+                Timber.i("> Search Proxies: $searchProxies")
+                Timber.i("> Preview: (version: ${expansionPreview?.version}, code: ${expansionPreview?.code})")
+                Timber.i("""> Reprints: Standard(${reprints?.standardHashes?.size}), 
+                    Expanded(${reprints?.expandedHashes?.size})""".trimMargin())
+                Timber.i("> BanList: $banList")
+                Timber.i("> Legal Overrides: ${legalOverrides?.singles?.size}")
+                Timber.i("> TCGPlayer Mass Entry: $marketplaceMassEntryEnabled")
+                plugins.forEach { it.onFetchActivated(this@FirebaseRemote) }
+            }
     }
 
     companion object {
         private const val KEY_EXPANSION_VERSION = "expansion_version"
-        private const val KEY_PREVIEW_EXPANSION_VERSION = "preview_expansion_version"
         private const val KEY_EXPANSION_PREVIEW = "expansion_preview_v2"
         private const val KEY_SEARCH_PROXIES = "search_proxies"
         private const val KEY_REPRINTS = "reprints"

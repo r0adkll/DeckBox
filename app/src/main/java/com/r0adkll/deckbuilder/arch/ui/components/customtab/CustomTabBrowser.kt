@@ -14,15 +14,14 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.ftinc.kit.kotlin.extensions.color
+import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.R
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
-import java.lang.IllegalStateException
 
 class CustomTabBrowser(
-        private val context: AppCompatActivity,
-        private val fallback: Fallback = IntentViewFallback()
+    private val context: AppCompatActivity,
+    private val fallback: Fallback = IntentViewFallback()
 ) : CustomTabsServiceConnection() {
 
     interface Fallback {
@@ -91,15 +90,14 @@ class CustomTabBrowser(
             fallback.openUri(context, uri)
         } else {
             CustomTabsIntent.Builder(session.value)
-                    .setToolbarColor(context.color(R.color.primaryColor))
-                    .build()
-                    .apply {
-                        intent.setPackage(packageName)
-                        intent.putExtra(Intent.EXTRA_REFERRER,
-                                        Uri.parse("android-app://" + context.packageName))
-
-                    }
-                    .launchUrl(context, uri)
+                .setToolbarColor(context.color(R.color.primaryColor))
+                .build()
+                .apply {
+                    intent.setPackage(packageName)
+                    intent.putExtra(Intent.EXTRA_REFERRER,
+                        Uri.parse("android-app://" + context.packageName))
+                }
+                .launchUrl(context, uri)
         }
     }
 }

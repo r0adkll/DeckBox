@@ -1,25 +1,22 @@
 package com.r0adkll.deckbuilder.arch.ui.components.drag
 
-
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
-import androidx.viewpager.widget.ViewPager
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.view.DragEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
-import com.ftinc.kit.kotlin.extensions.color
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.ftinc.kit.extensions.color
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import io.pokemontcg.model.SuperType
 
-
 class TabletDragListener(
-        val dropZone: View,
-        val pager: androidx.viewpager.widget.ViewPager
+    val dropZone: View,
+    val pager: androidx.viewpager.widget.ViewPager
 ) : View.OnDragListener {
 
     private val selectedColor by lazy { dropZone.color(R.color.secondaryColor) }
@@ -33,7 +30,7 @@ class TabletDragListener(
     private var lastPage: Int = 0
     private var wiggleAnimator: ObjectAnimator? = null
 
-
+    @Suppress("ComplexMethod")
     override fun onDrag(v: View, event: DragEvent): Boolean {
         val state = event.localState as PokemonCardView.DragState
 
@@ -83,7 +80,6 @@ class TabletDragListener(
         }
     }
 
-
     fun setDropListener(listener: (PokemonCard) -> Unit) {
         this.listener = object : DropListener {
             override fun onDrop(card: PokemonCard) {
@@ -92,7 +88,6 @@ class TabletDragListener(
         }
     }
 
-
     private fun unselectDropZone() {
         background.setImageResource(R.drawable.dr_dropzone_background)
         card.imageTintList = null
@@ -100,7 +95,6 @@ class TabletDragListener(
 
         wiggleAnimator?.end()
     }
-
 
     private fun selectDropZone() {
         background.setImageResource(R.drawable.dr_dropzone_background_selected)
@@ -116,30 +110,26 @@ class TabletDragListener(
         wiggleAnimator?.start()
     }
 
-
     private fun showDropZone() {
         dropZone.animate()
-                .alpha(1f)
-                .setDuration(ANIM_DURATION)
-                .setInterpolator(FastOutSlowInInterpolator())
-                .start()
+            .alpha(1f)
+            .setDuration(ANIM_DURATION)
+            .setInterpolator(FastOutSlowInInterpolator())
+            .start()
     }
-
 
     private fun hideDropZone() {
         dropZone.animate()
-                .alpha(0f)
-                .setDuration(ANIM_DURATION)
-                .setInterpolator(FastOutSlowInInterpolator())
-                .start()
+            .alpha(0f)
+            .setDuration(ANIM_DURATION)
+            .setInterpolator(FastOutSlowInInterpolator())
+            .start()
     }
-
 
     interface DropListener {
 
         fun onDrop(card: PokemonCard)
     }
-
 
     companion object {
         private const val ANIM_DURATION = 200L
@@ -156,12 +146,15 @@ class TabletDragListener(
             return listener
         }
 
-
         /**
          * Attach a new [TabletDragListener] to the target view to handle the
          * Drag n' Drop operation for tablet target
          */
-        fun attach(target: View, pager: androidx.viewpager.widget.ViewPager, dropListener: (PokemonCard) -> Unit): TabletDragListener {
+        fun attach(
+            target: View,
+            pager: androidx.viewpager.widget.ViewPager,
+            dropListener: (PokemonCard) -> Unit
+        ): TabletDragListener {
             val listener = TabletDragListener(target, pager)
             listener.setDropListener(dropListener)
             target.setOnDragListener(listener)

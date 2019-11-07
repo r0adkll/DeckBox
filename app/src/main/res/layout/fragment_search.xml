@@ -4,12 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/searchDrawer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <FrameLayout
             android:id="@+id/searchToolbar"
@@ -17,7 +19,8 @@
             android:layout_height="?attr/actionBarSize"
             android:outlineProvider="background"
             android:background="@color/windowBackground"
-            android:theme="@style/ThemeOverlay.DeckBuilder.Search">
+            android:theme="@style/ThemeOverlay.DeckBuilder.Search"
+            >
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
@@ -52,7 +55,8 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"

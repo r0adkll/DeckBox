@@ -1,11 +1,12 @@
+@file:Suppress("MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.ui.features.collection.adapter
 
-import com.ftinc.kit.kotlin.adapter.RecyclerItem
+import com.ftinc.kit.recycler.RecyclerViewItem
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 
-
-sealed class Item : RecyclerItem {
+sealed class Item : RecyclerViewItem {
 
     abstract val itemId: Long
 
@@ -14,9 +15,9 @@ sealed class Item : RecyclerItem {
         override val layoutId: Int get() = R.layout.item_collection_migration
         override val itemId: Long get() = 0L
 
-        override fun isItemSame(new: RecyclerItem): Boolean = new is Migration
+        override fun isItemSame(new: RecyclerViewItem): Boolean = new is Migration
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is Migration -> new.isLoading == isLoading && new.error == error
             else -> false
         }
@@ -32,12 +33,12 @@ sealed class Item : RecyclerItem {
                 return result
             }
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSeries -> new.series == series
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSeries -> new.series == series && new.completion == completion
             else -> false
         }
@@ -53,12 +54,12 @@ sealed class Item : RecyclerItem {
                 return result
             }
 
-        override fun isItemSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isItemSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSet -> new.expansion.code == expansion.code
             else -> false
         }
 
-        override fun isContentSame(new: RecyclerItem): Boolean = when(new) {
+        override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
             is ExpansionSet -> new.expansion.code == expansion.code && new.count == count
             else -> false
         }

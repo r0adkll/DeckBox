@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.ftinc.kit.arch.presentation.BaseFragment
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
-import com.ftinc.kit.kotlin.utils.ScreenUtils.smallestWidth
+import com.ftinc.kit.util.ScreenUtils
+import com.ftinc.kit.util.ScreenUtils.smallestWidth
+import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.ui.components.BaseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.CollectionRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.collection.adapter.Item
@@ -44,9 +46,9 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
         super.onActivityCreated(savedInstanceState)
 
         adapter = CollectionRecyclerAdapter(requireContext(), migrateClicks,
-                dismissClicks = {
-                    preferences.showCollectionMigration.set(false)
-                }
+            dismissClicks = {
+                preferences.showCollectionMigration.set(false)
+            }
         ) {
             if (it is Item.ExpansionSet) {
                 Analytics.event(Event.SelectContent.CollectionExpansionSet(it.expansion.code))
@@ -58,7 +60,11 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
         collectionRecycler.adapter = adapter
         (collectionRecycler.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         (collectionRecycler.layoutManager as? GridLayoutManager)?.apply {
-            spanCount = if (smallestWidth(requireContext().resources, com.ftinc.kit.kotlin.utils.ScreenUtils.Config.TABLET_10)) 6 else 3
+            spanCount = if (smallestWidth(requireContext().resources, ScreenUtils.Config.TABLET_10)) {
+                TABLET_SPAN_COUNT
+            } else {
+                PHONE_SPAN_COUNT
+            }
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (adapter.currentList[position]) {
@@ -73,11 +79,11 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
 
     override fun setupComponent() {
         getComponent(HomeComponent::class)
-                .plus(CollectionModule(this))
-                .inject(this)
+            .plus(CollectionModule(this))
+            .inject(this)
 
-        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_RESUME)
-        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_RESUME)
+        delegates += StatefulFragmentDelegate(renderer, Lifecycle.Event.ON_START)
+        delegates += StatefulFragmentDelegate(presenter, Lifecycle.Event.ON_START)
     }
 
     override fun render(state: State) {
@@ -94,18 +100,24 @@ class CollectionFragment : BaseFragment(), CollectionUi, CollectionUi.Intentions
     }
 
     override fun hideError() {
-        collectionEmptyView.setEmptyMessage(R.string.empty_collection)
+        collectionEmptyView.setMessage(R.string.empty_collection)
     }
 
     override fun showError(description: String) {
-        collectionEmptyView.emptyMessage = description
+        collectionEmptyView.message = description
     }
 
     override fun showLoading(isLoading: Boolean) {
-        collectionEmptyView.setLoading(isLoading)
+        collectionEmptyView.state = if (isLoading) {
+            EmptyView.State.LOADING
+        } else {
+            EmptyView.State.EMPTY
+        }
     }
 
     companion object {
+        private const val TABLET_SPAN_COUNT = 6
+        private const val PHONE_SPAN_COUNT = 3
 
         fun newInstance(): CollectionFragment = CollectionFragment()
     }

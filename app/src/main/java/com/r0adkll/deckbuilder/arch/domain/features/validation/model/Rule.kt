@@ -1,9 +1,7 @@
 package com.r0adkll.deckbuilder.arch.domain.features.validation.model
 
-
 import androidx.annotation.StringRes
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-
 
 interface Rule {
 
@@ -14,5 +12,6 @@ interface Rule {
      * @param cards the list of cards in a deck to check/validate
      * @return the error message, as a [StringRes], or null if cards are valid for this rule
      */
-    @StringRes fun check(cards: List<PokemonCard>): Int?
+    @StringRes
+    fun check(cards: List<PokemonCard>): Int?
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.1
+* [#51](https://github.com/r0adkll/DeckBox/issues/51) - Added ktlint, detekt, danger, GitHub Action enhancements and cleanup
+* Implemented ProGuard for reducing application size 
+* Upgraded Git versioner to new plugin 
+
 ## 1.10.0
 * [#5](https://github.com/r0adkll/DeckBox/issues/5) - Added pricing data from TCGPlayer API via Cloud Function + Firestore
 * [#94](https://github.com/r0adkll/DeckBox/issues/94) - Updated support contact url
@@ -58,7 +63,6 @@
 * [#55](https://github.com/r0adkll/DeckBox/issues/55) - Fixed issue where searching was forced into disk even with connectivity
 * Fixed issue with validation icon flashing
 * Fixed UI bug in expansion browser header
-
 
 ## 1.7.7
 * Hotfix for issue where decks were missing cards due to find(ids) paging limit

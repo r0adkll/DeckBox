@@ -1,26 +1,21 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
-
 import android.os.Parcelable
+import com.ftinc.kit.arch.presentation.BaseActions
+import com.ftinc.kit.arch.presentation.state.BaseState
+import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.ui.components.BaseActions
-import com.r0adkll.deckbuilder.arch.ui.components.renderers.StateRenderer
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 
-
-interface DeckImageUi : StateRenderer<DeckImageUi.State> {
-
-    val state: State
-
+interface DeckImageUi : Ui<DeckImageUi.State, DeckImageUi.State.Change> {
 
     interface Intentions {
 
         val pickedDeckImage: Observable<DeckImage>
         val selectDeckImageClicks: Observable<Unit>
     }
-
 
     interface Actions : BaseActions {
 
@@ -29,18 +24,17 @@ interface DeckImageUi : StateRenderer<DeckImageUi.State> {
         fun close()
     }
 
-
     @Parcelize
     data class State(
-            val sessionId: Long,
-            val isLoading: Boolean,
-            val error: String?,
-            val cards: List<PokemonCard>,
-            val selectedDeckImage: DeckImage?,
-            val isSaved: Boolean
-    ) : Parcelable {
+        val sessionId: Long,
+        override val isLoading: Boolean,
+        override val error: String?,
+        val cards: List<PokemonCard>,
+        val selectedDeckImage: DeckImage?,
+        val isSaved: Boolean
+    ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
-        fun reduce(change: Change): State = when(change) {
+        override fun reduce(change: Change): State = when (change) {
             Change.IsLoading -> this.copy(isLoading = true, error = null)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
             is Change.CardsLoaded -> this.copy(cards = change.cards, isLoading = false)
@@ -50,15 +44,13 @@ interface DeckImageUi : StateRenderer<DeckImageUi.State> {
             Change.ImageSaved -> this.copy(isSaved = true)
         }
 
-
-        sealed class Change(val logText: String) {
+        sealed class Change(logText: String) : Ui.State.Change(logText) {
             object IsLoading : Change("disk -> Loading session")
             class Error(val description: String) : Change("error -> $description")
             class CardsLoaded(val cards: List<PokemonCard>) : Change("disk -> ${cards.size} deck cards loaded")
             class ImageSelected(val image: DeckImage) : Change("user -> deck image selected: $image")
             object ImageSaved : Change("user -> deck image saved")
         }
-
 
         companion object {
 

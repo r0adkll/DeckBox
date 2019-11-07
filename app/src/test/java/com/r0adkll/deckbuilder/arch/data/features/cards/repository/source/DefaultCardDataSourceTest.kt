@@ -9,7 +9,19 @@ import com.r0adkll.deckbuilder.tools.ModelUtils.createPokemonCard
 import com.r0adkll.deckbuilder.tools.mockPreference
 import com.r0adkll.deckbuilder.util.helper.Connectivity
 import io.reactivex.Observable
-import org.amshove.kluent.*
+import org.amshove.kluent.Verify
+import org.amshove.kluent.VerifyNotCalled
+import org.amshove.kluent.When
+import org.amshove.kluent.any
+import org.amshove.kluent.called
+import org.amshove.kluent.calling
+import org.amshove.kluent.itReturns
+import org.amshove.kluent.mock
+import org.amshove.kluent.on
+import org.amshove.kluent.shouldContainAll
+import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.that
+import org.amshove.kluent.was
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
@@ -18,7 +30,6 @@ class DefaultCardDataSourceTest {
 
     lateinit var diskSource: CardDataSource
     lateinit var networkSource: CardDataSource
-    lateinit var previewSource: CardDataSource
     lateinit var connectivity: Connectivity
     lateinit var preferences: AppPreferences
     lateinit var remote: Remote
@@ -28,14 +39,13 @@ class DefaultCardDataSourceTest {
     fun setUp() {
         diskSource = mock()
         networkSource = mock()
-        previewSource = mock()
         connectivity = mock()
         preferences = mock()
         remote = mock()
 
         When calling networkSource.search(anyOrNull(), any(), anyOrNull()) itReturns Observable.just(emptyList())
         When calling diskSource.search(anyOrNull(), any(), anyOrNull()) itReturns Observable.just(emptyList())
-        source = DefaultCardDataSource(preferences, diskSource, networkSource, previewSource, connectivity, remote)
+        source = DefaultCardDataSource(preferences, diskSource, networkSource, connectivity, remote)
     }
 
     @Test
@@ -46,7 +56,7 @@ class DefaultCardDataSourceTest {
         val query = "test"
 
         source.search(null, query, null)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on networkSource that networkSource.search(null, query, null) was called
         VerifyNotCalled on diskSource that diskSource.search(anyOrNull(), any(), anyOrNull())
@@ -60,7 +70,7 @@ class DefaultCardDataSourceTest {
         val query = "test"
 
         source.search(null, query, null)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, null) was called
         VerifyNotCalled on networkSource that networkSource.search(anyOrNull(), any(), anyOrNull())
@@ -75,7 +85,7 @@ class DefaultCardDataSourceTest {
         val filter = Filter()
 
         source.search(null, query, filter)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on networkSource that networkSource.search(null, query, filter) was called
         VerifyNotCalled on diskSource that diskSource.search(anyOrNull(), any(), anyOrNull())
@@ -90,7 +100,7 @@ class DefaultCardDataSourceTest {
         val filter = Filter(expansions = listOf(createExpansion("sm8", "sm6")))
 
         source.search(null, query, filter)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, filter) was called
         VerifyNotCalled on networkSource that networkSource.search(anyOrNull(), any(), anyOrNull())
@@ -105,7 +115,7 @@ class DefaultCardDataSourceTest {
         val query = "test"
 
         source.search(null, query, null)
-                .blockingSubscribe()
+            .blockingSubscribe()
 
         Verify on diskSource that diskSource.search(null, query, null) was called
     }
@@ -113,10 +123,10 @@ class DefaultCardDataSourceTest {
     @Test
     fun testFindWithConnectivity() {
         val cards = listOf(
-                createPokemonCard().copy(id = "sm8-1"),
-                createPokemonCard().copy(id = "sm8-2"),
-                createPokemonCard().copy(id = "sm8-3"),
-                createPokemonCard().copy(id = "sm8-4")
+            createPokemonCard().copy(id = "sm8-1"),
+            createPokemonCard().copy(id = "sm8-2"),
+            createPokemonCard().copy(id = "sm8-3"),
+            createPokemonCard().copy(id = "sm8-4")
         )
         val ids = cards.map { it.id }
         When calling connectivity.isConnected() itReturns true
@@ -131,10 +141,10 @@ class DefaultCardDataSourceTest {
     @Test
     fun testFindIncompleteWithConnectivity() {
         val cards = listOf(
-                createPokemonCard().copy(id = "sm8-1"),
-                createPokemonCard().copy(id = "sm8-2"),
-                createPokemonCard().copy(id = "sm8-3"),
-                createPokemonCard().copy(id = "sm8-4")
+            createPokemonCard().copy(id = "sm8-1"),
+            createPokemonCard().copy(id = "sm8-2"),
+            createPokemonCard().copy(id = "sm8-3"),
+            createPokemonCard().copy(id = "sm8-4")
         )
         val ids = cards.map { it.id }
         When calling connectivity.isConnected() itReturns true
@@ -143,7 +153,7 @@ class DefaultCardDataSourceTest {
 
         val results = source.find(ids).blockingFirst()
 
-        results shouldContainAll  cards
+        results shouldContainAll cards
         Verify on diskSource that diskSource.find(ids) was called
         Verify on networkSource that networkSource.find(listOf("sm8-4")) was called
     }
@@ -151,10 +161,10 @@ class DefaultCardDataSourceTest {
     @Test
     fun testFindWithoutConnectivity() {
         val cards = listOf(
-                createPokemonCard().copy(id = "sm8-1"),
-                createPokemonCard().copy(id = "sm8-2"),
-                createPokemonCard().copy(id = "sm8-3"),
-                createPokemonCard().copy(id = "sm8-4")
+            createPokemonCard().copy(id = "sm8-1"),
+            createPokemonCard().copy(id = "sm8-2"),
+            createPokemonCard().copy(id = "sm8-3"),
+            createPokemonCard().copy(id = "sm8-4")
         )
         val ids = cards.map { it.id }
         When calling connectivity.isConnected() itReturns false

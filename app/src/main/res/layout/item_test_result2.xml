@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.TestResultProgressView
         android:id="@+id/background"
@@ -15,7 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/percent"
@@ -30,7 +32,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="100%" />
+        tools:text="100%"
+        />
 
     <com.ftinc.kit.widget.BezelImageView
         android:id="@+id/pokemonImage"
@@ -42,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="@+id/background"
         app:layout_constraintTop_toTopOf="@+id/background"
         app:layout_constraintVertical_bias="0.0"
-        app:maskDrawable="@drawable/dr_mask_round_rect" />
-
+        app:maskDrawable="@drawable/dr_mask_round_rect"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

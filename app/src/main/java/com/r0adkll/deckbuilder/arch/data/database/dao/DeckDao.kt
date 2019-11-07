@@ -1,7 +1,11 @@
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
 import android.net.Uri
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckCardJoin
@@ -29,7 +33,12 @@ abstract class DeckDao {
     abstract fun getDeck(name: String): DeckEntity?
 
     @Transaction
-    @Query("SELECT * FROM deck_card_join INNER JOIN cards ON deck_card_join.cardId = cards.id WHERE deck_card_join.deckId = :deckId")
+    @Query("""
+        SELECT * FROM deck_card_join 
+        INNER JOIN cards ON deck_card_join.cardId = cards.id 
+        WHERE deck_card_join.deckId = :deckId
+        """
+    )
     abstract fun getDeckCards(deckId: Long): Flowable<List<StackedCard>>
 
     @Transaction
@@ -60,14 +69,16 @@ abstract class DeckDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertJoins(joins: List<DeckCardJoin>)
 
-
+    @Suppress("LongParameterList")
     @Transaction
-    open fun insertDeckWithCards(id: Long?,
-                                 cards: List<PokemonCard>,
-                                 name: String,
-                                 description: String?,
-                                 image: DeckImage?,
-                                 collectionOnly: Boolean): DeckEntity {
+    open fun insertDeckWithCards(
+        id: Long?,
+        cards: List<PokemonCard>,
+        name: String,
+        description: String?,
+        image: DeckImage?,
+        collectionOnly: Boolean
+    ): DeckEntity {
         // Insert Cards
         val cardsWithAttacks = cards.map { RoomEntityMapper.to(it) }
         insertCardsWithAttacks(cardsWithAttacks)
@@ -90,17 +101,22 @@ abstract class DeckDao {
         return deck
     }
 
-
     @Transaction
     open fun duplicateDeck(deck: Deck) {
         duplicate(deck)
     }
 
-
     private fun duplicate(deck: Deck) {
         val existing = getDeck(deck.name)
         if (existing == null) {
-            val entity = DeckEntity(0L, deck.name, deck.description, deck.image?.uri, deck.collectionOnly, System.currentTimeMillis())
+            val entity = DeckEntity(
+                0L,
+                deck.name,
+                deck.description,
+                deck.image?.uri,
+                deck.collectionOnly,
+                System.currentTimeMillis()
+            )
             val id = insertDeck(entity)
             val joins = deck.cards.stack().map { DeckCardJoin(id, it.card.id, it.count) }
             insertJoins(joins)
@@ -113,10 +129,18 @@ abstract class DeckDao {
 
             val cleanName = deck.name.replace(regex, "").trim()
             val newName = "$cleanName ($count)"
-            duplicate(Deck("", newName, deck.description, deck.image, deck.collectionOnly, deck.cards, false, deck.timestamp))
+            duplicate(Deck(
+                "",
+                newName,
+                deck.description,
+                deck.image,
+                deck.collectionOnly,
+                deck.cards,
+                false,
+                deck.timestamp
+            ))
         }
     }
-
 
     private fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {
         cards.forEach {
@@ -131,7 +155,7 @@ abstract class DeckDao {
     }
 
     companion object {
-        private const val DUPLICATE_REGEX = "\\(\\d+\\)"
 
+        private const val DUPLICATE_REGEX = "\\(\\d+\\)"
     }
 }

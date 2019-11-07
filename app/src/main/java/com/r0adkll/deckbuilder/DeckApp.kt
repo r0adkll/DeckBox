@@ -1,12 +1,14 @@
+@file:Suppress("DEPRECATION")
+
 package com.r0adkll.deckbuilder
 
 import android.app.Application
 import com.bumptech.glide.request.target.ViewTarget
+import com.ftinc.kit.app.AppDelegate
+import com.ftinc.kit.widget.EmptyView
 import com.google.firebase.FirebaseApp
-import com.r0adkll.deckbuilder.internal.AppDelegate
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.LoggingAnalyticInterface
-import com.r0adkll.deckbuilder.internal.analytics.UserProperty
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.internal.di.AppModule
 import com.r0adkll.deckbuilder.internal.di.DaggerAppComponent
@@ -22,11 +24,14 @@ import javax.inject.Inject
 class DeckApp : Application() {
 
     companion object {
-        @JvmStatic lateinit var component: AppComponent
-        @JvmStatic lateinit var refWatcher: RefWatcher
+        @JvmStatic
+        lateinit var component: AppComponent
+        @JvmStatic
+        lateinit var refWatcher: RefWatcher
     }
 
-    @Inject lateinit var delegates: Set<@JvmSuppressWildcards AppDelegate>
+    @Inject
+    lateinit var delegates: Set<@JvmSuppressWildcards AppDelegate>
 
     override fun onCreate() {
         super.onCreate()
@@ -39,6 +44,9 @@ class DeckApp : Application() {
 
         // Setup Glide to allow for custom tag id's so we can set tags to images for our own purpose
         ViewTarget.setTagId(R.id.glide_tag_id)
+
+        @Suppress("MagicNumber")
+        EmptyView.defaultMessageTextSizeSp = 20
     }
 
     private fun installAnalytics() {
@@ -73,12 +81,12 @@ class DeckApp : Application() {
             if (e is NullPointerException || e is IllegalArgumentException) {
                 // that's likely a bug in the application
                 Thread.currentThread().uncaughtExceptionHandler
-                        .uncaughtException(Thread.currentThread(), e)
+                    ?.uncaughtException(Thread.currentThread(), e)
             }
             if (e is IllegalStateException) {
                 // that's a bug in RxJava or in a custom operator
                 Thread.currentThread().uncaughtExceptionHandler
-                        .uncaughtException(Thread.currentThread(), e)
+                    ?.uncaughtException(Thread.currentThread(), e)
             }
             Timber.w(ex, "Undeliverable exception received, not sure what to do")
         }
@@ -87,8 +95,8 @@ class DeckApp : Application() {
     @Suppress("NON_FINAL_MEMBER_IN_FINAL_CLASS")
     open fun installDagger(): AppComponent {
         component = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
+            .appModule(AppModule(this))
+            .build()
         return component
     }
 }

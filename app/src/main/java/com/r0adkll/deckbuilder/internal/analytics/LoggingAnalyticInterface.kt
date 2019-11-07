@@ -1,8 +1,6 @@
 package com.r0adkll.deckbuilder.internal.analytics
 
-
 import timber.log.Timber
-
 
 class LoggingAnalyticInterface : AnalyticInterface {
 

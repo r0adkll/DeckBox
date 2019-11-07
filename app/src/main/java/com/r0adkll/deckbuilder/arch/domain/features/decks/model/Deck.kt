@@ -1,23 +1,21 @@
 package com.r0adkll.deckbuilder.arch.domain.features.decks.model
 
-
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.pokemontcg.model.SuperType
 import kotlinx.android.parcel.Parcelize
 
-
 @Parcelize
 data class Deck(
-        val id: String,
-        val name: String,
-        val description: String,
-        val image: DeckImage?,
-        val collectionOnly: Boolean,
-        val cards: List<PokemonCard>,
-        val isMissingCards: Boolean,
-        val timestamp: Long
+    val id: String,
+    val name: String,
+    val description: String,
+    val image: DeckImage?,
+    val collectionOnly: Boolean,
+    val cards: List<PokemonCard>,
+    val isMissingCards: Boolean,
+    val timestamp: Long
 ) : Parcelable {
 
     val pokemonCount: Int get() = cards.count { it.supertype == SuperType.POKEMON }
@@ -26,6 +24,6 @@ data class Deck(
 
     override fun toString(): String {
         return "Deck(id='$id', name='$name', description='$description', cards=${cards.size}, " +
-                "collectionOnly=$collectionOnly, isMissingCards=$isMissingCards, timestamp=$timestamp)"
+            "collectionOnly=$collectionOnly, isMissingCards=$isMissingCards, timestamp=$timestamp)"
     }
 }

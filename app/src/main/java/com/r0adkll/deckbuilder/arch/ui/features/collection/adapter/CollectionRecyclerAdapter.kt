@@ -3,16 +3,16 @@ package com.r0adkll.deckbuilder.arch.ui.features.collection.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.ftinc.kit.recycler.EmptyViewListAdapter
 import com.jakewharton.rxrelay2.Relay
-import com.r0adkll.deckbuilder.arch.ui.components.EmptyViewListAdapter
-import com.r0adkll.deckbuilder.arch.ui.components.RecyclerItemCallback
+import com.r0adkll.deckbuilder.arch.ui.components.RecyclerViewItemCallback
 
 class CollectionRecyclerAdapter(
-        context: Context,
-        private val migrateClicks: Relay<Unit>,
-        private val dismissClicks: () -> Unit,
-        private val onItemClickListener: (Item) -> Unit = { }
-) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerItemCallback()) {
+    context: Context,
+    private val migrateClicks: Relay<Unit>,
+    private val dismissClicks: () -> Unit,
+    private val onItemClickListener: (Item) -> Unit = { }
+) : EmptyViewListAdapter<Item, UiViewHolder<Item>>(RecyclerViewItemCallback()) {
 
     private val inflater = LayoutInflater.from(context)
 

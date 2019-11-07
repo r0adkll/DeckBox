@@ -2,15 +2,19 @@ package com.r0adkll.deckbuilder.tools
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
-import org.amshove.kluent.*
-
+import org.amshove.kluent.When
+import org.amshove.kluent.any
+import org.amshove.kluent.calling
+import org.amshove.kluent.itAnswers
+import org.amshove.kluent.itReturns
+import org.amshove.kluent.mock
 
 inline fun <reified T : Any> mockPreference(
-        toReturn: T,
-        asObservable: Observable<T>? = null,
-        noinline onSet: PreferenceSetter<T>? = null,
-        isSet: Boolean? = null
-) : Preference<T> {
+    toReturn: T,
+    asObservable: Observable<T>? = null,
+    noinline onSet: PreferenceSetter<T>? = null,
+    isSet: Boolean? = null
+): Preference<T> {
     val mock = mock<Preference<T>>()
     When calling mock.get() itReturns toReturn
 
@@ -30,6 +34,5 @@ inline fun <reified T : Any> mockPreference(
 
     return mock
 }
-
 
 typealias PreferenceSetter<T> = (T) -> Unit

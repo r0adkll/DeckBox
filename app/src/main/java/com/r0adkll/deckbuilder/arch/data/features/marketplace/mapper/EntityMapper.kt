@@ -10,24 +10,24 @@ object EntityMapper {
 
     fun from(entity: ProductEntity): Product {
         return Product(
-                entity.cardId,
-                entity.setCode,
-                entity.groupId,
-                entity.productId,
-                entity.productName,
-                entity.url,
-                entity.prices.map { from(it) },
-                entity.updatedAt.milliseconds
+            entity.cardId,
+            entity.setCode,
+            entity.groupId,
+            entity.productId,
+            entity.productName,
+            entity.url,
+            entity.prices.map { from(it) },
+            entity.updatedAt.milliseconds
         )
     }
 
     fun from(entity: PriceEntity): Price {
         return Price(
-                entity.subTypeName,
-                entity.lowPrice,
-                entity.midPrice,
-                entity.highPrice,
-                entity.marketPrice
+            entity.subTypeName,
+            entity.lowPrice,
+            entity.midPrice,
+            entity.highPrice,
+            entity.marketPrice
         )
     }
 }

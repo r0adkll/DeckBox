@@ -66,7 +66,6 @@
         android:layout_marginEnd="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="?android:textColorPrimary"
-        android:textSize="@dimen/display_1"
         tools:text="Mew &amp; Mewtwo-GX"
         />
 

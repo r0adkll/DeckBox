@@ -53,9 +53,10 @@
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/abilityText">
+        app:layout_constraintTop_toBottomOf="@id/abilityText"
+        >
 
-<!--        <include layout="@layout/layout_card_attack" />-->
+        <!--        <include layout="@layout/layout_card_attack" />-->
 
     </LinearLayout>
 
@@ -82,7 +83,8 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardText">
+        app:layout_constraintTop_toBottomOf="@id/cardText"
+        >
 
         <TextView
             android:layout_width="0dp"
@@ -120,7 +122,8 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardWeaknessLayout">
+        app:layout_constraintTop_toBottomOf="@id/cardWeaknessLayout"
+        >
 
         <TextView
             android:layout_width="0dp"
@@ -151,7 +154,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/cardRetreatLayout"
         android:layout_width="0dp"
@@ -159,7 +161,8 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardResistanceLayout">
+        app:layout_constraintTop_toBottomOf="@id/cardResistanceLayout"
+        >
 
         <TextView
             android:layout_width="0dp"
@@ -184,27 +187,26 @@
             android:gravity="center_vertical|start"
             >
 
-<!--            <ImageView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:src="@drawable/ic_poketype_colorless"-->
-<!--                />-->
+            <!--            <ImageView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:src="@drawable/ic_poketype_colorless"-->
+            <!--                />-->
 
-<!--            <ImageView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:src="@drawable/ic_poketype_colorless"-->
-<!--                />-->
+            <!--            <ImageView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:src="@drawable/ic_poketype_colorless"-->
+            <!--                />-->
 
-<!--            <ImageView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:src="@drawable/ic_poketype_colorless"-->
-<!--                />-->
-
+            <!--            <ImageView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:src="@drawable/ic_poketype_colorless"-->
+            <!--                />-->
 
         </LinearLayout>
 

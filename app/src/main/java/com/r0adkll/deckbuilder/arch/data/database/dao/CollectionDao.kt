@@ -1,12 +1,15 @@
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import com.r0adkll.deckbuilder.arch.data.database.entities.CollectionCountEntity
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
 import io.reactivex.Flowable
 import io.reactivex.Single
-
 
 @Dao
 abstract class CollectionDao {
@@ -50,22 +53,24 @@ abstract class CollectionDao {
     @Transaction
     open fun incrementCount(card: PokemonCard): CollectionCountEntity? {
         val count = count(card.id)
-        if (count != null) {
-            count.count += 1
-            updateCount(count)
-            return count
-        } else if (card.expansion != null){
-            val newCount = CollectionCountEntity(
+        return when {
+            count != null -> {
+                count.count += 1
+                updateCount(count)
+                count
+            }
+            card.expansion != null -> {
+                val newCount = CollectionCountEntity(
                     card.id,
                     1,
                     card.expansion.code,
                     card.expansion.series
-            )
-            insertCount(newCount)
-            return newCount
+                )
+                insertCount(newCount)
+                newCount
+            }
+            else -> null
         }
-
-        return null
     }
 
     @Transaction
@@ -87,10 +92,10 @@ abstract class CollectionDao {
         val missingCards = cards.filter { card -> existingCards.none { existing -> existing.cardId == card.id } }
         val newCountEntities = missingCards.map { card ->
             CollectionCountEntity(
-                    card.id,
-                    1,
-                    card.expansion!!.code,
-                    card.expansion!!.series
+                card.id,
+                1,
+                card.expansion!!.code,
+                card.expansion.series
             )
         }
         insertCounts(newCountEntities)

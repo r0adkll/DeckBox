@@ -29,8 +29,8 @@ before_script:
 
 cache:
   paths:
-     - .gradle/wrapper
-     - .gradle/caches
+    - .gradle/wrapper
+    - .gradle/caches
 
 stages:
   - build
@@ -43,7 +43,7 @@ build:
     - ./gradlew assembleDebug
   artifacts:
     paths:
-    - app/build/outputs/
+      - app/build/outputs/
 
 unitTests:
   stage: test
