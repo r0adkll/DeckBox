@@ -18,7 +18,7 @@ class CachingMarketplaceRepository(
                 if (oldestPrice != null && oldestPrice.recordedAt.isToday()) {
                     Observable.just(products)
                 } else {
-                    throw IllegalStateException("There doesn't appear to be an up to date price in the cache")
+                    networkSource.getPrice(cardId)
                 }
             }
             .onErrorResumeNext(networkSource.getPrice(cardId))
@@ -27,15 +27,5 @@ class CachingMarketplaceRepository(
 
     override fun getPrices(cardIds: Set<String>): Observable<Map<String, Product>> {
         return networkSource.getPrices(cardIds)
-//        return cacheSource.getPrices(cardIds)
-//                .flatMap { products ->
-//                    if (products.values.any { !it.recordedAt.isToday() }) {
-//                        throw IllegalStateException("One of the prices appears to be out of date, force network pull")
-//                    } else {
-//                        Observable.just(products)
-//                    }
-//                }
-//                .onErrorResumeNext(networkSource.getPrices(cardIds))
-//                .switchIfEmpty(networkSource.getPrices(cardIds))
     }
 }

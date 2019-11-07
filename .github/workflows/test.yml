@@ -1,4 +1,4 @@
-name: Testing & Linters
+name: Build Status
 
 on: 
   push:
@@ -25,13 +25,32 @@ jobs:
       env:
         GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
       
-    - name: Run Tests and Linters
+    - name: Android Lint
+      continue-on-error: github.event_name == 'pull_request'
       run: |
         ./gradlew lint 
+
+    - name: ktlint
+      continue-on-error: github.event_name == 'pull_request'
+      run: |
         ./gradlew ktlintCheck
+
+    - name: detekt
+      continue-on-error: github.event_name == 'pull_request'
+      run: |
         ./gradlew detekt
+
+    - name: Unit test
+      continue-on-error: github.event_name == 'pull_request'
+      run: |
         ./gradlew test
-      
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: Reports
+        path: app/build/reports
+
     # =======================================
     # Install and run Danger ONLY if this was 
     # triggered by a PR
