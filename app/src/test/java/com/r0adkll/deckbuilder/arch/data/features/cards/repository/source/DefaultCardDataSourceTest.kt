@@ -30,7 +30,6 @@ class DefaultCardDataSourceTest {
 
     lateinit var diskSource: CardDataSource
     lateinit var networkSource: CardDataSource
-    lateinit var previewSource: CardDataSource
     lateinit var connectivity: Connectivity
     lateinit var preferences: AppPreferences
     lateinit var remote: Remote
@@ -40,14 +39,13 @@ class DefaultCardDataSourceTest {
     fun setUp() {
         diskSource = mock()
         networkSource = mock()
-        previewSource = mock()
         connectivity = mock()
         preferences = mock()
         remote = mock()
 
         When calling networkSource.search(anyOrNull(), any(), anyOrNull()) itReturns Observable.just(emptyList())
         When calling diskSource.search(anyOrNull(), any(), anyOrNull()) itReturns Observable.just(emptyList())
-        source = DefaultCardDataSource(preferences, diskSource, networkSource, previewSource, connectivity, remote)
+        source = DefaultCardDataSource(preferences, diskSource, networkSource, connectivity, remote)
     }
 
     @Test
