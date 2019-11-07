@@ -24,24 +24,36 @@ jobs:
         echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
       env:
         GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      
+
+    - name: Full Check
+      if: github.event_name != 'pull_request'
+      run: |
+        ./gradlew lint
+        ./gradlew ktlintCheck
+        ./gradlew detekt
+        ./gradlew test
+
     - name: Android Lint
-      continue-on-error: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request'
+      continue-on-error: true
       run: |
         ./gradlew lint 
 
     - name: ktlint
-      continue-on-error: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request'
+      continue-on-error: true
       run: |
         ./gradlew ktlintCheck
 
     - name: detekt
-      continue-on-error: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request'
+      continue-on-error: true
       run: |
         ./gradlew detekt
 
     - name: Unit test
-      continue-on-error: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request'
+      continue-on-error: true
       run: |
         ./gradlew test
 
