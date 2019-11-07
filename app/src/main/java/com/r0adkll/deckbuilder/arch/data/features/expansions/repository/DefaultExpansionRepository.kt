@@ -7,8 +7,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import io.reactivex.Observable
 
 class DefaultExpansionRepository(
-    val defaultSource: ExpansionDataSource,
-    val remote: Remote
+    val defaultSource: ExpansionDataSource
 ) : ExpansionRepository {
 
     override fun getExpansion(code: String): Observable<Expansion> {

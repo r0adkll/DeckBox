@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.data.features.expansions.repository
 
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
-import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import io.reactivex.Observable
 import org.amshove.kluent.When
 import org.amshove.kluent.any
@@ -21,14 +20,12 @@ class DefaultExpansionRepositoryTest {
     val refreshedExpansion = Expansion("sm115", null, "", "", 0, true, true, "", "", null)
 
     lateinit var defaultSource: ExpansionDataSource
-    lateinit var remote: Remote
     lateinit var repository: DefaultExpansionRepository
 
     @Before
     fun setUp() {
         defaultSource = mock()
-        remote = mock()
-        repository = DefaultExpansionRepository(defaultSource, remote)
+        repository = DefaultExpansionRepository(defaultSource)
 
         When calling defaultSource.getExpansions(any()) itReturns Observable.just(listOf(defaultExpansion))
         When calling defaultSource.refreshExpansions() itReturns Observable.just(listOf(
@@ -38,7 +35,7 @@ class DefaultExpansionRepositoryTest {
     }
 
     @Test
-    fun `expansions with remote undefined`() {
+    fun `get expansions`() {
         val result = repository.getExpansions().blockingFirst()
 
         result.size shouldEqualTo 1
@@ -47,19 +44,10 @@ class DefaultExpansionRepositoryTest {
     }
 
     @Test
-    fun `refreshed expansions with remote undefined`() {
+    fun `refreshed expansions`() {
         val result = repository.refreshExpansions().blockingFirst()
 
         result.size shouldEqualTo 2
-        result shouldContain defaultExpansion
-        result shouldContain refreshedExpansion
-    }
-
-    @Test
-    fun `refreshed expansions with remote defined`() {
-        val result = repository.refreshExpansions().blockingFirst()
-
-        result.size shouldEqualTo 3
         result shouldContain defaultExpansion
         result shouldContain refreshedExpansion
     }

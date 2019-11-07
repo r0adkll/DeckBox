@@ -48,9 +48,8 @@ class RepositoryModule {
 
     @Provides @AppScope
     fun provideExpansionRepository(
-        defaultSource: DefaultExpansionDataSource,
-        remote: Remote
-    ): ExpansionRepository = DefaultExpansionRepository(defaultSource, remote)
+        defaultSource: DefaultExpansionDataSource
+    ): ExpansionRepository = DefaultExpansionRepository(defaultSource)
 
     @Provides @AppScope
     fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
