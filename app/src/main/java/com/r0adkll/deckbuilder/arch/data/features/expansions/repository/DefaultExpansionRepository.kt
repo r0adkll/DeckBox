@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.data.features.expansions.repository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.ExpansionDataSource
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
-import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import io.reactivex.Observable
 
 class DefaultExpansionRepository(

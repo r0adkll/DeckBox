@@ -25,7 +25,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.Expans
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
-import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
