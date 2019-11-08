@@ -30,7 +30,11 @@ class TestResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         GlideApp.with(itemView)
             .load(item.pokemonCard?.imageUrl)
-            .signature(CardImageKey(item.pokemonCard?.expansion?.code ?: "", item.pokemonCard?.id ?: "", CardImageKey.Type.NORMAL))
+            .signature(CardImageKey(
+                item.pokemonCard?.expansion?.code ?: "",
+                item.pokemonCard?.id ?: "",
+                CardImageKey.Type.NORMAL
+            ))
             .into(imageView)
     }
 
