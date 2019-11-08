@@ -21,7 +21,7 @@ jobs:
           echo $ANDROID_HOME
           ls -la $ANDROID_HOME
           echo "== Checking Build Tools =="
-          ls -la $ANDROID_HOME/build-tools/29.0.2 | grep 'apksigner|zipalign'
+          ls -la $ANDROID_HOME/build-tools/29.0.2
 
       - name: Setup Secrets
         run: |
