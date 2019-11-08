@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.settings.offline
+package com.r0adkll.deckbuilder.arch.ui.features.settings.cache
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.r0adkll.deckbuilder.R
 
-class ManageOfflineActivity : BaseActivity() {
+class ManageCacheActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +22,7 @@ class ManageOfflineActivity : BaseActivity() {
     companion object {
 
         fun createIntent(context: Context): Intent {
-            return Intent(context, ManageOfflineActivity::class.java)
+            return Intent(context, ManageCacheActivity::class.java)
         }
     }
 }

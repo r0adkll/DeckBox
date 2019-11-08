@@ -305,4 +305,5 @@
     <string name="tab_supporter">Supporter</string>
     <string name="tab_tool">Tool</string>
     <string name="tab_break">BREAK</string>
+    <string name="action_clear_cache">Clear All</string>
 </resources>

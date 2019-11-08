@@ -95,7 +95,7 @@
             android:theme="@style/Theme.DeckBuilder.Splash"
             />
 
-        <activity android:name=".arch.ui.features.settings.offline.ManageOfflineActivity" />
+        <activity android:name=".arch.ui.features.settings.cache.ManageCacheActivity" />
         <activity
             android:name=".arch.ui.features.collection.set.CollectionSetActivity"
             android:theme="@style/Theme.DeckBuilder.Translucent"

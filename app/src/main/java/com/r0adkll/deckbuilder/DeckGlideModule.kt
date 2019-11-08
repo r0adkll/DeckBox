@@ -6,7 +6,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
-import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.executor.GlideExecutor
 import com.bumptech.glide.module.AppGlideModule
 import com.caverock.androidsvg.SVG
@@ -24,7 +23,6 @@ class DeckGlideModule : AppGlideModule() {
         builder.setSourceExecutor(GlideExecutor.newSourceExecutor(THREAD_COUNT, EXTRACTOR_NAME,
             GlideExecutor.UncaughtThrowableStrategy.IGNORE))
 
-//        builder.setDiskCache(InternalCacheDiskCacheFactory(context, DISK_CACHE_SIZE_IN_BYTES))
         val cacheDir = File(context.cacheDir, "images")
         builder.setDiskCache(PermanentDiskCacheFactory.create(cacheDir, true))
     }
@@ -36,7 +34,6 @@ class DeckGlideModule : AppGlideModule() {
 
     companion object {
 
-        private const val DISK_CACHE_SIZE_IN_BYTES = 1024L * 1024L * 500L
         private const val THREAD_COUNT = 4
         private const val EXTRACTOR_NAME = "glide-multi-executor"
     }
