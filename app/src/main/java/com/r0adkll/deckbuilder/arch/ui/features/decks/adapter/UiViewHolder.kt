@@ -30,6 +30,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewT
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.PREVIEW
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.QUICK_START
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
+import com.r0adkll.deckbuilder.cache.CardImageKey
 import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -182,6 +183,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             } ?: mostProminentCard(deck.cards)?.let {
                 GlideApp.with(itemView)
                     .load(it.imageUrl)
+                    .signature(CardImageKey(it.expansion?.code ?: "", it.id, CardImageKey.Type.NORMAL))
                     .placeholder(R.drawable.pokemon_card_back)
                     .into(image)
             }

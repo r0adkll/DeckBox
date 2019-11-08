@@ -26,6 +26,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
+import com.r0adkll.deckbuilder.cache.CardImageKey
 import com.r0adkll.deckbuilder.util.extensions.bytes
 import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 import io.pokemontcg.Pokemon
@@ -110,6 +111,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             GlideApp.with(this)
                 .downloadOnly()
                 .load(it.imageUrl)
+                .signature(CardImageKey(it.setCode, it.id, CardImageKey.Type.NORMAL))
                 .submit()
         }
 

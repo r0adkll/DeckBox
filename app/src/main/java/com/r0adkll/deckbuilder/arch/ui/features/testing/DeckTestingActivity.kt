@@ -37,6 +37,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
+import com.r0adkll.deckbuilder.cache.CardImageKey
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.fromHtml
@@ -179,6 +180,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         val futures = hand.map {
             GlideApp.with(this)
                 .load(it.imageUrl)
+                .signature(CardImageKey(it.expansion?.code ?: "", it.id, CardImageKey.Type.NORMAL))
                 .submit()
         }
 

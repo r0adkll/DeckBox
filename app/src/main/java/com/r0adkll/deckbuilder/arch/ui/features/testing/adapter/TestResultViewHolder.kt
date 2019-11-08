@@ -11,6 +11,7 @@ import com.ftinc.kit.arch.util.bindView
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.TestResultProgressView
+import com.r0adkll.deckbuilder.cache.CardImageKey
 
 @Suppress("MagicNumber")
 class TestResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,6 +30,7 @@ class TestResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         GlideApp.with(itemView)
             .load(item.pokemonCard?.imageUrl)
+            .signature(CardImageKey(item.pokemonCard?.expansion?.code ?: "", item.pokemonCard?.id ?: "", CardImageKey.Type.NORMAL))
             .into(imageView)
     }
 
