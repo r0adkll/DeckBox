@@ -30,12 +30,12 @@ jobs:
 
       - name: Assemble Release APK
         run: |
-          ./gradlew assembleRelease
+          ./gradlew bundleRelease
 
       - name: Sign Android Release
         uses: r0adkll/sign-android-release@master
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}

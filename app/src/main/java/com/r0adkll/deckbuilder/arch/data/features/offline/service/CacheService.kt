@@ -13,6 +13,7 @@ import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.TaskStackBuilder
 import com.ftinc.kit.arch.util.retryWithBackoff
 import com.ftinc.kit.extensions.color
 import com.ftinc.kit.util.Stopwatch
@@ -26,6 +27,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
+import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheActivity
 import com.r0adkll.deckbuilder.cache.CardImageKey
 import com.r0adkll.deckbuilder.util.extensions.bytes
 import com.r0adkll.deckbuilder.util.extensions.readablePercentage
@@ -113,7 +115,13 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
                 .load(it.imageUrl)
                 .signature(CardImageKey(it.setCode, it.id, CardImageKey.Type.NORMAL))
                 .submit()
-        }
+        }.plus(cards.map {
+            GlideApp.with(this)
+                .downloadOnly()
+                .load(it.imageUrlHiRes)
+                .signature(CardImageKey(it.setCode, it.id, CardImageKey.Type.HI_RES))
+                .submit()
+        })
 
         val throttle = Stopwatch.createStarted()
         targets.forEachIndexed { i, target ->
@@ -170,7 +178,23 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             .setSound(null)
             .setSmallIcon(getSmallIcon(status))
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .apply {
+                if (isOngoing) {
+                    priority = NotificationCompat.PRIORITY_LOW
+                } else {
+                    priority = NotificationCompat.PRIORITY_HIGH
+
+                    val manageIntent = TaskStackBuilder.create(this@CacheService)
+                        .addNextIntentWithParentStack(Intent(this@CacheService, ManageCacheActivity::class.java))
+                        .getPendingIntent(RC_PI_CACHE_MANAGEMENT, PendingIntent.FLAG_UPDATE_CURRENT)
+
+                    addAction(
+                        NotificationCompat.Action.Builder(null, getString(R.string.action_manage), manageIntent)
+                            .setShowsUserInterface(true)
+                            .build()
+                    )
+                }
+            }
             .setProgress(status)
 
         notificationManager.notify(NOTIFICATION_ID, builder.build())
@@ -216,6 +240,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
     companion object {
         private const val EXTRA_REQUEST = "CacheService.Request"
         private const val CHANNEL_ID = "deckbox-notifications"
+        private const val RC_PI_CACHE_MANAGEMENT = 15
         private const val NOTIFICATION_ID = 100
         private const val PAGE_SIZE = 1000
         private const val NOTIFICATION_THROTTLE_MS = 200L
