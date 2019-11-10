@@ -3,13 +3,14 @@
 package com.r0adkll.deckbuilder.arch.data.features.offline.service
 
 import android.annotation.TargetApi
-import android.app.IntentService
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.IBinder
 import androidx.annotation.DrawableRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -33,66 +34,111 @@ import com.r0adkll.deckbuilder.util.extensions.bytes
 import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
-class CacheService : IntentService("DeckBox-Cache-Service") {
+class CacheService : Service() {
 
     @Inject lateinit var api: Pokemon
     @Inject lateinit var preferences: AppPreferences
     @Inject lateinit var offlineStatusConsumer: OfflineStatusConsumer
     @Inject lateinit var cardCache: CardCache
 
+    private val scope = CoroutineScope(Dispatchers.IO)
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
+    private val cacheQueue = ArrayDeque<DownloadRequest>(3)
+    private var cacheJob: Job? = null
+    private var sessionIndex = AtomicInteger(0)
+    private var sessionCount = AtomicInteger(0)
+
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         DeckApp.component.inject(this)
+        Timber.i("Cache Service started")
     }
 
-    override fun onHandleIntent(intent: Intent?) {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val request = intent?.getParcelableExtra<DownloadRequest>(EXTRA_REQUEST)
         if (request != null) {
-            Timber.i("onHandleIntent($request)")
-            cacheCardData(request.expansion, request.downloadImages)
+            Timber.i("Start download ($request)")
+            sessionCount.addAndGet(request.expansion.size)
+            cacheQueue.push(request)
+            cacheCardData()
+            return START_STICKY
         }
+
+        stopSelf()
+        return START_NOT_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+        Timber.i("Shutting down CacheService")
     }
 
     private fun updateCacheStatus(value: Pair<String, CacheStatus>) {
         offlineStatusConsumer.status = offlineStatusConsumer.status.set(value)
     }
 
-    private fun cacheCardData(expansions: List<Expansion>, downloadImages: Boolean) {
-        // Update initial state of all expansions
-        for (expansion in expansions) {
-            // Update cache status and notification
-            updateCacheStatus(expansion.code to CacheStatus.Downloading())
-            showExpansionNotification(expansion, CacheStatus.Downloading())
+    private fun cacheCardData() {
+        Timber.d("Attempting to start card cache job: ${cacheJob?.isCompleted}")
+        if (cacheJob?.isCompleted != false) {
+            Timber.v("Launching cache coroutine")
+            cacheJob = scope.launch {
+                var nextRequest = cacheQueue.poll()
+                while (nextRequest != null) {
+                    Timber.d("Starting cache for $nextRequest")
+                    val (expansions, downloadImages) = nextRequest
+                    for (expansion in expansions) {
+                        val index = sessionIndex.getAndIncrement()
+                        val progressCount = { "$index of ${sessionCount.get()}" }
 
-            try {
-                val cardModels = getExpansion(expansion)
+                        // Update cache status and notification
+                        updateCacheStatus(expansion.code to CacheStatus.Downloading())
+                        showExpansionNotification(expansion, progressCount(), CacheStatus.Downloading())
 
-                // Store into database
-                cardCache.putCards(cardModels)
-                Timber.i("Expansion(${expansion.code}) inserted into database")
+                        try {
+                            val cardModels = getExpansion(expansion)
 
-                if (downloadImages) {
-                    cacheCardImages(expansion, cardModels)
+                            // Store into database
+                            cardCache.putCards(cardModels)
+                            Timber.i("Expansion(${expansion.code}) inserted into database")
+
+                            if (downloadImages) {
+                                cacheCardImages(expansion, index, cardModels)
+                            }
+
+                            // Update preferences
+                            val prefs = preferences.offlineExpansions.get().toMutableSet()
+                            prefs.add(expansion.code)
+                            preferences.offlineExpansions.set(prefs)
+
+                            // Notify UI and Notification
+                            updateCacheStatus(expansion.code to CacheStatus.Cached)
+                            showExpansionNotification(expansion, progressCount(), CacheStatus.Cached)
+                        } catch (e: Exception) {
+                            Timber.e(e, "Something went wrong when trying to cache ${expansion.name} card data")
+                            showExpansionNotification(expansion, null, null)
+                            updateCacheStatus(expansion.code to CacheStatus.Empty)
+                        }
+                    }
+
+                    nextRequest = cacheQueue.poll()
                 }
-
-                // Update preferences
-                val prefs = preferences.offlineExpansions.get().toMutableSet()
-                prefs.add(expansion.code)
-                preferences.offlineExpansions.set(prefs)
-
-                // Notify UI and Notification
-                updateCacheStatus(expansion.code to CacheStatus.Cached)
-                showExpansionNotification(expansion, CacheStatus.Cached)
-            } catch (e: Exception) {
-                Timber.e(e, "Something went wrong when trying to cache ${expansion.name} card data")
-                showExpansionNotification(expansion, null)
-                updateCacheStatus(expansion.code to CacheStatus.Empty)
+            }
+            cacheJob?.invokeOnCompletion {
+                stopSelf()
             }
         }
     }
@@ -108,7 +154,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             .blockingSingle()
     }
 
-    private fun cacheCardImages(expansion: Expansion, cards: List<Card>) {
+    private fun cacheCardImages(expansion: Expansion, index: Int, cards: List<Card>) {
         val targets = cards.map {
             GlideApp.with(this)
                 .downloadOnly()
@@ -126,18 +172,18 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         val throttle = Stopwatch.createStarted()
         targets.forEachIndexed { i, target ->
             try {
-                val result = target.get()
-                Timber.i("Image preloaded (${result.name})")
+                target.get()
             } catch (e: Exception) {
                 Timber.e(e, "Error caching card image")
             }
 
-            val progress = i.toFloat() / cards.size.toFloat()
+            val progress = i.toFloat() / cards.size.toFloat().times(2f)
             updateCacheStatus(expansion.code to CacheStatus.Downloading(progress))
 
             // Throttle notification calls or the system will start filtering us
             if (throttle.elapsed(TimeUnit.MILLISECONDS) > NOTIFICATION_THROTTLE_MS) {
-                showExpansionNotification(expansion, CacheStatus.Downloading(progress))
+                val progressCount = "${index + 1} of ${sessionCount.get()}"
+                showExpansionNotification(expansion, progressCount, CacheStatus.Downloading(progress))
                 throttle.reset().start()
             }
         }
@@ -159,7 +205,7 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         }
     }
 
-    private fun showExpansionNotification(expansion: Expansion, status: CacheStatus?) {
+    private fun showExpansionNotification(expansion: Expansion, progressCount: String?, status: CacheStatus?) {
         createChannel()
 
         val title = getTitle(status)
@@ -179,6 +225,10 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
             .setSmallIcon(getSmallIcon(status))
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
             .apply {
+                progressCount?.let {
+                    setSubText(it)
+                }
+
                 if (isOngoing) {
                     priority = NotificationCompat.PRIORITY_LOW
                 } else {
@@ -243,8 +293,9 @@ class CacheService : IntentService("DeckBox-Cache-Service") {
         private const val RC_PI_CACHE_MANAGEMENT = 15
         private const val NOTIFICATION_ID = 100
         private const val PAGE_SIZE = 1000
-        private const val NOTIFICATION_THROTTLE_MS = 200L
+        private const val NOTIFICATION_THROTTLE_MS = 500L
         private const val MAX_PROGRESS = 100
+        private const val FINISHED_TTL = 5000L
 
         fun start(context: Context, request: DownloadRequest) {
             val intent = Intent(context, CacheService::class.java)

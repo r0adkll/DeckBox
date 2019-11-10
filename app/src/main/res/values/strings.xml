@@ -239,7 +239,7 @@
     <string name="pref_about_privacy_policy">Privacy policy</string>
     <string name="format_lock_subhead">Format lock</string>
     <string name="pref_category_cache">Cache</string>
-    <string name="pref_cache_manage_title">Offline data</string>
+    <string name="pref_cache_manage_title">Manage offline data</string>
     <string name="pref_cache_manage_summary">Manage your cached card and image data</string>
     <string name="account_migration_started">Uploading decks and collections…</string>
     <string name="account_migration_finished">Account migrated!</string>
