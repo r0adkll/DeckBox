@@ -61,6 +61,7 @@ import com.r0adkll.deckbuilder.util.MarketplaceHelper
 import com.r0adkll.deckbuilder.util.extensions.ImageType
 import com.r0adkll.deckbuilder.util.extensions.drawable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
+import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
 import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
@@ -433,7 +434,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
             // Load expansion symbol
             GlideApp.with(this)
-                .load(card.expansion?.symbolUrl)
+                .loadOfflineUri(this, card.expansion?.symbolUrl)
                 .transition(withCrossFade())
                 .into(expansionSymbol)
         }

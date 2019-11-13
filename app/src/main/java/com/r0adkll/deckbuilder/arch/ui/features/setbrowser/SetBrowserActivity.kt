@@ -38,6 +38,7 @@ import com.r0adkll.deckbuilder.util.ScreenUtils.Config.TABLET_10
 import com.r0adkll.deckbuilder.util.ScreenUtils.smallestWidth
 import com.r0adkll.deckbuilder.util.extensions.addLayoutHeight
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
+import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
@@ -77,7 +78,7 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
 
         GlideApp.with(this)
             .`as`(PaletteBitmap::class.java)
-            .load(expansion.logoUrl)
+            .loadOfflineUri(this, expansion.logoUrl)
             .into(PaletteBitmapViewTarget(logo, listOf(
                 ExpansionPaletteAction(backdrop, expansion, contrastListener = this::setNavigationColor)
             )))

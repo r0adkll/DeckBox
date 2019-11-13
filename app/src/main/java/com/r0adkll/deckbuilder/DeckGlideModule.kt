@@ -32,7 +32,7 @@ class DeckGlideModule : AppGlideModule() {
 
     companion object {
 
-        private const val DISK_CACHE_SIZE_IN_BYTES = 1024L * 1024L * 500L
+        const val DISK_CACHE_SIZE_IN_BYTES = 1024L * 1024L * 500L
         private const val THREAD_COUNT = 4
         private const val EXTRACTOR_NAME = "glide-multi-executor"
     }

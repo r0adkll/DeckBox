@@ -37,3 +37,31 @@ fun GlideRequests.loadPokemonCard(context: Context, card: PokemonCard, type: Ima
         this.load(imageUri)
     }
 }
+
+fun GlideRequests.loadOfflineUri(context: Context, url: String?): GlideRequest<Drawable> {
+    return if (url != null) {
+        val cacheFile = ImageCacheLoader.getCacheFile(context, url?.toUri()!!)
+        if (cacheFile?.exists() == true) {
+            this.load(cacheFile)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+        } else {
+            this.load(url)
+        }
+    } else {
+        this.load(url as String?)
+    }
+}
+
+fun <T> GlideRequest<T>.loadOfflineUri(context: Context, url: String?): GlideRequest<T> {
+    return if (url != null) {
+        val cacheFile = ImageCacheLoader.getCacheFile(context, url.toUri())
+        if (cacheFile?.exists() == true) {
+            this.load(cacheFile)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+        } else {
+            this.load(url)
+        }
+    } else {
+        this.load(url as String?)
+    }
+}

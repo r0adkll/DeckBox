@@ -32,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -46,7 +45,6 @@ class CacheService : Service() {
     @Inject lateinit var cacheLoader: ExpansionCacheLoader
 
     private val scope = CoroutineScope(Dispatchers.IO)
-    private val mainScope = CoroutineScope(Dispatchers.Main)
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
     private val cacheQueue = ArrayDeque<DownloadRequest>()
     private var cacheJob: Job? = null
@@ -104,7 +102,7 @@ class CacheService : Service() {
 
                         val throttle = Stopwatch.createStarted()
                         val result = cacheLoader.load(expansion, nextRequest) { progress ->
-                            mainScope.launch {
+                            scope.launch {
                                 updateCacheStatus(expansion.code to CacheStatus.Downloading(progress))
 
                                 // Throttle notification calls or the system will start filtering us

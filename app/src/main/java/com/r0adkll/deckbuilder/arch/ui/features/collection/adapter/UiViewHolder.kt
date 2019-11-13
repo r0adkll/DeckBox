@@ -13,6 +13,7 @@ import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.ProgressLinearLayout
+import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
 import com.r0adkll.deckbuilder.util.extensions.max
 import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 import com.r0adkll.deckbuilder.util.extensions.safePercentage
@@ -77,7 +78,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
 
         override fun bind(item: Item.ExpansionSet) {
             GlideApp.with(itemView)
-                .load(item.expansion.logoUrl)
+                .loadOfflineUri(itemView.context, item.expansion.logoUrl)
                 .into(logo)
 
             @Suppress("MagicNumber")

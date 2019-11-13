@@ -33,6 +33,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetM
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
+import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
 import com.r0adkll.deckbuilder.util.extensions.margins
 import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
@@ -65,7 +66,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
 
         GlideApp.with(this)
             .`as`(PaletteBitmap::class.java)
-            .load(expansion.logoUrl)
+            .loadOfflineUri(this, expansion.logoUrl)
             .into(PaletteBitmapViewTarget(logo, listOf(
                 ExpansionPaletteAction(backdrop, expansion, contrastListener = this::setNavigationColor)
             )))
