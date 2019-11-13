@@ -37,11 +37,12 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResult
 import com.r0adkll.deckbuilder.arch.ui.features.testing.adapter.TestResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.cache.CardImageKey
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
+import com.r0adkll.deckbuilder.util.extensions.ImageType
 import com.r0adkll.deckbuilder.util.extensions.fromHtml
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
+import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
@@ -179,8 +180,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     override fun showTestHand(hand: List<PokemonCard>) {
         val futures = hand.map {
             GlideApp.with(this)
-                .load(it.imageUrl)
-                .signature(CardImageKey(it.expansion?.code ?: "", it.id, CardImageKey.Type.NORMAL))
+                .loadPokemonCard(this, it, ImageType.NORMAL)
                 .submit()
         }
 

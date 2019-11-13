@@ -1,7 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.settings.cache.adapter
 
 import com.ftinc.kit.recycler.RecyclerViewItem
-import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 
 sealed class Item : RecyclerViewItem {

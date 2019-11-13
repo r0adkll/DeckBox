@@ -27,7 +27,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.De
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.QuickStartRecyclerAdapter.QuickStartViewHolder.ViewType.DECK
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.QuickStartRecyclerAdapter.QuickStartViewHolder.ViewType.PLACEHOLDER
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
-import com.r0adkll.deckbuilder.cache.CardImageKey
+import com.r0adkll.deckbuilder.util.extensions.ImageType
+import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import com.r0adkll.deckbuilder.util.stack
 
 class QuickStartRecyclerAdapter(
@@ -178,8 +179,7 @@ class QuickStartRecyclerAdapter(
                     }
                 } ?: mostProminentCard(deck.cards)?.let {
                     GlideApp.with(itemView)
-                        .load(it.imageUrl)
-                        .signature(CardImageKey(it.expansion?.code ?: "", it.id, CardImageKey.Type.NORMAL))
+                        .loadPokemonCard(itemView.context, it, ImageType.NORMAL)
                         .placeholder(R.drawable.pokemon_card_back)
                         .into(image)
                 }

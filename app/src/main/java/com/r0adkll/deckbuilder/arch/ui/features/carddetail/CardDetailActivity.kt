@@ -54,13 +54,14 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsR
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.marketplace.ProductSparkAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
-import com.r0adkll.deckbuilder.cache.CardImageKey
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
+import com.r0adkll.deckbuilder.util.extensions.ImageType
 import com.r0adkll.deckbuilder.util.extensions.drawable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
+import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
 import kotlinx.android.synthetic.main.layout_card_details.*
@@ -398,8 +399,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             emptyView.isVisible = true
             emptyView.state = EmptyView.State.LOADING
             var request = GlideApp.with(this)
-                .load(card.imageUrlHiRes)
-                .signature(CardImageKey(card.expansion?.code ?: "", card.id, CardImageKey.Type.HI_RES))
+                .loadPokemonCard(this, card, ImageType.HI_RES)
                 .transition(withCrossFade())
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(

@@ -100,7 +100,7 @@ ext {
     kluent_version = '1.42'
 
     // Dependencies
-    androidXCoreVersion = '1.2.0-beta01'
+    androidXCoreVersion = '1.2.0-beta02'
     bottombar_version = '2.3.1'
     butterknife_version = '8.8.1'
     canvas_version = '1.0.2'
@@ -108,7 +108,7 @@ ext {
     ftkit_version = '2.0.6'
     leakcanary_version = '1.5.1'
     play_version = '15.0.0'
-    poketcg_version = '1.0.19'
+    poketcg_version = '1.0.20'
     retrofit_version = '2.3.0'
     room_version = '2.2.1'
     support_version = '1.0.0'
@@ -184,6 +184,7 @@ dependencies {
     implementation "com.jakewharton.rxrelay2:rxrelay:2.1.0"
     implementation "com.f2prateek.rx.preferences2:rx-preferences:2.0.0"
 
+    implementation "com.squareup.okio:okio:2.4.1"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

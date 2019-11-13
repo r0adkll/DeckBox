@@ -7,5 +7,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class DownloadRequest(
     val expansion: List<Expansion>,
-    val downloadImages: Boolean = false
+    val includeHiRes: Boolean,
+    val wifiOnly: Boolean = false
 ) : Parcelable

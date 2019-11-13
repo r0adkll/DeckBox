@@ -49,8 +49,7 @@ class DefaultOfflineRepository @Inject constructor(
         }
         status = statusChanges
 
-        // Start service
-        CacheService.start(context, DownloadRequest(filteredExpansions, request.downloadImages))
+        CacheService.start(context, request.copy(expansion = filteredExpansions))
     }
 
     override fun observeStatus(): Observable<OfflineStatus> {

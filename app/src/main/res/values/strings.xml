@@ -307,4 +307,6 @@
     <string name="tab_break">BREAK</string>
     <string name="action_clear_cache">Clear All</string>
     <string name="action_manage">Manage</string>
+    <string name="notification_channel_offline_description">Notifications for downloading data for offline use</string>
+    <string name="notification_channel_offline_name">Offline notifications</string>
 </resources>
