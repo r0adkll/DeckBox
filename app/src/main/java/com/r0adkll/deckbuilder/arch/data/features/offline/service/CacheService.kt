@@ -108,7 +108,11 @@ class CacheService : Service() {
 
                                 // Throttle notification calls or the system will start filtering us
                                 if (throttle.elapsed(TimeUnit.MILLISECONDS) > NOTIFICATION_THROTTLE_MS) {
-                                    showExpansionNotification(expansion, progressCount(), CacheStatus.Downloading(progress))
+                                    showExpansionNotification(
+                                        expansion,
+                                        progressCount(),
+                                        CacheStatus.Downloading(progress)
+                                    )
                                     throttle.reset().start()
                                 }
                             }

@@ -9,7 +9,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.offline.model.OfflineStatus
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
-import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
@@ -51,7 +50,6 @@ class DefaultOfflineCache @Inject constructor(
                         }
                     }
 
-                    Timber.i("Cache Status (${expansion.code}) (size=$cacheSizeBytes, normalImages=$normalImageCount, hiResImages=$hiResImageCount)")
                     if (cacheSizeBytes > 0L && normalImageCount > 0 && hiResImageCount > 0) {
                         cacheStatus[expansion] = CacheStatus.Cached(
                             cacheSizeBytes,

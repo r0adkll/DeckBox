@@ -24,5 +24,5 @@ class ManageCacheModule(val activity: ManageCacheActivity) {
     fun provideRenderer(
         actions: ManageCacheUi.Actions,
         schedulers: AppSchedulers
-    ) : ManageCacheRenderer = ManageCacheRenderer(actions, schedulers)
+    ): ManageCacheRenderer = ManageCacheRenderer(actions, schedulers)
 }

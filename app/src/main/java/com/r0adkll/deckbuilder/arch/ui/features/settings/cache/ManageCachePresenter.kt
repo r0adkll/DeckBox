@@ -4,7 +4,7 @@ import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheUi.State
-import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheUi.State.*
+import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheUi.State.Change
 import com.r0adkll.deckbuilder.internal.di.scopes.ActivityScope
 import io.reactivex.Observable
 import timber.log.Timber
@@ -41,7 +41,6 @@ class ManageCachePresenter @Inject constructor(
             }, {
                 Timber.e(it, "Failed to delete cache")
             })
-
 
         return offlineStatus
     }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import okio.buffer
 import okio.sink
@@ -93,7 +94,7 @@ class ImageCacheLoader(
                             failedCounter.incrementAndGet()
                             null
                         }
-                    } catch (e: Exception) {
+                    } catch (e: IOException) {
                         Timber.e(e, "Unable to download image @ $uri")
                         failedCounter.incrementAndGet()
                     }
@@ -123,18 +124,22 @@ class ImageCacheLoader(
 
             val response = okHttpClient.newCall(request).execute()
             if (response.isSuccessful) {
-                response.body?.let { responseBody ->
-                    responseBody.source().use { source ->
-                        output.sink().buffer().use { sink ->
-                            source.readAll(sink)
-                        }
-                    }
-                }
+                saveResponseToFile(response, output)
             } else {
                 Timber.e("Error downloading image")
             }
         } catch (e: IOException) {
             Timber.e(e, "Error downloading ($uri) ==> $output")
+        }
+    }
+
+    private fun saveResponseToFile(response: Response, output: File) {
+        response.body?.let { responseBody ->
+            responseBody.source().use { source ->
+                output.sink().buffer().use { sink ->
+                    source.readAll(sink)
+                }
+            }
         }
     }
 

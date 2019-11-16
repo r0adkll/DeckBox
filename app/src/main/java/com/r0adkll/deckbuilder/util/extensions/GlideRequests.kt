@@ -8,15 +8,10 @@ import com.r0adkll.deckbuilder.GlideRequest
 import com.r0adkll.deckbuilder.GlideRequests
 import com.r0adkll.deckbuilder.arch.data.features.offline.cache.ImageCacheLoader
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.util.extensions.ImageType.BOTH
-import com.r0adkll.deckbuilder.util.extensions.ImageType.HI_RES
-import com.r0adkll.deckbuilder.util.extensions.ImageType.NORMAL
-
-enum class ImageType {
-    NORMAL,
-    HI_RES,
-    BOTH
-}
+import com.r0adkll.deckbuilder.util.glide.ImageType
+import com.r0adkll.deckbuilder.util.glide.ImageType.BOTH
+import com.r0adkll.deckbuilder.util.glide.ImageType.HI_RES
+import com.r0adkll.deckbuilder.util.glide.ImageType.NORMAL
 
 fun GlideRequests.loadPokemonCard(context: Context, card: PokemonCard, type: ImageType): GlideRequest<Drawable> {
     val imageUri = when (type) {

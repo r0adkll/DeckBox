@@ -5,7 +5,8 @@ import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
 import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.ui.components.ExpansionComparator
-import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheUi.*
+import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheUi.Actions
+import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.adapter.ExpansionCache
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.extensions.displayableFileSize
@@ -51,6 +52,5 @@ class ManageCacheRenderer(
             .subscribe {
                 actions.setItems(it)
             }
-
     }
 }
