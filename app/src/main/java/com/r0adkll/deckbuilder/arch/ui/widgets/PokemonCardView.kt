@@ -31,7 +31,7 @@ import com.ftinc.kit.extensions.sp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.util.extensions.ImageType
+import com.r0adkll.deckbuilder.util.glide.ImageType
 import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import timber.log.Timber
 import kotlin.math.abs

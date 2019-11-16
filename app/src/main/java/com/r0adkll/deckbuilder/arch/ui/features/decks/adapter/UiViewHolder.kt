@@ -30,7 +30,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewT
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.PREVIEW
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.UiViewHolder.ViewType.QUICK_START
 import com.r0adkll.deckbuilder.arch.ui.widgets.DeckImageView
-import com.r0adkll.deckbuilder.util.extensions.ImageType
+import com.r0adkll.deckbuilder.util.glide.ImageType
 import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.disposables.CompositeDisposable

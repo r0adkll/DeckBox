@@ -58,7 +58,7 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
-import com.r0adkll.deckbuilder.util.extensions.ImageType
+import com.r0adkll.deckbuilder.util.glide.ImageType
 import com.r0adkll.deckbuilder.util.extensions.drawable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
