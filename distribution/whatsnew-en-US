@@ -1,5 +1,7 @@
 • Ton of improvement around code quality and size.
 • Reduced application size
+• Improved offline cache support to include hi-res images
+• Added screen to manage cache
 
 ---
 • For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md
