@@ -59,3 +59,19 @@ fun <Item> List<Item>.findAndUpdate(selector: (Item) -> Boolean, updater: (Item?
 
     return items
 }
+
+fun <T> Array<T>.sumByLong(selector: (T) -> Long): Long {
+    var sum = 0L
+    for (item in this) {
+        sum += selector(item)
+    }
+    return sum
+}
+
+fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
+    var sum = 0L
+    for (item in this) {
+        sum += selector(item)
+    }
+    return sum
+}

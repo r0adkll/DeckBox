@@ -6,7 +6,7 @@ import androidx.core.net.toUri
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.r0adkll.deckbuilder.GlideRequest
 import com.r0adkll.deckbuilder.GlideRequests
-import com.r0adkll.deckbuilder.arch.data.features.offline.service.ImageCacheLoader
+import com.r0adkll.deckbuilder.arch.data.features.offline.cache.ImageCacheLoader
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.util.extensions.ImageType.BOTH
 import com.r0adkll.deckbuilder.util.extensions.ImageType.HI_RES

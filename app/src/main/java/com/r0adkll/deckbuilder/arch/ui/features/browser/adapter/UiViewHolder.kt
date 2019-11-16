@@ -75,7 +75,7 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             actionDownload.setImageResource(when (item.offlineStatus) {
                 CacheStatus.Queued -> R.drawable.ic_cloud_queue_24px
                 is CacheStatus.Downloading -> R.drawable.cloud_sync
-                CacheStatus.Cached -> R.drawable.ic_cloud_done_black_24dp
+                is CacheStatus.Cached -> R.drawable.ic_cloud_done_black_24dp
                 else -> R.drawable.cloud_download_outline
             })
 

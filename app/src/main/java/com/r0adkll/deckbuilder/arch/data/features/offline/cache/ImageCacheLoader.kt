@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.data.features.offline.service
+package com.r0adkll.deckbuilder.arch.data.features.offline.cache
 
 import android.content.Context
 import android.net.Uri
@@ -71,7 +71,8 @@ class ImageCacheLoader(
     ) {
         if (imageUris.isNotEmpty()) {
             val count = imageUris.size.toFloat()
-            val counter = AtomicInteger(0)
+            val successCounter = AtomicInteger(0)
+            val failedCounter = AtomicInteger(0)
             val deferredDownloads = imageUris.map { uri ->
                 downloadScope.async {
                     try {
@@ -82,17 +83,19 @@ class ImageCacheLoader(
 
                             // Update Progress
                             Timber.v("Downloaded $uri to $outputFile")
-                            val completed = counter.incrementAndGet().toFloat()
+                            val completed = successCounter.incrementAndGet() + failedCounter.get()
                             val progress = (completed + 1f) / count
                             progressListener(progress)
 
                             outputFile
                         } else {
                             Timber.w("Unable to build output file for $uri")
+                            failedCounter.incrementAndGet()
                             null
                         }
                     } catch (e: Exception) {
                         Timber.e(e, "Unable to download image @ $uri")
+                        failedCounter.incrementAndGet()
                     }
                 }
             }
@@ -130,11 +133,9 @@ class ImageCacheLoader(
             } else {
                 Timber.e("Error downloading image")
             }
-
         } catch (e: IOException) {
             Timber.e(e, "Error downloading ($uri) ==> $output")
         }
-
     }
 
     private fun deleteGlideImageCache(uri: Uri) {
@@ -145,6 +146,10 @@ class ImageCacheLoader(
     companion object {
         private val NUM_DOWNLOAD_THREADS
             get() = Runtime.getRuntime().availableProcessors().coerceAtLeast(2)
+
+        fun getCacheDir(context: Context): File {
+            return File(context.cacheDir, "offline")
+        }
 
         fun getCacheFile(context: Context, uri: Uri): File? {
             val dir = File(context.cacheDir, "offline")

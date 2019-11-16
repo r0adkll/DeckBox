@@ -15,5 +15,10 @@ sealed class CacheStatus : Parcelable {
     data class Downloading(val progress: Float? = null) : CacheStatus()
 
     @Parcelize
-    object Cached : CacheStatus()
+    data class Cached(
+        val totalSizeInBytes: Long,
+        val cardCount: Int,
+        val normalImageCount: Int,
+        val hiResImageCount: Int
+    ) : CacheStatus()
 }

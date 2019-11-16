@@ -19,6 +19,9 @@ abstract class CardDao {
     @Query("SELECT * FROM cards WHERE id IN(:ids)")
     abstract fun getCards(ids: List<String>): Single<List<CardWithAttacks>>
 
+    @Query("SELECT COUNT(id) FROM cards WHERE setCode = :setCode")
+    abstract fun getCount(setCode: String): Int
+
     @RawQuery
     abstract fun searchCards(query: SupportSQLiteQuery): Single<List<CardWithAttacks>>
 

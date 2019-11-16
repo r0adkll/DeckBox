@@ -19,6 +19,7 @@ import com.ftinc.kit.util.Stopwatch
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.features.offline.cache.ExpansionCacheLoader
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
@@ -79,7 +80,7 @@ class CacheService : Service() {
         Timber.i("Shutting down CacheService")
     }
 
-    private fun updateCacheStatus(value: Pair<String, CacheStatus>) {
+    private fun updateCacheStatus(value: Pair<Expansion, CacheStatus>) {
         offlineStatusConsumer.status = offlineStatusConsumer.status.set(value)
     }
 
@@ -93,17 +94,17 @@ class CacheService : Service() {
                     Timber.d("Starting cache for $nextRequest")
                     val (expansions, _) = nextRequest
                     for (expansion in expansions) {
-                        val index = sessionIndex.getAndIncrement()
-                        val progressCount = { "$index of ${sessionCount.get()}" }
+                        sessionIndex.incrementAndGet()
+                        val progressCount = { "${sessionIndex.get()} of ${sessionCount.get()}" }
 
                         // Update cache status and notification
-                        updateCacheStatus(expansion.code to CacheStatus.Downloading())
+                        updateCacheStatus(expansion to CacheStatus.Downloading())
                         showExpansionNotification(expansion, progressCount(), CacheStatus.Downloading())
 
                         val throttle = Stopwatch.createStarted()
                         val result = cacheLoader.load(expansion, nextRequest) { progress ->
                             scope.launch {
-                                updateCacheStatus(expansion.code to CacheStatus.Downloading(progress))
+                                updateCacheStatus(expansion to CacheStatus.Downloading(progress))
 
                                 // Throttle notification calls or the system will start filtering us
                                 if (throttle.elapsed(TimeUnit.MILLISECONDS) > NOTIFICATION_THROTTLE_MS) {
@@ -115,17 +116,19 @@ class CacheService : Service() {
                         throttle.stop()
 
                         if (result.isSuccess) {
+                            val resultStatus = result.getOrThrow()
+
                             // Update preferences
                             val prefs = preferences.offlineExpansions.get().toMutableSet()
                             prefs.add(expansion.code)
                             preferences.offlineExpansions.set(prefs)
 
                             // Notify UI and Notification
-                            updateCacheStatus(expansion.code to CacheStatus.Cached)
-                            showExpansionNotification(expansion, progressCount(), CacheStatus.Cached)
+                            updateCacheStatus(expansion to resultStatus)
+                            showExpansionNotification(expansion, progressCount(), resultStatus)
                         } else {
                             showExpansionNotification(expansion, null, null)
-                            updateCacheStatus(expansion.code to CacheStatus.Empty)
+                            updateCacheStatus(expansion to CacheStatus.Empty)
                         }
                     }
 
@@ -160,7 +163,7 @@ class CacheService : Service() {
         val intent = RouteActivity.createIntent(this)
         val pending = PendingIntent.getActivity(this, 0, intent, 0)
 
-        val isOngoing = status != null && status != CacheStatus.Cached
+        val isOngoing = status != null && status !is CacheStatus.Cached
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(text)
@@ -183,6 +186,7 @@ class CacheService : Service() {
 
                     val manageIntent = TaskStackBuilder.create(this@CacheService)
                         .addParentStack(ManageCacheActivity::class.java)
+                        .addNextIntent(ManageCacheActivity.createIntent(this@CacheService))
                         .getPendingIntent(RC_PI_CACHE_MANAGEMENT, PendingIntent.FLAG_UPDATE_CURRENT)
 
                     addAction(
@@ -202,7 +206,7 @@ class CacheService : Service() {
             CacheStatus.Empty -> getString(R.string.notification_caching_title_start)
             CacheStatus.Queued -> getString(R.string.notification_caching_queued_title)
             is CacheStatus.Downloading -> getString(R.string.notification_caching_title)
-            CacheStatus.Cached -> getString(R.string.notification_caching_title_finished)
+            is CacheStatus.Cached -> getString(R.string.notification_caching_title_finished)
             else -> getString(R.string.notification_caching_title_error)
         }
     }
@@ -211,7 +215,7 @@ class CacheService : Service() {
         return when (status) {
             null -> getString(R.string.notification_caching_text_error)
             CacheStatus.Empty -> getString(R.string.notification_caching_text)
-            CacheStatus.Cached -> getString(R.string.notification_expansion_cached_text_format, expansion.name)
+            is CacheStatus.Cached -> getString(R.string.notification_expansion_cached_text_format, expansion.name)
             else -> expansion.name
         }
     }
