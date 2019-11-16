@@ -239,7 +239,7 @@
     <string name="pref_about_privacy_policy">Privacy policy</string>
     <string name="format_lock_subhead">Format lock</string>
     <string name="pref_category_cache">Cache</string>
-    <string name="pref_cache_manage_title">Offline data</string>
+    <string name="pref_cache_manage_title">Manage offline data</string>
     <string name="pref_cache_manage_summary">Manage your cached card and image data</string>
     <string name="account_migration_started">Uploading decks and collections…</string>
     <string name="account_migration_finished">Account migrated!</string>
@@ -250,7 +250,7 @@
     <string name="notification_caching_queued_title">Download Queued</string>
     <string name="action_hide">Hide</string>
     <string name="expansion_offline_description">Download Pokémon cards to build and manage your decks without an internet connection. Easily download all cards in standard or expanded formats by using the actions below.</string>
-    <string name="activity_manage_offline">Offline data</string>
+    <string name="activity_manage_offline">Manage offline data</string>
     <string name="dialog_confirm_download_format">Download %1$s Expansions</string>
     <string name="dialog_confirm_download_format_message">Are you sure you want to download all the card and image data of the %1$d expansions in %2$s format?</string>
     <string name="action_download">Download</string>
@@ -305,4 +305,15 @@
     <string name="tab_supporter">Supporter</string>
     <string name="tab_tool">Tool</string>
     <string name="tab_break">BREAK</string>
+    <string name="action_clear_cache">Clear All</string>
+    <string name="action_manage">Manage</string>
+    <string name="notification_channel_offline_description">Notifications for downloading data for offline use</string>
+    <string name="notification_channel_offline_name">Offline notifications</string>
+    <string name="empty_manage_cache">You don\'t have any cards cached for offline use.</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_delete_all">Clear all</string>
+    <string name="dialog_delete_all_cache_title">Clear all cache?</string>
+    <string name="dialog_delete_all_cache_message">Are you sure you want to clear all cached images for offline use? Doing this will result in the images needing to be downloaded again to view and make increase data usage.</string>
+    <string name="dialog_delete_expansion_cache_title">Clear %1$s cache?</string>
+    <string name="dialog_delete_expansion_cache_message">Are you sure you want to clear all cached images for %1$s? Doing this will result in the images needing to be downloaded again to view and make increase data usage.</string>
 </resources>

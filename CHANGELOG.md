@@ -1,6 +1,8 @@
 # Changelog
 
 ## 1.10.1
+* [#113](https://github.com/r0adkll/DeckBox/issues/113) - Improved switching of offline cache images when loading them.
+* [#114](https://github.com/r0adkll/DeckBox/issues/114) - Added interface to manage offline cache data
 * [#51](https://github.com/r0adkll/DeckBox/issues/51) - Added ktlint, detekt, danger, GitHub Action enhancements and cleanup
 * Implemented ProGuard for reducing application size 
 * Upgraded Git versioner to new plugin 

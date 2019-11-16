@@ -1,7 +1,7 @@
 name: Deploy Alpha
 
 on:
-  pull_request:
+  push:
     branches:
       - feature/*
 
@@ -16,6 +16,12 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Dependency Check
+        run: |
+          echo $ANDROID_HOME
+          echo "== Checking Build Tools =="
+          ls -la $ANDROID_HOME/build-tools/29.0.2
+
       - name: Setup Secrets
         run: |
           echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
@@ -24,12 +30,12 @@ jobs:
 
       - name: Assemble Release APK
         run: |
-          ./gradlew assembleRelease
+          ./gradlew bundleRelease
 
       - name: Sign Android Release
-        uses: r0adkll/sign-android-release@v1
+        uses: r0adkll/sign-android-release@master
         with:
-          releaseDirectory: /app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}

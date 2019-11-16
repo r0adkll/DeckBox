@@ -53,8 +53,8 @@ interface BrowseUi : Ui<BrowseUi.State, BrowseUi.State.Change> {
         }
 
         override fun toString(): String {
-            return "State(isLoading=$isLoading, error=$error, expansions=${expansions.map { it.code }}, " +
-                "offlineStats=$offlineStatus, offlineOutline=$offlineOutline)"
+            return "State(isLoading=$isLoading, error=$error, expansions=${expansions.size}, " +
+                "offlineStats=${offlineStatus?.expansions?.size}, offlineOutline=$offlineOutline)"
         }
 
         companion object {

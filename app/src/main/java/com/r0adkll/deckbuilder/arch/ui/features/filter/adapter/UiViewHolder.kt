@@ -42,6 +42,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.View
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.UiViewHolder.ViewType.VIEW_MORE
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonTypeView
 import com.r0adkll.deckbuilder.arch.ui.widgets.SeekBarIndicatorView
+import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
 import io.pokemontcg.model.Type
 import timber.log.Timber
 
@@ -186,7 +187,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 is Expansion -> {
                     text.text = opt.name
                     GlideApp.with(itemView)
-                        .load(opt.symbolUrl)
+                        .loadOfflineUri(itemView.context, opt.symbolUrl)
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(icon)
                 }

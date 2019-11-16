@@ -64,7 +64,14 @@
             android:theme="@style/Theme.DeckBuilder.Export"
             />
 
-        <activity android:name=".arch.ui.features.settings.SettingsActivity" />
+        <activity android:name=".arch.ui.features.settings.SettingsActivity"
+            android:parentActivityName=".arch.ui.features.home.HomeActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity"
+                />
+        </activity>
 
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
@@ -95,7 +102,15 @@
             android:theme="@style/Theme.DeckBuilder.Splash"
             />
 
-        <activity android:name=".arch.ui.features.settings.offline.ManageOfflineActivity" />
+        <activity android:name=".arch.ui.features.settings.cache.ManageCacheActivity"
+            android:parentActivityName=".arch.ui.features.settings.SettingsActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.r0adkll.deckbuilder.arch.ui.features.settings.SettingsActivity"
+                />
+        </activity>
+
         <activity
             android:name=".arch.ui.features.collection.set.CollectionSetActivity"
             android:theme="@style/Theme.DeckBuilder.Translucent"
@@ -117,11 +132,6 @@
                 android:resource="@xml/files"
                 />
         </provider>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="7b1875458d267befd0938d565c22df19a3a7c047"
-            />
 
     </application>
 

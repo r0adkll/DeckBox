@@ -87,6 +87,7 @@
                 android:alpha=".54"
                 android:src="@drawable/cloud_download_outline"
                 android:tint="@color/black"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 />
 
         </LinearLayout>

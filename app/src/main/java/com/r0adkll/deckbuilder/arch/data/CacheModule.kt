@@ -8,6 +8,8 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.SwitchingDeckCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RoomSessionCache
 import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
+import com.r0adkll.deckbuilder.arch.data.features.offline.cache.DefaultOfflineCache
+import com.r0adkll.deckbuilder.arch.data.features.offline.cache.OfflineCache
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.OfflineStatusConsumer
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
@@ -31,4 +33,7 @@ class CacheModule {
 
     @Provides @AppScope
     fun provideOfflineStatusConsumer(consumer: DefaultOfflineRepository): OfflineStatusConsumer = consumer
+
+    @Provides @AppScope
+    fun provideOfflineCache(cache: DefaultOfflineCache): OfflineCache = cache
 }

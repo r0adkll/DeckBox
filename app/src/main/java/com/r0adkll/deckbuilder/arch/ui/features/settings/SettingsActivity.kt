@@ -36,7 +36,7 @@ import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollecti
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
-import com.r0adkll.deckbuilder.arch.ui.features.settings.offline.ManageOfflineActivity
+import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -167,7 +167,7 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_cache_manage" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "manage_cache"))
-                    startActivity(ManageOfflineActivity.createIntent(requireActivity()))
+                    startActivity(ManageCacheActivity.createIntent(requireActivity()))
                     true
                 }
                 "pref_developer_reset_preview" -> {

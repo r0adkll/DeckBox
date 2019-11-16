@@ -1,27 +1,24 @@
 package com.r0adkll.deckbuilder.arch.domain.features.offline.model
 
 import android.os.Parcelable
+import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class OfflineStatus(val expansions: Map<String, CacheStatus> = emptyMap()) : Parcelable {
+data class OfflineStatus(val expansions: Map<Expansion, CacheStatus> = emptyMap()) : Parcelable {
 
-    fun set(setCode: String, status: CacheStatus): OfflineStatus {
-        val updatedExpansions = expansions.plus(setCode to status)
+    fun set(expansion: Expansion, status: CacheStatus): OfflineStatus {
+        val updatedExpansions = expansions.plus(expansion to status)
         return copy(expansions = updatedExpansions)
     }
 
-    fun set(status: Pair<String, CacheStatus>): OfflineStatus {
+    fun set(status: Pair<Expansion, CacheStatus>): OfflineStatus {
         val updatedExpansions = expansions.plus(status)
         return copy(expansions = updatedExpansions)
     }
 
-    fun set(statuses: Map<String, CacheStatus>): OfflineStatus {
+    fun set(statuses: Map<Expansion, CacheStatus>): OfflineStatus {
         val updatedExpansions = expansions.plus(statuses)
         return copy(expansions = updatedExpansions)
-    }
-
-    companion object {
-        const val ALL = "all"
     }
 }

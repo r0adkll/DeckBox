@@ -31,6 +31,8 @@ import com.ftinc.kit.extensions.sp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.util.glide.ImageType
+import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import timber.log.Timber
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -239,10 +241,16 @@ class PokemonCardView @JvmOverloads constructor(
     }
 
     private fun loadImage() {
-        GlideApp.with(this)
-            .load(card?.imageUrl)
-            .placeholder(R.drawable.pokemon_card_back)
-            .into(this)
+        if (card != null) {
+            GlideApp.with(this)
+                .loadPokemonCard(context, card!!, ImageType.NORMAL)
+                .placeholder(R.drawable.pokemon_card_back)
+                .into(this)
+        } else {
+            GlideApp.with(this)
+                .load(R.drawable.pokemon_card_back)
+                .into(this)
+        }
     }
 
     @Suppress("NON_EXHAUSTIVE_WHEN")

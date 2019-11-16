@@ -2,6 +2,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
     <PreferenceCategory android:title="@string/pref_category_account">
@@ -29,15 +30,16 @@
 
     </PreferenceCategory>
 
-    <!--<PreferenceCategory android:title="@string/pref_category_cache">-->
+    <PreferenceCategory android:title="@string/pref_category_cache">
 
-    <!--<Preference-->
-    <!--android:key="pref_cache_manage"-->
-    <!--android:title="@string/pref_cache_manage_title"-->
-    <!--android:summary="@string/pref_cache_manage_summary"-->
-    <!--/>-->
+        <Preference
+            android:key="pref_cache_manage"
+            android:title="@string/pref_cache_manage_title"
+            android:summary="@string/pref_cache_manage_summary"
+            app:icon="@drawable/ic_cloud_queue_24px"
+            />
 
-    <!--</PreferenceCategory>-->
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_help">
 
@@ -45,20 +47,25 @@
             android:key="pref_help_feedback"
             android:title="@string/pref_help_feedback_title"
             android:summary="@string/pref_help_feedback_summary"
+            app:icon="@drawable/ic_feedback_black_24dp"
             />
 
         <Preference
             android:key="pref_reset_quickstart"
             android:title="@string/pref_help_quickstart_title"
             android:summary="@string/pref_help_quickstart_summary"
+            app:icon="@drawable/ic_restore"
             app:isPreferenceVisible="false"
+            tools:isPreferenceVisible="true"
             />
 
         <Preference
             android:key="pref_reset_offline_outline"
             android:title="@string/pref_help_offline_outline_title"
             android:summary="@string/pref_help_offline_outline_summary"
+            app:icon="@drawable/ic_restore"
             app:isPreferenceVisible="false"
+            tools:isPreferenceVisible="true"
             />
 
     </PreferenceCategory>
@@ -68,23 +75,27 @@
         <Preference
             android:key="pref_about_privacy_policy"
             android:title="@string/pref_about_privacy_policy"
+            app:icon="@drawable/ic_shield_link"
             />
 
         <Preference
             android:key="pref_about_oss"
             android:title="@string/pref_about_oss_title"
+            app:icon="@drawable/ic_license"
             />
 
         <Preference
             android:key="pref_about_opensource"
             android:title="Contribute"
             android:summary="DeckBox is now open source. Contribute @ Github"
+            app:icon="@drawable/ic_github_circle"
             />
 
         <Preference
             android:key="pref_about_developer"
             android:title="Developed by"
             android:summary="r0adkll"
+            app:icon="@drawable/ic_account_circle_outline"
             />
 
         <Preference
@@ -104,17 +115,20 @@
         <Preference
             android:key="pref_developer_reset_preview"
             android:title="@string/pref_developer_resetpreview"
+            app:icon="@drawable/ic_restart"
             />
 
         <Preference
             android:key="pref_developer_user_id"
             android:title="@string/pref_developer_user_id_title"
+            app:icon="@drawable/ic_account_badge_outline"
             />
 
         <EditTextPreference
             android:key="pref_developer_test_user_id"
             android:title="Enter test user Id"
             android:summary="Enter a user's id that we will use in place of your own for testing"
+            app:icon="@drawable/ic_account_search_outline"
             />
 
     </PreferenceCategory>

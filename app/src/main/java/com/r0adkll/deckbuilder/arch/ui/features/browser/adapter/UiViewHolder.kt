@@ -17,6 +17,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
+import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
 import com.r0adkll.deckbuilder.util.extensions.readablePercentage
 
 sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -74,14 +75,14 @@ sealed class UiViewHolder<I : Item>(itemView: View) : RecyclerView.ViewHolder(it
             actionDownload.setImageResource(when (item.offlineStatus) {
                 CacheStatus.Queued -> R.drawable.ic_cloud_queue_24px
                 is CacheStatus.Downloading -> R.drawable.cloud_sync
-                CacheStatus.Cached -> R.drawable.ic_cloud_done_black_24dp
+                is CacheStatus.Cached -> R.drawable.ic_cloud_done_black_24dp
                 else -> R.drawable.cloud_download_outline
             })
 
             if (logo.getTag(R.id.tag_expansion_logo) != item.expansion.logoUrl) {
                 itemView.setTag(R.id.tag_expansion_logo, item.expansion.logoUrl)
                 GlideApp.with(itemView)
-                    .load(item.expansion.logoUrl)
+                    .loadOfflineUri(itemView.context, item.expansion.logoUrl)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(logo)
             }

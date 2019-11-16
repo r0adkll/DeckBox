@@ -30,6 +30,13 @@
 -keep public class com.r0adkll.deckbuilder.arch.domain.features.importer.model.** { *; }
 -keep public class com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.** { *; }
 
-
 # pokemontcg.io kotlin sdk rules
 -keep public class io.pokemontcg.internal.api.** { *; }
+
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
