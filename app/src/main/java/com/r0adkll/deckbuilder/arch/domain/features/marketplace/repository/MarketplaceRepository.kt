@@ -5,6 +5,6 @@ import io.reactivex.Observable
 
 interface MarketplaceRepository {
 
-    fun getPrice(cardId: String): Observable<List<Product>>
+    fun getPrice(cardId: String): Observable<Product>
     fun getPrices(cardIds: Set<String>): Observable<Map<String, Product>>
 }

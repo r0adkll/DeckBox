@@ -9,12 +9,15 @@ import com.r0adkll.deckbuilder.arch.data.database.converter.UriConverter
 import com.r0adkll.deckbuilder.arch.data.database.dao.CardDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.CollectionDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.DeckDao
+import com.r0adkll.deckbuilder.arch.data.database.dao.MarketplaceDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.SessionDao
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CollectionCountEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckCardJoin
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.PriceEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.ProductEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.SessionCardJoin
 import com.r0adkll.deckbuilder.arch.data.database.entities.SessionChangeEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
@@ -27,9 +30,10 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
  * ---
  * 1. Initial Version (production)
  * 2. Added collections support (production)
+ * 3. Added marketplace product + prices
  */
 @Database(
-    version = 2,
+    version = 3,
     entities = [
         DeckEntity::class,
         DeckCardJoin::class,
@@ -38,7 +42,9 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
         SessionCardJoin::class,
         SessionChangeEntity::class,
         SessionEntity::class,
-        CollectionCountEntity::class
+        CollectionCountEntity::class,
+        ProductEntity::class,
+        PriceEntity::class
     ]
 )
 @TypeConverters(UriConverter::class)
@@ -48,6 +54,7 @@ abstract class DeckDatabase : RoomDatabase() {
     abstract fun cards(): CardDao
     abstract fun sessions(): SessionDao
     abstract fun collection(): CollectionDao
+    abstract fun marketplace(): MarketplaceDao
 
     companion object {
 

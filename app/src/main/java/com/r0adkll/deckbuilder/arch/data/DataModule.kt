@@ -15,6 +15,8 @@ import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.D
 import com.r0adkll.deckbuilder.arch.data.features.exporter.ptcgo.DefaultPtcgoExporter
 import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTournamentExporter
 import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.MarketplaceSource
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.TcgReplayerMarketplaceSource
 import com.r0adkll.deckbuilder.arch.data.features.testing.DefaultDeckTester
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
@@ -92,6 +94,7 @@ class DataModule {
      * ---
      * 1. Initial Version
      * 2. Added collections support
+     * 3. Marketplace price cache support
      */
     @Provides @AppScope
     fun provideRoomDatabase(context: Context): DeckDatabase {
@@ -116,6 +119,11 @@ class DataModule {
     ): CardDataSource {
         return DefaultCardDataSource(preferences, disk, network, connectivity, remote)
     }
+
+    @Provides @AppScope
+    fun provideMarketplaceSource(
+        source: TcgReplayerMarketplaceSource
+    ): MarketplaceSource = source
 
     /*
      * Deck Validation Rules

@@ -4,10 +4,10 @@ import android.os.Parcelable
 import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Price
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import io.reactivex.Observable
-import kotlinx.android.parcel.Parcelize
 
 interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
 
@@ -31,10 +31,9 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
         fun hideCollectionCounter()
         fun showCardInformation(card: PokemonCard)
         fun showPrices(lowPrice: Double?, marketPrice: Double?, highPrice: Double?)
-        fun showPriceHistory(products: List<Product>)
+        fun showPriceHistory(product: Product?, prices: List<Price>)
     }
 
-    @Parcelize
     data class State(
         val sessionId: Long?,
         val card: PokemonCard?,
@@ -45,8 +44,8 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
         val evolvesTo: List<PokemonCard>,
         val validation: Validation,
         val collectionCount: Int,
-        val products: List<Product>?
-    ) : Ui.State<State.Change>, Parcelable {
+        val product: Product?
+    ) : Ui.State<State.Change> {
 
         val hasCopies: Boolean
             get() = count?.let { it > 0 } == true
@@ -61,7 +60,7 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
             is Change.EvolvesToLoaded -> this.copy(evolvesTo = change.cards)
             is Change.CollectionCountChanged -> this.copy(collectionCount = change.count)
             is Change.CollectionCountUpdated -> this.copy(collectionCount = collectionCount + change.change)
-            is Change.PriceUpdated -> this.copy(products = change.products)
+            is Change.PriceUpdated -> this.copy(product = change.product)
         }
 
         sealed class Change(logText: String) : Ui.State.Change(logText) {
@@ -73,13 +72,13 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
             class Validated(val validation: Validation) : Change("network -> card validated: $validation")
             class CollectionCountChanged(val count: Int) : Change("network -> collection count changed: $count")
             class CollectionCountUpdated(val change: Int) : Change("user -> collection count updated: $change")
-            class PriceUpdated(val products: List<Product>) : Change("network -> products updated: $products")
+            class PriceUpdated(val product: Product) : Change("network -> products updated: $product")
         }
 
         override fun toString(): String {
             return "State(sessionId=$sessionId, card=${card?.id}, count=$count, variants=${variants.size}, " +
                 "evolvesFrom=${evolvesFrom.size}, evolvesTo=${evolvesTo.size}, validation=$validation, " +
-                "collection=$collectionCount, products=$products)"
+                "collection=$collectionCount, products=$product)"
         }
 
         companion object {
