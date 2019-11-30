@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.CacheModule
 import com.r0adkll.deckbuilder.arch.data.DataModule
 import com.r0adkll.deckbuilder.arch.data.RepositoryModule
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.api.TcgReplayerModule
 import com.r0adkll.deckbuilder.arch.data.features.offline.service.CacheService
 import com.r0adkll.deckbuilder.arch.ui.RouteActivity
 import com.r0adkll.deckbuilder.arch.ui.ShortcutActivity
@@ -43,7 +44,8 @@ import dagger.Component
     BuildModule::class,
     DataModule::class,
     CacheModule::class,
-    RepositoryModule::class
+    RepositoryModule::class,
+    TcgReplayerModule::class
 ])
 interface AppComponent {
 

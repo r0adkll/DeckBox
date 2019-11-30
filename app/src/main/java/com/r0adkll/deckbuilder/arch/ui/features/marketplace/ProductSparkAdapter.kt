@@ -1,24 +1,24 @@
 package com.r0adkll.deckbuilder.arch.ui.features.marketplace
 
-import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Price
 import com.robinhood.spark.SparkAdapter
 
 class ProductSparkAdapter(
-    private val products: List<Product>
+    private val prices: List<Price>
 ) : SparkAdapter() {
 
-    private val baseLine = products.maxBy { it.recordedAt }?.marketPrice?.toFloat()
+    private val baseLine = prices.maxBy { it.updatedAt }?.market?.toFloat()
 
     override fun getY(index: Int): Float {
-        return products[index].marketPrice?.toFloat() ?: 0f
+        return prices[index].market?.toFloat() ?: 0f
     }
 
     override fun getItem(index: Int): Any {
-        return products[index]
+        return prices[index]
     }
 
     override fun getCount(): Int {
-        return products.size
+        return prices.size
     }
 
     override fun hasBaseLine(): Boolean {
@@ -30,6 +30,6 @@ class ProductSparkAdapter(
     }
 
     override fun getX(index: Int): Float {
-        return products[index].recordedAt.toFloat()
+        return prices[index].updatedAt.toFloat()
     }
 }

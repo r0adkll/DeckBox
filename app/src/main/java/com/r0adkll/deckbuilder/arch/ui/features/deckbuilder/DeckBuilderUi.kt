@@ -114,7 +114,7 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
                 POKEMON -> copy(pokemonCards = pokemonCards.minus(change.card))
                 TRAINER -> copy(trainerCards = trainerCards.minus(change.card))
                 ENERGY -> copy(energyCards = energyCards.minus(change.card))
-                UNKNOWN -> this
+                else -> this
             }
             is Change.EditCards -> copy(
                 pokemonCards = change.cards.filter { it.supertype == POKEMON },

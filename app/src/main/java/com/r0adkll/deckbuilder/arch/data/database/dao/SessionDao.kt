@@ -24,7 +24,7 @@ import io.reactivex.Flowable
 abstract class SessionDao {
 
     @Transaction
-    @Query("SELECT * FROM sessions WHERE uid = :sessionId")
+    @Query("SELECT * FROM sessions WHERE uid = :sessionId LIMIT 1")
     abstract fun getSessionWithChanges(sessionId: Long): Flowable<SessionWithChanges>
 
     @Transaction

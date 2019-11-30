@@ -10,8 +10,7 @@ import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRe
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.DefaultExpansionRepository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.DefaultExpansionDataSource
-import com.r0adkll.deckbuilder.arch.data.features.marketplace.CachingMarketplaceRepository
-import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.FirestoreMarketplaceSource
+import com.r0adkll.deckbuilder.arch.data.features.marketplace.DefaultMarketplaceRepository
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.MarketplaceSource
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.preview.RemotePreviewRepository
@@ -62,12 +61,9 @@ class RepositoryModule {
     }
 
     @Provides @AppScope
-    fun provideMarketplaceRepository(schedulers: AppSchedulers): MarketplaceRepository {
-        return CachingMarketplaceRepository(
-            FirestoreMarketplaceSource(MarketplaceSource.Source.CACHE, schedulers),
-            FirestoreMarketplaceSource(MarketplaceSource.Source.NETWORK, schedulers)
-        )
-    }
+    fun provideMarketplaceRepository(
+        repository: DefaultMarketplaceRepository
+    ): MarketplaceRepository = repository
 
     @Provides @AppScope
     fun provideCollectionRepository(

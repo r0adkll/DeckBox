@@ -48,6 +48,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Price
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
@@ -135,22 +136,21 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
         priceSparkline.baseLinePaint.pathEffect = DashPathEffect(floatArrayOf(dp(4f), dp(4f)), 0f)
         priceSparkline.setScrubListener {
-            val product = it as? Product
-            if (product != null) {
+            val price = it as? Price
+            if (price != null) {
                 slidingLayout?.isTouchEnabled = false
-                showPrices(product.price?.low, product.price?.market, product.price?.high)
+                showPrices(price.low, price.market, price.high)
             } else {
                 slidingLayout?.isTouchEnabled = true
 
                 // DRAGONS: this is dubious because we are manipulating the view state outside of MVI
-                val latestProduct = state.products?.maxBy { it.recordedAt }
-                showPrices(latestProduct?.price?.low, latestProduct?.price?.market,
-                    latestProduct?.price?.high)
+                val latestPrice = state.product?.prices?.maxBy { it.updatedAt }
+                showPrices(latestPrice?.low, latestPrice?.market, latestPrice?.high)
             }
         }
 
         actionBuy.setOnClickListener {
-            val product = state.products?.maxBy { it.recordedAt }
+            val product = state.product
             if (product != null) {
                 Analytics.event(Event.ViewItem.MarketplaceLink(product.cardId))
                 val url = MarketplaceHelper.buildAffiliateLink(product)
@@ -269,12 +269,11 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         priceHigh.text = highPrice?.formatPrice() ?: "n/a"
     }
 
-    override fun showPriceHistory(products: List<Product>) {
-        priceSparkline.isVisible = products.size > 1
-        priceSparkline.adapter = ProductSparkAdapter(products)
+    override fun showPriceHistory(product: Product?, prices: List<Price>) {
+        priceSparkline.isVisible = prices.size > 1
+        priceSparkline.adapter = ProductSparkAdapter(prices)
 
         // Prepare our product url to load
-        val product = products.maxBy { it.recordedAt }
         if (product != null) {
             val url = MarketplaceHelper.buildAffiliateLink(product)
             customTabBrowser.prepare(url)

@@ -7,6 +7,7 @@ import com.bumptech.glide.request.target.ViewTarget
 import com.ftinc.kit.app.AppDelegate
 import com.ftinc.kit.widget.EmptyView
 import com.google.firebase.FirebaseApp
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.LoggingAnalyticInterface
 import com.r0adkll.deckbuilder.internal.di.AppComponent
@@ -24,17 +25,16 @@ import javax.inject.Inject
 class DeckApp : Application() {
 
     companion object {
-        @JvmStatic
-        lateinit var component: AppComponent
-        @JvmStatic
-        lateinit var refWatcher: RefWatcher
+        @JvmStatic lateinit var component: AppComponent
+        @JvmStatic lateinit var refWatcher: RefWatcher
     }
 
-    @Inject
-    lateinit var delegates: Set<@JvmSuppressWildcards AppDelegate>
+    @Inject lateinit var delegates: Set<@JvmSuppressWildcards AppDelegate>
 
     override fun onCreate() {
         super.onCreate()
+        AndroidThreeTen.init(this)
+
         installLeakCanary()
         installDagger().inject(this)
         installAnalytics()

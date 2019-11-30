@@ -46,20 +46,21 @@ class CardDetailRenderer(
             }
 
         disposables += state
-            .mapNullable { it.products?.maxBy { it.recordedAt } }
+            .mapNullable { it.product?.prices?.maxBy { it.updatedAt } }
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe {
-                actions.showPrices(it.value?.price?.low, it.value?.price?.market,
-                    it.value?.price?.high)
+                actions.showPrices(it.value?.low, it.value?.market,
+                    it.value?.high)
             }
 
         disposables += state
-            .mapNullable { it.products?.sortedBy { it.recordedAt } }
+            .mapNullable { it.product}
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe {
-                actions.showPriceHistory(it.value ?: emptyList())
+                val prices = it.value?.prices?.sortedBy { it.updatedAt } ?: emptyList()
+                actions.showPriceHistory(it.value, prices)
             }
 
         disposables += state
