@@ -48,7 +48,7 @@ jobs:
         with:
           serviceAccountJson: play-service-account.json
           packageName: com.r0adkll.deckbuilder
-          releaseFile: ${{ SIGNED_RELEASE_FILE }}
+          releaseFile: ${{ steps.sign_android_release.outputs.signedReleaseFile }}
           track: alpha
           whatsNewDirectory: distribution
           mappingFile: app/build/outputs/mapping/release/mapping.txt
