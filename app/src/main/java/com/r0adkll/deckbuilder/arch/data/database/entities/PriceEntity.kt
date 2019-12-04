@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data.database.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -8,13 +9,13 @@ import androidx.room.PrimaryKey
     tableName = "marketplace_prices",
     foreignKeys = [ForeignKey(
         entity = ProductEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["productId"],
+        parentColumns = ["product_id"],
+        childColumns = ["parentId"],
         onDelete = ForeignKey.CASCADE
     )]
 )
 class PriceEntity(
-    @PrimaryKey(autoGenerate = true) var id: Long,
+    @ColumnInfo(name = "price_id") @PrimaryKey(autoGenerate = true) var id: Long,
     var rarity: String,
     var low: Double? = null,
     var mid: Double? = null,
@@ -24,5 +25,5 @@ class PriceEntity(
     var updatedAt: Long,
     var expiresAt: Long,
 
-    var productId: Long
+    var parentId: Long
 )

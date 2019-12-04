@@ -40,3 +40,14 @@
   **[] $VALUES;
   public *;
 }
+
+# KotlinX Serialization
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.SerializationKt
+-keep,includedescriptorclasses class com.r0adkll.deckbuilder.**$$serializer { *; }
+-keepclassmembers class com.r0adkll.deckbuilder.** {
+    *** Companion;
+}
+-keepclasseswithmembers class com.r0adkll.deckbuilder.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}

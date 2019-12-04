@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Price
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import io.reactivex.Observable
+import kotlinx.android.parcel.Parcelize
 
 interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
 
@@ -34,6 +35,7 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
         fun showPriceHistory(product: Product?, prices: List<Price>)
     }
 
+    @Parcelize
     data class State(
         val sessionId: Long?,
         val card: PokemonCard?,
@@ -45,7 +47,7 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
         val validation: Validation,
         val collectionCount: Int,
         val product: Product?
-    ) : Ui.State<State.Change> {
+    ) : Ui.State<State.Change>, Parcelable {
 
         val hasCopies: Boolean
             get() = count?.let { it > 0 } == true

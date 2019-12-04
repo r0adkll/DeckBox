@@ -86,8 +86,8 @@ class FirebaseRemote @Inject constructor(
                 Timber.i("> Expansion Version: $expansionVersion")
                 Timber.i("> Search Proxies: $searchProxies")
                 Timber.i("> Preview: (version: ${expansionPreview?.version}, code: ${expansionPreview?.code})")
-                Timber.i("""> Reprints: Standard(${reprints?.standardHashes?.size}), 
-                    Expanded(${reprints?.expandedHashes?.size})""".trimMargin())
+                Timber.i("""> Reprints: Standard(${reprints?.standardHashes?.size}),
+                    |Expanded(${reprints?.expandedHashes?.size})""".trimMargin())
                 Timber.i("> BanList: $banList")
                 Timber.i("> Legal Overrides: ${legalOverrides?.singles?.size}")
                 Timber.i("> TCGPlayer Mass Entry: $marketplaceMassEntryEnabled")

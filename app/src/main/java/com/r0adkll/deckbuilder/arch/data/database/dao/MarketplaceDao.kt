@@ -24,9 +24,9 @@ abstract class MarketplaceDao {
     @Query("""
         SELECT *, MAX(marketplace_prices.updatedAt) 
         FROM marketplace_prices 
-        INNER JOIN marketplace_products ON marketplace_prices.productId = marketplace_products.id 
+        INNER JOIN marketplace_products ON marketplace_prices.parentId = marketplace_products.product_id
         WHERE marketplace_products.cardId IN(:cardIds) 
-        GROUP BY marketplace_prices.productId
+        GROUP BY marketplace_prices.parentId
     """)
     abstract fun getLatestPriceForProducts(cardIds: Set<String>): Single<List<PriceWithProduct>>
 
@@ -40,7 +40,7 @@ abstract class MarketplaceDao {
     abstract fun deleteAll()
 
     @Transaction
-    fun insertProducts(products: List<Product>) {
+    open fun insertProducts(products: List<Product>) {
         for (product in products) {
             val entity = product.mapToEntity()
             val productId = insertProduct(entity)
