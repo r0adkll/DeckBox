@@ -30,7 +30,7 @@ jobs:
           GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
           SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.SERVICE_ACCOUNT_JSON }}
 
-      - name: Assemble Release APK
+      - name: Assemble Release Bundle
         run: |
           ./gradlew bundleRelease
 
@@ -48,7 +48,7 @@ jobs:
         with:
           serviceAccountJson: play-service-account.json
           packageName: com.r0adkll.deckbuilder
-          releaseFile: ${{ steps.sign_android_release.outputs.signedReleaseFile }}
+          releaseFile: ${{ env.SIGNED_RELEASE_FILE }}
           track: alpha
           whatsNewDirectory: distribution
           mappingFile: app/build/outputs/mapping/release/mapping.txt
