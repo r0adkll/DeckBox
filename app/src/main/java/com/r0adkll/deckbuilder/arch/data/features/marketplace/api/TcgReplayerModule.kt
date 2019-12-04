@@ -1,18 +1,16 @@
 package com.r0adkll.deckbuilder.arch.data.features.marketplace.api
 
 import android.os.Build
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import dagger.Module
 import dagger.Provides
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 class TcgReplayerModule {
@@ -37,7 +35,7 @@ class TcgReplayerModule {
             .client(client)
             .baseUrl(BuildConfig.MARKETPLACE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         return retrofit.create(TcgReplayer::class.java)

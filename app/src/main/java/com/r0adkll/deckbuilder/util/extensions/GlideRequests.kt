@@ -35,7 +35,7 @@ fun GlideRequests.loadPokemonCard(context: Context, card: PokemonCard, type: Ima
 
 fun GlideRequests.loadOfflineUri(context: Context, url: String?): GlideRequest<Drawable> {
     return if (url != null) {
-        val cacheFile = ImageCacheLoader.getCacheFile(context, url?.toUri()!!)
+        val cacheFile = ImageCacheLoader.getCacheFile(context, url.toUri())
         if (cacheFile?.exists() == true) {
             this.load(cacheFile)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

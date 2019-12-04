@@ -7,6 +7,7 @@ import com.r0adkll.deckbuilder.arch.data.features.marketplace.cache.MarketplaceC
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
+import timber.log.Timber
 import javax.inject.Inject
 
 class TcgReplayerMarketplaceSource @Inject constructor(
@@ -36,6 +37,7 @@ class TcgReplayerMarketplaceSource @Inject constructor(
 
     private fun cache(cardId: String): Observable<Product> {
         return cache.getPrice(cardId)
+            .onErrorResumeNext(Observable.empty())
             .subscribeOn(schedulers.disk)
     }
 
@@ -44,13 +46,20 @@ class TcgReplayerMarketplaceSource @Inject constructor(
             .map {
                 mapOf(it.first().cardId to it.first())
             }
+            .doOnNext {
+                Timber.d("Prices from Cache: $it")
+            }
+            .onErrorReturnItem(emptyMap())
             .subscribeOn(schedulers.disk)
     }
 
     private fun network(cardId: String): Observable<Product> {
         return api.getPrice(cardId)
             .map { it.mapToModel() }
-            .doOnNext { cache.putPrices(listOf(it)) }
+            .doOnNext {
+                cache.putPrices(listOf(it))
+            }
+            .onErrorResumeNext(Observable.empty())
             .subscribeOn(schedulers.network)
     }
 

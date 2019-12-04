@@ -1,8 +1,5 @@
 package com.r0adkll.deckbuilder.arch.data.features.marketplace.api.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class PriceResponse(
     val cardId: String,
     val setCode: String,
@@ -11,6 +8,5 @@ data class PriceResponse(
     val groupId: Long,
     val url: String,
     val modifiedOn: String,
-
     val prices: List<CardPricing>? = null
 ) 

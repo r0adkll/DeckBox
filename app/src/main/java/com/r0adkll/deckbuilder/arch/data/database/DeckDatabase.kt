@@ -74,5 +74,40 @@ abstract class DeckDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE `sessions` ADD COLUMN `collectionOnly` INTEGER")
             }
         }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `marketplace_products` (
+                        `product_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+                        `cardId` TEXT NOT NULL, 
+                        `setCode` TEXT NOT NULL, 
+                        `groupId` INTEGER NOT NULL, 
+                        `productId` INTEGER NOT NULL, 
+                        `productName` TEXT NOT NULL, 
+                        `url` TEXT NOT NULL, 
+                        `modifiedOn` INTEGER NOT NULL
+                    )
+                """)
+                database.execSQL("""
+                    CREATE INDEX IF NOT EXISTS `index_marketplace_products_cardId` ON `marketplace_products` (`cardId`)
+                """)
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `marketplace_prices` (
+                        `price_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+                        `rarity` TEXT NOT NULL, 
+                        `low` REAL, 
+                        `mid` REAL, 
+                        `high` REAL, 
+                        `market` REAL, 
+                        `directLow` REAL, 
+                        `updatedAt` INTEGER NOT NULL, 
+                        `expiresAt` INTEGER NOT NULL, 
+                        `parentId` INTEGER NOT NULL, 
+                        FOREIGN KEY(`parentId`) REFERENCES `marketplace_products`(`product_id`) ON UPDATE NO ACTION ON DELETE CASCADE 
+                    )
+                """)
+            }
+        }
     }
 }
