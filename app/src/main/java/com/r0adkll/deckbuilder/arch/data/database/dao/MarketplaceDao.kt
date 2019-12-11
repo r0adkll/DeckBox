@@ -8,7 +8,6 @@ import androidx.room.Transaction
 import com.r0adkll.deckbuilder.arch.data.database.entities.PriceEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.ProductEntity
 import com.r0adkll.deckbuilder.arch.data.database.mapping.mapToEntity
-import com.r0adkll.deckbuilder.arch.data.database.relations.PriceWithProduct
 import com.r0adkll.deckbuilder.arch.data.database.relations.ProductWithPrices
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import io.reactivex.Single
@@ -22,13 +21,11 @@ abstract class MarketplaceDao {
 
     @Transaction
     @Query("""
-        SELECT *, MAX(marketplace_prices.updatedAt) 
-        FROM marketplace_prices 
-        INNER JOIN marketplace_products ON marketplace_prices.parentId = marketplace_products.product_id
+        SELECT *
+        FROM marketplace_products
         WHERE marketplace_products.cardId IN(:cardIds) 
-        GROUP BY marketplace_prices.parentId
     """)
-    abstract fun getLatestPriceForProducts(cardIds: Set<String>): Single<List<PriceWithProduct>>
+    abstract fun getLatestPriceForProducts(cardIds: Set<String>): Single<List<ProductWithPrices>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertProduct(product: ProductEntity): Long
@@ -43,9 +40,9 @@ abstract class MarketplaceDao {
     open fun insertProducts(products: List<Product>) {
         for (product in products) {
             val entity = product.mapToEntity()
-            val productId = insertProduct(entity)
+            insertProduct(entity)
             val priceEntities = product.prices.map {
-                it.mapToEntity(productId)
+                it.mapToEntity(entity.cardId)
             }
             insertPrices(priceEntities)
         }

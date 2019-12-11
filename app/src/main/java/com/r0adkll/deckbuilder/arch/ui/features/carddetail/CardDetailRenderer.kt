@@ -59,7 +59,10 @@ class CardDetailRenderer(
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe {
-                val prices = it.value?.prices?.sortedBy { it.updatedAt } ?: emptyList()
+                val prices = it.value?.prices
+                    ?.filter { price -> price.rarity == it.value?.topRarity }
+                    ?.sortedBy { it.updatedAt }
+                    ?: emptyList()
                 actions.showPriceHistory(it.value, prices)
             }
 

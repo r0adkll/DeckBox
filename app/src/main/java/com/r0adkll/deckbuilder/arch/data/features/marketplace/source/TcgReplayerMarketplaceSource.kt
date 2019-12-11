@@ -44,7 +44,9 @@ class TcgReplayerMarketplaceSource @Inject constructor(
     private fun cache(cardIds: Set<String>): Observable<Map<String, Product>> {
         return cache.getPrices(cardIds)
             .map {
-                mapOf(it.first().cardId to it.first())
+                it.map { product ->
+                    product.cardId to product
+                }.toMap()
             }
             .doOnNext {
                 Timber.d("Prices from Cache: $it")

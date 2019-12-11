@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/setupRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:gravity="center"
     android:background="?attr/colorPrimary"
     >
+
+    <ImageView
+        android:id="@+id/pattern"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
     <com.r0adkll.deckbuilder.arch.ui.widgets.CardSwitcher
         android:id="@+id/cardSwitcher"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <LinearLayout
@@ -23,6 +30,10 @@
         android:layout_weight="1"
         android:gravity="start|center_vertical"
         android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         >
 
         <Space
@@ -35,11 +46,11 @@
             android:id="@+id/setupTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:text="@string/app_name"
-            android:textSize="@dimen/font_display2"
             android:textColor="@color/white"
-            android:fontFamily="sans-serif-medium"
+            android:textSize="@dimen/font_display2"
             />
 
         <TextView
@@ -49,15 +60,15 @@
             android:layout_marginTop="4dp"
             android:gravity="start"
             android:text="@string/app_description"
-            android:textSize="20sp"
             android:textColor="@color/white"
+            android:textSize="20sp"
             />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:layout_marginStart="-2dp"
+            android:layout_marginTop="24dp"
             android:gravity="center"
             android:orientation="horizontal"
             >
@@ -74,12 +85,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="sans-serif-medium"
                 android:padding="@dimen/padding_small"
                 android:text="@string/action_continue"
                 android:textColor="@color/white87"
                 android:textSize="16sp"
-                android:fontFamily="sans-serif-medium"
-                android:background="?attr/selectableItemBackground"
                 />
 
         </LinearLayout>
@@ -95,13 +106,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="16dp"
             android:text="@string/pref_about_privacy_policy"
             android:textColor="@color/white70"
-            android:background="?attr/selectableItemBackground"
             />
 
     </LinearLayout>
 
-</LinearLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

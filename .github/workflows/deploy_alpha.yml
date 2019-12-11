@@ -3,7 +3,7 @@ name: Deploy Alpha
 on:
   push:
     branches:
-      - feature/*
+      - feature/alpha-*
 
 jobs:
   deploy:
@@ -15,12 +15,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-
-      - name: Dependency Check
-        run: |
-          echo $ANDROID_HOME
-          echo "== Checking Build Tools =="
-          ls -la $ANDROID_HOME/build-tools/29.0.2
 
       - name: Setup Secrets
         run: |
@@ -50,5 +44,5 @@ jobs:
           packageName: com.r0adkll.deckbuilder
           releaseFile: ${{ env.SIGNED_RELEASE_FILE }}
           track: alpha
-          whatsNewDirectory: distribution
+          whatsNewDirectory: distribution/
           mappingFile: app/build/outputs/mapping/release/mapping.txt

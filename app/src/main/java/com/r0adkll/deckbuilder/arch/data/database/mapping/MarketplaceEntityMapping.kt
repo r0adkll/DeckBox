@@ -9,7 +9,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 
 fun Product.mapToEntity(): ProductEntity {
     return ProductEntity(
-        0L,
         cardId,
         setCode,
         groupId,
@@ -20,7 +19,7 @@ fun Product.mapToEntity(): ProductEntity {
     )
 }
 
-fun Price.mapToEntity(productId: Long): PriceEntity {
+fun Price.mapToEntity(cardId: String): PriceEntity {
     return PriceEntity(
         0L,
         rarity,
@@ -31,7 +30,7 @@ fun Price.mapToEntity(productId: Long): PriceEntity {
         directLow,
         updatedAt,
         expiresAt,
-        productId
+        cardId
     )
 }
 
@@ -45,20 +44,6 @@ fun ProductWithPrices.mapToModel(): Product {
         product.url,
         prices.map { it.mapToModel() },
         prices.map { it.rarity }.toSet(),
-        product.modifiedOn
-    )
-}
-
-fun PriceWithProduct.mapToModel(): Product {
-    return Product(
-        product.cardId,
-        product.setCode,
-        product.groupId,
-        product.productId,
-        product.productName,
-        product.url,
-        listOf(price.mapToModel()),
-        setOf(price.rarity),
         product.modifiedOn
     )
 }

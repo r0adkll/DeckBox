@@ -35,7 +35,6 @@ import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
-import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
@@ -73,12 +72,9 @@ class SettingsActivity : BaseActivity() {
 
         private val disposables = CompositeDisposable()
         private var migrationSnackbar: Snackbar? = null
-        private lateinit var customTabBrowser: CustomTabBrowser
 
         override fun onActivityCreated(savedInstanceState: Bundle?) {
             super.onActivityCreated(savedInstanceState)
-            customTabBrowser = CustomTabBrowser(requireActivity() as AppCompatActivity)
-            customTabBrowser.prepare(Uri.parse(getString(R.string.privacy_policy_url)))
             setupClient()
         }
 
@@ -118,7 +114,7 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_about_privacy_policy" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "privacy_policy"))
-                    customTabBrowser.launch(Uri.parse(getString(R.string.privacy_policy_url)))
+                    startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
                     true
                 }
                 "pref_about_developer" -> {
