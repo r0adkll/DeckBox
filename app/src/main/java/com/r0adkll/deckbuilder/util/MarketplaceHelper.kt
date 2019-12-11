@@ -1,5 +1,7 @@
 package com.r0adkll.deckbuilder.util
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -7,12 +9,17 @@ import com.r0adkll.deckbuilder.BuildConfig
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
-import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 
 object MarketplaceHelper {
 
     private const val TCG_PLAYER_PRICING_INFO_URL = "https://help.tcgplayer.com/hc/en-us/articles/222376867"
     private const val MASS_ENTRY_URL = "http://store.tcgplayer.com/massentry"
+
+    fun openLink(context: Context, uri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        val chooserIntent = Intent.createChooser(intent, context.getString(R.string.share_marketplace_link))
+        context.startActivity(chooserIntent)
+    }
 
     fun buildAffiliateLink(product: Product): Uri {
         return Uri.parse(product.url)
@@ -41,15 +48,12 @@ object MarketplaceHelper {
     }
 
     fun showMarketPriceExplanationDialog(activity: AppCompatActivity): AlertDialog {
-        val customTabBrowser = CustomTabBrowser(activity)
-        customTabBrowser.prepare(Uri.parse(TCG_PLAYER_PRICING_INFO_URL))
         return AlertDialog.Builder(activity)
             .setTitle(R.string.dialog_market_price_title)
             .setMessage(R.string.dialog_market_price_message)
             .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
             .setNeutralButton(R.string.action_view_more) { dialog, _ ->
-                customTabBrowser.destroy()
-                customTabBrowser.launch(Uri.parse(TCG_PLAYER_PRICING_INFO_URL))
+                openLink(activity, Uri.parse(TCG_PLAYER_PRICING_INFO_URL))
                 dialog.dismiss()
             }
             .show()

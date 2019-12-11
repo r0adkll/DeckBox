@@ -2,10 +2,12 @@ package com.r0adkll.deckbuilder.arch.ui.features.setup
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Shader
 import android.os.Bundle
 import android.view.WindowManager
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.extensions.color
+import com.ftinc.kit.extensions.drawable
 import com.ftinc.kit.extensions.snackbar
 import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -20,6 +22,7 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
+import com.r0adkll.deckbuilder.arch.ui.widgets.TileDrawable
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import kotlinx.android.synthetic.main.activity_setup.*
@@ -37,6 +40,10 @@ class SetupActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setup)
+
+        val tileDrawable = drawable(R.drawable.ic_app_pattern)!!
+        pattern.setImageDrawable(TileDrawable(tileDrawable, Shader.TileMode.REPEAT, -45f))
+
         setupClient()
 
         actionSignIn.setOnClickListener {

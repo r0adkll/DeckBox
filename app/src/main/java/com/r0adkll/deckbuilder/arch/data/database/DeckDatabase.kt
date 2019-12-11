@@ -79,14 +79,14 @@ abstract class DeckDatabase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("""
                     CREATE TABLE IF NOT EXISTS `marketplace_products` (
-                        `product_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
                         `cardId` TEXT NOT NULL, 
                         `setCode` TEXT NOT NULL, 
                         `groupId` INTEGER NOT NULL, 
                         `productId` INTEGER NOT NULL, 
                         `productName` TEXT NOT NULL, 
                         `url` TEXT NOT NULL, 
-                        `modifiedOn` INTEGER NOT NULL
+                        `modifiedOn` INTEGER NOT NULL,
+                        PRIMARY KEY(`cardId`)
                     )
                 """)
                 database.execSQL("""
@@ -104,7 +104,7 @@ abstract class DeckDatabase : RoomDatabase() {
                         `updatedAt` INTEGER NOT NULL, 
                         `expiresAt` INTEGER NOT NULL, 
                         `parentId` INTEGER NOT NULL, 
-                        FOREIGN KEY(`parentId`) REFERENCES `marketplace_products`(`product_id`) ON UPDATE NO ACTION ON DELETE CASCADE 
+                        FOREIGN KEY(`parentId`) REFERENCES `marketplace_products`(`cardId`) ON UPDATE NO ACTION ON DELETE CASCADE 
                     )
                 """)
             }

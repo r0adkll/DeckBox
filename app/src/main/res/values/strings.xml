@@ -282,7 +282,7 @@
     <string name="pref_category_preview">Preview</string>
     <string name="pref_preview_expansions_title">Preview expansions</string>
     <string name="pref_preview_expansions_summary">Enable access to the preview expansions for unreleased sets</string>
-    <string name="action_buy">Buy now @ TCGPlayer</string>
+    <string name="action_view_tcgplayer">View on TCGPlayer</string>
     <string name="activity_marketplace_tcgplayer">TCGPlayer.com</string>
     <string name="marketplace_price_low">Low</string>
     <string name="marketplace_price_market">Market</string>
@@ -316,4 +316,5 @@
     <string name="dialog_delete_all_cache_message">Are you sure you want to clear all cached images for offline use? Doing this will result in the images needing to be downloaded again to view and make increase data usage.</string>
     <string name="dialog_delete_expansion_cache_title">Clear %1$s cache?</string>
     <string name="dialog_delete_expansion_cache_message">Are you sure you want to clear all cached images for %1$s? Doing this will result in the images needing to be downloaded again to view and make increase data usage.</string>
+    <string name="share_marketplace_link">Open marketplace...</string>
 </resources>

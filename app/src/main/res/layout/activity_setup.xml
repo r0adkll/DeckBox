@@ -1,36 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:background="?attr/colorPrimary"
     >
 
-    <com.r0adkll.deckbuilder.arch.ui.widgets.MarqueeCardContainer
-        android:id="@+id/marquee_container"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/pattern"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        app:cardWidth="@dimen/marquee_card_width"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center"
+            />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/app_name"
-            android:textSize="@dimen/setup_title_textsize"
+            android:textSize="@dimen/font_display3"
             android:textColor="@color/white"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-light"
             />
 
         <TextView
@@ -41,17 +55,21 @@
             android:paddingStart="34dp"
             android:paddingEnd="34dp"
             android:text="@string/app_description"
-            android:textSize="@dimen/setup_body_textsize"
+            android:textSize="16sp"
             android:textColor="@color/white"
             />
 
-        <com.google.android.gms.common.SignInButton
+        <TextView
             android:id="@+id/actionSignIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_gravity="center"
-            app:buttonSize="wide"
+            android:paddingEnd="24dp"
+            android:background="@drawable/dr_google_signin_button"
+            android:text="Sign in with Google"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:gravity="center_vertical"
             />
 
         <TextView
@@ -66,11 +84,6 @@
             android:background="?attr/selectableItemBackground"
             />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            />
 
         <TextView
             android:id="@+id/actionPrivacyPolicy"
@@ -86,4 +99,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

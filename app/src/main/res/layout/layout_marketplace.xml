@@ -10,14 +10,14 @@
     >
 
     <Button
-        android:id="@+id/actionBuy"
+        android:id="@+id/actionView"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/dr_action_buy_background"
-        android:text="@string/action_buy"
+        android:text="@string/action_view_tcgplayer"
         />
 
     <LinearLayout

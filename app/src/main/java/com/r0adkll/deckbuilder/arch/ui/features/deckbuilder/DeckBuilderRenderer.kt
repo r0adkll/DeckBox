@@ -177,18 +177,18 @@ class DeckBuilderRenderer(
             val sumType = if (state.collectionOnly) EXCLUDE_COLLECTION else NO_COLLECTION
             val allCards = state.allCardsStackedWithCollection
 
-            val low = allCards.computeSum(state.products, sumType) { it.prices.firstOrNull()?.low }
-            val market = allCards.computeSum(state.products, sumType) { it.prices.firstOrNull()?.market }
-            val high = allCards.computeSum(state.products, sumType) { it.prices.firstOrNull()?.high }
+            val low = allCards.computeSum(state.products, sumType) { it.latestPrice?.low }
+            val market = allCards.computeSum(state.products, sumType) { it.latestPrice?.market }
+            val high = allCards.computeSum(state.products, sumType) { it.latestPrice?.high }
 
             val lowCollection = computeIf(state.collectionOnly) {
-                allCards.computeSum(state.products, ONLY_COLLECTION) { it.prices.firstOrNull()?.low }
+                allCards.computeSum(state.products, ONLY_COLLECTION) { it.latestPrice?.low }
             }
             val marketCollection = computeIf(state.collectionOnly) {
-                allCards.computeSum(state.products, ONLY_COLLECTION) { it.prices.firstOrNull()?.market }
+                allCards.computeSum(state.products, ONLY_COLLECTION) { it.latestPrice?.market }
             }
             val highCollection = computeIf(state.collectionOnly) {
-                allCards.computeSum(state.products, ONLY_COLLECTION) { it.prices.firstOrNull()?.high }
+                allCards.computeSum(state.products, ONLY_COLLECTION) { it.latestPrice?.high }
             }
 
             MarketPrices(low, market, high,

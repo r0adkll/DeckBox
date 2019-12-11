@@ -10,7 +10,7 @@ data class ProductWithPrices(
     val product: ProductEntity,
 
     @Relation(entity = PriceEntity::class,
-        parentColumn = "product_id",
+        parentColumn = "cardId",
         entityColumn = "parentId")
     val prices: List<PriceEntity>
 )

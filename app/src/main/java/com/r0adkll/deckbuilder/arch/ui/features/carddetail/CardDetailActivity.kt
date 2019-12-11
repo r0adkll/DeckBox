@@ -50,7 +50,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Price
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
-import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.marketplace.ProductSparkAdapter
@@ -85,7 +84,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     @Inject lateinit var renderer: CardDetailRenderer
     @Inject lateinit var presenter: CardDetailPresenter
 
-    private lateinit var customTabBrowser: CustomTabBrowser
     private lateinit var variantsAdapter: PokemonCardsRecyclerAdapter
     private lateinit var evolvesFromAdapter: PokemonCardsRecyclerAdapter
     private lateinit var evolvesToAdapter: PokemonCardsRecyclerAdapter
@@ -93,7 +91,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card_detail)
-        customTabBrowser = CustomTabBrowser(this)
 
         // Odd state hack to pass in passed values
         state = state.copy(card = card)
@@ -149,12 +146,12 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             }
         }
 
-        actionBuy.setOnClickListener {
+        actionView.setOnClickListener {
             val product = state.product
             if (product != null) {
                 Analytics.event(Event.ViewItem.MarketplaceLink(product.cardId))
                 val url = MarketplaceHelper.buildAffiliateLink(product)
-                customTabBrowser.launch(url)
+                MarketplaceHelper.openLink(this, url)
             }
         }
 
@@ -272,12 +269,6 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
     override fun showPriceHistory(product: Product?, prices: List<Price>) {
         priceSparkline.isVisible = prices.size > 1
         priceSparkline.adapter = ProductSparkAdapter(prices)
-
-        // Prepare our product url to load
-        if (product != null) {
-            val url = MarketplaceHelper.buildAffiliateLink(product)
-            customTabBrowser.prepare(url)
-        }
     }
 
     override fun showVariants(cards: List<PokemonCard>) {

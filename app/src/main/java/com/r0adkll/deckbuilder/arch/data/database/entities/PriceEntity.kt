@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     tableName = "marketplace_prices",
     foreignKeys = [ForeignKey(
         entity = ProductEntity::class,
-        parentColumns = ["product_id"],
+        parentColumns = ["cardId"],
         childColumns = ["parentId"],
         onDelete = ForeignKey.CASCADE
     )]
@@ -25,5 +25,5 @@ class PriceEntity(
     var updatedAt: Long,
     var expiresAt: Long,
 
-    var parentId: Long
+    var parentId: String
 )

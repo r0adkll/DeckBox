@@ -42,7 +42,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCa
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.Remote
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
-import com.r0adkll.deckbuilder.arch.ui.components.customtab.CustomTabBrowser
 import com.r0adkll.deckbuilder.arch.ui.components.drag.EditDragListener
 import com.r0adkll.deckbuilder.arch.ui.components.drag.TabletDragListener
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
@@ -162,7 +161,6 @@ class DeckBuilderActivity : BaseActivity(),
     private lateinit var component: DeckBuilderComponent
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
-    private lateinit var customTabBrowser: CustomTabBrowser
     private val panelSlideListener = DeckBuilderPanelSlideListener()
     private var savingSnackBar: Snackbar? = null
     private var pendingImport: List<PokemonCard>? = null
@@ -224,7 +222,6 @@ class DeckBuilderActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
-        customTabBrowser = CustomTabBrowser(this)
 
         // Setup AppBar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -285,10 +282,10 @@ class DeckBuilderActivity : BaseActivity(),
                     .show(supportFragmentManager, DeckImagePickerFragment.TAG)
             }
 
-        actionBuy.isVisible = remote.marketplaceMassEntryEnabled
-        actionBuy.setOnClickListener {
+        actionView.isVisible = remote.marketplaceMassEntryEnabled
+        actionView.setOnClickListener {
             val link = MarketplaceHelper.buildAffiliateLink(state.allCards, state.products)
-            customTabBrowser.launch(link)
+            MarketplaceHelper.openLink(this, link)
         }
 
         priceMarketLayout.setOnClickListener {

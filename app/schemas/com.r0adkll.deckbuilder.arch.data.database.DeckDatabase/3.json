@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "5da27f6d598fd3ad8a9e2c07c0ead525",
+    "identityHash": "12a55bd0b46a4ffda262767972c5486c",
     "entities": [
       {
         "tableName": "decks",
@@ -601,14 +601,8 @@
       },
       {
         "tableName": "marketplace_products",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`product_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cardId` TEXT NOT NULL, `setCode` TEXT NOT NULL, `groupId` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `productName` TEXT NOT NULL, `url` TEXT NOT NULL, `modifiedOn` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cardId` TEXT NOT NULL, `setCode` TEXT NOT NULL, `groupId` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `productName` TEXT NOT NULL, `url` TEXT NOT NULL, `modifiedOn` INTEGER NOT NULL, PRIMARY KEY(`cardId`))",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "product_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "cardId",
             "columnName": "cardId",
@@ -654,25 +648,16 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "product_id"
+            "cardId"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
-        "indices": [
-          {
-            "name": "index_marketplace_products_cardId",
-            "unique": false,
-            "columnNames": [
-              "cardId"
-            ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_marketplace_products_cardId` ON `${TABLE_NAME}` (`cardId`)"
-          }
-        ],
+        "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "marketplace_prices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`price_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `rarity` TEXT NOT NULL, `low` REAL, `mid` REAL, `high` REAL, `market` REAL, `directLow` REAL, `updatedAt` INTEGER NOT NULL, `expiresAt` INTEGER NOT NULL, `parentId` INTEGER NOT NULL, FOREIGN KEY(`parentId`) REFERENCES `marketplace_products`(`product_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`price_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `rarity` TEXT NOT NULL, `low` REAL, `mid` REAL, `high` REAL, `market` REAL, `directLow` REAL, `updatedAt` INTEGER NOT NULL, `expiresAt` INTEGER NOT NULL, `parentId` TEXT NOT NULL, FOREIGN KEY(`parentId`) REFERENCES `marketplace_products`(`cardId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -731,7 +716,7 @@
           {
             "fieldPath": "parentId",
             "columnName": "parentId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -751,7 +736,7 @@
               "parentId"
             ],
             "referencedColumns": [
-              "product_id"
+              "cardId"
             ]
           }
         ]
@@ -760,7 +745,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5da27f6d598fd3ad8a9e2c07c0ead525')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '12a55bd0b46a4ffda262767972c5486c')"
     ]
   }
 }
