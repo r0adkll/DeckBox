@@ -8,6 +8,7 @@ import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.DragonMajestyE
 import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.ExpansionAction
 import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.LostThunderExpansionAction
 import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.TeamUpExpansionAction
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteAction
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 
 class ExpansionPaletteAction(
@@ -16,7 +17,7 @@ class ExpansionPaletteAction(
     private val actions: List<ExpansionAction> = defaultExpansionActions,
     private val colorPicker: (Palette) -> Int? = defaultColorPicker,
     private val contrastListener: (isLight: Boolean) -> Unit
-) : PaletteBitmapViewTarget.PaletteAction {
+) : PaletteAction {
 
     override fun execute(palette: Palette?) {
         palette?.let { p ->

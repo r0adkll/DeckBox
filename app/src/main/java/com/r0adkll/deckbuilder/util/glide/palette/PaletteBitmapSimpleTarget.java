@@ -1,13 +1,15 @@
 package com.r0adkll.deckbuilder.util.glide.palette;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
 
-import com.bumptech.glide.request.target.ImageViewTarget;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.bumptech.glide.util.Preconditions;
 
 /**
@@ -36,24 +38,24 @@ import com.bumptech.glide.util.Preconditions;
  *
  * @see PaletteTargetBuilder
  */
-public class PaletteBitmapViewTarget extends ImageViewTarget<PaletteBitmap> {
+public class PaletteBitmapSimpleTarget extends CustomTarget<PaletteBitmap> {
 
     private final Iterable<PaletteAction> actions;
 
-    public PaletteBitmapViewTarget(
-            @NonNull ImageView view,
-            @NonNull Iterable<PaletteAction> actions) {
-        super(view);
+    public PaletteBitmapSimpleTarget(@NonNull Iterable<PaletteAction> actions) {
+        super();
         this.actions = Preconditions.checkNotNull(actions);
     }
 
     @Override
-    protected void setResource(@Nullable PaletteBitmap resource) {
-        Bitmap bitmap = resource != null ? resource.bitmap : null;
-        Palette palette = resource != null ? resource.palette : null;
+    public void onResourceReady(@NonNull PaletteBitmap resource, @Nullable Transition<? super PaletteBitmap> transition) {
+        Palette palette = resource.palette;
 
-        view.setImageBitmap(bitmap);
         setPalette(palette);
+    }
+
+    @Override
+    public void onLoadCleared(@Nullable Drawable placeholder) {
     }
 
     protected void setPalette(Palette palette) {

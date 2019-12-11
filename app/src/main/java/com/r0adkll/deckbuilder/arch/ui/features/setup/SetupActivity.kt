@@ -58,7 +58,7 @@ class SetupActivity : BaseActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         }
         cardSwitcher?.setOnPaletteChangeListener {
-            val primaryColor = it.dominantSwatch
+            val primaryColor = it.vibrantSwatch
             val primaryDarkColor = it.darkVibrantSwatch
 
             setupRoot?.setBackgroundColor(primaryColor?.rgb ?: color(R.color.primaryColor))
