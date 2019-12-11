@@ -115,6 +115,7 @@
             android:name=".arch.ui.features.collection.set.CollectionSetActivity"
             android:theme="@style/Theme.DeckBuilder.Translucent"
             />
+        <activity android:name=".arch.ui.InternalWebBrowser" />
 
         <service
             android:name=".arch.data.features.offline.service.CacheService"

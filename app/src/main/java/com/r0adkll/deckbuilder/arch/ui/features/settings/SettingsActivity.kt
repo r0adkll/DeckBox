@@ -34,6 +34,7 @@ import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollectionSource
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
+import com.r0adkll.deckbuilder.arch.ui.InternalWebBrowser
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.features.settings.cache.ManageCacheActivity
 import com.r0adkll.deckbuilder.arch.ui.features.setup.SetupActivity
@@ -114,17 +115,29 @@ class SettingsActivity : BaseActivity() {
                 }
                 "pref_about_privacy_policy" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "privacy_policy"))
-                    startActivity(IntentUtils.openLink(getString(R.string.privacy_policy_url)))
+                    InternalWebBrowser.show(
+                        requireContext(),
+                        R.string.pref_about_privacy_policy,
+                        getString(R.string.privacy_policy_url)
+                    )
                     true
                 }
                 "pref_about_developer" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "developer"))
-                    startActivity(IntentUtils.openLink(getString(R.string.developer_website_url)))
+                    InternalWebBrowser.show(
+                        requireContext(),
+                        R.string.pref_about_developer,
+                        getString(R.string.developer_website_url)
+                    )
                     true
                 }
                 "pref_about_opensource" -> {
                     Analytics.event(Event.SelectContent.Action("settings", "contribute"))
-                    startActivity(IntentUtils.openLink(getString(R.string.opensource_repository_url)))
+                    InternalWebBrowser.show(
+                        requireContext(),
+                        R.string.pref_about_opensource,
+                        getString(R.string.opensource_repository_url)
+                    )
                     true
                 }
                 "pref_about_oss" -> {

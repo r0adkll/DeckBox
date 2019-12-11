@@ -9,7 +9,6 @@ import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.extensions.color
 import com.ftinc.kit.extensions.drawable
 import com.ftinc.kit.extensions.snackbar
-import com.ftinc.kit.util.IntentUtils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -21,6 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.ui.InternalWebBrowser
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
 import com.r0adkll.deckbuilder.arch.ui.widgets.TileDrawable
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
@@ -69,14 +69,7 @@ class SetupActivity : BaseActivity() {
         }
 
         actionPrivacyPolicy.setOnClickListener {
-            val intent = IntentUtils.openLink(getString(R.string.privacy_policy_url))
-            if (IntentUtils.isIntentAvailable(this, intent)) {
-                startActivity(intent)
-            } else {
-                Intent.createChooser(intent, getString(R.string.intent_chooser_link_title)).apply {
-                    startActivity(this)
-                }
-            }
+            InternalWebBrowser.show(this, R.string.pref_about_privacy_policy, getString(R.string.privacy_policy_url))
         }
     }
 
