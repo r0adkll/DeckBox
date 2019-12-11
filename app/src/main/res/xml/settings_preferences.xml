@@ -86,14 +86,14 @@
 
         <Preference
             android:key="pref_about_opensource"
-            android:title="Contribute"
+            android:title="@string/pref_about_opensource"
             android:summary="DeckBox is now open source. Contribute @ Github"
             app:icon="@drawable/ic_github_circle"
             />
 
         <Preference
             android:key="pref_about_developer"
-            android:title="Developed by"
+            android:title="@string/pref_about_developer"
             android:summary="r0adkll"
             app:icon="@drawable/ic_account_circle_outline"
             />

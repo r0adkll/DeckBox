@@ -317,4 +317,6 @@
     <string name="dialog_delete_expansion_cache_title">Clear %1$s cache?</string>
     <string name="dialog_delete_expansion_cache_message">Are you sure you want to clear all cached images for %1$s? Doing this will result in the images needing to be downloaded again to view and make increase data usage.</string>
     <string name="share_marketplace_link">Open marketplace...</string>
+    <string name="pref_about_developer">Developed by</string>
+    <string name="pref_about_opensource">Contribute</string>
 </resources>
