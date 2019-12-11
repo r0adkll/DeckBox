@@ -17,7 +17,6 @@ import com.bumptech.glide.util.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget.PaletteAction;
 import static com.r0adkll.deckbuilder.util.glide.palette.PaletteTargetBuilder.ReusableSwatchBuilder;
 import static com.r0adkll.deckbuilder.util.glide.palette.PaletteTargetBuilder.SwatchBuilder;
 

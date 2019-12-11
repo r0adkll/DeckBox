@@ -139,7 +139,7 @@ public final class PaletteTargetBuilder {
 
     @NonNull
     private final ImageView view;
-    private final List<PaletteBitmapViewTarget.PaletteAction> actions = new LinkedList<>();
+    private final List<PaletteAction> actions = new LinkedList<>();
 
     public PaletteTargetBuilder(@NonNull ImageView view) {
         this.view = Preconditions.checkNotNull(view);
@@ -166,7 +166,7 @@ public final class PaletteTargetBuilder {
     }
 
     @NonNull
-    public PaletteTargetBuilder action(@NonNull PaletteBitmapViewTarget.PaletteAction action) {
+    public PaletteTargetBuilder action(@NonNull PaletteAction action) {
         actions.add(action);
         return this;
     }
@@ -235,7 +235,7 @@ public final class PaletteTargetBuilder {
     }
 
     /**
-     * This builder is to allow creating {@link PaletteBitmapViewTarget.PaletteAction}s in a reusable way. An implementation
+     * This builder is to allow creating {@link PaletteAction}s in a reusable way. An implementation
      * of this builder should allow to create multiple distinct and independent actions.
      */
     public interface ReusableSwatchBuilder extends SwatchApplier {
@@ -254,7 +254,7 @@ public final class PaletteTargetBuilder {
         ReusableSwatchBuilder custom(@NonNull PaletteActionGroup.SwatchTarget target);
 
         @NonNull
-        PaletteBitmapViewTarget.PaletteAction build();
+        PaletteAction build();
     }
 
     /**

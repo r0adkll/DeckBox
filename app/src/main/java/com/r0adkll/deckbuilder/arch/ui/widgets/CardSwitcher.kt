@@ -8,7 +8,10 @@ import android.widget.ViewSwitcher
 import com.ftinc.kit.extensions.dip
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.util.CardUtils
+import com.r0adkll.deckbuilder.util.glide.ToolCropTransformation
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteAction
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
+import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapSimpleTarget
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,11 +37,13 @@ class CardSwitcher : ViewSwitcher {
         var lp = LayoutParams(dip(CARD_SIZE), LayoutParams.WRAP_CONTENT)
         lp.gravity = Gravity.CENTER
         card1 = PokemonCardView(context)
+        card1.elevation = 0f
         addView(card1, lp)
 
         lp = LayoutParams(dip(CARD_SIZE), LayoutParams.WRAP_CONTENT)
         lp.gravity = Gravity.CENTER
         card2 = PokemonCardView(context)
+        card2.elevation = 0f
         addView(card2, lp)
 
         loadNextImage(card1)
@@ -80,11 +85,20 @@ class CardSwitcher : ViewSwitcher {
 
     private fun loadNextImage(view: PokemonCardView) {
         val url = getNextImageUrl()
+
+        // Load image cutout into palette
         GlideApp.with(this)
             .`as`(PaletteBitmap::class.java)
             .load(url)
-            .into(PaletteBitmapViewTarget(view, listOf(TargetPaletteAction())))
+            .transform(ToolCropTransformation())
+            .into(PaletteBitmapSimpleTarget(listOf(TargetPaletteAction())))
 
+        // Load image into view
+        GlideApp.with(this)
+            .load(url)
+            .into(view)
+
+        // Pre-cache next image
         getNextCacheImageUrl()?.let {
             GlideApp.with(this)
                 .downloadOnly()
@@ -110,7 +124,7 @@ class CardSwitcher : ViewSwitcher {
         }
     }
 
-    inner class TargetPaletteAction : PaletteBitmapViewTarget.PaletteAction {
+    inner class TargetPaletteAction : PaletteAction {
         override fun execute(palette: androidx.palette.graphics.Palette?) {
             palette?.let {
                 paletteChangeListener?.onPaletteChanged(it)
