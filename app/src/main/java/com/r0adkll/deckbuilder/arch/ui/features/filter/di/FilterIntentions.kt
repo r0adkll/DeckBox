@@ -7,6 +7,5 @@ import io.reactivex.Observable
 
 interface FilterIntentions {
 
-    fun filterChanges(): Relay<Pair<SuperType, Filter>>
-    fun categoryChange(): Observable<SuperType>
+    fun filterChanges(): Relay<Filter>
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.DisposableStateRenderer
 import com.ftinc.kit.arch.util.mapNullable
 import com.ftinc.kit.arch.util.plusAssign
-import io.pokemontcg.model.SuperType
 import io.reactivex.Scheduler
 
 class SearchRenderer(
@@ -16,95 +15,68 @@ class SearchRenderer(
     @SuppressLint("RxSubscribeOnError")
     override fun start() {
 
-        subscribeToSuperType(SuperType.POKEMON)
-        subscribeToSuperType(SuperType.TRAINER)
-        subscribeToSuperType(SuperType.ENERGY)
-
-        // Subscribe to query text changes
         disposables += state
-            .map { Pair(it.category, it.results[it.category]?.query ?: "") }
-            .distinctUntilChanged { t -> t.first }
-            .addToLifecycle()
-            .subscribe {
-                actions.setQueryText(it.second)
-            }
-
-        // Subscribe to the category change itself
-        disposables += state
-            .map { it.category }
+            .map { it.filter.isEmpty }
             .distinctUntilChanged()
             .addToLifecycle()
-            .subscribe { actions.setCategory(it) }
+            .subscribe {
+                actions.showFilterEmpty(it)
+            }
+
+        disposables += state
+            .map { it.results }
+            .distinctUntilChanged()
+            .addToLifecycle()
+            .subscribe {
+                actions.setResults(it)
+            }
+
+        disposables += state
+            .map { it.isLoading }
+            .distinctUntilChanged()
+            .addToLifecycle()
+            .subscribe {
+                actions.showLoading(it)
+            }
+
+        disposables += state
+            .mapNullable { it.error }
+            .distinctUntilChanged()
+            .addToLifecycle()
+            .subscribe {
+                val value = it.value
+                if (value != null) {
+                    actions.showError(value)
+                } else {
+                    actions.hideError()
+                }
+            }
+
+        disposables += state
+            .map {
+                it.results.isEmpty() && !it.isLoading && it.query.isNotBlank()
+            }
+            .distinctUntilChanged()
+            .addToLifecycle()
+            .subscribe {
+                if (it) {
+                    actions.showEmptyResults()
+                } else {
+                    actions.showEmptyDefault()
+                }
+            }
+
+        disposables += state
+            .map { it.query }
+            .addToLifecycle()
+            .subscribe {
+                actions.setQueryText(it)
+            }
 
         disposables += state
             .map { it.selected }
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe { actions.setSelectedCards(it) }
-    }
-
-    @SuppressLint("RxSubscribeOnError")
-    private fun subscribeToSuperType(superType: SuperType) {
-
-        disposables += state
-            .mapNullable { it.results[superType]?.filter?.isEmpty ?: true }
-            .distinctUntilChanged()
-            .addToLifecycle()
-            .subscribe {
-                val value = it.value
-                if (value != null) {
-                    actions.showFilterEmpty(value)
-                }
-            }
-
-        disposables += state
-            .mapNullable { it.results[superType]?.results }
-            .distinctUntilChanged()
-            .addToLifecycle()
-            .subscribe {
-                val value = it.value
-                if (value != null) {
-                    actions.setResults(superType, value)
-                }
-            }
-
-        disposables += state
-            .mapNullable { it.results[superType]?.isLoading }
-            .distinctUntilChanged()
-            .addToLifecycle()
-            .subscribe {
-                val value = it.value
-                if (value != null) {
-                    actions.showLoading(superType, value)
-                }
-            }
-
-        disposables += state
-            .mapNullable { it.results[superType]?.error }
-            .distinctUntilChanged()
-            .addToLifecycle()
-            .subscribe {
-                val value = it.value
-                if (value != null) {
-                    actions.showError(superType, value)
-                } else {
-                    actions.hideError(superType)
-                }
-            }
-
-        disposables += state
-            .map {
-                val results = it.results[superType]!!
-                results.results.isEmpty() && !results.isLoading && results.query.isNotBlank()
-            }
-            .distinctUntilChanged()
-            .addToLifecycle()
-            .subscribe {
-                if (it) {
-                    actions.showEmptyResults(superType)
-                } else {
-                    actions.showEmptyDefault(superType)
-                }
-            }
     }
 }

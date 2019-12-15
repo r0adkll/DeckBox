@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import com.evernote.android.state.State
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.presentation.BaseActivity
@@ -30,40 +31,41 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
-import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
-import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.ResultsPagerAdapter
+import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.ImeUtils
-import com.r0adkll.deckbuilder.util.OnTabSelectedAdapter
-import com.r0adkll.deckbuilder.util.extensions.findEnum
-import io.pokemontcg.model.SuperType
+import com.r0adkll.deckbuilder.util.extensions.setLoading
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 import javax.inject.Inject
 
-class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.Actions,
-    FilterIntentions, DrawerInteractor, HasComponent<FilterableComponent> {
+class SearchActivity : BaseActivity(),
+    SearchUi,
+    SearchUi.Intentions,
+    SearchUi.Actions,
+    FilterIntentions,
+    DrawerInteractor,
+    HasComponent<FilterableComponent> {
 
     @State override var state: SearchUi.State = SearchUi.State.DEFAULT
-    @State var superType: SuperType = SuperType.POKEMON
 
     val sessionId: Long by bindLong(EXTRA_SESSION_ID)
 
     @Inject lateinit var renderer: SearchRenderer
     @Inject lateinit var presenter: SearchPresenter
 
-    private val categoryChanges: Relay<SuperType> = PublishRelay.create()
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val pokemonCardLongClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
-    private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
+    private val filterChanges: Relay<Filter> = PublishRelay.create()
     private var selectionSnackBar: Snackbar? = null
-    private lateinit var adapter: ResultsPagerAdapter
+    private lateinit var adapter: SearchResultsRecyclerAdapter
     private lateinit var component: SearchComponent
 
     @SuppressLint("RxSubscribeOnError")
@@ -71,11 +73,29 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        adapter = ResultsPagerAdapter(this, sessionId != Session.NO_ID,
-            KeyboardScrollHideListener(searchView), pokemonCardLongClicks, editCardIntentions)
-        pager.offscreenPageLimit = 3
-        pager.adapter = adapter
-        tabs.setupWithViewPager(pager)
+        adapter = SearchResultsRecyclerAdapter(this, editCardIntentions = editCardIntentions)
+        adapter.emptyView = emptyView
+
+        if (sessionId != Session.NO_ID) {
+            adapter.onItemClickListener = { _, card ->
+                editCardIntentions.addCardClicks.accept(listOf(card))
+            }
+            adapter.onItemLongClickListener = { view, _ ->
+                val card = view.findViewById<PokemonCardView>(R.id.card)
+                pokemonCardLongClicks.accept(card)
+                true
+            }
+        } else {
+            adapter.onItemClickListener = { view, _ ->
+                val card = view.findViewById<PokemonCardView>(R.id.card)
+                pokemonCardLongClicks.accept(card)
+            }
+        }
+
+        recycler.layoutManager = GridLayoutManager(this, 3)
+        recycler.adapter = adapter
+        recycler.setHasFixedSize(true)
+        recycler.addOnScrollListener(KeyboardScrollHideListener(searchView))
 
         searchback.setOnClickListener {
             supportFinishAfterTransition()
@@ -87,40 +107,21 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
             ImeUtils.hideIme(searchView)
         }
 
-        tabs.addOnTabSelectedListener(object : OnTabSelectedAdapter() {
-            override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
-                val category = when (tab.position) {
-                    0 -> SuperType.POKEMON
-                    1 -> SuperType.TRAINER
-                    2 -> SuperType.ENERGY
-                    else -> SuperType.POKEMON
-                }
-                categoryChanges.accept(category)
-            }
-        })
-
         disposables += pokemonCardLongClicks
             .subscribe {
                 Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
                 CardDetailActivity.show(this, it, sessionId)
             }
 
-        superType = findEnum<SuperType>(EXTRA_SUPER_TYPE) ?: SuperType.POKEMON
-
-        // Set default tab
-        val i = when (superType) {
-            SuperType.POKEMON -> 0
-            SuperType.TRAINER -> 1
-            SuperType.ENERGY -> 2
-            else -> 0
-        }
-        tabs.getTabAt(i)?.select()
-
         state = state.copy(
             id = UUID.randomUUID().toString(),
-            sessionId = sessionId,
-            category = superType
+            sessionId = sessionId
         )
+
+        searchView.post {
+            searchView.requestFocus()
+            ImeUtils.showIme(searchView)
+        }
     }
 
     override fun setupComponent() {
@@ -157,10 +158,6 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
             }
     }
 
-    override fun switchCategories(): Observable<SuperType> {
-        return categoryChanges
-    }
-
     override fun selectCard(): Observable<PokemonCard> {
         return editCardIntentions.addCardClicks
             .map { it.first() }
@@ -175,21 +172,17 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         return clearSelectionClicks
     }
 
-    override fun categoryChange(): Observable<SuperType> {
-        return categoryChanges
-    }
-
     /*
      * This receives changes from the FilterPresenter
      */
-    override fun filterChanges(): Relay<Pair<SuperType, Filter>> {
+    override fun filterChanges(): Relay<Filter> {
         return filterChanges
     }
 
     /*
      * This sends changes to the SearchPresenter
      */
-    override fun filterUpdates(): Observable<Pair<SuperType, Filter>> {
+    override fun filterUpdates(): Observable<Filter> {
         return filterChanges
     }
 
@@ -198,7 +191,9 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
     }
 
     override fun setQueryText(text: String) {
-        searchView.setQuery(text, false)
+        if (searchView.query?.toString() != text) {
+            searchView.setQuery(text, false)
+        }
     }
 
     override fun showFilterEmpty(enabled: Boolean) {
@@ -208,8 +203,8 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         })
     }
 
-    override fun setResults(superType: SuperType, cards: List<PokemonCard>) {
-        adapter.setCards(superType, cards)
+    override fun setResults(cards: List<PokemonCard>) {
+        adapter.submitList(cards)
     }
 
     override fun setSelectedCards(cards: List<PokemonCard>) {
@@ -217,35 +212,24 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
         showSelectionSnackbar(cards.size)
     }
 
-    override fun showLoading(superType: SuperType, isLoading: Boolean) {
-        adapter.showLoading(superType, isLoading)
+    override fun showLoading(isLoading: Boolean) {
+        emptyView.setLoading(isLoading)
     }
 
-    override fun showEmptyResults(superType: SuperType) {
-        adapter.showEmptyResults(superType)
+    override fun showEmptyResults() {
+        emptyView.setMessage(R.string.empty_search_results_pokemon_message)
     }
 
-    override fun showEmptyDefault(superType: SuperType) {
-        adapter.showEmptyDefault(superType)
+    override fun showEmptyDefault() {
+        emptyView.setMessage(R.string.empty_search_pokemon_message)
     }
 
-    override fun showError(superType: SuperType, description: String) {
-        adapter.showError(superType, description)
+    override fun showError(description: String) {
+        emptyView.message = description
     }
 
-    override fun hideError(superType: SuperType) {
-        adapter.hideError(superType)
-    }
-
-    override fun setCategory(superType: SuperType) {
-        this.superType = superType
-        val position = when (superType) {
-            SuperType.POKEMON -> 0
-            SuperType.TRAINER -> 1
-            SuperType.ENERGY -> 2
-            else -> 0
-        }
-        tabs.getTabAt(position)?.select()
+    override fun hideError() {
+        showEmptyDefault()
     }
 
     private fun showSelectionSnackbar(count: Int) {
@@ -284,16 +268,13 @@ class SearchActivity : BaseActivity(), SearchUi, SearchUi.Intentions, SearchUi.A
 
     companion object {
         const val EXTRA_SESSION_ID = "SearchActivity.SessionId"
-        const val EXTRA_SUPER_TYPE = "SearchActivity.SuperType"
 
         fun createIntent(
             context: Context,
-            sessionId: Long = Session.NO_ID,
-            superType: SuperType = SuperType.POKEMON
+            sessionId: Long = Session.NO_ID
         ): Intent {
             val intent = Intent(context, SearchActivity::class.java)
             intent.putExtra(EXTRA_SESSION_ID, sessionId)
-            intent.putExtra(EXTRA_SUPER_TYPE, superType)
             return intent
         }
     }

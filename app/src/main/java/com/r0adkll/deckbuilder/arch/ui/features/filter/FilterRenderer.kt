@@ -15,12 +15,13 @@ class FilterRenderer(
     override fun start() {
 
         disposables += state
-            .map { it.filters[it.category]!!.applySpecification() }
+            .map { it.applySpecification() }
+            .distinctUntilChanged()
             .addToLifecycle()
             .subscribe { actions.setItems(it) }
 
         disposables += state
-            .map { it.filters[it.category]!!.filter.isEmpty }
+            .map { it.filter.isEmpty }
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe { actions.setIsEmpty(it) }

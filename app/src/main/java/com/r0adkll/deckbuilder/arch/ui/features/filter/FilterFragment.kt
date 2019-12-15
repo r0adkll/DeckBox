@@ -62,11 +62,6 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
         recycler.layoutManager = LinearLayoutManager(activity)
         recycler.adapter = adapter
         (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-
-        if (activity is SearchActivity) {
-            val type = (activity as SearchActivity).superType
-            state = state.copy(category = type)
-        }
     }
 
     override fun setupComponent() {

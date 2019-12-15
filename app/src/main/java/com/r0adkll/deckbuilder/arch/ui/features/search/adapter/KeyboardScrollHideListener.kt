@@ -1,4 +1,4 @@
-package com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter
+package com.r0adkll.deckbuilder.arch.ui.features.search.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

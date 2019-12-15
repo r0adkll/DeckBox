@@ -14,7 +14,7 @@ interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
 
     interface Intentions {
 
-        fun filterUpdates(): Observable<Pair<SuperType, Filter>>
+        fun filterUpdates(): Observable<Filter>
         fun searchCards(): Observable<String>
     }
 

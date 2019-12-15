@@ -53,9 +53,6 @@ class FilterPresenter @Inject constructor(
         val clearFilter = intentions.clearFilter()
             .map { Change.ClearFilter as Change }
 
-        val categoryChanges = categoryIntentions.categoryChange()
-            .map { Change.CategoryChanged(it) as Change }
-
         val merged = loadExpansions
             .mergeWith(fieldChanged)
             .mergeWith(typeSelected)
@@ -64,15 +61,12 @@ class FilterPresenter @Inject constructor(
             .mergeWith(valueRangeChanges)
             .mergeWith(viewMoreSelected)
             .mergeWith(clearFilter)
-            .mergeWith(categoryChanges)
             .doOnNext { Timber.d(it.logText) }
 
         disposables += merged.scan(ui.state, State::reduce)
             .logState()
             .doOnNext {
-                it.filters.forEach {
-                    categoryIntentions.filterChanges().accept(Pair(it.key, it.value.filter))
-                }
+                categoryIntentions.filterChanges().accept(it.filter)
             }
             .subscribe(ui::render) { t ->
                 Timber.e(t, "Error in filter reduction")
