@@ -1,3 +1,5 @@
+@file:Suppress("MaxLineLength", "MagicNumber")
+
 package com.r0adkll.deckbuilder.arch.data.database
 
 import androidx.room.Database

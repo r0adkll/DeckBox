@@ -24,7 +24,7 @@ class RoomMarketplaceCache @Inject constructor(
     }
 
     override fun getPrices(cardIds: Set<String>): Observable<List<Product>> {
-        return  db.marketplace().getLatestPriceForProducts(cardIds)
+        return db.marketplace().getLatestPriceForProducts(cardIds)
             .map { pricesWithProducts ->
                 pricesWithProducts.map {
                     it.mapToModel()

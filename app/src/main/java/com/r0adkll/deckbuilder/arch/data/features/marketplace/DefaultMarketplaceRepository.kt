@@ -4,8 +4,6 @@ import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.Marketplace
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
-import com.r0adkll.deckbuilder.util.AppSchedulers
-import com.r0adkll.deckbuilder.util.extensions.isToday
 import io.reactivex.Observable
 import javax.inject.Inject
 

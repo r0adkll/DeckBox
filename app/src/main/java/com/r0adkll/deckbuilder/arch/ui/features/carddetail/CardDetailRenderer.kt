@@ -55,7 +55,7 @@ class CardDetailRenderer(
             }
 
         disposables += state
-            .mapNullable { it.product}
+            .mapNullable { it.product }
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe {

@@ -42,7 +42,7 @@ class SetupActivity : BaseActivity() {
         setContentView(R.layout.activity_setup)
 
         val tileDrawable = drawable(R.drawable.ic_app_pattern)!!
-        pattern.setImageDrawable(TileDrawable(tileDrawable, Shader.TileMode.REPEAT, -45f))
+        pattern.setImageDrawable(TileDrawable(tileDrawable, Shader.TileMode.REPEAT, PATTERN_ANGLE))
 
         setupClient()
 
@@ -141,6 +141,7 @@ class SetupActivity : BaseActivity() {
     }
 
     companion object {
+        private const val PATTERN_ANGLE = -45f
         const val RC_SIGN_IN = 100
 
         fun createIntent(context: Context): Intent = Intent(context, SetupActivity::class.java)
