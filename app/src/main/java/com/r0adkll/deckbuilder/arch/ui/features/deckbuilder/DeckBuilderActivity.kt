@@ -188,14 +188,8 @@ class DeckBuilderActivity : BaseActivity(),
 
     private val fabClickListener = View.OnClickListener {
         if (fragmentSwitcher == null) {
-            val superType = when (tabs.selectedTabPosition) {
-                0 -> SuperType.POKEMON
-                1 -> SuperType.TRAINER
-                2 -> SuperType.ENERGY
-                else -> SuperType.POKEMON
-            }
             Analytics.event(Event.SelectContent.Action("add_new_card"))
-            startActivity(SearchActivity.createIntent(this, sessionId, superType))
+            startActivity(SearchActivity.createIntent(this, sessionId))
         } else {
             // Show the overview fragment
             editOverviewClicks.accept(true)

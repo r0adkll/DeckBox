@@ -74,42 +74,25 @@
 
             </FrameLayout>
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabIndicatorColor="?attr/colorPrimary"
-                >
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tab_pokemon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tab_pokemon"
-                    />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tab_trainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tab_trainer"
-                    />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tab_energy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tab_energy"
-                    />
-
-            </com.google.android.material.tabs.TabLayout>
-
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:padding="@dimen/padding_small"
+            android:clipToPadding="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
+
+        <com.ftinc.kit.widget.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/padding_giant"
+            android:paddingEnd="@dimen/padding_giant"
+            app:emptyMessage="@string/empty_search_pokemon_message"
+            app:emptyIcon="@drawable/ic_empty_search"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
 

@@ -8,7 +8,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardReposit
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.SearchUi.State.Change
 import com.r0adkll.deckbuilder.internal.di.scopes.FragmentScope
-import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,8 +25,7 @@ class SearchPresenter @Inject constructor(
             .flatMap { getSearchCardsObservable(it) }
 
         val filterChanges = intentions.filterUpdates()
-            .filter { it.first == SuperType.UNKNOWN }
-            .flatMap { (_, filter) ->
+            .flatMap { filter ->
                 getReSearchCardsObservable(filter)
             }
 

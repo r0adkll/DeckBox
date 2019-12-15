@@ -29,7 +29,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
-import com.r0adkll.deckbuilder.arch.ui.features.search.pageadapter.KeyboardScrollHideListener
+import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
@@ -56,7 +56,7 @@ class SearchFragment : BaseFragment(),
     @Inject lateinit var renderer: SearchRenderer
     @Inject lateinit var presenter: SearchPresenter
 
-    private val filterChanges: Relay<Pair<SuperType, Filter>> = PublishRelay.create()
+    private val filterChanges: Relay<Filter> = PublishRelay.create()
     private lateinit var adapter: SearchResultsRecyclerAdapter
     private lateinit var component: UnifiedSearchComponent
     private lateinit var toolbarScrollListener: ToolbarScrollListener
@@ -121,16 +121,12 @@ class SearchFragment : BaseFragment(),
         renderer.render(state)
     }
 
-    override fun filterUpdates(): Observable<Pair<SuperType, Filter>> {
+    override fun filterUpdates(): Observable<Filter> {
         return filterChanges
     }
 
-    override fun filterChanges(): Relay<Pair<SuperType, Filter>> {
+    override fun filterChanges(): Relay<Filter> {
         return filterChanges
-    }
-
-    override fun categoryChange(): Observable<SuperType> {
-        return Observable.just(SuperType.UNKNOWN)
     }
 
     override fun searchCards(): Observable<String> {
@@ -151,7 +147,9 @@ class SearchFragment : BaseFragment(),
     }
 
     override fun setQueryText(text: String) {
-        searchView.setQuery(text, false)
+        if (searchView.query?.toString() != text) {
+            searchView.setQuery(text, false)
+        }
     }
 
     override fun setResults(cards: List<PokemonCard>) {

@@ -227,18 +227,7 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
         private val hpRange = 0..250
 
         val DEFAULT by lazy {
-            createPokemon(emptyList(), STANDARD)
-        }
-
-        fun create(
-            superType: SuperType,
-            expansions: List<Expansion> = emptyList(),
-            visibility: FilterUi.ExpansionVisibility
-        ): FilterSpec = when (superType) {
-            SuperType.POKEMON -> createPokemon(expansions, visibility)
-            SuperType.TRAINER -> createTrainer(expansions, visibility)
-            SuperType.ENERGY -> createEnergy(expansions, visibility)
-            SuperType.UNKNOWN -> createAll(expansions, visibility)
+            createAll(emptyList(), STANDARD)
         }
 
         fun createAll(
@@ -285,81 +274,6 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                     Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, hpRange.first, hpRange.last),
                     Spec.TypeSpec("weaknesses", R.string.filter_header_weaknesses),
                     Spec.TypeSpec("resistances", R.string.filter_header_resistances)
-                )
-            )
-        }
-
-        fun createPokemon(
-            expansions: List<Expansion>,
-            visibility: FilterUi.ExpansionVisibility
-        ): FilterSpec {
-            return FilterSpec(
-                listOf(
-                    Spec.FieldSpec,
-                    Spec.TypeSpec("type", R.string.filter_header_type),
-                    AttributeSpec(listOf(
-                        SubTypeAttribute(BASIC),
-                        SubTypeAttribute(STAGE_1),
-                        SubTypeAttribute(STAGE_2),
-                        SubTypeAttribute(MEGA),
-                        SubTypeAttribute(EX),
-                        SubTypeAttribute(GX),
-                        SubTypeAttribute(TAG_TEAM),
-                        SubTypeAttribute(LEVEL_UP),
-                        SubTypeAttribute(BREAK),
-                        SubTypeAttribute(LEGEND),
-                        SubTypeAttribute(RESTORED),
-                        ContainsAttribute("Ability")
-                    )),
-                    Spec.ExpansionSpec(expansions, visibility),
-                    Spec.RaritySpec(Rarity.values().toList()),
-                    Spec.ValueRangeSpec("retreatCost", R.string.filter_header_retreat_cost,
-                        retreatCostRange.first, retreatCostRange.last),
-                    Spec.ValueRangeSpec("attackCost", R.string.filter_header_attack_cost,
-                        attackCostRange.first, attackCostRange.last),
-                    Spec.ValueRangeSpec("attackDamage", R.string.filter_header_attack_damage,
-                        attackDmgRange.first, attackDmgRange.last),
-                    Spec.ValueRangeSpec("hp", R.string.filter_header_retreat_cost, hpRange.first, hpRange.last),
-                    Spec.TypeSpec("weaknesses", R.string.filter_header_weaknesses),
-                    Spec.TypeSpec("resistances", R.string.filter_header_resistances)
-                )
-            )
-        }
-
-        fun createTrainer(
-            expansions: List<Expansion>,
-            visibility: FilterUi.ExpansionVisibility
-        ): FilterSpec {
-            return FilterSpec(
-                listOf(
-                    Spec.FieldSpec,
-                    AttributeSpec(listOf(
-                        SubTypeAttribute(ITEM),
-                        SubTypeAttribute(STADIUM),
-                        SubTypeAttribute(SUPPORTER),
-                        SubTypeAttribute(STADIUM),
-                        SubTypeAttribute(TECHNICAL_MACHINE),
-                        SubTypeAttribute(POKEMON_TOOL),
-                        SubTypeAttribute(ROCKETS_SECRET_MACHINE)
-                    )),
-                    Spec.ExpansionSpec(expansions, visibility),
-                    Spec.RaritySpec(Rarity.values().toList())
-                )
-            )
-        }
-
-        fun createEnergy(
-            expansions: List<Expansion>,
-            visibility: FilterUi.ExpansionVisibility
-        ): FilterSpec {
-            return FilterSpec(
-                listOf(
-                    AttributeSpec(listOf(
-                        SubTypeAttribute(BASIC),
-                        SubTypeAttribute(SPECIAL)
-                    )),
-                    Spec.ExpansionSpec(expansions, visibility),
-                    Spec.RaritySpec(Rarity.values().toList())
                 )
             )
         }

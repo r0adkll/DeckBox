@@ -1,7 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 import android.annotation.SuppressLint
-import android.text.TextUtils
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
@@ -10,7 +9,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State.Change
-import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -50,25 +48,21 @@ class SearchPresenter @Inject constructor(
         val observeSession = if (ui.state.sessionId != Session.NO_ID) {
             editor.observeSession(ui.state.sessionId)
                 .map { Change.SessionUpdated(it) as Change }
-                .onErrorReturn(handleUnknownError(SuperType.UNKNOWN))
+                .onErrorReturn(handleUnknownError())
         } else {
             Observable.empty()
         }
 
         val searchCards = intentions.searchCards()
-            .flatMap { getSearchCardsObservable(ui.state.category, it) }
-
-        val switchCategories = intentions.switchCategories()
-            .map { Change.CategorySwitched(it) as Change }
+            .flatMap { getSearchCardsObservable(it) }
 
         val filterChanges = intentions.filterUpdates()
-            .flatMap { (category, filter) ->
-                getReSearchCardsObservable(category, filter)
+            .flatMap { filter ->
+                getReSearchCardsObservable(filter)
             }
 
         return observeSession
             .mergeWith(searchCards)
-            .mergeWith(switchCategories)
             .mergeWith(filterChanges)
     }
 
@@ -85,42 +79,41 @@ class SearchPresenter @Inject constructor(
         }
     }
 
-    private fun getReSearchCardsObservable(category: SuperType, filter: Filter): Observable<Change> {
-        val result = ui.state.results[category]
-        return if (result?.query.isNullOrBlank() && filter.isEmptyWithoutField) {
-            Observable.just(Change.FilterChanged(category, filter) as Change)
+    private fun getReSearchCardsObservable(filter: Filter): Observable<Change> {
+        return if (ui.state.query.isBlank() && filter.isEmptyWithoutField) {
+            Observable.just(Change.FilterChanged(filter) as Change)
         } else {
-            val query = result?.query ?: ""
-            repository.search(category, query.replace(",", "|"), filter)
-                .map { Change.ResultsLoaded(category, it) as Change }
+            val query = ui.state.query
+            repository.search(null, query.replace(",", "|"), filter)
+                .map { Change.ResultsLoaded(it) as Change }
                 .startWith(listOf(
-                    Change.FilterChanged(category, filter) as Change,
-                    Change.IsLoading(category) as Change
+                    Change.FilterChanged(filter) as Change,
+                    Change.IsLoading as Change
                 ))
-                .onErrorReturn(handleUnknownError(category))
+                .onErrorReturn(handleUnknownError())
         }
     }
 
     @SuppressLint("CheckResult")
-    private fun getSearchCardsObservable(category: SuperType, text: String): Observable<Change> {
-        val filter = ui.state.current()?.filter
-        return if (TextUtils.isEmpty(text) && filter?.isEmptyWithoutField != false) {
-            Observable.just(Change.ClearQuery(category) as Change)
+    private fun getSearchCardsObservable(text: String): Observable<Change> {
+        val filter = ui.state.filter
+        return if (text.isEmpty() && filter.isEmptyWithoutField) {
+            Observable.just(Change.ClearQuery as Change)
         } else {
-            repository.search(ui.state.category, text.replace(",", "|"), filter)
-                .map { Change.ResultsLoaded(category, it) as Change }
+            repository.search(null, text.replace(",", "|"), filter)
+                .map { Change.ResultsLoaded(it) as Change }
                 .startWith(listOf(
-                    Change.QuerySubmitted(category, text) as Change,
-                    Change.IsLoading(category) as Change
+                    Change.QuerySubmitted(text) as Change,
+                    Change.IsLoading as Change
                 ))
-                .onErrorReturn(handleUnknownError(category))
+                .onErrorReturn(handleUnknownError())
         }
     }
 
     companion object {
 
-        private fun handleUnknownError(category: SuperType): (Throwable) -> Change = {
-            Change.Error(category, "Unknown error has occured")
+        private fun handleUnknownError(): (Throwable) -> Change = {
+            Change.Error("Unknown error has occured")
         }
     }
 }

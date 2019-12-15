@@ -19,84 +19,110 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".5"
+        />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_launcher"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        >
+        app:layout_constraintBottom_toTopOf="@id/title"
+        />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_gravity="center"
-            />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/raleway_semibold"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_display3"
+        app:layout_constraintBottom_toTopOf="@id/description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textSize="@dimen/font_display3"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif-light"
-            />
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:paddingStart="34dp"
+        android:paddingEnd="34dp"
+        android:text="@string/app_description"
+        android:textSize="16sp"
+        android:textColor="@color/white"
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:paddingStart="34dp"
-            android:paddingEnd="34dp"
-            android:text="@string/app_description"
-            android:textSize="16sp"
-            android:textColor="@color/white"
-            />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        />
 
-        <TextView
-            android:id="@+id/actionSignIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_gravity="center"
-            android:paddingEnd="24dp"
-            android:background="@drawable/dr_google_signin_button"
-            android:text="Sign in with Google"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:gravity="center_vertical"
-            />
+    <TextView
+        android:id="@+id/actionSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_gravity="center"
+        android:paddingEnd="24dp"
+        android:background="@drawable/dr_google_signin_button"
+        android:text="@string/sign_in_with_google"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline"
+        app:layout_constraintBottom_toTopOf="@id/actionContinue"
+        app:layout_constraintVertical_chainStyle="packed"
+        />
 
-        <TextView
-            android:id="@+id/actionContinue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:padding="@dimen/padding_small"
-            android:text="@string/action_continue"
-            android:textColor="@color/white87"
-            android:background="?attr/selectableItemBackground"
-            />
+    <TextView
+        android:id="@+id/actionContinue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
+        android:text="@string/action_continue"
+        android:textColor="@color/white87"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:background="?attr/selectableItemBackground"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionSignIn"
+        app:layout_constraintBottom_toTopOf="@id/actionPrivacyPolicy"
+        />
 
 
-        <TextView
-            android:id="@+id/actionPrivacyPolicy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:padding="16dp"
-            android:text="@string/pref_about_privacy_policy"
-            android:textColor="@color/white70"
-            android:background="?attr/selectableItemBackground"
-            />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/actionPrivacyPolicy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:padding="16dp"
+        android:text="@string/pref_about_privacy_policy"
+        android:textColor="@color/white90"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="1"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
