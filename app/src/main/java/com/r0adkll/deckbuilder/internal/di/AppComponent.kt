@@ -25,7 +25,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeComponent
 import com.r0adkll.deckbuilder.arch.ui.features.home.di.HomeModule
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.importer.di.DeckImportModule
-import com.r0adkll.deckbuilder.arch.ui.features.onboarding.OnboardingActivity
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di.SetBrowserComponent
 import com.r0adkll.deckbuilder.arch.ui.features.setbrowser.di.SetBrowserModule
@@ -54,7 +53,6 @@ interface AppComponent {
     fun inject(activity: DeckExportActivity)
     fun inject(activity: RouteActivity)
     fun inject(activity: ShortcutActivity)
-    fun inject(activity: OnboardingActivity)
     fun inject(fragment: SettingsActivity.SettingsFragment)
     fun inject(service: CacheService)
 
