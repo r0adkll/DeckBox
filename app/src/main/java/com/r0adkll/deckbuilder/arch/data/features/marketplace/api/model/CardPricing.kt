@@ -8,4 +8,4 @@ data class CardPricing(
     val marketPrice: Double,
     val directLowPrice: Double? = null,
     val updatedAt: String
-) 
+)

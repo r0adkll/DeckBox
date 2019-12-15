@@ -12,7 +12,6 @@ import com.r0adkll.deckbuilder.util.glide.ToolCropTransformation
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteAction
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmap
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapSimpleTarget
-import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

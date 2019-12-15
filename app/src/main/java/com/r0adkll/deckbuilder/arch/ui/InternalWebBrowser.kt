@@ -43,6 +43,7 @@ class InternalWebBrowser : BaseActivity() {
 
         webView.webChromeClient = object : WebChromeClient() {
 
+            @Suppress("MagicNumber")
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 loadingIndicator.isVisible = newProgress in (1..99)
             }

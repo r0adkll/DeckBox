@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.data.database.mapping
 
 import com.r0adkll.deckbuilder.arch.data.database.entities.PriceEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.ProductEntity
-import com.r0adkll.deckbuilder.arch.data.database.relations.PriceWithProduct
 import com.r0adkll.deckbuilder.arch.data.database.relations.ProductWithPrices
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Price
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product

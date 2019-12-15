@@ -6,7 +6,6 @@ import com.ftinc.kit.arch.presentation.state.BaseState
 import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 

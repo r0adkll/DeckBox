@@ -6,7 +6,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import java.nio.charset.Charset
 import java.security.MessageDigest
 
-
 /**
  * Glide transformation for cropping the visual information out of Pokemon Tool item cards for displaying them
  * in the playtest card renders

@@ -9,7 +9,6 @@ import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.ExpansionActio
 import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.LostThunderExpansionAction
 import com.r0adkll.deckbuilder.arch.ui.components.palette.actions.TeamUpExpansionAction
 import com.r0adkll.deckbuilder.util.glide.palette.PaletteAction
-import com.r0adkll.deckbuilder.util.glide.palette.PaletteBitmapViewTarget
 
 class ExpansionPaletteAction(
     private val view: ImageView,

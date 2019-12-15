@@ -12,9 +12,9 @@ class SearchRenderer(
     comp: Scheduler
 ) : DisposableStateRenderer<SearchUi.State>(main, comp) {
 
+    @Suppress("LongMethod")
     @SuppressLint("RxSubscribeOnError")
     override fun start() {
-
         disposables += state
             .map { it.filter.isEmpty }
             .distinctUntilChanged()

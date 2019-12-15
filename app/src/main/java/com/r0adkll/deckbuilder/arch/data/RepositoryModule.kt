@@ -11,7 +11,6 @@ import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEdit
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.DefaultExpansionRepository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.DefaultExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.DefaultMarketplaceRepository
-import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.MarketplaceSource
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.preview.RemotePreviewRepository
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
@@ -25,7 +24,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.Marke
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
-import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 

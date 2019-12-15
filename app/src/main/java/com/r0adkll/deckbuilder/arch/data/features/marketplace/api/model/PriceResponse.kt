@@ -9,4 +9,4 @@ data class PriceResponse(
     val url: String,
     val modifiedOn: String,
     val prices: List<CardPricing>? = null
-) 
+)

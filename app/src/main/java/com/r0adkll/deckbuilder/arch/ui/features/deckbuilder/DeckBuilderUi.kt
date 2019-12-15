@@ -13,7 +13,6 @@ import com.r0adkll.deckbuilder.util.stack
 import io.pokemontcg.model.SuperType.ENERGY
 import io.pokemontcg.model.SuperType.POKEMON
 import io.pokemontcg.model.SuperType.TRAINER
-import io.pokemontcg.model.SuperType.UNKNOWN
 import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
