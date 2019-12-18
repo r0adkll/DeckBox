@@ -92,9 +92,6 @@ abstract class DeckDatabase : RoomDatabase() {
                     )
                 """)
                 database.execSQL("""
-                    CREATE INDEX IF NOT EXISTS `index_marketplace_products_cardId` ON `marketplace_products` (`cardId`)
-                """)
-                database.execSQL("""
                     CREATE TABLE IF NOT EXISTS `marketplace_prices` (
                         `price_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
                         `rarity` TEXT NOT NULL, 
@@ -105,7 +102,7 @@ abstract class DeckDatabase : RoomDatabase() {
                         `directLow` REAL, 
                         `updatedAt` INTEGER NOT NULL, 
                         `expiresAt` INTEGER NOT NULL, 
-                        `parentId` INTEGER NOT NULL, 
+                        `parentId` TEXT NOT NULL, 
                         FOREIGN KEY(`parentId`) REFERENCES `marketplace_products`(`cardId`) ON UPDATE NO ACTION ON DELETE CASCADE 
                     )
                 """)
