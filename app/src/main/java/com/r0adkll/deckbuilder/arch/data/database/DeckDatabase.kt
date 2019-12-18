@@ -102,7 +102,7 @@ abstract class DeckDatabase : RoomDatabase() {
                         `directLow` REAL, 
                         `updatedAt` INTEGER NOT NULL, 
                         `expiresAt` INTEGER NOT NULL, 
-                        `parentId` INTEGER NOT NULL, 
+                        `parentId` TEXT NOT NULL, 
                         FOREIGN KEY(`parentId`) REFERENCES `marketplace_products`(`cardId`) ON UPDATE NO ACTION ON DELETE CASCADE 
                     )
                 """)
