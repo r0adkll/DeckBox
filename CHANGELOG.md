@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.2-hotfix
+* Turned off proguard and minimizing for immediate fix and later solution
+* Fixed DB migration for new pricing data
+
 ## 1.10.1
 * [#119](https://github.com/r0adkll/DeckBox/issues/119) - Migrated marketplace integration to new pricing API
 * [#114](https://github.com/r0adkll/DeckBox/issues/114) - Added interface to manage offline cache data
