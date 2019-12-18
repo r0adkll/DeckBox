@@ -92,9 +92,6 @@ abstract class DeckDatabase : RoomDatabase() {
                     )
                 """)
                 database.execSQL("""
-                    CREATE INDEX IF NOT EXISTS `index_marketplace_products_cardId` ON `marketplace_products` (`cardId`)
-                """)
-                database.execSQL("""
                     CREATE TABLE IF NOT EXISTS `marketplace_prices` (
                         `price_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
                         `rarity` TEXT NOT NULL, 

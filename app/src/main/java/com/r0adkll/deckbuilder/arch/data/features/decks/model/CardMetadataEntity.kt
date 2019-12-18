@@ -15,6 +15,6 @@ class CardMetadataEntity(
     val superType: String = "",
     val imageUrl: String = "",
     val imageUrlHiRes: String = "",
-    val count: Int = 0,
+    var count: Int = 0,
     val previewSet: String? = null
 )

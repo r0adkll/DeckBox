@@ -62,7 +62,7 @@ class DecksPresenter @Inject constructor(
 
         val createSession = intentions.createSession()
             .flatMap { deck ->
-                editRepository.createSession(deck, null)
+                editRepository.startSession(deck, null)
                     .map { Change.SessionLoaded(it) as Change }
                     .startWith(Change.IsSessionLoading(deck.id))
                     .onErrorReturn(handleUnknownError)
@@ -70,7 +70,7 @@ class DecksPresenter @Inject constructor(
 
         val createNewSession = intentions.createNewSession()
             .flatMap {
-                editRepository.createSession()
+                editRepository.startSession()
                     .map { Change.SessionLoaded(it) as Change }
                     .startWith(Change.IsSessionLoading(""))
                     .onErrorReturn(handleUnknownError)

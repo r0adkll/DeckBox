@@ -35,7 +35,7 @@ class ShortcutActivity : Activity() {
             when (action) {
                 ACTION_NEW_DECK -> {
                     Shortcuts.reportUsage(this, Shortcuts.CREATE_DECK_ID)
-                    disposables += editor.createSession()
+                    disposables += editor.startSession()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ sessionId ->
                             TaskStackBuilder.create(this)
@@ -53,7 +53,7 @@ class ShortcutActivity : Activity() {
                     if (deckId != null) {
                         Shortcuts.reportUsage(this, deckId)
                         disposables += deckRepository.getDeck(deckId)
-                            .flatMap { editor.createSession(it) }
+                            .flatMap { editor.startSession(it) }
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ sessionId ->
                                 TaskStackBuilder.create(this)

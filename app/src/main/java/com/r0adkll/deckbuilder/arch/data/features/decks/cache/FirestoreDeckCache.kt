@@ -243,8 +243,8 @@ class FirestoreDeckCache @Inject constructor(
     companion object {
         private const val DUPLICATE_REGEX = "\\(\\d+\\)"
         // Do to an error on my side, this is now stuck as 'decks', but it is users
-        private const val COLLECTION_USERS = "decks"
-        private const val COLLECTION_OFFLINE_USERS = "offline_users"
-        private const val COLLECTION_DECKS = "decks"
+        internal const val COLLECTION_USERS = "decks"
+        internal const val COLLECTION_OFFLINE_USERS = "offline_users"
+        internal const val COLLECTION_DECKS = "decks"
     }
 }
