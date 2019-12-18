@@ -1,5 +1,3 @@
-@file:Suppress("TooManyFunctions")
-
 package com.r0adkll.deckbuilder.arch.data.database.dao
 
 import android.net.Uri
@@ -12,67 +10,19 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
-import com.r0adkll.deckbuilder.arch.data.database.entities.SessionCardJoin
-import com.r0adkll.deckbuilder.arch.data.database.entities.SessionChangeEntity
-import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
+import com.r0adkll.deckbuilder.arch.data.database.entities.DeckCardJoin
+import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
-import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
-import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
-import io.reactivex.Flowable
+import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
+import com.r0adkll.deckbuilder.util.stack
+import io.reactivex.Single
 
 @Dao
 abstract class SessionDao {
 
-    @Transaction
-    @Query("SELECT * FROM sessions WHERE uid = :sessionId LIMIT 1")
-    abstract fun getSessionWithChanges(sessionId: Long): Flowable<SessionWithChanges>
-
-    @Transaction
-    @Query("""
-        SELECT * FROM session_card_join 
-        INNER JOIN cards ON session_card_join.cardId = cards.id 
-        WHERE session_card_join.sessionId = :sessionId
-        """)
-    abstract fun getSessionCards(sessionId: Long): Flowable<List<StackedCard>>
-
-    @Query("SELECT * FROM session_card_join WHERE sessionId = :sessionId")
-    abstract fun getSessionCardJoins(sessionId: Long): List<SessionCardJoin>
-
-    @Query("SELECT * FROM session_card_join WHERE sessionId = :sessionId AND cardId IN(:cardIds)")
-    abstract fun getSessionCardJoins(sessionId: Long, cardIds: List<String>): List<SessionCardJoin>
-
-    @Query("SELECT * FROM session_card_join WHERE sessionId = :sessionId AND cardId == :cardId")
-    abstract fun getSessionCardJoin(sessionId: Long, cardId: String): SessionCardJoin?
-
-    @Query("SELECT * FROM sessions WHERE uid = :sessionId")
-    abstract fun getSession(sessionId: Long): SessionEntity?
-
-    @Query("Select * FROM session_changes WHERE sessionId = :sessionId AND searchSessionId = :searchSessionId")
-    abstract fun getChangesForSearchSession(sessionId: Long, searchSessionId: String): List<SessionChangeEntity>
-
-    @Query("UPDATE sessions SET name = :name WHERE uid = :sessionId")
-    abstract fun updateName(sessionId: Long, name: String): Int
-
-    @Query("UPDATE sessions SET description = :description WHERE uid = :sessionId")
-    abstract fun updateDescription(sessionId: Long, description: String): Int
-
-    @Query("UPDATE sessions SET image = :image WHERE uid = :sessionId")
-    abstract fun updateImage(sessionId: Long, image: Uri): Int
-
-    @Query("UPDATE sessions SET collectionOnly = :collectionOnly WHERE uid = :sessionId")
-    abstract fun updateCollectionOnly(sessionId: Long, collectionOnly: Boolean): Int
-
-    @Query("DELETE FROM sessions WHERE uid = :sessionId")
-    abstract fun deleteSession(sessionId: Long): Int
-
-    @Query("DELETE FROM session_changes WHERE sessionId = :sessionId")
-    abstract fun deleteChanges(sessionId: Long)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSession(session: SessionEntity): Long
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertCards(cards: List<CardEntity>)
+    /*
+     * Basic CRUD ops that aren't session specific
+     */
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertCard(card: CardEntity): Long
@@ -80,160 +30,99 @@ abstract class SessionDao {
     @Insert
     abstract fun insertAttacks(attacks: List<AttackEntity>)
 
-    @Insert
-    abstract fun insertJoins(joins: List<SessionCardJoin>)
-
-    @Insert
-    abstract fun insertChanges(changes: List<SessionChangeEntity>)
-
-    @Insert
-    abstract fun insertChange(change: SessionChangeEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertJoins(joins: List<DeckCardJoin>)
 
     @Update
-    abstract fun updateJoins(joins: List<SessionCardJoin>)
+    abstract fun updateJoins(joins: List<DeckCardJoin>)
 
     @Update
-    abstract fun updateJoin(join: SessionCardJoin)
-
-    @Update
-    abstract fun updateSession(session: SessionEntity)
+    abstract fun updateJoin(join: DeckCardJoin)
 
     @Delete
-    abstract fun deleteJoins(joins: List<SessionCardJoin>)
+    abstract fun deleteJoin(join: DeckCardJoin)
 
-    @Delete
-    abstract fun deleteJoin(join: SessionCardJoin)
+    @Query("SELECT * FROM deck_card_join WHERE deckId = :deckId")
+    abstract fun getJoins(deckId: Long): List<DeckCardJoin>
 
-    @Delete
-    abstract fun deleteChanges(changes: List<SessionChangeEntity>)
-
-    private fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {
-        cards.forEach {
-            insertCardWithAttacks(it)
-        }
-    }
-
-    private fun insertCardWithAttacks(card: CardWithAttacks) {
-        if (insertCard(card.card) > 0L) {
-            insertAttacks(card.attacks)
-        }
-    }
+    @Query("SELECT * FROM deck_card_join WHERE deckId = :deckId AND cardId = :cardId")
+    abstract fun getJoin(deckId: Long, cardId: String): DeckCardJoin?
 
     /*
-     * Insert new session
+     * Session specific CRUD ops
+     */
+
+    @Query("UPDATE decks SET name = :name WHERE uid = :deckId")
+    abstract fun updateName(deckId: String, name: String): Single<Int>
+
+    @Query("UPDATE decks SET description = :description WHERE uid = :deckId")
+    abstract fun updateDescription(deckId: String, description: String): Single<Int>
+
+    @Query("UPDATE decks SET image = :image WHERE uid = :deckId")
+    abstract fun updateImage(deckId: String, image: Uri): Single<Int>
+
+    @Query("UPDATE decks SET collectionOnly = :collectionOnly WHERE uid = :deckId")
+    abstract fun updateCollectionOnly(deckId: String, collectionOnly: Boolean): Single<Int>
+
+    /*
+     * Compound transaction or helper functions
      */
 
     @Transaction
-    open fun insertNewSession(
-        session: SessionEntity,
-        cards: List<CardWithAttacks>,
-        joins: List<SessionCardJoin>
-    ): Long {
-        insertCardsWithAttacks(cards)
+    open fun addCards(deckId: String, cards: List<PokemonCard>) {
+        val duid = deckId.toLong()
+        val stackedCards = cards.stack()
 
-        val sessionId = insertSession(session)
-        joins.forEach { it.sessionId = sessionId }
-        insertJoins(joins)
-        return sessionId
-    }
+        // Insert cards into cache
+        val cardsWithAttacks = cards.map { RoomEntityMapper.to(it) }
+        insertCardsWithAttacks(cardsWithAttacks)
 
-    /*
-     * Add/Remove session cards
-     */
+        val existingJoins = getJoins(duid)
 
-    @Transaction
-    open fun insertAddChanges(sessionId: Long, cards: List<CardWithAttacks>, changes: List<SessionChangeEntity>) {
-        insertCardsWithAttacks(cards)
-        insertChanges(changes)
-
-        val joins = getSessionCardJoins(sessionId).toMutableList()
-
-        val condensedChanges = changes.groupBy { it.cardId }.map {
-            it.key to it.value.sumBy { it.change }
-        }
-
-        // Find missing joins
-        val joinsToInsert = condensedChanges.filter { change ->
-            joins.none { it.cardId == change.first }
+        val joinsToInsert = stackedCards.filter { stackedCard ->
+            existingJoins.none { it.cardId == stackedCard.card.id }
         }.map {
-            SessionCardJoin(sessionId, it.first, it.second)
+            DeckCardJoin(duid, it.card.id, it.count)
         }
 
-        // Find joins to Update
-        val joinsToUpdate = joins.filter { join ->
-            condensedChanges.any { it.first == join.cardId }
+        val joinsToUpdate = existingJoins.filter { join ->
+            stackedCards.any { it.card.id == join.cardId }
         }.map { join ->
-            val change = condensedChanges.find { it.first == join.cardId }
-            change?.let {
-                join.count += it.second
+            val cardToUpdate = stackedCards.find { it.card.id == join.cardId }
+            cardToUpdate?.let {
+                join.count += it.count
                 join
             } ?: join
         }
 
+        // Insert/Update joins
         insertJoins(joinsToInsert)
         updateJoins(joinsToUpdate)
     }
 
     @Transaction
-    open fun insertRemoveChange(sessionId: Long, card: CardWithAttacks?, change: SessionChangeEntity) {
-        card?.let { insertCardWithAttacks(it) }
-        insertChange(change)
+    open fun removeCard(deckId: String, card: PokemonCard) {
+        val duid = deckId.toLong()
 
-        // Find existing join
-        val join = getSessionCardJoin(sessionId, change.cardId)
-        join?.let {
-            it.count += change.change
-            if (it.count <= 0) {
-                deleteJoin(it)
-            } else {
-                updateJoin(it)
-            }
-        }
-    }
+        // insert card into cache, if not already there
+        insertCardsWithAttacks(listOf(RoomEntityMapper.to(card)))
 
-    /*
-     * Transaction: Reset Session
-     */
-
-    @Transaction
-    open fun resetSession(sessionId: Long, deckId: String? = null) {
-        val session = getSession(sessionId)
-        if (session != null) {
-            if (session.deckId != deckId) {
-                session.deckId = deckId
-            }
-            session.originalName = session.name
-            session.originalDescription = session.description
-            session.originalImage = session.image
-            session.originalCollectionOnly = session.collectionOnly
-            updateSession(session)
-        }
-        deleteChanges(sessionId)
-    }
-
-    @Transaction
-    open fun clearSearchSession(sessionId: Long, searchSessionId: String) {
-        val changes = getChangesForSearchSession(sessionId, searchSessionId)
-        val condensedChanges = changes.groupBy { it.cardId }
-            .mapValues { it.value.sumBy { it.change } }
-            .filter { it.value > 0 }
-
-        val joins = getSessionCardJoins(sessionId, condensedChanges.map { it.key })
-        val joinsToUpdate = ArrayList<SessionCardJoin>()
-        val joinsToDelete = ArrayList<SessionCardJoin>()
-
-        joins.forEach { join ->
-            val change = condensedChanges[join.cardId] ?: 0
-            join.count -= change
+        val join = getJoin(duid, card.id)
+        if (join != null) {
+            join.count--
             if (join.count <= 0) {
-                joinsToDelete += join
+                deleteJoin(join)
             } else {
-                joinsToUpdate += join
+                updateJoin(join)
             }
         }
+    }
 
-        updateJoins(joinsToUpdate)
-        deleteJoins(joinsToDelete)
-        deleteChanges(changes)
+    private fun insertCardsWithAttacks(cards: List<CardWithAttacks>) {
+        cards.forEach { card ->
+            if (insertCard(card.card) > 0L) {
+                insertAttacks(card.attacks)
+            }
+        }
     }
 }

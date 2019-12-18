@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.data
 
+import com.r0adkll.deckbuilder.arch.data.database.DeckDatabase
 import com.r0adkll.deckbuilder.arch.data.features.account.DefaultAccountRepository
 import com.r0adkll.deckbuilder.arch.data.features.cards.repository.DefaultCardRepository
 import com.r0adkll.deckbuilder.arch.data.features.collection.repository.DefaultCollectionRepository
@@ -8,6 +9,8 @@ import com.r0adkll.deckbuilder.arch.data.features.collection.source.RoomCollecti
 import com.r0adkll.deckbuilder.arch.data.features.community.repository.DefaultCommunityRepository
 import com.r0adkll.deckbuilder.arch.data.features.decks.repository.DefaultDeckRepository
 import com.r0adkll.deckbuilder.arch.data.features.editing.repository.DefaultEditRepository
+import com.r0adkll.deckbuilder.arch.data.features.editing.source.FirestoreEditSource
+import com.r0adkll.deckbuilder.arch.data.features.editing.source.RoomEditSource
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.DefaultExpansionRepository
 import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.DefaultExpansionDataSource
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.DefaultMarketplaceRepository
@@ -24,6 +27,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.Marke
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
+import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
 import dagger.Provides
 
@@ -40,7 +44,15 @@ class RepositoryModule {
     fun provideCommunityRepository(repository: DefaultCommunityRepository): CommunityRepository = repository
 
     @Provides @AppScope
-    fun provideEditRepository(repository: DefaultEditRepository): EditRepository = repository
+    fun provideEditRepository(
+        db: DeckDatabase,
+        preferences: AppPreferences,
+        schedulers: AppSchedulers
+    ): EditRepository {
+        val localSource = RoomEditSource(db, schedulers)
+        val remoteSource = FirestoreEditSource(preferences, schedulers)
+        return DefaultEditRepository(localSource, remoteSource, preferences)
+    }
 
     @Provides @AppScope
     fun provideExpansionRepository(

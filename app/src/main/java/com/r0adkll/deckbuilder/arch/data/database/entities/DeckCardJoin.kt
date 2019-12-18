@@ -4,6 +4,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 
+/**
+ * A Join table class for the many-to-many relationship between decks
+ * and cards
+ */
 @Entity(
     tableName = "deck_card_join",
     primaryKeys = ["deckId", "cardId"],

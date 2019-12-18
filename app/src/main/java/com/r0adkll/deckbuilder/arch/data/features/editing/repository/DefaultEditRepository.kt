@@ -1,94 +1,62 @@
 package com.r0adkll.deckbuilder.arch.data.features.editing.repository
 
-import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
+import com.r0adkll.deckbuilder.arch.data.AppPreferences
+import com.r0adkll.deckbuilder.arch.data.features.editing.source.EditSource
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
-import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.reactivex.Observable
-import javax.inject.Inject
 
-class DefaultEditRepository @Inject constructor(
-    val cache: SessionCache,
-    val decks: DeckRepository,
-    val schedulers: AppSchedulers
+class DefaultEditRepository(
+    private val localSource: EditSource,
+    private val remoteSource: EditSource,
+    private val preferences: AppPreferences
 ) : EditRepository {
 
-    override fun createSession(deck: Deck?, imports: List<PokemonCard>?): Observable<Long> {
-        return cache.createSession(deck, imports)
-            .subscribeOn(schedulers.database)
+    private val isOffline: Boolean
+        get() = preferences.offlineId.isSet && preferences.offlineId.get().isNotBlank()
+
+    override fun startSession(imports: List<PokemonCard>?): Observable<Deck> = when (isOffline) {
+        true -> localSource.startSession(imports)
+        else -> remoteSource.startSession(imports)
     }
 
-    override fun getSession(sessionId: Long): Observable<Session> {
-        return cache.getSession(sessionId)
-            .subscribeOn(schedulers.database)
+    override fun changeName(deckId: String, name: String): Observable<String> = when (isOffline) {
+        true -> localSource.changeName(deckId, name)
+        else -> remoteSource.changeName(deckId, name)
     }
 
-    override fun persistSession(sessionId: Long): Observable<Unit> {
-        return cache.getSession(sessionId)
-            .flatMap { session ->
-                decks.persistDeck(
-                    session.deckId,
-                    session.cards,
-                    session.name,
-                    session.description,
-                    session.image,
-                    session.collectionOnly
-                )
-                    .flatMap {
-                        // Be sure to pass the deck id to the session for when a new deck is created
-                        cache.resetSession(sessionId, it.id)
-                            .subscribeOn(schedulers.database)
-                    }
-            }
-            .subscribeOn(schedulers.database)
+    override fun changeDescription(deckId: String, description: String): Observable<String> = when (isOffline) {
+        true -> localSource.changeDescription(deckId, description)
+        else -> remoteSource.changeDescription(deckId, description)
     }
 
-    override fun deleteSession(sessionId: Long): Observable<Int> {
-        return cache.deleteSession(sessionId)
-            .subscribeOn(schedulers.database)
+    override fun changeDeckImage(deckId: String, image: DeckImage): Observable<Unit> = when (isOffline) {
+        true -> localSource.changeDeckImage(deckId, image)
+        else -> remoteSource.changeDeckImage(deckId, image)
     }
 
-    override fun observeSession(sessionId: Long): Observable<Session> {
-        return cache.observeSession(sessionId)
-            .subscribeOn(schedulers.database)
+    override fun changeCollectionOnly(deckId: String, collectionOnly: Boolean): Observable<Unit> = when (isOffline) {
+        true -> localSource.changeCollectionOnly(deckId, collectionOnly)
+        else -> remoteSource.changeCollectionOnly(deckId, collectionOnly)
     }
 
-    override fun changeName(sessionId: Long, name: String): Observable<String> {
-        return cache.changeName(sessionId, name)
-            .subscribeOn(schedulers.database)
+    override fun addCards(deckId: String, cards: List<PokemonCard>): Observable<Unit> = when (isOffline) {
+        true -> localSource.addCards(deckId, cards)
+        else -> remoteSource.addCards(deckId, cards)
     }
 
-    override fun changeDescription(sessionId: Long, description: String): Observable<String> {
-        return cache.changeDescription(sessionId, description)
-            .subscribeOn(schedulers.database)
+    override fun removeCard(deckId: String, card: PokemonCard): Observable<Unit> = when (isOffline) {
+        true -> localSource.removeCard(deckId, card)
+        else -> remoteSource.removeCard(deckId, card)
     }
 
-    override fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit> {
-        return cache.changeDeckImage(sessionId, image)
-            .subscribeOn(schedulers.database)
-    }
-
-    override fun changeCollectionOnly(sessionId: Long, collectionOnly: Boolean): Observable<Unit> {
-        return cache.changeCollectionOnly(sessionId, collectionOnly)
-            .subscribeOn(schedulers.database)
-    }
-
-    override fun addCards(sessionId: Long, cards: List<PokemonCard>, searchSessionId: String?): Observable<Unit> {
-        return cache.addCards(sessionId, cards, searchSessionId)
-            .subscribeOn(schedulers.database)
-    }
-
-    override fun removeCard(sessionId: Long, card: PokemonCard, searchSessionId: String?): Observable<Unit> {
-        return cache.removeCard(sessionId, card, searchSessionId)
-            .subscribeOn(schedulers.database)
-    }
-
-    override fun clearSearchSession(sessionId: Long, searchSessionId: String): Observable<Unit> {
-        return cache.clearSearchSession(sessionId, searchSessionId)
-            .subscribeOn(schedulers.database)
+    private fun <T> createSessionIfNeeded(deckId: String, action: (Deck?) -> Observable<T>): Observable<T> {
+        return if (deckId == EditRepository.CREATE_DECK_ID) {
+            startSession().flatMap { action(it) }
+        } else {
+            action(null)
+        }
     }
 }

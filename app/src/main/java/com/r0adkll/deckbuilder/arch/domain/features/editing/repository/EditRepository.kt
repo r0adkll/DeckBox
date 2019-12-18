@@ -12,64 +12,47 @@ import io.reactivex.Observable
 interface EditRepository {
 
     /**
-     * Create a new editing session. Either one with no deck, or a session that represents a deck
-     *
-     * @return the session id to refer too later
+     * Start a new deck editing session, creating a new deck to edit into
+     * @return the deck id to refer too later
      */
-    fun createSession(deck: Deck? = null, imports: List<PokemonCard>? = null): Observable<Long>
-
-    /**
-     * Get the editing session for the given [sessionId]
-     */
-    fun getSession(sessionId: Long): Observable<Session>
-
-    /**
-     * Observe the a session and all of it's changes
-     */
-    fun observeSession(sessionId: Long): Observable<Session>
-
-    /**
-     * Save the changes made during this session
-     */
-    fun persistSession(sessionId: Long): Observable<Unit>
-
-    /**
-     * Delete a session
-     */
-    fun deleteSession(sessionId: Long): Observable<Int>
+    fun startSession(imports: List<PokemonCard>? = null): Observable<Deck>
 
     /**
      * Change/Add the deck image for the given session ID
      */
-    fun changeDeckImage(sessionId: Long, image: DeckImage): Observable<Unit>
+    fun changeDeckImage(deckId: String, image: DeckImage): Observable<Unit>
 
     /**
      * Chagne the deck's collection only flag
      */
-    fun changeCollectionOnly(sessionId: Long, collectionOnly: Boolean): Observable<Unit>
+    fun changeCollectionOnly(deckId: String, collectionOnly: Boolean): Observable<Unit>
 
     /**
      * Change the name of an editing session
      */
-    fun changeName(sessionId: Long, name: String): Observable<String>
+    fun changeName(deckId: String, name: String): Observable<String>
 
     /**
      * Change the description of a session
      */
-    fun changeDescription(sessionId: Long, description: String): Observable<String>
+    fun changeDescription(deckId: String, description: String): Observable<String>
 
     /**
      * Add cards to session
      */
-    fun addCards(sessionId: Long, cards: List<PokemonCard>, searchSessionId: String? = null): Observable<Unit>
+    fun addCards(deckId: String, cards: List<PokemonCard>): Observable<Unit>
 
     /**
      * Remove card from a session
      */
-    fun removeCard(sessionId: Long, card: PokemonCard, searchSessionId: String? = null): Observable<Unit>
+    fun removeCard(deckId: String, card: PokemonCard): Observable<Unit>
 
-    /**
-     * Remove all the cards added in the search session for [searchSessionId]
-     */
-    fun clearSearchSession(sessionId: Long, searchSessionId: String): Observable<Unit>
+    companion object {
+
+        /**
+         * An id to pass to coordinate a new deck editing session but to indicate that the session hasn't been
+         * created yet and needs to be started before making any edits
+         */
+        const val CREATE_DECK_ID = "create_new_deck"
+    }
 }

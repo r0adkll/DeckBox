@@ -6,8 +6,6 @@ import com.r0adkll.deckbuilder.arch.data.features.community.cache.CommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.community.cache.FirestoreCommunityCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.DeckCache
 import com.r0adkll.deckbuilder.arch.data.features.decks.cache.SwitchingDeckCache
-import com.r0adkll.deckbuilder.arch.data.features.editing.cache.RoomSessionCache
-import com.r0adkll.deckbuilder.arch.data.features.editing.cache.SessionCache
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.cache.MarketplaceCache
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.cache.RoomMarketplaceCache
 import com.r0adkll.deckbuilder.arch.data.features.offline.cache.DefaultOfflineCache
@@ -29,9 +27,6 @@ class CacheModule {
 
     @Provides @AppScope
     fun provideCommunityCache(cache: FirestoreCommunityCache): CommunityCache = cache
-
-    @Provides @AppScope
-    fun provideSessionCache(cache: RoomSessionCache): SessionCache = cache
 
     @Provides @AppScope
     fun provideOfflineStatusConsumer(consumer: DefaultOfflineRepository): OfflineStatusConsumer = consumer
