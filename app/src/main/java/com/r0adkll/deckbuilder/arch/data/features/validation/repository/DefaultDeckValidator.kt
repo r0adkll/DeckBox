@@ -20,18 +20,12 @@ import javax.inject.Inject
 class DefaultDeckValidator @Inject constructor(
     val rules: Set<@JvmSuppressWildcards Rule>,
     val expansionRepository: ExpansionRepository,
-    val deckRepository: DeckRepository,
     val editRepository: EditRepository,
     val remote: Remote
 ) : DeckValidator {
 
-    override fun validate(sessionId: Long): Observable<Validation> {
-        return editRepository.getSession(sessionId)
-            .flatMap { validate(it.cards) }
-    }
-
     override fun validate(deckId: String): Observable<Validation> {
-        return deckRepository.getDeck(deckId)
+        return editRepository.observeSession(deckId)
             .flatMap { validate(it.cards) }
     }
 

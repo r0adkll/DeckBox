@@ -17,6 +17,7 @@ import com.ftinc.kit.extensions.snackbar
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.FlagPreferences
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Edit
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.browser.BrowseFragment
 import com.r0adkll.deckbuilder.arch.ui.features.collection.CollectionFragment
@@ -107,10 +108,10 @@ class HomeActivity : BaseActivity(),
         cards?.let {
             if (it.isNotEmpty()) {
                 Analytics.event(Event.SelectContent.Action("import_cards"))
-                disposables += editor.startSession(imports = it)
+                disposables += editor.submit(editor.createNewSession(), Edit.AddCards(it))
                     .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ sessionId ->
-                        startActivity(DeckBuilderActivity.createIntent(this, sessionId, true))
+                    .subscribe({ deckId ->
+                        startActivity(DeckBuilderActivity.createIntent(this, deckId))
                     }, { t ->
                         Timber.e(t)
                         snackbar(R.string.error_session_new_deck)

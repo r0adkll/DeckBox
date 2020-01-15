@@ -29,7 +29,7 @@ class RoomEditSource(
     }
 
     override fun changeName(deckId: String, name: String): Observable<String> {
-        return db.sessions()
+        return db.edits()
             .updateName(deckId, name)
             .toObservable()
             .map { name }
@@ -37,7 +37,7 @@ class RoomEditSource(
     }
 
     override fun changeDescription(deckId: String, description: String): Observable<String> {
-        return db.sessions()
+        return db.edits()
             .updateDescription(deckId, description)
             .toObservable()
             .map { description }
@@ -45,7 +45,7 @@ class RoomEditSource(
     }
 
     override fun changeDeckImage(deckId: String, image: DeckImage): Observable<Unit> {
-        return db.sessions()
+        return db.edits()
             .updateImage(deckId, image.uri)
             .toObservable()
             .map { Unit }
@@ -53,7 +53,7 @@ class RoomEditSource(
     }
 
     override fun changeCollectionOnly(deckId: String, collectionOnly: Boolean): Observable<Unit> {
-        return db.sessions()
+        return db.edits()
             .updateCollectionOnly(deckId, collectionOnly)
             .toObservable()
             .map { Unit }
@@ -62,13 +62,13 @@ class RoomEditSource(
 
     override fun addCards(deckId: String, cards: List<PokemonCard>): Observable<Unit> {
         return Observable.fromCallable {
-            db.sessions().addCards(deckId, cards)
+            db.edits().addCards(deckId, cards)
         }.subscribeOn(schedulers.disk)
     }
 
     override fun removeCard(deckId: String, card: PokemonCard): Observable<Unit> {
         return Observable.fromCallable {
-            db.sessions().removeCard(deckId, card)
+            db.edits().removeCard(deckId, card)
         }.subscribeOn(schedulers.disk)
     }
 }

@@ -4,19 +4,14 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.AbilityEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckEntity
-import com.r0adkll.deckbuilder.arch.data.database.entities.SessionCardJoin
-import com.r0adkll.deckbuilder.arch.data.database.entities.SessionChangeEntity
 import com.r0adkll.deckbuilder.arch.data.database.relations.CardWithAttacks
 import com.r0adkll.deckbuilder.arch.data.database.relations.DeckStackedCard
-import com.r0adkll.deckbuilder.arch.data.database.relations.SessionWithChanges
 import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Ability
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Attack
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Change
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.compactCardEffects
@@ -31,14 +26,6 @@ import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
 object RoomEntityMapper {
-
-    fun createAddChange(sessionId: Long, card: PokemonCard, searchSessionId: String?): SessionChangeEntity {
-        return SessionChangeEntity(0L, sessionId, card.id, 1, searchSessionId)
-    }
-
-    fun createRemoveChange(sessionId: Long, card: PokemonCard, searchSessionId: String?): SessionChangeEntity {
-        return SessionChangeEntity(0L, sessionId, card.id, -1, searchSessionId)
-    }
 
     fun to(entity: DeckEntity, cards: List<StackedCard>, expansions: List<Expansion>): Deck {
         return Deck(
@@ -63,29 +50,6 @@ object RoomEntityMapper {
             fromDeck(expansions, cards).unstack(),
             false,
             entity.timestamp
-        )
-    }
-
-    fun to(entity: SessionWithChanges, cards: List<StackedCard>, expansions: List<Expansion>): Session {
-        return Session(
-            entity.session.uid,
-            entity.session.deckId,
-            entity.session.name ?: "",
-            entity.session.description ?: "",
-            entity.session.image?.let { DeckImage.from(it) },
-            entity.session.collectionOnly ?: false,
-            from(expansions, cards).unstack(),
-            calculateChanges(entity),
-            entity.changes.map { to(it) }
-        )
-    }
-
-    fun to(entity: SessionChangeEntity): Change {
-        return Change(
-            entity.uid,
-            entity.cardId,
-            entity.change,
-            entity.searchSessionId
         )
     }
 
@@ -179,10 +143,6 @@ object RoomEntityMapper {
                 ?.replace("-", "")
                 ?.toIntOrNull() ?: 0
         )
-    }
-
-    fun to(sessionId: Long, stack: StackedPokemonCard): SessionCardJoin {
-        return SessionCardJoin(sessionId, stack.card.id, stack.count)
     }
 
     fun from(expansions: List<Expansion>, entities: List<StackedCard>): List<StackedPokemonCard> {
@@ -289,19 +249,5 @@ object RoomEntityMapper {
             entity.damage,
             entity.convertedEnergyCost
         )
-    }
-
-    private fun calculateChanges(entity: SessionWithChanges): Boolean {
-        var anyCardChange = false
-        entity.changes.groupBy { it.cardId }.forEach { (_, changes) ->
-            if (changes.sumBy { it.change } != 0) {
-                anyCardChange = true
-            }
-        }
-        return anyCardChange ||
-            entity.session.originalName != entity.session.name ||
-            entity.session.originalDescription != entity.session.description ||
-            entity.session.originalImage != entity.session.image ||
-            entity.session.originalCollectionOnly != entity.session.collectionOnly
     }
 }

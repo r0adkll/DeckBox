@@ -6,6 +6,8 @@ import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Edit
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
@@ -19,7 +21,8 @@ import javax.inject.Inject
 class CardDetailPresenter @Inject constructor(
     ui: CardDetailUi,
     val intentions: CardDetailUi.Intentions,
-    val repository: CardRepository,
+    val deckRepository: DeckRepository,
+    val cardRepository: CardRepository,
     val collectionRepository: CollectionRepository,
     val marketplaceRepository: MarketplaceRepository,
     val editor: EditRepository,
@@ -30,10 +33,10 @@ class CardDetailPresenter @Inject constructor(
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
 
-        val observeSession = ui.state.sessionId?.let {
-            editor.observeSession(it)
-                .map {
-                    it.cards.filter { it.id == ui.state.card?.id }.count()
+        val observeSession = ui.state.deckId?.let { deckId ->
+            deckRepository.observeDeck(deckId)
+                .map { deck ->
+                    deck.cards.filter { it.id == ui.state.card?.id }.count()
                 }
                 .map { Change.CountChanged(it) as Change }
                 .onErrorReturn(handleUnknownError)
@@ -51,18 +54,18 @@ class CardDetailPresenter @Inject constructor(
             .map { Change.PriceUpdated(it) as Change }
             .onErrorReturn(handleUnknownError)
 
-        val loadVariants = repository.search(ui.state.card!!.supertype, ui.state.card!!.name)
+        val loadVariants = cardRepository.search(ui.state.card!!.supertype, ui.state.card!!.name)
             .map { it.filter { it.id != ui.state.card!!.id } }
             .map { Change.VariantsLoaded(it) as Change }
             .onErrorReturn(handleUnknownError)
 
         val loadEvolves = ui.state.card!!.evolvesFrom?.let {
-            repository.search(ui.state.card!!.supertype, it)
+            cardRepository.search(ui.state.card!!.supertype, it)
                 .map { Change.EvolvesFromLoaded(it) as Change }
                 .onErrorReturn(handleUnknownError)
         } ?: Observable.empty()
 
-        val loadEvolvesTo = repository.search(ui.state.card!!.supertype, "", Filter(evolvesFrom = ui.state.card!!.name))
+        val loadEvolvesTo = cardRepository.search(ui.state.card!!.supertype, "", Filter(evolvesFrom = ui.state.card!!.name))
             .map { Change.EvolvesToLoaded(it) as Change }
             .onErrorReturn(handleUnknownError)
 
@@ -82,19 +85,22 @@ class CardDetailPresenter @Inject constructor(
                     .onErrorReturn { Change.CollectionCountUpdated(1) }
             }
 
-        disposables += intentions.addCardClicks()
-            .flatMap { editor.addCards(ui.state.sessionId!!, listOf(ui.state.card!!)) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Timber.d("Card(s) added to session")
-            }, { t -> Timber.e(t, "Error adding card to session") })
+        val deckId = ui.state.deckId
+        if (deckId != null) {
+            disposables += intentions.addCardClicks()
+                .flatMap { editor.submit(deckId, Edit.AddCards(ui.state.card!!)) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Timber.d("Card(s) added to session")
+                }, { t -> Timber.e(t, "Error adding card to session") })
 
-        disposables += intentions.removeCardClicks()
-            .flatMap { editor.removeCard(ui.state.sessionId!!, ui.state.card!!) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Timber.d("Card removed from session")
-            }, { t -> Timber.e(t, "Error removing card from session") })
+            disposables += intentions.removeCardClicks()
+                .flatMap { editor.submit(deckId, Edit.RemoveCard(ui.state.card!!)) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Timber.d("Card removed from session")
+                }, { t -> Timber.e(t, "Error removing card from session") })
+        }
 
         return observeSession
             .mergeWith(loadVariants)

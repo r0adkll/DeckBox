@@ -55,7 +55,7 @@ sealed class Item : RecyclerViewItem {
         }
     }
 
-    data class DeckItem(val validatedDeck: ValidatedDeck, val isLoading: Boolean) : Item() {
+    data class DeckItem(val validatedDeck: ValidatedDeck) : Item() {
 
         override val layoutId: Int get() = R.layout.item_deck
         override val itemId: Long get() = validatedDeck.deck.id.hashCode().toLong()
@@ -66,7 +66,7 @@ sealed class Item : RecyclerViewItem {
         }
 
         override fun isContentSame(new: RecyclerViewItem): Boolean = when (new) {
-            is DeckItem -> new.validatedDeck == validatedDeck && new.isLoading == isLoading
+            is DeckItem -> new.validatedDeck == validatedDeck
             else -> false
         }
     }

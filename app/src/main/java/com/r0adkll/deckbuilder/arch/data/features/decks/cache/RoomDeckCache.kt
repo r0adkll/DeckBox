@@ -5,10 +5,8 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.DeckEntity
 import com.r0adkll.deckbuilder.arch.data.database.mapping.RoomEntityMapper
 import com.r0adkll.deckbuilder.arch.data.database.relations.DeckStackedCard
 import com.r0adkll.deckbuilder.arch.data.database.relations.StackedCard
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.ExpansionRepository
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import java.security.InvalidParameterException
@@ -18,6 +16,25 @@ class RoomDeckCache @Inject constructor(
     val db: DeckDatabase,
     val repository: ExpansionRepository
 ) : DeckCache {
+
+    override fun observeDeck(id: String): Observable<Deck> {
+        val deckId = id.toLongOrNull()
+        return if (deckId != null) {
+            repository.getExpansions()
+                .flatMap { expansions ->
+                    db.decks().getDeck(deckId)
+                        .flatMap { deckEntity ->
+                            db.decks().getDeckCards(deckId)
+                                .map { cards ->
+                                    RoomEntityMapper.to(deckEntity, cards, expansions)
+                                }
+                        }
+                        .toObservable()
+                }
+        } else {
+            Observable.error(InvalidParameterException("'id' is not a valid deckId"))
+        }
+    }
 
     override fun getDeck(id: String): Observable<Deck> {
         val deckId = id.toLongOrNull()
@@ -52,22 +69,6 @@ class RoomDeckCache @Inject constructor(
                     }
                 )
             }
-    }
-
-    override fun putDeck(
-        id: String?,
-        cards: List<PokemonCard>,
-        name: String,
-        description: String?,
-        image: DeckImage?,
-        collectionOnly: Boolean
-    ): Observable<Deck> {
-        return Observable.fromCallable {
-            val entity = db.decks()
-                .insertDeckWithCards(id?.toLongOrNull(), cards, name, description, image, collectionOnly)
-            Deck(entity.uid.toString(), name, description
-                ?: "", image, collectionOnly, cards, false, entity.timestamp)
-        }
     }
 
     override fun deleteDeck(deck: Deck): Observable<Unit> {

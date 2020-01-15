@@ -38,6 +38,7 @@ import com.ftinc.kit.extensions.dp
 import com.ftinc.kit.extensions.sp
 import com.ftinc.kit.util.bindLong
 import com.ftinc.kit.util.bindOptionalParcelable
+import com.ftinc.kit.util.bindOptionalString
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxrelay2.PublishRelay
@@ -47,7 +48,6 @@ import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Price
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.adapter.PokemonCardsRecyclerAdapter
@@ -74,7 +74,7 @@ import javax.inject.Inject
 class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions, CardDetailUi.Actions {
 
     private val card: PokemonCard? by bindOptionalParcelable(EXTRA_CARD)
-    private val sessionId: Long by bindLong(EXTRA_SESSION_ID)
+    private val deckId by bindOptionalString(EXTRA_DECK_ID)
 
     private val addCardClicks: Relay<Unit> = PublishRelay.create()
     private val removeCardClicks: Relay<Unit> = PublishRelay.create()
@@ -93,12 +93,10 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         setContentView(R.layout.activity_card_detail)
 
         // Odd state hack to pass in passed values
-        state = state.copy(card = card)
-
-        // Only set the deck if it hasn't been set yet
-        if (sessionId != -1L) {
-            state = state.copy(sessionId = sessionId)
-        }
+        state = state.copy(
+            deckId = deckId,
+            card = card
+        )
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         appbar?.setNavigationOnClickListener { supportFinishAfterTransition() }
@@ -108,7 +106,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         // Setup variants recycler
         variantsAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
-            show(this, view, sessionId)
+            show(this, view, state.deckId)
         }
         variantsRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         variantsRecycler.adapter = variantsAdapter
@@ -116,7 +114,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         // Setup evolves from adapter
         evolvesFromAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
-            show(this, view, sessionId)
+            show(this, view, state.deckId)
         }
         evolvesRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesRecycler.adapter = evolvesFromAdapter
@@ -124,7 +122,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         // Setup evolves to adapter
         evolvesToAdapter = PokemonCardsRecyclerAdapter(this) { view, _ ->
             Analytics.event(Event.SelectContent.PokemonCard(view.card?.id ?: "unknown"))
-            show(this, view, sessionId)
+            show(this, view, state.deckId)
         }
         evolvesToRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         evolvesToRecycler.adapter = evolvesToAdapter
@@ -175,7 +173,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
             val actionAdd = menu.findItem(R.id.action_add)
             val actionRemove = menu.findItem(R.id.action_remove)
 
-            if (state.sessionId != null) {
+            if (state.deckId != null) {
                 actionAdd.isVisible = true
                 actionRemove.isVisible = state.hasCopies
             } else {
@@ -432,28 +430,28 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
 
     companion object {
         const val EXTRA_CARD = "CardDetailActivity.Card"
-        const val EXTRA_SESSION_ID = "CardDetailActivity.SessionId"
+        const val EXTRA_DECK_ID = "CardDetailActivity.DeckId"
         private val ONLY_NUMBER_REGEX by lazy { "^[0-9]+".toRegex() }
 
         fun createIntent(
             context: Context,
             card: PokemonCard,
-            sessionId: Long? = null
+            deckId: String? = null
         ): Intent {
             val intent = Intent(context, CardDetailActivity::class.java)
             intent.putExtra(EXTRA_CARD, card)
-            sessionId?.let { if (it != Session.NO_ID) intent.putExtra(EXTRA_SESSION_ID, it) }
+            deckId?.let { intent.putExtra(EXTRA_DECK_ID, it) }
             return intent
         }
 
         fun show(
             context: Activity,
             view: PokemonCardView,
-            sessionId: Long? = null
+            deckId: String? = null
         ) {
             if (view.card != null) {
                 val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, "cardImage")
-                val intent = createIntent(context, view.card!!, sessionId)
+                val intent = createIntent(context, view.card!!, deckId)
                 context.startActivity(intent, options.toBundle())
             }
         }

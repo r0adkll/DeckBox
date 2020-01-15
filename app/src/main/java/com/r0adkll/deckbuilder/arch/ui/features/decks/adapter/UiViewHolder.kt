@@ -153,7 +153,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
 
         private val image by bindView<DeckImageView>(R.id.image)
         private val title by bindView<TextView>(R.id.title)
-        private val loading by bindView<ProgressBar>(R.id.loading)
         private val error by bindView<ImageView>(R.id.error)
         private val actionShare by bindView<ImageView>(R.id.action_share)
         private val actionMore by bindView<ImageView>(R.id.action_more)
@@ -166,7 +165,6 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
             val deck = item.validatedDeck.deck
             title.text = deck.name
             error.isVisible = deck.isMissingCards
-            loading.isVisible = item.isLoading
 
             deck.image?.let {
                 when (it) {

@@ -17,7 +17,6 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.ftinc.kit.extensions.pt
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
@@ -34,7 +33,6 @@ import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.net.URLEncoder
 import javax.inject.Inject
 
@@ -45,23 +43,23 @@ class DefaultTournamentExporter @Inject constructor(
 
     private class ViewHolder(val parent: ViewGroup) {
 
-        val formatStandard = parent.findViewById<ImageView>(R.id.formatStandard)
-        val formatExpanded = parent.findViewById<ImageView>(R.id.formatExpanded)
-        val playerName = parent.findViewById<EditText>(R.id.playerName)
-        val playerId = parent.findViewById<EditText>(R.id.playerID)
-        val dateOfBirth = parent.findViewById<EditText>(R.id.dateOfBirth)
-        val ageJunior = parent.findViewById<ImageView>(R.id.optionAgeDivisionJunior)
-        val ageSenior = parent.findViewById<ImageView>(R.id.optionAgeDivisionSenior)
-        val ageMaster = parent.findViewById<ImageView>(R.id.optionAgeDivisionMasters)
-        val ageJuniorLabel = parent.findViewById<TextView>(R.id.optionAgeDivisionJuniorLabel)
-        val ageSeniorLabel = parent.findViewById<TextView>(R.id.optionAgeDivisionSeniorLabel)
-        val ageMasterLabel = parent.findViewById<TextView>(R.id.optionAgeDivisionMastersLabel)
-        val extraColumn = parent.findViewById<LinearLayout>(R.id.extraColumn)
-        val tablePokemon = parent.findViewById<TableLayout>(R.id.tablePokemon)
-        val tablePokemon2 = parent.findViewById<TableLayout>(R.id.tablePokemon2)
-        val tablePokemon2Title = parent.findViewById<TextView>(R.id.tablePokemon2Title)
-        val tableTrainer = parent.findViewById<TableLayout>(R.id.tableTrainer)
-        val tableEnergy = parent.findViewById<TableLayout>(R.id.tableEnergy)
+        val formatStandard: ImageView = parent.findViewById(R.id.formatStandard)
+        val formatExpanded: ImageView = parent.findViewById(R.id.formatExpanded)
+        val playerName: EditText = parent.findViewById(R.id.playerName)
+        val playerId: EditText = parent.findViewById(R.id.playerID)
+        val dateOfBirth: EditText = parent.findViewById(R.id.dateOfBirth)
+        val ageJunior: ImageView = parent.findViewById(R.id.optionAgeDivisionJunior)
+        val ageSenior: ImageView = parent.findViewById(R.id.optionAgeDivisionSenior)
+        val ageMaster: ImageView = parent.findViewById(R.id.optionAgeDivisionMasters)
+        val ageJuniorLabel: TextView = parent.findViewById(R.id.optionAgeDivisionJuniorLabel)
+        val ageSeniorLabel: TextView = parent.findViewById(R.id.optionAgeDivisionSeniorLabel)
+        val ageMasterLabel: TextView = parent.findViewById(R.id.optionAgeDivisionMastersLabel)
+        val extraColumn: LinearLayout = parent.findViewById(R.id.extraColumn)
+        val tablePokemon: TableLayout = parent.findViewById(R.id.tablePokemon)
+        val tablePokemon2: TableLayout = parent.findViewById(R.id.tablePokemon2)
+        val tablePokemon2Title: TextView = parent.findViewById(R.id.tablePokemon2Title)
+        val tableTrainer: TableLayout = parent.findViewById(R.id.tableTrainer)
+        val tableEnergy: TableLayout = parent.findViewById(R.id.tableEnergy)
 
         fun setAgeDivision(ageDivision: AgeDivision) {
             when (ageDivision) {
@@ -82,14 +80,10 @@ class DefaultTournamentExporter @Inject constructor(
         }
     }
 
-    override fun export(activityContext: Context, task: ExportTask, playerInfo: PlayerInfo): Observable<File> {
-        return when {
-            task.deckId != null -> deckRepository.getDeck(task.deckId)
-                .map { createDocument(activityContext, it.cards, it.name, playerInfo) }
-            task.sessionId != null -> editRepository.getSession(task.sessionId)
-                .map { createDocument(activityContext, it.cards, it.name, playerInfo) }
-            else -> Observable.error(IOException("Unable to export your deck"))
-        }
+    override fun export(activityContext: Context, deckId: String, playerInfo: PlayerInfo): Observable<File> {
+        return editRepository.observeSession(deckId)
+            .take(1)
+            .map { createDocument(activityContext, it.cards, it.name, playerInfo) }
     }
 
     private fun createDocument(context: Context, cards: List<PokemonCard>, name: String, playerInfo: PlayerInfo): File {

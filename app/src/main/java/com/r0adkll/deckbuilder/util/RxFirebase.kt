@@ -3,6 +3,8 @@ package com.r0adkll.deckbuilder.util
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import io.reactivex.BackpressureStrategy
@@ -55,6 +57,51 @@ object RxFirebase {
 
                 if (!items.isNullOrEmpty()) {
                     source.onNext(items)
+                }
+            }
+
+            source.setCancellable {
+                registration.remove()
+            }
+        }, BackpressureStrategy.BUFFER)
+    }
+
+    inline fun <reified T : Any> DocumentReference.observeAs(): Flowable<T> {
+        return Flowable.create({ source ->
+
+            val registration = this.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (firebaseFirestoreException != null) {
+                    source.onError(firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+
+                val item = documentSnapshot?.toObject(T::class.java)
+                if (item != null) {
+                    source.onNext(item)
+                }
+            }
+
+            source.setCancellable {
+                registration.remove()
+            }
+        }, BackpressureStrategy.BUFFER)
+    }
+
+    inline fun <reified T : Any> DocumentReference.observeAs(crossinline mapper: (DocumentSnapshot) -> T): Flowable<T> {
+        return Flowable.create({ source ->
+
+            val registration = this.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (firebaseFirestoreException != null) {
+                    source.onError(firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+
+                val item = documentSnapshot?.let {
+                    mapper(it)
+                }
+
+                if (item != null) {
+                    source.onNext(item)
                 }
             }
 

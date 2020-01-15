@@ -61,7 +61,6 @@ interface AppComponent {
     fun plus(module: DeckImportModule): DeckImportComponent
     fun plus(module: MultiExportModule): MultiExportComponent
     fun plus(module: SetBrowserModule): SetBrowserComponent
-    fun plus(module: DeckImageModule): DeckImageComponent
     fun plus(module: DeckTestingModule): DeckTestingComponent
     fun plus(module: CollectionSetModule): CollectionSetComponent
     fun plus(module: ManageCacheModule): ManageCacheComponent

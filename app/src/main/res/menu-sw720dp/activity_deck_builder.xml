@@ -5,13 +5,6 @@
     >
 
     <item
-        android:id="@+id/action_save"
-        android:title="@string/action_save"
-        android:icon="@drawable/ic_save_black_24dp"
-        app:showAsAction="always"
-        />
-
-    <item
         android:id="@+id/action_edit"
         android:title="@string/action_edit"
         android:icon="@drawable/ic_edit_black_24dp"

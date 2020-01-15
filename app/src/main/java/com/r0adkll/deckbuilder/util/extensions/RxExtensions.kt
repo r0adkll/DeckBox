@@ -19,3 +19,14 @@ operator fun Observable<List<Expansion>>.plus(cardSource: Observable<List<Card>>
 infix fun <T> Observable<List<T>>.combineLatest(other: Observable<List<T>>): Observable<List<T>> {
     return Observable.combineLatest(this, other, BiFunction { first, second -> first + second })
 }
+
+fun <T, R> Observable<T>.mapNotNull(mapper: (T) -> R?): Observable<R> {
+    return flatMap {
+        val value = mapper(it)
+        if (value != null) {
+            Observable.just(value)
+        } else {
+            Observable.empty()
+        }
+    }
+}

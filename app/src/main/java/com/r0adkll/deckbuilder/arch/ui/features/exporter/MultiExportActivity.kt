@@ -9,10 +9,9 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.util.bindParcelable
+import com.ftinc.kit.util.bindString
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.ExportTask
-import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportModule
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.ptcgo.PtcgoExportFragment
@@ -21,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_multi_export.*
 
 class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
 
-    private val task: ExportTask by bindParcelable(EXTRA_TASK)
+    private val task by bindString(EXTRA_TASK)
 
     private lateinit var component: MultiExportComponent
     private lateinit var adapter: ExportPagerAdapter
@@ -65,15 +64,9 @@ class MultiExportActivity : BaseActivity(), HasComponent<MultiExportComponent> {
     companion object {
         const val EXTRA_TASK = "MultiExportActivity.ExportTask"
 
-        fun createIntent(context: Context, deck: Deck): Intent {
+        fun createIntent(context: Context, deckId: String): Intent {
             val intent = Intent(context, MultiExportActivity::class.java)
-            intent.putExtra(EXTRA_TASK, ExportTask(deck.id, null))
-            return intent
-        }
-
-        fun createIntent(context: Context, sessionId: Long): Intent {
-            val intent = Intent(context, MultiExportActivity::class.java)
-            intent.putExtra(EXTRA_TASK, ExportTask(null, sessionId))
+            intent.putExtra(EXTRA_TASK, deckId)
             return intent
         }
     }

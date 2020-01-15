@@ -18,20 +18,6 @@ class DefaultDeckTester @Inject constructor(
     val validator: DeckValidator
 ) : DeckTester {
 
-    override fun testSession(sessionId: Long, iterations: Int): Observable<TestResults> {
-        return editRepository.getSession(sessionId)
-            .flatMap { session ->
-                validator.validate(session.cards)
-                    .map {
-                        if (it.isValid) {
-                            test(session.cards, iterations)
-                        } else {
-                            throw InvalidDeckException()
-                        }
-                    }
-            }
-    }
-
     override fun testDeck(deck: Deck, iterations: Int): Observable<TestResults> {
         return validator.validate(deck.cards)
             .map {
@@ -50,20 +36,6 @@ class DefaultDeckTester @Inject constructor(
                     .map {
                         if (it.isValid) {
                             test(deck.cards, iterations)
-                        } else {
-                            throw InvalidDeckException()
-                        }
-                    }
-            }
-    }
-
-    override fun testHand(sessionId: Long, iterations: Int): Observable<List<PokemonCard>> {
-        return editRepository.getSession(sessionId)
-            .flatMap { session ->
-                validator.validate(session.cards)
-                    .map {
-                        if (it.isValid) {
-                            deal(session.cards, iterations)
                         } else {
                             throw InvalidDeckException()
                         }

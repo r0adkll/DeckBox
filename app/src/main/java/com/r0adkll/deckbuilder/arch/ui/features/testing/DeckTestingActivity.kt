@@ -54,7 +54,6 @@ import javax.inject.Inject
 
 class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intentions, DeckTestingUi.Actions {
 
-    private val sessionId: Long by bindLong(EXTRA_SESSION_ID, -1L)
     private val deckId: String? by bindOptionalString(EXTRA_DECK_ID)
     private val cards: List<PokemonCardView> by bindViews(
         R.id.card1,
@@ -79,9 +78,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         setContentView(R.layout.activity_deck_testing)
 
         // Configure state
-        if (sessionId != -1L) {
-            state = state.copy(sessionId = sessionId)
-        } else if (deckId != null) {
+        if (deckId != null) {
             state = state.copy(deckId = deckId)
         }
 
@@ -348,7 +345,6 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
     }
 
     companion object {
-        private const val EXTRA_SESSION_ID = "DeckTestingActivity.SessionId"
         private const val EXTRA_DECK_ID = "DeckTestingActivity.DeckId"
         private const val STEP = 100
         private const val LARGE_STEP = 1000
@@ -356,12 +352,6 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
         private const val DEAL_ANIMATION_DELAY = 100L
         private const val DEAL_ANIMATION_DURATION = 250L
         private const val DEAL_RETURN_ANIMATION_DURATION = 200L
-
-        fun createIntent(context: Context, sessionId: Long): Intent {
-            val intent = Intent(context, DeckTestingActivity::class.java)
-            intent.putExtra(EXTRA_SESSION_ID, sessionId)
-            return intent
-        }
 
         fun createIntent(context: Context, deckId: String): Intent {
             val intent = Intent(context, DeckTestingActivity::class.java)

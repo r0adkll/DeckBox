@@ -5,7 +5,7 @@ import com.ftinc.kit.arch.presentation.state.BaseState
 import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
@@ -29,7 +29,7 @@ interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
         override val error: String?,
 
         // The identifiers by which cards are loaded, these are set before 'start()' is called
-        val sessionId: Long,
+        val deckId: String,
 
         @Transient val cards: List<PokemonCard> = emptyList()
     ) : BaseState<State.Change>(isLoading, error), PaperParcelable {
@@ -47,7 +47,7 @@ interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
         }
 
         override fun toString(): String {
-            return "State(isLoading=$isLoading, error=$error, sessionId=$sessionId, cards=${cards.size})"
+            return "State(isLoading=$isLoading, error=$error, deckId=$deckId, cards=${cards.size})"
         }
 
         companion object {
@@ -55,7 +55,7 @@ interface OverviewUi : Ui<OverviewUi.State, OverviewUi.State.Change> {
             val CREATOR = PaperParcelOverviewUi_State.CREATOR
 
             val DEFAULT by lazy {
-                State(false, null, Session.NO_ID, emptyList())
+                State(false, null, "", emptyList())
             }
         }
     }

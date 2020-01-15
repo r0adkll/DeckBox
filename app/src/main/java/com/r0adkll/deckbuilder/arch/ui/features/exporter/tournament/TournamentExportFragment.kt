@@ -19,7 +19,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.domain.ExportTask
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.TournamentExporter
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.AgeDivision
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
@@ -46,7 +46,7 @@ class TournamentExportFragment : BaseFragment(),
 
     @SaveState override var state: State = State.DEFAULT
 
-    @Inject lateinit var exportTask: ExportTask
+    @Inject lateinit var task: ExportTask
     @Inject lateinit var renderer: TournamentExportRenderer
     @Inject lateinit var presenter: TournamentExportPresenter
     @Inject lateinit var exporter: TournamentExporter
@@ -87,7 +87,7 @@ class TournamentExportFragment : BaseFragment(),
                 Analytics.event(Event.SelectContent.Action("tournament_export"))
                 val playerInfo = state.toPlayerInfo()
 
-                disposables += exporter.export(activity!!, exportTask, playerInfo)
+                disposables += exporter.export(activity!!, task.deckId, playerInfo)
                     .subscribe({
                         val intent = PdfPreviewActivity.createIntent(activity!!, it)
                         startActivity(intent)

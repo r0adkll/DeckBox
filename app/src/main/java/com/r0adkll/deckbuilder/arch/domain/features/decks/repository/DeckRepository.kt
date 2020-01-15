@@ -5,6 +5,8 @@ import io.reactivex.Observable
 
 interface DeckRepository {
 
+    fun observeDeck(id: String): Observable<Deck>
+
     fun getDeck(id: String): Observable<Deck>
 
     fun getDecks(): Observable<List<Deck>>

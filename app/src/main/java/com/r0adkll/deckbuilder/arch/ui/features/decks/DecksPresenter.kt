@@ -33,6 +33,9 @@ class DecksPresenter @Inject constructor(
     val preferences: AppPreferences
 ) : UiPresenter<State, Change>(ui) {
 
+    override val tag: String?
+        get() = "DecksPresenter"
+
     @Suppress("LongMethod")
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
@@ -59,25 +62,6 @@ class DecksPresenter @Inject constructor(
                     .map { Change.DeckDeleted as Change }
                     .onErrorReturn(handleUnknownError)
             }
-
-        val createSession = intentions.createSession()
-            .flatMap { deck ->
-                editRepository.startSession(deck, null)
-                    .map { Change.SessionLoaded(it) as Change }
-                    .startWith(Change.IsSessionLoading(deck.id))
-                    .onErrorReturn(handleUnknownError)
-            }
-
-        val createNewSession = intentions.createNewSession()
-            .flatMap {
-                editRepository.startSession()
-                    .map { Change.SessionLoaded(it) as Change }
-                    .startWith(Change.IsSessionLoading(""))
-                    .onErrorReturn(handleUnknownError)
-            }
-
-        val clearSession = intentions.clearSession()
-            .map { Change.ClearSession as Change }
 
         val showPreview = previewRepository.getExpansionPreview()
             .map { Change.ShowPreview(it) as Change }
@@ -113,9 +97,6 @@ class DecksPresenter @Inject constructor(
             }
 
         return loadDecks.mergeWith(deleteDecks)
-            .mergeWith(createSession)
-            .mergeWith(createNewSession)
-            .mergeWith(clearSession)
             .mergeWith(showQuickStart)
             .mergeWith(showPreview)
     }

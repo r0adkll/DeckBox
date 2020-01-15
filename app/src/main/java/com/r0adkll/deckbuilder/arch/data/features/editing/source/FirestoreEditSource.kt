@@ -96,6 +96,7 @@ class FirestoreEditSource(
                         cardMetadata.count = stackedCards.find {
                             it.card.id == cardMetadata.id
                         }?.count?.plus(cardMetadata.count) ?: cardMetadata.count
+                        cardMetadata
                     } ?: emptyList()
 
                     val metadataToAdd = stackedCards.filter { stackedCard ->

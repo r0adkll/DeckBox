@@ -12,7 +12,7 @@ import com.r0adkll.deckbuilder.arch.data.database.dao.CardDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.CollectionDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.DeckDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.MarketplaceDao
-import com.r0adkll.deckbuilder.arch.data.database.dao.SessionDao
+import com.r0adkll.deckbuilder.arch.data.database.dao.EditDao
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CollectionCountEntity
@@ -20,9 +20,6 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.DeckCardJoin
 import com.r0adkll.deckbuilder.arch.data.database.entities.DeckEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.PriceEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.ProductEntity
-import com.r0adkll.deckbuilder.arch.data.database.entities.SessionCardJoin
-import com.r0adkll.deckbuilder.arch.data.database.entities.SessionChangeEntity
-import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
 
 /**
  * The Room database object for storing all local on-device data from card cache
@@ -41,9 +38,6 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.SessionEntity
         DeckCardJoin::class,
         AttackEntity::class,
         CardEntity::class,
-        SessionCardJoin::class,
-        SessionChangeEntity::class,
-        SessionEntity::class,
         CollectionCountEntity::class,
         ProductEntity::class,
         PriceEntity::class
@@ -54,7 +48,7 @@ abstract class DeckDatabase : RoomDatabase() {
 
     abstract fun decks(): DeckDao
     abstract fun cards(): CardDao
-    abstract fun sessions(): SessionDao
+    abstract fun edits(): EditDao
     abstract fun collection(): CollectionDao
     abstract fun marketplace(): MarketplaceDao
 

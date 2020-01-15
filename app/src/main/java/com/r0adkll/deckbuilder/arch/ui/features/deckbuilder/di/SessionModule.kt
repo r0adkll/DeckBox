@@ -5,13 +5,13 @@ import dagger.Provides
 import javax.inject.Qualifier
 
 @Module
-class SessionModule(val sessionId: Long) {
+class SessionModule(val editId: String) {
 
     @Provides
-    @SessionId
-    fun provideSessionId(): Long = sessionId
+    @EditId
+    fun provideEditId(): String = editId
 }
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class SessionId
+annotation class EditId

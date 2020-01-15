@@ -1,9 +1,7 @@
 package com.r0adkll.deckbuilder.arch.data.features.decks.cache
 
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -12,6 +10,11 @@ class SwitchingDeckCache @Inject constructor(
     val firestoreDeckCache: FirestoreDeckCache,
     val preferences: AppPreferences
 ) : DeckCache {
+
+    override fun observeDeck(id: String): Observable<Deck> = when (isOffline()) {
+        true -> roomDeckCache.observeDeck(id)
+        else -> firestoreDeckCache.observeDeck(id)
+    }
 
     override fun getDeck(id: String): Observable<Deck> = when (isOffline()) {
         true -> roomDeckCache.getDeck(id)
@@ -23,18 +26,6 @@ class SwitchingDeckCache @Inject constructor(
             true -> roomDeckCache.getDecks()
             else -> firestoreDeckCache.getDecks()
         }
-    }
-
-    override fun putDeck(
-        id: String?,
-        cards: List<PokemonCard>,
-        name: String,
-        description: String?,
-        image: DeckImage?,
-        collectionOnly: Boolean
-    ): Observable<Deck> = when (isOffline()) {
-        true -> roomDeckCache.putDeck(id, cards, name, description, image, collectionOnly)
-        else -> firestoreDeckCache.putDeck(id, cards, name, description, image, collectionOnly)
     }
 
     override fun deleteDeck(deck: Deck): Observable<Unit> = when (isOffline()) {

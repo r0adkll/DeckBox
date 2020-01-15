@@ -18,9 +18,9 @@ import com.ftinc.kit.extensions.toast
 import com.ftinc.kit.util.IntentUtils
 import com.jakewharton.rxbinding2.view.clicks
 import com.r0adkll.deckbuilder.R
-import com.r0adkll.deckbuilder.arch.domain.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.ptcgo.PtcgoExporter
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
@@ -36,16 +36,11 @@ class PtcgoExportFragment : BaseFragment() {
         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
 
-    @Inject
-    lateinit var schedulers: AppSchedulers
-    @Inject
-    lateinit var deckRepository: DeckRepository
-    @Inject
-    lateinit var editRepository: EditRepository
-    @Inject
-    lateinit var exporter: PtcgoExporter
-    @Inject
-    lateinit var exportTask: ExportTask
+    @Inject lateinit var schedulers: AppSchedulers
+    @Inject lateinit var deckRepository: DeckRepository
+    @Inject lateinit var editRepository: EditRepository
+    @Inject lateinit var exporter: PtcgoExporter
+    @Inject lateinit var task: ExportTask
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_ptcgo_export, container, false)
@@ -56,29 +51,16 @@ class PtcgoExportFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
 
-        if (exportTask.deckId != null) {
-            disposables += deckRepository.getDeck(exportTask.deckId!!)
-                .flatMap { exporter.export(it.cards, it.name) }
-                .subscribeOn(schedulers.comp)
-                .observeOn(schedulers.main)
-                .subscribe({
-                    deckList.text = it
-                }, {
-                    Timber.e(it, "Error exporting deck")
-                    deckList.text = getText(R.string.error_exporting_deck)
-                })
-        } else {
-            disposables += editRepository.getSession(exportTask.sessionId!!)
-                .flatMap { exporter.export(it.cards, it.name) }
-                .subscribeOn(schedulers.comp)
-                .observeOn(schedulers.main)
-                .subscribe({
-                    deckList.text = it
-                }, {
-                    Timber.e(it, "Error exporting deck")
-                    deckList.text = getText(R.string.error_exporting_deck)
-                })
-        }
+        disposables += editRepository.observeSession(task.deckId)
+            .flatMap { exporter.export(it.cards, it.name) }
+            .subscribeOn(schedulers.comp)
+            .observeOn(schedulers.main)
+            .subscribe({
+                deckList.text = it
+            }, {
+                Timber.e(it, "Error exporting deck")
+                deckList.text = getText(R.string.error_exporting_deck)
+            })
 
         disposables += actionCopy.clicks()
             .subscribe {
