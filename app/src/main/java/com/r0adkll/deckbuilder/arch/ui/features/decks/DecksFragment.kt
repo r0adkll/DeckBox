@@ -17,6 +17,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
 import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.remote.model.ExpansionPreview
 import com.r0adkll.deckbuilder.arch.ui.Shortcuts
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
@@ -45,6 +46,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     @Inject lateinit var renderer: DecksRenderer
     @Inject lateinit var presenter: DecksPresenter
     @Inject lateinit var preferences: AppPreferences
+    @Inject lateinit var editor: EditRepository
 
     private val viewPreview = PublishRelay.create<ExpansionPreview>()
     private val dismissPreview = PublishRelay.create<Unit>()
@@ -54,9 +56,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     private val testClicks = PublishRelay.create<Deck>()
     private val quickStartClicks = PublishRelay.create<Deck>()
     private val dismissQuickStart = PublishRelay.create<Unit>()
-    private val createSession = PublishRelay.create<Deck>()
-    private val createNewSession = PublishRelay.create<Unit>()
-    private val clearSession = PublishRelay.create<Unit>()
 
     private lateinit var adapter: DecksRecyclerAdapter
 
@@ -67,7 +66,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = DecksRecyclerAdapter(activity!!, shareClicks, duplicateClicks, deleteClicks,
+        adapter = DecksRecyclerAdapter(requireActivity(), shareClicks, duplicateClicks, deleteClicks,
             testClicks, dismissPreview, viewPreview, quickStartClicks, dismissQuickStart)
 
         adapter.itemClickListener = { item ->
@@ -77,8 +76,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
                 // Update shortcuts
                 Shortcuts.addDeckShortcut(requireContext(), item.validatedDeck.deck)
 
-                // Generate a new session and pass to builder activity
-                createSession.accept(item.validatedDeck.deck)
+                startActivity(DeckBuilderActivity.createIntent(requireActivity(), item.validatedDeck.deck.id))
             }
         }
         adapter.emptyView = empty_view
@@ -105,7 +103,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
 
         fab.setOnClickListener {
             Analytics.event(Event.SelectContent.Action("new_deck"))
-            createNewSession.accept(Unit)
+            startActivity(DeckBuilderActivity.createIntent(requireActivity(), editor.createNewSession(), isNew = true))
         }
 
         if (preferences.quickStart.get()) {
@@ -116,7 +114,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         disposables += shareClicks
             .subscribe {
                 Analytics.event(Event.SelectContent.Action("export_decklist"))
-                val intent = MultiExportActivity.createIntent(activity!!, it)
+                val intent = MultiExportActivity.createIntent(requireActivity(), it.id)
                 startActivity(intent)
             }
 
@@ -124,14 +122,14 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         disposables += testClicks
             .subscribe {
                 Analytics.event(Event.SelectContent.Action("test_decklist"))
-                val intent = DeckTestingActivity.createIntent(activity!!, it.id)
+                val intent = DeckTestingActivity.createIntent(requireActivity(), it.id)
                 startActivity(intent)
             }
 
         @SuppressLint("RxSubscribeOnError")
         disposables += viewPreview
             .subscribe { preview ->
-                startActivity(SetBrowserActivity.createIntent(activity!!, preview.code))
+                startActivity(SetBrowserActivity.createIntent(requireActivity(), preview.code))
             }
 
         @SuppressLint("RxSubscribeOnError")
@@ -143,7 +141,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         @SuppressLint("RxSubscribeOnError")
         disposables += quickStartClicks
             .subscribe {
-                createSession.accept(it)
+                startActivity(DeckBuilderActivity.createIntent(requireActivity(), it.id))
             }
     }
 
@@ -161,12 +159,6 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
         renderer.render(state)
     }
 
-    override fun createSession(): Observable<Deck> = createSession
-
-    override fun createNewSession(): Observable<Unit> = createNewSession
-
-    override fun clearSession(): Observable<Unit> = clearSession
-
     override fun dismissPreview(): Observable<Unit> = dismissPreview.doOnNext {
         Analytics.event(Event.SelectContent.Action("dismiss_preview"))
     }
@@ -176,7 +168,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     override fun duplicateClicks(): Observable<Deck> = duplicateClicks
 
     override fun deleteClicks(): Observable<Deck> = deleteClicks.flatMap { deck ->
-        DialogUtils.confirmDialog(activity!!,
+        DialogUtils.confirmDialog(requireActivity(),
             Resource(R.string.dialog_delete_deck_title),
             Resource(R.string.dialog_delete_deck_message, deck.name),
             R.string.action_delete,
@@ -204,12 +196,7 @@ class DecksFragment : BaseFragment(), DecksUi, DecksUi.Intentions, DecksUi.Actio
     }
 
     override fun balanceShortcuts(decks: List<Deck>) {
-        Shortcuts.balanceShortcuts(activity!!, decks)
-    }
-
-    override fun openSession(sessionId: Long) {
-        clearSession.accept(Unit)
-        startActivity(DeckBuilderActivity.createIntent(activity!!, sessionId))
+        Shortcuts.balanceShortcuts(requireActivity(), decks)
     }
 
     companion object {

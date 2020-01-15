@@ -42,7 +42,7 @@ class DecksRenderer(
                     .forEach { (key, value) ->
                         items += Item.Header(key.name.toLowerCase().capitalize())
                         items += value.map {
-                            Item.DeckItem(it, s.isSessionLoading == it.deck.id)
+                            Item.DeckItem(it)
                         }
                     }
 
@@ -58,15 +58,5 @@ class DecksRenderer(
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe { actions.balanceShortcuts(it.map { it.deck }) }
-
-        disposables += state
-            .mapNullable { it.sessionId }
-            .distinctUntilChanged()
-            .addToLifecycle()
-            .subscribe {
-                if (it.value != null) {
-                    actions.openSession(it.value!!)
-                }
-            }
     }
 }

@@ -47,11 +47,12 @@ class RepositoryModule {
     fun provideEditRepository(
         db: DeckDatabase,
         preferences: AppPreferences,
-        schedulers: AppSchedulers
+        schedulers: AppSchedulers,
+        deckRepository: DeckRepository
     ): EditRepository {
         val localSource = RoomEditSource(db, schedulers)
         val remoteSource = FirestoreEditSource(preferences, schedulers)
-        return DefaultEditRepository(localSource, remoteSource, preferences)
+        return DefaultEditRepository(localSource, remoteSource, preferences, deckRepository)
     }
 
     @Provides @AppScope

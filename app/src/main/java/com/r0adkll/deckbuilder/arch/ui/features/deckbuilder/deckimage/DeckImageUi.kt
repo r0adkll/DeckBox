@@ -26,7 +26,7 @@ interface DeckImageUi : Ui<DeckImageUi.State, DeckImageUi.State.Change> {
 
     @Parcelize
     data class State(
-        val sessionId: Long,
+        val deckId: String,
         override val isLoading: Boolean,
         override val error: String?,
         val cards: List<PokemonCard>,
@@ -55,7 +55,7 @@ interface DeckImageUi : Ui<DeckImageUi.State, DeckImageUi.State.Change> {
         companion object {
 
             val DEFAULT by lazy {
-                State(-1L, false, null, emptyList(), null, false)
+                State("", false, null, emptyList(), null, false)
             }
         }
     }

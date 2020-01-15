@@ -24,13 +24,6 @@ class DeckTestingPresenter @Inject constructor(
     override fun smashObservables(): Observable<Change> {
 
         val loadMetaData = when {
-            ui.state.sessionId != null -> editRepository.getSession(ui.state.sessionId!!)
-                .map {
-                    DeckTestingUi.Metadata(it.name, it.description,
-                        it.cards.count { it.supertype == SuperType.POKEMON },
-                        it.cards.count { it.supertype == SuperType.TRAINER },
-                        it.cards.count { it.supertype == SuperType.ENERGY })
-                }
             ui.state.deckId != null -> deckRepository.getDeck(ui.state.deckId!!)
                 .map {
                     DeckTestingUi.Metadata(it.name, it.description,
@@ -50,7 +43,6 @@ class DeckTestingPresenter @Inject constructor(
         val testSingleHand = intentions.testSingleHand()
             .flatMap { _ ->
                 val testObservable = when {
-                    ui.state.sessionId != null -> tester.testHand(ui.state.sessionId!!)
                     ui.state.deckId != null -> tester.testHandById(ui.state.deckId!!)
                     else -> Observable.empty()
                 }
@@ -63,7 +55,6 @@ class DeckTestingPresenter @Inject constructor(
         val testOverallHands = intentions.testOverallHands()
             .flatMap { iterations ->
                 val testObservable = when {
-                    ui.state.sessionId != null -> tester.testSession(ui.state.sessionId!!, iterations)
                     ui.state.deckId != null -> tester.testDeckById(ui.state.deckId!!, iterations)
                     else -> Observable.empty()
                 }

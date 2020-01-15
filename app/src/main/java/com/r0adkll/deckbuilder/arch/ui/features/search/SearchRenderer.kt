@@ -15,6 +15,7 @@ class SearchRenderer(
     @Suppress("LongMethod")
     @SuppressLint("RxSubscribeOnError")
     override fun start() {
+
         disposables += state
             .map { it.filter.isEmpty }
             .distinctUntilChanged()

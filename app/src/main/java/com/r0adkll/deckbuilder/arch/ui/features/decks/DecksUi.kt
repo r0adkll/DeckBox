@@ -20,16 +20,12 @@ interface DecksUi : Ui<DecksUi.State, DecksUi.State.Change> {
         fun duplicateClicks(): Observable<Deck>
         fun deleteClicks(): Observable<Deck>
         fun dismissPreview(): Observable<Unit>
-        fun createSession(): Observable<Deck>
-        fun createNewSession(): Observable<Unit>
-        fun clearSession(): Observable<Unit>
     }
 
     interface Actions : BaseActions {
 
         fun showItems(items: List<Item>)
         fun balanceShortcuts(decks: List<Deck>)
-        fun openSession(sessionId: Long)
     }
 
     @Parcelize
@@ -44,9 +40,7 @@ interface DecksUi : Ui<DecksUi.State, DecksUi.State.Change> {
         val hasLoadedOnce: Boolean,
         val decks: List<ValidatedDeck>,
         val preview: ExpansionPreview?,
-        val quickStart: QuickStart?,
-        val isSessionLoading: String?,
-        val sessionId: Long?
+        val quickStart: QuickStart?
     ) : BaseState<State.Change>(isLoading, error), Parcelable {
 
         @Suppress("ComplexMethod")
@@ -55,7 +49,6 @@ interface DecksUi : Ui<DecksUi.State, DecksUi.State.Change> {
             Change.DeckDeleted -> this
             Change.HidePreview -> this.copy(preview = null)
             Change.HideQuickStart -> this.copy(quickStart = null)
-            Change.ClearSession -> this.copy(isSessionLoading = null, sessionId = null)
             is Change.ShowPreview -> this.copy(preview = change.preview)
             is Change.ShowQuickStart -> this.copy(quickStart = change.quickStart)
             is Change.Error -> this.copy(error = change.description, isLoading = false)
@@ -65,8 +58,6 @@ interface DecksUi : Ui<DecksUi.State, DecksUi.State.Change> {
                 hasLoadedOnce = true,
                 error = null
             )
-            is Change.IsSessionLoading -> this.copy(isSessionLoading = change.deckId)
-            is Change.SessionLoaded -> this.copy(sessionId = change.sessionId, isSessionLoading = null)
         }
 
         sealed class Change(logText: String) : Ui.State.Change(logText) {
@@ -76,12 +67,9 @@ interface DecksUi : Ui<DecksUi.State, DecksUi.State.Change> {
             class ShowPreview(
                 val preview: ExpansionPreview
             ) : Change("user -> show preview (version: ${preview.version}, expansion: ${preview.code})")
-            class IsSessionLoading(val deckId: String) : Change("user -> creating session for ($deckId)")
-            class SessionLoaded(val sessionId: Long) : Change("user -> session loaded $sessionId")
             class ShowQuickStart(
                 val quickStart: QuickStart
             ) : Change("network -> show quickstart templates: ${quickStart.templates.size}")
-            object ClearSession : Change("self -> clearing session")
             object HideQuickStart : Change("user -> hide quickstart")
             object HidePreview : Change("user -> hide preview")
             object DeckDeleted : Change("user -> deck deleted")
@@ -89,13 +77,13 @@ interface DecksUi : Ui<DecksUi.State, DecksUi.State.Change> {
 
         override fun toString(): String {
             return "State(isLoading=$isLoading, error=$error, decks=${decks.size}, showPreview=${preview != null}, " +
-                "showQuickstart=${quickStart != null}, isSessionLoading=$isSessionLoading, sessionId=$sessionId)"
+                "showQuickstart=${quickStart != null})"
         }
 
         companion object {
 
             val DEFAULT by lazy {
-                State(false, null, false, emptyList(), null, null, null, null)
+                State(false, null, false, emptyList(), null, null)
             }
         }
     }

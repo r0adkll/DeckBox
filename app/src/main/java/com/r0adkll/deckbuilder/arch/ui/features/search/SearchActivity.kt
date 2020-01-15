@@ -3,6 +3,7 @@
 package com.r0adkll.deckbuilder.arch.ui.features.search
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,9 +16,7 @@ import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
 import com.ftinc.kit.arch.util.plusAssign
 import com.ftinc.kit.arch.util.uiDebounce
-import com.ftinc.kit.extensions.color
-import com.ftinc.kit.util.bindLong
-import com.google.android.material.snackbar.Snackbar
+import com.ftinc.kit.util.bindOptionalString
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -25,16 +24,16 @@ import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
+import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.search.di.SearchModule
-import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.KeyboardScrollHideListener
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
@@ -55,16 +54,14 @@ class SearchActivity : BaseActivity(),
 
     @State override var state: SearchUi.State = SearchUi.State.DEFAULT
 
-    val sessionId: Long by bindLong(EXTRA_SESSION_ID)
+    val deckId by bindOptionalString(EXTRA_DECK_ID)
 
     @Inject lateinit var renderer: SearchRenderer
     @Inject lateinit var presenter: SearchPresenter
 
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
     private val pokemonCardLongClicks: Relay<PokemonCardView> = PublishRelay.create()
-    private val clearSelectionClicks: Relay<Unit> = PublishRelay.create()
     private val filterChanges: Relay<Filter> = PublishRelay.create()
-    private var selectionSnackBar: Snackbar? = null
     private lateinit var adapter: SearchResultsRecyclerAdapter
     private lateinit var component: SearchComponent
 
@@ -76,7 +73,7 @@ class SearchActivity : BaseActivity(),
         adapter = SearchResultsRecyclerAdapter(this, editCardIntentions = editCardIntentions)
         adapter.emptyView = emptyView
 
-        if (sessionId != Session.NO_ID) {
+        if (deckId != null) {
             adapter.onItemClickListener = { _, card ->
                 editCardIntentions.addCardClicks.accept(listOf(card))
             }
@@ -110,12 +107,12 @@ class SearchActivity : BaseActivity(),
         disposables += pokemonCardLongClicks
             .subscribe {
                 Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                CardDetailActivity.show(this, it, sessionId)
+                CardDetailActivity.show(this, it, deckId)
             }
 
         state = state.copy(
             id = UUID.randomUUID().toString(),
-            sessionId = sessionId
+            deckId = deckId
         )
 
         searchView.post {
@@ -168,10 +165,6 @@ class SearchActivity : BaseActivity(),
         return editCardIntentions.removeCardClicks
     }
 
-    override fun clearSelection(): Observable<Unit> {
-        return clearSelectionClicks
-    }
-
     /*
      * This receives changes from the FilterPresenter
      */
@@ -209,7 +202,6 @@ class SearchActivity : BaseActivity(),
 
     override fun setSelectedCards(cards: List<PokemonCard>) {
         adapter.setSelectedCards(cards)
-        showSelectionSnackbar(cards.size)
     }
 
     override fun showLoading(isLoading: Boolean) {
@@ -232,50 +224,22 @@ class SearchActivity : BaseActivity(),
         showEmptyDefault()
     }
 
-    private fun showSelectionSnackbar(count: Int) {
-        val text = resources.getQuantityString(R.plurals.card_selection_count, count, count)
-        if (selectionSnackBar == null) {
-            selectionSnackBar = Snackbar.make(coordinator, text, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.action_undo) { clearSelectionClicks.accept(Unit) }
-                .setActionTextColor(color(R.color.primaryColor))
-        }
-
-        if (count > 0) {
-            selectionSnackBar?.setText(text)
-            if (selectionSnackBar?.isShown != true) {
-                selectionSnackBar?.show()
-            }
-        } else {
-            if (selectionSnackBar?.isShown == true) {
-                selectionSnackBar?.dismiss()
-            }
-        }
-    }
-
-    private fun validationSnackbar(result: Int) {
-        val wasShown = selectionSnackBar?.isShownOrQueued ?: false
-
-        val snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT)
-        snackbar.addCallback(object : Snackbar.Callback() {
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                if (wasShown) {
-                    showSelectionSnackbar(state.selected.size)
-                }
-            }
-        })
-        snackbar.show()
-    }
-
     companion object {
-        const val EXTRA_SESSION_ID = "SearchActivity.SessionId"
+        private const val EXTRA_DECK_ID = "SearchActivity.DeckId"
 
         fun createIntent(
             context: Context,
-            sessionId: Long = Session.NO_ID
+            deckId: String? = null
         ): Intent {
             val intent = Intent(context, SearchActivity::class.java)
-            intent.putExtra(EXTRA_SESSION_ID, sessionId)
+            if (deckId != null) {
+                intent.putExtra(EXTRA_DECK_ID, deckId)
+            }
             return intent
+        }
+
+        fun parseResult(data: Intent?): String? {
+            return data?.getStringExtra(EXTRA_DECK_ID)
         }
     }
 }

@@ -5,7 +5,8 @@ import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.collection.model.CollectionCount
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
+import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.model.Product
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
@@ -21,7 +22,6 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
 
     interface Intentions {
 
-        fun saveDeck(): Observable<Unit>
         fun addCards(): Observable<List<PokemonCard>>
         fun removeCard(): Observable<PokemonCard>
         fun editDeckClicks(): Observable<Boolean>
@@ -35,11 +35,9 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
 
         fun showBrokenRules(errors: List<Int>)
         fun showFormat(format: Format)
-        fun showIsSaving(isSaving: Boolean)
         fun showIsEditing(isEditing: Boolean)
         fun showIsOverview(isOverview: Boolean)
         fun showError(description: String)
-        fun showSaveAction(hasChanges: Boolean)
         fun showCardCount(count: Int)
         fun showPokemonCards(cards: List<StackedPokemonCard>)
         fun showTrainerCards(cards: List<StackedPokemonCard>)
@@ -54,11 +52,9 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
 
     @PaperParcel
     data class State @JvmOverloads constructor(
-        val sessionId: Long,
+        val deckId: String,
 
-        val isSaving: Boolean,
         val isEditing: Boolean,
-        val isChanged: Boolean,
         val isOverview: Boolean,
         val error: String?,
 
@@ -84,18 +80,14 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
 
         @Suppress("ComplexMethod")
         override fun reduce(change: Change): State = when (change) {
-            Change.Saving -> copy(isSaving = true, error = null)
-            Change.Saved -> copy(isSaving = false)
-            is Change.SessionUpdated -> copy(
-                pokemonCards = change.session.cards.filter { it.supertype == POKEMON },
-                trainerCards = change.session.cards.filter { it.supertype == TRAINER },
-                energyCards = change.session.cards.filter { it.supertype == ENERGY },
-                name = change.session.name,
-                description = change.session.description,
-                image = change.session.image,
-                collectionOnly = change.session.collectionOnly,
-                isChanged = change.session.hasChanges,
-                isSaving = false,
+            is Change.DeckUpdated -> copy(
+                pokemonCards = change.deck.cards.filter { it.supertype == POKEMON },
+                trainerCards = change.deck.cards.filter { it.supertype == TRAINER },
+                energyCards = change.deck.cards.filter { it.supertype == ENERGY },
+                name = change.deck.name,
+                description = change.deck.description,
+                image = change.deck.image,
+                collectionOnly = change.deck.collectionOnly,
                 error = null
             )
             is Change.Editing -> copy(isEditing = change.isEditing)
@@ -127,10 +119,8 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
         }
 
         override fun toString(): String {
-            return "State(sessionId=$sessionId, " +
-                "isSaving=$isSaving, " +
+            return "State(deckId=$deckId, " +
                 "isEditing=$isEditing, " +
-                "isChanged=$isChanged, " +
                 "isOverview=$isOverview, " +
                 "error=$error, " +
                 "pokemonCards=${pokemonCards.size}, " +
@@ -145,9 +135,7 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
         }
 
         sealed class Change(logText: String) : Ui.State.Change(logText) {
-            object Saving : Change("user -> is saving deck")
-            object Saved : Change("network -> deck saved!")
-            class SessionUpdated(val session: Session) : Change("cache -> Session changed/updated $session")
+            class DeckUpdated(val deck: Deck) : Change("cache -> Deck updated $deck")
             class Editing(val isEditing: Boolean) : Change("user -> is editing: $isEditing")
             class Overview(val isOverview: Boolean) : Change("user -> is overview: $isOverview")
             class Error(val description: String) : Change("error -> $description")
@@ -171,10 +159,8 @@ interface DeckBuilderUi : Ui<DeckBuilderUi.State, DeckBuilderUi.State.Change> {
 
             val DEFAULT by lazy {
                 State(
-                    sessionId = -1L,
-                    isSaving = false,
+                    deckId = "", // This will be set in the activity before the Presenter is fired up
                     isEditing = false,
-                    isChanged = false,
                     isOverview = false,
                     error = null,
                     name = null,

@@ -35,36 +35,21 @@ class ShortcutActivity : Activity() {
             when (action) {
                 ACTION_NEW_DECK -> {
                     Shortcuts.reportUsage(this, Shortcuts.CREATE_DECK_ID)
-                    disposables += editor.startSession()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ sessionId ->
-                            TaskStackBuilder.create(this)
-                                .addParentStack(DeckBuilderActivity::class.java)
-                                .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId, true))
-                                .startActivities()
-                            finish()
-                        }, {
-                            startActivity(HomeActivity.createIntent(this))
-                            finish()
-                        })
+                    TaskStackBuilder.create(this)
+                        .addParentStack(DeckBuilderActivity::class.java)
+                        .addNextIntent(DeckBuilderActivity.createIntent(this, editor.createNewSession(), isNew = true))
+                        .startActivities()
+                    finish()
                 }
                 ACTION_OPEN_DECK -> {
                     val deckId = intent?.getStringExtra(EXTRA_DECK_ID)
                     if (deckId != null) {
                         Shortcuts.reportUsage(this, deckId)
-                        disposables += deckRepository.getDeck(deckId)
-                            .flatMap { editor.startSession(it) }
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ sessionId ->
-                                TaskStackBuilder.create(this)
-                                    .addParentStack(DeckBuilderActivity::class.java)
-                                    .addNextIntent(DeckBuilderActivity.createIntent(this, sessionId))
-                                    .startActivities()
-                                finish()
-                            }, {
-                                startActivity(HomeActivity.createIntent(this))
-                                finish()
-                            })
+                        TaskStackBuilder.create(this)
+                            .addParentStack(DeckBuilderActivity::class.java)
+                            .addNextIntent(DeckBuilderActivity.createIntent(this, deckId))
+                            .startActivities()
+                        finish()
                     } else {
                         finish()
                     }

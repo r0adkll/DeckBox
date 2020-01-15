@@ -5,7 +5,8 @@ import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Edit
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.search.SearchUi.State.Change
@@ -19,35 +20,34 @@ class SearchPresenter @Inject constructor(
     ui: SearchUi,
     val intentions: SearchUi.Intentions,
     val repository: CardRepository,
+    val deckRepository: DeckRepository,
     val editor: EditRepository
 ) : UiPresenter<State, Change>(ui) {
 
     override fun smashObservables(): Observable<Change> {
+        val deckId = ui.state.deckId
 
         disposables += intentions.selectCard()
-            .sessionMap(ui.state.sessionId) { editor.addCards(ui.state.sessionId, listOf(it), ui.state.id) }
+            .sessionMap(deckId) { editor.submit(deckId!!, Edit.AddCards(listOf(it))) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Timber.d("Card added to search session")
-            }, { Timber.e(it, "Error adding card to search session") })
+                Timber.i("Card added to Deck($deckId)")
+            }, {
+                Timber.e(it, "Error adding card to search session")
+            })
 
         disposables += intentions.removeCard()
-            .sessionMap(ui.state.sessionId) { editor.removeCard(ui.state.sessionId, it, ui.state.id) }
+            .sessionMap(deckId) { editor.submit(deckId!!, Edit.RemoveCard(it)) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Timber.d("Card removed from search session")
-            }, { Timber.e(it, "Error removing card from search session") })
+                Timber.i("Card removed from Deck($deckId)")
+            }, {
+                Timber.e(it, "Error removing card from search session")
+            })
 
-        disposables += intentions.clearSelection()
-            .sessionMap(ui.state.sessionId) { editor.clearSearchSession(ui.state.sessionId, ui.state.id) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Timber.d("Search session cleared.")
-            }, { Timber.e(it, "Error clearing search session") })
-
-        val observeSession = if (ui.state.sessionId != Session.NO_ID) {
-            editor.observeSession(ui.state.sessionId)
-                .map { Change.SessionUpdated(it) as Change }
+        val observeSession = if (deckId != null) {
+            editor.observeSession(deckId)
+                .map { Change.DeckUpdated(it) as Change }
                 .onErrorReturn(handleUnknownError())
         } else {
             Observable.empty()
@@ -71,8 +71,8 @@ class SearchPresenter @Inject constructor(
      * an empty observable. This enables us to use the search activity without having a session to
      * be modified
      */
-    private fun <T, R> Observable<T>.sessionMap(sessionId: Long, mapper: (T) -> ObservableSource<R>): Observable<R> {
-        return if (sessionId != Session.NO_ID) {
+    private fun <T, R> Observable<T>.sessionMap(deckId: String?, mapper: (T) -> ObservableSource<R>): Observable<R> {
+        return if (deckId != null) {
             this.flatMap(mapper)
         } else {
             Observable.empty()

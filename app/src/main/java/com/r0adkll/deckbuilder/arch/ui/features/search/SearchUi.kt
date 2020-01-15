@@ -3,12 +3,11 @@ package com.r0adkll.deckbuilder.arch.ui.features.search
 import com.ftinc.kit.arch.presentation.state.Ui
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Session
+import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import io.reactivex.Observable
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
 import java.util.*
-import kotlin.collections.ArrayList
 
 interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
 
@@ -18,7 +17,6 @@ interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
         fun searchCards(): Observable<String>
         fun selectCard(): Observable<PokemonCard>
         fun removeCard(): Observable<PokemonCard>
-        fun clearSelection(): Observable<Unit>
     }
 
     interface Actions {
@@ -37,7 +35,7 @@ interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
     @PaperParcel
     data class State @JvmOverloads constructor(
         val id: String,
-        val sessionId: Long,
+        val deckId: String?,
         val query: String,
         val filter: Filter,
         val isLoading: Boolean,
@@ -61,23 +59,7 @@ interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
             )
             is Change.ResultsLoaded -> copy(results = change.results, isLoading = false, error = null)
             is Change.ClearQuery -> copy(results = emptyList(), query = "", isLoading = false, error = null)
-            is Change.SessionUpdated -> {
-                // Determine the 'selected' cards from list of changes based on this search session id
-                val changes = change.session.changes.filter { it.searchSessionId == id }
-                    .groupBy { it.cardId }
-                    .mapValues { it.value.sumBy { it.change } }
-                    .filter { it.value > 0 }
-
-                val cards = ArrayList<PokemonCard>()
-                changes.forEach { (cardId, count) ->
-                    (0 until count).forEach { _ ->
-                        val card = change.session.cards.find { it.id == cardId }
-                        card?.let { cards += it }
-                    }
-                }
-
-                this.copy(selected = cards)
-            }
+            is Change.DeckUpdated -> copy(selected = change.deck.cards)
         }
 
         override fun toString(): String {
@@ -93,7 +75,7 @@ interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
                 val results: List<PokemonCard>
             ) : Change("network -> search results loaded (${results.size})")
             object ClearQuery : Change("user -> clearing query and results")
-            class SessionUpdated(val session: Session) : Change("disk -> session updated!")
+            class DeckUpdated(val deck: Deck) : Change("data -> deck updated!")
         }
 
         companion object {
@@ -102,7 +84,7 @@ interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
 
             val DEFAULT by lazy {
                 State(UUID.randomUUID().toString(),
-                    Session.NO_ID,
+                    null,
                     "",
                     Filter(),
                     false,

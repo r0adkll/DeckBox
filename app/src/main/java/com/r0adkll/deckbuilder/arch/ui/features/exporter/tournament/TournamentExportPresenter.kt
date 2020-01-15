@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
-import com.r0adkll.deckbuilder.arch.domain.ExportTask
+import com.r0adkll.deckbuilder.arch.domain.features.exporter.ExportTask
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Format
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.tournament.TournamentExportUi.State
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class TournamentExportPresenter @Inject constructor(
     ui: TournamentExportUi,
-    val exportTask: ExportTask,
+    val task: ExportTask,
     val intentions: TournamentExportUi.Intentions,
     val preferences: AppPreferences,
     val validator: DeckValidator
@@ -23,11 +23,7 @@ class TournamentExportPresenter @Inject constructor(
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
 
-        val initialFormat = when {
-            exportTask.sessionId != null -> validator.validate(exportTask.sessionId)
-            exportTask.deckId != null -> validator.validate(exportTask.deckId)
-            else -> Observable.empty()
-        }.map {
+        val initialFormat = validator.validate(task.deckId).map {
             when {
                 it.standard -> Format.STANDARD
                 it.expanded -> Format.EXPANDED

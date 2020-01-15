@@ -1,6 +1,8 @@
 package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage
 
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
+import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
+import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Edit
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.DeckImageUi.State.Change
@@ -11,25 +13,26 @@ import javax.inject.Inject
 class DeckImagePresenter @Inject constructor(
     ui: DeckImageUi,
     val intentions: DeckImageUi.Intentions,
-    val repository: EditRepository
+    val deckRepository: DeckRepository,
+    val editor: EditRepository
 ) : UiPresenter<State, Change>(ui) {
 
     override fun smashObservables(): Observable<Change> {
-
-        val loadImages = repository.getSession(ui.state.sessionId)
-            .map { Change.CardsLoaded(it.cards) as Change }
-            .onErrorReturn(handleUnknownError)
 
         val deckImageClicks = intentions.pickedDeckImage
             .map { Change.ImageSelected(it) as Change }
 
         val deckImageSelected = intentions.selectDeckImageClicks
             .flatMap {
-                repository.changeDeckImage(ui.state.sessionId, ui.state.selectedDeckImage!!)
+                editor.submit(ui.state.deckId, Edit.Image(ui.state.selectedDeckImage!!))
                     .map { Change.ImageSaved as Change }
             }
 
-        return loadImages
+        val observeDeck = editor.observeSession(ui.state.deckId)
+            .map { Change.CardsLoaded(it.cards) as Change }
+            .onErrorReturn(handleUnknownError)
+
+        return observeDeck
             .mergeWith(deckImageClicks)
             .mergeWith(deckImageSelected)
     }

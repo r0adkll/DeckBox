@@ -16,6 +16,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.model.Deck
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.adapter.DeckImage
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import com.r0adkll.deckbuilder.util.RxFirebase.asObservable
+import com.r0adkll.deckbuilder.util.RxFirebase.observeAs
 import com.r0adkll.deckbuilder.util.RxFirebase.asVoidObservable
 import io.reactivex.Observable
 import timber.log.Timber
@@ -28,12 +29,34 @@ class FirestoreDeckCache @Inject constructor(
     val schedulers: AppSchedulers
 ) : DeckCache {
 
+    override fun observeDeck(id: String): Observable<Deck> {
+        return getUserDeckCollection()?.let { collection ->
+            collection.document(id)
+                .observeAs {
+                    it.toObject(DeckEntity::class.java)!!.apply {
+                        this.id = it.id
+                    }
+                }
+                .toObservable()
+                .flatMap { deck ->
+                    val cardIds = deck.metadata().map { it.id }.toHashSet()
+                    cardRepository.find(cardIds.toList())
+                        .map { EntityMapper.to(deck, it) }
+                }
+                .doOnNext { Timber.d("Firebase::getDeck($id) - Thread(${Thread.currentThread().name})") }
+        } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
+    }
+
     override fun getDeck(id: String): Observable<Deck> {
         return getUserDeckCollection()?.let { collection ->
             collection.document(id)
                 .get()
                 .asObservable(schedulers.firebaseExecutor)
-                .map { it.toObject(DeckEntity::class.java) }
+                .map {
+                    it.toObject(DeckEntity::class.java)!!.apply {
+                        this.id = it.id
+                    }
+                }
                 .flatMap { deck ->
                     val cardIds = deck.metadata().map { it.id }.toHashSet()
                     cardRepository.find(cardIds.toList())
@@ -78,31 +101,6 @@ class FirestoreDeckCache @Inject constructor(
                         decks.map { EntityMapper.to(it, cards) }
                     }
             }
-    }
-
-    override fun putDeck(
-        id: String?,
-        cards: List<PokemonCard>,
-        name: String,
-        description: String?,
-        image: DeckImage?,
-        collectionOnly: Boolean
-    ): Observable<Deck> {
-        return getUserDeckCollection()?.let { collection ->
-            val newDeck = Deck(id ?: "", name, description
-                ?: "", image, collectionOnly, cards, false, System.currentTimeMillis())
-            val model = EntityMapper.to(newDeck)
-            if (id == null) {
-                collection.add(model)
-                    .asObservable(schedulers.firebaseExecutor)
-                    .map { newDeck.copy(id = it.id) }
-            } else {
-                collection.document(id)
-                    .set(model)
-                    .asVoidObservable(schedulers.firebaseExecutor)
-                    .map { newDeck }
-            }
-        } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
 
     override fun duplicateDeck(deck: Deck): Observable<Unit> {
@@ -155,6 +153,31 @@ class FirestoreDeckCache @Inject constructor(
     fun putDecks(decks: List<Deck>): Observable<Unit> {
         val models = decks.map { EntityMapper.to(it) }
         return putDeckEntities(models)
+    }
+
+    private fun putDeck(
+        id: String?,
+        cards: List<PokemonCard>,
+        name: String,
+        description: String?,
+        image: DeckImage?,
+        collectionOnly: Boolean
+    ): Observable<Deck> {
+        return getUserDeckCollection()?.let { collection ->
+            val newDeck = Deck(id ?: "", name, description
+                ?: "", image, collectionOnly, cards, false, System.currentTimeMillis())
+            val model = EntityMapper.to(newDeck)
+            if (id == null) {
+                collection.add(model)
+                    .asObservable(schedulers.firebaseExecutor)
+                    .map { newDeck.copy(id = it.id) }
+            } else {
+                collection.document(id)
+                    .set(model)
+                    .asVoidObservable(schedulers.firebaseExecutor)
+                    .map { newDeck }
+            }
+        } ?: Observable.error(FirebaseAuthException("-1", "No current user logged in"))
     }
 
     /**

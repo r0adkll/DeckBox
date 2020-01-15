@@ -18,7 +18,7 @@ import com.r0adkll.deckbuilder.util.stack
 import io.reactivex.Single
 
 @Dao
-abstract class SessionDao {
+abstract class EditDao {
 
     /*
      * Basic CRUD ops that aren't session specific

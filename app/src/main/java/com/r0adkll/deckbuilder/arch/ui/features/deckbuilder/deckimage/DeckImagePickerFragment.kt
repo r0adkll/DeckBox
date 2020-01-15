@@ -9,11 +9,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.util.uiDebounce
-import com.ftinc.kit.util.bindLong
 import com.ftinc.kit.util.bindString
 import com.ftinc.kit.util.bundle
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
@@ -32,7 +32,7 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
 
     override var state: DeckImageUi.State = DeckImageUi.State.DEFAULT
 
-    private val sessionId: Long by bindLong(EXTRA_SESSION_ID)
+    private val deckId: String by bindString(EXTRA_DECK_ID)
     private val deckImage: String? by bindString(EXTRA_DECK_IMAGE)
 
     private val deckImageClicks: Relay<DeckImage> = PublishRelay.create()
@@ -49,7 +49,7 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
         super.onActivityCreated(savedInstanceState)
 
         val selection = deckImage?.let { DeckImage.from(Uri.parse(it)) }
-        state = state.copy(sessionId = sessionId, selectedDeckImage = selection)
+        state = state.copy(deckId = deckId, selectedDeckImage = selection)
 
         getComponent(DeckBuilderComponent::class)
             .plus(DeckImageModule(this))
@@ -136,14 +136,14 @@ class DeckImagePickerFragment : DialogFragment(), DeckImageUi, DeckImageUi.Inten
 
     companion object {
         const val TAG = "DeckImagePicker"
-        private const val EXTRA_SESSION_ID = "DeckImagePickerFragment.SessionId"
+        private const val EXTRA_DECK_ID = "DeckImagePickerFragment.SessionId"
         private const val EXTRA_DECK_IMAGE = "DeckImagePickerFragment.DeckImage"
         private const val GRID_SPAN_SIZE = 3
 
-        fun newInstance(sessionId: Long, image: DeckImage? = null): DeckImagePickerFragment {
+        fun newInstance(deckId: String, image: DeckImage? = null): DeckImagePickerFragment {
             val fragment = DeckImagePickerFragment()
             fragment.arguments = bundle {
-                EXTRA_SESSION_ID to sessionId
+                EXTRA_DECK_ID to deckId
                 image?.let { EXTRA_DECK_IMAGE to it.uri.toString() }
             }
             return fragment

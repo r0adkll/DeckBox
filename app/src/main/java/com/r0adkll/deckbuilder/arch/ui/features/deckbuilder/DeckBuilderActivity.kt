@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -24,8 +23,7 @@ import com.ftinc.kit.extensions.dimenPixelSize
 import com.ftinc.kit.extensions.dp
 import com.ftinc.kit.extensions.snackbar
 import com.ftinc.kit.util.bindBoolean
-import com.ftinc.kit.util.bindLong
-import com.google.android.material.snackbar.Snackbar
+import com.ftinc.kit.util.bindString
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.textChanges
@@ -139,8 +137,8 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
-    private val sessionId: Long by bindLong(EXTRA_SESSION_ID)
-    private val isNewDeck: Boolean by bindBoolean(EXTRA_IS_NEW)
+    private val deckId by bindString(EXTRA_DECK_ID)
+    private val isNewDeck by bindBoolean(EXTRA_IS_NEW)
 
     private val imm: InputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
@@ -154,7 +152,6 @@ class DeckBuilderActivity : BaseActivity(),
 
     private val pokemonCardClicks: Relay<PokemonCardView> = PublishRelay.create()
     private val editCardIntentions: EditCardIntentions = EditCardIntentions()
-    private val saveDeck: Relay<Unit> = PublishRelay.create()
     private val editDeckClicks: Relay<Boolean> = PublishRelay.create()
     private val editOverviewClicks: Relay<Boolean> = PublishRelay.create()
 
@@ -162,34 +159,12 @@ class DeckBuilderActivity : BaseActivity(),
     private lateinit var adapter: DeckBuilderPagerAdapter
     private lateinit var ruleAdapter: RuleRecyclerAdapter
     private val panelSlideListener = DeckBuilderPanelSlideListener()
-    private var savingSnackBar: Snackbar? = null
     private var pendingImport: List<PokemonCard>? = null
-
-    private val navigationClickListener = View.OnClickListener {
-        if (state.isChanged) {
-            Analytics.event(Event.SelectContent.Action("close_deck_editor"))
-            AlertDialog.Builder(this)
-                .setTitle(R.string.deckbuilder_unsaved_changes_title)
-                .setMessage(R.string.deckbuilder_unsaved_changes_message)
-                .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
-                    Analytics.event(Event.SelectContent.Action("discarded_changes"))
-                    dialog.dismiss()
-                    supportFinishAfterTransition()
-                }
-                .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
-                    Analytics.event(Event.SelectContent.Action("kept_changes"))
-                    dialog.dismiss()
-                }
-                .show()
-        } else {
-            supportFinishAfterTransition()
-        }
-    }
 
     private val fabClickListener = View.OnClickListener {
         if (fragmentSwitcher == null) {
             Analytics.event(Event.SelectContent.Action("add_new_card"))
-            startActivity(SearchActivity.createIntent(this, sessionId))
+            startActivityForResult(SearchActivity.createIntent(this, state.deckId), RC_EDIT_CHANGES)
         } else {
             // Show the overview fragment
             editOverviewClicks.accept(true)
@@ -217,6 +192,8 @@ class DeckBuilderActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deck_builder)
 
+        state = state.copy(deckId = deckId)
+
         // Setup AppBar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = null
@@ -225,7 +202,9 @@ class DeckBuilderActivity : BaseActivity(),
             inputDeckName.requestFocus()
             imm.showSoftInput(inputDeckName, 0)
         }
-        appbar?.setNavigationOnClickListener(navigationClickListener)
+        appbar?.setNavigationOnClickListener {
+            supportFinishAfterTransition()
+        }
 
         // Setup pager
         ruleAdapter = RuleRecyclerAdapter(this)
@@ -258,21 +237,20 @@ class DeckBuilderActivity : BaseActivity(),
             }
         })
 
-        state = state.copy(sessionId = sessionId)
 
         disposables += pokemonCardClicks
             .uiDebounce()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 Analytics.event(Event.SelectContent.PokemonCard(it.card?.id ?: "unknown"))
-                CardDetailActivity.show(this, it, sessionId)
+                CardDetailActivity.show(this, it, state.deckId)
             }
 
         disposables += actionDeckImage.clicks()
             .uiDebounce()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                DeckImagePickerFragment.newInstance(sessionId, state.image)
+                DeckImagePickerFragment.newInstance(state.deckId, state.image)
                     .show(supportFragmentManager, DeckImagePickerFragment.TAG)
             }
 
@@ -298,7 +276,7 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun setupComponent() {
         this.component = DeckApp.component.deckBuilderComponentBuilder()
-            .sessionModule(SessionModule(sessionId))
+            .sessionModule(SessionModule(deckId))
             .deckBuilderModule(DeckBuilderModule(this))
             .build()
         this.component.inject(this)
@@ -315,31 +293,11 @@ class DeckBuilderActivity : BaseActivity(),
         }
     }
 
-    override fun onDestroy() {
-        destroySession()
-        super.onDestroy()
-    }
-
     override fun onBackPressed() {
         if (fragmentSwitcher != null && fragmentSwitcher!!.displayedChild == 1) {
             editOverviewClicks.accept(false)
         } else if (slidingLayout.panelState == EXPANDED) {
             slidingLayout.panelState = COLLAPSED
-        } else if (state.isChanged) {
-            Analytics.event(Event.SelectContent.Action("close_deck_editor"))
-            AlertDialog.Builder(this)
-                .setTitle(R.string.deckbuilder_unsaved_changes_title)
-                .setMessage(R.string.deckbuilder_unsaved_changes_message)
-                .setPositiveButton(R.string.dialog_action_yes) { dialog, _ ->
-                    Analytics.event(Event.SelectContent.Action("discarded_changes"))
-                    dialog.dismiss()
-                    super.onBackPressed()
-                }
-                .setNegativeButton(R.string.dialog_action_no) { dialog, _ ->
-                    Analytics.event(Event.SelectContent.Action("kept_changes"))
-                    dialog.dismiss()
-                }
-                .show()
         } else {
             super.onBackPressed()
         }
@@ -367,9 +325,6 @@ class DeckBuilderActivity : BaseActivity(),
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val saveItem = menu.findItem(R.id.action_save)
-        saveItem.isVisible = state.isChanged && !state.isSaving
-
         val editItem = menu.findItem(R.id.action_edit)
         val finishEditItem = menu.findItem(R.id.action_finish_edit)
         editItem.isVisible = !state.isEditing
@@ -398,17 +353,12 @@ class DeckBuilderActivity : BaseActivity(),
             }
             R.id.action_export -> {
                 Analytics.event(Event.SelectContent.MenuAction("export_decklist"))
-                startActivity(MultiExportActivity.createIntent(this, sessionId))
-                true
-            }
-            R.id.action_save -> {
-                Analytics.event(Event.SelectContent.MenuAction("save_deck"))
-                saveDeck.accept(Unit)
+                startActivity(MultiExportActivity.createIntent(this, state.deckId))
                 true
             }
             R.id.action_test -> {
                 Analytics.event(Event.SelectContent.MenuAction("test_deck"))
-                startActivity(DeckTestingActivity.createIntent(this, sessionId))
+                startActivity(DeckTestingActivity.createIntent(this, state.deckId))
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -440,8 +390,9 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun editDeckName(): Observable<String> {
         return inputDeckName.textChanges()
+            .skipInitialValue()
             .map { it.toString() }
-            .uiDebounce()
+            .uiDebounce(DEBOUNCE_TIME_MS)
             .doOnNext {
                 Analytics.event(Event.SelectContent.Deck.EditName)
             }
@@ -449,8 +400,9 @@ class DeckBuilderActivity : BaseActivity(),
 
     override fun editDeckDescription(): Observable<String> {
         return inputDeckDescription.textChanges()
+            .skipInitialValue()
             .map { it.toString() }
-            .uiDebounce()
+            .uiDebounce(DEBOUNCE_TIME_MS)
             .doOnNext {
                 Analytics.event(Event.SelectContent.Deck.EditDescription)
             }
@@ -459,18 +411,10 @@ class DeckBuilderActivity : BaseActivity(),
     override fun editDeckCollectionOnly(): Observable<Boolean> {
         return collectionSwitch.checkedChanges()
             .skipInitialValue()
-            .uiDebounce()
+            .uiDebounce(DEBOUNCE_TIME_MS)
             .doOnNext {
                 Analytics.event(Event.SelectContent.Deck.EditCollectionOnly(it))
             }
-    }
-
-    override fun saveDeck(): Observable<Unit> {
-        return saveDeck
-    }
-
-    override fun showSaveAction(hasChanges: Boolean) {
-        invalidateOptionsMenu()
     }
 
     override fun showCardCount(count: Int) {
@@ -562,31 +506,6 @@ class DeckBuilderActivity : BaseActivity(),
         collectionPriceHigh.text = high?.times(-1.0)?.formatPrice() ?: "n/a"
     }
 
-    override fun showIsSaving(isSaving: Boolean) {
-        invalidateOptionsMenu()
-        if (isSaving) {
-            if (savingSnackBar == null) {
-                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saving_message, Snackbar.LENGTH_INDEFINITE)
-            } else {
-                savingSnackBar?.setText(R.string.deckbuilder_saving_message)
-                savingSnackBar?.duration = Snackbar.LENGTH_INDEFINITE
-            }
-
-            savingSnackBar?.show()
-        } else {
-            if (savingSnackBar == null) {
-                savingSnackBar = Snackbar.make(pager, R.string.deckbuilder_saved_message, Snackbar.LENGTH_SHORT)
-            } else {
-                savingSnackBar?.setText(R.string.deckbuilder_saved_message)
-                savingSnackBar?.duration = Snackbar.LENGTH_SHORT
-            }
-
-            if (savingSnackBar?.isShown == true) {
-                savingSnackBar?.show()
-            }
-        }
-    }
-
     override fun showIsEditing(isEditing: Boolean) {
         invalidateOptionsMenu()
         adapter.isEditing = isEditing
@@ -631,24 +550,18 @@ class DeckBuilderActivity : BaseActivity(),
         ruleAdapter.submitList(errors)
     }
 
-    @SuppressLint("CheckResult", "RxLeakedSubscription")
-    private fun destroySession() {
-        editRepository.deleteSession(sessionId)
-            .subscribe({
-                Timber.i("Session[$sessionId] Deleted!")
-            }, { t -> Timber.e(t, "Error deleting Session[$sessionId]") })
-    }
-
     companion object {
         private const val EXTRA_IS_NEW = "DeckBuilderActivity.IsNew"
-        private const val EXTRA_SESSION_ID = "DeckBuilderActivity.SessionId"
+        private const val EXTRA_DECK_ID = "DeckBuilderActivity.DeckId"
         private const val OFFSCREEN_PAGE_LIMIT = 3
+        private const val RC_EDIT_CHANGES = 1000
+        private const val DEBOUNCE_TIME_MS = 1000L
 
         private fun createIntent(context: Context): Intent = Intent(context, DeckBuilderActivity::class.java)
 
-        fun createIntent(context: Context, sessionId: Long, isNew: Boolean = false): Intent {
+        fun createIntent(context: Context, deckId: String, isNew: Boolean = false): Intent {
             val intent = createIntent(context)
-            intent.putExtra(EXTRA_SESSION_ID, sessionId)
+            intent.putExtra(EXTRA_DECK_ID, deckId)
             intent.putExtra(EXTRA_IS_NEW, isNew)
             return intent
         }

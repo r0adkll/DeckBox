@@ -46,7 +46,6 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
         override val isLoading: Boolean,
         override val error: String?,
 
-        val sessionId: Long?,
         val deckId: String?,
         val metadata: Metadata?,
 
@@ -78,7 +77,7 @@ interface DeckTestingUi : Ui<DeckTestingUi.State, DeckTestingUi.State.Change> {
         companion object {
 
             val DEFAULT by lazy {
-                State(false, null, null, null, null, 1000, null, null)
+                State(false, null, null, null, 1000, null, null)
             }
         }
     }

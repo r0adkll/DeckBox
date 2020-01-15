@@ -37,7 +37,7 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
 
     @Parcelize
     data class State(
-        val sessionId: Long?,
+        val deckId: String?,
         val card: PokemonCard?,
         val error: String?,
         val count: Int?,
@@ -78,7 +78,7 @@ interface CardDetailUi : Ui<CardDetailUi.State, CardDetailUi.State.Change> {
         }
 
         override fun toString(): String {
-            return "State(sessionId=$sessionId, card=${card?.id}, count=$count, variants=${variants.size}, " +
+            return "State(deckId=$deckId, card=${card?.id}, count=$count, variants=${variants.size}, " +
                 "evolvesFrom=${evolvesFrom.size}, evolvesTo=${evolvesTo.size}, validation=$validation, " +
                 "collection=$collectionCount, products=$product)"
         }
