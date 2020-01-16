@@ -183,12 +183,6 @@ class SearchActivity : BaseActivity(),
         drawer.closeDrawer(GravityCompat.END)
     }
 
-    override fun setQueryText(text: String) {
-        if (searchView.query?.toString() != text) {
-            searchView.setQuery(text, false)
-        }
-    }
-
     override fun showFilterEmpty(enabled: Boolean) {
         actionFilter.setImageResource(when (enabled) {
             true -> R.drawable.ic_filter_outline
