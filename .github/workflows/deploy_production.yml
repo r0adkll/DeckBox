@@ -1,9 +1,10 @@
-name: Deploy Alpha
+name: Deploy Production
 
 on:
   push:
-    branches:
-      - feature/alpha-*
+    tags:
+      - v*.*.*
+
 
 jobs:
   deploy:
@@ -43,6 +44,6 @@ jobs:
           serviceAccountJson: play-service-account.json
           packageName: com.r0adkll.deckbuilder
           releaseFile: ${{ env.SIGNED_RELEASE_FILE }}
-          track: alpha
+          track: production
           whatsNewDirectory: distribution/
           mappingFile: app/build/outputs/mapping/release/mapping.txt

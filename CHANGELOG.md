@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.11.0
+* [#118](https://github.com/r0adkll/DeckBox/issues/118) - Replaced intermediate session "editing" to now just have changes lazy-save to the deck (creating a new one if building from scratch).
+* [#116](https://github.com/r0adkll/DeckBox/issues/116) - Added dialog confirmation to +1 entire collection set feature. Added a -1 entire collection feature.
+* Fixed issue with search input field erasing characters
+* Fixed issue with search filter not operating correctly with supertypes
+
 ## 1.10.2-hotfix
 * Turned off proguard and minimizing for immediate fix and later solution
 * Fixed DB migration for new pricing data
