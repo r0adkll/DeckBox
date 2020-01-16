@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.oss.licenses.plugin'
 apply plugin: 'io.fabric'
 
-def VERSION_NAME = "1.10.2"
+def VERSION_NAME = "1.11.0"
 
 gitVersioner {
     baseBranch 'master'

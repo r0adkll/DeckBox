@@ -1,10 +1,8 @@
-• HOTFIX: fixed crashing from previous release
-• Improved marketplace price accuracy and frequency
-• Simplified search interface to be more streamlined
-• Ton of improvement around code quality and size.
-• Reduced application size
-• Improved offline cache support to include hi-res images
-• Added screen to manage cache
+• Changes made to decks are now persisted instantly, no longer needing to hit "save"
+• Fixed issue with search input field erasing characters you type
+• Fixed issue with search filter not operating correctly
+• Added confirmation to +1 entire collection set
+• Added a way to -1 an entire collection set
 
 ---
 • For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md
