@@ -22,6 +22,7 @@ interface CollectionSetUi : Ui<State, Change> {
         fun addCard(): Observable<List<PokemonCard>>
         fun removeCard(): Observable<PokemonCard>
         fun addSet(): Observable<Unit>
+        fun removeSet(): Observable<Unit>
         fun toggleMissingCards(): Observable<Unit>
     }
 

@@ -58,6 +58,13 @@ class CollectionSetPresenter @Inject constructor(
                     .onErrorReturn { Change.Error("Something went wrong incrementing set in collection") }
             }
 
+        val removeSet = intentions.removeSet()
+            .flatMap {
+                collectionRepository.decrementSet(ui.state.expansion!!.code, ui.state.cards)
+                    .map { Change.CountsUpdated(it) as Change }
+                    .onErrorReturn { Change.Error("Something went wrong decrementing set in collection") }
+            }
+
         val toggleMissingCards = intentions.toggleMissingCards()
             .map { Change.ToggleMissingCards as Change }
 
@@ -65,6 +72,7 @@ class CollectionSetPresenter @Inject constructor(
             .mergeWith(addCard)
             .mergeWith(removeCard)
             .mergeWith(addSet)
+            .mergeWith(removeSet)
             .mergeWith(toggleMissingCards)
     }
 }

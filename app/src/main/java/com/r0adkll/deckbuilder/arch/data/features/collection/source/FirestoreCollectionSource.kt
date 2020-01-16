@@ -160,6 +160,32 @@ class FirestoreCollectionSource @Inject constructor(
         } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
     }
 
+    override fun decrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>> {
+        return getUserCardCollection()?.let { collection ->
+            collection.whereEqualTo("set", set)
+                .get()
+                .asObservable(schedulers.firebaseExecutor)
+                .flatMap {
+                    val batch = FirebaseFirestore.getInstance().batch()
+                    val entities = it.toObjects(CollectionCountEntity::class.java)
+
+                    entities.forEach { entity ->
+                        batch.update(collection.document(entity.cardId), "count",
+                            entity.count.minus(1).coerceAtLeast(0))
+                    }
+
+                    batch.commit()
+                        .asVoidObservable(schedulers.firebaseExecutor)
+                        .map {
+                            entities.forEach {
+                                it.count = it.count.minus(1).coerceAtLeast(0)
+                            }
+                            entities.map(EntityMapper::to)
+                        }
+                }
+        } ?: Observable.error(FirebaseAuthException("-1", "no current user logged in"))
+    }
+
     fun migrateLegacyCounts(): Observable<Unit> {
         return getUserCardCollection()?.let { collection ->
             collection.get()

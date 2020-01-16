@@ -61,6 +61,14 @@ class RoomCollectionSource @Inject constructor(
         }.subscribeOn(schedulers.database)
     }
 
+    override fun decrementSet(set: String, cards: List<PokemonCard>): Observable<List<CollectionCount>> {
+        return Observable.fromCallable {
+            db.collection()
+                .decrementSet(set, cards)
+                .map(EntityMapper::to)
+        }.subscribeOn(schedulers.database)
+    }
+
     fun getAll(): Single<List<CollectionCount>> {
         return db.collection().getAll()
             .map { it.map(EntityMapper::to) }

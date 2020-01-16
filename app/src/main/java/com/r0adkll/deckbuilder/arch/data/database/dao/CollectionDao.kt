@@ -102,4 +102,16 @@ abstract class CollectionDao {
 
         return existingCards + newCountEntities
     }
+
+    @Transaction
+    open fun decrementSet(set: String, cards: List<PokemonCard>): List<CollectionCountEntity> {
+        val existingCards = counts(set)
+        existingCards.forEach {
+            if (it.count > 0) {
+                it.count--
+            }
+        }
+        updateCounts(existingCards)
+        return existingCards
+    }
 }
