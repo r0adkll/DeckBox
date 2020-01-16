@@ -411,7 +411,6 @@ class DeckBuilderActivity : BaseActivity(),
     override fun editDeckCollectionOnly(): Observable<Boolean> {
         return collectionSwitch.checkedChanges()
             .skipInitialValue()
-            .uiDebounce(DEBOUNCE_TIME_MS)
             .doOnNext {
                 Analytics.event(Event.SelectContent.Deck.EditCollectionOnly(it))
             }

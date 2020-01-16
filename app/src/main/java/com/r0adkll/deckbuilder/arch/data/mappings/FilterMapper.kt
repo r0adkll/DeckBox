@@ -9,6 +9,10 @@ object FilterMapper {
     fun to(filter: Filter): CardQueryBuilder {
         val builder = CardQueryBuilder()
 
+        if (filter.superType != null) {
+            builder.supertype = filter.superType.displayName
+        }
+
         if (filter.types.isNotEmpty()) {
             builder.types = filter.types.joinToString(separator = "|")
         }

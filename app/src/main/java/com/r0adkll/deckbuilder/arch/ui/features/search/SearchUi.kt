@@ -22,7 +22,6 @@ interface SearchUi : Ui<SearchUi.State, SearchUi.State.Change> {
     interface Actions {
 
         fun showFilterEmpty(enabled: Boolean)
-        fun setQueryText(text: String)
         fun setResults(cards: List<PokemonCard>)
         fun setSelectedCards(cards: List<PokemonCard>)
         fun showLoading(isLoading: Boolean)

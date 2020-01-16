@@ -68,13 +68,6 @@ class SearchRenderer(
             }
 
         disposables += state
-            .map { it.query }
-            .addToLifecycle()
-            .subscribe {
-                actions.setQueryText(it)
-            }
-
-        disposables += state
             .map { it.selected }
             .distinctUntilChanged()
             .addToLifecycle()
