@@ -278,7 +278,7 @@
     <string name="action_retry">Retry</string>
     <string name="pref_account_migrate_collection_title">Migrate your Collection</string>
     <string name="pref_account_migrate_collection_summary">Move your collection counts to your online account</string>
-    <string name="action_add_all">Add entire set</string>
+    <string name="action_add_all">Increment entire set</string>
     <string name="pref_category_preview">Preview</string>
     <string name="pref_preview_expansions_title">Preview expansions</string>
     <string name="pref_preview_expansions_summary">Enable access to the preview expansions for unreleased sets</string>
@@ -320,4 +320,11 @@
     <string name="pref_about_developer">Developed by</string>
     <string name="pref_about_opensource">Contribute</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="dialog_collection_add_all_title">Increment all cards</string>
+    <string name="dialog_collection_add_all_message">This will increment every card in this collection by 1. Are you sure you want to do this?</string>
+    <string name="action_increment">Increment</string>
+    <string name="action_remove_all">Decrement entire set</string>
+    <string name="dialog_collection_remove_all_title">Decrement all cards</string>
+    <string name="dialog_collection_remove_all_message">This will decrement every card in this collection by 1. Are you sure you want to do this?</string>
+    <string name="action_decrement">Decrement</string>
 </resources>

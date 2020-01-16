@@ -1,5 +1,6 @@
 package com.r0adkll.deckbuilder.arch.ui.features.collection.set
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.ftinc.kit.arch.presentation.BaseActivity
 import com.ftinc.kit.arch.presentation.delegates.StatefulActivityDelegate
+import com.ftinc.kit.arch.util.plusAssign
 import com.ftinc.kit.extensions.color
 import com.ftinc.kit.extensions.dip
 import com.ftinc.kit.extensions.smallestWidth
@@ -32,6 +34,7 @@ import com.r0adkll.deckbuilder.arch.ui.features.collection.set.adapter.Collectio
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetModule
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
+import com.r0adkll.deckbuilder.util.DialogUtils
 import com.r0adkll.deckbuilder.util.extensions.layoutHeight
 import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
 import com.r0adkll.deckbuilder.util.extensions.margins
@@ -55,6 +58,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
     private val addCardClicks = PublishRelay.create<List<PokemonCard>>()
     private val removeCardClicks = PublishRelay.create<PokemonCard>()
     private val incrementSetClicks = PublishRelay.create<Unit>()
+    private val decrementSetClicks = PublishRelay.create<Unit>()
     private val toggleMissingCardsClicks = PublishRelay.create<Unit>()
 
     private lateinit var adapter: CollectionSetRecyclerAdapter
@@ -131,11 +135,37 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         } ?: false
     }
 
+    @SuppressLint("RxSubscribeOnError")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_add_all -> {
-                Analytics.event(Event.SelectContent.MenuAction("collection_add_all"))
-                incrementSetClicks.accept(Unit)
+                disposables += DialogUtils.confirmDialog(
+                    this,
+                    DialogUtils.DialogText.Resource(R.string.dialog_collection_add_all_title),
+                    DialogUtils.DialogText.Resource(R.string.dialog_collection_add_all_message),
+                    R.string.action_increment,
+                    android.R.string.cancel
+                ).subscribe {
+                    if (it) {
+                        Analytics.event(Event.SelectContent.MenuAction("collection_add_all"))
+                        incrementSetClicks.accept(Unit)
+                    }
+                }
+                true
+            }
+            R.id.action_remove_all -> {
+                disposables += DialogUtils.confirmDialog(
+                    this,
+                    DialogUtils.DialogText.Resource(R.string.dialog_collection_remove_all_title),
+                    DialogUtils.DialogText.Resource(R.string.dialog_collection_remove_all_message),
+                    R.string.action_decrement,
+                    android.R.string.cancel
+                ).subscribe {
+                    if (it) {
+                        Analytics.event(Event.SelectContent.MenuAction("collection_remove_all"))
+                        decrementSetClicks.accept(Unit)
+                    }
+                }
                 true
             }
             R.id.action_toggle_missing_cards -> {
@@ -183,6 +213,10 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         return incrementSetClicks
     }
 
+    override fun removeSet(): Observable<Unit> {
+        return decrementSetClicks
+    }
+
     override fun toggleMissingCards(): Observable<Unit> {
         return toggleMissingCardsClicks
     }
@@ -220,6 +254,7 @@ class CollectionSetActivity : BaseActivity(), CollectionSetUi, CollectionSetUi.I
         val color = if (isLight) color(R.color.black87) else Color.WHITE
         val secondaryColor = if (isLight) color(R.color.black54) else color(R.color.white50)
         appbar?.navigationIcon?.setTint(color)
+        appbar?.overflowIcon = appbar?.overflowIcon?.let { it.setTint(color); it }
         progressCompletion.setTextColor(color)
         progressBar.borderColor = color
         progressBar.trackColor = secondaryColor
