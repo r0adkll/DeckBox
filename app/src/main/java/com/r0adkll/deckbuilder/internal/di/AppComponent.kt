@@ -15,8 +15,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailComponen
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.di.CardDetailModule
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetComponent
 import com.r0adkll.deckbuilder.arch.ui.features.collection.set.di.CollectionSetModule
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckImageComponent
-import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.deckimage.di.DeckImageModule
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.DeckBuilderComponent
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.DeckExportActivity
 import com.r0adkll.deckbuilder.arch.ui.features.exporter.di.MultiExportComponent

@@ -43,9 +43,11 @@ class DefaultEditRepository(
         return if (sessions.containsKey(editId)) {
             val mappedDeckId = sessions[editId]
             if (mappedDeckId.isNullOrBlank()) {
-                // At this point, we are waiting on the user to make an edit, so we want to switchMap the sessions change notifications
+                // At this point, we are waiting on the user to make an edit,
+                // so we want to switchMap the sessions change notifications
                 changeNotifications.switchMap {
-                    // Check again if the mapped deck id exists for this edit id, if so observe it, otherwise just return empty
+                    // Check again if the mapped deck id exists for this edit id,
+                    // if so observe it, otherwise just return empty
                     val newMappedDeckId = sessions[editId]
                     if (newMappedDeckId.isNullOrBlank()) {
                         Observable.empty()
@@ -114,7 +116,8 @@ class DefaultEditRepository(
      * If the [editId] is set in the session map, and has a valid deckId, then we just pass through that mapped
      * deck id.
      *
-     * @param editId the id that the user is making the edit with. Could be a new session id, a mapped session id, or a deck id
+     * @param editId the id that the user is making the edit with. Could be a new session id, a mapped session id,
+     *               or a deck id
      * @param action the resulting edit action to apply after determining if we need a new deck or not
      */
     private fun <T> createDeckIfNeeded(editId: String, action: (String) -> Observable<T>): Observable<T> {

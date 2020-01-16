@@ -11,8 +11,8 @@ import com.r0adkll.deckbuilder.arch.data.database.converter.UriConverter
 import com.r0adkll.deckbuilder.arch.data.database.dao.CardDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.CollectionDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.DeckDao
-import com.r0adkll.deckbuilder.arch.data.database.dao.MarketplaceDao
 import com.r0adkll.deckbuilder.arch.data.database.dao.EditDao
+import com.r0adkll.deckbuilder.arch.data.database.dao.MarketplaceDao
 import com.r0adkll.deckbuilder.arch.data.database.entities.AttackEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CardEntity
 import com.r0adkll.deckbuilder.arch.data.database.entities.CollectionCountEntity

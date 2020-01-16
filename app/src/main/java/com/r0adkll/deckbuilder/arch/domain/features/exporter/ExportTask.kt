@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class ExportTask(val deckId: String): Parcelable
+data class ExportTask(val deckId: String) : Parcelable

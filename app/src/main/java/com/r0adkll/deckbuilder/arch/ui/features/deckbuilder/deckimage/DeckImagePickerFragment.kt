@@ -13,7 +13,6 @@ import com.ftinc.kit.util.bindString
 import com.ftinc.kit.util.bundle
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.view.clicks
-import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
