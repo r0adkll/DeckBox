@@ -11,16 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.ftinc.kit.arch.presentation.BaseFragment
 import com.ftinc.kit.arch.presentation.delegates.StatefulFragmentDelegate
 import com.ftinc.kit.arch.util.plusAssign
-import com.ftinc.kit.util.bindString
-import com.ftinc.kit.util.bundle
 import com.ftinc.kit.widget.EmptyView
-import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.components.EditCardIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.carddetail.CardDetailActivity
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.di.EditId

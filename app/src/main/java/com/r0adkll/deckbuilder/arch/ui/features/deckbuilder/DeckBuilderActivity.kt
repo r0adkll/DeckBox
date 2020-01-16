@@ -237,7 +237,6 @@ class DeckBuilderActivity : BaseActivity(),
             }
         })
 
-
         disposables += pokemonCardClicks
             .uiDebounce()
             .observeOn(AndroidSchedulers.mainThread())

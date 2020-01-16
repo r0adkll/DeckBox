@@ -5,7 +5,6 @@ import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.ftinc.kit.arch.util.plusAssign
 import com.google.firebase.auth.FirebaseAuth
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.arch.data.AppPreferences
@@ -13,7 +12,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckReposit
 import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepository
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.DeckBuilderActivity
 import com.r0adkll.deckbuilder.arch.ui.features.home.HomeActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 

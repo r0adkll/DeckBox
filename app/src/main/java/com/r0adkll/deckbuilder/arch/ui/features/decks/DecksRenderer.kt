@@ -2,7 +2,6 @@ package com.r0adkll.deckbuilder.arch.ui.features.decks
 
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.renderers.UiBaseStateRenderer
-import com.ftinc.kit.arch.util.mapNullable
 import com.ftinc.kit.arch.util.plusAssign
 import com.r0adkll.deckbuilder.arch.domain.Format
 import com.r0adkll.deckbuilder.arch.ui.features.decks.adapter.Item

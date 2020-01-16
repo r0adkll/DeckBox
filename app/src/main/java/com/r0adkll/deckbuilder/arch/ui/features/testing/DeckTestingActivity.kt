@@ -22,7 +22,6 @@ import com.ftinc.kit.arch.util.plusAssign
 import com.ftinc.kit.arch.util.uiDebounce
 import com.ftinc.kit.extensions.dp
 import com.ftinc.kit.extensions.toast
-import com.ftinc.kit.util.bindLong
 import com.ftinc.kit.util.bindOptionalString
 import com.ftinc.kit.widget.EmptyView
 import com.jakewharton.rxbinding2.view.clicks
@@ -39,10 +38,10 @@ import com.r0adkll.deckbuilder.arch.ui.features.testing.di.DeckTestingModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
-import com.r0adkll.deckbuilder.util.glide.ImageType
 import com.r0adkll.deckbuilder.util.extensions.fromHtml
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
 import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
+import com.r0adkll.deckbuilder.util.glide.ImageType
 import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable

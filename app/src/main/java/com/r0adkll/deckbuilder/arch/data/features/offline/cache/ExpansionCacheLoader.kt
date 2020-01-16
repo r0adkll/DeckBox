@@ -11,7 +11,6 @@ import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
 import timber.log.Timber
 import java.io.File
-import java.lang.Exception
 import javax.inject.Inject
 
 class ExpansionCacheLoader @Inject constructor(

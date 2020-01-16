@@ -7,7 +7,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.editing.repository.EditRepos
 import com.r0adkll.deckbuilder.arch.domain.features.testing.DeckTester
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State.Change
-import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject

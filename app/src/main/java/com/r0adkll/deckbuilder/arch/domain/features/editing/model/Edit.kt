@@ -14,7 +14,7 @@ sealed class Edit {
     class Description(val description: String) : Edit()
     class CollectionOnly(val collectionOnly: Boolean) : Edit()
     class AddCards(val cards: List<PokemonCard>) : Edit() {
-        constructor(vararg cards: PokemonCard): this(cards.toList())
+        constructor(vararg cards: PokemonCard) : this(cards.toList())
     }
     class RemoveCard(val card: PokemonCard) : Edit()
 }

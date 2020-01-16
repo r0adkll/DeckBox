@@ -28,8 +28,8 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterIntentions
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableComponent
 import com.r0adkll.deckbuilder.arch.ui.features.filter.di.FilterableModule
 import com.r0adkll.deckbuilder.arch.ui.features.search.DrawerInteractor
-import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.KeyboardScrollHideListener
+import com.r0adkll.deckbuilder.arch.ui.features.search.adapter.SearchResultsRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchComponent
 import com.r0adkll.deckbuilder.arch.ui.features.unifiedsearch.di.UnifiedSearchModule
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView

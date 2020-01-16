@@ -11,8 +11,8 @@ import com.ftinc.kit.arch.util.bindView
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
 import com.r0adkll.deckbuilder.arch.ui.widgets.TestResultProgressView
-import com.r0adkll.deckbuilder.util.glide.ImageType
 import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
+import com.r0adkll.deckbuilder.util.glide.ImageType
 
 @Suppress("MagicNumber")
 class TestResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

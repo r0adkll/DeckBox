@@ -65,7 +65,8 @@ class CardDetailPresenter @Inject constructor(
                 .onErrorReturn(handleUnknownError)
         } ?: Observable.empty()
 
-        val loadEvolvesTo = cardRepository.search(ui.state.card!!.supertype, "", Filter(evolvesFrom = ui.state.card!!.name))
+        val loadEvolvesTo = cardRepository.search(ui.state.card!!.supertype, "",
+            Filter(evolvesFrom = ui.state.card!!.name))
             .map { Change.EvolvesToLoaded(it) as Change }
             .onErrorReturn(handleUnknownError)
 

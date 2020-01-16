@@ -36,7 +36,6 @@ import com.ftinc.kit.extensions.color
 import com.ftinc.kit.extensions.dip
 import com.ftinc.kit.extensions.dp
 import com.ftinc.kit.extensions.sp
-import com.ftinc.kit.util.bindLong
 import com.ftinc.kit.util.bindOptionalParcelable
 import com.ftinc.kit.util.bindOptionalString
 import com.ftinc.kit.widget.EmptyView
@@ -58,11 +57,11 @@ import com.r0adkll.deckbuilder.internal.analytics.Analytics
 import com.r0adkll.deckbuilder.internal.analytics.Event
 import com.r0adkll.deckbuilder.util.CardUtils
 import com.r0adkll.deckbuilder.util.MarketplaceHelper
-import com.r0adkll.deckbuilder.util.glide.ImageType
 import com.r0adkll.deckbuilder.util.extensions.drawable
 import com.r0adkll.deckbuilder.util.extensions.formatPrice
 import com.r0adkll.deckbuilder.util.extensions.loadOfflineUri
 import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
+import com.r0adkll.deckbuilder.util.glide.ImageType
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_card_detail.*
 import kotlinx.android.synthetic.main.layout_card_details.*

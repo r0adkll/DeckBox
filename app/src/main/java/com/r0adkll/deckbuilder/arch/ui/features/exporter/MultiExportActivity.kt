@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.ftinc.kit.arch.di.HasComponent
 import com.ftinc.kit.arch.presentation.BaseActivity
-import com.ftinc.kit.util.bindParcelable
 import com.ftinc.kit.util.bindString
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.R
