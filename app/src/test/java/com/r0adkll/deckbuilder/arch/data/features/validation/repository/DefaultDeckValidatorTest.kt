@@ -27,7 +27,6 @@ import org.junit.Test
 class DefaultDeckValidatorTest {
 
     lateinit var expansionRepository: ExpansionRepository
-    lateinit var deckRepository: DeckRepository
     lateinit var editRepository: EditRepository
     lateinit var remote: Remote
     lateinit var validator: DefaultDeckValidator
@@ -35,12 +34,11 @@ class DefaultDeckValidatorTest {
     @Before
     fun setUp() {
         expansionRepository = mock()
-        deckRepository = mock()
         editRepository = mock()
         remote = mock()
 
         val rules = emptySet<Rule>()
-        validator = DefaultDeckValidator(rules, expansionRepository, deckRepository, editRepository, remote)
+        validator = DefaultDeckValidator(rules, expansionRepository, editRepository, remote)
     }
 
     @Test
