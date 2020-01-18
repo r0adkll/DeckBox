@@ -30,9 +30,10 @@ import com.r0adkll.deckbuilder.arch.data.database.entities.ProductEntity
  * 1. Initial Version (production)
  * 2. Added collections support (production)
  * 3. Added marketplace product + prices
+ * 4. Dropped Session Tables
  */
 @Database(
-    version = 3,
+    version = 4,
     entities = [
         DeckEntity::class,
         DeckCardJoin::class,
@@ -100,6 +101,14 @@ abstract class DeckDatabase : RoomDatabase() {
                         FOREIGN KEY(`parentId`) REFERENCES `marketplace_products`(`cardId`) ON UPDATE NO ACTION ON DELETE CASCADE 
                     )
                 """)
+            }
+        }
+
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE session_card_join")
+                database.execSQL("DROP TABLE sessions")
+                database.execSQL("DROP TABLE session_changes")
             }
         }
     }

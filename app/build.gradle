@@ -87,6 +87,10 @@ android {
     configurations.all {
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
     }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
 }
 
 androidExtensions {
@@ -111,7 +115,7 @@ ext {
     play_version = '15.0.0'
     poketcg_version = '1.1.0'
     retrofit_version = '2.3.0'
-    room_version = '2.2.2'
+    room_version = '2.2.3'
     support_version = '1.0.0'
     state_version = '1.4.1'
     stetho_version = '1.5.1'
@@ -122,8 +126,18 @@ ext {
 dependencies {
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation 'androidx.test:runner:1.2.0'
+    testImplementation "org.robolectric:robolectric:4.3"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.amshove.kluent:kluent-android:$kluent_version"
+    testImplementation "androidx.room:room-testing:$room_version"
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation "androidx.room:room-testing:$room_version"
     androidTestImplementation "org.amshove.kluent:kluent-android:$kluent_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
@@ -135,29 +149,30 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation "androidx.appcompat:appcompat:1.1.0"
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.preference:preference:1.1.0"
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
     implementation "androidx.core:core-ktx:$androidXCoreVersion"
-    implementation "com.google.android.material:material:1.2.0-alpha02"
+    implementation "com.google.android.material:material:1.2.0-alpha03"
     implementation "androidx.palette:palette:1.0.0"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
-    implementation "dev.chrisbanes:insetter:0.1.1"
-    implementation "dev.chrisbanes:insetter-ktx:0.1.1"
+    implementation "dev.chrisbanes:insetter:0.2.0"
+    implementation "dev.chrisbanes:insetter-ktx:0.2.0"
 
     implementation "com.google.firebase:firebase-core:17.2.1"
-    implementation "com.google.firebase:firebase-firestore-ktx:21.3.0"
+    implementation "com.google.firebase:firebase-firestore-ktx:21.3.1"
     implementation "com.google.firebase:firebase-auth:19.2.0"
-    implementation "com.google.firebase:firebase-config-ktx:19.0.3"
+    implementation "com.google.firebase:firebase-config-ktx:19.1.0"
     implementation "com.google.android.gms:play-services-auth:17.0.0"
     implementation "com.google.android.gms:play-services-oss-licenses:17.0.0"
     releaseImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
-    implementation "com.google.dagger:dagger:2.23.1"
-    kapt "com.google.dagger:dagger-compiler:2.23.1"
+    implementation "com.google.dagger:dagger:2.25.4"
+    kapt "com.google.dagger:dagger-compiler:2.25.4"
 
     implementation "com.github.bumptech.glide:glide:4.9.0"
     kapt "com.github.bumptech.glide:compiler:4.9.0"

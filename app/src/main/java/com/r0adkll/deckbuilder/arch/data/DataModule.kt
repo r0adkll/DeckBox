@@ -101,7 +101,8 @@ class DataModule {
         return Room.databaseBuilder(context, DeckDatabase::class.java, BuildConfig.DATABASE_NAME)
             .addMigrations(
                 DeckDatabase.MIGRATION_1_2,
-                DeckDatabase.MIGRATION_2_3
+                DeckDatabase.MIGRATION_2_3,
+                DeckDatabase.MIGRATION_3_4
             )
             .build()
     }
