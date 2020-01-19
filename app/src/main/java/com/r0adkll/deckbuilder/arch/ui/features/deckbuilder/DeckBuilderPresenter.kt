@@ -3,6 +3,7 @@ package com.r0adkll.deckbuilder.arch.ui.features.deckbuilder
 import android.annotation.SuppressLint
 import com.ftinc.kit.arch.presentation.presenter.UiPresenter
 import com.ftinc.kit.arch.util.plusAssign
+import com.r0adkll.deckbuilder.arch.data.features.validation.model.SizeRule
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
 import com.r0adkll.deckbuilder.arch.domain.features.editing.model.Edit
@@ -28,6 +29,8 @@ class DeckBuilderPresenter @Inject constructor(
     val validator: DeckValidator
 ) : UiPresenter<State, Change>(ui) {
 
+    override val tag: String? get() = "DeckBuilderPresenter"
+
     @SuppressLint("RxSubscribeOnError")
     override fun smashObservables(): Observable<Change> {
         subscribeDirectIntentions()
@@ -40,7 +43,7 @@ class DeckBuilderPresenter @Inject constructor(
                     .onErrorReturn(handleUnknownError)
 
                 // We don't want to load pricing information for invalid decks
-                val marketplace = if (false) {
+                val marketplace = if (deck.cards.size <= SizeRule.MAX_SIZE) {
                     val cardIds = deck.cards.map { it.id }.toSet()
                     marketplaceRepository.getPrices(cardIds)
                         .map { Change.PriceProducts(it) as Change }
@@ -70,42 +73,42 @@ class DeckBuilderPresenter @Inject constructor(
 
     private fun subscribeDirectIntentions() {
 
-        val onNext = Consumer<String> {
-            Timber.i("Edit complete! Deck($it)")
+        fun onNext(tag: String): Consumer<String> = Consumer {
+            Timber.i("$tag - Edit complete! Deck($it)")
         }
 
         disposables += intentions.addCards()
             .flatMap { editor.submit(ui.state.deckId, Edit.AddCards(it)) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(onNext, Consumer {
+            .subscribe(onNext("Add Cards"), Consumer {
                 Timber.e(it, "Error adding cards to deck")
             })
 
         disposables += intentions.removeCard()
             .flatMap { editor.submit(ui.state.deckId, Edit.RemoveCard(it)) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(onNext, Consumer {
+            .subscribe(onNext("Remove card"), Consumer {
                 Timber.e(it, "Error removing card from session")
             })
 
         disposables += intentions.editDeckName()
             .flatMap { editor.submit(ui.state.deckId, Edit.Name(it)) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(onNext, Consumer {
+            .subscribe(onNext("Name"), Consumer {
                 Timber.e(it, "Error changing deck name")
             })
 
         disposables += intentions.editDeckDescription()
             .flatMap { editor.submit(ui.state.deckId, Edit.Description(it)) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(onNext, Consumer {
+            .subscribe(onNext("Description"), Consumer {
                 Timber.e(it, "Error changing description name")
             })
 
         disposables += intentions.editDeckCollectionOnly()
             .flatMap { editor.submit(ui.state.deckId, Edit.CollectionOnly(it)) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(onNext, Consumer {
+            .subscribe(onNext("Collection Mode"), Consumer {
                 Timber.e(it, "Error changing collection only")
             })
     }

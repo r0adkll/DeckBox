@@ -390,6 +390,7 @@ class DeckBuilderActivity : BaseActivity(),
     override fun editDeckName(): Observable<String> {
         return inputDeckName.textChanges()
             .skipInitialValue()
+            .filter { inputDeckName.tag == true }
             .map { it.toString() }
             .uiDebounce(DEBOUNCE_TIME_MS)
             .doOnNext {
@@ -400,6 +401,7 @@ class DeckBuilderActivity : BaseActivity(),
     override fun editDeckDescription(): Observable<String> {
         return inputDeckDescription.textChanges()
             .skipInitialValue()
+            .filter { inputDeckDescription.tag == true }
             .map { it.toString() }
             .uiDebounce(DEBOUNCE_TIME_MS)
             .doOnNext {
@@ -410,6 +412,7 @@ class DeckBuilderActivity : BaseActivity(),
     override fun editDeckCollectionOnly(): Observable<Boolean> {
         return collectionSwitch.checkedChanges()
             .skipInitialValue()
+            .filter { collectionSwitch.tag == true }
             .doOnNext {
                 Analytics.event(Event.SelectContent.Deck.EditCollectionOnly(it))
             }
@@ -440,16 +443,16 @@ class DeckBuilderActivity : BaseActivity(),
         } else {
             appbarTitle?.text = name
         }
-        if (inputDeckName.text.isNullOrBlank()) {
+        if (inputDeckName.tag != true) {
             inputDeckName.setText(name)
-            inputDeckName.setSelection(name.length)
+            inputDeckName.tag = true
         }
     }
 
     override fun showDeckDescription(description: String) {
-        if (inputDeckDescription.text.isNullOrBlank()) {
+        if (inputDeckDescription.tag != true) {
             inputDeckDescription.setText(description)
-            inputDeckDescription.setSelection(description.length)
+            inputDeckDescription.tag = true
         }
     }
 
@@ -479,6 +482,7 @@ class DeckBuilderActivity : BaseActivity(),
         adapter.isCollectionEnabled = collectionOnly
         if (collectionSwitch.isChecked != collectionOnly) {
             collectionSwitch.isChecked = collectionOnly
+            collectionSwitch.tag = true
         }
     }
 
