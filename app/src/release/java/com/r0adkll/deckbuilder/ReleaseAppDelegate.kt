@@ -24,7 +24,6 @@ class ReleaseAppDelegate : AppDelegate {
     private fun installCrashlytics() {
         FirebaseCrashlytics.getInstance().apply {
             setCustomKey("GIT_HASH", BuildConfig.GIT_SHA)
-            setCustomKey("FLAVOR", BuildConfig.FLAVOR)
         }
         Timber.plant(CrashlyticsTree())
     }
