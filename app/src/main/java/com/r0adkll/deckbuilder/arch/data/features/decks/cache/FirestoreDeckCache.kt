@@ -33,7 +33,7 @@ class FirestoreDeckCache @Inject constructor(
         return getUserDeckCollection()?.let { collection ->
             collection.document(id)
                 .observeAs {
-                    it.toObject(DeckEntity::class.java)!!.apply {
+                    it.toObject(DeckEntity::class.java)?.apply {
                         this.id = it.id
                     }
                 }

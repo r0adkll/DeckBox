@@ -32,10 +32,10 @@ class TabletDragListener(
 
     @Suppress("ComplexMethod")
     override fun onDrag(v: View, event: DragEvent): Boolean {
-        val state = event.localState as PokemonCardView.DragState
+        val state = event.localState as? PokemonCardView.DragState
 
         // Only respond if the drag and drop mode is not an edit mode
-        if (!state.isEdit) {
+        if (state?.isEdit == false) {
             return when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> {
                     showDropZone()

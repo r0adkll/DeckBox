@@ -1,37 +1,33 @@
 package com.r0adkll.deckbuilder.util
 
-import com.crashlytics.android.Crashlytics
+import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
 class CrashlyticsTree : Timber.DebugTree() {
 
     override fun e(t: Throwable) {
-        Crashlytics.logException(t)
+        FirebaseCrashlytics.getInstance()
+            .recordException(t)
     }
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        if (message.length < MAX_LOG_LENGTH) {
-            Crashlytics.log(priority, tag, message)
-            return
+        val readablePriority = when (priority) {
+            Log.VERBOSE -> "VERBOSE"
+            Log.DEBUG -> "DEBUG"
+            Log.INFO -> "INFO"
+            Log.ASSERT -> "ASSERT"
+            Log.WARN -> "WARN"
+            Log.ERROR -> "ERROR"
+            else -> "$priority"
         }
 
-        // Split by line, then ensure each line can fit into Log's maximum length.
-        var i = 0
-        val length = message.length
-        while (i < length) {
-            var newline = message.indexOf('\n', i)
-            newline = if (newline != -1) newline else length
-            do {
-                val end = Math.min(newline, i + MAX_LOG_LENGTH)
-                val part = message.substring(i, end)
-                Crashlytics.log(priority, tag, part)
-                i = end
-            } while (i < newline)
-            i++
-        }
-    }
+        FirebaseCrashlytics.getInstance()
+            .log("$readablePriority:($tag) $message")
 
-    companion object {
-        private val MAX_LOG_LENGTH = 4000
+        if (t != null) {
+            FirebaseCrashlytics.getInstance()
+                .log(Log.getStackTraceString(t))
+        }
     }
 }

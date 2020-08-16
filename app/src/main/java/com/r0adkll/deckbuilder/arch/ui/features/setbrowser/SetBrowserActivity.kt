@@ -87,8 +87,10 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val filter = tab.tag as? BrowseFilter
-                filterChanges.accept(filter)
-                Analytics.event(Event.SelectContent.Action("expansion_filter", filter.toString()))
+                if (filter != null) {
+                    filterChanges.accept(filter)
+                    Analytics.event(Event.SelectContent.Action("expansion_filter", filter.toString()))
+                }
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -110,10 +112,13 @@ class SetBrowserActivity : BaseActivity(), SetBrowserUi, SetBrowserUi.Intentions
             val percent = offset.toFloat() / height
             val minScale = 0.4f
             val maxScale = 1f
-            val scale = maxScale + ((maxScale - minScale) * percent)
+            var scale = maxScale + ((maxScale - minScale) * percent)
+            if (scale.isNaN()) {
+                scale = minScale
+            }
             logo.pivotX = logo.width * 0.5f
             logo.pivotY = logo.height.toFloat() * 0.9f
-            logo.scaleX = scale
+            logo.scaleX = scale.coerceIn(-Float.MAX_VALUE..Float.MAX_VALUE)
             logo.scaleY = scale
         })
 

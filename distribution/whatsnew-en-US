@@ -1,8 +1,5 @@
-• Changes made to decks are now persisted instantly, no longer needing to hit "save"
-• Fixed issue with search input field erasing characters you type
-• Fixed issue with search filter not operating correctly
-• Added confirmation to +1 entire collection set
-• Added a way to -1 an entire collection set
+• Bug Fixes
+• Updating crash reporting
 
 ---
 • For more information visit: https://github.com/r0adkll/DeckBox/blob/master/CHANGELOG.md

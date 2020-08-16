@@ -87,7 +87,7 @@ object RxFirebase {
         }, BackpressureStrategy.BUFFER)
     }
 
-    inline fun <reified T : Any> DocumentReference.observeAs(crossinline mapper: (DocumentSnapshot) -> T): Flowable<T> {
+    inline fun <reified T : Any> DocumentReference.observeAs(crossinline mapper: (DocumentSnapshot) -> T?): Flowable<T> {
         return Flowable.create({ source ->
 
             val registration = this.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->

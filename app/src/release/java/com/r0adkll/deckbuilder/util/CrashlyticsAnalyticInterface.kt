@@ -1,17 +1,21 @@
 package com.r0adkll.deckbuilder.util
 
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.r0adkll.deckbuilder.internal.analytics.AnalyticInterface
 import com.r0adkll.deckbuilder.internal.analytics.Event
 
 class CrashlyticsAnalyticInterface : AnalyticInterface {
 
     override fun setUserId(id: String) {
-        Crashlytics.setUserIdentifier(id)
+        FirebaseCrashlytics.getInstance()
+            .setUserId(id)
     }
 
     override fun setUserProperty(key: String, value: String?) {
-        Crashlytics.setString(key, value)
+        if (value != null) {
+            FirebaseCrashlytics.getInstance()
+                .setCustomKey(key, value)
+        }
     }
 
     override fun postEvent(event: Event) {
