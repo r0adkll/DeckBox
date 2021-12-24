@@ -29,6 +29,7 @@ import com.jakewharton.rxbinding2.view.longClicks
 import com.r0adkll.deckbuilder.DeckApp
 import com.r0adkll.deckbuilder.GlideApp
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.SubTypes
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.ui.components.DividerSpacerItemDecoration
 import com.r0adkll.deckbuilder.arch.ui.features.testing.DeckTestingUi.State
@@ -42,7 +43,6 @@ import com.r0adkll.deckbuilder.util.extensions.fromHtml
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
 import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import com.r0adkll.deckbuilder.util.glide.ImageType
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -246,7 +246,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
             cards[it].setImageDrawable(images[it])
             val isBasic = hand[it].let {
                 it.supertype == SuperType.POKEMON &&
-                    (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank())
+                    (it.subtype == SubTypes.BASIC || it.evolvesFrom.isNullOrBlank())
             }
             cards[it].elevation = if (isBasic) dp(4f) else 0f
             cards[it].scaleX = if (isBasic) 1.05f else 1f

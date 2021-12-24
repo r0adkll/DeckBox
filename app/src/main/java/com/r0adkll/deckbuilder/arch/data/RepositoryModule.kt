@@ -16,6 +16,7 @@ import com.r0adkll.deckbuilder.arch.data.features.expansions.repository.source.D
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.DefaultMarketplaceRepository
 import com.r0adkll.deckbuilder.arch.data.features.offline.repository.DefaultOfflineRepository
 import com.r0adkll.deckbuilder.arch.data.features.preview.RemotePreviewRepository
+import com.r0adkll.deckbuilder.arch.data.features.subtypes.DefaultSubtypeRepository
 import com.r0adkll.deckbuilder.arch.domain.features.account.AccountRepository
 import com.r0adkll.deckbuilder.arch.domain.features.cards.repository.CardRepository
 import com.r0adkll.deckbuilder.arch.domain.features.collection.repository.CollectionRepository
@@ -26,6 +27,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.repository.Expans
 import com.r0adkll.deckbuilder.arch.domain.features.marketplace.repository.MarketplaceRepository
 import com.r0adkll.deckbuilder.arch.domain.features.offline.repository.OfflineRepository
 import com.r0adkll.deckbuilder.arch.domain.features.preview.PreviewRepository
+import com.r0adkll.deckbuilder.arch.domain.features.subtypes.SubtypeRepository
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import dagger.Module
@@ -34,54 +36,70 @@ import dagger.Provides
 @Module
 class RepositoryModule {
 
-    @Provides @AppScope
-    fun provideAccountRepository(repository: DefaultAccountRepository): AccountRepository = repository
+  @Provides
+  @AppScope
+  fun provideAccountRepository(repository: DefaultAccountRepository): AccountRepository = repository
 
-    @Provides @AppScope
-    fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository
+  @Provides
+  @AppScope
+  fun provideDecksRepository(repository: DefaultDeckRepository): DeckRepository = repository
 
-    @Provides @AppScope
-    fun provideCommunityRepository(repository: DefaultCommunityRepository): CommunityRepository = repository
+  @Provides
+  @AppScope
+  fun provideCommunityRepository(repository: DefaultCommunityRepository): CommunityRepository = repository
 
-    @Provides @AppScope
-    fun provideEditRepository(
-        db: DeckDatabase,
-        preferences: AppPreferences,
-        schedulers: AppSchedulers,
-        deckRepository: DeckRepository
-    ): EditRepository {
-        val localSource = RoomEditSource(db, schedulers)
-        val remoteSource = FirestoreEditSource(preferences, schedulers)
-        return DefaultEditRepository(localSource, remoteSource, preferences, deckRepository)
-    }
+  @Provides
+  @AppScope
+  fun provideEditRepository(
+    db: DeckDatabase,
+    preferences: AppPreferences,
+    schedulers: AppSchedulers,
+    deckRepository: DeckRepository
+  ): EditRepository {
+    val localSource = RoomEditSource(db, schedulers)
+    val remoteSource = FirestoreEditSource(preferences, schedulers)
+    return DefaultEditRepository(localSource, remoteSource, preferences, deckRepository)
+  }
 
-    @Provides @AppScope
-    fun provideExpansionRepository(
-        defaultSource: DefaultExpansionDataSource
-    ): ExpansionRepository = DefaultExpansionRepository(defaultSource)
+  @Provides
+  @AppScope
+  fun provideExpansionRepository(
+    defaultSource: DefaultExpansionDataSource
+  ): ExpansionRepository = DefaultExpansionRepository(defaultSource)
 
-    @Provides @AppScope
-    fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
+  @Provides
+  @AppScope
+  fun provideCardRepository(repository: DefaultCardRepository): CardRepository = repository
 
-    @Provides @AppScope
-    fun provideOfflineRepository(repository: DefaultOfflineRepository): OfflineRepository = repository
+  @Provides
+  @AppScope
+  fun provideOfflineRepository(repository: DefaultOfflineRepository): OfflineRepository = repository
 
-    @Provides @AppScope
-    fun providePreviewRepository(repository: RemotePreviewRepository): PreviewRepository {
-        return repository
-    }
+  @Provides
+  @AppScope
+  fun providePreviewRepository(repository: RemotePreviewRepository): PreviewRepository {
+    return repository
+  }
 
-    @Provides @AppScope
-    fun provideMarketplaceRepository(
-        repository: DefaultMarketplaceRepository
-    ): MarketplaceRepository = repository
+  @Provides
+  @AppScope
+  fun provideMarketplaceRepository(
+    repository: DefaultMarketplaceRepository
+  ): MarketplaceRepository = repository
 
-    @Provides @AppScope
-    fun provideCollectionRepository(
-        roomCollectionCache: RoomCollectionSource,
-        firestoreCollectionCache: FirestoreCollectionSource,
-        preferences: AppPreferences
-    ): CollectionRepository {
-        return DefaultCollectionRepository(roomCollectionCache, firestoreCollectionCache, preferences)
-    }
+  @Provides
+  @AppScope
+  fun provideCollectionRepository(
+    roomCollectionCache: RoomCollectionSource,
+    firestoreCollectionCache: FirestoreCollectionSource,
+    preferences: AppPreferences
+  ): CollectionRepository {
+    return DefaultCollectionRepository(roomCollectionCache, firestoreCollectionCache, preferences)
+  }
+
+  @Provides
+  @AppScope
+  fun provideSubtypeRepository(
+    repository: DefaultSubtypeRepository
+  ): SubtypeRepository = repository
 }

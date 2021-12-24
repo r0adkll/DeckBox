@@ -29,11 +29,11 @@ object FilterQueryHelper {
         }
 
         // Adjust query for contains
-        filter?.contains?.forEach {
-            if (it.equals("Ability", true)) {
-                filterQuery = filterQuery.and("ability".notNull())
-            } // else ignore
-        }
+//        filter?.contains?.forEach {
+//            if (it.equals("Ability", true)) {
+//                filterQuery = filterQuery.and("ability".notNull())
+//            } // else ignore
+//        }
 
         // Adjust query for expansions
         if (filter?.expansions?.isNotEmpty() == true) {
@@ -109,7 +109,7 @@ object FilterQueryHelper {
     private fun applySubtypes(filter: Filter?, query: WhereAndOr<String>): WhereAndOr<String> {
         return if (filter?.subTypes?.isNotEmpty() == true) {
             when {
-                filter.subTypes.size == 1 -> query.and("subType" eq filter.subTypes[0].displayName)
+                filter.subTypes.size == 1 -> query.and("subType" eq filter.subTypes[0])
                 filter.subTypes.size > 1 -> applyMultipleSubtypes(filter, query)
                 else -> query
             }
@@ -119,12 +119,12 @@ object FilterQueryHelper {
     }
 
     private fun applyMultipleSubtypes(filter: Filter, query: WhereAndOr<String>): WhereAndOr<String> {
-        var condition = ("subType" eq filter.subTypes[0].displayName) or
-            ("subType" eq filter.subTypes[1].displayName)
+        var condition = ("subType" eq filter.subTypes[0]) or
+            ("subType" eq filter.subTypes[1])
         if (filter.subTypes.size > 2) {
             (2 until filter.subTypes.size).forEach {
                 val subType = filter.subTypes[it]
-                condition = condition or ("subType" eq subType.displayName)
+                condition = condition or ("subType" eq subType)
             }
         }
         return query.and(condition)

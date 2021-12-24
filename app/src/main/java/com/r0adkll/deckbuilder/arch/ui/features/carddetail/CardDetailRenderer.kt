@@ -46,7 +46,7 @@ class CardDetailRenderer(
             }
 
         disposables += state
-            .mapNullable { it.product?.prices?.maxBy { it.updatedAt } }
+            .mapNullable { it.product?.prices?.maxByOrNull { it.updatedAt } }
             .distinctUntilChanged()
             .addToLifecycle()
             .subscribe {

@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.gms.oss.licenses.plugin'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
-def VERSION_NAME = "1.12.0"
+def VERSION_NAME = "1.12.1"
 
 gitVersioner {
     baseBranch 'master'
@@ -16,16 +16,15 @@ gitVersioner {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.r0adkll.deckbuilder"
-        buildToolsVersion "29.0.3"
 
         minSdkVersion 22
-        targetSdkVersion 29
+        targetSdkVersion 30
 
-        versionCode gitVersioner.versionCode + 2
+        versionCode gitVersioner.versionCode + 3
         versionName "$VERSION_NAME.${gitVersioner.versionName}"
         multiDexEnabled true
 
@@ -33,6 +32,7 @@ android {
         buildConfigField "String", "DATABASE_NAME", "\"deckbox.db\""
         buildConfigField "String", "AFFILIATE_CODE", "\"DeckBox\""
         buildConfigField "String", "MARKETPLACE_URL", "\"https://tcgreplayer.deckboxtcg.app/\""
+        buildConfigField "String", "POKEMONTCG_API_KEY", "\"${POKEMONTCG_API_KEY}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -77,14 +77,6 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            if (variant.buildType.name == "release") {
-                outputFileName = "deckbox-" + variant.versionName + "." + gitVersioner.currentSha1Short + ".apk"
-            }
-        }
-    }
-
     configurations.all {
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
     }
@@ -114,9 +106,9 @@ ext {
     ftkit_version = '2.0.6'
     leakcanary_version = '1.5.1'
     play_version = '15.0.0'
-    poketcg_version = '1.2.0'
+    poketcg_version = '1.2.1'
     retrofit_version = '2.3.0'
-    room_version = '2.2.3'
+    room_version = '2.4.0'
     support_version = '1.0.0'
     state_version = '1.4.1'
     stetho_version = '1.5.1'
@@ -148,7 +140,9 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-    implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
+
+    implementation "com.github.PokemonTCG.pokemon-tcg-sdk-kotlin:pokemon-tcg-sdk-kotlin:v2-SNAPSHOT"
+    implementation "com.github.PokemonTCG.pokemon-tcg-sdk-kotlin:pokemon-tcg-sdk-kotlin-rx2:v2-SNAPSHOT"
 
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation "androidx.appcompat:appcompat:1.1.0"
@@ -171,10 +165,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation "com.google.android.gms:play-services-auth:18.1.0"
     implementation "com.google.android.gms:play-services-oss-licenses:17.0.0"
-    releaseImplementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+    releaseImplementation 'com.google.firebase:firebase-crashlytics:17.4.0'
 
-    implementation "com.google.dagger:dagger:2.28.1"
-    kapt "com.google.dagger:dagger-compiler:2.28.1"
+    implementation "com.google.dagger:dagger:2.28.3"
+    kapt "com.google.dagger:dagger-compiler:2.28.3"
 
     implementation "com.github.bumptech.glide:glide:4.9.0"
     kapt "com.github.bumptech.glide:compiler:4.9.0"

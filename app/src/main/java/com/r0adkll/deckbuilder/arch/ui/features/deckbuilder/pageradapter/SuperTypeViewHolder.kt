@@ -25,7 +25,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.PokemonItem
 import com.r0adkll.deckbuilder.arch.ui.features.deckbuilder.adapter.StackedPokemonRecyclerAdapter
 import com.r0adkll.deckbuilder.arch.ui.widgets.PokemonCardView
 import com.r0adkll.deckbuilder.util.ScreenUtils
-import io.pokemontcg.model.SubType
 import kotlin.math.min
 
 /**
@@ -190,12 +189,13 @@ class TrainerEnergyViewHolder(
 
     override fun bind(cards: List<StackedPokemonCard>) {
         val sorted = cards.sortedBy { c ->
-            when (c.card.subtype) {
-                SubType.SUPPORTER -> 0
-                SubType.ITEM -> 1
-                SubType.POKEMON_TOOL -> 2
-                SubType.STADIUM -> 3
-                SubType.SPECIAL -> 4
+            when (c.card.subtype.uppercase()) {
+                "SUPPORTER" -> 0
+                "ITEM" -> 1
+                "POKEMON TOOL" -> 2
+                "POKEMON TOOL F" -> 2
+                "STADIUM" -> 3
+                "SPECIAL" -> 4
                 else -> 10
             }
         }

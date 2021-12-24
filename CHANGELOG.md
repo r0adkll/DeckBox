@@ -5,6 +5,7 @@
 * Updating dependencies
 * Updating Crashlytics
 * Bug Fixes
+* Fixed broken sdk
 
 ## 1.11.0
 * [#118](https://github.com/r0adkll/DeckBox/issues/118) - Replaced intermediate session "editing" to now just have changes lazy-save to the deck (creating a new one if building from scratch).

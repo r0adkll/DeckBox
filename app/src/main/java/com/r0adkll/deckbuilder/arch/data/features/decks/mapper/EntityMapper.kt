@@ -21,7 +21,6 @@ import com.r0adkll.deckbuilder.util.deserializeTypes
 import com.r0adkll.deckbuilder.util.extensions.milliseconds
 import com.r0adkll.deckbuilder.util.stack
 import com.r0adkll.deckbuilder.util.unstack
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
@@ -89,7 +88,7 @@ object EntityMapper {
             card.imageUrlHiRes,
             card.types?.compactTypes(),
             card.supertype.displayName,
-            card.subtype.displayName,
+            card.subtype,
             card.evolvesFrom,
             card.hp,
             card.retreatCost?.size,
@@ -115,7 +114,7 @@ object EntityMapper {
             entity.imageUrlHiRes,
             entity.types?.deserializeTypes(),
             SuperType.find(entity.supertype),
-            SubType.find(entity.subtype),
+            entity.subtype,
             entity.evolvesFrom,
             entity.hp,
             entity.retreatCost?.let { (0 until it).map { _ -> Type.COLORLESS } },

@@ -19,7 +19,7 @@ class TcgReplayerMarketplaceSource @Inject constructor(
     override fun getPrice(cardId: String): Observable<Product> {
         return Observable.concat(cache(cardId), network(cardId))
             .takeUntil {
-                val expiresAt = it.prices.maxBy { it.expiresAt }?.expiresAt ?: 0L
+                val expiresAt = it.prices.maxByOrNull { it.expiresAt }?.expiresAt ?: 0L
                 expiresAt > System.currentTimeMillis()
             }
     }
@@ -29,7 +29,7 @@ class TcgReplayerMarketplaceSource @Inject constructor(
             .takeUntil {
                 it.keys.containsAll(cardIds) &&
                     it.none {
-                        val expiresAt = it.value.prices.maxBy { it.expiresAt }?.expiresAt ?: 0L
+                        val expiresAt = it.value.prices.maxByOrNull { it.expiresAt }?.expiresAt ?: 0L
                         expiresAt < System.currentTimeMillis()
                     }
             }

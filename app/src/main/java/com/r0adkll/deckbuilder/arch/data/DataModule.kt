@@ -17,6 +17,8 @@ import com.r0adkll.deckbuilder.arch.data.features.exporter.tournament.DefaultTou
 import com.r0adkll.deckbuilder.arch.data.features.importer.repository.DefaultImporter
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.MarketplaceSource
 import com.r0adkll.deckbuilder.arch.data.features.marketplace.source.TcgReplayerMarketplaceSource
+import com.r0adkll.deckbuilder.arch.data.features.subtypes.cache.InMemorySubtypeCache
+import com.r0adkll.deckbuilder.arch.data.features.subtypes.cache.SubtypeCache
 import com.r0adkll.deckbuilder.arch.data.features.testing.DefaultDeckTester
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.BasicRule
 import com.r0adkll.deckbuilder.arch.data.features.validation.model.DuplicateRule
@@ -83,7 +85,10 @@ class DataModule {
     @Provides @AppScope
     fun providePokemonApiConfig(): Config {
         val level = if (BuildConfig.DEBUG) HEADERS else NONE
-        return Config(logLevel = level)
+        return Config(
+          logLevel = level,
+          apiKey = BuildConfig.POKEMONTCG_API_KEY,
+        )
     }
 
     @Provides @AppScope
@@ -126,6 +131,9 @@ class DataModule {
     fun provideMarketplaceSource(
         source: TcgReplayerMarketplaceSource
     ): MarketplaceSource = source
+
+    @Provides @AppScope
+    fun provideSubtypeCache(): SubtypeCache = InMemorySubtypeCache()
 
     /*
      * Deck Validation Rules

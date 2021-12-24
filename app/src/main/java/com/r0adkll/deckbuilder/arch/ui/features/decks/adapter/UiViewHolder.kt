@@ -211,7 +211,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : ViewHolder(itemView), D
         private fun mostProminentCard(cards: List<PokemonCard>): PokemonCard? {
             val stacks = cards.stack()
             val evolutions = EvolutionChain.build(stacks)
-            val largestEvolutionLine = evolutions.maxBy { it.size }
+            val largestEvolutionLine = evolutions.maxByOrNull { it.size }
             return largestEvolutionLine?.last()?.cards?.firstOrNull()?.card
         }
     }

@@ -7,7 +7,7 @@ class ProductSparkAdapter(
     private val prices: List<Price>
 ) : SparkAdapter() {
 
-    private val baseLine = prices.maxBy { it.updatedAt }?.market?.toFloat()
+    private val baseLine = prices.maxByOrNull { it.updatedAt }?.market?.toFloat()
 
     override fun getY(index: Int): Float {
         return prices[index].market?.toFloat() ?: 0f

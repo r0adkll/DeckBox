@@ -3,7 +3,7 @@
 /*
  * Dependencies
  */
-@file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.18")
+@file:DependsOn("io.pokemontcg:pokemon-tcg-sdk-kotlin:1.2.1")
 @file:DependsOn("me.xdrop:fuzzywuzzy:1.1.10")
 @file:DependsOn("com.google.code.gson:gson:2.8.5")
 
@@ -68,6 +68,8 @@ sets.forEach { set ->
         }
 
         println("${set.name} cards fetched.")
+
+        Thread.sleep(3000L)
     } catch (e: Exception) {
         println("ERRROR FETCHING: ${set.name}")
         e.printStackTrace()

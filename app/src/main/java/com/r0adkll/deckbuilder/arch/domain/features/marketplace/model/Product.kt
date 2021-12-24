@@ -24,7 +24,7 @@ data class Product(
             ?: rarities.find { it == "1st Edition Holofoil" })
 
     val latestPrice: Price?
-        get() = prices.filter { it.rarity == topRarity }.maxBy { it.updatedAt }
+        get() = prices.filter { it.rarity == topRarity }.maxByOrNull { it.updatedAt }
 
     val marketPrice: Double?
         get() = latestPrice?.market

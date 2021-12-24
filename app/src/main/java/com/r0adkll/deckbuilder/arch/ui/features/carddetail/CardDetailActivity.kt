@@ -138,7 +138,7 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
                 slidingLayout?.isTouchEnabled = true
 
                 // DRAGONS: this is dubious because we are manipulating the view state outside of MVI
-                val latestPrice = state.product?.prices?.maxBy { it.updatedAt }
+                val latestPrice = state.product?.prices?.maxByOrNull { it.updatedAt }
                 showPrices(latestPrice?.low, latestPrice?.market, latestPrice?.high)
             }
         }

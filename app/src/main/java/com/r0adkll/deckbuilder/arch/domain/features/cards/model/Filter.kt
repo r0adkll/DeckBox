@@ -3,7 +3,6 @@ package com.r0adkll.deckbuilder.arch.domain.features.cards.model
 import android.os.Parcelable
 import com.r0adkll.deckbuilder.arch.domain.Rarity
 import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import kotlinx.android.parcel.Parcelize
@@ -20,8 +19,7 @@ data class Filter(
     val field: SearchField = SearchField.NAME,
     val types: List<Type> = emptyList(),
     val superType: SuperType? = null,
-    val subTypes: List<SubType> = emptyList(),
-    val contains: List<String> = emptyList(),
+    val subTypes: List<String> = emptyList(),
     val expansions: List<Expansion> = emptyList(),
     val rarity: List<Rarity> = emptyList(),
     val retreatCost: String? = null,
@@ -37,7 +35,7 @@ data class Filter(
 
     val isEmptyWithoutField: Boolean
         get() {
-            return types.isEmpty() && subTypes.isEmpty() && contains.isEmpty() && expansions.isEmpty() &&
+            return types.isEmpty() && subTypes.isEmpty() && expansions.isEmpty() &&
                 rarity.isEmpty() && retreatCost.isNullOrBlank() && attackCost.isNullOrBlank() &&
                 attackDamage.isNullOrBlank() && hp.isNullOrBlank() && weaknesses.isEmpty() &&
                 evolvesFrom.isNullOrBlank() && resistances.isEmpty() && superType == null
@@ -55,7 +53,7 @@ data class Filter(
 
     override fun toString(): String {
         return "Filter(field=$field, types=$types, superType=$superType, subTypes=$subTypes, " +
-            "contains=$contains, rarity=$rarity, retreatCost=$retreatCost, attackCost=$attackCost, " +
+            "rarity=$rarity, retreatCost=$retreatCost, attackCost=$attackCost, " +
             "attackDamage=$attackDamage, hp=$hp, evolvesFrom=$evolvesFrom, weaknesses=$weaknesses, " +
             "resistances=$resistances)"
     }
