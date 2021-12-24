@@ -67,18 +67,18 @@ class DecksPresenter @Inject constructor(
             .map { Change.ShowPreview(it) as Change }
             .onErrorReturnItem(Change.HidePreview as Change)
 
-        val showQuickStart = preferences.quickStart
-            .asObservable()
-            .flatMap { canQuickStart ->
-                if (canQuickStart) {
-                    communityRepository.getDeckTemplates()
-                        .map { DecksUi.QuickStart(it) }
-                        .map { Change.ShowQuickStart(it) }
-                        .startWith(Change.ShowQuickStart(DecksUi.QuickStart()))
-                } else {
-                    Observable.just(Change.HideQuickStart)
-                }
-            }
+//        val showQuickStart = preferences.quickStart
+//            .asObservable()
+//            .flatMap { canQuickStart ->
+//                if (canQuickStart) {
+//                    communityRepository.getDeckTemplates()
+//                        .map { DecksUi.QuickStart(it) }
+//                        .map { Change.ShowQuickStart(it) }
+//                        .startWith(Change.ShowQuickStart(DecksUi.QuickStart()))
+//                } else {
+//                    Observable.just(Change.HideQuickStart)
+//                }
+//            }
 
         disposables += intentions.duplicateClicks()
             .flatMap {
@@ -97,7 +97,7 @@ class DecksPresenter @Inject constructor(
             }
 
         return loadDecks.mergeWith(deleteDecks)
-            .mergeWith(showQuickStart)
+//            .mergeWith(showQuickStart)
             .mergeWith(showPreview)
     }
 

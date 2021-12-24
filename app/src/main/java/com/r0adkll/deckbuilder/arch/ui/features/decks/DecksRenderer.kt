@@ -24,9 +24,9 @@ class DecksRenderer(
                     items += Item.Preview(s.preview)
                 }
 
-                if (s.quickStart != null) {
-                    items += Item.QuickStart(s.quickStart)
-                }
+//                if (s.quickStart != null) {
+//                    items += Item.QuickStart(s.quickStart)
+//                }
 
                 s.decks
                     .sortedByDescending { it.deck.timestamp }
@@ -39,7 +39,7 @@ class DecksRenderer(
                     }
                     .toSortedMap()
                     .forEach { (key, value) ->
-                        items += Item.Header(key.name.toLowerCase().capitalize())
+                        items += Item.Header(key.name.lowercase().capitalize())
                         items += value.map {
                             Item.DeckItem(it)
                         }
