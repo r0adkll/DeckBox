@@ -38,6 +38,6 @@ fun String.iso8601(): Long {
 }
 
 fun String.fromReleaseDate(): Long {
-    val df = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+    val df = SimpleDateFormat("yyyy/MM/dd", Locale.US)
     return df.parse(this)?.time ?: 0L
 }
