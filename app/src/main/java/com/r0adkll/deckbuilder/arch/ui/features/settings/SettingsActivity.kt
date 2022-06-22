@@ -182,9 +182,9 @@ class SettingsActivity : BaseActivity() {
                     true
                 }
                 "pref_developer_user_id" -> {
-                    preferenceManager.sharedPreferences.edit()
-                        .remove("pref_developer_test_user_id")
-                        .apply()
+                    preferenceManager.sharedPreferences?.edit()
+                        ?.remove("pref_developer_test_user_id")
+                        ?.apply()
 
                     val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                     clipboardManager?.let { cm ->
@@ -286,7 +286,7 @@ class SettingsActivity : BaseActivity() {
 
             val testUserId = findPreference<Preference>("pref_developer_test_user_id")
             testUserId?.summary = preferenceManager.sharedPreferences
-                .getString("pref_developer_test_user_id", null) ?: "Enter a user's id to test with"
+                ?.getString("pref_developer_test_user_id", null) ?: "Enter a user's id to test with"
         }
 
         private fun setupClient() {

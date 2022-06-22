@@ -61,6 +61,7 @@ class BrowseFragment : BaseFragment(), BrowseUi, BrowseUi.Actions, BrowseUi.Inte
                     val intent = SetBrowserActivity.createIntent(requireActivity(), it.expansion)
                     startActivity(intent)
                 }
+                else -> {}
             }
         }
         adapter.emptyView = emptyView

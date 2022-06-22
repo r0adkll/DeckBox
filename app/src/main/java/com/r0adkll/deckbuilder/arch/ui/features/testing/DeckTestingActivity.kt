@@ -184,7 +184,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
             .map { it.map { it.get() } }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ images ->
+            .subscribe({ images: List<Drawable> ->
                 field.post {
                     setHandImages(hand, images)
                     animateTopRow()

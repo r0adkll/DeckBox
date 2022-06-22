@@ -13,8 +13,6 @@ import com.r0adkll.deckbuilder.internal.analytics.LoggingAnalyticInterface
 import com.r0adkll.deckbuilder.internal.di.AppComponent
 import com.r0adkll.deckbuilder.internal.di.AppModule
 import com.r0adkll.deckbuilder.internal.di.DaggerAppComponent
-import com.squareup.leakcanary.LeakCanary
-import com.squareup.leakcanary.RefWatcher
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
@@ -26,7 +24,6 @@ class DeckApp : Application() {
 
     companion object {
         @JvmStatic lateinit var component: AppComponent
-        @JvmStatic lateinit var refWatcher: RefWatcher
     }
 
     @Inject lateinit var delegates: Set<@JvmSuppressWildcards AppDelegate>
@@ -35,7 +32,6 @@ class DeckApp : Application() {
         super.onCreate()
         AndroidThreeTen.init(this)
 
-        installLeakCanary()
         installDagger().inject(this)
         installAnalytics()
         installDelegates()
@@ -56,10 +52,6 @@ class DeckApp : Application() {
 
     private fun installDelegates() {
         delegates.forEach { it.onCreate(this) }
-    }
-
-    private fun installLeakCanary() {
-        refWatcher = LeakCanary.install(this)
     }
 
     private fun installFirestore() {

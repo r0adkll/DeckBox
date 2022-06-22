@@ -3,8 +3,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.0.18'
-        classpath 'com.squareup:kotlinpoet:1.1.0'
+        classpath 'io.pokemontcg:pokemon-tcg-sdk-kotlin:1.2.1'
+        classpath 'com.squareup:kotlinpoet:1.8.0'
     }
 }
 

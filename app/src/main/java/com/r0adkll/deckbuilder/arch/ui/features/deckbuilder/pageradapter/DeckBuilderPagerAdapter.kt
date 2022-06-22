@@ -88,6 +88,7 @@ class DeckBuilderPagerAdapter(
                 energyCards = cards
                 viewHolders[2]?.bind(energyCards)
             }
+            else -> {}
         }
     }
 
@@ -97,6 +98,7 @@ class DeckBuilderPagerAdapter(
             SuperType.POKEMON -> viewHolders[0]?.wiggleCard(card)
             SuperType.TRAINER -> viewHolders[1]?.wiggleCard(card)
             SuperType.ENERGY -> viewHolders[2]?.wiggleCard(card)
+            else -> {}
         }
     }
 

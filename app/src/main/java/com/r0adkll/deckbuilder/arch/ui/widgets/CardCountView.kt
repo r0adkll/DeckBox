@@ -72,6 +72,7 @@ class CardCountView @JvmOverloads constructor(
             SuperType.POKEMON -> pokemonCountView.text = count
             SuperType.TRAINER -> trainerCountView.text = count
             SuperType.ENERGY -> energyCountView.text = count
+            else -> {}
         }
     }
 
@@ -84,6 +85,7 @@ class CardCountView @JvmOverloads constructor(
             SuperType.POKEMON -> pokemonCountView.text = count.toString()
             SuperType.TRAINER -> trainerCountView.text = count.toString()
             SuperType.ENERGY -> energyCountView.text = count.toString()
+            else -> {}
         }
     }
 

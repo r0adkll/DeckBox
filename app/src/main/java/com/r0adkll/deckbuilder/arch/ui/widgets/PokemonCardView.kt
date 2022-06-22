@@ -271,6 +271,7 @@ class PokemonCardView @JvmOverloads constructor(
                 val x = boundsF.right
                 canvas.drawCircle(x, y, punchRadius, punchPaint)
             }
+            else -> {}
         }
     }
 

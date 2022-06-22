@@ -18,7 +18,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         >
 
-        <activity android:name=".arch.ui.RouteActivity">
+        <activity android:name=".arch.ui.RouteActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
