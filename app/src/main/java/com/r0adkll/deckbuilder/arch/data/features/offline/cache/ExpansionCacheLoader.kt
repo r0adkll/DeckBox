@@ -9,6 +9,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.offline.model.CacheStatus
 import com.r0adkll.deckbuilder.arch.domain.features.offline.model.DownloadRequest
 import io.pokemontcg.Pokemon
 import io.pokemontcg.model.Card
+import io.pokemontcg.requests.query.CardBuilder
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -27,9 +28,13 @@ class ExpansionCacheLoader @Inject constructor(
         request: DownloadRequest,
         progressListener: (Float) -> Unit
     ): Result<CacheStatus.Cached> {
+        val card = CardBuilder()
+        card.set {
+            id(expansion.code)
+        }
         try {
             val expansionCards = api.card().where {
-                setCode = expansion.code
+                query = card.build()
                 pageSize = PAGE_SIZE
             }.all()
 
@@ -82,9 +87,9 @@ class ExpansionCacheLoader @Inject constructor(
 
     private fun getImageUrls(cards: List<Card>, request: DownloadRequest): List<Uri> {
         return cards.flatMap {
-            val imageUrls = mutableListOf(it.imageUrl.toUri())
+            val imageUrls = mutableListOf(it.images.small.toUri())
             if (request.includeHiRes) {
-                imageUrls += it.imageUrlHiRes.toUri()
+                imageUrls += it.images.large.toUri()
             }
             imageUrls
         }

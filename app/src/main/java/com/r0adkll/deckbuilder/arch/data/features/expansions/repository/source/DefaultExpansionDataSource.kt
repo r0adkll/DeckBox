@@ -12,6 +12,7 @@ import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.pokemontcg.Pokemon
 import io.reactivex.Observable
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -43,12 +44,15 @@ class DefaultExpansionDataSource @Inject constructor(
     }
 
     private fun network(): Observable<List<Expansion>> {
-        return api.set()
-            .where {
-                pageSize = MAX_PAGE_SIZE
-            }
-            .observeAll()
-            .map { it.map { SetMapper.to(it) } }
+        return Observable.just(runBlocking {
+            api.set()
+                    .where {
+                        pageSize = MAX_PAGE_SIZE
+                    }
+                    .all()
+                    .map { SetMapper.to(it) }
+
+        })
             .doOnNext { diskCache.putExpansions(it) }
             .doOnNext { memoryCache.putExpansions(it) }
             .subscribeOn(schedulers.network)

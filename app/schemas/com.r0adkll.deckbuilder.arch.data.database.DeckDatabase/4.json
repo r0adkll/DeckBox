@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "a199af42be485e1d4fe84969e8a46bfc",
+    "identityHash": "dca3400e9f0af5511a21cf442254c954",
     "entities": [
       {
         "tableName": "decks",
@@ -91,6 +91,7 @@
             "columnNames": [
               "cardId"
             ],
+            "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_deck_card_join_cardId` ON `${TABLE_NAME}` (`cardId`)"
           }
         ],
@@ -185,6 +186,7 @@
             "columnNames": [
               "cardId"
             ],
+            "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_attacks_cardId` ON `${TABLE_NAME}` (`cardId`)"
           }
         ],
@@ -204,7 +206,7 @@
       },
       {
         "tableName": "cards",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `number` TEXT NOT NULL, `text` TEXT, `artist` TEXT NOT NULL, `rarity` TEXT, `nationalPokedexNumber` INTEGER, `hp` INTEGER, `retreatCost` INTEGER NOT NULL, `types` TEXT, `superType` TEXT NOT NULL, `subType` TEXT NOT NULL, `evolvesFrom` TEXT, `series` TEXT NOT NULL, `expansionSet` TEXT NOT NULL, `setCode` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `imageUrlHiRes` TEXT NOT NULL, `weaknesses` TEXT, `resistances` TEXT, `ability_name` TEXT, `ability_text` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `number` TEXT NOT NULL, `text` TEXT, `artist` TEXT NOT NULL, `rarity` TEXT, `nationalPokedexNumbers` TEXT, `hp` INTEGER, `retreatCost` INTEGER NOT NULL, `types` TEXT, `superType` TEXT NOT NULL, `subTypes` TEXT, `evolvesFrom` TEXT, `series` TEXT NOT NULL, `expansionSet` TEXT NOT NULL, `setCode` TEXT, `imageUrl` TEXT NOT NULL, `imageUrlHiRes` TEXT NOT NULL, `abilities` TEXT, `weaknesses` TEXT, `resistances` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -243,9 +245,9 @@
             "notNull": false
           },
           {
-            "fieldPath": "nationalPokedexNumber",
-            "columnName": "nationalPokedexNumber",
-            "affinity": "INTEGER",
+            "fieldPath": "nationalPokedexNumbers",
+            "columnName": "nationalPokedexNumbers",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -273,10 +275,10 @@
             "notNull": true
           },
           {
-            "fieldPath": "subType",
-            "columnName": "subType",
+            "fieldPath": "subTypes",
+            "columnName": "subTypes",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "evolvesFrom",
@@ -300,7 +302,7 @@
             "fieldPath": "setCode",
             "columnName": "setCode",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "imageUrl",
@@ -315,6 +317,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "abilities",
+            "columnName": "abilities",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "weaknesses",
             "columnName": "weaknesses",
             "affinity": "TEXT",
@@ -323,18 +331,6 @@
           {
             "fieldPath": "resistances",
             "columnName": "resistances",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "ability.name",
-            "columnName": "ability_name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "ability.text",
-            "columnName": "ability_text",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -532,7 +528,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a199af42be485e1d4fe84969e8a46bfc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dca3400e9f0af5511a21cf442254c954')"
     ]
   }
 }

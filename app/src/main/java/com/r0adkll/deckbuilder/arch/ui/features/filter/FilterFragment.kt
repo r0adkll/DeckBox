@@ -88,7 +88,7 @@ class FilterFragment : BaseFragment(), FilterUi, FilterUi.Intentions, FilterUi.A
     override fun attributeClicks(): Observable<FilterAttribute> = filterIntentions.attributeClicks.doOnNext { attr ->
         Analytics.event(Event.SelectContent.FilterOption("attribute", when (attr) {
             is FilterAttribute.SuperTypeAttribute -> attr.superType.displayName
-            is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
+            is FilterAttribute.SubTypeAttribute -> attr.subType
             is FilterAttribute.ContainsAttribute -> attr.attribute
             is FilterAttribute.ExpansionAttribute -> attr.format.name.toLowerCase()
         }))

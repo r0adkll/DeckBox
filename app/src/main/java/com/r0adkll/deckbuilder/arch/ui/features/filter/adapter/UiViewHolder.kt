@@ -142,7 +142,7 @@ sealed class UiViewHolder<in I : Item>(itemView: View) : RecyclerView.ViewHolder
                 val view = inflater.inflate(R.layout.item_attribute, container, false) as CheckedTextView
                 view.text = when (attr) {
                     is FilterAttribute.SuperTypeAttribute -> attr.superType.displayName
-                    is FilterAttribute.SubTypeAttribute -> attr.subType.displayName
+                    is FilterAttribute.SubTypeAttribute -> attr.subType
                     is FilterAttribute.ContainsAttribute -> attr.attribute
                     is FilterAttribute.ExpansionAttribute -> attr.format.name.toLowerCase().capitalize()
                 }

@@ -42,7 +42,6 @@ import com.r0adkll.deckbuilder.util.extensions.fromHtml
 import com.r0adkll.deckbuilder.util.extensions.isMulligan
 import com.r0adkll.deckbuilder.util.extensions.loadPokemonCard
 import com.r0adkll.deckbuilder.util.glide.ImageType
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -246,7 +245,7 @@ class DeckTestingActivity : BaseActivity(), DeckTestingUi, DeckTestingUi.Intenti
             cards[it].setImageDrawable(images[it])
             val isBasic = hand[it].let {
                 it.supertype == SuperType.POKEMON &&
-                    (it.subtype == SubType.BASIC || it.evolvesFrom.isNullOrBlank())
+                    (it.subtypes?.get(0) == "basic" || it.evolvesFrom.isNullOrBlank())
             }
             cards[it].elevation = if (isBasic) dp(4f) else 0f
             cards[it].scaleX = if (isBasic) 1.05f else 1f

@@ -4,7 +4,6 @@ package com.r0adkll.deckbuilder.arch.ui.components
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.EvolutionChain
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 
 object EvolutionChainComparator : Comparator<EvolutionChain> {
@@ -36,7 +35,7 @@ object EvolutionChainComparator : Comparator<EvolutionChain> {
         return when (lhs.supertype) {
             SuperType.POKEMON -> {
                 // 2a - Pokemon - Sort National Dex Number
-                lhs.nationalPokedexNumber?.compareTo(rhs.nationalPokedexNumber
+                lhs.nationalPokedexNumbers?.get(0)?.compareTo(rhs.nationalPokedexNumbers?.get(0)
                     ?: Int.MAX_VALUE) ?: 0
             }
             SuperType.TRAINER -> {
@@ -56,7 +55,7 @@ object EvolutionChainComparator : Comparator<EvolutionChain> {
     }
 
     private fun compareSubtype(lhs: PokemonCard, rhs: PokemonCard): Int {
-        return lhs.subtype.weight(lhs.supertype).compareTo(rhs.subtype.weight(rhs.supertype))
+        return lhs.subtypes!![0].weight(lhs.supertype).compareTo(rhs.subtypes!![0].weight(rhs.supertype))
     }
 
     private fun SuperType.weight(): Int = when (this) {
@@ -65,23 +64,23 @@ object EvolutionChainComparator : Comparator<EvolutionChain> {
         else -> 2
     }
 
-    private fun SubType.weight(superType: SuperType): Int = when (superType) {
+    private fun String.weight(superType: SuperType): Int = when (superType) {
         SuperType.ENERGY -> energyWeight()
         SuperType.TRAINER -> trainerWeight()
         else -> 0
     }
 
-    private fun SubType.energyWeight(): Int = when (this) {
-        SubType.BASIC -> 1
-        SubType.SPECIAL -> 0
+    private fun String.energyWeight(): Int = when (this) {
+        "basic" -> 1
+        "special" -> 0
         else -> 0
     }
 
-    private fun SubType.trainerWeight(): Int = when (this) {
-        SubType.ITEM -> 0
-        SubType.SUPPORTER -> 1
-        SubType.STADIUM -> 2
-        SubType.POKEMON_TOOL -> 3
+    private fun String.trainerWeight(): Int = when (this) {
+        "item" -> 0
+        "supporter" -> 1
+        "stadium" -> 2
+        "tool" -> 3
         else -> 4
     }
 }

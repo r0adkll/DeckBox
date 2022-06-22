@@ -21,7 +21,6 @@ import com.r0adkll.deckbuilder.util.deserializeEffects
 import com.r0adkll.deckbuilder.util.deserializeTypes
 import com.r0adkll.deckbuilder.util.unstack
 import io.pokemontcg.model.Card
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
@@ -58,22 +57,22 @@ object RoomEntityMapper {
             card.id,
             card.name,
             card.number,
-            card.text?.joinToString("\n"),
+            null,
             card.artist,
             card.rarity,
-            card.nationalPokedexNumber,
+            card.nationalPokedexNumbers,
             card.hp,
             card.retreatCost?.size ?: 0,
             card.types?.compactTypes(),
             card.supertype.displayName,
-            card.subtype.displayName,
+            card.subtypes,
             card.evolvesFrom,
             card.series,
             card.expansion?.name ?: "",
             card.expansion?.code ?: "",
             card.imageUrl,
             card.imageUrlHiRes,
-            card.ability?.let { AbilityEntity(it.name, it.text) },
+            card.abilities?.map { AbilityEntity(it.name, it.text) },
             card.weaknesses?.compactEffects(),
             card.resistances?.compactEffects()
         )
@@ -104,22 +103,22 @@ object RoomEntityMapper {
             card.id,
             card.name,
             card.number,
-            card.text?.joinToString("\n"),
+        null,
             card.artist ?: "",
             card.rarity,
-            card.nationalPokedexNumber,
+            card.nationalPokedexNumbers,
             card.hp,
             card.retreatCost?.size ?: 0,
             card.types?.compactTypes(),
             card.supertype.displayName,
-            card.subtype.displayName,
+            card.subtypes,
             card.evolvesFrom,
-            card.series,
-            card.set,
-            card.setCode,
-            card.imageUrl,
-            card.imageUrlHiRes,
-            card.ability?.let { AbilityEntity(it.name, it.text) },
+            card.set.series,
+            card.set.name,
+            card.set.id,
+            card.images.small,
+            card.images.large,
+            card.abilities?.map { AbilityEntity(it.name, it.text) },
             card.weaknesses?.compactCardEffects(),
             card.resistances?.compactCardEffects()
         )
@@ -151,12 +150,12 @@ object RoomEntityMapper {
                 PokemonCard(
                     e.card.card.id,
                     e.card.card.name,
-                    e.card.card.nationalPokedexNumber,
+                    e.card.card.nationalPokedexNumbers,
                     e.card.card.imageUrl,
                     e.card.card.imageUrlHiRes,
                     e.card.card.types?.deserializeTypes(),
                     SuperType.find(e.card.card.superType),
-                    SubType.find(e.card.card.subType),
+                    e.card.card.subTypes,
                     e.card.card.evolvesFrom,
                     e.card.card.hp,
                     (0 until e.card.card.retreatCost).map { Type.COLORLESS },
@@ -165,11 +164,11 @@ object RoomEntityMapper {
                     e.card.card.rarity,
                     e.card.card.series,
                     expansions.find { it.code == e.card.card.setCode },
-                    e.card.card.text?.split("\n"),
+//                    e.card.card.text?.split("\n"),
                     e.card.attacks.map { from(it) },
                     e.card.card.weaknesses?.deserializeEffects(),
                     e.card.card.resistances?.deserializeEffects(),
-                    e.card.card.ability?.let {
+                    e.card.card.abilities?.map {
                         Ability(it.name, it.text)
                     }
                 ),
@@ -184,12 +183,12 @@ object RoomEntityMapper {
                 PokemonCard(
                     e.card.card.id,
                     e.card.card.name,
-                    e.card.card.nationalPokedexNumber,
+                    e.card.card.nationalPokedexNumbers,
                     e.card.card.imageUrl,
                     e.card.card.imageUrlHiRes,
                     e.card.card.types?.deserializeTypes(),
                     SuperType.find(e.card.card.superType),
-                    SubType.find(e.card.card.subType),
+                    e.card.card.subTypes,
                     e.card.card.evolvesFrom,
                     e.card.card.hp,
                     (0 until e.card.card.retreatCost).map { Type.COLORLESS },
@@ -198,11 +197,11 @@ object RoomEntityMapper {
                     e.card.card.rarity,
                     e.card.card.series,
                     expansions.find { it.code == e.card.card.setCode },
-                    e.card.card.text?.split("\n"),
+//                    e.card.card.text?.split("\n"),
                     e.card.attacks.map { from(it) },
                     e.card.card.weaknesses?.deserializeEffects(),
                     e.card.card.resistances?.deserializeEffects(),
-                    e.card.card.ability?.let {
+                    e.card.card.abilities?.map {
                         Ability(it.name, it.text)
                     }
                 ),
@@ -216,12 +215,12 @@ object RoomEntityMapper {
             PokemonCard(
                 e.card.id,
                 e.card.name,
-                e.card.nationalPokedexNumber,
+                e.card.nationalPokedexNumbers,
                 e.card.imageUrl,
                 e.card.imageUrlHiRes,
                 e.card.types?.deserializeTypes(),
                 SuperType.find(e.card.superType),
-                SubType.find(e.card.subType),
+                e.card.subTypes,
                 e.card.evolvesFrom,
                 e.card.hp,
                 (0 until e.card.retreatCost).map { Type.COLORLESS },
@@ -230,11 +229,11 @@ object RoomEntityMapper {
                 e.card.rarity,
                 e.card.series,
                 expansions.find { it.code == e.card.setCode },
-                e.card.text?.split("\n"),
+//                e.card.text?.split("\n"),
                 e.attacks.map { from(it) },
                 e.card.weaknesses?.deserializeEffects(),
                 e.card.resistances?.deserializeEffects(),
-                e.card.ability?.let {
+                e.card.abilities?.map {
                     Ability(it.name, it.text)
                 }
             )

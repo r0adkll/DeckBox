@@ -19,7 +19,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.Vie
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
 import com.r0adkll.deckbuilder.util.extensions.expanded
 import com.r0adkll.deckbuilder.util.extensions.standard
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
@@ -56,7 +55,7 @@ interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
         data class SuperTypeAttribute(val superType: SuperType) : FilterAttribute()
 
         @Parcelize
-        data class SubTypeAttribute(val subType: SubType) : FilterAttribute()
+        data class SubTypeAttribute(val subType: String) : FilterAttribute()
 
         @Parcelize
         data class ContainsAttribute(val attribute: String) : FilterAttribute()

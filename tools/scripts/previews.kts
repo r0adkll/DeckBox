@@ -179,12 +179,12 @@ data class Effect(val type: String, val value: String)
 data class Card(
     var id: String = "",
     var name: String = "",
-    var nationalPokedexNumber: Int? = null,
+    var nationalPokedexNumbers: List<Int>? = null,
     var imageUrl: String = "",
     var imageUrlHiRes: String = "",
     var types: List<String>? = null,
     var supertype: String = "",
-    var subtype: String = "",
+    var subtypes: List<String>? = null,
     var evolvesFrom: String? = null,
     var hp: String? = null,
     var retreatCost: List<String>? = null,
@@ -194,11 +194,11 @@ data class Card(
     var series: String = "",
     var set: String = "",
     var setCode: String = "",
-    var text: MutableList<String>? = null,
+//    var text: MutableList<String>? = null,
     var attacks: MutableList<Attack>? = null,
     var weaknesses: List<Effect>? = null,
     var resistances: List<Effect>? = null,
-    var ability: Ability? = null
+    var abilities: List<Ability>? = null
 )
 
 /*

@@ -583,7 +583,7 @@ fun List<PokemonCard>.stack(): List<StackedPokemonCard> {
         map[card] = count + 1
     }
     return map.map { StackedPokemonCard(it.key, it.value) }
-        .sortedBy { card -> card.card.nationalPokedexNumber }
+        .sortedBy { card -> card.card.nationalPokedexNumbers?.get(0) }
 }
 
 fun List<PokemonCard>.stack(collection: List<CollectionCount>): List<StackedPokemonCard> {
@@ -598,7 +598,7 @@ fun List<PokemonCard>.stack(collection: List<CollectionCount>): List<StackedPoke
     return map.map {
         val collectionCount = collectionMap[it.key] ?: 0
         StackedPokemonCard(it.key, it.value, collectionCount)
-    }.sortedBy { card -> card.card.nationalPokedexNumber }
+    }.sortedBy { card -> card.card.nationalPokedexNumbers?.get(0) }
 }
 
 fun List<StackedPokemonCard>.unstack(): List<PokemonCard> = this.flatMap { stack ->

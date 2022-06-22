@@ -25,24 +25,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.M
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.LESS_THAN_EQUALS
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Modifier.NONE
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item.ValueRange.Value
-import io.pokemontcg.model.SubType.BASIC
-import io.pokemontcg.model.SubType.BREAK
-import io.pokemontcg.model.SubType.EX
-import io.pokemontcg.model.SubType.GX
-import io.pokemontcg.model.SubType.ITEM
-import io.pokemontcg.model.SubType.LEGEND
-import io.pokemontcg.model.SubType.LEVEL_UP
-import io.pokemontcg.model.SubType.MEGA
-import io.pokemontcg.model.SubType.POKEMON_TOOL
-import io.pokemontcg.model.SubType.RESTORED
-import io.pokemontcg.model.SubType.ROCKETS_SECRET_MACHINE
-import io.pokemontcg.model.SubType.SPECIAL
-import io.pokemontcg.model.SubType.STADIUM
-import io.pokemontcg.model.SubType.STAGE_1
-import io.pokemontcg.model.SubType.STAGE_2
-import io.pokemontcg.model.SubType.SUPPORTER
-import io.pokemontcg.model.SubType.TAG_TEAM
-import io.pokemontcg.model.SubType.TECHNICAL_MACHINE
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import kotlinx.android.parcel.Parcelize
@@ -242,25 +224,25 @@ data class FilterSpec(val specs: List<Spec>) : Parcelable {
                         SuperTypeAttribute(SuperType.POKEMON),
                         SuperTypeAttribute(SuperType.TRAINER),
                         SuperTypeAttribute(SuperType.ENERGY),
-                        SubTypeAttribute(BASIC),
-                        SubTypeAttribute(SPECIAL),
-                        SubTypeAttribute(STAGE_1),
-                        SubTypeAttribute(STAGE_2),
-                        SubTypeAttribute(MEGA),
-                        SubTypeAttribute(EX),
-                        SubTypeAttribute(GX),
-                        SubTypeAttribute(TAG_TEAM),
-                        SubTypeAttribute(LEVEL_UP),
-                        SubTypeAttribute(BREAK),
-                        SubTypeAttribute(LEGEND),
-                        SubTypeAttribute(RESTORED),
-                        SubTypeAttribute(ITEM),
-                        SubTypeAttribute(STADIUM),
-                        SubTypeAttribute(SUPPORTER),
-                        SubTypeAttribute(STADIUM),
-                        SubTypeAttribute(TECHNICAL_MACHINE),
-                        SubTypeAttribute(POKEMON_TOOL),
-                        SubTypeAttribute(ROCKETS_SECRET_MACHINE),
+                        SubTypeAttribute("BASIC"),
+                        SubTypeAttribute("SPECIAL"),
+                        SubTypeAttribute("STAGE_1"),
+                        SubTypeAttribute("STAGE_2"),
+                        SubTypeAttribute("MEGA"),
+                        SubTypeAttribute("EX"),
+                        SubTypeAttribute("GX"),
+                        SubTypeAttribute("TAG_TEAM"),
+                        SubTypeAttribute("LEVEL_UP"),
+                        SubTypeAttribute("BREAK"),
+                        SubTypeAttribute("LEGEND"),
+                        SubTypeAttribute("RESTORED"),
+                        SubTypeAttribute("ITEM"),
+                        SubTypeAttribute("STADIUM"),
+                        SubTypeAttribute("SUPPORTER"),
+                        SubTypeAttribute("STADIUM"),
+                        SubTypeAttribute("TECHNICAL_MACHINE"),
+                        SubTypeAttribute("POKEMON_TOOL"),
+                        SubTypeAttribute("ROCKETS_SECRET_MACHINE"),
                         ContainsAttribute("Ability")
                     )),
                     Spec.ExpansionSpec(expansions, visibility),

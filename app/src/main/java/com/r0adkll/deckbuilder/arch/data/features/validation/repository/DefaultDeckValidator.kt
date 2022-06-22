@@ -10,7 +10,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Rule
 import com.r0adkll.deckbuilder.arch.domain.features.validation.model.Validation
 import com.r0adkll.deckbuilder.arch.domain.features.validation.repository.DeckValidator
 import com.r0adkll.deckbuilder.util.extensions.sortableNumber
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -52,7 +51,7 @@ class DefaultDeckValidator @Inject constructor(
         val legalOverrides = remote.legalOverrides
         val legalPromoOverride = legalOverrides?.promos
         return cards.isNotEmpty() && cards.all { card ->
-            if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
+            if (card.supertype == SuperType.ENERGY && card.subtypes?.contains("basic") == true) {
                 true
             } else {
                 val singlesOverride = legalOverrides?.singles?.find { card.id.equals(it.id, true) }
@@ -82,7 +81,7 @@ class DefaultDeckValidator @Inject constructor(
         val legalOverrides = remote.legalOverrides
         val legalPromoOverride = legalOverrides?.expandedPromos
         return cards.isNotEmpty() && cards.all { card ->
-            if (card.supertype == SuperType.ENERGY && card.subtype == SubType.BASIC) {
+            if (card.supertype == SuperType.ENERGY && card.subtypes?.contains("basic") == true) {
                 true
             } else {
                 val singlesOverride = legalOverrides?.singles?.find { card.id.equals(it.id, true) }
@@ -108,6 +107,7 @@ class DefaultDeckValidator @Inject constructor(
     @Suppress("MagicNumber")
     private fun PokemonCard.reprintHash(): Long {
         return (this.name.hashCode().toLong() * 31L) +
-            (this.text?.hashCode()?.toLong() ?: 0L * 31L)
+            (this.attacks?.hashCode()?.toLong() ?: 0L * 31L) +
+                (this.abilities?.hashCode()?.toLong() ?: 0L * 31L)
     }
 }

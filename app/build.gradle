@@ -114,7 +114,7 @@ ext {
     ftkit_version = '2.0.6'
     leakcanary_version = '2.9.1'
     play_version = '15.0.0'
-    poketcg_version = '1.2.1'
+    poketcg_version = 'v2-SNAPSHOT'
     retrofit_version = '2.8.1'
     room_version = '2.4.2'
     support_version = '1.0.0'
@@ -147,7 +147,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-    implementation "io.pokemontcg:pokemon-tcg-sdk-kotlin:$poketcg_version"
+    implementation "com.github.PokemonTCG:pokemon-tcg-sdk-kotlin:$poketcg_version"
 
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation "androidx.appcompat:appcompat:1.4.2"

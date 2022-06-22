@@ -136,12 +136,12 @@ data class EvolutionChain(val nodes: ArrayList<Node> = ArrayList(3)) {
     private class PokemonComparator : Comparator<StackedPokemonCard> {
 
         override fun compare(lhs: StackedPokemonCard, rhs: StackedPokemonCard): Int {
-            if (lhs.card.nationalPokedexNumber == null) {
-                return if (rhs.card.nationalPokedexNumber == null) 0 else -1
-            } else if (rhs.card.nationalPokedexNumber == null) {
+            if (lhs.card.nationalPokedexNumbers == null) {
+                return if (rhs.card.nationalPokedexNumbers == null) 0 else -1
+            } else if (rhs.card.nationalPokedexNumbers == null) {
                 return 1
             } else {
-                val pokedexNumberResult = lhs.card.nationalPokedexNumber.compareTo(rhs.card.nationalPokedexNumber)
+                val pokedexNumberResult = lhs.card.nationalPokedexNumbers[0].compareTo(rhs.card.nationalPokedexNumbers[0])
                 return if (pokedexNumberResult == 0) {
                     lhs.card.id.compareTo(rhs.card.id)
                 } else {

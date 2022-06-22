@@ -21,7 +21,6 @@ import com.r0adkll.deckbuilder.util.deserializeTypes
 import com.r0adkll.deckbuilder.util.extensions.milliseconds
 import com.r0adkll.deckbuilder.util.stack
 import com.r0adkll.deckbuilder.util.unstack
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
@@ -84,12 +83,12 @@ object EntityMapper {
         return PokemonCardEntity(
             card.id,
             card.name,
-            card.nationalPokedexNumber,
+            card.nationalPokedexNumbers,
             card.imageUrl,
             card.imageUrlHiRes,
             card.types?.compactTypes(),
             card.supertype.displayName,
-            card.subtype.displayName,
+            card.subtypes,
             card.evolvesFrom,
             card.hp,
             card.retreatCost?.size,
@@ -98,11 +97,10 @@ object EntityMapper {
             card.rarity,
             card.series,
             card.expansion?.code,
-            card.text?.joinToString("\n"),
+//            card.text?.joinToString("\n"),
             card.weaknesses?.compactEffects(),
             card.resistances?.compactEffects(),
-            card.ability?.name,
-            card.ability?.text
+            card.abilities
         )
     }
 
@@ -110,12 +108,12 @@ object EntityMapper {
         return PokemonCard(
             entity.id,
             entity.name,
-            entity.nationalPokedexNumber,
+            entity.nationalPokedexNumbers,
             entity.imageUrl,
             entity.imageUrlHiRes,
             entity.types?.deserializeTypes(),
             SuperType.find(entity.supertype),
-            SubType.find(entity.subtype),
+            entity.subtypes,
             entity.evolvesFrom,
             entity.hp,
             entity.retreatCost?.let { (0 until it).map { _ -> Type.COLORLESS } },
@@ -124,11 +122,11 @@ object EntityMapper {
             entity.rarity,
             entity.series,
             entity.expansionCode?.let { code -> expansions.find { it.code == code } },
-            entity.text?.split("\n"),
+//            entity.text?.split("\n"),
             null,
             entity.weaknesses?.deserializeEffects(),
             entity.resistances?.deserializeEffects(),
-            entity.abilityName?.let { Ability(it, entity.abilityText ?: "") }
+            entity.abilities
         )
     }
 

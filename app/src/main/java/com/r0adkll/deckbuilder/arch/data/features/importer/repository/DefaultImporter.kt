@@ -84,7 +84,7 @@ class DefaultImporter @Inject constructor(
 
     private fun filterEnergy(): (CardSpec) -> Boolean {
         return { spec ->
-            Type.VALUES.filter { it != Type.COLORLESS && it != Type.UNKNOWN && it != Type.DRAGON }
+            Type.values().filter { it != Type.COLORLESS && it != Type.UNKNOWN && it != Type.DRAGON }
                 .find {
                     spec.name.contains("${it.name} Energy", true) ||
                         (spec.name.contains(it.name, true) && spec.set.contains("Energy", true))
@@ -94,7 +94,7 @@ class DefaultImporter @Inject constructor(
 
     private fun mapEnergy(): (CardSpec) -> Pair<CardSpec, String>? {
         return { spec ->
-            val type = Type.VALUES.filter { it != Type.COLORLESS && it != Type.UNKNOWN && it != Type.DRAGON }
+            val type = Type.values().filter { it != Type.COLORLESS && it != Type.UNKNOWN && it != Type.DRAGON }
                 .find {
                     spec.name.contains("${it.name} Energy", true) ||
                         (spec.name.contains(it.name, true) && spec.set.contains("Energy", true))

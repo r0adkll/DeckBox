@@ -83,7 +83,7 @@ class DataModule {
     @Provides @AppScope
     fun providePokemonApiConfig(): Config {
         val level = if (BuildConfig.DEBUG) HEADERS else NONE
-        return Config(logLevel = level)
+        return Config(apiKey = "", logLevel = level)
     }
 
     @Provides @AppScope

@@ -297,9 +297,9 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         cardInformation.isVisible = true
 
         // Set Ability
-        if (card.ability != null) {
-            abilityName.text = card.ability.name
-            abilityText.text = card.ability.text
+        if (card.abilities != null) {
+            abilityName.text = card.abilities[0].name
+            abilityText.text = card.abilities[0].text
         } else {
             abilityLabel.isGone = true
             abilityName.isGone = true
@@ -329,8 +329,8 @@ class CardDetailActivity : BaseActivity(), CardDetailUi, CardDetailUi.Intentions
         }
 
         // Set Card Text
-        cardText.isVisible = !card.text.isNullOrEmpty()
-        cardText.text = card.text?.joinToString("\n")
+        cardText.isVisible = false
+        cardText.text = ""
 
         // Set Card Weakness
         cardWeaknessLayout.isVisible = !card.weaknesses.isNullOrEmpty()
