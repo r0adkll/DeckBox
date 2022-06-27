@@ -141,8 +141,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation "com.github.PokemonTCG.pokemon-tcg-sdk-kotlin:pokemon-tcg-sdk-kotlin:v2-SNAPSHOT"
-    implementation "com.github.PokemonTCG.pokemon-tcg-sdk-kotlin:pokemon-tcg-sdk-kotlin-rx2:v2-SNAPSHOT"
+    implementation "com.github.PokemonTCG.pokemon-tcg-sdk-kotlin:pokemon-tcg-sdk-kotlin:ac78879d38c164973d065bb5be80483f70639bb0"
+    implementation "com.github.PokemonTCG.pokemon-tcg-sdk-kotlin:pokemon-tcg-sdk-kotlin-rx2:ac78879d38c164973d065bb5be80483f70639bb0"
 
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation "androidx.appcompat:appcompat:1.1.0"
