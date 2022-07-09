@@ -24,7 +24,7 @@ android {
         minSdkVersion 22
         targetSdkVersion 30
 
-        versionCode gitVersioner.versionCode + 3
+        versionCode gitVersioner.versionCode + 4
         versionName "$VERSION_NAME.${gitVersioner.versionName}"
         multiDexEnabled true
 
