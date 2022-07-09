@@ -57,16 +57,19 @@ class EvolutionLineItemDecoration(
                 val state = this.adapter.getEvolutionState(index)
                 if (state.evolution == PokemonCardView.Evolution.END ||
                     state.evolution == PokemonCardView.Evolution.MIDDLE) {
-                    val child = parent.getChildAt(index)
-                    val nextChild = parent.getChildAt(index + 1)?.findViewById<PokemonCardView>(R.id.card)
+                    var child = parent.findViewHolderForItemId(adapter.getItemId(index))
+                            ?.itemView
+                    var nextChild = parent.findViewHolderForItemId(adapter.getItemId(index + 1))
+                            ?.itemView
+                            ?.findViewById<PokemonCardView>(R.id.card)
                     drawEvolutionLink(c, child, nextChild)
                 }
             }
         }
     }
 
-    private fun drawEvolutionLink(c: Canvas, child: View, nextChild: PokemonCardView?) {
-        if (nextChild != null &&
+    private fun drawEvolutionLink(c: Canvas, child: View?, nextChild: PokemonCardView?) {
+        if (child != null && nextChild != null &&
             (nextChild.evolution == PokemonCardView.Evolution.START ||
                 nextChild.evolution == PokemonCardView.Evolution.MIDDLE)) {
             // Render Link
