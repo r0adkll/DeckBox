@@ -6,7 +6,7 @@ apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
-def VERSION_NAME = "1.20.0"
+def VERSION_NAME = "1.30.0"
 
 gitVersioner {
     baseBranch 'master'
