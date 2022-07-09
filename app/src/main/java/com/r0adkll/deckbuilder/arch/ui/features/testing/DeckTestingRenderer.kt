@@ -25,7 +25,7 @@ class DeckTestingRenderer(
                     val testResults = ArrayList<TestResult>()
 
                     val cumulativeResultCount = result.startingHand.values.sum().toFloat()
-                    val maxHandPercentage = ((result.startingHand.values.max()?.toFloat()
+                    val maxHandPercentage = ((result.startingHand.values.maxOrNull()?.toFloat()
                         ?: 1f) / cumulativeResultCount) + 0.1f
                     val maxMulliganPercentage = result.mulligans.toFloat() / result.count.toFloat()
                     val maxPercentage = max(maxHandPercentage, maxMulliganPercentage)

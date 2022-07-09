@@ -19,7 +19,6 @@ import com.r0adkll.deckbuilder.arch.ui.features.filter.FilterUi.State.Change.Vie
 import com.r0adkll.deckbuilder.arch.ui.features.filter.adapter.Item
 import com.r0adkll.deckbuilder.util.extensions.expanded
 import com.r0adkll.deckbuilder.util.extensions.standard
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 import io.reactivex.Observable
@@ -27,125 +26,136 @@ import kotlinx.android.parcel.Parcelize
 
 interface FilterUi : Ui<FilterUi.State, FilterUi.State.Change> {
 
-    interface Intentions {
+  interface Intentions {
 
-        fun fieldChanges(): Observable<SearchField>
-        fun typeClicks(): Observable<Pair<String, Type>>
-        fun attributeClicks(): Observable<FilterAttribute>
-        fun optionClicks(): Observable<Pair<String, Any>>
-        fun viewMoreClicks(): Observable<Unit>
-        fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>>
-        fun clearFilter(): Observable<Unit>
-    }
+    fun fieldChanges(): Observable<SearchField>
+    fun typeClicks(): Observable<Pair<String, Type>>
+    fun attributeClicks(): Observable<FilterAttribute>
+    fun optionClicks(): Observable<Pair<String, Any>>
+    fun viewMoreClicks(): Observable<Unit>
+    fun valueRangeChanges(): Observable<Pair<String, Item.ValueRange.Value>>
+    fun clearFilter(): Observable<Unit>
+  }
 
-    interface Actions {
+  interface Actions {
 
-        fun setItems(items: List<Item>)
-        fun setIsEmpty(isEmpty: Boolean)
-    }
+    fun setItems(items: List<Item>)
+    fun setIsEmpty(isEmpty: Boolean)
+  }
 
-    enum class ExpansionVisibility(val next: () -> ExpansionVisibility) {
-        STANDARD({ EXPANDED }),
-        EXPANDED({ UNLIMITED }),
-        UNLIMITED({ UNLIMITED })
-    }
+  enum class ExpansionVisibility(val next: () -> ExpansionVisibility) {
+    STANDARD({ EXPANDED }),
+    EXPANDED({ UNLIMITED }),
+    UNLIMITED({ UNLIMITED })
+  }
 
-    sealed class FilterAttribute : Parcelable {
-
-        @Parcelize
-        data class SuperTypeAttribute(val superType: SuperType) : FilterAttribute()
-
-        @Parcelize
-        data class SubTypeAttribute(val subType: SubType) : FilterAttribute()
-
-        @Parcelize
-        data class ContainsAttribute(val attribute: String) : FilterAttribute()
-
-        @Parcelize
-        data class ExpansionAttribute(val format: Format, val expansions: List<Expansion>) : FilterAttribute()
-    }
+  sealed class FilterAttribute : Parcelable {
 
     @Parcelize
-    data class State(
-        val spec: FilterSpec,
-        val filter: Filter,
-        val visibility: ExpansionVisibility,
-        val expansions: List<Expansion>
-    ) : Ui.State<State.Change>, Parcelable {
+    data class SuperTypeAttribute(val superType: SuperType) : FilterAttribute()
 
-        @Suppress("LongMethod", "ComplexMethod")
-        override fun reduce(change: Change): State = when (change) {
-            is ExpansionsLoaded -> {
-                copy(
-                    expansions = change.expansions,
-                    spec = FilterSpec.createAll(
-                        change.expansions,
-                        visibility
-                    )
-                )
-            }
+    @Parcelize
+    data class SubTypeAttribute(val subType: String) : FilterAttribute()
 
-            is FieldChanged -> copy(filter = FilterReducer.reduceField(change.field, filter))
-            is TypeSelected -> copy(filter = FilterReducer.reduceType(change.key, change.type, filter))
+    @Parcelize
+    data class ExpansionAttribute(val format: Format, val expansions: List<Expansion>) : FilterAttribute()
+  }
 
-            is AttributeSelected -> {
-                val newFilter = FilterReducer.reduceAttribute(change.attribute, filter)
-                val visibility = if (change.attribute is FilterAttribute.ExpansionAttribute) {
-                    when {
-                        newFilter.expansions.containsAll(expansions.expanded()) -> ExpansionVisibility.EXPANDED
-                        newFilter.expansions.containsAll(expansions.standard()) -> ExpansionVisibility.STANDARD
-                        else -> visibility
-                    }
-                } else {
-                    visibility
-                }
-                copy(
-                    spec = FilterSpec.createAll(expansions, visibility),
-                    filter = newFilter,
-                    visibility = visibility
-                )
-            }
+  @Parcelize
+  data class State(
+    val spec: FilterSpec,
+    val filter: Filter,
+    val visibility: ExpansionVisibility,
+    val expansions: List<Expansion>,
+    val subTypes: List<String>,
+  ) : Ui.State<State.Change>, Parcelable {
 
-            is ExpansionSelected -> copy(filter = FilterReducer.reduceExpansion(change.expansion, filter))
-            is RaritySelected -> copy(filter = FilterReducer.reduceRarity(change.rarity, filter))
-            is ValueRangeChanged -> copy(filter = FilterReducer.reduceValueRange(change.key, change.value, filter))
+    @Suppress("LongMethod", "ComplexMethod")
+    override fun reduce(change: Change): State = when (change) {
+      is ExpansionsLoaded -> {
+        copy(
+          expansions = change.expansions,
+          spec = FilterSpec.createAll(
+            expansions = change.expansions,
+            subTypes = subTypes,
+            visibility = visibility
+          )
+        )
+      }
+      is Change.SubtypesLoaded -> {
+        copy(
+          subTypes = change.subTypes,
+          spec = FilterSpec.createAll(
+            expansions = expansions,
+            subTypes = change.subTypes,
+            visibility = visibility,
+          )
+        )
+      }
 
-            ViewMoreSelected -> copy(
-                visibility = visibility.next(),
-                spec = FilterSpec.createAll(expansions, visibility.next())
-            )
+      is FieldChanged -> copy(filter = FilterReducer.reduceField(change.field, filter))
+      is TypeSelected -> copy(filter = FilterReducer.reduceType(change.key, change.type, filter))
 
-            ClearFilter -> copy(filter = Filter.DEFAULT)
+      is AttributeSelected -> {
+        val newFilter = FilterReducer.reduceAttribute(change.attribute, filter)
+        val visibility = if (change.attribute is FilterAttribute.ExpansionAttribute) {
+          when {
+            newFilter.expansions.containsAll(expansions.expanded()) -> ExpansionVisibility.EXPANDED
+            newFilter.expansions.containsAll(expansions.standard()) -> ExpansionVisibility.STANDARD
+            else -> visibility
+          }
+        } else {
+          visibility
         }
+        copy(
+          spec = FilterSpec.createAll(expansions, subTypes, visibility),
+          filter = newFilter,
+          visibility = visibility
+        )
+      }
 
-        override fun toString(): String {
-            return "State(spec=$spec, filter=$filter, visibility=$visibility, expansions=${expansions.size})"
-        }
+      is ExpansionSelected -> copy(filter = FilterReducer.reduceExpansion(change.expansion, filter))
+      is RaritySelected -> copy(filter = FilterReducer.reduceRarity(change.rarity, filter))
+      is ValueRangeChanged -> copy(filter = FilterReducer.reduceValueRange(change.key, change.value, filter))
 
-        fun applySpecification(): List<Item> = spec.apply(filter)
+      ViewMoreSelected -> copy(
+        visibility = visibility.next(),
+        spec = FilterSpec.createAll(expansions, subTypes, visibility.next())
+      )
 
-        sealed class Change(logText: String) : Ui.State.Change(logText) {
-            class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
-            class FieldChanged(val field: SearchField) : Change("user -> $field was selected")
-            class TypeSelected(val key: String, val type: Type) : Change("user -> $type was selected")
-            class AttributeSelected(val attribute: FilterAttribute) : Change("user -> $attribute was selected")
-            class ExpansionSelected(val expansion: Expansion) : Change("user -> $expansion was selected")
-            class RaritySelected(val rarity: Rarity) : Change("user -> $rarity was selected")
-            class ValueRangeChanged(val key: String, val value: String) : Change("user -> $key was changed to $value")
-            object ViewMoreSelected : Change("user -> view more expansions selected")
-            object ClearFilter : Change("user -> clear filter")
-        }
-
-        companion object {
-
-            val DEFAULT by lazy {
-                State(
-                    FilterSpec.createAll(emptyList(), ExpansionVisibility.STANDARD),
-                    Filter.DEFAULT,
-                    ExpansionVisibility.STANDARD,
-                    emptyList()
-                )
-            }
-        }
+      ClearFilter -> copy(filter = Filter.DEFAULT)
     }
+
+    override fun toString(): String {
+      return "State(spec=$spec, filter=$filter, visibility=$visibility, expansions=${expansions.size})"
+    }
+
+    fun applySpecification(): List<Item> = spec.apply(filter)
+
+    sealed class Change(logText: String) : Ui.State.Change(logText) {
+      class ExpansionsLoaded(val expansions: List<Expansion>) : Change("network -> expansions loaded")
+      class SubtypesLoaded(val subTypes: List<String>) : Change("network -> subtypes loaded")
+      class FieldChanged(val field: SearchField) : Change("user -> $field was selected")
+      class TypeSelected(val key: String, val type: Type) : Change("user -> $type was selected")
+      class AttributeSelected(val attribute: FilterAttribute) : Change("user -> $attribute was selected")
+      class ExpansionSelected(val expansion: Expansion) : Change("user -> $expansion was selected")
+      class RaritySelected(val rarity: Rarity) : Change("user -> $rarity was selected")
+      class ValueRangeChanged(val key: String, val value: String) : Change("user -> $key was changed to $value")
+      object ViewMoreSelected : Change("user -> view more expansions selected")
+      object ClearFilter : Change("user -> clear filter")
+    }
+
+    companion object {
+
+      val DEFAULT by lazy {
+        State(
+          spec = FilterSpec.createAll(emptyList(), emptyList(), ExpansionVisibility.STANDARD),
+          filter = Filter.DEFAULT,
+          visibility = ExpansionVisibility.STANDARD,
+          expansions = emptyList(),
+          subTypes = emptyList(),
+        )
+      }
+    }
+  }
 }

@@ -11,6 +11,7 @@ import com.r0adkll.deckbuilder.arch.domain.features.expansions.model.Expansion
 import com.r0adkll.deckbuilder.internal.di.scopes.AppScope
 import com.r0adkll.deckbuilder.util.AppSchedulers
 import io.pokemontcg.Pokemon
+import io.pokemontcg.allAsObservable
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
@@ -47,7 +48,7 @@ class DefaultExpansionDataSource @Inject constructor(
             .where {
                 pageSize = MAX_PAGE_SIZE
             }
-            .observeAll()
+            .allAsObservable()
             .map { it.map { SetMapper.to(it) } }
             .doOnNext { diskCache.putExpansions(it) }
             .doOnNext { memoryCache.putExpansions(it) }

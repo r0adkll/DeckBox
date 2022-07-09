@@ -31,7 +31,6 @@ object FilterReducer {
     fun reduceAttribute(attribute: FilterAttribute, filter: Filter): Filter = when (attribute) {
         is SuperTypeAttribute -> filter.copy(superType = filter.toggle(attribute.superType))
         is SubTypeAttribute -> filter.copy(subTypes = filter.subTypes.toggle(attribute.subType))
-        is FilterAttribute.ContainsAttribute -> filter.copy(contains = filter.contains.toggle(attribute.attribute))
         is FilterAttribute.ExpansionAttribute -> filter.toggle(attribute.expansions, attribute.format)
     }
 

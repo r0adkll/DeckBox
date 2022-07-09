@@ -1,68 +1,83 @@
 package com.r0adkll.deckbuilder.arch.data.mappings
 
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.Filter
+import io.pokemontcg.ExperimentalPokemonApi
 import io.pokemontcg.requests.CardQueryBuilder
+import io.pokemontcg.requests.query.CardBuilder
+import io.pokemontcg.requests.query.StringValue
+import io.pokemontcg.requests.query.cardBuilder
 
 object FilterMapper {
 
-    @Suppress("ComplexMethod")
-    fun to(filter: Filter): CardQueryBuilder {
-        val builder = CardQueryBuilder()
+  @ExperimentalPokemonApi
+  @Suppress("ComplexMethod")
+  fun to(filter: Filter, additionalQueryBuilder: CardBuilder.() -> Unit): CardQueryBuilder {
+    return CardQueryBuilder().apply {
+      pageSize = filter.pageSize
+      query = cardBuilder {
+        additionalQueryBuilder()
 
-        if (filter.superType != null) {
-            builder.supertype = filter.superType.displayName
+        filter.superType?.let { superType ->
+          supertype(superType)
         }
 
         if (filter.types.isNotEmpty()) {
-            builder.types = filter.types.joinToString(separator = "|")
+          type(filter.types)
         }
 
         if (filter.subTypes.isNotEmpty()) {
-            builder.subtype = filter.subTypes.joinToString(separator = "|")
-        }
-
-        if (filter.contains.isNotEmpty()) {
-            builder.contains = filter.contains.joinToString(separator = "|") { it.toLowerCase() }
+          // TODO: Cleanup after API update
+          subtypes(*filter.subTypes.toTypedArray())
         }
 
         if (filter.expansions.isNotEmpty()) {
-            builder.setCode = filter.expansions.joinToString("|") { it.code }
+          set {
+            ids(filter.expansions.map { it.code })
+          }
         }
 
         if (filter.rarity.isNotEmpty()) {
-            builder.rarity = filter.rarity.joinToString("|") { it.key }
+          rarity {
+            isIn(filter.rarity.map { it.key })
+          }
         }
 
-        if (!filter.retreatCost.isNullOrBlank()) {
-            builder.retreatCost = filter.retreatCost
+        filter.retreatCost?.let { retreatCost ->
+          retreatCost(retreatCost)
         }
 
         if (!filter.attackCost.isNullOrBlank()) {
-            builder.attackCost = filter.attackCost
+          attacks {
+            cost(filter.attackCost)
+          }
         }
 
         if (!filter.attackDamage.isNullOrBlank()) {
-            builder.attackDamage = filter.attackDamage
+          attacks {
+            damage(filter.attackDamage)
+          }
         }
 
         if (!filter.hp.isNullOrBlank()) {
-            builder.hp = filter.hp
+          hp(filter.hp)
         }
 
         if (!filter.evolvesFrom.isNullOrBlank()) {
-            builder.evolvesFrom = filter.evolvesFrom
+          evolvesFrom(filter.evolvesFrom)
         }
 
         if (filter.weaknesses.isNotEmpty()) {
-            builder.weaknesses = filter.weaknesses.joinToString("|") { it.displayName }
+          weaknesses {
+            type(filter.weaknesses)
+          }
         }
 
         if (filter.resistances.isNotEmpty()) {
-            builder.resistances = filter.resistances.joinToString("|") { it.displayName }
+          resistances {
+            type(filter.resistances)
+          }
         }
-
-        builder.pageSize = filter.pageSize
-
-        return builder
+      }
     }
+  }
 }

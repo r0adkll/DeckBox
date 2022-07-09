@@ -17,6 +17,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.ftinc.kit.extensions.pt
 import com.r0adkll.deckbuilder.R
+import com.r0adkll.deckbuilder.arch.domain.SubTypes
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.PokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.cards.model.StackedPokemonCard
 import com.r0adkll.deckbuilder.arch.domain.features.decks.repository.DeckRepository
@@ -27,7 +28,6 @@ import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.Fo
 import com.r0adkll.deckbuilder.arch.domain.features.exporter.tournament.model.PlayerInfo
 import com.r0adkll.deckbuilder.util.AgeDivisionUtils
 import com.r0adkll.deckbuilder.util.stack
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.reactivex.Observable
 import timber.log.Timber
@@ -229,7 +229,7 @@ class DefaultTournamentExporter @Inject constructor(
         val reducedStackedTrainers = HashMap<String, StackedPokemonCard>()
 
         this.forEach {
-            val name = if (it.card.supertype == SuperType.ENERGY && it.card.subtype == SubType.BASIC) {
+            val name = if (it.card.supertype == SuperType.ENERGY && it.card.subtype == SubTypes.BASIC) {
                 // Make sure to trim the term "Basic" out of energy cards
                 it.card.name.replace("Basic", "").trim()
             } else {

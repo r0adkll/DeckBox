@@ -21,7 +21,6 @@ import com.r0adkll.deckbuilder.util.deserializeEffects
 import com.r0adkll.deckbuilder.util.deserializeTypes
 import com.r0adkll.deckbuilder.util.unstack
 import io.pokemontcg.model.Card
-import io.pokemontcg.model.SubType
 import io.pokemontcg.model.SuperType
 import io.pokemontcg.model.Type
 
@@ -66,7 +65,7 @@ object RoomEntityMapper {
             card.retreatCost?.size ?: 0,
             card.types?.compactTypes(),
             card.supertype.displayName,
-            card.subtype.displayName,
+            card.subtype,
             card.evolvesFrom,
             card.series,
             card.expansion?.name ?: "",
@@ -104,22 +103,22 @@ object RoomEntityMapper {
             card.id,
             card.name,
             card.number,
-            card.text?.joinToString("\n"),
+            card.flavorText,
             card.artist ?: "",
             card.rarity,
-            card.nationalPokedexNumber,
+            card.nationalPokedexNumbers?.firstOrNull(),
             card.hp,
             card.retreatCost?.size ?: 0,
             card.types?.compactTypes(),
             card.supertype.displayName,
-            card.subtype.displayName,
+            card.subtypes.firstOrNull() ?: "Unknown",
             card.evolvesFrom,
-            card.series,
-            card.set,
-            card.setCode,
-            card.imageUrl,
-            card.imageUrlHiRes,
-            card.ability?.let { AbilityEntity(it.name, it.text) },
+            card.set.series,
+            card.set.name,
+            card.set.id,
+            card.images.small,
+            card.images.large,
+            card.abilities?.firstOrNull()?.let { AbilityEntity(it.name, it.text) },
             card.weaknesses?.compactCardEffects(),
             card.resistances?.compactCardEffects()
         )
@@ -156,7 +155,7 @@ object RoomEntityMapper {
                     e.card.card.imageUrlHiRes,
                     e.card.card.types?.deserializeTypes(),
                     SuperType.find(e.card.card.superType),
-                    SubType.find(e.card.card.subType),
+                    e.card.card.subType,
                     e.card.card.evolvesFrom,
                     e.card.card.hp,
                     (0 until e.card.card.retreatCost).map { Type.COLORLESS },
@@ -189,7 +188,7 @@ object RoomEntityMapper {
                     e.card.card.imageUrlHiRes,
                     e.card.card.types?.deserializeTypes(),
                     SuperType.find(e.card.card.superType),
-                    SubType.find(e.card.card.subType),
+                    e.card.card.subType,
                     e.card.card.evolvesFrom,
                     e.card.card.hp,
                     (0 until e.card.card.retreatCost).map { Type.COLORLESS },
@@ -221,7 +220,7 @@ object RoomEntityMapper {
                 e.card.imageUrlHiRes,
                 e.card.types?.deserializeTypes(),
                 SuperType.find(e.card.superType),
-                SubType.find(e.card.subType),
+                e.card.subType,
                 e.card.evolvesFrom,
                 e.card.hp,
                 (0 until e.card.retreatCost).map { Type.COLORLESS },

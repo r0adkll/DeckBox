@@ -18,7 +18,8 @@
         tools:ignore="GoogleAppIndexingWarning"
         >
 
-        <activity android:name=".arch.ui.RouteActivity">
+        <activity android:name=".arch.ui.RouteActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,13 +31,16 @@
                 />
         </activity>
 
-        <activity android:name=".arch.ui.features.setup.SetupActivity" />
-        <activity android:name=".arch.ui.features.home.HomeActivity" />
+        <activity android:name=".arch.ui.features.setup.SetupActivity"
+            android:exported="false" />
+        <activity android:name=".arch.ui.features.home.HomeActivity"
+            android:exported="false" />
 
         <activity
             android:name=".arch.ui.features.deckbuilder.DeckBuilderActivity"
             android:parentActivityName=".arch.ui.features.home.HomeActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"
+            android:exported="false"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -44,25 +48,30 @@
                 />
         </activity>
 
-        <activity android:name=".arch.ui.features.search.SearchActivity" />
+        <activity android:name=".arch.ui.features.search.SearchActivity"
+            android:exported="false" />
 
         <activity
             android:name=".arch.ui.features.carddetail.CardDetailActivity"
             android:theme="@style/Theme.DeckBuilder.Detail"
+            android:exported="false"
             />
 
         <activity
             android:name=".arch.ui.features.exporter.DeckExportActivity"
             android:theme="@style/Theme.DeckBuilder.Export"
+            android:exported="false"
             />
 
         <activity
             android:name=".arch.ui.features.importer.DeckImportActivity"
             android:theme="@style/Theme.DeckBuilder.Export"
+            android:exported="false"
             />
 
         <activity android:name=".arch.ui.features.settings.SettingsActivity"
             android:parentActivityName=".arch.ui.features.home.HomeActivity"
+            android:exported="false"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -73,23 +82,29 @@
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
             android:theme="@style/Theme.DeckBuilder.OSS"
+            android:exported="false"
             />
 
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
             android:theme="@style/Theme.DeckBuilder.OSS"
+            android:exported="false"
             />
 
-        <activity android:name=".arch.ui.features.exporter.MultiExportActivity" />
-        <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity" />
+        <activity android:name=".arch.ui.features.exporter.MultiExportActivity"
+            android:exported="false" />
+        <activity android:name=".arch.ui.features.exporter.preview.PdfPreviewActivity"
+            android:exported="false" />
         <activity
             android:name=".arch.ui.features.setbrowser.SetBrowserActivity"
             android:theme="@style/Theme.DeckBuilder.Translucent"
+            android:exported="false"
             />
 
         <activity
             android:name=".arch.ui.features.testing.DeckTestingActivity"
             android:screenOrientation="sensorPortrait"
+            android:exported="false"
             />
 
         <activity
@@ -101,6 +116,7 @@
 
         <activity android:name=".arch.ui.features.settings.cache.ManageCacheActivity"
             android:parentActivityName=".arch.ui.features.settings.SettingsActivity"
+            android:exported="false"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -111,8 +127,10 @@
         <activity
             android:name=".arch.ui.features.collection.set.CollectionSetActivity"
             android:theme="@style/Theme.DeckBuilder.Translucent"
+            android:exported="false"
             />
-        <activity android:name=".arch.ui.InternalWebBrowser" />
+        <activity android:name=".arch.ui.InternalWebBrowser"
+            android:exported="false" />
 
         <service
             android:name=".arch.data.features.offline.service.CacheService"
