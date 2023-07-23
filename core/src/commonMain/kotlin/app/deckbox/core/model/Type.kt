@@ -1,6 +1,6 @@
 package app.deckbox.core.model
 
-enum class Type(internal var text: String? = null) {
+enum class Type {
   COLORLESS,
   DARKNESS,
   DRAGON,
@@ -12,20 +12,17 @@ enum class Type(internal var text: String? = null) {
   METAL,
   PSYCHIC,
   WATER,
-  UNKNOWN;
+  UNKNOWN,
+  ;
 
   val displayName: String
-    get() = text ?: name.capitalize()
+    get() = name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
   companion object {
     private val VALUES by lazy { values() }
 
     fun find(text: String): Type {
-      val type = VALUES.find { it.name.equals(text, true) } ?: UNKNOWN
-      if (type == UNKNOWN) {
-        type.text = text
-      }
-      return type
+      return VALUES.find { it.name.equals(text, true) } ?: UNKNOWN
     }
   }
 }

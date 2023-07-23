@@ -1,23 +1,20 @@
 package app.deckbox.core.model
 
-enum class SuperType(internal var text: String? = null) {
+enum class SuperType(val text: String) {
   ENERGY("Energy"),
   POKEMON("Pokémon"),
   TRAINER("Trainer"),
-  UNKNOWN;
+  UNKNOWN(""),
+  ;
 
   val displayName: String
-    get() = text ?: name.toLowerCase().capitalize()
+    get() = text
 
   companion object {
     private val VALUES by lazy { values() }
 
     fun find(text: String?): SuperType {
-      val supertype = VALUES.find { it.text.equals(text, true) } ?: UNKNOWN
-      if (supertype == UNKNOWN) {
-        supertype.text = text
-      }
-      return supertype
+      return VALUES.find { it.text.equals(text, true) } ?: UNKNOWN
     }
   }
 }

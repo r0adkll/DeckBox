@@ -20,10 +20,12 @@ class PokemonTcgApi(
 ) {
   private val client = HttpClient {
     install(ContentNegotiation) {
-      json(Json {
-        isLenient = true
-        ignoreUnknownKeys = true
-      })
+      json(
+        Json {
+          isLenient = true
+          ignoreUnknownKeys = true
+        },
+      )
     }
 
     defaultRequest {
@@ -58,7 +60,7 @@ class PokemonTcgApi(
       val cardResponse = response.body<CardModel>()
       Result.success(ModelMapper.to(cardResponse))
     } else {
-      Result.failure(ApiException("Unable to fetch card for ${id}: ${response.status}"))
+      Result.failure(ApiException("Unable to fetch card for $id: ${response.status}"))
     }
   }
 
@@ -66,4 +68,3 @@ class PokemonTcgApi(
     private const val BASE_URL = "https://api.pokemontcg.io/v2/"
   }
 }
-

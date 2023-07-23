@@ -7,7 +7,7 @@ package app.deckbox.core.model
  */
 data class ValidationError(
   val message: Message,
-  val isBlocking: Boolean = false
+  val isBlocking: Boolean = false,
 ) {
 
   sealed class Message {

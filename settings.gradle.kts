@@ -1,19 +1,17 @@
 pluginManagement {
-    includeBuild("gradle/build-logic")
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
-    }
-
-
+  includeBuild("gradle/build-logic")
+  repositories {
+    google()
+    gradlePluginPortal()
+    mavenCentral()
+  }
 }
 
 dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-    }
+  repositories {
+    google()
+    mavenCentral()
+  }
 }
 
 rootProject.name = "DeckBox"

@@ -80,7 +80,7 @@ internal class LegalitiesModel(
 internal class AbilityModel(
   val name: String,
   val text: String,
-  val type: String? = null
+  val type: String? = null,
 )
 
 @Serializable
@@ -89,13 +89,13 @@ internal class AttackModel(
   val name: String,
   val text: String? = null,
   val damage: String? = null,
-  val convertedEnergyCost: Int
+  val convertedEnergyCost: Int,
 )
 
 @Serializable
 internal class EffectModel(
   val type: String,
-  val value: String
+  val value: String,
 )
 
 @Serializable

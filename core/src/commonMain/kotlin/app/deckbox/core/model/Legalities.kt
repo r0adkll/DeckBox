@@ -9,7 +9,8 @@ data class Legalities(
 enum class Legality {
   LEGAL,
   ILLEGAL,
-  BANNED;
+  BANNED,
+  ;
 
   companion object {
 

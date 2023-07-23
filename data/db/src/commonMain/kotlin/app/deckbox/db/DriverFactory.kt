@@ -22,7 +22,7 @@ fun createDatabase(driverFactory: DriverFactory): DeckboxDatabase {
       typesAdapter = StringListAdapter,
       evolvesToAdapter = StringListAdapter,
       rulesAdapter = StringListAdapter,
-    )
+    ),
   )
 
   // Do more work with the database (see below).

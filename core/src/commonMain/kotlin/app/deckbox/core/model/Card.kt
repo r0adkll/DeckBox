@@ -35,18 +35,18 @@ data class Card(
     val name: String,
     val text: String?,
     val damage: String?,
-    val convertedEnergyCost: Int
+    val convertedEnergyCost: Int,
   )
 
   data class Ability(
     val name: String,
     val text: String,
-    val type: String?
+    val type: String?,
   )
 
   data class Effect(
     val type: Type,
-    val value: String
+    val value: String,
   )
 
   data class Image(

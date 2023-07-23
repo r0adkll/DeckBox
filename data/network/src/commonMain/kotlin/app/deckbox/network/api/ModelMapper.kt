@@ -54,7 +54,7 @@ internal object ModelMapper {
     return Card.Ability(
       name = model.name,
       text = model.text,
-      type = model.type
+      type = model.type,
     )
   }
 
@@ -64,7 +64,7 @@ internal object ModelMapper {
       name = model.name,
       text = model.text,
       damage = model.damage,
-      convertedEnergyCost = model.convertedEnergyCost
+      convertedEnergyCost = model.convertedEnergyCost,
     )
   }
 
@@ -94,7 +94,7 @@ internal object ModelMapper {
       images = Expansion.Images(
         symbol = model.images.symbol,
         logo = model.images.logo,
-      )
+      ),
     )
   }
 
@@ -118,7 +118,7 @@ internal object ModelMapper {
           market = prices.market,
           directLow = prices.directLow,
         )
-      }
+      },
     )
   }
 
@@ -144,7 +144,7 @@ internal object ModelMapper {
           reverseHoloAvg7 = prices.reverseHoloAvg7,
           reverseHoloAvg30 = prices.reverseHoloAvg30,
         )
-      }
+      },
     )
   }
 }

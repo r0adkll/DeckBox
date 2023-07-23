@@ -1,0 +1,23 @@
+root = true
+
+[*]
+charset = utf-8
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 120
+ij_kotlin_packages_to_use_import_on_demand = true
+
+[*.{kt,kts}]
+indent_size = 2
+ij_continuation_indent_size = 2
+ij_kotlin_imports_layout = *
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+
+[*.{gradle]
+indent_size = 4
+
+[*.{xml,yml,yaml}]
+indent_size = 2

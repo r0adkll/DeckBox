@@ -5,13 +5,13 @@ class Collection(
 ) {
 
   fun getCount(card: Card): Int {
-    TODO("Not yet implemented")
+    return counts[card.id]?.totalCount ?: 0
   }
 
   data class Count(
     val expansionId: String,
     val expansionName: String,
-    val variationCounts: Map<String, Int>
+    val variationCounts: Map<String, Int>,
   ) {
 
     /**
