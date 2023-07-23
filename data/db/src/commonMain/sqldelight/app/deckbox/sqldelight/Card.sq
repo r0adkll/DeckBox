@@ -1,0 +1,29 @@
+import app.deckbox.core.model.SuperType;
+import kotlin.String;
+import kotlin.Int;
+import kotlin.collections.List;
+
+CREATE TABLE cards (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  image_small TEXT NOT NULL,
+  image_large TEXT NOT NULL,
+  supertype TEXT AS SuperType,
+  subtypes TEXT AS List<String> NOT NULL,
+  level TEXT,
+  hp INTEGER,
+  number TEXT NOT NULL,
+  artist TEXT,
+  rarity TEXT,
+  flavorText TEXT,
+  convertedRetreatCost INTEGER,
+  nationalPokedexNumbers TEXT AS List<Int> NOT NULL,
+  types TEXT AS List<String> NOT NULL,
+  evolvesFrom TEXT,
+  evolvesTo TEXT AS List<String> NOT NULL,
+  rules TEXT AS List<String> NOT NULL
+);
+
+insertCard:
+INSERT INTO cards
+VALUES ?;
