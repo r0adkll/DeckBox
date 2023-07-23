@@ -4,7 +4,7 @@
 package app.deckbox.convention
 
 object Versions {
-    const val compileSdk = 33
-    const val minSdk = 23
-    const val targetSdk = 33
+  const val compileSdk = 33
+  const val minSdk = 23
+  const val targetSdk = 33
 }

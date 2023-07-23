@@ -19,94 +19,97 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 class KotlinMultiplatformConventionPlugin : Plugin<Project> {
-    override fun apply(target: Project) = with(target) {
-        with(pluginManager) {
-            apply("org.jetbrains.kotlin.multiplatform")
-        }
-
-        // Compose Multiplatform doesn't current support Kotlin 1.8.22, so we
-        // need to override the compose kotlin compiler plugin version to make
-        // it compatible
-        if (pluginManager.hasPlugin("org.jetbrains.compose")) {
-            extensions.configure<ComposeExtension> {
-                kotlinCompilerPlugin.set("1.4.8")
-            }
-        }
-
-        extensions.configure<KotlinMultiplatformExtension> {
-            targetHierarchy.default()
-
-            jvm()
-            if (pluginManager.hasPlugin("com.android.library")) {
-                android()
-            }
-
-            listOf(
-                iosX64(),
-                iosArm64(),
-                iosSimulatorArm64(),
-            ).forEach { target ->
-                target.binaries.framework {
-                    baseName = path.substring(1).replace(':', '-')
-                }
-            }
-
-            targets.withType<KotlinNativeTarget>().configureEach {
-                binaries.all {
-                    // Enable debug symbols:
-                    // https://kotlinlang.org/docs/native-ios-symbolication.html
-                    freeCompilerArgs += "-Xadd-light-debug=enable"
-
-                    // Add linker flag for SQLite. See:
-                    // https://github.com/touchlab/SQLiter/issues/77
-                    linkerOpts("-lsqlite3")
-                }
-            }
-
-            configureSpotless()
-            configureKotlin()
-        }
-    }
-}
-
-fun Project.addKspDependencyForAllTargets(dependencyNotation: Any) = addKspDependencyForAllTargets("", dependencyNotation)
-fun Project.addKspTestDependencyForAllTargets(dependencyNotation: Any) = addKspDependencyForAllTargets("Test", dependencyNotation)
-
-fun Project.addKspDependencyForCommon(dependencyNotation: Any) {
-    dependencies {
-        add("kspCommonMainMetadata", dependencyNotation)
+  override fun apply(target: Project) = with(target) {
+    with(pluginManager) {
+      apply("org.jetbrains.kotlin.multiplatform")
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
-        if (name != "kspCommonMainKotlinMetadata") {
-            dependsOn("kspCommonMainKotlinMetadata")
-        }
+    // Compose Multiplatform doesn't current support Kotlin 1.8.22, so we
+    // need to override the compose kotlin compiler plugin version to make
+    // it compatible
+    if (pluginManager.hasPlugin("org.jetbrains.compose")) {
+      extensions.configure<ComposeExtension> {
+        kotlinCompilerPlugin.set("1.4.8")
+      }
     }
 
     extensions.configure<KotlinMultiplatformExtension> {
-        sourceSets["commonMain"].apply {
-            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+      targetHierarchy.default()
+
+      jvm()
+      if (pluginManager.hasPlugin("com.android.library")) {
+        android()
+      }
+
+      listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+      ).forEach { target ->
+        target.binaries.framework {
+          baseName = path.substring(1).replace(':', '-')
         }
+      }
+
+      targets.withType<KotlinNativeTarget>().configureEach {
+        binaries.all {
+          // Enable debug symbols:
+          // https://kotlinlang.org/docs/native-ios-symbolication.html
+          freeCompilerArgs += "-Xadd-light-debug=enable"
+
+          // Add linker flag for SQLite. See:
+          // https://github.com/touchlab/SQLiter/issues/77
+          linkerOpts("-lsqlite3")
+        }
+      }
+
+      configureSpotless()
+      configureKotlin()
     }
+  }
+}
+
+fun Project.addKspDependencyForAllTargets(dependencyNotation: Any) =
+  addKspDependencyForAllTargets("", dependencyNotation)
+
+fun Project.addKspTestDependencyForAllTargets(dependencyNotation: Any) =
+  addKspDependencyForAllTargets("Test", dependencyNotation)
+
+fun Project.addKspDependencyForCommon(dependencyNotation: Any) {
+  dependencies {
+    add("kspCommonMainMetadata", dependencyNotation)
+  }
+
+  tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
+    if (name != "kspCommonMainKotlinMetadata") {
+      dependsOn("kspCommonMainKotlinMetadata")
+    }
+  }
+
+  extensions.configure<KotlinMultiplatformExtension> {
+    sourceSets["commonMain"].apply {
+      kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+    }
+  }
 }
 
 private fun Project.addKspDependencyForAllTargets(
-    configurationNameSuffix: String,
-    dependencyNotation: Any,
+  configurationNameSuffix: String,
+  dependencyNotation: Any,
 ) {
-    val kmpExtension = extensions.getByType<KotlinMultiplatformExtension>()
-    dependencies {
-        kmpExtension.targets
-            .asSequence()
-            .filter { target ->
-                // Don't add KSP for common target, only final platforms
-                target.platformType != KotlinPlatformType.common
-            }
-            .forEach { target ->
-                add(
-                    "ksp${target.targetName.capitalized()}$configurationNameSuffix",
-                    dependencyNotation,
-                )
-            }
-    }
+  val kmpExtension = extensions.getByType<KotlinMultiplatformExtension>()
+  dependencies {
+    kmpExtension.targets
+      .asSequence()
+      .filter { target ->
+        // Don't add KSP for common target, only final platforms
+        target.platformType != KotlinPlatformType.common
+      }
+      .forEach { target ->
+        add(
+          "ksp${target.targetName.capitalized()}$configurationNameSuffix",
+          dependencyNotation,
+        )
+      }
+  }
 }
