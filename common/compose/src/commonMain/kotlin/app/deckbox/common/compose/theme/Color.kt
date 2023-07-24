@@ -120,7 +120,7 @@ val DeckBoxDarkColors = darkColorScheme(
   inverseOnSurface = md_theme_dark_inverseOnSurface,
   inverseSurface = md_theme_dark_inverseSurface,
   inversePrimary = md_theme_dark_inversePrimary,
-  //shadow = md_theme_dark_shadow,
+  // shadow = md_theme_dark_shadow,
 )
 
 val seed = Color(0xFF03a9f4)
@@ -163,7 +163,8 @@ object PokemonTypeColor {
   fun Type.toBackgroundColor(): Color = when (this) {
     Type.LIGHTNING -> Lightning.copy(alpha = 0.12f)
     Type.UNKNOWN,
-    Type.COLORLESS -> Colorless.copy(alpha = 0.20f)
+    Type.COLORLESS,
+    -> Colorless.copy(alpha = 0.20f)
     else -> toColor().copy(alpha = 0.20f)
   }
 }

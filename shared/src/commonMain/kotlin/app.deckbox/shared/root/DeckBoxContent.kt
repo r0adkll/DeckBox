@@ -15,7 +15,6 @@ import com.slack.circuit.runtime.Navigator
 
 fun createCircuitConfig(): CircuitConfig {
   return CircuitConfig.Builder()
-
     .build()
 }
 
@@ -24,7 +23,7 @@ fun createCircuitConfig(): CircuitConfig {
 fun DeckBoxContent(
   backstack: SaveableBackStack,
   navigator: Navigator,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val circuitConfig = remember { createCircuitConfig() }
 

@@ -4,7 +4,7 @@ import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 
-//Replace with your font locations
+// Replace with your font locations
 val Roboto = FontFamily.Default
 
 val DeckBoxTypography: Typography
@@ -29,4 +29,3 @@ val DeckBoxTypography: Typography
       labelSmall = default.labelSmall.copy(fontFamily = fontFamily),
     )
   }
-

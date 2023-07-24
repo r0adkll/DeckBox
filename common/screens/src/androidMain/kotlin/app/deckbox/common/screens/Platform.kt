@@ -1,4 +1,4 @@
-// Copyright 2022, Christopher Banes and the Tivi project contributors
+// Copyright 2022, Drew Heavner and the Deckbox project contributors
 // SPDX-License-Identifier: Apache-2.0
 
 package app.deckbox.common.screens

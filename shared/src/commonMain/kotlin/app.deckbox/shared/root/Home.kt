@@ -200,17 +200,19 @@ private fun HomeNavigationDrawer(
   ) {
     for (item in navigationItems) {
       @OptIn(ExperimentalMaterial3Api::class)
-      (NavigationDrawerItem(
-    icon = {
-      Icon(
-        imageVector = item.iconImageVector,
-        contentDescription = item.contentDescription,
-      )
-    },
-    label = { Text(text = item.label) },
-    selected = selectedNavigation == item.screen,
-    onClick = { onNavigationSelected(item.screen) },
-  ))
+      (
+        NavigationDrawerItem(
+          icon = {
+            Icon(
+              imageVector = item.iconImageVector,
+              contentDescription = item.contentDescription,
+            )
+          },
+          label = { Text(text = item.label) },
+          selected = selectedNavigation == item.screen,
+          onClick = { onNavigationSelected(item.screen) },
+        )
+        )
     }
   }
 }
