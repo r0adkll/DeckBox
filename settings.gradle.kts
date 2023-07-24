@@ -20,5 +20,7 @@ include(":shared")
 include(":core")
 include(":data:network")
 include(":data:db")
+include(":common:screens")
+include(":common:compose")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
