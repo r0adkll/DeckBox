@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "app.deckbox"
+  namespace = "app.deckbox.android"
 
   defaultConfig {
     applicationId = "app.deckbox.android"

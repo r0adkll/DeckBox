@@ -1,4 +1,4 @@
-package app.deckbox
+package app.deckbox.shared
 
 class Greeting {
   private val platform: Platform = getPlatform()

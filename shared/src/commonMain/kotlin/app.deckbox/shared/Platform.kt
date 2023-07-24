@@ -1,4 +1,4 @@
-package app.deckbox
+package app.deckbox.shared
 
 interface Platform {
   val name: String

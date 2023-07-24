@@ -1,4 +1,4 @@
-package app.deckbox
+package app.deckbox.shared
 
 import platform.UIKit.UIDevice
 
