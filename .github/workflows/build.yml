@@ -85,11 +85,11 @@ jobs:
       - name: Build Android App (skipping benchmark variant)
         run: |
           ./gradlew \
-            :android-app:bundle \
-            :android-app:build \
+            :androidApp:bundle \
+            :androidApp:build \
             lint \
-            -x :android-app:assemble \
-            -x :android-app:bundle
+            -x :androidApp:assemble \
+            -x :androidApp:bundle
 
 #      - name: Run smoke tests on Gradle Managed Device
 #        # --info used to add a repro to https://issuetracker.google.com/issues/193118030
@@ -110,7 +110,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: android-build-outputs
-          path: android-app/app/build/outputs
+          path: androidApp/app/build/outputs
 
       - name: Upload reports
         if: always()
@@ -309,7 +309,7 @@ jobs:
 #      - uses: actions/download-artifact@v3
 #        with:
 #          name: android-build-outputs
-#          path: android-app/app/build/outputs
+#          path: androidApp/app/build/outputs
 #
 #      - name: Publish QA build to internal track
 #        uses: r0adkll/upload-google-play@v1.1.1
@@ -317,8 +317,8 @@ jobs:
 #          serviceAccountJson: release/play-account.json
 #          packageName: app.tivi
 #          track: internal
-#          releaseFiles: android-app/app/build/outputs/bundle/qaRelease/app-qa-release.aab
-#          mappingFile: android-app/app/build/outputs/mapping/qaRelease/mapping.txt
+#          releaseFiles: androidApp/app/build/outputs/bundle/qaRelease/app-qa-release.aab
+#          mappingFile: androidApp/app/build/outputs/mapping/qaRelease/mapping.txt
 #
 #      - name: Publish build to alpha track
 #        uses: r0adkll/upload-google-play@v1.1.1
@@ -326,8 +326,8 @@ jobs:
 #          serviceAccountJson: release/play-account.json
 #          packageName: app.tivi
 #          track: alpha
-#          releaseFiles: android-app/app/build/outputs/bundle/standardRelease/app-standard-release.aab
-#          mappingFile: android-app/app/build/outputs/mapping/standardRelease/mapping.txt
+#          releaseFiles: androidApp/app/build/outputs/bundle/standardRelease/app-standard-release.aab
+#          mappingFile: androidApp/app/build/outputs/mapping/standardRelease/mapping.txt
 #
 #      - uses: actions/download-artifact@v3
 #        with:
