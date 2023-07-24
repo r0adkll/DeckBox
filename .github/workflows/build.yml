@@ -77,10 +77,10 @@ jobs:
         with:
           cache-disabled: true
 
-      - name: Decrypt secrets
-        run: ./release/decrypt-secrets.sh
-        env:
-          ENCRYPT_KEY: ${{ secrets.ENCRYPT_KEY }}
+#      - name: Decrypt secrets
+#        run: ./release/decrypt-secrets.sh
+#        env:
+#          ENCRYPT_KEY: ${{ secrets.ENCRYPT_KEY }}
 
       - name: Build Android App (skipping benchmark variant)
         run: |
