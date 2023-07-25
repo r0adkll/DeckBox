@@ -3,40 +3,27 @@ package app.deckbox.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import app.deckbox.shared.Greeting
+import androidx.core.view.WindowCompat
+import app.deckbox.common.screens.DecksScreen
+import app.deckbox.shared.root.DeckBoxContent
+import com.slack.circuit.backstack.rememberSaveableBackStack
+import com.slack.circuit.foundation.push
+import com.slack.circuit.foundation.rememberCircuitNavigator
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+
     setContent {
-      MyApplicationTheme {
-        Surface(
-          modifier = Modifier.fillMaxSize(),
-          color = MaterialTheme.colors.background,
-        ) {
-          GreetingView(Greeting().greet())
-        }
-      }
+      val backstack = rememberSaveableBackStack { push(DecksScreen()) }
+      val navigator = rememberCircuitNavigator(backstack)
+
+      DeckBoxContent(
+        backstack = backstack,
+        navigator = navigator,
+      )
     }
-  }
-}
-
-@Composable
-fun GreetingView(text: String) {
-  Text(text = text)
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-  MyApplicationTheme {
-    GreetingView("Hello, Android!")
   }
 }

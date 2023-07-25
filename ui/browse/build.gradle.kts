@@ -9,24 +9,12 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-  targets.withType<KotlinNativeTarget> {
-    binaries.withType<Framework> {
-      isStatic = true
-      baseName = "shared"
-    }
-  }
-
   sourceSets {
     val commonMain by getting {
       dependencies {
         implementation(projects.core)
         implementation(projects.common.screens)
         implementation(projects.common.compose)
-
-        implementation(projects.ui.browse)
-        implementation(projects.ui.cards)
-        implementation(projects.ui.decks)
-        implementation(projects.ui.expansions)
 
         implementation(compose.runtime)
         implementation(compose.foundation)
@@ -38,7 +26,6 @@ kotlin {
         implementation(compose.ui)
 
         implementation(libs.circuit.foundation)
-        implementation(libs.circuit.overlay)
         implementation(libs.circuit.runtime)
       }
     }

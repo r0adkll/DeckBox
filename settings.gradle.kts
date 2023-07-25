@@ -22,5 +22,11 @@ include(":data:network")
 include(":data:db")
 include(":common:screens")
 include(":common:compose")
+include(
+  ":ui:browse",
+  ":ui:cards",
+  ":ui:decks",
+  ":ui:expansions"
+)
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
