@@ -1,5 +1,6 @@
 package app.deckbox.ui.expansions
 
+import DeckBoxRootAppBar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,7 +21,9 @@ import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Screen
 import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
+import me.tatarka.inject.annotations.Inject
 
+@Inject
 class ExpansionsUiFactory : Ui.Factory {
   override fun create(screen: Screen, context: CircuitContext): Ui<*>? = when (screen) {
     is ExpansionsScreen -> {
@@ -43,20 +46,8 @@ internal fun Expansions(
   Scaffold(
     modifier = modifier,
     topBar = {
-      TopAppBar(
-        title = { Text("Expansions") }, // TODO: Convert to use Lyracist,
-        navigationIcon = {
-          IconButton(
-            onClick = {
-              // TODO: Navigate back
-            },
-          ) {
-            Icon(
-              Icons.Default.ArrowBack,
-              contentDescription = null,
-            )
-          }
-        },
+      DeckBoxRootAppBar(
+        title = "Expansions", // TODO: Convert to use Lyracist,
       )
     },
   ) { paddingValues ->

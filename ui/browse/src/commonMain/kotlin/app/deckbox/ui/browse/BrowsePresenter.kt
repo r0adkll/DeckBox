@@ -10,20 +10,26 @@ import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.Screen
 import com.slack.circuit.runtime.presenter.Presenter
+import me.tatarka.inject.annotations.Assisted
+import me.tatarka.inject.annotations.Inject
 
-class BrowsePresenterFactory : Presenter.Factory {
+@Inject
+class BrowsePresenterFactory(
+  private val presenterFactory: (Navigator) -> BrowsePresenter,
+) : Presenter.Factory {
   override fun create(
     screen: Screen,
     navigator: Navigator,
     context: CircuitContext,
   ): Presenter<*>? = when (screen) {
-    is BrowseScreen -> BrowsePresenter(navigator)
+    is BrowseScreen -> presenterFactory(navigator)
     else -> null
   }
 }
 
+@Inject
 class BrowsePresenter(
-  private val navigator: Navigator,
+  @Assisted private val navigator: Navigator,
 ) : Presenter<BrowseUiState> {
 
   @Composable

@@ -3,6 +3,11 @@
 plugins {
   id("app.deckbox.android.application")
   id("app.deckbox.kotlin.android")
+  alias(libs.plugins.ksp)
+}
+
+ksp {
+  arg("me.tatarka.inject.generateCompanionExtensions", "true")
 }
 
 android {
@@ -42,6 +47,8 @@ dependencies {
 
   implementation(libs.circuit.runtime)
   implementation(libs.circuit.foundation)
+
+  ksp(libs.kotlininject.ksp)
 
   implementation("androidx.compose.ui:ui:1.4.3")
   implementation("androidx.compose.ui:ui-tooling:1.4.3")

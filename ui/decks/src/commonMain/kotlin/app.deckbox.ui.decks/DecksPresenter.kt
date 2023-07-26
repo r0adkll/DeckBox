@@ -5,26 +5,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.DecksScreen
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.Screen
 import com.slack.circuit.runtime.presenter.Presenter
+import me.tatarka.inject.annotations.Assisted
+import me.tatarka.inject.annotations.Inject
 
-class DecksPresenterFactory : Presenter.Factory {
+@Inject
+class DecksPresenterFactory(
+  private val presenterFactory: (Navigator) -> DecksPresenter
+) : Presenter.Factory {
   override fun create(
     screen: Screen,
     navigator: Navigator,
     context: CircuitContext,
   ): Presenter<*>? = when (screen) {
-    is DecksScreen -> DecksPresenter(navigator)
+    is DecksScreen -> presenterFactory(navigator)
     else -> null
   }
 }
 
+@Inject
 class DecksPresenter(
-  private val navigator: Navigator,
+  @Assisted private val navigator: Navigator,
 ) : Presenter<DecksUiState> {
 
   @Composable

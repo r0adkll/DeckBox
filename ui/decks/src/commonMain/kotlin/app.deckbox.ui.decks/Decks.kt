@@ -1,16 +1,12 @@
 package app.deckbox.ui.decks
 
+import DeckBoxRootAppBar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +15,9 @@ import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Screen
 import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
+import me.tatarka.inject.annotations.Inject
 
+@Inject
 class DecksUiFactory : Ui.Factory {
   override fun create(screen: Screen, context: CircuitContext): Ui<*>? = when (screen) {
     is DecksScreen -> {
@@ -42,20 +40,8 @@ internal fun Decks(
   Scaffold(
     modifier = modifier,
     topBar = {
-      TopAppBar(
-        title = { Text("Decks") }, // TODO: Convert to use Lyracist,
-        navigationIcon = {
-          IconButton(
-            onClick = {
-              // TODO: Navigate back
-            },
-          ) {
-            Icon(
-              Icons.Default.ArrowBack,
-              contentDescription = null,
-            )
-          }
-        },
+      DeckBoxRootAppBar(
+        title = "Decks", // TODO: Convert to use Lyracist,
       )
     },
   ) { paddingValues ->

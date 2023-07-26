@@ -1,10 +1,47 @@
 import SwiftUI
+import shared
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    lazy var applicationComponent: IosApplicationComponent = createApplicationComponent(
+        appDelegate: self
+    )
+
+    func application(
+        _: UIApplication,
+        didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+//        if !(FirebaseOptions.defaultOptions()?.apiKey?.isEmpty ?? true) {
+//            FirebaseApp.configure()
+//        }
+//        applicationComponent.initializers.initialize()
+        return true
+    }
+}
 
 @main
 struct iOSApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
 	var body: some Scene {
 		WindowGroup {
-			ContentView()
+			let uiComponent = createHomeUiControllerComponent(
+                applicationComponent: delegate.applicationComponent
+            )
+            ContentView(component: uiComponent)
 		}
 	}
+}
+
+private func createApplicationComponent(
+    appDelegate: AppDelegate
+) -> IosApplicationComponent {
+    return IosApplicationComponent.companion.create()
+}
+
+private func createHomeUiControllerComponent(
+    applicationComponent: IosApplicationComponent
+) -> HomeUiControllerComponent {
+    return HomeUiControllerComponent.companion.create(
+        applicationComponent: applicationComponent
+    )
 }

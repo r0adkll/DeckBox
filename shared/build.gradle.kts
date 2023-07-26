@@ -1,3 +1,4 @@
+import app.deckbox.convention.addKspDependencyForAllTargets
 import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
@@ -5,6 +6,7 @@ plugins {
   alias(libs.plugins.composeMultiplatform)
   id("app.deckbox.android.library")
   id("app.deckbox.multiplatform")
+  alias(libs.plugins.ksp)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -19,33 +21,35 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(projects.core)
-        implementation(projects.common.screens)
-        implementation(projects.common.compose)
+        api(projects.core)
+        api(projects.common.screens)
+        api(projects.common.compose)
 
-        implementation(projects.ui.browse)
-        implementation(projects.ui.cards)
-        implementation(projects.ui.decks)
-        implementation(projects.ui.expansions)
+        api(projects.ui.browse)
+        api(projects.ui.cards)
+        api(projects.ui.decks)
+        api(projects.ui.expansions)
 
-        implementation(compose.runtime)
-        implementation(compose.foundation)
-        implementation(compose.material)
-        implementation(compose.material3)
-        implementation(compose.materialIconsExtended)
+        api(compose.runtime)
+        api(compose.foundation)
+        api(compose.material)
+        api(compose.material3)
+        api(compose.materialIconsExtended)
         @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-        implementation(compose.components.resources)
-        implementation(compose.ui)
+        api(compose.components.resources)
+        api(compose.ui)
 
-        implementation(libs.circuit.foundation)
-        implementation(libs.circuit.overlay)
-        implementation(libs.circuit.runtime)
-      }
-    }
-    val commonTest by getting {
-      dependencies {
-        implementation(libs.kotlin.test)
+        api(libs.circuit.foundation)
+        api(libs.circuit.overlay)
+        api(libs.circuit.runtime)
       }
     }
   }
 }
+
+
+ksp {
+  arg("me.tatarka.inject.generateCompanionExtensions", "true")
+}
+
+addKspDependencyForAllTargets(libs.kotlininject.ksp)

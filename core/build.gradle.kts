@@ -7,7 +7,9 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(libs.kotlinx.coroutines.core)
+        api(libs.kotlinx.coroutines.core)
+        api(libs.kotlininject.runtime)
+
         implementation(libs.kotlinx.datetime)
       }
     }

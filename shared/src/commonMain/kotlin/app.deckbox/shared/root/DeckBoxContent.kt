@@ -18,34 +18,24 @@ import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.CircuitConfig
 import com.slack.circuit.runtime.Navigator
+import me.tatarka.inject.annotations.Assisted
+import me.tatarka.inject.annotations.Inject
 
-fun createCircuitConfig(): CircuitConfig {
-  return CircuitConfig.Builder()
-
-    // TODO: Move how these are provided to some sort of DI framework
-    .addUiFactory(
-      BrowseUiFactory(),
-      DecksUiFactory(),
-      ExpansionsUiFactory(),
-    )
-    .addPresenterFactory(
-      BrowsePresenterFactory(),
-      DecksPresenterFactory(),
-      ExpansionsPresenterFactory(),
-    )
-
-    .build()
-}
-
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-@Composable
-fun DeckBoxContent(
+typealias DeckBoxContent = @Composable (
   backstack: SaveableBackStack,
   navigator: Navigator,
-  modifier: Modifier = Modifier,
-) {
-  val circuitConfig = remember { createCircuitConfig() }
+  modifier: Modifier,
+) -> Unit
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Inject
+@Composable
+fun DeckBoxContent(
+  @Assisted backstack: SaveableBackStack,
+  @Assisted navigator: Navigator,
+  circuitConfig: CircuitConfig,
+  @Assisted modifier: Modifier = Modifier,
+) {
   CompositionLocalProvider(
     LocalWindowSizeClass provides calculateWindowSizeClass(),
   ) {

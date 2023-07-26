@@ -5,7 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
 class DispatcherProvider(
-  val main: CoroutineDispatcher = Dispatchers.Main,
-  val io: CoroutineDispatcher = Dispatchers.IO,
-  val computation: CoroutineDispatcher = Dispatchers.Default,
+  val io: CoroutineDispatcher,
+  val databaseWrite: CoroutineDispatcher,
+  val databaseRead: CoroutineDispatcher,
+  val computation: CoroutineDispatcher,
+  val main: CoroutineDispatcher,
 )
