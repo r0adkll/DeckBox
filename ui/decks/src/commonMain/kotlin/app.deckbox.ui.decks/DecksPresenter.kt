@@ -16,7 +16,7 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 class DecksPresenterFactory(
-  private val presenterFactory: (Navigator) -> DecksPresenter
+  private val presenterFactory: (Navigator) -> DecksPresenter,
 ) : Presenter.Factory {
   override fun create(
     screen: Screen,

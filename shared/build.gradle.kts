@@ -55,7 +55,6 @@ kotlin {
   }
 }
 
-
 ksp {
   arg("me.tatarka.inject.generateCompanionExtensions", "true")
 }

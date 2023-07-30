@@ -30,7 +30,7 @@ typealias PokemonTcgApiKey = String
 @ContributesBinding(MergeAppScope::class)
 class KtorPokemonTcgApi(
   private val apiKey: PokemonTcgApiKey = BuildConfig.POKEMON_TCG_API_KEY,
-) : PokemonTcgApi{
+) : PokemonTcgApi {
   private val client = HttpClient {
     install(ContentNegotiation) {
       json(

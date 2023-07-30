@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -48,7 +47,7 @@ internal fun CompactExpansionCard(
             .background(
               color = MaterialTheme.colorScheme.secondaryContainer,
               shape = shape,
-            )
+            ),
         )
         CardHeader(
           title = { Text(expansion.name) },
@@ -59,18 +58,20 @@ internal fun CompactExpansionCard(
               painter = logoPainter,
               contentDescription = "${expansion.name} Logo",
               modifier = Modifier
-                .size(width = 100.dp, height = 48.dp)
+                .size(width = 100.dp, height = 48.dp),
             )
           },
         )
-      }
+      },
     ) { measurables, constraints ->
       val progressWidth = constraints.maxWidth * progress
       val headerPlaceable = measurables[1].measure(constraints)
-      val progressPlaceable = measurables[0].measure(constraints.copy(
-        maxWidth = progressWidth.roundToInt(),
-        maxHeight = headerPlaceable.height,
-      ))
+      val progressPlaceable = measurables[0].measure(
+        constraints.copy(
+          maxWidth = progressWidth.roundToInt(),
+          maxHeight = headerPlaceable.height,
+        ),
+      )
 
       layout(constraints.maxWidth, headerPlaceable.height) {
         progressPlaceable.place(0, 0)

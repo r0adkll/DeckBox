@@ -6,5 +6,5 @@ enum class SearchField {
   ABILITY_NAME,
   ABILITY_TEXT,
   ATTACK_NAME,
-  ATTACK_TEXT;
+  ATTACK_TEXT,
 }

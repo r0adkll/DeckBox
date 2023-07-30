@@ -11,7 +11,7 @@ data class ExpansionsUiState(
   val loadState: ExpansionsLoadState,
   val expansionCardStyle: ExpansionCardStyle,
   val query: String?,
-  val eventSink: (ExpansionsUiEvent) -> Unit
+  val eventSink: (ExpansionsUiEvent) -> Unit,
 ) : CircuitUiState
 
 sealed interface ExpansionsUiEvent : CircuitUiEvent {

@@ -28,14 +28,14 @@ fun CardHeader(
         horizontal = 16.dp,
         vertical = 14.dp,
       ),
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     leading()
 
     Column(
       Modifier
         .weight(1f)
-        .padding(start = 16.dp)
+        .padding(start = 16.dp),
     ) {
       CompositionLocalProvider(
         LocalTextStyle provides MaterialTheme.typography.titleMedium,

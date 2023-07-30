@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.CloudDownload
 import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,7 +45,7 @@ internal fun SmallExpansionCard(
           painter = logoPainter,
           contentDescription = "${expansion.name} Logo",
           modifier = Modifier
-            .size(width = 100.dp, height = 48.dp)
+            .size(width = 100.dp, height = 48.dp),
         )
       },
       title = {
@@ -59,7 +58,7 @@ internal fun SmallExpansionCard(
         IconButton(onClick = { /*TODO*/ }) {
           Icon(Icons.Rounded.FileDownload, contentDescription = null)
         }
-      }
+      },
     )
 
     CollectionBar(
@@ -74,7 +73,7 @@ internal fun SmallExpansionCard(
         end = 16.dp,
         top = 8.dp,
         bottom = 16.dp,
-      )
+      ),
     ) {
       Text(
         text = "$count of ${expansion.printedTotal}",

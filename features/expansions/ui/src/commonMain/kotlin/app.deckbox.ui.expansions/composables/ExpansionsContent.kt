@@ -60,7 +60,7 @@ private fun EmptyContent(
   ) {
     Icon(
       Icons.Outlined.Place,
-      contentDescription = null
+      contentDescription = null,
     )
     Spacer(Modifier.height(16.dp))
     Text("Uh-oh! Unable to load expansions.")
@@ -93,7 +93,7 @@ private fun ErrorContent(
   ) {
     Icon(
       Icons.Outlined.Error,
-      contentDescription = null
+      contentDescription = null,
     )
     Spacer(Modifier.height(16.dp))
     Text(message)

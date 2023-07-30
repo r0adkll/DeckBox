@@ -7,7 +7,6 @@ import app.deckbox.core.model.Legality
 import app.deckbox.core.model.SuperType
 import app.deckbox.core.model.Type
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
 
 internal object ModelMapper {

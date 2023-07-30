@@ -31,7 +31,7 @@ internal fun CollectionBar(
         shape = RoundedCornerShape(50),
       )
       .fillMaxWidth()
-      .height(24.dp)
+      .height(24.dp),
   ) {
     val progress = count.toFloat() / printedTotal.toFloat()
     val progressWidth = maxWidth * progress
@@ -44,7 +44,7 @@ internal fun CollectionBar(
         .size(
           width = progressWidth,
           height = maxHeight,
-        )
+        ),
     ) {
       if (progress > 0.10f) {
         Text(

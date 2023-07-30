@@ -32,7 +32,6 @@ kotlin {
       dependsOn(commonMain)
 
       dependencies {
-
       }
     }
 

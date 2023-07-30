@@ -6,7 +6,6 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
-import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Expansion
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding

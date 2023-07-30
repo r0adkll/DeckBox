@@ -20,8 +20,6 @@ import com.slack.circuit.runtime.Screen
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
@@ -72,7 +70,7 @@ class ExpansionsPresenter(
                 it.name.contains(searchQuery!!, ignoreCase = true) ||
                   it.series.contains(searchQuery!!, ignoreCase = true) ||
                   it.ptcgoCode?.contains(searchQuery!!, ignoreCase = true) == true
-              }
+              },
             )
           }
           else -> expansionsLoadState

@@ -6,7 +6,6 @@ import app.deckbox.android.logging.AndroidBark
 import app.deckbox.core.extensions.unsafeLazy
 import app.deckbox.core.logging.Heartwood
 import kotlininject.merge.app.deckbox.android.di.MergedAndroidAppComponent
-import kotlininject.merge.app.deckbox.android.di.create
 import kotlininject.merge.app.deckbox.android.di.createMergedAndroidAppComponent
 
 class DeckBoxApplication : Application() {

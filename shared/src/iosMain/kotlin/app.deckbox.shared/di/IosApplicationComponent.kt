@@ -12,30 +12,29 @@ import me.tatarka.inject.annotations.Provides
 import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
 
-
 @AppScope
 @MergeComponent(MergeAppScope::class)
 abstract class IosApplicationComponent() : SharedAppComponent {
 
-    @AppScope
-    @Provides
-    fun provideApplicationId(): ApplicationInfo = ApplicationInfo(
-        packageName = NSBundle.mainBundle.bundleIdentifier ?: "app.tivi.client",
-        debugBuild = Platform.isDebugBinary,
-        flavor = Flavor.Standard,
-        versionName = NSBundle.mainBundle.infoDictionary
-            ?.get("CFBundleShortVersionString") as? String
-            ?: "",
-        versionCode = (
-            NSBundle.mainBundle.infoDictionary
-                ?.get("CFBundleVersion") as? String
-            )
-            ?.toIntOrNull()
-            ?: 0,
-    )
+  @AppScope
+  @Provides
+  fun provideApplicationId(): ApplicationInfo = ApplicationInfo(
+    packageName = NSBundle.mainBundle.bundleIdentifier ?: "app.tivi.client",
+    debugBuild = Platform.isDebugBinary,
+    flavor = Flavor.Standard,
+    versionName = NSBundle.mainBundle.infoDictionary
+      ?.get("CFBundleShortVersionString") as? String
+      ?: "",
+    versionCode = (
+      NSBundle.mainBundle.infoDictionary
+        ?.get("CFBundleVersion") as? String
+      )
+      ?.toIntOrNull()
+      ?: 0,
+  )
 
-    @Provides
-    fun provideNsUserDefaults(): NSUserDefaults = NSUserDefaults.standardUserDefaults
+  @Provides
+  fun provideNsUserDefaults(): NSUserDefaults = NSUserDefaults.standardUserDefaults
 
-    companion object
+  companion object
 }

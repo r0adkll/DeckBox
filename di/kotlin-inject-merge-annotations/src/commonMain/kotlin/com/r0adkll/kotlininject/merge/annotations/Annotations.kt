@@ -37,4 +37,3 @@ annotation class ContributesSubcomponent(
   val scope: KClass<*>,
   val parentScope: KClass<*>,
 )
-

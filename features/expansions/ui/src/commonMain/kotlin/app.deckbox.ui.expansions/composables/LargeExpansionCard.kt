@@ -60,7 +60,7 @@ internal fun LargeExpansionCard(
             .background(
               color = MaterialTheme.colorScheme.primaryContainer,
               shape = CircleShape,
-            )
+            ),
         )
       },
       title = {
@@ -73,13 +73,13 @@ internal fun LargeExpansionCard(
         IconButton(onClick = { /*TODO*/ }) {
           Icon(Icons.Rounded.FileDownload, contentDescription = null)
         }
-      }
+      },
     )
     Logo(
       url = expansion.images.logo,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 16.dp)
+        .padding(horizontal = 16.dp),
     )
     Tags(
       buildList {
@@ -156,10 +156,10 @@ fun TagChip(
         horizontal = 16.dp,
         vertical = 8.dp,
       )
-      .then(modifier)
+      .then(modifier),
   ) {
     CompositionLocalProvider(
-      LocalTextStyle provides MaterialTheme.typography.labelLarge
+      LocalTextStyle provides MaterialTheme.typography.labelLarge,
     ) {
       content()
     }

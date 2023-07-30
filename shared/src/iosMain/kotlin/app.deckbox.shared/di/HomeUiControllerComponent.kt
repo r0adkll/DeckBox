@@ -1,4 +1,4 @@
-// Copyright 2023, Christopher Banes and the Tivi project contributors
+// Copyright 2023, Drew Heavner and the Deckbox project contributors
 // SPDX-License-Identifier: Apache-2.0
 
 package app.deckbox.shared.di
@@ -17,11 +17,11 @@ import platform.UIKit.UIViewController
   parentScope = MergeAppScope::class,
 )
 abstract class HomeUiControllerComponent : UiComponent {
-    abstract val uiViewControllerFactory: () -> UIViewController
+  abstract val uiViewControllerFactory: () -> UIViewController
 
-    @Provides
-    @ActivityScope
-    fun uiViewController(bind: DeckBoxUiViewController): UIViewController = bind()
+  @Provides
+  @ActivityScope
+  fun uiViewController(bind: DeckBoxUiViewController): UIViewController = bind()
 
-    companion object
+  companion object
 }

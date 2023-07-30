@@ -15,24 +15,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.seiko.imageloader.intercept.Interceptor
-import com.seiko.imageloader.model.ImageAction
 import com.seiko.imageloader.model.ImageEvent
-import com.seiko.imageloader.model.ImageRequest
-import com.seiko.imageloader.model.ImageResult
 import com.seiko.imageloader.rememberImageAction
 import com.seiko.imageloader.rememberImageActionPainter
-import com.seiko.imageloader.rememberImagePainter
 
 @Composable
 fun Avatar(
   modifier: Modifier = Modifier,
-  content: @Composable BoxScope.() -> Unit
+  content: @Composable BoxScope.() -> Unit,
 ) {
   Box(
     modifier = modifier
       .size(40.dp)
-      .clip(CircleShape)
+      .clip(CircleShape),
   ) {
     content()
   }
@@ -50,7 +45,7 @@ fun ImageAvatar(
         .align(Alignment.Center),
       color = MaterialTheme.colorScheme.primary,
     )
-  }
+  },
 ) {
   val action by rememberImageAction(url)
 

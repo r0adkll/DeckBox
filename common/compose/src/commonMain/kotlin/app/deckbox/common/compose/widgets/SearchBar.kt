@@ -70,7 +70,7 @@ fun SearchBar(
           filter()
         }
       }
-    }
+    },
   )
 }
 
@@ -100,7 +100,7 @@ private fun SearchBarWithFilter(
       Box(
         Modifier
           .weight(1f)
-          .padding(start = 16.dp)
+          .padding(start = 16.dp),
       ) {
         var query by remember { mutableStateOf(initialValue) }
 

@@ -9,8 +9,7 @@ import com.slack.circuit.runtime.CircuitUiState
 data class DecksUiState(
   val isLoading: Boolean = false,
   val decks: List<Deck> = emptyList(),
-  val eventSink: (DecksUiEvent) -> Unit
+  val eventSink: (DecksUiEvent) -> Unit,
 ) : CircuitUiState
 
-sealed interface DecksUiEvent : CircuitUiEvent {
-}
+sealed interface DecksUiEvent : CircuitUiEvent

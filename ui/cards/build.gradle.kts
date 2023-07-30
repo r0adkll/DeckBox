@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
 plugins {
   alias(libs.plugins.composeMultiplatform)
   id("app.deckbox.android.library")
