@@ -6,13 +6,15 @@ import app.deckbox.android.DeckBoxApplication
 import app.deckbox.core.app.ApplicationInfo
 import app.deckbox.core.app.Flavor
 import app.deckbox.core.di.AppScope
+import app.deckbox.core.di.MergeAppScope
 import app.deckbox.shared.di.SharedAppComponent
-import me.tatarka.inject.annotations.Component
+import com.r0adkll.kotlininject.merge.annotations.MergeComponent
+import kotlininject.merge.app.deckbox.android.di.MergedAndroidAppComponent
 import me.tatarka.inject.annotations.Provides
 import org.jetbrains.compose.components.resources.BuildConfig
 
 @AppScope
-@Component
+@MergeComponent(MergeAppScope::class)
 abstract class AndroidAppComponent(
   @get:Provides val application: Application,
 ) : SharedAppComponent {
@@ -32,9 +34,9 @@ abstract class AndroidAppComponent(
     )
   }
 
-  companion object {
-    fun from(context: Context): AndroidAppComponent {
-      return (context.applicationContext as DeckBoxApplication).component
-    }
-  }
+  companion object
+}
+
+fun AndroidAppComponent.Companion.from(context: Context): MergedAndroidAppComponent {
+  return (context.applicationContext as DeckBoxApplication).component
 }

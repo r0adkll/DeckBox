@@ -4,16 +4,19 @@
 package app.deckbox.shared.di
 
 import app.deckbox.core.di.ActivityScope
+import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.di.MergeAppScope
 import app.deckbox.shared.DeckBoxUiViewController
-import me.tatarka.inject.annotations.Component
+import com.r0adkll.kotlininject.merge.annotations.ContributesSubcomponent
 import me.tatarka.inject.annotations.Provides
 import platform.UIKit.UIViewController
 
 @ActivityScope
-@Component
-abstract class HomeUiControllerComponent(
-  @Component val applicationComponent: IosApplicationComponent,
-) : UiComponent {
+@ContributesSubcomponent(
+  scope = MergeActivityScope::class,
+  parentScope = MergeAppScope::class,
+)
+abstract class HomeUiControllerComponent : UiComponent {
     abstract val uiViewControllerFactory: () -> UIViewController
 
     @Provides

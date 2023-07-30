@@ -16,7 +16,11 @@ ij_kotlin_imports_layout = *
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
 
-[*.{gradle]
+[*.sq]
+indent_size = 2
+ij_continuation_indent_size = 2
+
+[*.gradle]
 indent_size = 4
 
 [*.{xml,yml,yaml}]

@@ -1,28 +1,30 @@
+import app.deckbox.convention.addKspDependencyForCommon
+
 plugins {
   alias(libs.plugins.composeMultiplatform)
   id("app.deckbox.android.library")
   id("app.deckbox.multiplatform")
+  alias(libs.plugins.ksp)
 }
 
 kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        api(projects.core)
         api(projects.common.screens)
 
-        api(compose.material3)
         api(libs.circuit.foundation)
         api(libs.compose.material3.windowsizeclass)
         api(libs.insetsx)
+        api(libs.imageloader)
 
-        implementation(projects.core)
-        implementation(compose.foundation)
-        implementation(compose.material)
-        implementation(compose.materialIconsExtended)
-        implementation(compose.animation)
-        implementation(libs.paging.compose)
-
-//                implementation(libs.uuid)
+        api(compose.foundation)
+        api(compose.material)
+        api(compose.material3)
+        api(compose.materialIconsExtended)
+        api(compose.animation)
+        api(libs.paging.compose)
       }
     }
 
@@ -30,7 +32,7 @@ kotlin {
       dependsOn(commonMain)
 
       dependencies {
-//                implementation(projects.thirdparty.composeMaterialDialogs.datetime)
+
       }
     }
 
@@ -47,3 +49,5 @@ kotlin {
     }
   }
 }
+
+addKspDependencyForCommon(projects.di.kotlinInjectMerge)

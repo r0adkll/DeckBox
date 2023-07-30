@@ -96,7 +96,9 @@ internal fun Home(
     Row(
       modifier = Modifier
         .fillMaxSize()
-        .padding(paddingValues),
+        .then(
+          if (navigationType != NavigationType.BOTTOM_NAVIGATION) Modifier.padding(paddingValues) else Modifier
+        ),
     ) {
       if (navigationType == NavigationType.RAIL) {
         HomeNavigationRail(

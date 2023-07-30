@@ -4,21 +4,15 @@
 package app.deckbox.shared.di
 
 import app.deckbox.core.di.ActivityScope
-import app.deckbox.ui.browse.BrowseComponent
-import app.deckbox.ui.decks.DecksComponent
-import app.deckbox.ui.expansions.ExpansionsComponent
 import com.slack.circuit.foundation.CircuitConfig
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.ui.Ui
 import me.tatarka.inject.annotations.Provides
 
-interface UiComponent :
-  BrowseComponent,
-  DecksComponent,
-  ExpansionsComponent {
+interface UiComponent {
 
 //    @Provides
-//    @ActivityScope
+//    @SingleIn(MergeActivityScope::class)
 //    fun provideLyricist(): TiviStrings {
 //        return Lyricist(
 //            defaultLanguageTag = Locales.EN,

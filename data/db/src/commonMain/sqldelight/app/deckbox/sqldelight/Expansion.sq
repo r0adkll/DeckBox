@@ -1,0 +1,39 @@
+import app.deckbox.core.model.Legality;
+import kotlin.Int;
+import kotlinx.datetime.LocalDate;
+import kotlinx.datetime.LocalDateTime;
+
+CREATE TABLE expansions (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  total INTEGER AS Int NOT NULL,
+  printedTotal INTEGER AS Int NOT NULL,
+  series TEXT NOT NULL,
+  ptcgoCode TEXT,
+  releaseDate TEXT AS LocalDate NOT NULL,
+  updatedAt TEXT AS LocalDateTime NOT NULL,
+  legalitiesUnlimited TEXT AS Legality,
+  legalitiesStandard TEXT AS Legality,
+  legalitiesExpanded TEXT AS Legality,
+  symbol TEXT NOT NULL,
+  logo TEXT NOT NULL
+);
+
+insert:
+INSERT INTO expansions
+VALUES ?;
+
+getAll:
+SELECT * FROM expansions;
+
+getById:
+SELECT * FROM expansions
+WHERE id = ?
+LIMIT 1;
+
+deleteAll:
+DELETE FROM expansions;
+
+deleteById:
+DELETE FROM expansions
+WHERE id = ?;

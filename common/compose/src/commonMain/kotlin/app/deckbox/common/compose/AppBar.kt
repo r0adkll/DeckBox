@@ -1,3 +1,4 @@
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
@@ -15,6 +16,7 @@ fun DeckBoxRootAppBar(
   title: String,
   modifier: Modifier = Modifier,
   scrollBehavior: TopAppBarScrollBehavior? = null,
+  actions: @Composable RowScope.() -> Unit = {},
 ) {
   TopAppBar(
     modifier = modifier,
@@ -22,7 +24,6 @@ fun DeckBoxRootAppBar(
       .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
     scrollBehavior = scrollBehavior,
     title = { Text(text = title) },
-    actions = {
-    },
+    actions = actions,
   )
 }

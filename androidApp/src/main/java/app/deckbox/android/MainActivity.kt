@@ -8,20 +8,25 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import app.deckbox.android.di.ActivityComponent
 import app.deckbox.android.di.AndroidAppComponent
+import app.deckbox.android.di.from
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.core.di.ActivityScope
+import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.di.MergeAppScope
 import app.deckbox.shared.di.UiComponent
 import app.deckbox.shared.root.DeckBoxContent
+import com.r0adkll.kotlininject.merge.annotations.ContributesSubcomponent
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.push
 import com.slack.circuit.foundation.rememberCircuitNavigator
-import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val component = MainActivityComponent.create(this)
+
+    val component = AndroidAppComponent.from(this)
+      .createMainActivityComponent(this)
 
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -39,12 +44,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @ActivityScope
-@Component
+@ContributesSubcomponent(
+  scope = MergeActivityScope::class,
+  parentScope = MergeAppScope::class,
+)
 abstract class MainActivityComponent(
   @get:Provides override val activity: Activity,
-  @Component val applicationComponent: AndroidAppComponent = AndroidAppComponent.from(activity),
 ) : ActivityComponent, UiComponent {
   abstract val deckBoxContent: DeckBoxContent
-
-  companion object
 }

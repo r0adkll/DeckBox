@@ -25,10 +25,18 @@ kotlin {
         api(projects.common.screens)
         api(projects.common.compose)
 
+        // Data Modules
+        api(projects.data.db)
+        api(projects.data.network.impl)
+
+        // Feature Modules
+        api(projects.features.expansions.impl)
+        api(projects.features.expansions.ui)
+
+        // UI Modules
         api(projects.ui.browse)
         api(projects.ui.cards)
         api(projects.ui.decks)
-        api(projects.ui.expansions)
 
         api(compose.runtime)
         api(compose.foundation)
@@ -53,3 +61,4 @@ ksp {
 }
 
 addKspDependencyForAllTargets(libs.kotlininject.ksp)
+addKspDependencyForAllTargets(projects.di.kotlinInjectMerge)

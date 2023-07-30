@@ -7,10 +7,10 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        api(projects.di.kotlinInjectMergeAnnotations)
         api(libs.kotlinx.coroutines.core)
         api(libs.kotlininject.runtime)
-
-        implementation(libs.kotlinx.datetime)
+        api(libs.kotlinx.datetime)
       }
     }
     val commonTest by getting {

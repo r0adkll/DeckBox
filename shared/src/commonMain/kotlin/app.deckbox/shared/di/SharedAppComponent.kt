@@ -7,8 +7,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
 import me.tatarka.inject.annotations.Provides
 
-interface SharedAppComponent :
-  CoreComponent
+interface SharedAppComponent : CoreComponent
 
 interface CoreComponent {
 

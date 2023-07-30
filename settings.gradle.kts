@@ -18,15 +18,26 @@ rootProject.name = "DeckBox"
 include(":androidApp")
 include(":shared")
 include(":core")
-include(":data:network")
-include(":data:db")
 include(":common:screens")
 include(":common:compose")
+include(
+  ":data:network:public",
+  ":data:network:impl",
+  ":data:db",
+)
+include(
+  ":features:expansions:public",
+  ":features:expansions:impl",
+  ":features:expansions:ui",
+)
 include(
   ":ui:browse",
   ":ui:cards",
   ":ui:decks",
-  ":ui:expansions"
+)
+include(
+  ":di:kotlin-inject-merge",
+  ":di:kotlin-inject-merge-annotations",
 )
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

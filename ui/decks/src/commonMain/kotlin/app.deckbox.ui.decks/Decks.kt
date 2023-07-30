@@ -36,7 +36,6 @@ internal fun Decks(
   state: DecksUiState,
   modifier: Modifier = Modifier,
 ) {
-  print(state)
   Scaffold(
     modifier = modifier,
     topBar = {
@@ -52,7 +51,7 @@ internal fun Decks(
         .fillMaxSize(),
       contentAlignment = Alignment.Center,
     ) {
-      Text("Decks UI using Circuit")
+      Text("Decks UI using Circuit: ${state.isLoading}")
     }
   }
 }

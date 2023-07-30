@@ -2,7 +2,7 @@ import SwiftUI
 import shared
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    lazy var applicationComponent: IosApplicationComponent = createApplicationComponent(
+    lazy var applicationComponent: MergedIosApplicationComponent = createApplicationComponent(
         appDelegate: self
     )
 
@@ -34,14 +34,12 @@ struct iOSApp: App {
 
 private func createApplicationComponent(
     appDelegate: AppDelegate
-) -> IosApplicationComponent {
-    return IosApplicationComponent.companion.create()
+) -> MergedIosApplicationComponent {
+    return IosApplicationComponent.companion.createMergedIosApplicationComponent()
 }
 
 private func createHomeUiControllerComponent(
-    applicationComponent: IosApplicationComponent
+    applicationComponent: MergedIosApplicationComponent
 ) -> HomeUiControllerComponent {
-    return HomeUiControllerComponent.companion.create(
-        applicationComponent: applicationComponent
-    )
+    return applicationComponent.createHomeUiControllerComponent()
 }

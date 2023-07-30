@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.DecksScreen
+import app.deckbox.core.logging.bark
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.Screen
@@ -42,7 +43,7 @@ class DecksPresenter(
       isLoading = isLoading,
       decks = emptyList(),
     ) { event ->
-      println(event)
+      bark { "$event" }
     }
   }
 }

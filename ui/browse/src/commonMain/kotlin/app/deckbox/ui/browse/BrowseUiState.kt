@@ -12,7 +12,7 @@ data class BrowseUiState(
   val results: List<Card> = emptyList(),
   val filter: SearchFilter? = null,
   val query: String? = null,
-  val eventSink: (BrowseUiEvent) -> Unit
+  val eventSink: (BrowseUiEvent) -> Unit,
 ) : CircuitUiState
 
 sealed interface BrowseUiEvent : CircuitUiEvent {

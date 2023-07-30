@@ -6,13 +6,15 @@ package app.deckbox.shared.di
 import app.deckbox.core.app.ApplicationInfo
 import app.deckbox.core.app.Flavor
 import app.deckbox.core.di.AppScope
-import me.tatarka.inject.annotations.Component
+import app.deckbox.core.di.MergeAppScope
+import com.r0adkll.kotlininject.merge.annotations.MergeComponent
 import me.tatarka.inject.annotations.Provides
 import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
 
-@Component
+
 @AppScope
+@MergeComponent(MergeAppScope::class)
 abstract class IosApplicationComponent() : SharedAppComponent {
 
     @AppScope

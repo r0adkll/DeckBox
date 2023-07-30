@@ -1,10 +1,10 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import app.deckbox.convention.addKspDependencyForCommon
 
 plugins {
   alias(libs.plugins.composeMultiplatform)
   id("app.deckbox.android.library")
   id("app.deckbox.multiplatform")
+  alias(libs.plugins.ksp)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -29,10 +29,7 @@ kotlin {
         implementation(libs.circuit.runtime)
       }
     }
-    val commonTest by getting {
-      dependencies {
-        implementation(libs.kotlin.test)
-      }
-    }
   }
 }
+
+addKspDependencyForCommon(projects.di.kotlinInjectMerge)
