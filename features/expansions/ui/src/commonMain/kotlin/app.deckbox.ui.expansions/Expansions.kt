@@ -29,6 +29,7 @@ import app.deckbox.ui.expansions.ExpansionsUiEvent.ExpansionClicked
 import app.deckbox.ui.expansions.ExpansionsUiEvent.SearchCleared
 import app.deckbox.ui.expansions.ExpansionsUiEvent.SearchUpdated
 import app.deckbox.ui.expansions.composables.ExpansionsContent
+import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.statusBars
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Screen
@@ -78,7 +79,7 @@ internal fun Expansions(
             )
           }
         },
-        placeholder = { Text("Search expansions") },
+        placeholder = { Text(LocalStrings.current.expansionSearchHint) },
         trailing = {
           Box {
             IconButton(

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.core.model.Expansion
+import cafe.adriel.lyricist.LocalStrings
 import com.seiko.imageloader.rememberImagePainter
 import kotlin.random.Random
 
@@ -76,14 +77,14 @@ internal fun SmallExpansionCard(
       ),
     ) {
       Text(
-        text = "$count of ${expansion.printedTotal}",
+        text = LocalStrings.current.collectionCountOfTotal(count, expansion.printedTotal),
         style = MaterialTheme.typography.labelMedium.copy(
           textAlign = TextAlign.Start,
         ),
         modifier = Modifier.weight(1f),
       )
       Text(
-        text = "Released on ${expansion.releaseDate}",
+        text = LocalStrings.current.expansionReleaseDate(expansion.releaseDate.toString()),
         style = MaterialTheme.typography.labelMedium.copy(
           color = MaterialTheme.colorScheme.outline,
         ),

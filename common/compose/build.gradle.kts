@@ -13,6 +13,7 @@ kotlin {
       dependencies {
         api(projects.core)
         api(projects.common.screens)
+        api(projects.common.resources.strings)
 
         api(libs.circuit.foundation)
         api(libs.compose.material3.windowsizeclass)

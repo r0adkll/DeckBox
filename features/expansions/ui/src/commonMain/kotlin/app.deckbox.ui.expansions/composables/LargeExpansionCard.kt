@@ -37,6 +37,7 @@ import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.common.compose.widgets.ImageAvatar
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Legality
+import cafe.adriel.lyricist.LocalStrings
 import com.seiko.imageloader.rememberImagePainter
 import kotlin.random.Random
 
@@ -84,10 +85,10 @@ internal fun LargeExpansionCard(
     Tags(
       buildList {
         if (expansion.legalities?.standard == Legality.LEGAL) {
-          add("Standard") // TODO Lyracist
+          add(LocalStrings.current.standardLegality)
         }
         if (expansion.legalities?.expanded == Legality.LEGAL) {
-          add("Expanded") // TODO Lyracist
+          add(LocalStrings.current.expandedLegality)
         }
       },
     )
@@ -95,7 +96,7 @@ internal fun LargeExpansionCard(
       printedTotal = expansion.printedTotal,
     )
     Text(
-      text = "Released on ${expansion.releaseDate}",
+      text = LocalStrings.current.expansionReleaseDate(expansion.releaseDate.toString()),
       style = MaterialTheme.typography.labelSmall.copy(
         color = MaterialTheme.colorScheme.outline,
       ),
@@ -181,11 +182,11 @@ private fun CollectionCounter(
   ) {
     Row {
       Text(
-        text = "Collection", // TODO: Lyracist
+        text = LocalStrings.current.collection,
         style = MaterialTheme.typography.labelMedium,
       )
       Text(
-        text = "$count of $printedTotal",
+        text = LocalStrings.current.collectionCountOfTotal(count, printedTotal),
         style = MaterialTheme.typography.labelMedium.copy(textAlign = TextAlign.End),
 
         modifier = Modifier.weight(1f),

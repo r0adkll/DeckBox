@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Expansion
 import app.deckbox.expansions.ui.ExpansionCardStyle
 import app.deckbox.ui.expansions.ExpansionsLoadState
+import cafe.adriel.lyricist.LocalStrings
 
 @Composable
 internal fun ExpansionsContent(
@@ -63,7 +64,7 @@ private fun EmptyContent(
       contentDescription = null,
     )
     Spacer(Modifier.height(16.dp))
-    Text("Uh-oh! Unable to load expansions.")
+    Text(LocalStrings.current.expansionsEmptyMessage)
   }
 }
 

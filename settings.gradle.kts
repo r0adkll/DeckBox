@@ -18,8 +18,11 @@ rootProject.name = "DeckBox"
 include(":androidApp")
 include(":shared")
 include(":core")
-include(":common:screens")
-include(":common:compose")
+include(
+  ":common:screens",
+  ":common:compose",
+  ":common:resources:strings",
+)
 include(
   ":data:network:public",
   ":data:network:impl",

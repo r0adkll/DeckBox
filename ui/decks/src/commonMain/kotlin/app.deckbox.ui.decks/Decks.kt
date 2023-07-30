@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.deckbox.common.screens.DecksScreen
+import cafe.adriel.lyricist.LocalStrings
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Screen
 import com.slack.circuit.runtime.ui.Ui
@@ -40,7 +41,7 @@ internal fun Decks(
     modifier = modifier,
     topBar = {
       DeckBoxRootAppBar(
-        title = "Decks", // TODO: Convert to use Lyracist,
+        title = LocalStrings.current.decks,
       )
     },
   ) { paddingValues ->

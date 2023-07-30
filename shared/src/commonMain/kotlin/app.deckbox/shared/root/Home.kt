@@ -40,9 +40,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.LocalWindowSizeClass
+import app.deckbox.common.resources.strings.DeckBoxStrings
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
+import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.safeContentPadding
 import com.moriatsushi.insetsx.statusBars
@@ -70,7 +72,8 @@ internal fun Home(
     derivedStateOf { backstack.last().screen }
   }
 
-  val navigationItems = remember { buildNavigationItems() }
+  val strings = LocalStrings.current
+  val navigationItems = remember { buildNavigationItems(strings) }
 
   Scaffold(
     bottomBar = {
@@ -261,26 +264,26 @@ internal enum class NavigationType {
   }
 }
 
-private fun buildNavigationItems(): List<HomeNavigationItem> {
+private fun buildNavigationItems(strings: DeckBoxStrings): List<HomeNavigationItem> {
   return listOf(
     HomeNavigationItem(
       screen = DecksScreen(),
-      label = "Decks", // TODO: Replace with Lyracist setup
-      contentDescription = "List of saved decks",
+      label = strings.decks,
+      contentDescription = strings.decksTabContentDescription,
       iconImageVector = Icons.Outlined.Weekend,
       selectedImageVector = Icons.Default.Weekend,
     ),
     HomeNavigationItem(
       screen = ExpansionsScreen(),
-      label = "Expansions",
-      contentDescription = "List of Pokemon Expansion sets",
+      label = strings.expansions,
+      contentDescription = strings.expansionsTabContentDescription,
       iconImageVector = Icons.Outlined.Subscriptions,
       selectedImageVector = Icons.Default.Subscriptions,
     ),
     HomeNavigationItem(
       screen = BrowseScreen(),
-      label = "Browse",
-      contentDescription = "Browse all Pokemon Cards",
+      label = strings.browse,
+      contentDescription = strings.browseTabContentDescription,
       iconImageVector = Icons.Outlined.Subscriptions,
       selectedImageVector = Icons.Default.Subscriptions,
     ),

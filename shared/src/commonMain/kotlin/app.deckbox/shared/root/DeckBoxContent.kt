@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import app.deckbox.common.compose.LocalWindowSizeClass
 import app.deckbox.common.compose.theme.DeckBoxTheme
+import cafe.adriel.lyricist.ProvideStrings
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.LocalImageLoader
 import com.slack.circuit.backstack.SaveableBackStack
@@ -37,13 +38,15 @@ fun DeckBoxContent(
     LocalWindowSizeClass provides calculateWindowSizeClass(),
     LocalImageLoader provides remember { imageLoader.value },
   ) {
-    CircuitCompositionLocals(circuitConfig) {
-      DeckBoxTheme {
-        Home(
-          backstack = backstack,
-          navigator = navigator,
-          modifier = modifier,
-        )
+    ProvideStrings {
+      CircuitCompositionLocals(circuitConfig) {
+        DeckBoxTheme {
+          Home(
+            backstack = backstack,
+            navigator = navigator,
+            modifier = modifier,
+          )
+        }
       }
     }
   }

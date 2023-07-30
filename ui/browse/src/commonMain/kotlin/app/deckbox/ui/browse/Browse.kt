@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.deckbox.common.screens.BrowseScreen
+import cafe.adriel.lyricist.LocalStrings
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Screen
 import com.slack.circuit.runtime.ui.Ui
@@ -41,7 +42,7 @@ internal fun Browse(
     modifier = modifier,
     topBar = {
       DeckBoxRootAppBar(
-        title = "Browse", // TODO: Convert to use Lyracist,
+        title = LocalStrings.current.browse,
       )
     },
   ) { paddingValues ->
