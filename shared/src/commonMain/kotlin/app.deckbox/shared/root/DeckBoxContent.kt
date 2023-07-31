@@ -7,7 +7,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import app.deckbox.common.compose.LocalWindowSizeClass
+import app.deckbox.common.compose.extensions.shouldUseDarkColors
+import app.deckbox.common.compose.extensions.shouldUseDynamicColors
 import app.deckbox.common.compose.theme.DeckBoxTheme
+import app.deckbox.common.settings.DeckBoxSettings
 import cafe.adriel.lyricist.ProvideStrings
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.LocalImageLoader
@@ -32,6 +35,7 @@ fun DeckBoxContent(
   @Assisted navigator: Navigator,
   circuitConfig: CircuitConfig,
   imageLoader: Lazy<ImageLoader>,
+  settings: DeckBoxSettings,
   @Assisted modifier: Modifier = Modifier,
 ) {
   CompositionLocalProvider(
@@ -40,7 +44,10 @@ fun DeckBoxContent(
   ) {
     ProvideStrings {
       CircuitCompositionLocals(circuitConfig) {
-        DeckBoxTheme {
+        DeckBoxTheme(
+          useDarkColors = settings.shouldUseDarkColors(),
+          useDynamicColors = settings.shouldUseDynamicColors(),
+        ) {
           Home(
             backstack = backstack,
             navigator = navigator,

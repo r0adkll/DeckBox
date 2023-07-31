@@ -22,6 +22,7 @@ include(
   ":common:screens",
   ":common:compose",
   ":common:resources:strings",
+  ":common:settings",
 )
 include(
   ":data:network:public",

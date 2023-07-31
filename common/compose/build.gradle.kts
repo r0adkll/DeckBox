@@ -14,6 +14,7 @@ kotlin {
         api(projects.core)
         api(projects.common.screens)
         api(projects.common.resources.strings)
+        api(projects.common.settings)
 
         api(libs.circuit.foundation)
         api(libs.compose.material3.windowsizeclass)

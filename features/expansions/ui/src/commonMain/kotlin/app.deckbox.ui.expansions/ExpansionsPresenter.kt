@@ -10,10 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.ExpansionsScreen
+import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Expansion
 import app.deckbox.expansions.ExpansionsRepository
-import app.deckbox.expansions.ui.ExpansionCardStyle
+import app.deckbox.ui.expansions.extensions.collectExpansionCardStyle
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.Screen
@@ -41,6 +42,7 @@ class ExpansionsPresenterFactory(
 class ExpansionsPresenter(
   @Assisted private val navigator: Navigator,
   private val expansionsRepository: ExpansionsRepository,
+  private val settings: DeckBoxSettings,
 ) : Presenter<ExpansionsUiState> {
 
   @Composable
@@ -56,8 +58,7 @@ class ExpansionsPresenter(
         }
     }.collectAsState(ExpansionsLoadState.Loading)
 
-    // TODO Hook up to preferences + UI
-    var expansionCardStyle by remember { mutableStateOf(ExpansionCardStyle.Large) }
+    val expansionCardStyle by settings.collectExpansionCardStyle()
 
     var searchQuery by rememberSaveable { mutableStateOf<String?>(null) }
     val filteredLoadState by remember {
@@ -84,7 +85,7 @@ class ExpansionsPresenter(
       query = searchQuery,
     ) { event ->
       when (event) {
-        is ExpansionsUiEvent.ChangeCardStyle -> expansionCardStyle = event.style
+        is ExpansionsUiEvent.ChangeCardStyle -> settings.expansionCardStyle = event.style
         is ExpansionsUiEvent.ExpansionClicked -> {
           bark { "Expansion Clicked: ${event.expansion.name}" }
         }
