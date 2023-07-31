@@ -35,8 +35,12 @@ include(
   ":features:expansions:ui",
 )
 include(
+  ":features:cards:public",
+  ":features:cards:impl",
+  ":features:cards:ui",
+)
+include(
   ":ui:browse",
-  ":ui:cards",
   ":ui:decks",
 )
 include(
