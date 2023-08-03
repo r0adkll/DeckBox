@@ -1,9 +1,9 @@
 package com.r0adkll.kotlininject.merge.generators
 
-import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.r0adkll.kotlininject.merge.ClassScanner
-import com.r0adkll.kotlininject.merge.GeneratedContributionCache
+import com.google.devtools.ksp.symbol.KSDeclaration
+import com.google.devtools.ksp.validate
+import com.r0adkll.kotlininject.merge.MergeContext
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import com.r0adkll.kotlininject.merge.annotations.ContributesSubcomponent
 import com.r0adkll.kotlininject.merge.annotations.ContributesTo
@@ -14,6 +14,7 @@ import com.r0adkll.kotlininject.merge.util.buildFile
 import com.r0adkll.kotlininject.merge.util.findActualType
 import com.r0adkll.kotlininject.merge.util.findAnnotation
 import com.r0adkll.kotlininject.merge.util.getScope
+import com.r0adkll.kotlininject.merge.util.getSymbolsWithClassAnnotation
 import com.r0adkll.kotlininject.merge.util.isInterface
 import com.r0adkll.kotlininject.merge.util.toClassName
 import com.squareup.kotlinpoet.ClassName
@@ -27,23 +28,48 @@ import com.squareup.kotlinpoet.ksp.addOriginatingKSFile
 import com.squareup.kotlinpoet.ksp.toAnnotationSpec
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
+import kotlin.reflect.KClass
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 
-class MergeComponentGenerator(
-  private val classScanner: ClassScanner,
-  private val contributionCache: GeneratedContributionCache,
-  private val logger: KSPLogger,
-) : Generator {
+class MergeComponentGenerator : Generator {
 
-  override fun generate(element: KSClassDeclaration): GeneratedSpec {
+  override val annotation: KClass<*>
+    get() = MergeComponent::class
+
+  override fun generate(
+    context: MergeContext,
+    element: KSDeclaration,
+  ): GeneratedSpec {
+    require(element is KSClassDeclaration) { "${annotation.simpleName} requires a KSClassDeclaration" }
+    return process(context, element)
+  }
+
+  override fun generate(context: MergeContext): List<GeneratedSpec> {
+    return context.resolver
+      .getSymbolsWithClassAnnotation(annotation)
+      .mapNotNull { element ->
+        if (element.validate()) {
+          process(context, element)
+        } else {
+          context.defer(element, annotation)
+          null
+        }
+      }
+      .toList()
+  }
+
+  private fun process(
+    context: MergeContext,
+    element: KSClassDeclaration,
+  ): GeneratedSpec {
     val packageName = "kotlininject.merge.${element.packageName.asString()}"
     val classSimpleName = "Merged${element.simpleName.asString()}"
     val className = ClassName(packageName, classSimpleName)
 
     return FileSpec.buildFile(packageName, classSimpleName) {
       // Recursively Generate a component and its contributed subcomponents
-      addType(generateComponent(packageName, element))
+      addType(generateComponent(context, packageName, element))
 
       // Create Companion extension method on original element to create this component
       val constructorParameters = getConstructorParameters(element)
@@ -54,20 +80,21 @@ class MergeComponentGenerator(
           .addStatement(
             "return %T.create(${constructorParameters.joinToString { "%L" }})",
             className,
-            *constructorParameters.map { it.name }.toTypedArray()
+            *constructorParameters.map { it.name }.toTypedArray(),
           )
           .returns(className)
-          .build()
+          .build(),
       )
     } isAggregating true
   }
 
 
   private fun FileSpec.Builder.generateComponent(
+    context: MergeContext,
     packageName: String,
     element: KSClassDeclaration,
     parent: ClassName? = null,
-  ): TypeSpec {
+  ): TypeSpec = with(context) {
     val classSimpleName = "Merged${element.simpleName.asString()}"
     val className = ClassName(packageName, classSimpleName)
     val isSubcomponent: Boolean = parent != null
@@ -135,7 +162,7 @@ class MergeComponentGenerator(
         addProperty(
           PropertySpec.builder("parent", parent)
             .initializer("parent")
-            .build()
+            .build(),
         )
 
         ParameterSpec.builder("parent", parent)
@@ -200,25 +227,26 @@ class MergeComponentGenerator(
             .addStatement(
               "return %T.create(${subcomponentConstructorParams.joinToString { "%L" }}${if (subcomponentConstructorParams.isNotEmpty()) ", " else ""}this)",
               subcomponentClassName,
-              *subcomponentConstructorParams.map { it.name }.toTypedArray()
+              *subcomponentConstructorParams.map { it.name }.toTypedArray(),
             )
-            .build()
+            .build(),
         )
 
         // Generate the Subcomponent
         addType(
           generateComponent(
+            context = context,
             packageName = packageName,
             element = subcomponent,
             parent = className,
-          )
+          ),
         )
       }
 
       // Every component should have an empty companion object
       addType(
         TypeSpec.companionObjectBuilder()
-          .build()
+          .build(),
       )
     }
   }

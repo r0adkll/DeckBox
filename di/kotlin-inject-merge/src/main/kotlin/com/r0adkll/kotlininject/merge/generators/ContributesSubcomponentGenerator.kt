@@ -8,10 +8,12 @@ import com.r0adkll.kotlininject.merge.util.findAnnotation
 import com.r0adkll.kotlininject.merge.util.getParentScope
 import com.r0adkll.kotlininject.merge.util.toClassName
 import com.squareup.kotlinpoet.ClassName
+import kotlin.reflect.KClass
 
-class ContributesSubcomponentGenerator(
-  contributionCache: GeneratedContributionCache,
-) : HintGenerator(HINT_SUBCOMPONENT_PACKAGE, contributionCache) {
+class ContributesSubcomponentGenerator : HintGenerator(HINT_SUBCOMPONENT_PACKAGE) {
+
+  override val annotation: KClass<*>
+    get() = ContributesSubcomponent::class
 
   override fun getScope(element: KSClassDeclaration): ClassName {
     return element.findAnnotation(ContributesSubcomponent::class)

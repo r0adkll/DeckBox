@@ -22,9 +22,10 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ksp.toClassName
 import kotlin.reflect.KClass
 
-class ContributesBindingGenerator(
-  contributionCache: GeneratedContributionCache,
-) : HintGenerator(HINT_BINDING_PACKAGE, contributionCache) {
+class ContributesBindingGenerator : HintGenerator(HINT_BINDING_PACKAGE) {
+
+  override val annotation: KClass<*>
+    get() = ContributesBinding::class
 
   override fun getScope(element: KSClassDeclaration): ClassName {
     return element.findAnnotation(ContributesBinding::class)

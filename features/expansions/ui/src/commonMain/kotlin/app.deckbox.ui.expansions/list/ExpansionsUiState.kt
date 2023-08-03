@@ -1,4 +1,4 @@
-package app.deckbox.ui.expansions
+package app.deckbox.ui.expansions.list
 
 import androidx.compose.runtime.Stable
 import app.deckbox.core.model.Expansion

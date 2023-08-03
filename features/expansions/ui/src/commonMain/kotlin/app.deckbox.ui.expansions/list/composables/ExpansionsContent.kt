@@ -1,4 +1,4 @@
-package app.deckbox.ui.expansions.composables
+package app.deckbox.ui.expansions.list.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Expansion
 import app.deckbox.expansions.ui.ExpansionCardStyle
-import app.deckbox.ui.expansions.ExpansionsLoadState
+import app.deckbox.ui.expansions.list.ExpansionsLoadState
 import cafe.adriel.lyricist.LocalStrings
 
 @Composable

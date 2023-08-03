@@ -1,4 +1,4 @@
-package app.deckbox.ui.expansions.composables
+package app.deckbox.ui.expansions.list.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row

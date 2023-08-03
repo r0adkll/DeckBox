@@ -17,6 +17,7 @@ kotlin {
         implementation(projects.common.compose)
 
         implementation(projects.features.expansions.public)
+        implementation(projects.features.cards.public)
 
         implementation(compose.runtime)
         implementation(compose.foundation)
@@ -35,6 +36,3 @@ kotlin {
 }
 
 addKspDependencyForCommon(projects.di.kotlinInjectMerge)
-dependencies {
-  implementation(libs.androidx.material3)
-}

@@ -1,16 +1,14 @@
 package com.r0adkll.kotlininject.merge.generators
 
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSType
-import com.r0adkll.kotlininject.merge.GeneratedContributionCache
-import com.r0adkll.kotlininject.merge.HINT_BINDING_PACKAGE
-import com.r0adkll.kotlininject.merge.HINT_CONTRIBUTES_PACKAGE
+import com.google.devtools.ksp.symbol.KSDeclaration
+import com.google.devtools.ksp.validate
+import com.r0adkll.kotlininject.merge.DeferredSymbol
+import com.r0adkll.kotlininject.merge.MergeContext
 import com.r0adkll.kotlininject.merge.REFERENCE_SUFFIX
 import com.r0adkll.kotlininject.merge.SCOPE_SUFFIX
-import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
-import com.r0adkll.kotlininject.merge.annotations.ContributesTo
 import com.r0adkll.kotlininject.merge.util.buildFile
-import com.r0adkll.kotlininject.merge.util.findAnnotation
+import com.r0adkll.kotlininject.merge.util.getSymbolsWithClassAnnotation
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
@@ -22,12 +20,35 @@ import kotlin.reflect.KClass
 
 abstract class HintGenerator(
   private val hintPackageName: String,
-  private val contributionCache: GeneratedContributionCache,
 ) : Generator {
 
   abstract fun getScope(element: KSClassDeclaration): ClassName
 
-  override fun generate(element: KSClassDeclaration): GeneratedSpec {
+  override fun generate(
+    context: MergeContext,
+    element: KSDeclaration,
+  ): GeneratedSpec {
+    require(element is KSClassDeclaration) { "${annotation.simpleName} requires KSClassDeclarations only" }
+    return process(context, element)
+  }
+
+  override fun generate(context: MergeContext): List<GeneratedSpec> {
+    return context.resolver.getSymbolsWithClassAnnotation(annotation)
+      .mapNotNull { element ->
+        if (element.validate()) {
+          process(context, element)
+        } else {
+          context.defer(element, annotation)
+          null
+        }
+      }
+      .toList()
+  }
+
+  private fun process(
+    context: MergeContext,
+    element: KSClassDeclaration,
+  ): GeneratedSpec {
     val fileName = element.simpleName.asString()
     val className = element.toClassName()
     val propertyName = element.qualifiedName!!.asString()
@@ -36,7 +57,7 @@ abstract class HintGenerator(
     val scope = getScope(element)
 
     // Cache this for the session
-    contributionCache.add(element)
+    context.contributionCache.add(element)
 
     return FileSpec.buildFile(hintPackageName, fileName) {
       // Reference Hint

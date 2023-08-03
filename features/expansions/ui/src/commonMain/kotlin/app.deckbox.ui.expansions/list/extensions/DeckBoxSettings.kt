@@ -1,4 +1,4 @@
-package app.deckbox.ui.expansions.extensions
+package app.deckbox.ui.expansions.list.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State

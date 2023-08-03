@@ -1,4 +1,4 @@
-package app.deckbox.ui.expansions
+package app.deckbox.ui.expansions.list
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,33 +23,23 @@ import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.widgets.SearchBar
 import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.screens.ExpansionsScreen
+import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.expansions.ui.ExpansionCardStyle
-import app.deckbox.ui.expansions.ExpansionsUiEvent.ChangeCardStyle
-import app.deckbox.ui.expansions.ExpansionsUiEvent.ExpansionClicked
-import app.deckbox.ui.expansions.ExpansionsUiEvent.SearchCleared
-import app.deckbox.ui.expansions.ExpansionsUiEvent.SearchUpdated
-import app.deckbox.ui.expansions.composables.ExpansionsContent
+import app.deckbox.ui.expansions.list.ExpansionsUiEvent.ChangeCardStyle
+import app.deckbox.ui.expansions.list.ExpansionsUiEvent.ExpansionClicked
+import app.deckbox.ui.expansions.list.ExpansionsUiEvent.SearchCleared
+import app.deckbox.ui.expansions.list.ExpansionsUiEvent.SearchUpdated
+import app.deckbox.ui.expansions.list.composables.ExpansionsContent
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.statusBars
+import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Screen
 import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
 import me.tatarka.inject.annotations.Inject
 
-@Inject
-class ExpansionsUiFactory : Ui.Factory {
-  override fun create(screen: Screen, context: CircuitContext): Ui<*>? = when (screen) {
-    is ExpansionsScreen -> {
-      ui<ExpansionsUiState> { state, modifier ->
-        Expansions(state, modifier)
-      }
-    }
-
-    else -> null
-  }
-}
-
+@CircuitInject(MergeActivityScope::class, ExpansionsScreen::class)
 @Composable
 internal fun Expansions(
   state: ExpansionsUiState,

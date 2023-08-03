@@ -37,3 +37,10 @@ annotation class ContributesSubcomponent(
   val scope: KClass<*>,
   val parentScope: KClass<*>,
 )
+
+@MustBeDocumented
+@Retention(AnnotationRetention.SOURCE)
+annotation class CircuitInject(
+  val scope: KClass<*>,
+  val screen: KClass<*>,
+)

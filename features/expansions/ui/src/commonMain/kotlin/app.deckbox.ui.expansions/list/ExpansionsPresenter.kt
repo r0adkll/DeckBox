@@ -1,4 +1,4 @@
-package app.deckbox.ui.expansions
+package app.deckbox.ui.expansions.list
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -11,10 +11,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.settings.DeckBoxSettings
+import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Expansion
 import app.deckbox.expansions.ExpansionsRepository
-import app.deckbox.ui.expansions.extensions.collectExpansionCardStyle
+import app.deckbox.ui.expansions.list.extensions.collectExpansionCardStyle
+import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.Screen
@@ -25,20 +27,7 @@ import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
 @Inject
-class ExpansionsPresenterFactory(
-  private val presenterFactory: (Navigator) -> ExpansionsPresenter,
-) : Presenter.Factory {
-  override fun create(
-    screen: Screen,
-    navigator: Navigator,
-    context: CircuitContext,
-  ): Presenter<*>? = when (screen) {
-    is ExpansionsScreen -> presenterFactory(navigator)
-    else -> null
-  }
-}
-
-@Inject
+@CircuitInject(MergeActivityScope::class, ExpansionsScreen::class)
 class ExpansionsPresenter(
   @Assisted private val navigator: Navigator,
   private val expansionsRepository: ExpansionsRepository,
