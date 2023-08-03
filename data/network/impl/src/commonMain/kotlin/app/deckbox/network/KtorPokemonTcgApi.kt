@@ -69,18 +69,23 @@ class KtorPokemonTcgApi(
     }
   }
 
-  override suspend fun getCards(filters: Map<String, String>?): Result<List<Card>> {
-    val response = client.get("cards") {
-      url {
-        filters?.forEach { (key, value) ->
-          parameters.append(key, value)
+  override suspend fun getCards(filters: Map<String, String>?): Result<PagedResponse<Card>> {
+    val response = try {
+      client.get("cards") {
+        url {
+          filters?.forEach { (key, value) ->
+            parameters.append(key, value)
+          }
         }
       }
+    } catch (e: Exception) {
+      e.printStackTrace()
+      return Result.failure(e)
     }
 
     return if (response.status.isSuccess()) {
       val cardResponse = response.body<CardResponse>()
-      Result.success(ModelMapper.toCards(cardResponse.cards))
+      Result.success(ModelMapper.toPagedResponse(cardResponse))
     } else {
       Result.failure(ApiException("Unable to fetch cards: ${response.status}"))
     }

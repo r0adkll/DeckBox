@@ -4,10 +4,22 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal class CardResponse(@SerialName("data") val cards: List<CardModel>)
+internal class CardResponse(
+  @SerialName("data") val cards: List<CardModel>,
+  val page: Int,
+  val pageSize: Int,
+  val count: Int,
+  val totalCount: Int,
+)
 
 @Serializable
-internal class CardSetResponse(@SerialName("data") val sets: List<CardSetModel>)
+internal class CardSetResponse(
+  @SerialName("data") val sets: List<CardSetModel>,
+  val page: Int,
+  val pageSize: Int,
+  val count: Int,
+  val totalCount: Int,
+)
 
 @Serializable
 internal class SimpleResponse(val data: List<String>)

@@ -8,6 +8,8 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(projects.core)
+
+        api(libs.paging.common)
       }
     }
   }

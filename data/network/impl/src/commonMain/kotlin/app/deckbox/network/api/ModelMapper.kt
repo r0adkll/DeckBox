@@ -6,10 +6,21 @@ import app.deckbox.core.model.Legalities
 import app.deckbox.core.model.Legality
 import app.deckbox.core.model.SuperType
 import app.deckbox.core.model.Type
+import app.deckbox.network.PagedResponse
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toLocalDateTime
 
 internal object ModelMapper {
+
+  fun toPagedResponse(response: CardResponse): PagedResponse<Card> {
+    return PagedResponse(
+      data = toCards(response.cards),
+      page = response.page,
+      pageSize = response.pageSize,
+      count = response.count,
+      totalCount = response.totalCount,
+    )
+  }
 
   fun toCards(models: Iterable<CardModel>): List<Card> {
     return models.map { to(it) }

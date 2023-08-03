@@ -12,10 +12,9 @@ data class SearchFilter(
   val attackDamage: RangeValue? = null,
   val hp: RangeValue? = null,
   val evolvesFrom: String? = null,
+  val evolvesTo: String? = null,
   val weaknesses: Set<Type> = emptySet(),
   val resistances: Set<Type> = emptySet(),
-  val orderBy: String? = null,
-  val pageSize: Int = 1000,
 ) {
 
   val isEmpty: Boolean

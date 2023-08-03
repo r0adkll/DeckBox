@@ -70,7 +70,6 @@ class ExpansionFetcher(
   override val name: String = "ExpansionFetcher"
 
   override fun invoke(key: ExpansionKey): Flow<FetcherResult<ExpansionResponse>> = flow {
-    println("ExpansionFetcher($key)")
     when (key) {
       is ExpansionKey.All -> api.getExpansions()
         .map { ExpansionResponse.All(it) }
@@ -102,7 +101,6 @@ class ExpansionSourceOfTruth(
 
   @OptIn(ExperimentalCoroutinesApi::class)
   override fun reader(key: ExpansionKey): Flow<ExpansionResponse?> {
-    println("SourceOfTruth($key)")
     return when (key) {
       ExpansionKey.All -> expansionsDao.observeExpansions()
         .map { ExpansionResponse.All(it) }
