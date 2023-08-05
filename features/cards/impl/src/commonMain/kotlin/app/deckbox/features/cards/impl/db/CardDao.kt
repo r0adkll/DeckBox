@@ -1,4 +1,4 @@
-package app.deckbox.features.cards.public.db
+package app.deckbox.features.cards.impl.db
 
 import app.deckbox.core.model.Card
 import app.deckbox.features.cards.public.model.CardQuery
@@ -15,7 +15,7 @@ interface CardDao {
   fun observe(ids: List<String>): Flow<List<Card>>
   fun observe(query: CardQuery): Flow<List<Card>>
 
-  suspend fun insert(cards: Card)
+  suspend fun insert(card: Card)
   suspend fun insert(cards: List<Card>)
 
   suspend fun delete(id: String)

@@ -13,7 +13,10 @@ sealed interface ExpansionDetailUiState : CircuitUiState {
   data class Loaded(
     val expansion: Expansion,
     val cardsPager: Pager<Int, Card>,
-  )
+    val eventSink: (ExpansionDetailUiEvent) -> Unit,
+  ) : ExpansionDetailUiState
 }
 
-sealed interface ExpansionDetailUiEvent : CircuitUiEvent
+sealed interface ExpansionDetailUiEvent : CircuitUiEvent {
+  object NavigateBack : ExpansionDetailUiEvent
+}

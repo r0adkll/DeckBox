@@ -17,6 +17,7 @@ kotlin {
         api(projects.common.settings)
 
         api(libs.circuit.foundation)
+        api(libs.circuit.overlay)
         api(libs.compose.material3.windowsizeclass)
         api(libs.insetsx)
         api(libs.imageloader)
@@ -26,6 +27,9 @@ kotlin {
         api(compose.material3)
         api(compose.materialIconsExtended)
         api(compose.animation)
+        @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+        api(compose.components.resources)
+
         api(libs.paging.compose)
       }
     }
@@ -46,7 +50,17 @@ kotlin {
 
       dependencies {
         implementation(libs.androidx.activity.compose)
+        api(libs.androidx.paging.runtime)
+        api(libs.androidx.paging.compose)
       }
+    }
+  }
+}
+
+android {
+  sourceSets {
+    named("main") {
+      resources.srcDir("src/commonMain/resources")
     }
   }
 }

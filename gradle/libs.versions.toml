@@ -16,6 +16,7 @@ ktor = "2.3.1"
 lyricist = "1.4.2"
 multiplatformsettings = "1.0.0"
 okhttp = "4.11.0"
+paging = "3.2.0"
 paging-multiplatform = "3.2.0-alpha05-0.2.3"
 junit = "4.13.2"
 espresso-core = "3.5.1"
@@ -51,6 +52,8 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-archCoreTesting = "androidx.arch.core:core-testing:2.2.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 androidx-preferences = "androidx.preference:preference:1.2.1"
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 

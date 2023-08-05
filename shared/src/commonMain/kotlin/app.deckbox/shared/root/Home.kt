@@ -14,8 +14,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarViewDay
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.ImageSearch
+import androidx.compose.material.icons.filled.Style
 import androidx.compose.material.icons.filled.Subscriptions
 import androidx.compose.material.icons.filled.Weekend
+import androidx.compose.material.icons.outlined.CalendarViewDay
+import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.ImageSearch
+import androidx.compose.material.icons.outlined.Style
 import androidx.compose.material.icons.outlined.Subscriptions
 import androidx.compose.material.icons.outlined.Weekend
 import androidx.compose.material3.Divider
@@ -75,57 +83,57 @@ internal fun Home(
   val strings = LocalStrings.current
   val navigationItems = remember { buildNavigationItems(strings) }
 
-  Scaffold(
-    bottomBar = {
-      if (navigationType == NavigationType.BOTTOM_NAVIGATION) {
-        HomeNavigationBar(
-          selectedNavigation = rootScreen,
-          navigationItems = navigationItems,
-          onNavigationSelected = { navigator.resetRoot(it) },
-          modifier = Modifier.fillMaxWidth(),
-        )
-      } else {
-        Spacer(
-          Modifier
-            .windowInsetsBottomHeight(WindowInsets.navigationBars)
-            .fillMaxWidth(),
-        )
-      }
-    },
-    // We let content handle the status bar
-    contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
-    modifier = modifier,
-  ) { paddingValues ->
-    Row(
-      modifier = Modifier
-        .fillMaxSize()
-        .then(
-          if (navigationType != NavigationType.BOTTOM_NAVIGATION) Modifier.padding(paddingValues) else Modifier,
-        ),
-    ) {
-      if (navigationType == NavigationType.RAIL) {
-        HomeNavigationRail(
-          selectedNavigation = rootScreen,
-          navigationItems = navigationItems,
-          onNavigationSelected = { navigator.resetRoot(it) },
-          modifier = Modifier.fillMaxHeight(),
-        )
+  ContentWithOverlays {
+    Scaffold(
+      bottomBar = {
+        if (navigationType == NavigationType.BOTTOM_NAVIGATION) {
+          HomeNavigationBar(
+            selectedNavigation = rootScreen,
+            navigationItems = navigationItems,
+            onNavigationSelected = { navigator.resetRoot(it) },
+            modifier = Modifier.fillMaxWidth(),
+          )
+        } else {
+          Spacer(
+            Modifier
+              .windowInsetsBottomHeight(WindowInsets.navigationBars)
+              .fillMaxWidth(),
+          )
+        }
+      },
+      // We let content handle the status bar
+      contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
+      modifier = modifier,
+    ) { paddingValues ->
+      Row(
+        modifier = Modifier
+          .fillMaxSize()
+          .then(
+            if (navigationType != NavigationType.BOTTOM_NAVIGATION) Modifier.padding(paddingValues) else Modifier,
+          ),
+      ) {
+        if (navigationType == NavigationType.RAIL) {
+          HomeNavigationRail(
+            selectedNavigation = rootScreen,
+            navigationItems = navigationItems,
+            onNavigationSelected = { navigator.resetRoot(it) },
+            modifier = Modifier.fillMaxHeight(),
+          )
 
-        Divider(
-          Modifier
-            .fillMaxHeight()
-            .width(1.dp),
-        )
-      } else if (navigationType == NavigationType.PERMANENT_DRAWER) {
-        HomeNavigationDrawer(
-          selectedNavigation = rootScreen,
-          navigationItems = navigationItems,
-          onNavigationSelected = { navigator.resetRoot(it) },
-          modifier = Modifier.fillMaxHeight(),
-        )
-      }
+          Divider(
+            Modifier
+              .fillMaxHeight()
+              .width(1.dp),
+          )
+        } else if (navigationType == NavigationType.PERMANENT_DRAWER) {
+          HomeNavigationDrawer(
+            selectedNavigation = rootScreen,
+            navigationItems = navigationItems,
+            onNavigationSelected = { navigator.resetRoot(it) },
+            modifier = Modifier.fillMaxHeight(),
+          )
+        }
 
-      ContentWithOverlays {
         NavigableCircuitContent(
           navigator = navigator,
           backstack = backstack,
@@ -270,35 +278,22 @@ private fun buildNavigationItems(strings: DeckBoxStrings): List<HomeNavigationIt
       screen = DecksScreen(),
       label = strings.decks,
       contentDescription = strings.decksTabContentDescription,
-      iconImageVector = Icons.Outlined.Weekend,
-      selectedImageVector = Icons.Default.Weekend,
+      iconImageVector = Icons.Outlined.Style,
+      selectedImageVector = Icons.Default.Style,
     ),
     HomeNavigationItem(
       screen = ExpansionsScreen(),
       label = strings.expansions,
       contentDescription = strings.expansionsTabContentDescription,
-      iconImageVector = Icons.Outlined.Subscriptions,
-      selectedImageVector = Icons.Default.Subscriptions,
+      iconImageVector = Icons.Outlined.Dashboard,
+      selectedImageVector = Icons.Default.Dashboard,
     ),
     HomeNavigationItem(
       screen = BrowseScreen(),
       label = strings.browse,
       contentDescription = strings.browseTabContentDescription,
-      iconImageVector = Icons.Outlined.Subscriptions,
-      selectedImageVector = Icons.Default.Subscriptions,
+      iconImageVector = Icons.Outlined.ImageSearch,
+      selectedImageVector = Icons.Default.ImageSearch,
     ),
-//    HomeNavigationItem(
-//      screen = LibraryScreen,
-//      label = strings.libraryTitle,
-//      contentDescription = strings.cdLibraryTitle,
-//      iconImageVector = Icons.Outlined.VideoLibrary,
-//      selectedImageVector = Icons.Default.VideoLibrary,
-//    ),
-//    HomeNavigationItem(
-//      screen = SearchScreen,
-//      label = strings.searchNavigationTitle,
-//      contentDescription = strings.cdSearchNavigationTitle,
-//      iconImageVector = Icons.Default.Search,
-//    ),
   )
 }

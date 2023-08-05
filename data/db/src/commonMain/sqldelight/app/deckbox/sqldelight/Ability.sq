@@ -1,0 +1,21 @@
+CREATE TABLE abilities (
+  name TEXT NOT NULL,
+  text TEXT NOT NULL,
+  type TEXT,
+
+  cardId TEXT NOT NULL,
+  FOREIGN KEY (cardId) REFERENCES cards(id) ON DELETE CASCADE,
+  PRIMARY KEY (cardId, name)
+);
+
+insert:
+INSERT OR IGNORE INTO abilities
+VALUES ?;
+
+getById:
+SELECT * FROM abilities
+WHERE cardId = ?;
+
+getByIds:
+SELECT * FROM abilities
+WHERE cardId IN ?;

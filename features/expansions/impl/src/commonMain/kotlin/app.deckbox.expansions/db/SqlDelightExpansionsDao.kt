@@ -8,6 +8,8 @@ import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Expansion
+import app.deckbox.db.mapping.toEntity
+import app.deckbox.db.mapping.toModel
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -25,7 +27,7 @@ class SqlDelightExpansionsDao(
     database.expansionQueries
       .getAll()
       .awaitAsList()
-      .toModels()
+      .map { it.toModel() }
   }
 
   override fun observeExpansions(): Flow<List<Expansion>> {
@@ -33,7 +35,7 @@ class SqlDelightExpansionsDao(
       .getAll()
       .asFlow()
       .mapToList(dispatcherProvider.databaseRead)
-      .map { it.toModels() }
+      .map { entity -> entity.map { it.toModel() } }
   }
 
   override fun observeExpansion(id: String): Flow<Expansion> {

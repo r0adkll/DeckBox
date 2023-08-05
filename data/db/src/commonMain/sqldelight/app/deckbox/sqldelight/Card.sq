@@ -1,29 +1,95 @@
+import app.deckbox.core.model.Legality;
+import app.deckbox.core.model.Type;
 import app.deckbox.core.model.SuperType;
-import kotlin.String;
+import app.deckbox.core.model.Card.Effect;
 import kotlin.Int;
+import kotlin.String;
 import kotlin.collections.List;
+import kotlinx.datetime.LocalDate;
 
 CREATE TABLE cards (
   id TEXT NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
   image_small TEXT NOT NULL,
   image_large TEXT NOT NULL,
-  supertype TEXT AS SuperType,
+  supertype TEXT AS SuperType NOT NULL,
   subtypes TEXT AS List<String> NOT NULL,
   level TEXT,
-  hp INTEGER,
+  hp INTEGER AS Int,
+  types TEXT AS List<Type>,
+  evolvesFrom TEXT,
+  evolvesTo TEXT AS List<String>,
+  rules TEXT AS List<String>,
+  ancientTrait_name TEXT,
+  ancientTrait_text TEXT,
+  ancientTrait_type TEXT,
+  weaknesses TEXT AS List<Effect>,
+  resistances TEXT AS List<Effect>,
+  retreatCost TEXT AS List<Type>,
+  convertedRetreatCost INTEGER AS Int,
   number TEXT NOT NULL,
   artist TEXT,
   rarity TEXT,
   flavorText TEXT,
-  convertedRetreatCost INTEGER,
-  nationalPokedexNumbers TEXT AS List<Int> NOT NULL,
-  types TEXT AS List<String> NOT NULL,
-  evolvesFrom TEXT,
-  evolvesTo TEXT AS List<String> NOT NULL,
-  rules TEXT AS List<String> NOT NULL
+  nationalPokedexNumbers TEXT AS List<Int>,
+
+  legalitiesUnlimited TEXT AS Legality,
+  legalitiesStandard TEXT AS Legality,
+  legalitiesExpanded TEXT AS Legality,
+
+  tcgPlayerUrl TEXT,
+  tcgPlayerUpdatedAt TEXT AS LocalDate,
+  tcgPlayerLow REAL,
+  tcgPlayerMid REAL,
+  tcgPlayerHigh REAL,
+  tcgPlayerMarket REAL,
+  tcgPlayerDirectLow REAL,
+
+  cardMarketUrl TEXT,
+  cardMarketUpdatedAt TEXT AS LocalDate,
+  cardMarketAverageSellPrice REAL,
+  cardMarketLowPrice REAL,
+  cardMarketTrendPrice REAL,
+  cardMarketGermanProLow REAL,
+  cardMarketSuggestedPrice REAL,
+  cardMarketReverseHoloSell REAL,
+  cardMarketReverseHoloLow REAL,
+  cardMarketReverseHoloTrend REAL,
+  cardMarketLowPriceExPlus REAL,
+  cardMarketAvg1 REAL,
+  cardMarketAvg7 REAL,
+  cardMarketAvg30 REAL,
+  cardMarketReverseHoloAvg1 REAL,
+  cardMarketReverseHoloAvg7 REAL,
+  cardMarketReverseHoloAvg30 REAL,
+
+  expansionId TEXT NOT NULL,
+  FOREIGN KEY (expansionId) REFERENCES expansions(id)
 );
 
-insertCard:
-INSERT INTO cards
+insert:
+INSERT OR REPLACE INTO cards
 VALUES ?;
+
+getById:
+SELECT * FROM cards
+WHERE cards.id = ?;
+
+getByIds:
+SELECT * FROM cards
+WHERE cards.id IN ?;
+
+getByExpansionId:
+SELECT * FROM cards
+WHERE expansionId = ?;
+
+delete:
+DELETE FROM cards
+WHERE id = ?;
+
+deleteMany:
+DELETE FROM cards
+WHERE id IN ?;
+
+deleteAll:
+DELETE FROM cards;

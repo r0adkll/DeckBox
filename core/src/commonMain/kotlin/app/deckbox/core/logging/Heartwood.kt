@@ -39,11 +39,12 @@ inline fun Any.bark(
    * site.
    */
   tag: String? = null,
+  throwable: Throwable? = null,
   extras: Extras? = null,
   message: () -> String,
 ) {
   val tagOrCaller = tag ?: outerClassSimpleNameInternalOnlyDoNotUseKThxBye()
-  Heartwood.log(priority, tagOrCaller, extras, message())
+  Heartwood.log(priority, tagOrCaller, extras, messageWithStacktrace(throwable, message))
 }
 
 /**
@@ -54,10 +55,19 @@ inline fun Any.bark(
 inline fun bark(
   tag: String,
   priority: LogPriority = LogPriority.DEBUG,
+  throwable: Throwable? = null,
   extras: Extras? = null,
   message: () -> String,
 ) {
-  Heartwood.log(priority, tag, extras, message())
+  Heartwood.log(priority, tag, extras, messageWithStacktrace(throwable, message))
+}
+
+inline fun messageWithStacktrace(t: Throwable?, msg: () -> String): String {
+  var message = msg()
+  if (t != null) {
+    message += "\n${t.stackTraceToString()}"
+  }
+  return message
 }
 
 @PublishedApi

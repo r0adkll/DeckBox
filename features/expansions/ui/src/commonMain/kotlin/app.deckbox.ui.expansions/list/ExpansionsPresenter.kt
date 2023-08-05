@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
@@ -77,6 +78,7 @@ class ExpansionsPresenter(
         is ExpansionsUiEvent.ChangeCardStyle -> settings.expansionCardStyle = event.style
         is ExpansionsUiEvent.ExpansionClicked -> {
           bark { "Expansion Clicked: ${event.expansion.name}" }
+          navigator.goTo(ExpansionDetailScreen(event.expansion.id))
         }
         is ExpansionsUiEvent.SearchUpdated -> searchQuery = event.query
         ExpansionsUiEvent.SearchCleared -> searchQuery = null

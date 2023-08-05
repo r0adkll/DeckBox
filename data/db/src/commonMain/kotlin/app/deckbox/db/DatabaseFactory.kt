@@ -5,6 +5,7 @@ import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.model.SuperType
+import app.deckbox.sqldelight.Attacks
 import app.deckbox.sqldelight.Cards
 import app.deckbox.sqldelight.Expansions
 import me.tatarka.inject.annotations.Inject
@@ -19,9 +20,19 @@ class DatabaseFactory(
       supertypeAdapter = EnumColumnAdapter<SuperType>(),
       subtypesAdapter = StringListAdapter,
       nationalPokedexNumbersAdapter = IntListAdapter,
-      typesAdapter = StringListAdapter,
+      hpAdapter = IntColumnAdapter,
+      typesAdapter = TypeListAdapter,
       evolvesToAdapter = StringListAdapter,
       rulesAdapter = StringListAdapter,
+      retreatCostAdapter = TypeListAdapter,
+      convertedRetreatCostAdapter = IntColumnAdapter,
+      legalitiesExpandedAdapter = EnumColumnAdapter(),
+      legalitiesStandardAdapter = EnumColumnAdapter(),
+      legalitiesUnlimitedAdapter = EnumColumnAdapter(),
+      resistancesAdapter = CardEffectListAdapter,
+      weaknessesAdapter = CardEffectListAdapter,
+      tcgPlayerUpdatedAtAdapter = LocalDateAdapter,
+      cardMarketUpdatedAtAdapter = LocalDateAdapter,
     ),
     expansionsAdapter = Expansions.Adapter(
       totalAdapter = IntColumnAdapter,
@@ -31,6 +42,10 @@ class DatabaseFactory(
       legalitiesUnlimitedAdapter = EnumColumnAdapter(),
       legalitiesStandardAdapter = EnumColumnAdapter(),
       legalitiesExpandedAdapter = EnumColumnAdapter(),
+    ),
+    attacksAdapter = Attacks.Adapter(
+      costAdapter = TypeListAdapter,
+      convertedEnergyCostAdapter = IntColumnAdapter,
     ),
   )
 }

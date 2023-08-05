@@ -1,5 +1,8 @@
 package app.deckbox.core.model
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+
 data class Card(
   val id: String,
   val name: String,
@@ -56,7 +59,7 @@ data class Card(
 
   data class TcgPlayer(
     val url: String,
-    val updatedAt: String?,
+    val updatedAt: LocalDate?,
     val prices: Prices?,
   ) {
 
@@ -71,7 +74,7 @@ data class Card(
 
   data class CardMarket(
     val url: String,
-    val updatedAt: String?,
+    val updatedAt: LocalDate?,
     val prices: Prices?,
   ) {
 

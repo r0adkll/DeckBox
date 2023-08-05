@@ -5,7 +5,7 @@ import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Card
 import app.deckbox.features.cards.public.CardRepository
-import app.deckbox.features.cards.public.db.CardDao
+import app.deckbox.features.cards.impl.db.CardDao
 import app.deckbox.network.PokemonTcgApi
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +21,6 @@ import org.mobilenativefoundation.store.store5.SourceOfTruth
 import org.mobilenativefoundation.store.store5.StoreBuilder
 import org.mobilenativefoundation.store.store5.StoreReadRequest
 import org.mobilenativefoundation.store.store5.StoreReadResponse
-import org.mobilenativefoundation.store.store5.impl.extensions.get
 
 @AppScope
 @Inject

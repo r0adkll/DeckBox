@@ -3,6 +3,7 @@ package app.deckbox.expansions
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
+import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Expansion
 import app.deckbox.expansions.db.ExpansionsDao
 import app.deckbox.network.PokemonTcgApi
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onEmpty
 import me.tatarka.inject.annotations.Inject
 import org.mobilenativefoundation.store.store5.Fetcher
@@ -54,6 +56,7 @@ class StoreExpansionsRepository(
   override fun observeExpansions(): Flow<List<Expansion>> {
     return store.stream(StoreReadRequest.cached(ExpansionKey.All, refresh = false))
       .flatMapLatest {
+        bark { "${it.origin}, data: ${it.dataOrNull()}" }
         val data = it.dataOrNull()
         if (data != null) {
           flowOf((data as ExpansionResponse.All).expansions)
@@ -108,8 +111,8 @@ class ExpansionSourceOfTruth(
           if (it.expansions.isEmpty()) null else it
         }
       is ExpansionKey.ById -> expansionsDao.observeExpansion(key.id)
+        .onEach { bark { "Expansion Found($key): $it" } }
         .map { ExpansionResponse.Single(it) }
-        .onEmpty<ExpansionResponse?> { emit(null) }
     }
   }
 

@@ -1,0 +1,28 @@
+import app.deckbox.core.model.Type;
+import kotlin.Int;
+import kotlin.String;
+import kotlin.collections.List;
+
+CREATE TABLE attacks (
+  cost TEXT AS List<Type>,
+  name TEXT NOT NULL,
+  text TEXT,
+  damage TEXT,
+  convertedEnergyCost INTEGER AS Int NOT NULL,
+
+  cardId TEXT NOT NULL,
+  FOREIGN KEY (cardId) REFERENCES cards(id) ON DELETE CASCADE,
+  PRIMARY KEY (cardId, name)
+);
+
+insert:
+INSERT OR IGNORE INTO attacks
+VALUES ?;
+
+getById:
+SELECT * FROM attacks
+WHERE cardId = ?;
+
+getByIds:
+SELECT * FROM attacks
+WHERE cardId IN ?;

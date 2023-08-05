@@ -1,6 +1,9 @@
 package app.deckbox.network
 
 import app.deckbox.core.di.MergeAppScope
+import app.deckbox.core.logging.LogPriority
+import app.deckbox.core.logging.LogPriority.INFO
+import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Expansion
 import app.deckbox.network.api.CardModel
@@ -45,7 +48,7 @@ class KtorPokemonTcgApi(
       level = LogLevel.ALL
       logger = object : Logger {
         override fun log(message: String) {
-          println(message)
+          bark(INFO) { message }
         }
       }
     }
@@ -57,13 +60,23 @@ class KtorPokemonTcgApi(
   }
 
   override suspend fun getCard(id: String): Result<Card> {
-    val response = client.get("cards") {
-      url { appendPathSegments(id) }
+    val response = try {
+      client.get("cards") {
+        url { appendPathSegments(id) }
+      }
+    } catch (e: Throwable) {
+      bark(throwable = e) { "Error fetching card($id)" }
+      return Result.failure(e)
     }
 
     return if (response.status.isSuccess()) {
-      val cardResponse = response.body<CardModel>()
-      Result.success(ModelMapper.to(cardResponse))
+      try {
+        val cardResponse = response.body<CardModel>()
+        Result.success(ModelMapper.to(cardResponse))
+      } catch (e: Throwable) {
+        bark(throwable = e) { "Error fetching card($id)" }
+        Result.failure(e)
+      }
     } else {
       Result.failure(ApiException("Unable to fetch card($id): ${response.status}"))
     }
@@ -79,26 +92,51 @@ class KtorPokemonTcgApi(
         }
       }
     } catch (e: Exception) {
-      e.printStackTrace()
+      bark(throwable = e) { "Error fetching cards($filters)" }
       return Result.failure(e)
     }
 
     return if (response.status.isSuccess()) {
-      val cardResponse = response.body<CardResponse>()
-      Result.success(ModelMapper.toPagedResponse(cardResponse))
+      try {
+        val cardResponse = response.body<CardResponse>()
+        bark {
+          """
+            PageInfo(
+              page = ${cardResponse.page},
+              pageSize = ${cardResponse.pageSize},
+              count = ${cardResponse.count},
+              totalCount = ${cardResponse.totalCount},
+            )
+          """.trimIndent()
+        }
+        Result.success(ModelMapper.toPagedResponse(cardResponse))
+      } catch (e: Throwable) {
+        bark(throwable = e) { "Error fetching cards($filters)" }
+        Result.failure(e)
+      }
     } else {
       Result.failure(ApiException("Unable to fetch cards: ${response.status}"))
     }
   }
 
   override suspend fun getExpansion(id: String): Result<Expansion> {
-    val response = client.get("sets") {
-      url { appendPathSegments(id) }
+    val response = try {
+      client.get("sets") {
+        url { appendPathSegments(id) }
+      }
+    } catch (e: Throwable) {
+      bark(throwable = e) { "Error fetching expansion($id)" }
+      return Result.failure(e)
     }
 
     return if (response.status.isSuccess()) {
-      val responseBody = response.body<CardSetModel>()
-      Result.success(ModelMapper.to(responseBody))
+      try {
+        val responseBody = response.body<CardSetModel>()
+        Result.success(ModelMapper.to(responseBody))
+      } catch (e: Throwable) {
+        bark(throwable = e) { "Error fetching expansion($id)" }
+        Result.failure(e)
+      }
     } else {
       Result.failure(ApiException("Unable to fetch Expansion($id): ${response.status}"))
     }
@@ -107,19 +145,18 @@ class KtorPokemonTcgApi(
   override suspend fun getExpansions(): Result<List<Expansion>> {
     val response = try {
       client.get("sets")
-    } catch (e: Exception) {
-      e.printStackTrace()
+    } catch (e: Throwable) {
+      bark(throwable = e) { "Error fetching expansions" }
       return Result.failure(e)
     }
-
-    println("getExpansions::Result[${response.status.value}]")
 
     return if (response.status.isSuccess()) {
       try {
         val responseBody = response.body<CardSetResponse>()
-        Result.success(ModelMapper.toExpansions(responseBody.sets))
-      } catch (e: Exception) {
-        e.printStackTrace()
+        val expansions = ModelMapper.toExpansions(responseBody.sets)
+        Result.success(expansions)
+      } catch (e: Throwable) {
+        bark(throwable = e) { "Error fetching expansions" }
         Result.failure(e)
       }
     } else {

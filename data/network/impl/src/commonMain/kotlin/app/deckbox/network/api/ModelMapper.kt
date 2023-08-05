@@ -8,6 +8,8 @@ import app.deckbox.core.model.SuperType
 import app.deckbox.core.model.Type
 import app.deckbox.network.PagedResponse
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
 
 internal object ModelMapper {
@@ -100,27 +102,13 @@ internal object ModelMapper {
         expanded = Legality.from(model.legalities.expanded),
       ),
       ptcgoCode = model.ptcgoCode,
-      releaseDate = model.releaseDate.toExpansionLocalDate(),
-      updatedAt = model.updatedAt
-        .replace("/", "-")
-        .replace(" ", "T")
-        .toLocalDateTime(),
+      releaseDate = model.releaseDate.apiToLocalDate(),
+      updatedAt = model.updatedAt.apiToLocalDateTime(),
       images = Expansion.Images(
         symbol = model.images.symbol,
         logo = model.images.logo,
       ),
     )
-  }
-
-  private fun String.toExpansionLocalDate(): LocalDate {
-    val parts = split("/")
-    if (parts.size != 3) return LocalDate.fromEpochDays(0)
-
-    val year = parts[0].toInt()
-    val month = parts[1].toInt()
-    val day = parts[2].toInt()
-
-    return LocalDate(year, month, day)
   }
 
   private fun to(model: LegalitiesModel): Legalities {
@@ -134,7 +122,7 @@ internal object ModelMapper {
   private fun to(model: TcgPlayerModel): Card.TcgPlayer {
     return Card.TcgPlayer(
       url = model.url,
-      updatedAt = model.updated,
+      updatedAt = model.updated?.apiToLocalDate(),
       prices = model.prices?.let { prices ->
         Card.TcgPlayer.Prices(
           low = prices.low,
@@ -150,7 +138,7 @@ internal object ModelMapper {
   private fun to(model: CardMarketModel): Card.CardMarket {
     return Card.CardMarket(
       url = model.url,
-      updatedAt = model.updatedAt,
+      updatedAt = model.updatedAt?.apiToLocalDate(),
       prices = model.prices?.let { prices ->
         Card.CardMarket.Prices(
           averageSellPrice = prices.averageSellPrice,
@@ -172,4 +160,8 @@ internal object ModelMapper {
       },
     )
   }
+
+  private fun String.apiToLocalDate(): LocalDate = replace("/", "-").toLocalDate()
+
+  private fun String.apiToLocalDateTime(): LocalDateTime = replace("/", "-").replace(" ", "T").toLocalDateTime()
 }

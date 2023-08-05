@@ -248,11 +248,6 @@ class CircuitInjectGenerator : Generator {
       addType(
         TypeSpec.classBuilder(classSimpleName)
           .addAnnotation(Inject::class)
-          .addAnnotation(
-            AnnotationSpec.builder(ContributesTo::class)
-              .addMember("%T::class", scope)
-              .build(),
-          )
           .addSuperinterface(ClassNames.Circuit.PresenterFactory)
           .primaryConstructor(
             FunSpec.constructorBuilder()

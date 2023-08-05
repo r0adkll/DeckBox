@@ -8,7 +8,7 @@ import app.cash.paging.PagingState
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Card
-import app.deckbox.features.cards.public.db.CardDao
+import app.deckbox.features.cards.impl.db.CardDao
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.paging.CardPagingSource
 import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
@@ -29,13 +29,14 @@ class NetworkCardPagingSourceFactory(
   }
 }
 
+@Suppress("CAST_NEVER_SUCCEEDS", "USELESS_CAST", "KotlinRedundantDiagnosticSuppress")
 class NetworkCardPagingSource(
   private val api: PokemonTcgApi,
   private val db: CardDao,
   private val query: CardQuery,
 ) : CardPagingSource() {
 
-  override fun getRefreshKey(state: PagingState<Int, List<Card>>): Int? = null
+  override fun getRefreshKey(state: PagingState<Int, Card>): Int? = null
 
   override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
     val adjustedQuery = query.copy(pageSize = params.loadSize)

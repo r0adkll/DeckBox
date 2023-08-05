@@ -27,3 +27,24 @@ fun DeckBoxRootAppBar(
     actions = actions,
   )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeckBoxAppBar(
+  title: String,
+  navigationIcon: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
+  scrollBehavior: TopAppBarScrollBehavior? = null,
+  actions: @Composable RowScope.() -> Unit = {},
+) {
+  TopAppBar(
+    modifier = modifier,
+    windowInsets = WindowInsets.systemBars
+      .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+    scrollBehavior = scrollBehavior,
+    title = { Text(text = title) },
+    navigationIcon = navigationIcon,
+    actions = actions,
+
+  )
+}

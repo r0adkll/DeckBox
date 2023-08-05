@@ -36,14 +36,19 @@ dependencies {
 
 gradlePlugin {
   plugins {
-    register("kotlinMultiplatform") {
-      id = "app.deckbox.multiplatform"
-      implementationClass = "app.deckbox.convention.KotlinMultiplatformConventionPlugin"
-    }
-
     register("root") {
       id = "app.deckbox.root"
       implementationClass = "app.deckbox.convention.RootConventionPlugin"
+    }
+
+    register("ui") {
+      id = "app.deckbox.ui"
+      implementationClass = "app.deckbox.convention.UiConventionPlugin"
+    }
+
+    register("kotlinMultiplatform") {
+      id = "app.deckbox.multiplatform"
+      implementationClass = "app.deckbox.convention.KotlinMultiplatformConventionPlugin"
     }
 
     register("kotlinAndroid") {

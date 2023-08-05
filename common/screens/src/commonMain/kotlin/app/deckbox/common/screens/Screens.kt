@@ -18,6 +18,13 @@ class ExpansionDetailScreen(
   override val arguments get() = mapOf("expansionId" to expansionId)
 }
 
+@CommonParcelize
+class CardDetailScreen(
+  val cardId: String,
+) : DeckBoxScreen(name = "CardDetail()") {
+  override val arguments get() = mapOf("cardId" to cardId)
+}
+
 abstract class DeckBoxScreen(val name: String) : Screen {
   open val arguments: Map<String, *>? = null
 }

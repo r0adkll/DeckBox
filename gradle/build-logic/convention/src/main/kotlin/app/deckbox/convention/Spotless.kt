@@ -22,15 +22,16 @@ fun Project.configureSpotless() {
   spotless {
     kotlin {
       target("src/**/*.kt")
+      targetExclude("src/**/impl/**/*PagingSource.kt")
       ktlint(ktlintVersion)
       licenseHeaderFile(rootProject.file("spotless/google-copyright.txt"))
         .named("google")
         .onlyIfContentMatches("Copyright \\d+,* Google")
       licenseHeaderFile(rootProject.file("spotless/dh-copyright.txt"))
-        .named("cb-existing")
-        .onlyIfContentMatches("Copyright \\d+,* Christopher Banes")
+        .named("dh-existing")
+        .onlyIfContentMatches("Copyright \\d+,* Drew Heavner")
       licenseHeaderFile(rootProject.file("spotless/dh-copyright.txt"))
-        .named("cb-none")
+        .named("dh-none")
         .onlyIfContentMatches("^(?!// Copyright).*\$")
     }
 
@@ -41,10 +42,10 @@ fun Project.configureSpotless() {
         .named("google")
         .onlyIfContentMatches("Copyright \\d+,* Google")
       licenseHeaderFile(rootProject.file("spotless/dh-copyright.txt"), "(^(?![\\/ ]\\**).*$)")
-        .named("cb-existing")
-        .onlyIfContentMatches("Copyright \\d+,* Christopher Banes")
+        .named("dh-existing")
+        .onlyIfContentMatches("Copyright \\d+,* Drew Heavner")
       licenseHeaderFile(rootProject.file("spotless/dh-copyright.txt"), "(^(?![\\/ ]\\**).*$)")
-        .named("cb-none")
+        .named("dh-none")
         .onlyIfContentMatches("^(?!// Copyright).*\$")
     }
   }

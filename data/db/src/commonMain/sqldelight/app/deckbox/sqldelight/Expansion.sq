@@ -20,7 +20,7 @@ CREATE TABLE expansions (
 );
 
 insert:
-INSERT INTO expansions
+INSERT OR IGNORE INTO expansions
 VALUES ?;
 
 getAll:
@@ -30,6 +30,10 @@ getById:
 SELECT * FROM expansions
 WHERE id = ?
 LIMIT 1;
+
+getByIds:
+SELECT * FROM expansions
+WHERE id IN ?;
 
 deleteAll:
 DELETE FROM expansions;

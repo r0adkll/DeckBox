@@ -9,7 +9,7 @@ import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Expansion
-import app.deckbox.features.cards.public.db.CardDao
+import app.deckbox.features.cards.impl.db.CardDao
 import app.deckbox.features.cards.public.model.appendValue
 import app.deckbox.features.cards.public.model.buildQuery
 import app.deckbox.features.cards.public.paging.ExpansionCardPagingSource
@@ -31,18 +31,19 @@ class CachingExpansionPagingSourceFactory(
   }
 }
 
+@Suppress("CAST_NEVER_SUCCEEDS", "UNCHECKED_CAST", "USELESS_CAST", "KotlinRedundantDiagnosticSuppress")
 class CachingExpansionCardPagingSource(
   private val api: PokemonTcgApi,
   private val db: CardDao,
   private val expansion: Expansion,
 ) : ExpansionCardPagingSource() {
 
-  override fun getRefreshKey(state: PagingState<Int, List<Card>>): Int? = null
+  override fun getRefreshKey(state: PagingState<Int, Card>): Int? = null
 
   override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
     // First fetch all expansions from database if this is the
     // first load
-    return if (params.key == null || params.key == 1) {
+    return if (params.key == null || params.key == 0) {
       val databaseCards = db.fetchByExpansion(expansion.id)
       if (databaseCards.size >= expansion.total) {
         PagingSourceLoadResultPage(
@@ -61,7 +62,7 @@ class CachingExpansionCardPagingSource(
   private suspend fun loadFromNetwork(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
     val result = api.getCards(
       buildQuery(
-        page = params.key ?: 1,
+        page = params.key?.plus(1) ?: 1,
         pageSize = params.loadSize,
       ) {
         appendValue("set.id", expansion.id)
@@ -75,8 +76,9 @@ class CachingExpansionCardPagingSource(
 
       PagingSourceLoadResultPage(
         data = response.data,
-        prevKey = (response.page - 1).takeIf { it >= 0 },
-        nextKey = (response.page + 1).takeIf { response.hasMore },
+        prevKey = null,
+        nextKey = response.page
+          .takeIf { response.hasMore },
       ) as PagingSourceLoadResult<Int, Card>
     } else {
       PagingSourceLoadResultError<Int, Card>(result.exceptionOrNull() ?: Exception("Unable to load cards"))
