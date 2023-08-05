@@ -13,8 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -37,7 +35,7 @@ fun SpinningPokeballLoadingIndicator(
     animationSpec = infiniteRepeatable(
       animation = tween(300, easing = LinearEasing),
       repeatMode = RepeatMode.Restart,
-    )
+    ),
   )
 
   Image(
@@ -45,7 +43,7 @@ fun SpinningPokeballLoadingIndicator(
     contentDescription = null,
     modifier = modifier
       .size(size)
-      .rotate(rotationDegrees)
+      .rotate(rotationDegrees),
   )
 }
 

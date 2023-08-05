@@ -30,7 +30,9 @@ fun Cards.toModel(
     rules = rules,
     ancientTrait = if (ancientTrait_name != null && ancientTrait_text != null) {
       Card.Ability(ancientTrait_name, ancientTrait_text, ancientTrait_type)
-    } else null,
+    } else {
+      null
+    },
     abilities = abilities.map { it.toModel() },
     attacks = attacks.map { it.toModel() },
     weaknesses = weaknesses,
@@ -64,9 +66,11 @@ fun Cards.toTcgPlayer(): Card.TcgPlayer? {
         high = tcgPlayerHigh,
         market = tcgPlayerMarket,
         directLow = tcgPlayerDirectLow,
-      )
+      ),
     )
-  } else null
+  } else {
+    null
+  }
 }
 
 fun Cards.toCardMarket(): Card.CardMarket? {
@@ -76,23 +80,25 @@ fun Cards.toCardMarket(): Card.CardMarket? {
       updatedAt = cardMarketUpdatedAt,
       prices = Card.CardMarket.Prices(
         averageSellPrice = cardMarketAverageSellPrice,
-          lowPrice = cardMarketLowPrice,
-          trendPrice = cardMarketTrendPrice,
-          germanProLow = cardMarketGermanProLow,
-          suggestedPrice = cardMarketSuggestedPrice,
-          reverseHoloSell = cardMarketReverseHoloSell,
-          reverseHoloLow = cardMarketReverseHoloLow,
-          reverseHoloTrend = cardMarketReverseHoloTrend,
-          lowPriceExPlus = cardMarketLowPriceExPlus,
-          avg1 = cardMarketAvg1,
-          avg7 = cardMarketAvg7,
-          avg30 = cardMarketAvg30,
-          reverseHoloAvg1 = cardMarketReverseHoloAvg1,
-          reverseHoloAvg7 = cardMarketReverseHoloAvg7,
-          reverseHoloAvg30 = cardMarketReverseHoloAvg30,
-      )
+        lowPrice = cardMarketLowPrice,
+        trendPrice = cardMarketTrendPrice,
+        germanProLow = cardMarketGermanProLow,
+        suggestedPrice = cardMarketSuggestedPrice,
+        reverseHoloSell = cardMarketReverseHoloSell,
+        reverseHoloLow = cardMarketReverseHoloLow,
+        reverseHoloTrend = cardMarketReverseHoloTrend,
+        lowPriceExPlus = cardMarketLowPriceExPlus,
+        avg1 = cardMarketAvg1,
+        avg7 = cardMarketAvg7,
+        avg30 = cardMarketAvg30,
+        reverseHoloAvg1 = cardMarketReverseHoloAvg1,
+        reverseHoloAvg7 = cardMarketReverseHoloAvg7,
+        reverseHoloAvg30 = cardMarketReverseHoloAvg30,
+      ),
     )
-  } else null
+  } else {
+    null
+  }
 }
 
 fun Abilities.toModel(): Card.Ability = Card.Ability(

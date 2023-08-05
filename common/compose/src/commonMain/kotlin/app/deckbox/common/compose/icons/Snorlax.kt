@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _snorlax: ImageVector? = null
 
@@ -23,7 +22,7 @@ val DeckBoxIcons.Snorlax: ImageVector
       defaultWidth = 48.dp,
       defaultHeight = 48.dp,
       viewportWidth = 48f,
-      viewportHeight = 48f
+      viewportHeight = 48f,
     ).apply {
       group {
         path(
@@ -35,7 +34,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(42.9f, 6f)
           curveToRelative(-4.6f, -0.4f, -9.3f, 2.3f, -11.3f, 6.3f)
@@ -55,7 +54,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(42.9f, 6f)
           curveToRelative(-4.6f, -0.4f, -9.3f, 2.3f, -11.3f, 6.3f)
@@ -72,7 +71,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(5.1f, 6f)
           curveToRelative(4.6f, -0.4f, 9.3f, 2.3f, 11.3f, 6.3f)
@@ -92,7 +91,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(5.1f, 6f)
           curveToRelative(4.6f, -0.4f, 9.3f, 2.3f, 11.3f, 6.3f)
@@ -109,7 +108,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 5f)
           curveTo(11.8f, 5f, 2f, 16.4f, 2f, 25.8f)
@@ -127,7 +126,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(30.2f, 15f)
           curveToRelative(-0.2f, 0f, -0.3f, 0f, -0.4f, 0.1f)
@@ -149,7 +148,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(30.2f, 18f)
           curveToRelative(-0.2f, 0f, -0.3f, 0f, -0.4f, 0.1f)
@@ -171,7 +170,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(30.1f, 15f)
           curveTo(30.1f, 15f, 30.2f, 15f, 30.1f, 15f)
@@ -206,7 +205,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(29f, 27f)
           curveToRelative(-0.4f, 0f, -0.8f, -0.2f, -0.9f, -0.6f)
@@ -227,7 +226,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(19f, 27f)
           curveToRelative(-0.1f, 0f, -0.2f, 0f, -0.4f, -0.1f)
@@ -248,7 +247,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(15f, 33f)
           lineToRelative(2f, -4f)
@@ -265,7 +264,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(33f, 33f)
           lineToRelative(-2f, -4f)
@@ -282,7 +281,7 @@ val DeckBoxIcons.Snorlax: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 35f)
           curveToRelative(-4.9f, 0f, -8.1f, -1f, -8.3f, -1f)
@@ -299,4 +298,3 @@ val DeckBoxIcons.Snorlax: ImageVector
     }.build()
     return _snorlax!!
   }
-

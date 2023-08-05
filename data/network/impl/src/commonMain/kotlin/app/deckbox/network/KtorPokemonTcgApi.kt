@@ -1,7 +1,6 @@
 package app.deckbox.network
 
 import app.deckbox.core.di.MergeAppScope
-import app.deckbox.core.logging.LogPriority
 import app.deckbox.core.logging.LogPriority.INFO
 import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card

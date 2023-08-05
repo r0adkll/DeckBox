@@ -33,11 +33,7 @@ import app.deckbox.ui.expansions.list.composables.ExpansionsContent
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.statusBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
-import com.slack.circuit.runtime.CircuitContext
-import com.slack.circuit.runtime.Screen
-import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
-import me.tatarka.inject.annotations.Inject
 
 @CircuitInject(MergeActivityScope::class, ExpansionsScreen::class)
 @Composable

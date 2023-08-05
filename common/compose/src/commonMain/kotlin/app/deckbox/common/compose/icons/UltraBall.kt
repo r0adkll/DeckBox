@@ -1,12 +1,12 @@
 package app.deckbox.common.compose.icons
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
@@ -20,7 +20,7 @@ val DeckBoxIcons.UltraBall: ImageVector
       defaultWidth = 48.dp,
       defaultHeight = 48.dp,
       viewportWidth = 48f,
-      viewportHeight = 48f
+      viewportHeight = 48f,
     ).apply {
       group {
         path(
@@ -32,7 +32,7 @@ val DeckBoxIcons.UltraBall: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 4f)
           curveTo(12.954f, 4f, 4f, 12.954f, 4f, 24f)
@@ -51,7 +51,7 @@ val DeckBoxIcons.UltraBall: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 44f)
           curveToRelative(11.046f, 0f, 20f, -8.954f, 20f, -20f)
@@ -70,7 +70,7 @@ val DeckBoxIcons.UltraBall: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 44f)
           curveToRelative(11.046f, 0f, 20f, -8.954f, 20f, -20f)
@@ -89,7 +89,7 @@ val DeckBoxIcons.UltraBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(24f, 4f)
         curveToRelative(-4.968f, 0f, -9.503f, 1.822f, -13f, 4.82f)
@@ -114,7 +114,7 @@ val DeckBoxIcons.UltraBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(4f, 24f)
         curveToRelative(0f, 0.338f, 0.034f, 0.667f, 0.05f, 1f)
@@ -134,7 +134,7 @@ val DeckBoxIcons.UltraBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(29f, 24f)
         arcTo(5f, 5f, 0f, isMoreThanHalf = false, isPositiveArc = true, 24f, 29f)
@@ -151,7 +151,7 @@ val DeckBoxIcons.UltraBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(24f, 20f)
         curveToRelative(2.206f, 0f, 4f, 1.794f, 4f, 4f)
@@ -175,7 +175,7 @@ val DeckBoxIcons.UltraBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(26f, 24f)
         arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 24f, 26f)
@@ -188,4 +188,3 @@ val DeckBoxIcons.UltraBall: ImageVector
   }
 
 private var _ultraBall: ImageVector? = null
-

@@ -37,7 +37,7 @@ fun PokeballLoadingIndicator(
     animationSpec = infiniteRepeatable(
       animation = tween(300),
       repeatMode = RepeatMode.Reverse,
-    )
+    ),
   )
 
   Image(
@@ -48,7 +48,7 @@ fun PokeballLoadingIndicator(
       .graphicsLayer(
         transformOrigin = TransformOrigin(0.5f, 0.7f),
         rotationZ = rotation,
-      )
+      ),
   )
 }
 

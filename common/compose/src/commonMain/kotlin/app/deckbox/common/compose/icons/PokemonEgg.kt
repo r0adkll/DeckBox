@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _pokemonEgg: ImageVector? = null
 
@@ -23,7 +22,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
       defaultWidth = 48.dp,
       defaultHeight = 48.dp,
       viewportWidth = 48f,
-      viewportHeight = 48f
+      viewportHeight = 48f,
     ).apply {
       group {
         path(
@@ -35,7 +34,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 45f)
           curveToRelative(-6.1f, 0f, -11f, -5f, -11f, -11.2f)
@@ -55,7 +54,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 17f)
           curveToRelative(2.2f, 0f, 4.7f, 2.2f, 6.8f, 6f)
@@ -82,7 +81,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(32.6f, 22f)
           curveToRelative(-2.5f, -4.5f, -5.5f, -7f, -8.6f, -7f)
@@ -100,7 +99,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(18f, 11f)
           horizontalLineToRelative(-4f)
@@ -128,7 +127,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(32f, 8f)
           curveToRelative(-0.6f, 0f, -1f, -0.4f, -1f, -1f)
@@ -158,7 +157,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(22f, 11f)
           curveToRelative(-0.6f, 0f, -1f, -0.4f, -1f, -1f)
@@ -178,7 +177,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(26f, 11f)
           curveToRelative(-0.6f, 0f, -1f, -0.4f, -1f, -1f)
@@ -198,7 +197,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(26f, 8f)
           horizontalLineToRelative(-4f)
@@ -218,7 +217,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(33f, 10f)
           curveToRelative(0f, 0.6f, -0.4f, 1f, -1f, 1f)
@@ -236,7 +235,7 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(35.6f, 30.2f)
           lineToRelative(-0.9f, -0.9f)
@@ -274,4 +273,3 @@ public val DeckBoxIcons.PokemonEgg: ImageVector
     }.build()
     return _pokemonEgg!!
   }
-

@@ -52,7 +52,9 @@ object CardEffectListAdapter : ColumnAdapter<List<Card.Effect>, String> {
         val parts = it.split("|")
         if (parts.size == 2) {
           Card.Effect(Type.find(parts[0]), parts[1])
-        } else null
+        } else {
+          null
+        }
       }
   }
 

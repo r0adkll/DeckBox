@@ -88,7 +88,7 @@ fun Card.Ability.toEntity(
 )
 
 fun Card.Attack.toEntity(
-  cardId: String
+  cardId: String,
 ): Attacks = Attacks(
   cost = cost,
   name = name,

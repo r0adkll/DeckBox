@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _greatBall: ImageVector? = null
 
@@ -23,7 +22,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
       defaultWidth = 48.dp,
       defaultHeight = 48.dp,
       viewportWidth = 48f,
-      viewportHeight = 48f
+      viewportHeight = 48f,
     ).apply {
       group {
         path(
@@ -35,7 +34,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 4f)
           curveTo(12.954f, 4f, 4f, 12.954f, 4f, 24f)
@@ -54,7 +53,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 44f)
           curveToRelative(11.046f, 0f, 20f, -8.954f, 20f, -20f)
@@ -73,7 +72,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 44f)
           curveToRelative(11.046f, 0f, 20f, -8.954f, 20f, -20f)
@@ -92,7 +91,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(4f, 24f)
         curveToRelative(0f, 0.338f, 0.034f, 0.667f, 0.05f, 1f)
@@ -112,7 +111,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(29f, 24f)
         arcTo(5f, 5f, 0f, isMoreThanHalf = false, isPositiveArc = true, 24f, 29f)
@@ -129,7 +128,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(24f, 20f)
         curveToRelative(2.206f, 0f, 4f, 1.794f, 4f, 4f)
@@ -153,7 +152,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(26f, 24f)
         arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 24f, 26f)
@@ -171,7 +170,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(39.973f, 12f)
           horizontalLineTo(31f)
@@ -189,7 +188,7 @@ public val DeckBoxIcons.GreatBall: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(5.284f, 17f)
           horizontalLineTo(17f)
@@ -202,4 +201,3 @@ public val DeckBoxIcons.GreatBall: ImageVector
     }.build()
     return _greatBall!!
   }
-

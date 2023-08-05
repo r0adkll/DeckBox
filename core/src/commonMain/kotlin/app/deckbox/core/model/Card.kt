@@ -1,7 +1,6 @@
 package app.deckbox.core.model
 
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 
 data class Card(
   val id: String,

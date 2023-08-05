@@ -1,14 +1,13 @@
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.DeckBoxIcons
-
 
 private var _psyduck: ImageVector? = null
 
@@ -22,7 +21,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
       defaultWidth = 48.dp,
       defaultHeight = 48.dp,
       viewportWidth = 48f,
-      viewportHeight = 48f
+      viewportHeight = 48f,
     ).apply {
       group {
         path(
@@ -34,7 +33,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 11.9f)
           curveToRelative(-0.3f, 0f, -0.6f, -0.1f, -0.8f, -0.4f)
@@ -59,7 +58,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 11.9f)
           curveToRelative(-0.2f, 0f, -0.5f, -0.1f, -0.6f, -0.2f)
@@ -80,7 +79,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 10f)
           curveTo(14f, 10f, 6f, 19f, 6f, 26.4f)
@@ -98,7 +97,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 13f)
           curveTo(14f, 13f, 6f, 19f, 6f, 26.4f)
@@ -116,7 +115,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(6.1f, 28f)
           curveToRelative(0f, 0.3f, 0.1f, 0.6f, 0.2f, 0.8f)
@@ -158,7 +157,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(36f, 29f)
           curveToRelative(-1f, -3.5f, -6.8f, -1.8f, -8.7f, -5.2f)
@@ -180,7 +179,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(19f, 21f)
           curveToRelative(0f, 1.7f, -1.3f, 3f, -3f, 3f)
@@ -198,7 +197,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(16f, 20f)
           curveToRelative(0f, 0.6f, -0.4f, 1f, -1f, 1f)
@@ -216,7 +215,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(35f, 21f)
           curveToRelative(0f, 1.7f, -1.3f, 3f, -3f, 3f)
@@ -234,7 +233,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(32f, 20f)
           curveToRelative(0f, 0.6f, -0.4f, 1f, -1f, 1f)
@@ -252,7 +251,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(26f, 29f)
           curveToRelative(-0.6f, 0f, -1f, -0.4f, -1f, -1f)
@@ -272,7 +271,7 @@ public val DeckBoxIcons.Psyduck: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(22f, 29f)
           curveToRelative(-0.6f, 0f, -1f, -0.4f, -1f, -1f)
@@ -287,4 +286,3 @@ public val DeckBoxIcons.Psyduck: ImageVector
     }.build()
     return _psyduck!!
   }
-
