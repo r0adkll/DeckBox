@@ -43,9 +43,8 @@ private fun Empty(
   modifier: Modifier = Modifier,
 ) {
   Box(
-    modifier = modifier.fillMaxSize()
+    modifier = modifier.fillMaxSize(),
   ) {
-
   }
 }
 
@@ -54,10 +53,10 @@ private fun Loading(
   modifier: Modifier = Modifier,
 ) {
   Box(
-    modifier = modifier.fillMaxSize()
+    modifier = modifier.fillMaxSize(),
   ) {
     SpinningPokeballLoadingIndicator(
-      modifier = modifier.align(Alignment.Center)
+      modifier = modifier.align(Alignment.Center),
     )
   }
 }

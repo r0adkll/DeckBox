@@ -1,3 +1,6 @@
+// Copyright 2023, Drew Heavner and the Deckbox project contributors
+// SPDX-License-Identifier: Apache-2.0
+
 package app.deckbox.convention
 
 import org.gradle.api.Plugin
@@ -5,7 +8,6 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.get
 import org.jetbrains.compose.ComposePlugin
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class UiConventionPlugin : Plugin<Project> {

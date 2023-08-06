@@ -1,7 +1,6 @@
 package app.deckbox.ui.browse
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +30,6 @@ class BrowsePresenter(
 
   @Composable
   override fun present(): BrowseUiState {
-
     var searchQuery by rememberSaveable { mutableStateOf<String?>(null) }
     var filter by remember { mutableStateOf(SearchFilter()) }
     val query by remember {
