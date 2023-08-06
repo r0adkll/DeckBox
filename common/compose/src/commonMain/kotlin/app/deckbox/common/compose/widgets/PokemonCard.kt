@@ -1,5 +1,10 @@
 package app.deckbox.common.compose.widgets
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -51,20 +57,24 @@ fun PokemonCard(
     )
 
     if (imageAction is ImageEvent) {
-      Image(
-        painter = painterResource("pokemon_back_en.webp"),
-        contentDescription = "Card placeholder",
-        modifier = Modifier.fillMaxSize(),
+      val transition = rememberInfiniteTransition()
+
+      val alpha by transition.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 0.75f,
+        animationSpec = infiniteRepeatable(
+          animation = tween(500),
+          repeatMode = RepeatMode.Reverse,
+        )
       )
 
-//      CircularProgressIndicator(
-//        modifier = Modifier.align(Alignment.Center),
-//        color = MaterialTheme.colorScheme.secondaryContainer,
-//      )
-
-      SpinningPokeballLoadingIndicator(
-        modifier = Modifier.align(Alignment.Center),
-        size = 52.dp,
+      Image(
+        // TODO: Make a shared component for the different card backs
+        painter = painterResource("pokemon_back_en.webp"),
+        contentDescription = "Card placeholder",
+        modifier = Modifier
+          .fillMaxSize()
+          .alpha(alpha),
       )
     }
   }
@@ -75,6 +85,7 @@ fun PokemonCard(
 fun PlaceHolderPokemonCard(
   modifier: Modifier = Modifier,
 ) {
+  // TODO: Make a shared component for the different card backs
   val bitmap = resource("pokemon_back_en.webp").rememberImageBitmap().orEmpty()
   TradingCard(
     enabled = false,

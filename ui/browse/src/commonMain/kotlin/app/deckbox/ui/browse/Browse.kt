@@ -1,59 +1,104 @@
 package app.deckbox.ui.browse
 
-import DeckBoxRootAppBar
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.FilterAlt
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import app.deckbox.common.compose.overlays.showInFullScreen
+import app.deckbox.common.compose.widgets.SearchBar
+import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.screens.BrowseScreen
+import app.deckbox.common.screens.CardDetailScreen
+import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.ui.browse.composables.BrowseContent
 import cafe.adriel.lyricist.LocalStrings
-import com.slack.circuit.runtime.CircuitContext
-import com.slack.circuit.runtime.Screen
-import com.slack.circuit.runtime.ui.Ui
-import com.slack.circuit.runtime.ui.ui
-import me.tatarka.inject.annotations.Inject
+import com.moriatsushi.insetsx.statusBars
+import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import com.slack.circuit.overlay.LocalOverlayHost
+import kotlinx.coroutines.launch
 
-@Inject
-class BrowseUiFactory : Ui.Factory {
-  override fun create(screen: Screen, context: CircuitContext): Ui<*>? = when (screen) {
-    is BrowseScreen -> {
-      ui<BrowseUiState> { state, modifier ->
-        Browse(state, modifier)
-      }
-    }
-
-    else -> null
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
+@CircuitInject(MergeActivityScope::class, BrowseScreen::class)
 @Composable
 internal fun Browse(
   state: BrowseUiState,
   modifier: Modifier = Modifier,
 ) {
-  print(state)
-  Scaffold(
+  val coroutineScope = rememberCoroutineScope()
+  val overlayHost = LocalOverlayHost.current
+
+  Surface(
     modifier = modifier,
-    topBar = {
-      DeckBoxRootAppBar(
-        title = LocalStrings.current.browse,
-      )
-    },
-  ) { paddingValues ->
-    // TODO: Replace with actual UI
+  ) {
     Box(
       modifier = Modifier
-        .padding(paddingValues)
         .fillMaxSize(),
-      contentAlignment = Alignment.Center,
+      contentAlignment = Alignment.TopStart,
     ) {
-      Text("Browse UI using Circuit")
+      SearchBar(
+        initialValue = state.query,
+        onQueryUpdated = { query ->
+          state.eventSink(BrowseUiEvent.SearchUpdated(query))
+        },
+        onQueryCleared = {
+          state.eventSink(BrowseUiEvent.SearchCleared)
+        },
+        leading = {
+          Box(modifier = Modifier.padding(start = 16.dp)) {
+            Icon(
+              Icons.Rounded.Search,
+              contentDescription = null,
+            )
+          }
+        },
+        placeholder = { Text(LocalStrings.current.expansionSearchHint) },
+        trailing = {
+          Box {
+            IconButton(
+              onClick = {
+                // TODO:
+              },
+            ) {
+              Icon(Icons.Rounded.FilterAlt, contentDescription = "Filter your search")
+            }
+          }
+        },
+        modifier = Modifier
+          .windowInsetsPadding(WindowInsets.statusBars)
+          .zIndex(1f),
+      )
+
+      BrowseContent(
+        state = state,
+        onClick = { card ->
+          coroutineScope.launch {
+            overlayHost.showInFullScreen(CardDetailScreen(card.id))
+          }
+        },
+        contentPadding = PaddingValues(
+          start = 16.dp,
+          end = 16.dp,
+          top = 16.dp + SearchBarHeight / 2,
+        ),
+        modifier = Modifier
+          .windowInsetsPadding(WindowInsets.statusBars)
+          .padding(top = 8.dp + SearchBarHeight / 2),
+      )
     }
   }
 }

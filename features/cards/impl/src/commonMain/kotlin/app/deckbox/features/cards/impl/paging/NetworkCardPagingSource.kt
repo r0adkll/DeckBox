@@ -39,8 +39,11 @@ class NetworkCardPagingSource(
   override fun getRefreshKey(state: PagingState<Int, Card>): Int? = null
 
   override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
-    val adjustedQuery = query.copy(pageSize = params.loadSize)
-    val result = api.getCards(adjustedQuery.asQueryOptions())
+    val result = api.getCards(
+      query
+        .copy(page = params.key?.plus(1) ?: 1)
+        .asQueryOptions()
+    )
     return if (result.isSuccess) {
       val response = result.getOrThrow()
 
@@ -49,8 +52,9 @@ class NetworkCardPagingSource(
 
       PagingSourceLoadResultPage(
         data = response.data,
-        prevKey = (response.page - 1).takeIf { it >= 0 },
-        nextKey = response.page + 1,
+        prevKey = null,
+        nextKey = response.page
+          .takeIf { response.hasMore },
       ) as PagingSourceLoadResult<Int, Card>
     } else {
       PagingSourceLoadResultError<Int, Card>(result.exceptionOrNull() ?: Exception("Unable to load cards"))

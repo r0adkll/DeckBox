@@ -42,8 +42,7 @@ class ExpansionDetailPresenter(
         val pager = remember {
           Pager(
             config = PagingConfig(
-              pageSize = 100,
-              initialLoadSize = MAX_PAGE_SIZE,
+              pageSize = MAX_PAGE_SIZE,
             ),
             pagingSourceFactory = { expansionCardPagingSourceFactory.create(state.data) },
           )

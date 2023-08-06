@@ -63,7 +63,6 @@ class CachingExpansionCardPagingSource(
     val result = api.getCards(
       buildQuery(
         page = params.key?.plus(1) ?: 1,
-        pageSize = params.loadSize,
       ) {
         appendValue("set.id", expansion.id)
       },
