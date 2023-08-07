@@ -18,11 +18,11 @@ actual interface PlatformImageLoaderComponent {
       }
       interceptor {
         memoryCacheConfig {
-          maxSizeBytes(32 * 1024 * 1024) // 32MB
+          maxSizeBytes(1 * 1024 * 1024 * 1024) // 1GB
         }
         diskCacheConfig {
           directory(getCacheDir().toOkioPath().resolve("image_cache"))
-          maxSizeBytes(512L * 1024 * 1024) // 512MB
+          maxSizeBytes(50L/*giga*/ * 1024L/*mega*/ * 1024L/*kilo*/ * 1024L/*byte*/) // 50 GB
         }
       }
     }

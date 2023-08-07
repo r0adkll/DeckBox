@@ -24,4 +24,5 @@ data class DeckBoxStrings(
   // Browse
   val browse: String,
   val browseTabContentDescription: String,
+  val browseSearchHint: String,
 )

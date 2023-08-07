@@ -16,6 +16,7 @@ data class BrowseUiState(
 ) : CircuitUiState
 
 sealed interface BrowseUiEvent : CircuitUiEvent {
+  class CardClicked(val card: Card) : BrowseUiEvent
   class Filter(val filter: SearchFilter) : BrowseUiEvent
   data class SearchUpdated(val query: String?) : BrowseUiEvent
   object SearchCleared : BrowseUiEvent

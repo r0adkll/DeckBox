@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.LocalWindowSizeClass
+import app.deckbox.common.compose.PlatformBackHandler
 import app.deckbox.common.resources.strings.DeckBoxStrings
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.DecksScreen
@@ -55,6 +56,8 @@ import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.screen
 import com.slack.circuit.overlay.ContentWithOverlays
+import com.slack.circuit.overlay.OverlayHost
+import com.slack.circuit.overlay.rememberOverlayHost
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.Screen
 
@@ -77,7 +80,14 @@ internal fun Home(
   val strings = LocalStrings.current
   val navigationItems = remember { buildNavigationItems(strings) }
 
-  ContentWithOverlays {
+  val overlayHost = rememberOverlayHost()
+  PlatformBackHandler(overlayHost.currentOverlayData != null) {
+    overlayHost.currentOverlayData?.finish(Unit)
+  }
+
+  ContentWithOverlays(
+    overlayHost = overlayHost,
+  ) {
     Scaffold(
       bottomBar = {
         if (navigationType == NavigationType.BOTTOM_NAVIGATION) {
@@ -128,9 +138,10 @@ internal fun Home(
           )
         }
 
-        NavigableCircuitContent(
+        NavigableCircuitContentWithPrevious(
           navigator = navigator,
           backstack = backstack,
+          decoration = GestureNavDecoration(navigator),
           modifier = Modifier
             .weight(1f)
             .fillMaxHeight(),

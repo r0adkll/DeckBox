@@ -20,4 +20,5 @@ val EnDeckBoxStrings = DeckBoxStrings(
   expansionsErrorMessage = "Uh-oh! Looks like the expansion sets failed to load.",
   browse = "Browse",
   browseTabContentDescription = "Browse all Pokemon cards",
+  browseSearchHint = "Search for any card",
 )

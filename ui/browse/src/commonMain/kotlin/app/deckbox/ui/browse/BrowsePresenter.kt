@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.deckbox.common.screens.BrowseScreen
+import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.features.cards.public.model.CardQuery
@@ -64,6 +65,7 @@ class BrowsePresenter(
         is BrowseUiEvent.Filter -> filter = event.filter
         is BrowseUiEvent.SearchUpdated -> searchQuery = event.query
         BrowseUiEvent.SearchCleared -> searchQuery = null
+        is BrowseUiEvent.CardClicked -> navigator.goTo(CardDetailScreen(event.card.id))
       }
     }
   }

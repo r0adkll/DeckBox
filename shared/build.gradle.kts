@@ -54,6 +54,13 @@ kotlin {
         api(libs.circuit.runtime)
       }
     }
+
+    val androidMain by getting {
+      dependencies {
+        api(libs.androidx.activity.activity)
+        api(libs.androidx.activity.compose)
+      }
+    }
   }
 }
 

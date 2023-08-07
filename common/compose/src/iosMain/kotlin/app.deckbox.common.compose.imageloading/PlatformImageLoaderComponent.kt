@@ -35,7 +35,7 @@ actual interface PlatformImageLoaderComponent {
         }
         diskCacheConfig {
           directory(cacheDir.resolve("image_cache"))
-          maxSizeBytes(512L * 1024 * 1024) // 512MB
+          maxSizeBytes(2L/*giga*/ * 1024L/*mega*/ * 1024L/*kilo*/ * 1024L/*byte*/) // 2GB
         }
       }
     }

@@ -32,9 +32,11 @@ import app.cash.paging.Pager
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemKey
 import app.deckbox.common.compose.overlays.showInFullScreen
-import app.deckbox.common.compose.widgets.PlaceHolderPokemonCard
+import app.deckbox.common.compose.widgets.ShimmerPokemonCard
 import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
 import app.deckbox.common.compose.widgets.PokemonCard
+import app.deckbox.common.compose.widgets.PokemonCardGrid
+import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.core.di.MergeActivityScope
@@ -102,7 +104,7 @@ internal fun ExpansionDetail(
   ) {
     when (state) {
       ExpansionDetailUiState.Loading -> Loading(Modifier.padding(it))
-      is ExpansionDetailUiState.Loaded -> ExpansionDetailContent(
+      is ExpansionDetailUiState.Loaded -> PokemonCardGrid(
         cardPager = state.cardsPager,
         state = scrollState,
         onClick = { card ->
@@ -110,6 +112,10 @@ internal fun ExpansionDetail(
             overlayHost.showInFullScreen(CardDetailScreen(card.id))
           }
         },
+        contentPadding = PaddingValues(
+          start = 16.dp,
+          end = 16.dp,
+        ),
         modifier = Modifier.padding(it),
       )
     }
@@ -127,47 +133,5 @@ private fun Loading(
     PokeballLoadingIndicator(
       size = 92.dp,
     )
-  }
-}
-
-@Composable
-private fun ExpansionDetailContent(
-  cardPager: Pager<Int, Card>,
-  onClick: (Card) -> Unit,
-  state: LazyGridState = rememberLazyGridState(),
-  modifier: Modifier = Modifier,
-) {
-  val lazyPagingItems = cardPager.flow.collectAsLazyPagingItems()
-  LazyVerticalGrid(
-    columns = GridCells.Fixed(4),
-    verticalArrangement = Arrangement.spacedBy(8.dp),
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
-    contentPadding = PaddingValues(
-      horizontal = 8.dp,
-    ),
-    state = state,
-    modifier = modifier.fillMaxSize(),
-  ) {
-    items(
-      count = lazyPagingItems.itemCount,
-      key = lazyPagingItems.itemKey { it.id },
-    ) { index ->
-      val item = lazyPagingItems[index]
-      if (item != null) {
-        PokemonCard(
-          card = item,
-          onClick = {
-            bark { "${item.name} was clicked!" }
-            onClick(item)
-          },
-        )
-      } else {
-        PlaceHolderPokemonCard()
-      }
-    }
-  }
-
-  if (lazyPagingItems.itemCount == 0 && lazyPagingItems.loadState.refresh is LoadStateLoading) {
-    Loading()
   }
 }

@@ -16,6 +16,8 @@ kotlin {
         api(projects.common.resources.strings)
         api(projects.common.settings)
 
+        api(projects.thirdparty.shimmer)
+
         api(libs.circuit.foundation)
         api(libs.circuit.overlay)
         api(libs.compose.material3.windowsizeclass)

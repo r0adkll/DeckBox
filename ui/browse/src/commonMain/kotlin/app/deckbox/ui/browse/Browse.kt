@@ -20,12 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.overlays.showInFullScreen
+import app.deckbox.common.compose.widgets.PokemonCardGrid
 import app.deckbox.common.compose.widgets.SearchBar
 import app.deckbox.common.compose.widgets.SearchBarHeight
+import app.deckbox.common.compose.widgets.ShimmerLoadingGrid
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.ui.browse.composables.BrowseContent
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.statusBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -38,8 +39,8 @@ internal fun Browse(
   state: BrowseUiState,
   modifier: Modifier = Modifier,
 ) {
-  val coroutineScope = rememberCoroutineScope()
-  val overlayHost = LocalOverlayHost.current
+//  val coroutineScope = rememberCoroutineScope()
+//  val overlayHost = LocalOverlayHost.current
 
   Surface(
     modifier = modifier,
@@ -65,7 +66,7 @@ internal fun Browse(
             )
           }
         },
-        placeholder = { Text(LocalStrings.current.expansionSearchHint) },
+        placeholder = { Text(LocalStrings.current.browseSearchHint) },
         trailing = {
           Box {
             IconButton(
@@ -82,12 +83,13 @@ internal fun Browse(
           .zIndex(1f),
       )
 
-      BrowseContent(
-        state = state,
+      PokemonCardGrid(
+        cardPager = state.cardsPager,
         onClick = { card ->
-          coroutineScope.launch {
-            overlayHost.showInFullScreen(CardDetailScreen(card.id))
-          }
+          state.eventSink(BrowseUiEvent.CardClicked(card))
+//          coroutineScope.launch {
+//            overlayHost.showInFullScreen(CardDetailScreen(card.id))
+//          }
         },
         contentPadding = PaddingValues(
           start = 16.dp,

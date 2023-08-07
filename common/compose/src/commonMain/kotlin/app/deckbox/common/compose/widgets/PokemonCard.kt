@@ -6,6 +6,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -19,20 +20,19 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Card
 import com.seiko.imageloader.model.ImageEvent
 import com.seiko.imageloader.rememberImageAction
 import com.seiko.imageloader.rememberImageActionPainter
+import com.valentinilk.shimmer.shimmer
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.orEmpty
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.rememberImageBitmap
-import org.jetbrains.compose.resources.resource
 
-private val CardCornerRadius = 8.dp
-private const val CardAspectRatio = 0.7167969f
+internal val CardCornerRadius = 8.dp
+internal const val CardAspectRatio = 0.7167969f
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -81,18 +81,20 @@ fun PokemonCard(
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun PlaceHolderPokemonCard(
+fun ShimmerPokemonCard(
   modifier: Modifier = Modifier,
 ) {
   // TODO: Make a shared component for the different card backs
-  val bitmap = resource("pokemon_back_en.webp").rememberImageBitmap().orEmpty()
+//  val bitmap = resource("pokemon_back_en.webp").rememberImageBitmap().orEmpty()
   TradingCard(
     enabled = false,
     modifier = modifier,
   ) {
-    Image(
-      bitmap = bitmap,
-      contentDescription = "Card placeholder",
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .background(Color.LightGray)
+        .shimmer(),
     )
   }
 }
