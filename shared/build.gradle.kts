@@ -70,5 +70,13 @@ ksp {
   arg("me.tatarka.inject.generateCompanionExtensions", "true")
 }
 
+android {
+  sourceSets {
+    named("main") {
+      resources.srcDir("src/commonMain/resources")
+    }
+  }
+}
+
 addKspDependencyForAllTargets(libs.kotlininject.ksp)
 addKspDependencyForAllTargets(projects.di.kotlinInjectMerge)

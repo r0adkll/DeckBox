@@ -15,39 +15,41 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.deckbox.core.model.Deck
+import app.deckbox.core.settings.DeckCardSlice
+import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import cafe.adriel.lyricist.LocalStrings
 
-class ActionSlice(
-  private val onTest: () -> Unit,
-  private val onDuplicate: () -> Unit,
-  private val onDelete: () -> Unit,
-) : ComposeSlice {
-  override val name: String = "ActionSlice"
+class ActionSlice : ComposeSlice {
+  override val config: DeckCardSlice = DeckCardSlice.Actions.Full
 
   @Composable
-  override fun ColumnScope.Content() {
+  override fun ColumnScope.Content(deck: Deck, eventSink: (DeckCardEvent) -> Unit) {
     Row(
       modifier = Modifier
         .fillMaxWidth()
-        .padding(16.dp),
+        .padding(
+          horizontal = SlicePaddingHorizontal,
+          vertical = 16.dp,
+        ),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
 
       OutlinedButton(
-        onClick = onTest,
+        onClick = { eventSink(DeckCardEvent.Test) },
       ) {
         Text(LocalStrings.current.deckActionTestButton)
       }
 
       OutlinedButton(
-        onClick = onDuplicate,
+        onClick = { eventSink(DeckCardEvent.Duplicate) },
       ) {
         Text(LocalStrings.current.deckActionDuplicateButton)
       }
 
       FilledTonalButton(
-        onClick = onDelete,
+        onClick = { eventSink(DeckCardEvent.Delete) },
       ) {
         Icon(Icons.Rounded.Delete, contentDescription = null)
         Text(LocalStrings.current.deckActionDeleteButton)

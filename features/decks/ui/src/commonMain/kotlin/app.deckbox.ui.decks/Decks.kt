@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.features.decks.public.ui.DeckCardComposer
+import app.deckbox.features.decks.public.ui.DeckCard
 import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 
@@ -42,7 +42,7 @@ internal fun Decks(
         .padding(horizontal = 16.dp),
     ) {
       items(state.decks) { deck ->
-        DeckCardComposer(
+        DeckCard(
           deck = deck,
           config = state.deckCardConfig,
           onEvent = {},

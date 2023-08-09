@@ -60,12 +60,4 @@ kotlin {
   }
 }
 
-android {
-  sourceSets {
-    named("main") {
-      resources.srcDir("src/commonMain/resources")
-    }
-  }
-}
-
 addKspDependencyForCommon(projects.di.kotlinInjectMerge)

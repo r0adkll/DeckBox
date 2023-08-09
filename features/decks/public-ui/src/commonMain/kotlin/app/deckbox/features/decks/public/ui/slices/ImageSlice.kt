@@ -16,17 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import app.deckbox.common.compose.widgets.CardAspectRatio
 import app.deckbox.core.model.Deck
+import app.deckbox.core.settings.DeckCardSlice
+import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import com.seiko.imageloader.rememberImagePainter
 
-class FannedImageSlice(
-  val deck: Deck,
-) : ComposeSlice {
-  override val name: String = "FannedImageSlice"
+class FannedImageSlice : ComposeSlice {
+  override val config: DeckCardSlice = DeckCardSlice.Images.Fanned
 
   @Composable
-  override fun ColumnScope.Content() {
+  override fun ColumnScope.Content(
+    deck: Deck,
+    eventSink: (DeckCardEvent) -> Unit,
+  ) {
     Row(
       modifier = Modifier
         .padding(
@@ -56,13 +58,14 @@ class FannedImageSlice(
   }
 }
 
-class GridImageSlice(
-  val deck: Deck,
-) : ComposeSlice {
-  override val name: String = "GridImageSlice"
+class GridImageSlice : ComposeSlice {
+  override val config: DeckCardSlice = DeckCardSlice.Images.Grid
 
   @Composable
-  override fun ColumnScope.Content() {
+  override fun ColumnScope.Content(
+    deck: Deck,
+    eventSink: (DeckCardEvent) -> Unit,
+  ) {
     TODO("Not yet implemented")
   }
 }

@@ -2,6 +2,8 @@ package app.deckbox.decks.impl
 
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Deck
+import app.deckbox.core.model.Legalities
+import app.deckbox.core.model.Legality
 import app.deckbox.features.decks.public.DeckRepository
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.flow.Flow
@@ -24,9 +26,9 @@ class DefaultDeckRepository : DeckRepository {
           description = "This is a sample description that will represent a custom description a user writes on their deck.",
           collectionMode = false,
           tags = listOf(
-            "Standard",
             "Meta",
             "Test",
+            "#Torb",
           ),
           cardImages = listOf(
             "https://images.pokemontcg.io/sv2/237.png",
@@ -34,6 +36,11 @@ class DefaultDeckRepository : DeckRepository {
             "https://images.pokemontcg.io/sv2/276.png",
             "https://images.pokemontcg.io/sv2/277.png",
             "https://images.pokemontcg.io/sv2/271.png",
+          ),
+          legalities = Legalities(
+            standard = Legality.LEGAL,
+            expanded = Legality.LEGAL,
+            unlimited = Legality.LEGAL,
           ),
           errors = emptyList(),
           createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC),
@@ -45,9 +52,9 @@ class DefaultDeckRepository : DeckRepository {
           description = "This is a sample description that will represent a custom description a user writes on their deck.",
           collectionMode = false,
           tags = listOf(
-            "Standard",
             "Meta",
             "Test",
+            "#FireNation",
           ),
           cardImages = listOf(
             "https://images.pokemontcg.io/sv2/237.png",
@@ -55,6 +62,11 @@ class DefaultDeckRepository : DeckRepository {
             "https://images.pokemontcg.io/sv2/276.png",
             "https://images.pokemontcg.io/sv2/277.png",
             "https://images.pokemontcg.io/sv2/271.png",
+          ),
+          legalities = Legalities(
+            standard = Legality.ILLEGAL,
+            expanded = Legality.LEGAL,
+            unlimited = Legality.LEGAL,
           ),
           errors = emptyList(),
           createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC),
@@ -66,9 +78,9 @@ class DefaultDeckRepository : DeckRepository {
           description = "This is a sample description that will represent a custom description a user writes on their deck.",
           collectionMode = false,
           tags = listOf(
-            "Standard",
             "Meta",
             "Test",
+            "#Bacon",
           ),
           cardImages = listOf(
             "https://images.pokemontcg.io/sv2/237.png",
@@ -76,6 +88,12 @@ class DefaultDeckRepository : DeckRepository {
             "https://images.pokemontcg.io/sv2/276.png",
             "https://images.pokemontcg.io/sv2/277.png",
             "https://images.pokemontcg.io/sv2/271.png",
+          ),
+
+          legalities = Legalities(
+            standard = Legality.ILLEGAL,
+            expanded = Legality.ILLEGAL,
+            unlimited = Legality.LEGAL,
           ),
           errors = emptyList(),
           createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC),

@@ -8,6 +8,7 @@ data class Deck(
   val description: String?,
   val collectionMode: Boolean,
   val cardImages: List<String>,
+  val legalities: Legalities,
   val tags: List<String>,
   val errors: List<ValidationError>,
   val createdAt: LocalDateTime,

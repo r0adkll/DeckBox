@@ -9,22 +9,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.deckbox.core.model.Deck
+import app.deckbox.core.settings.DeckCardSlice
+import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 
-class DescriptionSlice(
-  private val description: String,
-) : ComposeSlice {
-  override val name: String = "DescriptionSlice"
+class DescriptionSlice : ComposeSlice {
+  override val config: DeckCardSlice = DeckCardSlice.Description
 
   @Composable
-  override fun ColumnScope.Content() {
+  override fun ColumnScope.Content(
+    deck: Deck,
+    eventSink: (DeckCardEvent) -> Unit,
+  ) {
+    if (deck.description == null) return
+
     Text(
-      text = description,
+      text = deck.description!!,
       style = MaterialTheme.typography.bodyMedium,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(16.dp),
+        .padding(
+          horizontal = SlicePaddingHorizontal,
+          vertical = SlicePaddingVertical,
+        ),
     )
   }
 }
