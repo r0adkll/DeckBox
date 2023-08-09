@@ -22,11 +22,11 @@ fun DeckCard(
   Card(
     shape = shape,
     modifier = modifier
+      .clip(shape)
       .clickable(
         role = Role.Button,
         onClick = onClick,
-      )
-      .clip(shape),
+      ),
   ) {
     slices.forEach { slice ->
       with (slice) {
