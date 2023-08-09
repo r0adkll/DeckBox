@@ -13,13 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.ImageSearch
-import androidx.compose.material.icons.filled.Style
-import androidx.compose.material.icons.outlined.Dashboard
-import androidx.compose.material.icons.outlined.ImageSearch
-import androidx.compose.material.icons.outlined.Style
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,6 +36,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.LocalWindowSizeClass
 import app.deckbox.common.compose.PlatformBackHandler
+import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.icons.filled.Browse
+import app.deckbox.common.compose.icons.filled.Collection
+import app.deckbox.common.compose.icons.filled.Decks
+import app.deckbox.common.compose.icons.outline.Browse
+import app.deckbox.common.compose.icons.outline.Collection
+import app.deckbox.common.compose.icons.outline.Decks
 import app.deckbox.common.resources.strings.DeckBoxStrings
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.DecksScreen
@@ -53,10 +53,8 @@ import com.moriatsushi.insetsx.safeContentPadding
 import com.moriatsushi.insetsx.statusBars
 import com.moriatsushi.insetsx.systemBars
 import com.slack.circuit.backstack.SaveableBackStack
-import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.screen
 import com.slack.circuit.overlay.ContentWithOverlays
-import com.slack.circuit.overlay.OverlayHost
 import com.slack.circuit.overlay.rememberOverlayHost
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.Screen
@@ -283,22 +281,22 @@ private fun buildNavigationItems(strings: DeckBoxStrings): List<HomeNavigationIt
       screen = DecksScreen(),
       label = strings.decks,
       contentDescription = strings.decksTabContentDescription,
-      iconImageVector = Icons.Outlined.Style,
-      selectedImageVector = Icons.Default.Style,
+      iconImageVector = DeckBoxIcons.Outline.Decks,
+      selectedImageVector = DeckBoxIcons.Filled.Decks,
     ),
     HomeNavigationItem(
       screen = ExpansionsScreen(),
       label = strings.expansions,
       contentDescription = strings.expansionsTabContentDescription,
-      iconImageVector = Icons.Outlined.Dashboard,
-      selectedImageVector = Icons.Default.Dashboard,
+      iconImageVector = DeckBoxIcons.Outline.Collection,
+      selectedImageVector = DeckBoxIcons.Filled.Collection,
     ),
     HomeNavigationItem(
       screen = BrowseScreen(),
       label = strings.browse,
       contentDescription = strings.browseTabContentDescription,
-      iconImageVector = Icons.Outlined.ImageSearch,
-      selectedImageVector = Icons.Default.ImageSearch,
+      iconImageVector = DeckBoxIcons.Outline.Browse,
+      selectedImageVector = DeckBoxIcons.Filled.Browse,
     ),
   )
 }
