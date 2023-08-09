@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -20,7 +22,10 @@ import app.cash.paging.LoadStateLoading
 import app.cash.paging.Pager
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemKey
+import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.icons.Snorlax
 import app.deckbox.core.model.Card
+import cafe.adriel.lyricist.LocalStrings
 import com.valentinilk.shimmer.shimmer
 import kotlin.math.ceil
 import kotlin.math.roundToInt
@@ -29,6 +34,7 @@ private const val DefaultColumns = 4
 private val DefaultVerticalItemSpacing = 8.dp
 private val DefaultHorizontalItemSpacing = 8.dp
 
+@Suppress("USELESS_IS_CHECK")
 @Composable
 fun PokemonCardGrid(
   cardPager: Pager<Int, Card>,
@@ -37,6 +43,7 @@ fun PokemonCardGrid(
   state: LazyGridState = rememberLazyGridState(),
   contentPadding: PaddingValues = PaddingValues(),
   columns: Int = DefaultColumns,
+  emptyContent: @Composable () -> Unit = { DefaultEmptyView() },
 ) {
   val lazyPagingItems = cardPager.flow.collectAsLazyPagingItems()
   LazyVerticalGrid(
@@ -63,13 +70,17 @@ fun PokemonCardGrid(
     }
   }
 
-  @Suppress("USELESS_IS_CHECK")
-  if (lazyPagingItems.itemCount == 0 && lazyPagingItems.loadState.refresh is LoadStateLoading) {
+  val isPagerEmpty = lazyPagingItems.itemCount == 0
+  val isRefreshing = lazyPagingItems.loadState.refresh is LoadStateLoading
+
+  if (isPagerEmpty && isRefreshing) {
     ShimmerLoadingGrid(
       columns = columns,
       contentPadding = contentPadding,
       modifier = modifier.fillMaxSize(),
     )
+  } else if (isPagerEmpty && !isRefreshing) {
+    emptyContent()
   }
 }
 
@@ -99,7 +110,7 @@ fun ShimmerLoadingGrid(
       repeat(rows) {
         Row(
           modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.spacedBy(DefaultHorizontalItemSpacing)
+          horizontalArrangement = Arrangement.spacedBy(DefaultHorizontalItemSpacing),
         ) {
           repeat(columns) {
             ShimmerPokemonCard(

@@ -47,6 +47,21 @@ abstract class AppSettings {
       settings.putString(key, value.storageKey)
     }
   }
+
+  inline fun <reified T> customSetting(
+    key: String,
+    defaultValue: T,
+    crossinline getter: (String) -> T,
+    crossinline setter: (T) -> String,
+  ) = object : ReadWriteProperty<AppSettings, T> {
+    override fun getValue(thisRef: AppSettings, property: KProperty<*>): T {
+      return settings.getStringOrNull(key)?.let(getter) ?: defaultValue
+    }
+
+    override fun setValue(thisRef: AppSettings, property: KProperty<*>, value: T) {
+      settings.putString(key, setter(value))
+    }
+  }
 }
 
 @OptIn(ExperimentalSettingsApi::class)

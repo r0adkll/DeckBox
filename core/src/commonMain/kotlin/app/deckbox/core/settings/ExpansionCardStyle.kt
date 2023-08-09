@@ -1,7 +1,4 @@
-package app.deckbox.expansions.ui
-
-import app.deckbox.core.settings.EnumSetting
-import app.deckbox.core.settings.EnumSettingProvider
+package app.deckbox.core.settings
 
 enum class ExpansionCardStyle(
   override val storageKey: String,

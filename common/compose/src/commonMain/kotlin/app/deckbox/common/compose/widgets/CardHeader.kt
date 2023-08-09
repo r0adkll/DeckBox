@@ -2,7 +2,9 @@ package app.deckbox.common.compose.widgets
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -19,8 +21,8 @@ fun CardHeader(
   title: @Composable () -> Unit,
   subtitle: @Composable () -> Unit,
   modifier: Modifier = Modifier,
-  leading: @Composable () -> Unit = {},
-  trailing: @Composable () -> Unit = {},
+  leading: (@Composable () -> Unit)? = null,
+  trailing: (@Composable () -> Unit)? = null,
 ) {
   Row(
     modifier = modifier
@@ -30,12 +32,12 @@ fun CardHeader(
       ),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    leading()
-
+    if (leading != null) {
+      leading()
+      Spacer(Modifier.width(16.dp))
+    }
     Column(
-      Modifier
-        .weight(1f)
-        .padding(start = 16.dp),
+      Modifier.weight(1f),
     ) {
       CompositionLocalProvider(
         LocalTextStyle provides MaterialTheme.typography.titleMedium,
@@ -50,6 +52,6 @@ fun CardHeader(
       }
     }
 
-    trailing()
+    trailing?.invoke()
   }
 }

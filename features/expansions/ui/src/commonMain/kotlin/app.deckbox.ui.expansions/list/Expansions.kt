@@ -24,7 +24,7 @@ import app.deckbox.common.compose.widgets.SearchBar
 import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.expansions.ui.ExpansionCardStyle
+import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.ui.expansions.list.ExpansionsUiEvent.ChangeCardStyle
 import app.deckbox.ui.expansions.list.ExpansionsUiEvent.ExpansionClicked
 import app.deckbox.ui.expansions.list.ExpansionsUiEvent.SearchCleared
@@ -33,7 +33,6 @@ import app.deckbox.ui.expansions.list.composables.ExpansionsContent
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.statusBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
-import com.slack.circuit.runtime.ui.ui
 
 @CircuitInject(MergeActivityScope::class, ExpansionsScreen::class)
 @Composable

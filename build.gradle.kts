@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinNativeCompile
 
 plugins {
   id("app.deckbox.root")
@@ -24,7 +25,14 @@ allprojects {
   tasks.withType<KotlinCompilationTask<*>>().configureEach {
     compilerOptions {
       // Treat all Kotlin warnings as errors
-      allWarningsAsErrors.set(true)
+//      allWarningsAsErrors.set(true)
+
+      // Hack to make klib manifests have an actually unique name
+//      val uniqueName = "${this@allprojects.group}.${this@allprojects.name}"
+//      freeCompilerArgs.addAll(
+//        "-module-name",
+//        uniqueName,
+//      )
 
       if (project.hasProperty("deckbox.enableComposeCompilerReports")) {
         freeCompilerArgs.addAll(
@@ -40,4 +48,16 @@ allprojects {
       }
     }
   }
+
+//  pluginManager.withPlugin("kotlin-multiplatform") {
+//    val kotlinExtension = project.extensions.getByName("kotlin")
+//      as org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+//    val uniqueName = "${project.group}.${project.name}"
+//
+//    kotlinExtension.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java) {
+//      compilations.configureEach {
+//        kotlinOptions.freeCompilerArgs += listOf("-module-name", uniqueName)
+//      }
+//    }
+//  }
 }

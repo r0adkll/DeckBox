@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Expansion
-import app.deckbox.expansions.ui.ExpansionCardStyle
+import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.ui.expansions.list.ExpansionsLoadState
 import cafe.adriel.lyricist.LocalStrings
 

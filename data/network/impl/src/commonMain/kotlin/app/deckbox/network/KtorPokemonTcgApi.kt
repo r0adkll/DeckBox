@@ -13,6 +13,7 @@ import app.deckbox.network.api.ModelMapper
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -42,6 +43,8 @@ class KtorPokemonTcgApi(
         },
       )
     }
+
+    install(HttpCache)
 
     install(Logging) {
       level = LogLevel.ALL

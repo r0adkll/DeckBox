@@ -1,5 +1,6 @@
 plugins {
   id("app.deckbox.multiplatform")
+  alias(libs.plugins.kotlin.serialization)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -11,6 +12,7 @@ kotlin {
         api(libs.kotlinx.coroutines.core)
         api(libs.kotlininject.runtime)
         api(libs.kotlinx.datetime)
+        implementation(libs.kotlinx.serialization.json)
       }
     }
     val commonTest by getting {

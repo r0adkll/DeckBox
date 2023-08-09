@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import app.deckbox.common.settings.DeckBoxSettings
-import app.deckbox.expansions.ui.ExpansionCardStyle
+import app.deckbox.core.settings.ExpansionCardStyle
 
 @Composable
 fun DeckBoxSettings.collectExpansionCardStyle(): State<ExpansionCardStyle> {

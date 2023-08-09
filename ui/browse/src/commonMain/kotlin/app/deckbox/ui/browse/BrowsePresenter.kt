@@ -39,7 +39,7 @@ class BrowsePresenter(
           CardQuery(orderBy = "-set.releaseDate")
         } else {
           CardQuery(
-            query = searchQuery,
+            query = "$searchQuery*",
             filter = filter,
           )
         }

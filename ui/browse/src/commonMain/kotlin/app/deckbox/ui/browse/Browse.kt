@@ -1,10 +1,13 @@
 package app.deckbox.ui.browse
 
+import Psyduck
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FilterAlt
@@ -19,14 +22,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.icons.Snorlax
 import app.deckbox.common.compose.overlays.showInFullScreen
+import app.deckbox.common.compose.widgets.DefaultEmptyView
+import app.deckbox.common.compose.widgets.DefaultIconSize
+import app.deckbox.common.compose.widgets.EmptyView
 import app.deckbox.common.compose.widgets.PokemonCardGrid
 import app.deckbox.common.compose.widgets.SearchBar
 import app.deckbox.common.compose.widgets.SearchBarHeight
+import app.deckbox.common.compose.widgets.SearchEmptyView
 import app.deckbox.common.compose.widgets.ShimmerLoadingGrid
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.logging.bark
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.statusBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -39,8 +49,8 @@ internal fun Browse(
   state: BrowseUiState,
   modifier: Modifier = Modifier,
 ) {
-//  val coroutineScope = rememberCoroutineScope()
-//  val overlayHost = LocalOverlayHost.current
+  val coroutineScope = rememberCoroutineScope()
+  val overlayHost = LocalOverlayHost.current
 
   Surface(
     modifier = modifier,
@@ -53,6 +63,7 @@ internal fun Browse(
       SearchBar(
         initialValue = state.query,
         onQueryUpdated = { query ->
+          bark { "Query: $query" }
           state.eventSink(BrowseUiEvent.SearchUpdated(query))
         },
         onQueryCleared = {
@@ -86,16 +97,22 @@ internal fun Browse(
       PokemonCardGrid(
         cardPager = state.cardsPager,
         onClick = { card ->
-          state.eventSink(BrowseUiEvent.CardClicked(card))
-//          coroutineScope.launch {
-//            overlayHost.showInFullScreen(CardDetailScreen(card.id))
-//          }
+          coroutineScope.launch {
+            overlayHost.showInFullScreen(CardDetailScreen(card.id))
+          }
         },
         contentPadding = PaddingValues(
           start = 16.dp,
           end = 16.dp,
           top = 16.dp + SearchBarHeight / 2,
         ),
+        emptyContent = {
+          if (!state.query.isNullOrBlank() || state.filter?.isEmpty == false) {
+            SearchEmptyView(query = state.query)
+          } else {
+            DefaultEmptyView()
+          }
+        },
         modifier = Modifier
           .windowInsetsPadding(WindowInsets.statusBars)
           .padding(top = 8.dp + SearchBarHeight / 2),

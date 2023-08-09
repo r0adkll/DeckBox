@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 internal val CardCornerRadius = 8.dp
-internal const val CardAspectRatio = 0.7167969f
+const val CardAspectRatio = 0.7167969f
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable

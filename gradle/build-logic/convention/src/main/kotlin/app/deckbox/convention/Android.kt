@@ -12,7 +12,7 @@ import org.gradle.kotlin.dsl.dependencies
 fun Project.configureAndroid(computeNamespace: Boolean = true) {
   android {
     if (computeNamespace) {
-      namespace = "app.deckbox.${path.substring(1).replace(':', '.')}"
+      namespace = "app.deckbox.${path.substring(1).replace(':', '.').replace("-", "_")}"
     }
     compileSdkVersion(Versions.compileSdk)
 

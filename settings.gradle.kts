@@ -40,8 +40,13 @@ include(
   ":features:cards:ui",
 )
 include(
+  ":features:decks:public",
+  ":features:decks:public-ui",
+  ":features:decks:impl",
+  ":features:decks:ui",
+)
+include(
   ":ui:browse",
-  ":ui:decks",
 )
 include(
   ":di:kotlin-inject-merge",

@@ -2,7 +2,7 @@ package app.deckbox.ui.expansions.list
 
 import androidx.compose.runtime.Stable
 import app.deckbox.core.model.Expansion
-import app.deckbox.expansions.ui.ExpansionCardStyle
+import app.deckbox.core.settings.ExpansionCardStyle
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 

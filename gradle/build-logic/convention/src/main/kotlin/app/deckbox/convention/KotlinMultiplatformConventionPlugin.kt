@@ -41,6 +41,8 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
         android()
       }
 
+      val uniqueName = "${project.group}.${project.name}"
+//      println("Native Unique Name: $uniqueName")
       listOf(
         iosX64(),
         iosArm64(),

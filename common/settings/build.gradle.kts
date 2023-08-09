@@ -11,7 +11,6 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(projects.core)
-        implementation(projects.features.expansions.public)
         api(libs.multiplatformsettings.core)
         api(libs.multiplatformsettings.coroutines)
       }

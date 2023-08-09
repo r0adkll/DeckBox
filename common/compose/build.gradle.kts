@@ -23,6 +23,7 @@ kotlin {
         api(libs.compose.material3.windowsizeclass)
         api(libs.insetsx)
         api(libs.imageloader)
+        api(libs.materialcolorsutilities)
 
         api(compose.foundation)
         api(compose.material)

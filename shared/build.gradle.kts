@@ -36,9 +36,11 @@ kotlin {
         api(projects.features.cards.impl)
         api(projects.features.cards.ui)
 
+        api(projects.features.decks.impl)
+        api(projects.features.decks.ui)
+
         // UI Modules
         api(projects.ui.browse)
-        api(projects.ui.decks)
 
         api(compose.runtime)
         api(compose.foundation)

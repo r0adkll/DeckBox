@@ -2,9 +2,12 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +21,7 @@ fun DeckBoxRootAppBar(
   scrollBehavior: TopAppBarScrollBehavior? = null,
   actions: @Composable RowScope.() -> Unit = {},
 ) {
-  TopAppBar(
+  CenterAlignedTopAppBar(
     modifier = modifier,
     windowInsets = WindowInsets.systemBars
       .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
@@ -36,6 +39,7 @@ fun DeckBoxAppBar(
   modifier: Modifier = Modifier,
   scrollBehavior: TopAppBarScrollBehavior? = null,
   actions: @Composable RowScope.() -> Unit = {},
+  colors: TopAppBarColors = TopAppBarDefaults.smallTopAppBarColors()
 ) {
   TopAppBar(
     modifier = modifier,
@@ -45,6 +49,6 @@ fun DeckBoxAppBar(
     title = { Text(text = title) },
     navigationIcon = navigationIcon,
     actions = actions,
-
+    colors = colors,
   )
 }

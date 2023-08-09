@@ -2,39 +2,30 @@ package app.deckbox.ui.expansions.list.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.common.compose.widgets.ImageAvatar
+import app.deckbox.common.compose.widgets.Tags
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Legality
 import cafe.adriel.lyricist.LocalStrings
@@ -119,52 +110,6 @@ private fun Logo(
     contentScale = ContentScale.FillWidth,
     modifier = modifier,
   )
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun Tags(
-  tags: List<String>,
-  modifier: Modifier = Modifier,
-) {
-  FlowRow(
-    modifier = modifier
-      .padding(16.dp),
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
-  ) {
-    tags.forEach { tag ->
-      TagChip {
-        Text(tag)
-      }
-    }
-  }
-}
-
-@Composable
-fun TagChip(
-  modifier: Modifier = Modifier,
-  color: Color = MaterialTheme.colorScheme.secondaryContainer,
-  shape: Shape = RoundedCornerShape(50),
-  content: @Composable BoxScope.() -> Unit,
-) {
-  Box(
-    modifier = Modifier
-      .background(
-        color = color,
-        shape = shape,
-      )
-      .padding(
-        horizontal = 16.dp,
-        vertical = 8.dp,
-      )
-      .then(modifier),
-  ) {
-    CompositionLocalProvider(
-      LocalTextStyle provides MaterialTheme.typography.labelLarge,
-    ) {
-      content()
-    }
-  }
 }
 
 @Composable
