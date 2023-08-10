@@ -22,10 +22,7 @@ fun Project.configureSpotless() {
   spotless {
     kotlin {
       target("src/**/*.kt")
-      targetExclude(
-        "src/**/impl/**/*PagingSource.kt",
-        "*.df.kts"
-      )
+      targetExclude("src/**/impl/**/*PagingSource.kt")
       ktlint(ktlintVersion)
       licenseHeaderFile(rootProject.file("spotless/google-copyright.txt"))
         .named("google")
