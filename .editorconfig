@@ -9,6 +9,9 @@ trim_trailing_whitespace = true
 max_line_length = 120
 ij_kotlin_packages_to_use_import_on_demand = true
 
+[*.df.kts]
+ktlint_no-wildcard-imports = disabled
+
 [*.{kt,kts}]
 indent_size = 2
 ij_continuation_indent_size = 2
