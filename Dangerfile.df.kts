@@ -9,6 +9,8 @@ danger(args) {
   onGitHub {
     val isTrivial = pullRequest.title.contains("#trivial")
 
+    message("This PR has been checked by Danger")
+
     // Changelog
     if (!isTrivial && !changelogChanged && sourceChanges != null) {
       warn(
