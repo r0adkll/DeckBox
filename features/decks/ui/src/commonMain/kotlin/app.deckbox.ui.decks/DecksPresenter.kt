@@ -9,9 +9,9 @@ import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Deck
+import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.features.decks.public.DeckCardConfigurator
 import app.deckbox.features.decks.public.DeckRepository
-import app.deckbox.core.settings.DeckCardConfig
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter

@@ -35,7 +35,6 @@ class ActionSlice : ComposeSlice {
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-
       OutlinedButton(
         onClick = { eventSink(DeckCardEvent.Test) },
       ) {

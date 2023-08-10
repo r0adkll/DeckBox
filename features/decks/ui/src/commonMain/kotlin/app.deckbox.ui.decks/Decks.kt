@@ -26,7 +26,6 @@ internal fun Decks(
   state: DecksUiState,
   modifier: Modifier = Modifier,
 ) {
-
   Scaffold(
     modifier = modifier,
     topBar = {

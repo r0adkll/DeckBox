@@ -35,7 +35,7 @@ val DeckBoxIcons.Filled.Decks: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(20f, 4f)
           verticalLineTo(12f)

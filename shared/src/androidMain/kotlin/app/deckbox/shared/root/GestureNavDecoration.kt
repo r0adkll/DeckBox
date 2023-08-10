@@ -205,7 +205,7 @@ private fun Modifier.predictiveBackMotion(
 
 @RequiresApi(34)
 @Composable
-private fun  BackHandler(
+private fun BackHandler(
   onBackProgress: (Float) -> Unit,
   animatedEnabled: Boolean = true,
   onBackInvoked: () -> Unit,

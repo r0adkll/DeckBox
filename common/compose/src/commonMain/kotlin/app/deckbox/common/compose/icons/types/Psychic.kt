@@ -1,16 +1,15 @@
 package app.deckbox.common.compose.icons.types
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.DeckBoxIcons
-
 
 private var _psychic: ImageVector? = null
 
@@ -24,7 +23,7 @@ val DeckBoxIcons.Types.Psychic: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       group {
         path(
@@ -36,7 +35,7 @@ val DeckBoxIcons.Types.Psychic: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(9.74696f, 7.3345f)
           curveTo(7.3987f, 8.0574f, 5.3307f, 9.9522f, 3.5429f, 13.0187f)
@@ -73,7 +72,7 @@ val DeckBoxIcons.Types.Psychic: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 0f)
           horizontalLineTo(0f)
@@ -86,4 +85,3 @@ val DeckBoxIcons.Types.Psychic: ImageVector
     }.build()
     return _psychic!!
   }
-

@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons.outline
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.DeckBoxIcons
-
 
 private var _browse: ImageVector? = null
 
@@ -23,7 +22,7 @@ val DeckBoxIcons.Outline.Browse: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color.Black),
@@ -34,7 +33,7 @@ val DeckBoxIcons.Outline.Browse: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(6f, 2f)
         curveTo(4.895f, 2f, 4f, 2.895f, 4f, 4f)
@@ -81,4 +80,3 @@ val DeckBoxIcons.Outline.Browse: ImageVector
     }.build()
     return _browse!!
   }
-

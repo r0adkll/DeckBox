@@ -53,7 +53,7 @@ include(
   ":di:kotlin-inject-merge-annotations",
 )
 include(
-  ":thirdparty:shimmer"
+  ":thirdparty:shimmer",
 )
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

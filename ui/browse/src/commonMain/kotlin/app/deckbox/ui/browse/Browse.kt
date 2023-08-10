@@ -1,13 +1,10 @@
 package app.deckbox.ui.browse
 
-import Psyduck
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FilterAlt
@@ -22,17 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import app.deckbox.common.compose.icons.DeckBoxIcons
-import app.deckbox.common.compose.icons.Snorlax
 import app.deckbox.common.compose.overlays.showInFullScreen
 import app.deckbox.common.compose.widgets.DefaultEmptyView
-import app.deckbox.common.compose.widgets.DefaultIconSize
-import app.deckbox.common.compose.widgets.EmptyView
 import app.deckbox.common.compose.widgets.PokemonCardGrid
 import app.deckbox.common.compose.widgets.SearchBar
 import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.compose.widgets.SearchEmptyView
-import app.deckbox.common.compose.widgets.ShimmerLoadingGrid
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope

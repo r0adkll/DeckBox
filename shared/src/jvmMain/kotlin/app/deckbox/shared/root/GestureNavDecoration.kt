@@ -9,22 +9,22 @@ import com.slack.circuit.foundation.NavigatorDefaults
 import com.slack.circuit.runtime.Navigator
 
 internal actual class GestureNavDecoration actual constructor(
-    navigator: Navigator,
+  navigator: Navigator,
 ) : NavDecorationWithPrevious {
-    @Composable
-    override fun <T> DecoratedContent(
-        arg: T,
-        previous: T?,
-        backStackDepth: Int,
-        modifier: Modifier,
-        content: @Composable (T) -> Unit,
-    ) {
-        // On Desktop we just use the built-in DefaultDecoration
-        NavigatorDefaults.DefaultDecoration.DecoratedContent(
-            arg = arg,
-            backStackDepth = backStackDepth,
-            modifier = modifier,
-            content = content,
-        )
-    }
+  @Composable
+  override fun <T> DecoratedContent(
+    arg: T,
+    previous: T?,
+    backStackDepth: Int,
+    modifier: Modifier,
+    content: @Composable (T) -> Unit,
+  ) {
+    // On Desktop we just use the built-in DefaultDecoration
+    NavigatorDefaults.DefaultDecoration.DecoratedContent(
+      arg = arg,
+      backStackDepth = backStackDepth,
+      modifier = modifier,
+      content = content,
+    )
+  }
 }

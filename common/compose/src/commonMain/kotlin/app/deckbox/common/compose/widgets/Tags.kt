@@ -14,11 +14,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import app.deckbox.common.compose.widgets.TagStyle.*
+import app.deckbox.common.compose.widgets.TagStyle.Filled
+import app.deckbox.common.compose.widgets.TagStyle.Outline
 import app.deckbox.core.extensions.fluentIf
 
 enum class TagStyle {
@@ -56,7 +56,7 @@ fun TagGroup(
     tags.forEach { tag ->
       TagChip(
         style = tag.style,
-        modifier = Modifier.padding(top = 8.dp)
+        modifier = Modifier.padding(top = 8.dp),
       ) {
         Text(tag.text)
       }

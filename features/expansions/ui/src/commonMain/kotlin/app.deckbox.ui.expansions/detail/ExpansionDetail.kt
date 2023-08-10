@@ -2,14 +2,10 @@ package app.deckbox.ui.expansions.detail
 
 import DeckBoxAppBar
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -32,28 +28,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import app.cash.paging.LoadStateLoading
-import app.cash.paging.Pager
-import app.cash.paging.compose.collectAsLazyPagingItems
-import app.cash.paging.compose.itemKey
 import app.deckbox.common.compose.overlays.showInFullScreen
 import app.deckbox.common.compose.util.Palette
 import app.deckbox.common.compose.util.generateColorPalette
-import app.deckbox.common.compose.widgets.ShimmerPokemonCard
 import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
-import app.deckbox.common.compose.widgets.PokemonCard
 import app.deckbox.common.compose.widgets.PokemonCardGrid
-import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.logging.bark
-import app.deckbox.core.model.Card
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.seiko.imageloader.asImageBitmap
 import com.seiko.imageloader.model.ImageResult
 import com.seiko.imageloader.rememberImageAction
-import com.seiko.imageloader.rememberImageActionPainter
 import com.slack.circuit.overlay.LocalOverlayHost
 import kotlinx.coroutines.launch
 

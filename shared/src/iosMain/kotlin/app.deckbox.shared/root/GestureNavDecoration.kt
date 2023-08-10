@@ -50,111 +50,111 @@ import kotlinx.coroutines.flow.filter
 @ExperimentalMaterialApi
 @Immutable
 class SwipeProperties(
-    val enterScreenOffsetFraction: Float = 0.25f,
-    val swipeThreshold: ThresholdConfig = FractionalThreshold(0.4f),
+  val enterScreenOffsetFraction: Float = 0.25f,
+  val swipeThreshold: ThresholdConfig = FractionalThreshold(0.4f),
 )
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 internal actual class GestureNavDecoration @ExperimentalMaterialApi constructor(
-    private val navigator: Navigator,
-    private val swipeProperties: SwipeProperties,
+  private val navigator: Navigator,
+  private val swipeProperties: SwipeProperties,
 ) : NavDecorationWithPrevious {
 
-    @OptIn(ExperimentalMaterialApi::class)
-    actual constructor(
-        navigator: Navigator,
-    ) : this(navigator, SwipeProperties())
+  @OptIn(ExperimentalMaterialApi::class)
+  actual constructor(
+    navigator: Navigator,
+  ) : this(navigator, SwipeProperties())
 
-    @Composable
-    override fun <T> DecoratedContent(
-        arg: T,
-        previous: T?,
-        backStackDepth: Int,
-        modifier: Modifier,
-        content: @Composable (T) -> Unit,
-    ) {
-        Box(modifier = modifier) {
-            // Remember the previous stack depth so we know if the navigation is going "back".
-            var prevStackDepth by rememberSaveable { mutableStateOf(backStackDepth) }
-            SideEffect {
-                prevStackDepth = backStackDepth
-            }
+  @Composable
+  override fun <T> DecoratedContent(
+    arg: T,
+    previous: T?,
+    backStackDepth: Int,
+    modifier: Modifier,
+    content: @Composable (T) -> Unit,
+  ) {
+    Box(modifier = modifier) {
+      // Remember the previous stack depth so we know if the navigation is going "back".
+      var prevStackDepth by rememberSaveable { mutableStateOf(backStackDepth) }
+      SideEffect {
+        prevStackDepth = backStackDepth
+      }
 
-            val dismissState = rememberDismissState()
+      val dismissState = rememberDismissState()
 
-            LaunchedEffect(dismissState) {
-                snapshotFlow { dismissState.isDismissed(DismissDirection.StartToEnd) }
-                    .filter { it }
-                    .collect { navigator.pop() }
-            }
+      LaunchedEffect(dismissState) {
+        snapshotFlow { dismissState.isDismissed(DismissDirection.StartToEnd) }
+          .filter { it }
+          .collect { navigator.pop() }
+      }
 
-            LaunchedEffect(arg) {
-                // Each time the top record changes, reset the dismiss state.
-                // We don't use reset() as that animates, and we need a snap.
-                dismissState.snapTo(DismissValue.Default)
-            }
+      LaunchedEffect(arg) {
+        // Each time the top record changes, reset the dismiss state.
+        // We don't use reset() as that animates, and we need a snap.
+        dismissState.snapTo(DismissValue.Default)
+      }
 
-            if (previous != null) {
-                // Previous content is only visible if the swipe-dismiss offset != 0
-                val showPrevious by remember { derivedStateOf { dismissState.offset.value != 0f } }
+      if (previous != null) {
+        // Previous content is only visible if the swipe-dismiss offset != 0
+        val showPrevious by remember { derivedStateOf { dismissState.offset.value != 0f } }
 
-                PreviousContent(
-                    isVisible = { showPrevious },
-                    modifier = Modifier.graphicsLayer {
-                        translationX = (dismissState.offset.value.absoluteValue - size.width) *
-                            swipeProperties.enterScreenOffsetFraction
-                    },
-                    content = { content(previous) },
-                )
-            }
+        PreviousContent(
+          isVisible = { showPrevious },
+          modifier = Modifier.graphicsLayer {
+            translationX = (dismissState.offset.value.absoluteValue - size.width) *
+              swipeProperties.enterScreenOffsetFraction
+          },
+          content = { content(previous) },
+        )
+      }
 
-            AnimatedContent(
-                targetState = arg,
-                transitionSpec = {
-                    when {
-                        // adding to back stack
-                        backStackDepth > prevStackDepth -> {
-                            slideInHorizontally(initialOffsetX = End) with slideOutHorizontally(
-                                targetOffsetX = { width ->
-                                    0 - (swipeProperties.enterScreenOffsetFraction * width).roundToInt()
-                                },
-                            )
-                        }
-
-                        // come back from back stack
-                        backStackDepth < prevStackDepth -> {
-                            when {
-                                dismissState.offset.value != 0f -> {
-                                    EnterTransition.None with ExitTransition.None
-                                }
-                                else -> {
-                                    slideInHorizontally { width ->
-                                        0 - (swipeProperties.enterScreenOffsetFraction * width).roundToInt()
-                                    }
-                                        .with(slideOutHorizontally(targetOffsetX = End))
-                                        .apply {
-                                            targetContentZIndex = -1f
-                                        }
-                                }
-                            }
-                        }
-
-                        // Root reset. Crossfade
-                        else -> fadeIn() with fadeOut()
-                    }
+      AnimatedContent(
+        targetState = arg,
+        transitionSpec = {
+          when {
+            // adding to back stack
+            backStackDepth > prevStackDepth -> {
+              slideInHorizontally(initialOffsetX = End) with slideOutHorizontally(
+                targetOffsetX = { width ->
+                  0 - (swipeProperties.enterScreenOffsetFraction * width).roundToInt()
                 },
-                modifier = modifier,
-                label = "GestureNavDecoration",
-            ) { record ->
-                SwipeableContent(
-                    state = dismissState,
-                    swipeEnabled = backStackDepth > 1,
-                    dismissThreshold = swipeProperties.swipeThreshold,
-                    content = { content(record) },
-                )
+              )
             }
-        }
+
+            // come back from back stack
+            backStackDepth < prevStackDepth -> {
+              when {
+                dismissState.offset.value != 0f -> {
+                  EnterTransition.None with ExitTransition.None
+                }
+                else -> {
+                  slideInHorizontally { width ->
+                    0 - (swipeProperties.enterScreenOffsetFraction * width).roundToInt()
+                  }
+                    .with(slideOutHorizontally(targetOffsetX = End))
+                    .apply {
+                      targetContentZIndex = -1f
+                    }
+                }
+              }
+            }
+
+            // Root reset. Crossfade
+            else -> fadeIn() with fadeOut()
+          }
+        },
+        modifier = modifier,
+        label = "GestureNavDecoration",
+      ) { record ->
+        SwipeableContent(
+          state = dismissState,
+          swipeEnabled = backStackDepth > 1,
+          dismissThreshold = swipeProperties.swipeThreshold,
+          content = { content(record) },
+        )
+      }
     }
+  }
 }
 
 private val End: (Int) -> Int = { it }
@@ -166,39 +166,39 @@ private val End: (Int) -> Int = { it }
 @Composable
 @ExperimentalMaterialApi
 internal fun SwipeableContent(
-    state: DismissState,
-    dismissThreshold: ThresholdConfig,
-    modifier: Modifier = Modifier,
-    swipeEnabled: Boolean = true,
-    content: @Composable () -> Unit,
+  state: DismissState,
+  dismissThreshold: ThresholdConfig,
+  modifier: Modifier = Modifier,
+  swipeEnabled: Boolean = true,
+  content: @Composable () -> Unit,
 ) {
-    BoxWithConstraints(modifier) {
-        val width = constraints.maxWidth.toFloat()
+  BoxWithConstraints(modifier) {
+    val width = constraints.maxWidth.toFloat()
 
-        Box(
-            modifier = Modifier.swipeable(
-                state = state,
-                anchors = mapOf(
-                    0f to DismissValue.Default,
-                    width to DismissValue.DismissedToEnd,
-                ),
-                thresholds = { _, _ -> dismissThreshold },
-                orientation = Orientation.Horizontal,
-                enabled = swipeEnabled,
-                reverseDirection = LocalLayoutDirection.current == LayoutDirection.Rtl,
-                resistance = ResistanceConfig(
-                    basis = width,
-                    factorAtMin = SwipeableDefaults.StiffResistanceFactor,
-                    factorAtMax = SwipeableDefaults.StandardResistanceFactor,
-                ),
-            ),
-        ) {
-            Box(
-                modifier = Modifier
-                    .offset { IntOffset(x = state.offset.value.roundToInt(), y = 0) },
-            ) {
-                content()
-            }
-        }
+    Box(
+      modifier = Modifier.swipeable(
+        state = state,
+        anchors = mapOf(
+          0f to DismissValue.Default,
+          width to DismissValue.DismissedToEnd,
+        ),
+        thresholds = { _, _ -> dismissThreshold },
+        orientation = Orientation.Horizontal,
+        enabled = swipeEnabled,
+        reverseDirection = LocalLayoutDirection.current == LayoutDirection.Rtl,
+        resistance = ResistanceConfig(
+          basis = width,
+          factorAtMin = SwipeableDefaults.StiffResistanceFactor,
+          factorAtMax = SwipeableDefaults.StandardResistanceFactor,
+        ),
+      ),
+    ) {
+      Box(
+        modifier = Modifier
+          .offset { IntOffset(x = state.offset.value.roundToInt(), y = 0) },
+      ) {
+        content()
+      }
     }
+  }
 }

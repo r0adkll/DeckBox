@@ -23,7 +23,8 @@ class DefaultDeckRepository : DeckRepository {
         Deck(
           id = "0",
           name = "Example Deck 1",
-          description = "This is a sample description that will represent a custom description a user writes on their deck.",
+          description = "This is a sample description that will represent a " +
+            "custom description a user writes on their deck.",
           collectionMode = false,
           tags = listOf(
             "Meta",
@@ -49,7 +50,8 @@ class DefaultDeckRepository : DeckRepository {
         Deck(
           id = "1",
           name = "Example Deck 2",
-          description = "This is a sample description that will represent a custom description a user writes on their deck.",
+          description = "This is a sample description that will represent a " +
+            "custom description a user writes on their deck.",
           collectionMode = false,
           tags = listOf(
             "Meta",
@@ -75,7 +77,8 @@ class DefaultDeckRepository : DeckRepository {
         Deck(
           id = "2",
           name = "Example Deck 3",
-          description = "This is a sample description that will represent a custom description a user writes on their deck.",
+          description = "This is a sample description that will represent a " +
+            "custom description a user writes on their deck.",
           collectionMode = false,
           tags = listOf(
             "Meta",

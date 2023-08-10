@@ -2,7 +2,6 @@ package app.deckbox.features.decks.public.ui.slices
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ImportExport
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,8 +15,6 @@ import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardSlice
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import cafe.adriel.lyricist.LocalStrings
-import kotlin.math.floor
-import kotlin.math.roundToInt
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -89,6 +86,6 @@ val LocalDateTime.readableFormat: String
     return if (now.date == date) {
       "$hourAdjusted:$minute $amPM"
     } else {
-      "${month.name} ${dayOfMonth}, $year $hourAdjusted:$minute $amPM"
+      "${month.name} $dayOfMonth, $year $hourAdjusted:$minute $amPM"
     }
   }

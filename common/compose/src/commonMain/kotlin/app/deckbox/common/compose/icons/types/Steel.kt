@@ -1,16 +1,15 @@
 package app.deckbox.common.compose.icons.types
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.DeckBoxIcons
-
 
 private var _steel: ImageVector? = null
 
@@ -24,7 +23,7 @@ val DeckBoxIcons.Types.Steel: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       group {
         path(
@@ -36,7 +35,7 @@ val DeckBoxIcons.Types.Steel: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(7.05081f, 8.8931f)
           horizontalLineTo(16.8253f)
@@ -83,7 +82,7 @@ val DeckBoxIcons.Types.Steel: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 0f)
           horizontalLineTo(0f)
@@ -96,4 +95,3 @@ val DeckBoxIcons.Types.Steel: ImageVector
     }.build()
     return _steel!!
   }
-

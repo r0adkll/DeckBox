@@ -29,7 +29,7 @@ fun DeckCard(
   ) {
     config.slices.forEach { sliceConfig ->
       val composeSlice = SliceRegistry.slice(sliceConfig)
-      with (composeSlice) {
+      with(composeSlice) {
         Content(deck, onEvent)
       }
     }

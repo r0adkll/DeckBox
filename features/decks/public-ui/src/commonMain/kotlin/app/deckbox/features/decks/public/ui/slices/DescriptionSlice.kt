@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardSlice
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent

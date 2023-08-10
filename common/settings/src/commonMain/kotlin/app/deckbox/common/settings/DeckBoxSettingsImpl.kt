@@ -3,9 +3,9 @@ package app.deckbox.common.settings
 import app.deckbox.common.settings.DeckBoxSettings.Theme
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
-import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.core.settings.DeckCardSlice
+import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.core.settings.asString
 import app.deckbox.core.settings.fromString
 import com.russhwolf.settings.ExperimentalSettingsApi
@@ -47,12 +47,12 @@ class DeckBoxSettingsImpl(
     },
     setter = { config ->
       config.slices.asString()
-    }
+    },
   )
 
   override fun observeDeckCardConfig(): Flow<DeckCardConfig> {
     return flowSettings.getStringOrNullFlow(KEY_DECK_CARD_CONFIG)
-      .map {  value ->
+      .map { value ->
         value?.let { DeckCardConfig(DeckCardSlice.fromString(it)) }
           ?: DeckCardConfig.DEFAULT
       }

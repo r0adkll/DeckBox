@@ -12,8 +12,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -22,10 +20,7 @@ import app.cash.paging.LoadStateLoading
 import app.cash.paging.Pager
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemKey
-import app.deckbox.common.compose.icons.DeckBoxIcons
-import app.deckbox.common.compose.icons.Snorlax
 import app.deckbox.core.model.Card
-import cafe.adriel.lyricist.LocalStrings
 import com.valentinilk.shimmer.shimmer
 import kotlin.math.ceil
 import kotlin.math.roundToInt
@@ -91,7 +86,6 @@ fun ShimmerLoadingGrid(
   modifier: Modifier = Modifier,
 ) = with(LocalDensity.current) {
   BoxWithConstraints(modifier = modifier) {
-
     // Compute size info
     val unPaddedWidth = maxWidth.toPx() - ((columns - 1) * DefaultHorizontalItemSpacing.toPx())
     val cardWidth = unPaddedWidth / columns

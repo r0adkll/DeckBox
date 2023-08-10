@@ -1,11 +1,11 @@
 package app.deckbox.core.settings
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
-import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface DeckCardSlice {
@@ -13,12 +13,14 @@ sealed interface DeckCardSlice {
   @Serializable
   sealed interface Header : DeckCardSlice {
     @Serializable object Export : Header
+
     @Serializable object Thumbnail : Header
   }
 
   @Serializable
   sealed interface Images : DeckCardSlice {
     @Serializable object Fanned : Images
+
     @Serializable object Grid : Images
   }
 
@@ -31,6 +33,7 @@ sealed interface DeckCardSlice {
   @Serializable
   sealed interface Actions : DeckCardSlice {
     @Serializable object Full : Actions
+
     @Serializable object Compact : Actions
   }
 
@@ -51,7 +54,6 @@ private val deckCardSliceJson by lazy {
     }
   }
 }
-
 
 fun List<DeckCardSlice>.asString(): String {
   val serializer = ListSerializer(DeckCardSlice.serializer())

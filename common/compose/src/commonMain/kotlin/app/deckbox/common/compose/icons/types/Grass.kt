@@ -1,16 +1,15 @@
 package app.deckbox.common.compose.icons.types
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.DeckBoxIcons
-
 
 private var _grass: ImageVector? = null
 
@@ -24,7 +23,7 @@ val DeckBoxIcons.Types.Grass: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       group {
         path(
@@ -36,7 +35,7 @@ val DeckBoxIcons.Types.Grass: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(15.5f, 1.65067f)
           curveTo(19.9405f, 7.2251f, 21.821f, 11.5362f, 21.1415f, 14.5838f)
@@ -95,7 +94,7 @@ val DeckBoxIcons.Types.Grass: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(24f, 0f)
           horizontalLineTo(0f)
@@ -108,4 +107,3 @@ val DeckBoxIcons.Types.Grass: ImageVector
     }.build()
     return _grass!!
   }
-

@@ -6,5 +6,5 @@ package app.deckbox.shared.root
 import com.slack.circuit.runtime.Navigator
 
 internal expect class GestureNavDecoration(
-    navigator: Navigator,
+  navigator: Navigator,
 ) : NavDecorationWithPrevious

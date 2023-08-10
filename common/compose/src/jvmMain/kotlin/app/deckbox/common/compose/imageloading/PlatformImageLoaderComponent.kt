@@ -13,6 +13,7 @@ actual interface PlatformImageLoaderComponent {
   @ActivityScope
   fun imageLoader(): ImageLoader {
     return ImageLoader {
+      logger = DeckBoxImageLoaderLogger
       components {
         setupDefaultComponents()
       }
@@ -22,7 +23,7 @@ actual interface PlatformImageLoaderComponent {
         }
         diskCacheConfig {
           directory(getCacheDir().toOkioPath().resolve("image_cache"))
-          maxSizeBytes(50L/*giga*/ * 1024L/*mega*/ * 1024L/*kilo*/ * 1024L/*byte*/) // 50 GB
+          maxSizeBytes(50L * 1024L * 1024L * 1024L) // 50 GB
         }
       }
     }
