@@ -9,7 +9,18 @@ on:
   pull_request:
 
 jobs:
+  danger:
+    runs-on: ubuntu-latest
+    name: "Danger"
+    steps:
+      - uses: actions/checkout@v1
+      - name: Danger
+        uses: danger/kotlin@1.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   code-style:
+    needs: [danger]
     runs-on: macos-latest
     timeout-minutes: 60
 #    env:
