@@ -19,7 +19,7 @@ jobs:
         with:
           args: --failOnErrors --no-publish-check
         env:
-          GITHUB_TOKEN: ${{ secrets.DECKBOX_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   code-style:
     needs: [danger]
