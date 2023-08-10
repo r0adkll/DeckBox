@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
@@ -53,7 +54,10 @@ fun TagGroup(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     tags.forEach { tag ->
-      TagChip(tag.style) {
+      TagChip(
+        style = tag.style,
+        modifier = Modifier.padding(top = 8.dp)
+      ) {
         Text(tag.text)
       }
     }
@@ -64,7 +68,7 @@ fun TagGroup(
 fun TagChip(
   style: TagStyle,
   modifier: Modifier = Modifier,
-  shape: Shape = RoundedCornerShape(50),
+  shape: Shape = RoundedCornerShape(8.dp),
   content: @Composable BoxScope.() -> Unit,
 ) {
   val color = when (style) {
@@ -73,7 +77,7 @@ fun TagChip(
   }
 
   Box(
-    modifier = Modifier
+    modifier = modifier
       .background(
         color = color,
         shape = shape,
@@ -87,9 +91,8 @@ fun TagChip(
       }
       .padding(
         horizontal = 16.dp,
-        vertical = 8.dp,
-      )
-      .then(modifier),
+        vertical = 6.dp,
+      ),
   ) {
     CompositionLocalProvider(
       LocalTextStyle provides MaterialTheme.typography.labelLarge,

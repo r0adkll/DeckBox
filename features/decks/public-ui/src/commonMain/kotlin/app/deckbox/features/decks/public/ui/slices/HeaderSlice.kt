@@ -9,6 +9,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.icons.outline.Export
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardSlice
@@ -43,7 +45,7 @@ class ExportHeaderSlice : ComposeSlice {
         IconButton(
           onClick = { eventSink(DeckCardEvent.Export) },
         ) {
-          Icon(Icons.Rounded.Share, contentDescription = null)
+          Icon(DeckBoxIcons.Outline.Export, contentDescription = null)
         }
       },
     )
