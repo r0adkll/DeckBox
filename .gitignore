@@ -91,3 +91,6 @@ report.xml
 Preview.html
 screenshots/**/*.png
 test_output
+/.idea/appInsightsSettings.xml
+/iosApp/iosApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+/iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist

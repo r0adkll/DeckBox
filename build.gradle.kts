@@ -24,14 +24,7 @@ allprojects {
   tasks.withType<KotlinCompilationTask<*>>().configureEach {
     compilerOptions {
       // Treat all Kotlin warnings as errors
-//      allWarningsAsErrors.set(true)
-
-      // Hack to make klib manifests have an actually unique name
-//      val uniqueName = "${this@allprojects.group}.${this@allprojects.name}"
-//      freeCompilerArgs.addAll(
-//        "-module-name",
-//        uniqueName,
-//      )
+      allWarningsAsErrors.set(true)
 
       if (project.hasProperty("deckbox.enableComposeCompilerReports")) {
         freeCompilerArgs.addAll(
@@ -47,16 +40,10 @@ allprojects {
       }
     }
   }
+}
 
-//  pluginManager.withPlugin("kotlin-multiplatform") {
-//    val kotlinExtension = project.extensions.getByName("kotlin")
-//      as org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-//    val uniqueName = "${project.group}.${project.name}"
-//
-//    kotlinExtension.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java) {
-//      compilations.configureEach {
-//        kotlinOptions.freeCompilerArgs += listOf("-module-name", uniqueName)
-//      }
-//    }
-//  }
+tasks.register<Copy>("bootstrap") {
+  from(file("scripts/pre-push"))
+  into(file(".git/hooks"))
+  fileMode = 777
 }

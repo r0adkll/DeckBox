@@ -3,6 +3,10 @@
   <component name="Kotlin2JvmCompilerArguments">
     <option name="jvmTarget" value="1.8" />
   </component>
+  <component name="KotlinCompilerSettings">
+    <option name="scriptTemplates" value="systems.danger.kts.DangerFileScript" />
+    <option name="scriptTemplatesClasspath" value="/usr/local/lib/danger/danger-kotlin.jar" />
+  </component>
   <component name="KotlinJpsPluginSettings">
     <option name="version" value="1.8.22" />
   </component>
