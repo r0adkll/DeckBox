@@ -12,11 +12,9 @@ danger(args) {
     // Changelog
     if (!isTrivial && !changelogChanged && sourceChanges != null) {
       warn(
-        WordUtils.capitalize(
-          "any changes to library code should be reflected in the Changelog.\n\n" +
-            "Please consider adding a note there and adhere to the " +
-            "[Changelog Guidelines](https://github.com/Moya/contributors/blob/master/Changelog%20Guidelines.md).",
-        ),
+        "any changes to library code should be reflected in the Changelog.\n\n" +
+          "Please consider adding a note there and adhere to the " +
+          "[Changelog Guidelines](https://github.com/Moya/contributors/blob/master/Changelog%20Guidelines.md).",
       )
     }
 
