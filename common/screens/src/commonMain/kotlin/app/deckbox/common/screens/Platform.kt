@@ -11,6 +11,12 @@ package app.deckbox.common.screens
 @Retention(AnnotationRetention.BINARY)
 expect annotation class CommonParcelize()
 
+@OptIn(ExperimentalMultiplatform::class)
+@OptionalExpectation
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.BINARY)
+expect annotation class CommonIgnoredOnParcel()
+
 // For Android @TypeParceler
 @OptIn(ExperimentalMultiplatform::class)
 @OptionalExpectation

@@ -13,12 +13,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import app.deckbox.common.compose.LocalWindowSizeClass
 import app.deckbox.common.compose.overlays.showInFullScreen
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.PokemonCardGrid
@@ -41,6 +43,7 @@ internal fun Browse(
   state: BrowseUiState,
   modifier: Modifier = Modifier,
 ) {
+  val windowSizeClass = LocalWindowSizeClass.current
   val coroutineScope = rememberCoroutineScope()
   val overlayHost = LocalOverlayHost.current
 
@@ -86,6 +89,12 @@ internal fun Browse(
           .zIndex(1f),
       )
 
+      val numColumns = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+        4
+      } else {
+        6
+      }
+
       PokemonCardGrid(
         cardPager = state.cardsPager,
         onClick = { card ->
@@ -105,6 +114,7 @@ internal fun Browse(
             DefaultEmptyView()
           }
         },
+        columns = numColumns,
         modifier = Modifier
           .windowInsetsPadding(WindowInsets.statusBars)
           .padding(top = 8.dp + SearchBarHeight / 2),

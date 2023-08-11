@@ -11,15 +11,6 @@ import me.tatarka.inject.annotations.Provides
 
 interface UiComponent {
 
-//    @Provides
-//    @SingleIn(MergeActivityScope::class)
-//    fun provideLyricist(): TiviStrings {
-//        return Lyricist(
-//            defaultLanguageTag = Locales.EN,
-//            translations = Strings,
-//        ).strings
-//    }
-
   @Provides
   @ActivityScope
   fun provideCircuitConfig(

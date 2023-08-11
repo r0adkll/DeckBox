@@ -1,5 +1,6 @@
 package app.deckbox.shared.root
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -43,16 +45,26 @@ import app.deckbox.common.compose.icons.filled.Decks
 import app.deckbox.common.compose.icons.outline.Browse
 import app.deckbox.common.compose.icons.outline.Collection
 import app.deckbox.common.compose.icons.outline.Decks
+import app.deckbox.common.compose.navigation.DetailNavigation
+import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.resources.strings.DeckBoxStrings
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
+import app.deckbox.common.screens.RootScreen
+import app.deckbox.core.extensions.fluentIf
+import app.deckbox.shared.navigator.MainDetailNavigator
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.safeContentPadding
 import com.moriatsushi.insetsx.statusBars
 import com.moriatsushi.insetsx.systemBars
 import com.slack.circuit.backstack.SaveableBackStack
+import com.slack.circuit.backstack.popUntil
+import com.slack.circuit.backstack.rememberSaveableBackStack
+import com.slack.circuit.foundation.NavigableCircuitContent
+import com.slack.circuit.foundation.push
+import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.foundation.screen
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.overlay.rememberOverlayHost
@@ -71,8 +83,27 @@ internal fun Home(
     NavigationType.forWindowSizeSize(windowSizeClass)
   }
 
+  val detailBackStack = rememberSaveableBackStack { push(RootScreen()) }
+  val detailNavigator = rememberCircuitNavigator(detailBackStack) {
+    detailBackStack.popUntil { false }
+    detailBackStack.push(RootScreen())
+  }
+
+  val mainDetailNavigator = remember(navigator, detailNavigator, navigationType) {
+    MainDetailNavigator(
+      mainNavigator = navigator,
+      detailNavigator = detailNavigator,
+      isDetailEnabled = navigationType == NavigationType.RAIL ||
+        navigationType == NavigationType.PERMANENT_DRAWER
+    )
+  }
+
   val rootScreen by remember {
     derivedStateOf { backstack.last().screen }
+  }
+
+  val rootDetailScreen by remember {
+    derivedStateOf { detailBackStack.topRecord?.screen }
   }
 
   val strings = LocalStrings.current
@@ -92,7 +123,7 @@ internal fun Home(
           HomeNavigationBar(
             selectedNavigation = rootScreen,
             navigationItems = navigationItems,
-            onNavigationSelected = { navigator.resetRoot(it) },
+            onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
             modifier = Modifier.fillMaxWidth(),
           )
         } else {
@@ -106,19 +137,19 @@ internal fun Home(
       // We let content handle the status bar
       contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
       modifier = modifier,
-    ) { paddingValues ->
+    ) { _ ->
       Row(
         modifier = Modifier
           .fillMaxSize()
-          .then(
-            if (navigationType != NavigationType.BOTTOM_NAVIGATION) Modifier.padding(paddingValues) else Modifier,
-          ),
+//          .fluentIf(navigationType != NavigationType.BOTTOM_NAVIGATION) {
+//            padding(paddingValues)
+//          },
       ) {
         if (navigationType == NavigationType.RAIL) {
           HomeNavigationRail(
             selectedNavigation = rootScreen,
             navigationItems = navigationItems,
-            onNavigationSelected = { navigator.resetRoot(it) },
+            onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
             modifier = Modifier.fillMaxHeight(),
           )
 
@@ -131,19 +162,40 @@ internal fun Home(
           HomeNavigationDrawer(
             selectedNavigation = rootScreen,
             navigationItems = navigationItems,
-            onNavigationSelected = { navigator.resetRoot(it) },
+            onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
             modifier = Modifier.fillMaxHeight(),
           )
         }
 
         NavigableCircuitContentWithPrevious(
-          navigator = navigator,
+          navigator = mainDetailNavigator,
           backstack = backstack,
           decoration = GestureNavDecoration(navigator),
           modifier = Modifier
             .weight(1f)
             .fillMaxHeight(),
         )
+
+        // TODO: Based on navigation type / screen width have a secondary CircuitContent here
+        //  that certain Detail type screens can be pushed into if its available
+        AnimatedVisibility(
+          visible = rootDetailScreen !is RootScreen,
+          modifier = Modifier
+            .weight(1f)
+            .fillMaxHeight(),
+        ) {
+          CompositionLocalProvider(
+            LocalDetailNavigation provides DetailNavigation.Active,
+          ) {
+            NavigableCircuitContent(
+              navigator = detailNavigator,
+              backstack = detailBackStack,
+              unavailableRoute = { _, _ ->
+                // Do nothing here
+              }
+            )
+          }
+        }
       }
     }
   }
@@ -268,7 +320,7 @@ internal enum class NavigationType {
       windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact -> BOTTOM_NAVIGATION
       windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact -> BOTTOM_NAVIGATION
       windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> RAIL
-      else -> PERMANENT_DRAWER
+      else -> RAIL
     }
   }
 }
