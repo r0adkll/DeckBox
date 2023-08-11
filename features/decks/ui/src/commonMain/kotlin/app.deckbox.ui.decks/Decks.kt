@@ -46,9 +46,9 @@ internal fun Decks(
         },
         onClick = {
           // TODO: Navigate to Deck Builder Screen
-        }
+        },
       )
-    }
+    },
   ) { _ ->
     LazyColumn(
       verticalArrangement = Arrangement.spacedBy(16.dp),

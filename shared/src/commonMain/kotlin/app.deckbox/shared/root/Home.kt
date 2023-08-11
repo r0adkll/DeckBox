@@ -52,7 +52,6 @@ import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.screens.RootScreen
-import app.deckbox.core.extensions.fluentIf
 import app.deckbox.shared.navigator.MainDetailNavigator
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
@@ -94,7 +93,7 @@ internal fun Home(
       mainNavigator = navigator,
       detailNavigator = detailNavigator,
       isDetailEnabled = navigationType == NavigationType.RAIL ||
-        navigationType == NavigationType.PERMANENT_DRAWER
+        navigationType == NavigationType.PERMANENT_DRAWER,
     )
   }
 
@@ -140,7 +139,7 @@ internal fun Home(
     ) { _ ->
       Row(
         modifier = Modifier
-          .fillMaxSize()
+          .fillMaxSize(),
 //          .fluentIf(navigationType != NavigationType.BOTTOM_NAVIGATION) {
 //            padding(paddingValues)
 //          },
@@ -192,7 +191,7 @@ internal fun Home(
               backstack = detailBackStack,
               unavailableRoute = { _, _ ->
                 // Do nothing here
-              }
+              },
             )
           }
         }

@@ -36,5 +36,4 @@ class MainDetailNavigator(
     detailNavigator.resetRoot(RootScreen())
     return mainNavigator.resetRoot(newRoot)
   }
-
 }
