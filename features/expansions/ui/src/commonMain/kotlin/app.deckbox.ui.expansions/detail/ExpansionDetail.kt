@@ -24,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import app.deckbox.common.compose.navigation.DetailNavigation
-import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.compose.navigation.isInDetailMode
 import app.deckbox.common.compose.overlays.showInFullScreen
 import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
