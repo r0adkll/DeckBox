@@ -51,16 +51,6 @@ jobs:
       - name: Check code style with Spotless
         run: ./gradlew spotlessCheck
 
-      - name: Check Android Lint
-        run: ./gradlew lintRelease
-
-      - name: Danger Lint
-        uses: docker://ghcr.io/danger/danger-kotlin:1.2.0
-        with:
-          args: --failOnErrors --no-publish-check --dangerfile=Dangerfile_lint.df.kts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 #      - name: Check code style with SwiftLint
 #        run: fastlane ios lint
 #        working-directory: ios-app
@@ -108,6 +98,13 @@ jobs:
             lint \
             -x :androidApp:assemble \
             -x :androidApp:bundle
+
+      - name: Danger Lint
+        uses: docker://ghcr.io/danger/danger-kotlin:1.2.0
+        with:
+          args: --failOnErrors --no-publish-check --dangerfile=Dangerfile_lint.df.kts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Run smoke tests on Gradle Managed Device
 #        # --info used to add a repro to https://issuetracker.google.com/issues/193118030
