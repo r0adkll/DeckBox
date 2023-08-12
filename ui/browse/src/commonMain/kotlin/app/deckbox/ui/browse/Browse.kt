@@ -1,6 +1,7 @@
 package app.deckbox.ui.browse
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,14 +44,13 @@ internal fun Browse(
   state: BrowseUiState,
   modifier: Modifier = Modifier,
 ) {
-  val windowSizeClass = LocalWindowSizeClass.current
   val coroutineScope = rememberCoroutineScope()
   val overlayHost = LocalOverlayHost.current
 
   Surface(
     modifier = modifier,
   ) {
-    Box(
+    BoxWithConstraints(
       modifier = Modifier
         .fillMaxSize(),
       contentAlignment = Alignment.TopStart,
@@ -89,12 +89,7 @@ internal fun Browse(
           .zIndex(1f),
       )
 
-      val numColumns = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
-        4
-      } else {
-        6
-      }
-
+      val numColumns = if (maxWidth > 400.dp) 6 else 4
       PokemonCardGrid(
         cardPager = state.cardsPager,
         onClick = { card ->

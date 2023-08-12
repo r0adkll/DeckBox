@@ -1,5 +1,6 @@
 package app.deckbox.ui.expansions.list.composables
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Place
@@ -20,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.widgets.AdaptiveContent
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.ui.expansions.list.ExpansionsLoadState
@@ -109,12 +117,87 @@ private fun ExpansionsContent(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(),
 ) {
+  AdaptiveContent(
+    compact = {
+      CompactExpansionsContent(
+        expansions = expansions,
+        style = style,
+        onClick = onClick,
+        modifier = modifier,
+        contentPadding = contentPadding,
+      )
+    },
+    expanded = {
+      ExpandedExpansionsContent(
+        expansions = expansions,
+        style = style,
+        onClick = onClick,
+        modifier = modifier,
+        contentPadding = contentPadding,
+      )
+    },
+  )
+}
+
+@Composable
+private fun CompactExpansionsContent(
+  expansions: List<Expansion>,
+  style: ExpansionCardStyle,
+  onClick: (Expansion) -> Unit,
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(),
+) {
   LazyColumn(
     modifier = modifier,
     contentPadding = contentPadding,
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     items(expansions) { expansion ->
+      val clickListener = { onClick(expansion) }
+      when (style) {
+        ExpansionCardStyle.Large -> {
+          LargeExpansionCard(
+            expansion = expansion,
+            onClick = clickListener,
+          )
+        }
+        ExpansionCardStyle.Small -> {
+          SmallExpansionCard(
+            expansion = expansion,
+            onClick = clickListener,
+          )
+        }
+        ExpansionCardStyle.Compact -> {
+          CompactExpansionCard(
+            expansion = expansion,
+            onClick = clickListener,
+          )
+        }
+      }
+    }
+  }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ExpandedExpansionsContent(
+  expansions: List<Expansion>,
+  style: ExpansionCardStyle,
+  onClick: (Expansion) -> Unit,
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(),
+) {
+  LazyVerticalStaggeredGrid(
+    modifier = modifier,
+    contentPadding = contentPadding,
+    columns = StaggeredGridCells.Fixed(2),
+    verticalItemSpacing = 16.dp,
+    horizontalArrangement = Arrangement.spacedBy(16.dp)
+  ) {
+    items(
+      items = expansions,
+      key = { it.id },
+    ) { expansion ->
       val clickListener = { onClick(expansion) }
       when (style) {
         ExpansionCardStyle.Large -> {

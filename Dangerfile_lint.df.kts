@@ -9,6 +9,22 @@ register plugin AndroidLint
 danger(args) {
 
   androidLint {
-    report("androidApp/build/reports/lint-results-release.xml")
+    val moduleLintFilesPaths = find(
+      projectDir = ".",
+      "lint-results-debug.xml",
+      "lint-results-release.xml",
+    ).toTypedArray()
+
+    reportDistinct(*moduleLintFilesPaths)
+
+//    parseAllDistinct(*moduleLintFilesPaths).forEach {
+//      if (it.severity == "Fatal") {
+//        fail(
+//          "Danger lint check failed: ${it.message}",
+//          it.location.file.replace(System.getProperty("user.dir"), ""),
+//          it.location.line.toInt(),
+//        )
+//      }
+//    }
   }
 }

@@ -14,8 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -163,14 +167,17 @@ internal fun Home(
               selectedNavigation = rootScreen,
               navigationItems = navigationItems,
               onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
+              onCreateSelected = {
+                // TODO: Nav to deck builder screen
+              },
               modifier = Modifier.fillMaxHeight(),
             )
 
-            Divider(
-              Modifier
-                .fillMaxHeight()
-                .width(1.dp),
-            )
+//            Divider(
+//              Modifier
+//                .fillMaxHeight()
+//                .width(1.dp),
+//            )
           } else if (navigationType == NavigationType.PERMANENT_DRAWER) {
             HomeNavigationDrawer(
               selectedNavigation = rootScreen,
@@ -243,9 +250,22 @@ private fun HomeNavigationRail(
   selectedNavigation: Screen,
   navigationItems: List<HomeNavigationItem>,
   onNavigationSelected: (Screen) -> Unit,
+  onCreateSelected: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  NavigationRail(modifier = modifier) {
+  NavigationRail(
+    modifier = modifier,
+    header = {
+      FloatingActionButton(
+        onClick = onCreateSelected,
+      ) {
+        Icon(
+          Icons.Rounded.Create,
+          contentDescription = null,
+        )
+      }
+    },
+  ) {
     for (item in navigationItems) {
       NavigationRailItem(
         icon = {
@@ -254,7 +274,7 @@ private fun HomeNavigationRail(
             selected = selectedNavigation == item.screen,
           )
         },
-        alwaysShowLabel = false,
+//        alwaysShowLabel = false,
         label = { Text(text = item.label) },
         selected = selectedNavigation == item.screen,
         onClick = { onNavigationSelected(item.screen) },
