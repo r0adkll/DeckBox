@@ -9,28 +9,9 @@ on:
   pull_request:
 
 jobs:
-  checks:
-    runs-on: macos-latest
-    name: "danger"
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
-
-      - name: set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
-      - name: Check convention plugins code style with Spotless
-        run: ./gradlew lintRelease
-
-  danger:
-    needs: [checks]
-    runs-on: macos-latest
-    name: "danger"
+  danger-pr:
+    runs-on: ubuntu-latest
+    name: "danger-pr"
     steps:
       - uses: actions/checkout@v1
       - name: Danger
@@ -41,7 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   code-style:
-    needs: [danger]
+    needs: [danger-pr]
     runs-on: macos-latest
     timeout-minutes: 60
 #    env:
@@ -71,9 +52,24 @@ jobs:
       - name: Check code style with Spotless
         run: ./gradlew spotlessCheck
 
+      - name: Check Android Lint
+        run: ./gradlew lintRelease
+
 #      - name: Check code style with SwiftLint
 #        run: fastlane ios lint
 #        working-directory: ios-app
+
+  danger-lint:
+    runs-on: ubuntu-latest
+    name: "danger-lint"
+    steps:
+      - uses: actions/checkout@v1
+      - name: Danger
+        uses: docker://ghcr.io/danger/danger-kotlin:1.2.0
+        with:
+          args: --failOnErrors --no-publish-check --dangerfile=Dangerfile_lint.df.kts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   android:
     needs: [code-style]
