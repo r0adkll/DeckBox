@@ -49,6 +49,7 @@ import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.resources.strings.DeckBoxStrings
 import app.deckbox.common.screens.BrowseScreen
+import app.deckbox.common.screens.DeckBoxScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.screens.RootScreen
@@ -113,78 +114,88 @@ internal fun Home(
     overlayHost.currentOverlayData?.finish(Unit)
   }
 
-  ContentWithOverlays(
-    overlayHost = overlayHost,
+  val detailNavigationState by remember {
+    derivedStateOf {
+      if (navigationType == NavigationType.BOTTOM_NAVIGATION) return@derivedStateOf DetailNavigation.None
+      detailBackStack.topRecord?.screen
+        ?.let { it as? DeckBoxScreen }
+        ?.let { DetailNavigation.Current(it) }
+        ?: DetailNavigation.Hidden
+    }
+  }
+
+  CompositionLocalProvider(
+    LocalDetailNavigation provides detailNavigationState,
   ) {
-    Scaffold(
-      bottomBar = {
-        if (navigationType == NavigationType.BOTTOM_NAVIGATION) {
-          HomeNavigationBar(
-            selectedNavigation = rootScreen,
-            navigationItems = navigationItems,
-            onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
-            modifier = Modifier.fillMaxWidth(),
-          )
-        } else {
-          Spacer(
-            Modifier
-              .windowInsetsBottomHeight(WindowInsets.navigationBars)
-              .fillMaxWidth(),
-          )
-        }
-      },
-      // We let content handle the status bar
-      contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
-      modifier = modifier,
-    ) { _ ->
-      Row(
-        modifier = Modifier
-          .fillMaxSize(),
+    ContentWithOverlays(
+      overlayHost = overlayHost,
+    ) {
+      Scaffold(
+        bottomBar = {
+          if (navigationType == NavigationType.BOTTOM_NAVIGATION) {
+            HomeNavigationBar(
+              selectedNavigation = rootScreen,
+              navigationItems = navigationItems,
+              onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
+              modifier = Modifier.fillMaxWidth(),
+            )
+          } else {
+            Spacer(
+              Modifier
+                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                .fillMaxWidth(),
+            )
+          }
+        },
+        // We let content handle the status bar
+        contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
+        modifier = modifier,
+      ) { _ ->
+        Row(
+          modifier = Modifier
+            .fillMaxSize(),
 //          .fluentIf(navigationType != NavigationType.BOTTOM_NAVIGATION) {
 //            padding(paddingValues)
 //          },
-      ) {
-        if (navigationType == NavigationType.RAIL) {
-          HomeNavigationRail(
-            selectedNavigation = rootScreen,
-            navigationItems = navigationItems,
-            onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
-            modifier = Modifier.fillMaxHeight(),
-          )
-
-          Divider(
-            Modifier
-              .fillMaxHeight()
-              .width(1.dp),
-          )
-        } else if (navigationType == NavigationType.PERMANENT_DRAWER) {
-          HomeNavigationDrawer(
-            selectedNavigation = rootScreen,
-            navigationItems = navigationItems,
-            onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
-            modifier = Modifier.fillMaxHeight(),
-          )
-        }
-
-        NavigableCircuitContentWithPrevious(
-          navigator = mainDetailNavigator,
-          backstack = backstack,
-          decoration = GestureNavDecoration(navigator),
-          modifier = Modifier
-            .weight(1f)
-            .fillMaxHeight(),
-        )
-
-        // TODO: Based on navigation type / screen width have a secondary CircuitContent here
-        //  that certain Detail type screens can be pushed into if its available
-        AnimatedVisibility(
-          visible = rootDetailScreen !is RootScreen,
-          modifier = Modifier
-            .weight(1f)
-            .fillMaxHeight(),
         ) {
-          CompositionLocalProvider(
-            LocalDetailNavigation provides DetailNavigation.Active,
+          if (navigationType == NavigationType.RAIL) {
+            HomeNavigationRail(
+              selectedNavigation = rootScreen,
+              navigationItems = navigationItems,
+              onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
+              modifier = Modifier.fillMaxHeight(),
+            )
+
+            Divider(
+              Modifier
+                .fillMaxHeight()
+                .width(1.dp),
+            )
+          } else if (navigationType == NavigationType.PERMANENT_DRAWER) {
+            HomeNavigationDrawer(
+              selectedNavigation = rootScreen,
+              navigationItems = navigationItems,
+              onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
+              modifier = Modifier.fillMaxHeight(),
+            )
+          }
+
+          NavigableCircuitContentWithPrevious(
+            navigator = mainDetailNavigator,
+            backstack = backstack,
+            decoration = GestureNavDecoration(navigator),
+            modifier = Modifier
+              .weight(1f)
+              .fillMaxHeight(),
+          )
+
+          // TODO: Based on navigation type / screen width have a secondary CircuitContent here
+          //  that certain Detail type screens can be pushed into if its available
+          AnimatedVisibility(
+            visible = rootDetailScreen !is RootScreen,
+            modifier = Modifier
+              .weight(1f)
+              .fillMaxHeight(),
           ) {
             NavigableCircuitContent(
               navigator = detailNavigator,

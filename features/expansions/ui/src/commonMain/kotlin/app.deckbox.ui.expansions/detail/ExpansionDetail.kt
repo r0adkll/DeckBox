@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
+import app.deckbox.common.compose.navigation.isInDetailMode
 import app.deckbox.common.compose.overlays.showInFullScreen
 import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
 import app.deckbox.common.compose.widgets.PokemonCardGrid
@@ -43,7 +44,7 @@ internal fun ExpansionDetail(
   state: ExpansionDetailUiState,
   modifier: Modifier = Modifier,
 ) {
-  val isDetailMode = LocalDetailNavigation.current == DetailNavigation.Active
+  val isDetailMode = isInDetailMode()
 
   val coroutineScope = rememberCoroutineScope()
   val overlayHost = LocalOverlayHost.current

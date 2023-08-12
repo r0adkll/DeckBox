@@ -17,6 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.navigation.DetailNavigation
+import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.core.di.MergeActivityScope
@@ -31,6 +33,7 @@ internal fun Decks(
   state: DecksUiState,
   modifier: Modifier = Modifier,
 ) {
+  val detailNavigationState = LocalDetailNavigation.current
   Scaffold(
     modifier = modifier,
     topBar = {
@@ -39,15 +42,17 @@ internal fun Decks(
       )
     },
     floatingActionButton = {
-      ExtendedFloatingActionButton(
-        text = { Text("Create") },
-        icon = {
-          Icon(Icons.Rounded.Add, contentDescription = null)
-        },
-        onClick = {
-          // TODO: Navigate to Deck Builder Screen
-        },
-      )
+      if (detailNavigationState is DetailNavigation.None) {
+        ExtendedFloatingActionButton(
+          text = { Text("Create") },
+          icon = {
+            Icon(Icons.Rounded.Add, contentDescription = null)
+          },
+          onClick = {
+            // TODO: Navigate to Deck Builder Screen
+          },
+        )
+      }
     },
   ) { _ ->
     LazyColumn(
