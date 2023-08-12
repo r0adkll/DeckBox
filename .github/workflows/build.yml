@@ -9,8 +9,27 @@ on:
   pull_request:
 
 jobs:
+  checks:
+    runs-on: macos-latest
+    name: "danger"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Check convention plugins code style with Spotless
+        run: ./gradlew lintRelease
+
   danger:
-    runs-on: ubuntu-latest
+    needs: [checks]
+    runs-on: macos-latest
     name: "danger"
     steps:
       - uses: actions/checkout@v1
