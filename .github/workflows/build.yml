@@ -60,6 +60,7 @@ jobs:
 #        working-directory: ios-app
 
   danger-lint:
+    needs: [code-style]
     runs-on: ubuntu-latest
     name: "danger-lint"
     steps:
