@@ -9,9 +9,9 @@ on:
   pull_request:
 
 jobs:
-  danger:
+  danger-pr:
     runs-on: ubuntu-latest
-    name: "danger"
+    name: "danger-pr"
     steps:
       - uses: actions/checkout@v1
       - name: Danger
@@ -22,7 +22,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   code-style:
-    needs: [danger]
     runs-on: macos-latest
     timeout-minutes: 60
 #    env:
@@ -56,19 +55,15 @@ jobs:
 #        run: fastlane ios lint
 #        working-directory: ios-app
 
+
   android:
     needs: [code-style]
     runs-on: ubuntu-latest
     timeout-minutes: 60
 #    env:
-#      ORG_GRADLE_PROJECT_TIVI_TMDB_API_KEY: ${{ secrets.ORG_GRADLE_PROJECT_TIVI_TMDB_API_KEY }}
-#      ORG_GRADLE_PROJECT_TIVI_TRAKT_CLIENT_ID: ${{ secrets.ORG_GRADLE_PROJECT_TIVI_TRAKT_CLIENT_ID }}
-#      ORG_GRADLE_PROJECT_TIVI_TRAKT_CLIENT_SECRET: ${{ secrets.ORG_GRADLE_PROJECT_TIVI_TRAKT_CLIENT_SECRET }}
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_URL: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_URL }}
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_USERNAME }}
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD }}
-#      ORG_GRADLE_PROJECT_TIVI_RELEASE_KEYSTORE_PWD: ${{ secrets.ORG_GRADLE_PROJECT_TIVI_RELEASE_KEYSTORE_PWD }}
-#      ORG_GRADLE_PROJECT_TIVI_RELEASE_KEY_PWD: ${{ secrets.ORG_GRADLE_PROJECT_TIVI_RELEASE_KEY_PWD }}
 
     steps:
       - name: Generate build number
@@ -103,6 +98,13 @@ jobs:
             lint \
             -x :androidApp:assemble \
             -x :androidApp:bundle
+
+      - name: Danger Lint
+        uses: docker://ghcr.io/danger/danger-kotlin:1.2.0
+        with:
+          args: --failOnErrors --no-publish-check --dangerfile=Dangerfile_lint.df.kts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Run smoke tests on Gradle Managed Device
 #        # --info used to add a repro to https://issuetracker.google.com/issues/193118030
@@ -263,9 +265,6 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 60
 #    env:
-#      ORG_GRADLE_PROJECT_TIVI_TMDB_API_KEY: ${{ secrets.ORG_GRADLE_PROJECT_TIVI_TMDB_API_KEY }}
-#      ORG_GRADLE_PROJECT_TIVI_TRAKT_CLIENT_ID: ${{ secrets.ORG_GRADLE_PROJECT_TIVI_TRAKT_CLIENT_ID }}
-#      ORG_GRADLE_PROJECT_TIVI_TRAKT_CLIENT_SECRET: ${{ secrets.ORG_GRADLE_PROJECT_TIVI_TRAKT_CLIENT_SECRET }}
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_URL: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_URL }}
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_USERNAME }}
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD }}

@@ -29,5 +29,9 @@ danger(args) {
     if (pullRequest.title.contains("WIP", false)) {
       warn("PR is classed as Work in Progress")
     }
+
+    if (git.linesOfCode > 500) {
+      warn("This PR is original Xbox Huge! Consider breaking into smaller PRs")
+    }
   }
 }

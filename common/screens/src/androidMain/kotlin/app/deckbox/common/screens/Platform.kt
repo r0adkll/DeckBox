@@ -10,3 +10,4 @@ package app.deckbox.common.screens
 actual typealias CommonParcelize = kotlinx.parcelize.Parcelize
 actual typealias CommonParceler<T> = kotlinx.parcelize.Parceler<T>
 actual typealias CommonTypeParceler<T, P> = kotlinx.parcelize.TypeParceler<T, P>
+actual typealias CommonIgnoredOnParcel = kotlinx.parcelize.IgnoredOnParcel

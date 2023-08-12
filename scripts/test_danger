@@ -1,0 +1,6 @@
+#!/bin/bash
+
+kotlinc -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:8001 -script-templates systems.danger.kts.DangerFileScript \
+-cp /usr/local/lib/danger/danger-kotlin.jar \
+-script Dangerfile.df.kts \
+-Dkotlin.script.classpath=/usr/local/lib/danger/danger-kotlin.jar

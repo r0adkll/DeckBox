@@ -68,6 +68,7 @@ internal fun CompactExpansionCard(
       val headerPlaceable = measurables[1].measure(constraints)
       val progressPlaceable = measurables[0].measure(
         constraints.copy(
+          minWidth = 0,
           maxWidth = progressWidth.roundToInt(),
           maxHeight = headerPlaceable.height,
         ),

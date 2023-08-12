@@ -1,5 +1,6 @@
 package app.deckbox.shared.root
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,11 +11,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -27,6 +29,7 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -43,16 +46,26 @@ import app.deckbox.common.compose.icons.filled.Decks
 import app.deckbox.common.compose.icons.outline.Browse
 import app.deckbox.common.compose.icons.outline.Collection
 import app.deckbox.common.compose.icons.outline.Decks
+import app.deckbox.common.compose.navigation.DetailNavigation
+import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.resources.strings.DeckBoxStrings
 import app.deckbox.common.screens.BrowseScreen
+import app.deckbox.common.screens.DeckBoxScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
+import app.deckbox.common.screens.RootScreen
+import app.deckbox.shared.navigator.MainDetailNavigator
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.safeContentPadding
 import com.moriatsushi.insetsx.statusBars
 import com.moriatsushi.insetsx.systemBars
 import com.slack.circuit.backstack.SaveableBackStack
+import com.slack.circuit.backstack.popUntil
+import com.slack.circuit.backstack.rememberSaveableBackStack
+import com.slack.circuit.foundation.NavigableCircuitContent
+import com.slack.circuit.foundation.push
+import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.foundation.screen
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.overlay.rememberOverlayHost
@@ -71,8 +84,27 @@ internal fun Home(
     NavigationType.forWindowSizeSize(windowSizeClass)
   }
 
+  val detailBackStack = rememberSaveableBackStack { push(RootScreen()) }
+  val detailNavigator = rememberCircuitNavigator(detailBackStack) {
+    detailBackStack.popUntil { false }
+    detailBackStack.push(RootScreen())
+  }
+
+  val mainDetailNavigator = remember(navigator, detailNavigator, navigationType) {
+    MainDetailNavigator(
+      mainNavigator = navigator,
+      detailNavigator = detailNavigator,
+      isDetailEnabled = navigationType == NavigationType.RAIL ||
+        navigationType == NavigationType.PERMANENT_DRAWER,
+    )
+  }
+
   val rootScreen by remember {
     derivedStateOf { backstack.last().screen }
+  }
+
+  val rootDetailScreen by remember {
+    derivedStateOf { detailBackStack.topRecord?.screen }
   }
 
   val strings = LocalStrings.current
@@ -83,67 +115,101 @@ internal fun Home(
     overlayHost.currentOverlayData?.finish(Unit)
   }
 
-  ContentWithOverlays(
-    overlayHost = overlayHost,
+  val detailNavigationState by remember {
+    derivedStateOf {
+      if (navigationType == NavigationType.BOTTOM_NAVIGATION) return@derivedStateOf DetailNavigation.None
+      detailBackStack.topRecord?.screen
+        ?.let { it as? DeckBoxScreen }
+        ?.let { DetailNavigation.Current(it) }
+        ?: DetailNavigation.Hidden
+    }
+  }
+
+  CompositionLocalProvider(
+    LocalDetailNavigation provides detailNavigationState,
   ) {
-    Scaffold(
-      bottomBar = {
-        if (navigationType == NavigationType.BOTTOM_NAVIGATION) {
-          HomeNavigationBar(
-            selectedNavigation = rootScreen,
-            navigationItems = navigationItems,
-            onNavigationSelected = { navigator.resetRoot(it) },
-            modifier = Modifier.fillMaxWidth(),
-          )
-        } else {
-          Spacer(
-            Modifier
-              .windowInsetsBottomHeight(WindowInsets.navigationBars)
-              .fillMaxWidth(),
-          )
-        }
-      },
-      // We let content handle the status bar
-      contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
-      modifier = modifier,
-    ) { paddingValues ->
-      Row(
-        modifier = Modifier
-          .fillMaxSize()
-          .then(
-            if (navigationType != NavigationType.BOTTOM_NAVIGATION) Modifier.padding(paddingValues) else Modifier,
-          ),
-      ) {
-        if (navigationType == NavigationType.RAIL) {
-          HomeNavigationRail(
-            selectedNavigation = rootScreen,
-            navigationItems = navigationItems,
-            onNavigationSelected = { navigator.resetRoot(it) },
-            modifier = Modifier.fillMaxHeight(),
-          )
-
-          Divider(
-            Modifier
-              .fillMaxHeight()
-              .width(1.dp),
-          )
-        } else if (navigationType == NavigationType.PERMANENT_DRAWER) {
-          HomeNavigationDrawer(
-            selectedNavigation = rootScreen,
-            navigationItems = navigationItems,
-            onNavigationSelected = { navigator.resetRoot(it) },
-            modifier = Modifier.fillMaxHeight(),
-          )
-        }
-
-        NavigableCircuitContentWithPrevious(
-          navigator = navigator,
-          backstack = backstack,
-          decoration = GestureNavDecoration(navigator),
+    ContentWithOverlays(
+      overlayHost = overlayHost,
+    ) {
+      Scaffold(
+        bottomBar = {
+          if (navigationType == NavigationType.BOTTOM_NAVIGATION) {
+            HomeNavigationBar(
+              selectedNavigation = rootScreen,
+              navigationItems = navigationItems,
+              onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
+              modifier = Modifier.fillMaxWidth(),
+            )
+          } else {
+            Spacer(
+              Modifier
+                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                .fillMaxWidth(),
+            )
+          }
+        },
+        // We let content handle the status bar
+        contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
+        modifier = modifier,
+      ) { _ ->
+        Row(
           modifier = Modifier
-            .weight(1f)
-            .fillMaxHeight(),
-        )
+            .fillMaxSize(),
+//          .fluentIf(navigationType != NavigationType.BOTTOM_NAVIGATION) {
+//            padding(paddingValues)
+//          },
+        ) {
+          if (navigationType == NavigationType.RAIL) {
+            HomeNavigationRail(
+              selectedNavigation = rootScreen,
+              navigationItems = navigationItems,
+              onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
+              onCreateSelected = {
+                // TODO: Nav to deck builder screen
+              },
+              modifier = Modifier.fillMaxHeight(),
+            )
+
+//            Divider(
+//              Modifier
+//                .fillMaxHeight()
+//                .width(1.dp),
+//            )
+          } else if (navigationType == NavigationType.PERMANENT_DRAWER) {
+            HomeNavigationDrawer(
+              selectedNavigation = rootScreen,
+              navigationItems = navigationItems,
+              onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
+              modifier = Modifier.fillMaxHeight(),
+            )
+          }
+
+          NavigableCircuitContentWithPrevious(
+            navigator = mainDetailNavigator,
+            backstack = backstack,
+            decoration = GestureNavDecoration(navigator),
+            modifier = Modifier
+              .weight(1f)
+              .fillMaxHeight(),
+          )
+
+          // TODO: Based on navigation type / screen width have a secondary CircuitContent here
+          //  that certain Detail type screens can be pushed into if its available
+          AnimatedVisibility(
+            visible = rootDetailScreen !is RootScreen,
+            modifier = Modifier
+              .weight(1f)
+              .fillMaxHeight(),
+          ) {
+            NavigableCircuitContent(
+              navigator = detailNavigator,
+              backstack = detailBackStack,
+              unavailableRoute = { _, _ ->
+                // Do nothing here
+              },
+            )
+          }
+        }
       }
     }
   }
@@ -181,9 +247,22 @@ private fun HomeNavigationRail(
   selectedNavigation: Screen,
   navigationItems: List<HomeNavigationItem>,
   onNavigationSelected: (Screen) -> Unit,
+  onCreateSelected: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  NavigationRail(modifier = modifier) {
+  NavigationRail(
+    modifier = modifier,
+    header = {
+      FloatingActionButton(
+        onClick = onCreateSelected,
+      ) {
+        Icon(
+          Icons.Rounded.Create,
+          contentDescription = null,
+        )
+      }
+    },
+  ) {
     for (item in navigationItems) {
       NavigationRailItem(
         icon = {
@@ -192,7 +271,7 @@ private fun HomeNavigationRail(
             selected = selectedNavigation == item.screen,
           )
         },
-        alwaysShowLabel = false,
+//        alwaysShowLabel = false,
         label = { Text(text = item.label) },
         selected = selectedNavigation == item.screen,
         onClick = { onNavigationSelected(item.screen) },
@@ -268,7 +347,7 @@ internal enum class NavigationType {
       windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact -> BOTTOM_NAVIGATION
       windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact -> BOTTOM_NAVIGATION
       windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> RAIL
-      else -> PERMANENT_DRAWER
+      else -> RAIL
     }
   }
 }

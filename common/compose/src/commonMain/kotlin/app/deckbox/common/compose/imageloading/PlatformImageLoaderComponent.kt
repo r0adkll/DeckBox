@@ -12,7 +12,7 @@ expect interface PlatformImageLoaderComponent
 val DeckBoxImageLoaderLogger: Logger by lazy {
   object : Logger {
 
-    override fun isLoggable(priority: LogPriority): Boolean = true
+    override fun isLoggable(priority: LogPriority): Boolean = priority > LogPriority.DEBUG
 
     override fun log(priority: LogPriority, tag: String, data: Any?, throwable: Throwable?, message: String) {
       bark(

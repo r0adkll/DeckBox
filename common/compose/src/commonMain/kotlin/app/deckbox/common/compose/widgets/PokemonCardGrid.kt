@@ -42,7 +42,7 @@ fun PokemonCardGrid(
 ) {
   val lazyPagingItems = cardPager.flow.collectAsLazyPagingItems()
   LazyVerticalGrid(
-    columns = GridCells.Fixed(DefaultColumns),
+    columns = GridCells.Fixed(columns),
     verticalArrangement = Arrangement.spacedBy(DefaultVerticalItemSpacing),
     horizontalArrangement = Arrangement.spacedBy(DefaultHorizontalItemSpacing),
     contentPadding = contentPadding,
