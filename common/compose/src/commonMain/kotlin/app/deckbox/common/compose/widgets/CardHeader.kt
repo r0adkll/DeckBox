@@ -60,7 +60,7 @@ fun CardHeader(
         modifier = Modifier
           .size(
             width = 56.dp,
-            height = 40.dp
+            height = 40.dp,
           ),
         contentAlignment = Alignment.Center,
       ) {

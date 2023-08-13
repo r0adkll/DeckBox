@@ -28,8 +28,6 @@ import com.seiko.imageloader.model.ImageEvent
 import com.seiko.imageloader.rememberImageAction
 import com.seiko.imageloader.rememberImageActionPainter
 import com.valentinilk.shimmer.shimmer
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
 internal val CardCornerRadius = 8.dp
 const val CardAspectRatio = 0.7167969f

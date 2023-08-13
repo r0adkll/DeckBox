@@ -24,7 +24,6 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
@@ -52,7 +51,6 @@ class BrowsePresenter(
     LaunchedEffect(searchQueryPipelineValue) {
       searchQuery = searchQueryPipelineValue
     }
-
 
     var filter by remember { mutableStateOf(SearchFilter()) }
     val query by remember {

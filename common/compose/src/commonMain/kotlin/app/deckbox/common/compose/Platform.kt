@@ -1,9 +1,9 @@
 package app.deckbox.common.compose
 
 enum class Platform {
-  Android,
-  iOS,
-  Desktop,
+  ANDROID,
+  IOS,
+  DESKTOP,
 }
 
 expect val currentPlatform: Platform

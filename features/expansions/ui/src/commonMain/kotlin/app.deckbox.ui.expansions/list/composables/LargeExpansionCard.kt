@@ -6,13 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DownloadForOffline
 import androidx.compose.material.icons.rounded.FileDownload
-import androidx.compose.material.icons.rounded.OfflineBolt
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -89,8 +86,8 @@ internal fun LargeExpansionCard(
       modifier = Modifier
         .padding(
           horizontal = 16.dp,
-          vertical = 8.dp
-        )
+          vertical = 8.dp,
+        ),
     )
     CollectionCounter(
       printedTotal = expansion.printedTotal,

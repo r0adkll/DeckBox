@@ -16,10 +16,6 @@ import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardSlice
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import cafe.adriel.lyricist.LocalStrings
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class ExportHeaderSlice : ComposeSlice {
   override val config: DeckCardSlice = DeckCardSlice.Header.Export

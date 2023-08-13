@@ -66,8 +66,8 @@ internal fun Decks(
             }
           },
           elevation = animateDpAsState(
-            if (isTopBarElevated) 6.dp else 0.dp
-          ).value
+            if (isTopBarElevated) 6.dp else 0.dp,
+          ).value,
         )
       }
     },
