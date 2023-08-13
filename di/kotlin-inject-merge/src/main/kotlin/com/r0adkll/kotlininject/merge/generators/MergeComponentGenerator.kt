@@ -134,8 +134,12 @@ class MergeComponentGenerator : Generator {
     return TypeSpec.buildClass(classSimpleName) {
       // Add this original file + contributed modules to the metadata
       // for incremental processing
-      element.containingFile?.let { addOriginatingKSFile(it) }
+      element.containingFile
+        ?.let { addOriginatingKSFile(it) }
       modules
+        .mapNotNull { it.containingFile }
+        .forEach { addOriginatingKSFile(it) }
+      subcomponents
         .mapNotNull { it.containingFile }
         .forEach { addOriginatingKSFile(it) }
 
@@ -229,6 +233,7 @@ class MergeComponentGenerator : Generator {
               subcomponentClassName,
               *subcomponentConstructorParams.map { it.name }.toTypedArray(),
             )
+            .addOriginatingKSFile(subcomponent.containingFile!!)
             .build(),
         )
 
