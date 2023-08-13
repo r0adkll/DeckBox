@@ -1,4 +1,10 @@
+@file:DependsOn("com.gianluz:danger-kotlin-android-lint-plugin:0.1.0")
+
+import com.gianluz.dangerkotlin.androidlint.AndroidLint
+import com.gianluz.dangerkotlin.androidlint.androidLint
 import systems.danger.kotlin.*
+
+register plugin AndroidLint
 
 danger(args) {
 
@@ -33,5 +39,15 @@ danger(args) {
     if (git.linesOfCode > 500) {
       warn("This PR is original Xbox Huge! Consider breaking into smaller PRs")
     }
+  }
+
+  androidLint {
+    val moduleLintFilesPaths = find(
+      projectDir = ".",
+      "lint-results-debug.xml",
+      "lint-results-release.xml",
+    ).toTypedArray()
+
+    reportDistinct(*moduleLintFilesPaths)
   }
 }

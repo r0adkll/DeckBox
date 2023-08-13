@@ -44,8 +44,7 @@ internal fun Expansions(
     modifier = modifier,
   ) {
     Box(
-      modifier = Modifier
-        .fillMaxSize(),
+      modifier = Modifier.fillMaxSize(),
       contentAlignment = Alignment.TopStart,
     ) {
       SearchBar(
@@ -57,34 +56,31 @@ internal fun Expansions(
           state.eventSink(SearchCleared)
         },
         leading = {
-          Box(modifier = Modifier.padding(start = 16.dp)) {
-            Icon(
-              Icons.Rounded.Search,
-              contentDescription = null,
-            )
-          }
+          Icon(
+            Icons.Rounded.Search,
+            contentDescription = null,
+          )
         },
         placeholder = { Text(LocalStrings.current.expansionSearchHint) },
         trailing = {
-          Box {
-            IconButton(
-              onClick = {
-                val nextCardStyleOrdinal = (state.expansionCardStyle.ordinal + 1) % ExpansionCardStyle.values().size
-                state.eventSink(ChangeCardStyle(ExpansionCardStyle.values()[nextCardStyleOrdinal]))
-              },
-            ) {
-              val icon = when (state.expansionCardStyle) {
-                ExpansionCardStyle.Large -> Icons.Rounded.DensityLarge
-                ExpansionCardStyle.Small -> Icons.Rounded.DensityMedium
-                ExpansionCardStyle.Compact -> Icons.Rounded.DensitySmall
-              }
-              Icon(icon, contentDescription = "Change expansion card style")
+          IconButton(
+            onClick = {
+              val nextCardStyleOrdinal = (state.expansionCardStyle.ordinal + 1) % ExpansionCardStyle.values().size
+              state.eventSink(ChangeCardStyle(ExpansionCardStyle.values()[nextCardStyleOrdinal]))
+            },
+          ) {
+            val icon = when (state.expansionCardStyle) {
+              ExpansionCardStyle.Large -> Icons.Rounded.DensityLarge
+              ExpansionCardStyle.Small -> Icons.Rounded.DensityMedium
+              ExpansionCardStyle.Compact -> Icons.Rounded.DensitySmall
             }
+            Icon(icon, contentDescription = "Change expansion card style")
           }
         },
         modifier = Modifier
           .windowInsetsPadding(WindowInsets.statusBars)
-          .zIndex(1f),
+          .zIndex(1f)
+          .padding(horizontal = 16.dp),
       )
 
       ExpansionsContent(

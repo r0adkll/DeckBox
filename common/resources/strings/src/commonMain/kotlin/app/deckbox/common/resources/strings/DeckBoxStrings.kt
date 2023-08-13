@@ -34,4 +34,8 @@ data class DeckBoxStrings(
   val browse: String,
   val browseTabContentDescription: String,
   val browseSearchHint: String,
+
+  // Settings
+  val settings: String,
+  val settingsTabContentDescription: String,
 )

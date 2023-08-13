@@ -63,28 +63,25 @@ internal fun Browse(
           state.eventSink(BrowseUiEvent.SearchCleared)
         },
         leading = {
-          Box(modifier = Modifier.padding(start = 16.dp)) {
-            Icon(
-              Icons.Rounded.Search,
-              contentDescription = null,
-            )
-          }
+          Icon(
+            Icons.Rounded.Search,
+            contentDescription = null,
+          )
         },
         placeholder = { Text(LocalStrings.current.browseSearchHint) },
         trailing = {
-          Box {
-            IconButton(
-              onClick = {
-                // TODO:
-              },
-            ) {
-              Icon(Icons.Rounded.FilterAlt, contentDescription = "Filter your search")
-            }
+          IconButton(
+            onClick = {
+              // TODO:
+            },
+          ) {
+            Icon(Icons.Rounded.FilterAlt, contentDescription = "Filter your search")
           }
         },
         modifier = Modifier
           .windowInsetsPadding(WindowInsets.statusBars)
-          .zIndex(1f),
+          .zIndex(1f)
+          .padding(horizontal = 16.dp),
       )
 
       val numColumns = if (maxWidth > 400.dp) 6 else 4

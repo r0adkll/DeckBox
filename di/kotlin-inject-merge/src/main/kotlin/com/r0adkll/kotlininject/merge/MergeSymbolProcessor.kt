@@ -74,7 +74,7 @@ class MergeSymbolProcessor(
 
   private fun process(generatedSpec: GeneratedSpec) {
     try {
-      generatedSpec.fileSpec.writeTo(codeGenerator, aggregating = generatedSpec.isAggregating)
+      generatedSpec.fileSpec.writeTo(codeGenerator, aggregating = true)
     } catch (e: Exception) {
       logger.exception(e)
     }

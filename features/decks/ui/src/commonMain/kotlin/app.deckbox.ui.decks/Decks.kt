@@ -89,7 +89,7 @@ internal fun Decks(
 
     if (state.isLoading) {
       Box(Modifier.fillMaxSize()) {
-        SpinningPokeballLoadingIndicator(size = 96.dp)
+        SpinningPokeballLoadingIndicator(size = 82.dp)
       }
     }
   }

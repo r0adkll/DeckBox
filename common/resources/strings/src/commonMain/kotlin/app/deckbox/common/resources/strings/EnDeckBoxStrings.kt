@@ -43,4 +43,6 @@ val EnDeckBoxStrings = DeckBoxStrings(
   browse = "Browse",
   browseTabContentDescription = "Browse all Pokemon cards",
   browseSearchHint = "Search for any card",
+  settings = "Settings",
+  settingsTabContentDescription = "Change application settings",
 )

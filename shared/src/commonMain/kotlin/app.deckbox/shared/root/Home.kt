@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -54,6 +55,7 @@ import app.deckbox.common.screens.DeckBoxScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.screens.RootScreen
+import app.deckbox.common.screens.SettingsScreen
 import app.deckbox.shared.navigator.MainDetailNavigator
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
@@ -169,12 +171,6 @@ internal fun Home(
               },
               modifier = Modifier.fillMaxHeight(),
             )
-
-//            Divider(
-//              Modifier
-//                .fillMaxHeight()
-//                .width(1.dp),
-//            )
           } else if (navigationType == NavigationType.PERMANENT_DRAWER) {
             HomeNavigationDrawer(
               selectedNavigation = rootScreen,
@@ -277,6 +273,19 @@ private fun HomeNavigationRail(
         onClick = { onNavigationSelected(item.screen) },
       )
     }
+
+    Spacer(Modifier.weight(1f))
+    NavigationRailItem(
+      icon = {
+        Icon(
+          imageVector = Icons.Outlined.Settings,
+          contentDescription = LocalStrings.current.settingsTabContentDescription,
+        )
+      },
+      label = { Text(text = LocalStrings.current.settings) },
+      selected = false,
+      onClick = { onNavigationSelected(SettingsScreen()) },
+    )
   }
 }
 
@@ -375,5 +384,15 @@ private fun buildNavigationItems(strings: DeckBoxStrings): List<HomeNavigationIt
       iconImageVector = DeckBoxIcons.Outline.Browse,
       selectedImageVector = DeckBoxIcons.Filled.Browse,
     ),
-  )
+  ) /*+ if (navigationType != NavigationType.BOTTOM_NAVIGATION) {
+    listOf(
+      HomeNavigationItem(
+        screen = SettingsScreen(),
+        label = strings.settings,
+        contentDescription = strings.settingsTabContentDescription,
+        iconImageVector = Icons.Outlined.Settings,
+        selectedImageVector = Icons.Filled.Settings,
+      ),
+    )
+  } else emptyList()*/
 }
