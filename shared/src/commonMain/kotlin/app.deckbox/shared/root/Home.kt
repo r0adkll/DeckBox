@@ -384,15 +384,5 @@ private fun buildNavigationItems(strings: DeckBoxStrings): List<HomeNavigationIt
       iconImageVector = DeckBoxIcons.Outline.Browse,
       selectedImageVector = DeckBoxIcons.Filled.Browse,
     ),
-  ) /*+ if (navigationType != NavigationType.BOTTOM_NAVIGATION) {
-    listOf(
-      HomeNavigationItem(
-        screen = SettingsScreen(),
-        label = strings.settings,
-        contentDescription = strings.settingsTabContentDescription,
-        iconImageVector = Icons.Outlined.Settings,
-        selectedImageVector = Icons.Filled.Settings,
-      ),
-    )
-  } else emptyList()*/
+  )
 }
