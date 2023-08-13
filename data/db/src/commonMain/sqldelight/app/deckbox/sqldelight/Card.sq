@@ -81,7 +81,8 @@ WHERE cards.id IN ?;
 
 getByExpansionId:
 SELECT * FROM cards
-WHERE expansionId = ?;
+WHERE expansionId = ?
+ORDER BY number;
 
 delete:
 DELETE FROM cards

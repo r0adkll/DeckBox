@@ -56,6 +56,7 @@ import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.screens.RootScreen
 import app.deckbox.common.screens.SettingsScreen
+import app.deckbox.core.extensions.fluentIf
 import app.deckbox.shared.navigator.MainDetailNavigator
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
@@ -153,13 +154,13 @@ internal fun Home(
         // We let content handle the status bar
         contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
         modifier = modifier,
-      ) { _ ->
+      ) { paddingValues ->
         Row(
           modifier = Modifier
-            .fillMaxSize(),
-//          .fluentIf(navigationType != NavigationType.BOTTOM_NAVIGATION) {
-//            padding(paddingValues)
-//          },
+            .fillMaxSize()
+            .fluentIf(navigationType == NavigationType.BOTTOM_NAVIGATION) {
+              padding(paddingValues)
+            },
         ) {
           if (navigationType == NavigationType.RAIL) {
             HomeNavigationRail(

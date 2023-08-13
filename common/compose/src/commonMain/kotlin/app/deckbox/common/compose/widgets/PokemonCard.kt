@@ -34,7 +34,6 @@ import org.jetbrains.compose.resources.painterResource
 internal val CardCornerRadius = 8.dp
 const val CardAspectRatio = 0.7167969f
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PokemonCard(
   card: Card,
@@ -67,10 +66,7 @@ fun PokemonCard(
         ),
       )
 
-      Image(
-        // TODO: Make a shared component for the different card backs
-        painter = painterResource("pokemon_back_en.webp"),
-        contentDescription = "Card placeholder",
+      PokemonCardBack(
         modifier = Modifier
           .fillMaxSize()
           .alpha(alpha),
@@ -79,13 +75,10 @@ fun PokemonCard(
   }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ShimmerPokemonCard(
   modifier: Modifier = Modifier,
 ) {
-  // TODO: Make a shared component for the different card backs
-//  val bitmap = resource("pokemon_back_en.webp").rememberImageBitmap().orEmpty()
   TradingCard(
     enabled = false,
     modifier = modifier,

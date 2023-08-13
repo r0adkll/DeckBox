@@ -5,10 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.DownloadForOffline
 import androidx.compose.material.icons.rounded.FileDownload
+import androidx.compose.material.icons.rounded.OfflineBolt
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.common.compose.widgets.ImageAvatar
 import app.deckbox.common.compose.widgets.Tags
+import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Legality
 import cafe.adriel.lyricist.LocalStrings
@@ -40,8 +45,7 @@ internal fun LargeExpansionCard(
   modifier: Modifier = Modifier,
 ) {
   Card(
-    modifier = modifier
-      .fillMaxWidth(),
+    modifier = modifier.fillMaxWidth(),
     onClick = onClick,
   ) {
     CardHeader(
@@ -71,10 +75,10 @@ internal fun LargeExpansionCard(
       url = expansion.images.logo,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 16.dp),
+        .padding(horizontal = 24.dp),
     )
     Tags(
-      buildList {
+      tags = buildList {
         if (expansion.legalities?.standard == Legality.LEGAL) {
           add(LocalStrings.current.standardLegality)
         }
@@ -82,12 +86,17 @@ internal fun LargeExpansionCard(
           add(LocalStrings.current.expandedLegality)
         }
       },
+      modifier = Modifier
+        .padding(
+          horizontal = 16.dp,
+          vertical = 8.dp
+        )
     )
     CollectionCounter(
       printedTotal = expansion.printedTotal,
     )
     Text(
-      text = LocalStrings.current.expansionReleaseDate(expansion.releaseDate.toString()),
+      text = LocalStrings.current.expansionReleaseDate(expansion.releaseDate.readableFormat),
       style = MaterialTheme.typography.labelSmall.copy(
         color = MaterialTheme.colorScheme.outline,
       ),
@@ -107,8 +116,8 @@ private fun Logo(
   Image(
     painter = logoPainter,
     contentDescription = "Logo", // TODO Lyracist
-    contentScale = ContentScale.FillWidth,
-    modifier = modifier,
+    contentScale = ContentScale.Fit,
+    modifier = modifier.height(150.dp),
   )
 }
 
@@ -122,7 +131,7 @@ private fun CollectionCounter(
   }
   Column(
     modifier
-      .padding(top = 16.dp)
+      .padding(top = 8.dp)
       .padding(horizontal = 16.dp),
   ) {
     Row {
@@ -139,7 +148,7 @@ private fun CollectionCounter(
     }
 
     CollectionBar(
-      modifier = Modifier.padding(top = 8.dp),
+      modifier = Modifier.padding(top = 4.dp),
       count = count,
       printedTotal = printedTotal,
     )

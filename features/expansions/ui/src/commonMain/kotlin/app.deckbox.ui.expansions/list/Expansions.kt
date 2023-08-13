@@ -90,7 +90,7 @@ internal fun Expansions(
         contentPadding = PaddingValues(
           start = 16.dp,
           end = 16.dp,
-          top = 16.dp + SearchBarHeight / 2,
+          top = 8.dp + SearchBarHeight / 2,
         ),
         modifier = Modifier
           .windowInsetsPadding(WindowInsets.statusBars)

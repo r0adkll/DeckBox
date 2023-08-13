@@ -81,11 +81,10 @@ internal fun ExpansionDetail(
         )
       }
     },
-
     modifier = modifier,
-  ) {
+  ) { paddingValues ->
     when (state) {
-      ExpansionDetailUiState.Loading -> Loading(Modifier.padding(it))
+      ExpansionDetailUiState.Loading -> Loading(Modifier.padding(paddingValues))
       is ExpansionDetailUiState.Loaded -> PokemonCardGrid(
         cardPager = state.cardsPager,
         state = scrollState,
@@ -94,11 +93,8 @@ internal fun ExpansionDetail(
             overlayHost.showInFullScreen(CardDetailScreen(card.id))
           }
         },
-        contentPadding = PaddingValues(
-          start = 16.dp,
-          end = 16.dp,
-        ),
-        modifier = Modifier.padding(it),
+        contentPadding = paddingValues,
+        modifier = Modifier.padding(horizontal = 16.dp),
       )
     }
   }

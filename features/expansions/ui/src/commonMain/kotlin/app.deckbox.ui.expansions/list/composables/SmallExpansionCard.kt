@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
+import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Expansion
 import cafe.adriel.lyricist.LocalStrings
 import com.seiko.imageloader.rememberImagePainter
@@ -84,7 +85,7 @@ internal fun SmallExpansionCard(
         modifier = Modifier.weight(1f),
       )
       Text(
-        text = LocalStrings.current.expansionReleaseDate(expansion.releaseDate.toString()),
+        text = LocalStrings.current.expansionReleaseDate(expansion.releaseDate.readableFormat),
         style = MaterialTheme.typography.labelMedium.copy(
           color = MaterialTheme.colorScheme.outline,
         ),

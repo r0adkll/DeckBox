@@ -22,6 +22,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
       append("\nYou've hurt yourself with confusion.")
     }
   },
+  cardPlaceholderContentDescription = "Pokemon Card Placeholder",
 
   decks = "Decks",
   decksTabContentDescription = "List of saved decks",

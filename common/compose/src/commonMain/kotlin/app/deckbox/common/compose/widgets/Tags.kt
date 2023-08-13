@@ -38,8 +38,7 @@ fun Tags(
 ) {
   TagGroup(
     tags = tags.map { Tag(it) },
-    modifier = modifier
-      .padding(16.dp),
+    modifier = modifier,
   )
 }
 

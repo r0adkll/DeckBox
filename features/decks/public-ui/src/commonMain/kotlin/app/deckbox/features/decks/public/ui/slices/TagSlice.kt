@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.Tag
 import app.deckbox.common.compose.widgets.TagGroup
 import app.deckbox.common.compose.widgets.TagStyle
-import app.deckbox.common.compose.widgets.Tags
 import app.deckbox.core.model.Deck
 import app.deckbox.core.model.Legality
 import app.deckbox.core.settings.DeckCardSlice
