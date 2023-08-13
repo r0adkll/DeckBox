@@ -6,6 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+val AdaptiveExpandedThreshold = 420.dp
+
 enum class AdaptiveState {
   Compact,
   Expanded,
@@ -17,7 +19,7 @@ fun AdaptiveContent(
   expanded: @Composable () -> Unit,
   modifier: Modifier = Modifier,
   stateResolver: (maxWidth: Dp) -> AdaptiveState = { maxWidth ->
-    if (maxWidth > 400.dp) AdaptiveState.Expanded else AdaptiveState.Compact
+    if (maxWidth > AdaptiveExpandedThreshold) AdaptiveState.Expanded else AdaptiveState.Compact
   },
 ) {
   BoxWithConstraints(modifier = modifier) {

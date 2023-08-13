@@ -53,7 +53,7 @@ class StoreExpansionsRepository(
 
   @OptIn(ExperimentalCoroutinesApi::class)
   override fun observeExpansions(): Flow<List<Expansion>> {
-    return store.stream(StoreReadRequest.cached(ExpansionKey.All, refresh = false))
+    return store.stream(StoreReadRequest.cached(ExpansionKey.All, refresh = true))
       .flatMapLatest {
         bark { "${it.origin}, data: ${it.dataOrNull()}" }
         val data = it.dataOrNull()

@@ -3,7 +3,6 @@ package app.deckbox.ui.expansions.detail
 import DeckBoxAppBar
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -81,11 +80,10 @@ internal fun ExpansionDetail(
         )
       }
     },
-
     modifier = modifier,
-  ) {
+  ) { paddingValues ->
     when (state) {
-      ExpansionDetailUiState.Loading -> Loading(Modifier.padding(it))
+      ExpansionDetailUiState.Loading -> Loading(Modifier.padding(paddingValues))
       is ExpansionDetailUiState.Loaded -> PokemonCardGrid(
         cardPager = state.cardsPager,
         state = scrollState,
@@ -94,11 +92,8 @@ internal fun ExpansionDetail(
             overlayHost.showInFullScreen(CardDetailScreen(card.id))
           }
         },
-        contentPadding = PaddingValues(
-          start = 16.dp,
-          end = 16.dp,
-        ),
-        modifier = Modifier.padding(it),
+        contentPadding = paddingValues,
+        modifier = Modifier.padding(horizontal = 16.dp),
       )
     }
   }

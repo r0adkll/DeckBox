@@ -11,14 +11,11 @@ import androidx.compose.runtime.Composable
 import app.deckbox.common.compose.icons.DeckBoxIcons
 import app.deckbox.common.compose.icons.outline.Export
 import app.deckbox.common.compose.widgets.CardHeader
+import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardSlice
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import cafe.adriel.lyricist.LocalStrings
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class ExportHeaderSlice : ComposeSlice {
   override val config: DeckCardSlice = DeckCardSlice.Header.Export
@@ -77,15 +74,3 @@ class ThumbnailHeaderSlice : ComposeSlice {
     )
   }
 }
-
-val LocalDateTime.readableFormat: String
-  get() {
-    val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-    val hourAdjusted = hour % 12
-    val amPM = if (hour < 12) "AM" else "PM"
-    return if (now.date == date) {
-      "$hourAdjusted:$minute $amPM"
-    } else {
-      "${month.name} $dayOfMonth, $year $hourAdjusted:$minute $amPM"
-    }
-  }

@@ -47,7 +47,7 @@ class CachingExpansionCardPagingSource(
       val databaseCards = db.fetchByExpansion(expansion.id)
       if (databaseCards.size >= expansion.total) {
         PagingSourceLoadResultPage(
-          data = databaseCards,
+          data = databaseCards.sortedBy { it.number.toIntOrNull() ?: 1 },
           prevKey = null,
           nextKey = null,
         ) as PagingSourceLoadResult<Int, Card>

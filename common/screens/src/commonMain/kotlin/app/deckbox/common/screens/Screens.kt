@@ -41,6 +41,9 @@ class CardDetailScreen(
   override val arguments get() = mapOf("cardId" to cardId)
 }
 
+@CommonParcelize
+class SettingsScreen : DeckBoxScreen(name = "Settings()")
+
 abstract class DeckBoxScreen(val name: String) : Screen {
   open val arguments: Map<String, *>? = null
   open val presentation: Presentation = Presentation()

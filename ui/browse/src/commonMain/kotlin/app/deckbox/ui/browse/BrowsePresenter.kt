@@ -1,10 +1,13 @@
 package app.deckbox.ui.browse
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import app.cash.paging.Pager
@@ -19,6 +22,10 @@ import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
@@ -29,24 +36,40 @@ class BrowsePresenter(
   private val cardPagingSourceFactory: CardPagingSourceFactory,
 ) : Presenter<BrowseUiState> {
 
+  private val queryPipeline = MutableSharedFlow<String?>()
+
+  @OptIn(FlowPreview::class)
   @Composable
   override fun present(): BrowseUiState {
     var searchQuery by rememberSaveable { mutableStateOf<String?>(null) }
+
+    val coroutineScope = rememberCoroutineScope()
+    val searchQueryPipelineValue by remember {
+      queryPipeline.debounce(1000L)
+    }.collectAsState(null)
+
+    LaunchedEffect(searchQueryPipelineValue) {
+      searchQuery = searchQueryPipelineValue
+    }
+
     var filter by remember { mutableStateOf(SearchFilter()) }
     val query by remember {
       derivedStateOf {
         if (searchQuery.isNullOrBlank() && filter.isEmpty) {
-          CardQuery(orderBy = "-set.releaseDate")
+          CardQuery(
+            orderBy = "-set.releaseDate",
+            pageSize = 50, // TODO: Is this the best place for this? Should we set this globally?
+          )
         } else {
           CardQuery(
             query = "$searchQuery*",
             filter = filter,
+            pageSize = 50, // TODO: Is this the best place for this? Should we set this globally?
           )
         }
       }
     }
 
-    // TODO: All the meat and potatoes here
     val pager = remember(query) {
       Pager(
         config = PagingConfig(
@@ -63,7 +86,9 @@ class BrowsePresenter(
     ) { event ->
       when (event) {
         is BrowseUiEvent.Filter -> filter = event.filter
-        is BrowseUiEvent.SearchUpdated -> searchQuery = event.query
+        is BrowseUiEvent.SearchUpdated -> {
+          coroutineScope.launch { queryPipeline.emit(event.query) }
+        }
         BrowseUiEvent.SearchCleared -> searchQuery = null
         is BrowseUiEvent.CardClicked -> navigator.goTo(CardDetailScreen(event.card.id))
       }

@@ -22,6 +22,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
       append("\nYou've hurt yourself with confusion.")
     }
   },
+  cardPlaceholderContentDescription = "Pokemon Card Placeholder",
 
   decks = "Decks",
   decksTabContentDescription = "List of saved decks",
@@ -43,4 +44,6 @@ val EnDeckBoxStrings = DeckBoxStrings(
   browse = "Browse",
   browseTabContentDescription = "Browse all Pokemon cards",
   browseSearchHint = "Search for any card",
+  settings = "Settings",
+  settingsTabContentDescription = "Change application settings",
 )

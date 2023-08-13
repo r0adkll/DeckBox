@@ -7,25 +7,14 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
-import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSDeclaration
-import com.google.devtools.ksp.validate
-import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
-import com.r0adkll.kotlininject.merge.annotations.ContributesTo
-import com.r0adkll.kotlininject.merge.annotations.MergeComponent
-import com.r0adkll.kotlininject.merge.annotations.ContributesSubcomponent
 import com.r0adkll.kotlininject.merge.generators.CircuitInjectGenerator
 import com.r0adkll.kotlininject.merge.generators.ContributesBindingGenerator
+import com.r0adkll.kotlininject.merge.generators.ContributesSubcomponentGenerator
 import com.r0adkll.kotlininject.merge.generators.ContributesToGenerator
+import com.r0adkll.kotlininject.merge.generators.GeneratedSpec
 import com.r0adkll.kotlininject.merge.generators.Generator
 import com.r0adkll.kotlininject.merge.generators.MergeComponentGenerator
-import com.r0adkll.kotlininject.merge.generators.ContributesSubcomponentGenerator
-import com.r0adkll.kotlininject.merge.generators.GeneratedSpec
-import com.r0adkll.kotlininject.merge.util.getSymbolsWithClassAnnotation
-import com.r0adkll.kotlininject.merge.util.hasAnnotation
-import com.r0adkll.kotlininject.merge.validator.ContributesBindingValidator
-import com.r0adkll.kotlininject.merge.validator.ContributesToValidator
-import com.r0adkll.kotlininject.merge.validator.MergeComponentValidator
+import com.squareup.kotlinpoet.ksp.originatingKSFiles
 import com.squareup.kotlinpoet.ksp.writeTo
 
 class MergeSymbolProcessor(
@@ -74,7 +63,7 @@ class MergeSymbolProcessor(
 
   private fun process(generatedSpec: GeneratedSpec) {
     try {
-      generatedSpec.fileSpec.writeTo(codeGenerator, aggregating = generatedSpec.isAggregating)
+      generatedSpec.fileSpec.writeTo(codeGenerator, aggregating = true)
     } catch (e: Exception) {
       logger.exception(e)
     }

@@ -9,6 +9,7 @@ data class DeckBoxStrings(
   val unlimitedLegality: String,
   val genericEmptyCardsMessage: String,
   val genericSearchEmpty: (query: String?) -> AnnotatedString,
+  val cardPlaceholderContentDescription: String,
 
   // Decks
   val decks: String,
@@ -34,4 +35,8 @@ data class DeckBoxStrings(
   val browse: String,
   val browseTabContentDescription: String,
   val browseSearchHint: String,
+
+  // Settings
+  val settings: String,
+  val settingsTabContentDescription: String,
 )

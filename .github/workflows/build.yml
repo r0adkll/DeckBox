@@ -102,7 +102,7 @@ jobs:
       - name: Danger Lint
         uses: docker://ghcr.io/danger/danger-kotlin:1.2.0
         with:
-          args: --failOnErrors --no-publish-check --dangerfile=Dangerfile_lint.df.kts
+          args: --failOnErrors --no-publish-check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

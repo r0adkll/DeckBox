@@ -1,6 +1,5 @@
 package app.deckbox.ui.browse
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -21,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.overlays.showInFullScreen
+import app.deckbox.common.compose.widgets.AdaptiveExpandedThreshold
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.PokemonCardGrid
 import app.deckbox.common.compose.widgets.SearchBar
@@ -63,31 +63,28 @@ internal fun Browse(
           state.eventSink(BrowseUiEvent.SearchCleared)
         },
         leading = {
-          Box(modifier = Modifier.padding(start = 16.dp)) {
-            Icon(
-              Icons.Rounded.Search,
-              contentDescription = null,
-            )
-          }
+          Icon(
+            Icons.Rounded.Search,
+            contentDescription = null,
+          )
         },
         placeholder = { Text(LocalStrings.current.browseSearchHint) },
         trailing = {
-          Box {
-            IconButton(
-              onClick = {
-                // TODO:
-              },
-            ) {
-              Icon(Icons.Rounded.FilterAlt, contentDescription = "Filter your search")
-            }
+          IconButton(
+            onClick = {
+              // TODO:
+            },
+          ) {
+            Icon(Icons.Rounded.FilterAlt, contentDescription = "Filter your search")
           }
         },
         modifier = Modifier
           .windowInsetsPadding(WindowInsets.statusBars)
-          .zIndex(1f),
+          .zIndex(1f)
+          .padding(horizontal = 16.dp),
       )
 
-      val numColumns = if (maxWidth > 400.dp) 6 else 4
+      val numColumns = if (maxWidth > AdaptiveExpandedThreshold) 6 else 4
       PokemonCardGrid(
         cardPager = state.cardsPager,
         onClick = { card ->
@@ -98,7 +95,7 @@ internal fun Browse(
         contentPadding = PaddingValues(
           start = 16.dp,
           end = 16.dp,
-          top = 16.dp + SearchBarHeight / 2,
+          top = 8.dp + SearchBarHeight / 2,
         ),
         emptyContent = {
           if (!state.query.isNullOrBlank() || state.filter?.isEmpty == false) {
