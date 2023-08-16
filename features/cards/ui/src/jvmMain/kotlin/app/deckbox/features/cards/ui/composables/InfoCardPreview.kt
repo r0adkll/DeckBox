@@ -16,9 +16,7 @@ import kotlinx.datetime.LocalDateTime
 @Preview
 @Composable
 fun InfoCardPreview() {
-
   DeckBoxTheme {
-
     InfoCard(
       name = "Charizard EX",
       modifier = Modifier.padding(32.dp),

@@ -227,7 +227,7 @@ class SqlDelightCardDao(
         abilities = abilities[entity.id] ?: emptyList(),
         attacks = attacks[entity.id] ?: emptyList(),
         tcgPlayerPrices = tcgPlayerPrices[entity.id],
-        cardMarketPrices  = cardMarketPlayerPrices[entity.id],
+        cardMarketPrices = cardMarketPlayerPrices[entity.id],
       )
     }
   }

@@ -1,6 +1,5 @@
 package app.deckbox.network.api
 
-import app.deckbox.core.model.Card
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

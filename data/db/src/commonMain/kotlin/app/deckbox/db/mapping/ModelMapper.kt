@@ -8,7 +8,6 @@ import app.deckbox.sqldelight.CardMarketPrices
 import app.deckbox.sqldelight.Cards
 import app.deckbox.sqldelight.Expansions
 import app.deckbox.sqldelight.TcgPlayerPrices
-import kotlinx.datetime.LocalDate
 
 fun Expansion.toEntity(): Expansions = Expansions(
   id = id,

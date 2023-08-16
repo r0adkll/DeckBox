@@ -30,35 +30,35 @@ fun TcgPlayerPriceCard(
     )
 
     tcgPlayer.prices?.let { prices ->
-      prices.normal?.let { normal  ->
+      prices.normal?.let { normal ->
         PriceRow(
           label = LocalStrings.current.tcgPlayerNormal,
           price = normal,
         )
       }
 
-      prices.holofoil?.let { holofoil  ->
+      prices.holofoil?.let { holofoil ->
         PriceRow(
           label = LocalStrings.current.tcgPlayerHolofoil,
           price = holofoil,
         )
       }
 
-      prices.reverseHolofoil?.let { reverseHolofoil  ->
+      prices.reverseHolofoil?.let { reverseHolofoil ->
         PriceRow(
           label = LocalStrings.current.tcgPlayerReverseHolofoil,
           price = reverseHolofoil,
         )
       }
 
-      prices.firstEditionNormal?.let { normal  ->
+      prices.firstEditionNormal?.let { normal ->
         PriceRow(
           label = LocalStrings.current.tcgPlayerFirstEditionNormal,
           price = normal,
         )
       }
 
-      prices.firstEditionHolofoil?.let { holofoil  ->
+      prices.firstEditionHolofoil?.let { holofoil ->
         PriceRow(
           label = LocalStrings.current.tcgPlayerFirstEditionHolofoil,
           price = holofoil,

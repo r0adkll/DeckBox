@@ -2,19 +2,15 @@ package app.deckbox.features.cards.ui.composables
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.ProvideTextStyle
@@ -29,17 +25,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.types.TypeIcon
-import app.deckbox.common.compose.icons.types.asImageVector
 import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
 import app.deckbox.common.compose.theme.PokemonTypeColor.toColor
-import app.deckbox.common.compose.widgets.ImageAvatar
-import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Type
-import app.deckbox.features.cards.ui.pokemonCard
-import cafe.adriel.lyricist.LocalStrings
-import com.seiko.imageloader.rememberImageActionPainter
-import com.seiko.imageloader.rememberImagePainter
 
 @Composable
 internal fun InfoCard(
@@ -54,7 +43,7 @@ internal fun InfoCard(
 
   val borderColor by animateColorAsState(
     card?.types?.firstOrNull()?.toColor()
-      ?: MaterialTheme.colorScheme.onSurfaceVariant
+      ?: MaterialTheme.colorScheme.onSurfaceVariant,
   )
 
   OutlinedCard(
@@ -165,12 +154,12 @@ internal fun InfoCard(
         ) {
           card.convertedRetreatCost?.let {
             Row(
-              horizontalArrangement = Arrangement.spacedBy(2.dp)
+              horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
               repeat(it) {
                 TypeIcon(
                   type = Type.COLORLESS,
-                  modifier = Modifier.size(24.dp)
+                  modifier = Modifier.size(24.dp),
                 )
               }
             }

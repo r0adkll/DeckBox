@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.DeckBoxIcons
@@ -43,6 +43,7 @@ fun TypeIcon(
         color = type.toColor(),
         shape = CircleShape,
       )
-      .padding(4.dp)
+      .padding(4.dp),
+    colorFilter = ColorFilter.tint(type.toContentColor(true)),
   )
 }

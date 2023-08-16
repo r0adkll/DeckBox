@@ -125,7 +125,7 @@ internal object ModelMapper {
     return Card.TcgPlayer(
       url = model.url,
       updatedAt = model.updated?.apiToLocalDate()
-      // TODO abstract this cause testability blows
+        // TODO abstract this cause testability blows
         ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
       prices = model.prices?.let { prices ->
         Card.TcgPlayer.Prices(
@@ -153,7 +153,7 @@ internal object ModelMapper {
     return Card.CardMarket(
       url = model.url,
       updatedAt = model.updatedAt?.apiToLocalDate()
-      // TODO abstract this cause testability blows
+        // TODO abstract this cause testability blows
         ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
       prices = model.prices?.let { prices ->
         Card.CardMarket.Prices(

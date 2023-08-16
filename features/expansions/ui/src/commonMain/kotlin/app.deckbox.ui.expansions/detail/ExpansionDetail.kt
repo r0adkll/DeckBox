@@ -17,22 +17,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.navigation.isInDetailMode
-import app.deckbox.common.compose.overlays.showInFullScreen
 import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
 import app.deckbox.common.compose.widgets.PokemonCardGrid
-import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.core.di.MergeActivityScope
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
-import com.slack.circuit.overlay.LocalOverlayHost
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @CircuitInject(MergeActivityScope::class, ExpansionDetailScreen::class)
@@ -42,9 +37,6 @@ internal fun ExpansionDetail(
   modifier: Modifier = Modifier,
 ) {
   val isDetailMode = isInDetailMode()
-
-//  val coroutineScope = rememberCoroutineScope()
-//  val overlayHost = LocalOverlayHost.current
 
   val scrollState = rememberLazyGridState()
   val isScrolled by remember {
@@ -89,9 +81,6 @@ internal fun ExpansionDetail(
         state = scrollState,
         onClick = { card ->
           state.eventSink(ExpansionDetailUiEvent.CardSelected(card))
-//          coroutineScope.launch {
-//            overlayHost.showInFullScreen(CardDetailScreen(card.id))
-//          }
         },
         contentPadding = paddingValues,
         modifier = Modifier.padding(horizontal = 16.dp),

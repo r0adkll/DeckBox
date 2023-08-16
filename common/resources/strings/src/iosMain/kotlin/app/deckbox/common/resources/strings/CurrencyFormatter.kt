@@ -9,10 +9,12 @@ actual object CurrencyFormatter {
     val currencyFormatter = NSNumberFormatter()
     currencyFormatter.usesGroupingSeparator = true
     currencyFormatter.numberStyle = NSNumberFormatterCurrencyStyle
-    currencyFormatter.setCurrencyCode(when(type) {
-      CurrencyType.USD -> "usd"
-      CurrencyType.EUR -> "eur"
-    })
+    currencyFormatter.setCurrencyCode(
+      when (type) {
+        CurrencyType.USD -> "usd"
+        CurrencyType.EUR -> "eur"
+      },
+    )
     return currencyFormatter.stringFromNumber(NSNumber(value))
       ?: "$value"
   }

@@ -82,7 +82,9 @@ fun TcgPlayerPrices.toNormalPrice(): Card.TcgPlayer.Price? {
       market = normalMarket,
       directLow = normalDirectLow,
     )
-  } else null
+  } else {
+    null
+  }
 }
 
 fun TcgPlayerPrices.toHolofoil(): Card.TcgPlayer.Price? {
@@ -94,11 +96,15 @@ fun TcgPlayerPrices.toHolofoil(): Card.TcgPlayer.Price? {
       market = holofoilMarket,
       directLow = holofoilDirectLow,
     )
-  } else null
+  } else {
+    null
+  }
 }
 
 fun TcgPlayerPrices.toReverseHolofoil(): Card.TcgPlayer.Price? {
-  return if (reverseHolofoilLow != null || reverseHolofoilMid != null || reverseHolofoilHigh != null || reverseHolofoilMarket != null) {
+  return if (reverseHolofoilLow != null || reverseHolofoilMid != null ||
+    reverseHolofoilHigh != null || reverseHolofoilMarket != null
+  ) {
     Card.TcgPlayer.Price(
       low = reverseHolofoilLow,
       mid = reverseHolofoilMid,
@@ -106,11 +112,15 @@ fun TcgPlayerPrices.toReverseHolofoil(): Card.TcgPlayer.Price? {
       market = reverseHolofoilMarket,
       directLow = reverseHolofoilDirectLow,
     )
-  } else null
+  } else {
+    null
+  }
 }
 
 fun TcgPlayerPrices.to1stEditionHolofoil(): Card.TcgPlayer.Price? {
-  return if (firstEditionHolofoilLow != null || firstEditionHolofoilMid != null || firstEditionHolofoilHigh != null || firstEditionHolofoilMarket != null) {
+  return if (firstEditionHolofoilLow != null || firstEditionHolofoilMid != null ||
+    firstEditionHolofoilHigh != null || firstEditionHolofoilMarket != null
+  ) {
     Card.TcgPlayer.Price(
       low = firstEditionHolofoilLow,
       mid = firstEditionHolofoilMid,
@@ -118,11 +128,15 @@ fun TcgPlayerPrices.to1stEditionHolofoil(): Card.TcgPlayer.Price? {
       market = firstEditionHolofoilMarket,
       directLow = firstEditionHolofoilDirectLow,
     )
-  } else null
+  } else {
+    null
+  }
 }
 
 fun TcgPlayerPrices.to1stEditionNormal(): Card.TcgPlayer.Price? {
-  return if (firstEditionNormalLow != null || firstEditionNormalMid != null || firstEditionNormalHigh != null || firstEditionNormalMarket != null) {
+  return if (firstEditionNormalLow != null || firstEditionNormalMid != null ||
+    firstEditionNormalHigh != null || firstEditionNormalMarket != null
+  ) {
     Card.TcgPlayer.Price(
       low = firstEditionNormalLow,
       mid = firstEditionNormalMid,
@@ -130,7 +144,9 @@ fun TcgPlayerPrices.to1stEditionNormal(): Card.TcgPlayer.Price? {
       market = firstEditionNormalMarket,
       directLow = firstEditionNormalDirectLow,
     )
-  } else null
+  } else {
+    null
+  }
 }
 
 fun CardMarketPrices.toModel(): Card.CardMarket {

@@ -33,7 +33,7 @@ fun CardMarketPriceCard(
             start = 16.dp,
             end = 16.dp,
             bottom = 16.dp,
-          )
+          ),
       ) {
         prices.trendPrice?.let { trend ->
           PriceUnit(

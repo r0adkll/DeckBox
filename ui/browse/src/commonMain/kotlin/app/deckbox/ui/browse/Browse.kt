@@ -14,12 +14,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import app.deckbox.common.compose.overlays.showInFullScreen
 import app.deckbox.common.compose.widgets.AdaptiveExpandedThreshold
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.PokemonCardGrid
@@ -27,14 +25,11 @@ import app.deckbox.common.compose.widgets.SearchBar
 import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.compose.widgets.SearchEmptyView
 import app.deckbox.common.screens.BrowseScreen
-import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.logging.bark
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.statusBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
-import com.slack.circuit.overlay.LocalOverlayHost
-import kotlinx.coroutines.launch
 
 @CircuitInject(MergeActivityScope::class, BrowseScreen::class)
 @Composable
@@ -42,9 +37,6 @@ internal fun Browse(
   state: BrowseUiState,
   modifier: Modifier = Modifier,
 ) {
-  val coroutineScope = rememberCoroutineScope()
-  val overlayHost = LocalOverlayHost.current
-
   Surface(
     modifier = modifier,
   ) {
@@ -88,9 +80,7 @@ internal fun Browse(
       PokemonCardGrid(
         cardPager = state.cardsPager,
         onClick = { card ->
-          coroutineScope.launch {
-            overlayHost.showInFullScreen(CardDetailScreen(card))
-          }
+          state.eventSink(BrowseUiEvent.CardClicked(card))
         },
         contentPadding = PaddingValues(
           start = 16.dp,

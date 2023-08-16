@@ -61,11 +61,6 @@ internal fun CardDetail(
   state: CardDetailUiState,
   modifier: Modifier = Modifier,
 ) {
-//  val backgroundColor by animateColorAsState(
-//    targetValue = state.pokemonCard?.types?.firstOrNull()?.toBackgroundColor()
-//      ?: MaterialTheme.colorScheme.background,
-//  )
-
   Scaffold(
     modifier = modifier,
     topBar = {
@@ -83,8 +78,7 @@ internal fun CardDetail(
         ),
       )
     },
-//    containerColor = backgroundColor,
-    contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars)
+    contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars),
   ) { paddingValues ->
     Column(
       modifier = Modifier
