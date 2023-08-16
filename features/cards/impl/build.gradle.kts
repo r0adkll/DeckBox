@@ -9,7 +9,7 @@ plugins {
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         implementation(projects.core)
         implementation(projects.data.db)

@@ -1,12 +1,14 @@
 package app.deckbox.features.cards.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.Card
 import app.deckbox.features.cards.public.CardRepository
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -25,28 +27,31 @@ class CardDetailPresenter(
 
   @Composable
   override fun present(): CardDetailUiState {
-    val cardLoadState by remember {
+    val cardLoadState by loadCard(screen.cardId)
+
+    // TODO Load additional card information such as evolution info, similar cards, etc
+
+    return CardDetailUiState(
+      cardName = screen.cardName,
+      cardImageUrl = screen.cardImageLarge,
+      card = cardLoadState,
+    ) { event ->
+      when (event) {
+        CardDetailUiEvent.NavigateBack -> navigator.pop()
+      }
+    }
+  }
+
+  @Composable
+  private fun loadCard(id: String): State<LoadState<out Card>> {
+    return remember {
       flow {
-        val card = repository.getCard(screen.cardId)
+        val card = repository.getCard(id)
         emit(
           card?.let { LoadState.Loaded(card) }
             ?: LoadState.Error("Unable to load card for ${screen.cardId}"),
         )
       }
     }.collectAsState(LoadState.Loading)
-
-    // TODO Load additional card information such as evolution info, similar cards, etc
-
-    return when (val state = cardLoadState) {
-      LoadState.Loading -> CardDetailUiState.Loading
-      is LoadState.Error -> CardDetailUiState.Error(state.message)
-      is LoadState.Loaded -> CardDetailUiState.Loaded(
-        card = state.data,
-      ) { event ->
-        when (event) {
-          CardDetailUiEvent.NavigateBack -> navigator.pop()
-        }
-      }
-    }
   }
 }

@@ -19,7 +19,7 @@ kotlin {
   }
 
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         implementation(projects.core)
 
@@ -30,19 +30,19 @@ kotlin {
       }
     }
 
-    val androidMain by getting {
+    androidMain {
       dependencies {
         implementation(libs.sqldelight.android)
       }
     }
 
-    val iosMain by getting {
+    iosMain {
       dependencies {
         implementation(libs.sqldelight.native)
       }
     }
 
-    val jvmMain by getting {
+    jvmMain {
       dependencies {
         implementation(libs.sqldelight.sqlite)
       }

@@ -1,5 +1,6 @@
 package app.deckbox.common.screens
 
+import app.deckbox.core.model.Card
 import com.slack.circuit.runtime.Screen
 
 /**
@@ -37,7 +38,11 @@ class ExpansionDetailScreen(
 @CommonParcelize
 class CardDetailScreen(
   val cardId: String,
+  val cardName: String,
+  val cardImageLarge: String,
 ) : DeckBoxScreen(name = "CardDetail()") {
+  constructor(card: Card) : this(card.id, card.name, card.image.large)
+
   override val arguments get() = mapOf("cardId" to cardId)
 }
 

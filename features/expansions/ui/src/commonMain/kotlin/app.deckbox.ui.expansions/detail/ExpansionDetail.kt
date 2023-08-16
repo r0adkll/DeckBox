@@ -43,8 +43,8 @@ internal fun ExpansionDetail(
 ) {
   val isDetailMode = isInDetailMode()
 
-  val coroutineScope = rememberCoroutineScope()
-  val overlayHost = LocalOverlayHost.current
+//  val coroutineScope = rememberCoroutineScope()
+//  val overlayHost = LocalOverlayHost.current
 
   val scrollState = rememberLazyGridState()
   val isScrolled by remember {
@@ -88,9 +88,10 @@ internal fun ExpansionDetail(
         cardPager = state.cardsPager,
         state = scrollState,
         onClick = { card ->
-          coroutineScope.launch {
-            overlayHost.showInFullScreen(CardDetailScreen(card.id))
-          }
+          state.eventSink(ExpansionDetailUiEvent.CardSelected(card))
+//          coroutineScope.launch {
+//            overlayHost.showInFullScreen(CardDetailScreen(card.id))
+//          }
         },
         contentPadding = paddingValues,
         modifier = Modifier.padding(horizontal = 16.dp),

@@ -1,0 +1,36 @@
+import kotlinx.datetime.LocalDate;
+
+CREATE TABLE cardMarketPrices (
+  url TEXT NOT NULL,
+  updatedAt TEXT AS LocalDate NOT NULL,
+  averageSellPrice REAL,
+  lowPrice REAL,
+  trendPrice REAL,
+  germanProLow REAL,
+  suggestedPrice REAL,
+  reverseHoloSell REAL,
+  reverseHoloLow REAL,
+  reverseHoloTrend REAL,
+  lowPriceExPlus REAL,
+  avg1 REAL,
+  avg7 REAL,
+  avg30 REAL,
+  reverseHoloAvg1 REAL,
+  reverseHoloAvg7 REAL,
+  reverseHoloAvg30 REAL,
+
+  cardId TEXT NOT NULL PRIMARY KEY,
+  FOREIGN KEY (cardId) REFERENCES cards(id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO cardMarketPrices
+VALUES ?;
+
+getById:
+SELECT * FROM cardMarketPrices
+WHERE cardId = ?;
+
+getByIds:
+SELECT * FROM cardMarketPrices
+WHERE cardId IN ?;

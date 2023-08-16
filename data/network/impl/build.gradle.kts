@@ -21,7 +21,7 @@ buildConfig {
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         api(projects.data.network.public)
         implementation(projects.core)
@@ -36,27 +36,27 @@ kotlin {
       }
     }
 
-    val commonTest by getting {
+    commonTest {
       dependencies {
         implementation(libs.kotlin.test)
       }
     }
 
-    val androidMain by getting {
+    androidMain {
       dependencies {
         api(libs.okhttp.okhttp)
         implementation(libs.ktor.client.okhttp)
       }
     }
 
-    val jvmMain by getting {
+    jvmMain {
       dependencies {
         api(libs.okhttp.okhttp)
         implementation(libs.ktor.client.okhttp)
       }
     }
 
-    val iosMain by getting {
+    iosMain {
       dependencies {
         implementation(libs.ktor.client.darwin)
       }

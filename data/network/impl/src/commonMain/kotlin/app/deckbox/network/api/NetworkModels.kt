@@ -1,5 +1,6 @@
 package app.deckbox.network.api
 
+import app.deckbox.core.model.Card
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -119,6 +120,15 @@ internal class TcgPlayerModel(
 
   @Serializable
   internal class PricesModel(
+    val normal: PriceModel? = null,
+    val holofoil: PriceModel? = null,
+    val reverseHolofoil: PriceModel? = null,
+    @SerialName("1stEditionHolofoil") val firstEditionHolofoil: PriceModel? = null,
+    @SerialName("1stEditionNormal") val firstEditionNormal: PriceModel? = null,
+  )
+
+  @Serializable
+  internal class PriceModel(
     val low: Double? = null,
     val mid: Double? = null,
     val high: Double? = null,

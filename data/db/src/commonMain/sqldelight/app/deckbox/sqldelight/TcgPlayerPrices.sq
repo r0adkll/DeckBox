@@ -1,0 +1,51 @@
+import kotlinx.datetime.LocalDate;
+
+CREATE TABLE tcgPlayerPrices (
+  url TEXT NOT NULL,
+  updatedAt TEXT AS LocalDate NOT NULL,
+
+  normalLow REAL,
+  normalMid REAL,
+  normalHigh REAL,
+  normalMarket REAL,
+  normalDirectLow REAL,
+
+  holofoilLow REAL,
+  holofoilMid REAL,
+  holofoilHigh REAL,
+  holofoilMarket REAL,
+  holofoilDirectLow REAL,
+
+  reverseHolofoilLow REAL,
+  reverseHolofoilMid REAL,
+  reverseHolofoilHigh REAL,
+  reverseHolofoilMarket REAL,
+  reverseHolofoilDirectLow REAL,
+
+  firstEditionHolofoilLow REAL,
+  firstEditionHolofoilMid REAL,
+  firstEditionHolofoilHigh REAL,
+  firstEditionHolofoilMarket REAL,
+  firstEditionHolofoilDirectLow REAL,
+
+  firstEditionNormalLow REAL,
+  firstEditionNormalMid REAL,
+  firstEditionNormalHigh REAL,
+  firstEditionNormalMarket REAL,
+  firstEditionNormalDirectLow REAL,
+
+  cardId TEXT NOT NULL PRIMARY KEY,
+  FOREIGN KEY (cardId) REFERENCES cards(id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO tcgPlayerPrices
+VALUES ?;
+
+getById:
+SELECT * FROM tcgPlayerPrices
+WHERE cardId = ?;
+
+getByIds:
+SELECT * FROM tcgPlayerPrices
+WHERE cardId IN ?;

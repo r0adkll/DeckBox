@@ -55,24 +55,6 @@ val DeckBoxIcons.Types.Water: ImageVector
           curveTo(6.7511f, 18.6564f, 8.3174f, 19.5975f, 9.1685f, 19.8892f)
           close()
         }
-        path(
-          fill = SolidColor(Color(0xFF000000)),
-          fillAlpha = 1.0f,
-          stroke = null,
-          strokeAlpha = 1.0f,
-          strokeLineWidth = 1.0f,
-          strokeLineCap = StrokeCap.Butt,
-          strokeLineJoin = StrokeJoin.Miter,
-          strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero,
-        ) {
-          moveTo(24f, 0f)
-          horizontalLineTo(0f)
-          verticalLineTo(24f)
-          horizontalLineTo(24f)
-          verticalLineTo(0f)
-          close()
-        }
       }
     }.build()
     return _water!!

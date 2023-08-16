@@ -10,6 +10,7 @@ data class DeckBoxStrings(
   val genericEmptyCardsMessage: String,
   val genericSearchEmpty: (query: String?) -> AnnotatedString,
   val cardPlaceholderContentDescription: String,
+  val refreshPricesContentDescription: String,
 
   // Decks
   val decks: String,
@@ -35,6 +36,25 @@ data class DeckBoxStrings(
   val browse: String,
   val browseTabContentDescription: String,
   val browseSearchHint: String,
+
+  // Card Detail
+  val tcgPlayerNormal: String,
+  val tcgPlayerHolofoil: String,
+  val tcgPlayerReverseHolofoil: String,
+  val tcgPlayerFirstEditionHolofoil: String,
+  val tcgPlayerFirstEditionNormal: String,
+
+  val priceMarket: String,
+  val priceLow: String,
+  val priceMid: String,
+  val priceHigh: String,
+
+  val priceTrend: String,
+  val oneDayAvg: String,
+  val sevenDayAvg: String,
+  val thirtyDayAvg: String,
+
+  val actionBuy: String,
 
   // Settings
   val settings: String,

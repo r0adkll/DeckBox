@@ -6,8 +6,10 @@ import app.cash.sqldelight.db.SqlDriver
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.model.SuperType
 import app.deckbox.sqldelight.Attacks
+import app.deckbox.sqldelight.CardMarketPrices
 import app.deckbox.sqldelight.Cards
 import app.deckbox.sqldelight.Expansions
+import app.deckbox.sqldelight.TcgPlayerPrices
 import me.tatarka.inject.annotations.Inject
 
 @Inject
@@ -31,8 +33,6 @@ class DatabaseFactory(
       legalitiesUnlimitedAdapter = EnumColumnAdapter(),
       resistancesAdapter = CardEffectListAdapter,
       weaknessesAdapter = CardEffectListAdapter,
-      tcgPlayerUpdatedAtAdapter = LocalDateAdapter,
-      cardMarketUpdatedAtAdapter = LocalDateAdapter,
     ),
     expansionsAdapter = Expansions.Adapter(
       totalAdapter = IntColumnAdapter,
@@ -46,6 +46,12 @@ class DatabaseFactory(
     attacksAdapter = Attacks.Adapter(
       costAdapter = TypeListAdapter,
       convertedEnergyCostAdapter = IntColumnAdapter,
+    ),
+    tcgPlayerPricesAdapter = TcgPlayerPrices.Adapter(
+      updatedAtAdapter = LocalDateAdapter,
+    ),
+    cardMarketPricesAdapter = CardMarketPrices.Adapter(
+      updatedAtAdapter = LocalDateAdapter,
     ),
   )
 }

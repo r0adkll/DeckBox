@@ -90,7 +90,7 @@ class BrowsePresenter(
           coroutineScope.launch { queryPipeline.emit(event.query) }
         }
         BrowseUiEvent.SearchCleared -> searchQuery = null
-        is BrowseUiEvent.CardClicked -> navigator.goTo(CardDetailScreen(event.card.id))
+        is BrowseUiEvent.CardClicked -> navigator.goTo(CardDetailScreen(event.card))
       }
     }
   }

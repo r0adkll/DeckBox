@@ -89,7 +89,7 @@ internal fun Browse(
         cardPager = state.cardsPager,
         onClick = { card ->
           coroutineScope.launch {
-            overlayHost.showInFullScreen(CardDetailScreen(card.id))
+            overlayHost.showInFullScreen(CardDetailScreen(card))
           }
         },
         contentPadding = PaddingValues(

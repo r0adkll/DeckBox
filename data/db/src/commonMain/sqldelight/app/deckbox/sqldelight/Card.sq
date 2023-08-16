@@ -5,7 +5,6 @@ import app.deckbox.core.model.Card.Effect;
 import kotlin.Int;
 import kotlin.String;
 import kotlin.collections.List;
-import kotlinx.datetime.LocalDate;
 
 CREATE TABLE cards (
   id TEXT NOT NULL PRIMARY KEY,
@@ -36,32 +35,6 @@ CREATE TABLE cards (
   legalitiesUnlimited TEXT AS Legality,
   legalitiesStandard TEXT AS Legality,
   legalitiesExpanded TEXT AS Legality,
-
-  tcgPlayerUrl TEXT,
-  tcgPlayerUpdatedAt TEXT AS LocalDate,
-  tcgPlayerLow REAL,
-  tcgPlayerMid REAL,
-  tcgPlayerHigh REAL,
-  tcgPlayerMarket REAL,
-  tcgPlayerDirectLow REAL,
-
-  cardMarketUrl TEXT,
-  cardMarketUpdatedAt TEXT AS LocalDate,
-  cardMarketAverageSellPrice REAL,
-  cardMarketLowPrice REAL,
-  cardMarketTrendPrice REAL,
-  cardMarketGermanProLow REAL,
-  cardMarketSuggestedPrice REAL,
-  cardMarketReverseHoloSell REAL,
-  cardMarketReverseHoloLow REAL,
-  cardMarketReverseHoloTrend REAL,
-  cardMarketLowPriceExPlus REAL,
-  cardMarketAvg1 REAL,
-  cardMarketAvg7 REAL,
-  cardMarketAvg30 REAL,
-  cardMarketReverseHoloAvg1 REAL,
-  cardMarketReverseHoloAvg7 REAL,
-  cardMarketReverseHoloAvg30 REAL,
 
   expansionId TEXT NOT NULL,
   FOREIGN KEY (expansionId) REFERENCES expansions(id)

@@ -4,9 +4,21 @@ plugins {
 
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         implementation(projects.features.cards.public)
+      }
+    }
+
+    jvmMain {
+      dependencies {
+        implementation(compose.preview)
+      }
+    }
+
+    androidMain {
+      dependencies {
+        implementation(compose.preview)
       }
     }
   }

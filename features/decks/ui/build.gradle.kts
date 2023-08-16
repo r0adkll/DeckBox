@@ -4,7 +4,7 @@ plugins {
 
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         implementation(projects.features.decks.public)
         implementation(projects.features.decks.publicUi)

@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
+import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
@@ -53,6 +54,7 @@ class ExpansionDetailPresenter(
         ) { event ->
           when (event) {
             ExpansionDetailUiEvent.NavigateBack -> navigator.pop()
+            is ExpansionDetailUiEvent.CardSelected -> navigator.goTo(CardDetailScreen(event.card))
           }
         }
       }

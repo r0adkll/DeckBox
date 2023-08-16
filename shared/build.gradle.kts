@@ -19,7 +19,7 @@ kotlin {
   }
 
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         api(projects.core)
         api(projects.common.screens)
@@ -57,7 +57,7 @@ kotlin {
       }
     }
 
-    val androidMain by getting {
+    androidMain {
       dependencies {
         api(libs.androidx.activity.activity)
         api(libs.androidx.activity.compose)

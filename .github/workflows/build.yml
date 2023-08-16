@@ -11,6 +11,7 @@ on:
 jobs:
   danger-pr:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
     name: "danger-pr"
     steps:
       - uses: actions/checkout@v1
@@ -100,6 +101,7 @@ jobs:
             -x :androidApp:bundle
 
       - name: Danger Lint
+        if: ${{ github.event_name == 'pull_request' }}
         uses: docker://ghcr.io/danger/danger-kotlin:1.2.0
         with:
           args: --failOnErrors --no-publish-check

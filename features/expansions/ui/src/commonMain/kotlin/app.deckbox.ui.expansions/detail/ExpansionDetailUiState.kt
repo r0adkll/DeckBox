@@ -19,4 +19,5 @@ sealed interface ExpansionDetailUiState : CircuitUiState {
 
 sealed interface ExpansionDetailUiEvent : CircuitUiEvent {
   object NavigateBack : ExpansionDetailUiEvent
+  data class CardSelected(val card: Card) : ExpansionDetailUiEvent
 }

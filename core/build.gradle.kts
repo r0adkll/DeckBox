@@ -6,7 +6,7 @@ plugins {
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         api(projects.di.kotlinInjectMergeAnnotations)
         api(libs.kotlinx.coroutines.core)
@@ -15,7 +15,8 @@ kotlin {
         implementation(libs.kotlinx.serialization.json)
       }
     }
-    val commonTest by getting {
+
+    commonTest {
       dependencies {
         implementation(libs.kotlin.test)
       }

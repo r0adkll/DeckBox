@@ -132,6 +132,14 @@ class SqlDelightCardDao(
         database.attackQueries.insert(attack)
       }
 
+    card.tcgPlayer?.toEntity(card.id)?.let { tcgPlayer ->
+      database.tcgPlayerPricesQueries.insert(tcgPlayer)
+    }
+
+    card.cardMarket?.toEntity(card.id)?.let { cardMarket ->
+      database.cardMarketPricesQueries.insert(cardMarket)
+    }
+
     afterRollback {
       bark(ERROR) { "Insert Card Failed Card(${card.id})" }
     }
@@ -168,10 +176,20 @@ class SqlDelightCardDao(
       .getById(entity.id)
       .executeAsList()
 
+    val tcgPlayerPrices = database.tcgPlayerPricesQueries
+      .getById(entity.id)
+      .executeAsOneOrNull()
+
+    val cardMarketPrices = database.cardMarketPricesQueries
+      .getById(entity.id)
+      .executeAsOneOrNull()
+
     return entity.toModel(
       expansion = expansion,
       abilities = abilities,
       attacks = attacks,
+      tcgPlayerPrices = tcgPlayerPrices,
+      cardMarketPrices = cardMarketPrices,
     )
   }
 
@@ -193,11 +211,23 @@ class SqlDelightCardDao(
       .executeAsList()
       .groupBy { it.cardId }
 
+    val tcgPlayerPrices = database.tcgPlayerPricesQueries
+      .getByIds(ids)
+      .executeAsList()
+      .associateBy { it.cardId }
+
+    val cardMarketPlayerPrices = database.cardMarketPricesQueries
+      .getByIds(ids)
+      .executeAsList()
+      .associateBy { it.cardId }
+
     return entities.map { entity ->
       entity.toModel(
         expansion = expansions.find { it.id == entity.expansionId }!!,
         abilities = abilities[entity.id] ?: emptyList(),
         attacks = attacks[entity.id] ?: emptyList(),
+        tcgPlayerPrices = tcgPlayerPrices[entity.id],
+        cardMarketPrices  = cardMarketPlayerPrices[entity.id],
       )
     }
   }
