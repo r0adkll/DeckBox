@@ -63,24 +63,6 @@ val DeckBoxIcons.Types.Psychic: ImageVector
           curveTo(9.9498f, 12.65f, 9.6672f, 12.5744f, 9.4203f, 12.4412f)
           close()
         }
-        path(
-          fill = SolidColor(Color(0xFF000000)),
-          fillAlpha = 1.0f,
-          stroke = null,
-          strokeAlpha = 1.0f,
-          strokeLineWidth = 1.0f,
-          strokeLineCap = StrokeCap.Butt,
-          strokeLineJoin = StrokeJoin.Miter,
-          strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero,
-        ) {
-          moveTo(24f, 0f)
-          horizontalLineTo(0f)
-          verticalLineTo(24f)
-          horizontalLineTo(24f)
-          verticalLineTo(0f)
-          close()
-        }
       }
     }.build()
     return _psychic!!

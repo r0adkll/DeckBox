@@ -5,13 +5,17 @@ import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Legalities
 import app.deckbox.sqldelight.Abilities
 import app.deckbox.sqldelight.Attacks
+import app.deckbox.sqldelight.CardMarketPrices
 import app.deckbox.sqldelight.Cards
 import app.deckbox.sqldelight.Expansions
+import app.deckbox.sqldelight.TcgPlayerPrices
 
 fun Cards.toModel(
   expansion: Expansions,
   abilities: List<Abilities>,
   attacks: List<Attacks>,
+  tcgPlayerPrices: TcgPlayerPrices?,
+  cardMarketPrices: CardMarketPrices?,
 ): Card {
   return Card(
     id = id,
@@ -50,55 +54,123 @@ fun Cards.toModel(
       expanded = legalitiesExpanded,
       unlimited = legalitiesUnlimited,
     ),
-    tcgPlayer = toTcgPlayer(),
-    cardMarket = toCardMarket(),
+    tcgPlayer = tcgPlayerPrices?.toModel(),
+    cardMarket = cardMarketPrices?.toModel(),
   )
 }
 
-fun Cards.toTcgPlayer(): Card.TcgPlayer? {
-  return if (tcgPlayerUrl != null) {
-    Card.TcgPlayer(
-      url = tcgPlayerUrl,
-      updatedAt = tcgPlayerUpdatedAt,
-      prices = Card.TcgPlayer.Prices(
-        low = tcgPlayerLow,
-        mid = tcgPlayerMid,
-        high = tcgPlayerHigh,
-        market = tcgPlayerMarket,
-        directLow = tcgPlayerDirectLow,
-      ),
+fun TcgPlayerPrices.toModel(): Card.TcgPlayer {
+  return Card.TcgPlayer(
+    url = url,
+    updatedAt = updatedAt,
+    prices = Card.TcgPlayer.Prices(
+      normal = toNormalPrice(),
+      holofoil = toHolofoil(),
+      reverseHolofoil = toReverseHolofoil(),
+      firstEditionHolofoil = to1stEditionHolofoil(),
+      firstEditionNormal = to1stEditionNormal(),
+    ),
+  )
+}
+
+fun TcgPlayerPrices.toNormalPrice(): Card.TcgPlayer.Price? {
+  return if (normalLow != null || normalMid != null || normalHigh != null || normalMarket != null) {
+    Card.TcgPlayer.Price(
+      low = normalLow,
+      mid = normalMid,
+      high = normalHigh,
+      market = normalMarket,
+      directLow = normalDirectLow,
     )
   } else {
     null
   }
 }
 
-fun Cards.toCardMarket(): Card.CardMarket? {
-  return if (cardMarketUrl != null) {
-    Card.CardMarket(
-      url = cardMarketUrl,
-      updatedAt = cardMarketUpdatedAt,
-      prices = Card.CardMarket.Prices(
-        averageSellPrice = cardMarketAverageSellPrice,
-        lowPrice = cardMarketLowPrice,
-        trendPrice = cardMarketTrendPrice,
-        germanProLow = cardMarketGermanProLow,
-        suggestedPrice = cardMarketSuggestedPrice,
-        reverseHoloSell = cardMarketReverseHoloSell,
-        reverseHoloLow = cardMarketReverseHoloLow,
-        reverseHoloTrend = cardMarketReverseHoloTrend,
-        lowPriceExPlus = cardMarketLowPriceExPlus,
-        avg1 = cardMarketAvg1,
-        avg7 = cardMarketAvg7,
-        avg30 = cardMarketAvg30,
-        reverseHoloAvg1 = cardMarketReverseHoloAvg1,
-        reverseHoloAvg7 = cardMarketReverseHoloAvg7,
-        reverseHoloAvg30 = cardMarketReverseHoloAvg30,
-      ),
+fun TcgPlayerPrices.toHolofoil(): Card.TcgPlayer.Price? {
+  return if (holofoilLow != null || holofoilMid != null || holofoilHigh != null || holofoilMarket != null) {
+    Card.TcgPlayer.Price(
+      low = holofoilLow,
+      mid = holofoilMid,
+      high = holofoilHigh,
+      market = holofoilMarket,
+      directLow = holofoilDirectLow,
     )
   } else {
     null
   }
+}
+
+fun TcgPlayerPrices.toReverseHolofoil(): Card.TcgPlayer.Price? {
+  return if (reverseHolofoilLow != null || reverseHolofoilMid != null ||
+    reverseHolofoilHigh != null || reverseHolofoilMarket != null
+  ) {
+    Card.TcgPlayer.Price(
+      low = reverseHolofoilLow,
+      mid = reverseHolofoilMid,
+      high = reverseHolofoilHigh,
+      market = reverseHolofoilMarket,
+      directLow = reverseHolofoilDirectLow,
+    )
+  } else {
+    null
+  }
+}
+
+fun TcgPlayerPrices.to1stEditionHolofoil(): Card.TcgPlayer.Price? {
+  return if (firstEditionHolofoilLow != null || firstEditionHolofoilMid != null ||
+    firstEditionHolofoilHigh != null || firstEditionHolofoilMarket != null
+  ) {
+    Card.TcgPlayer.Price(
+      low = firstEditionHolofoilLow,
+      mid = firstEditionHolofoilMid,
+      high = firstEditionHolofoilHigh,
+      market = firstEditionHolofoilMarket,
+      directLow = firstEditionHolofoilDirectLow,
+    )
+  } else {
+    null
+  }
+}
+
+fun TcgPlayerPrices.to1stEditionNormal(): Card.TcgPlayer.Price? {
+  return if (firstEditionNormalLow != null || firstEditionNormalMid != null ||
+    firstEditionNormalHigh != null || firstEditionNormalMarket != null
+  ) {
+    Card.TcgPlayer.Price(
+      low = firstEditionNormalLow,
+      mid = firstEditionNormalMid,
+      high = firstEditionNormalHigh,
+      market = firstEditionNormalMarket,
+      directLow = firstEditionNormalDirectLow,
+    )
+  } else {
+    null
+  }
+}
+
+fun CardMarketPrices.toModel(): Card.CardMarket {
+  return Card.CardMarket(
+    url = url,
+    updatedAt = updatedAt,
+    prices = Card.CardMarket.Prices(
+      averageSellPrice = averageSellPrice,
+      lowPrice = lowPrice,
+      trendPrice = trendPrice,
+      germanProLow = germanProLow,
+      suggestedPrice = suggestedPrice,
+      reverseHoloSell = reverseHoloSell,
+      reverseHoloLow = reverseHoloLow,
+      reverseHoloTrend = reverseHoloTrend,
+      lowPriceExPlus = lowPriceExPlus,
+      avg1 = avg1,
+      avg7 = avg7,
+      avg30 = avg30,
+      reverseHoloAvg1 = reverseHoloAvg1,
+      reverseHoloAvg7 = reverseHoloAvg7,
+      reverseHoloAvg30 = reverseHoloAvg30,
+    ),
+  )
 }
 
 fun Abilities.toModel(): Card.Ability = Card.Ability(

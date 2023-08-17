@@ -8,7 +8,7 @@ plugins {
 
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         implementation(projects.core)
         api(libs.multiplatformsettings.core)
@@ -16,7 +16,7 @@ kotlin {
       }
     }
 
-    val androidMain by getting {
+    androidMain {
       dependencies {
         implementation(libs.androidx.preferences)
       }

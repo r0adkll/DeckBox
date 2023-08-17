@@ -52,24 +52,6 @@ val DeckBoxIcons.Types.Colorless: ImageVector
           curveTo(10.8635f, 7.1708f, 11.5584f, 5.1805f, 12.138f, 1.8127f)
           close()
         }
-        path(
-          fill = SolidColor(Color(0xFF000000)),
-          fillAlpha = 1.0f,
-          stroke = null,
-          strokeAlpha = 1.0f,
-          strokeLineWidth = 1.0f,
-          strokeLineCap = StrokeCap.Butt,
-          strokeLineJoin = StrokeJoin.Miter,
-          strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero,
-        ) {
-          moveTo(24f, 0f)
-          horizontalLineTo(-9.53674e-7f)
-          verticalLineTo(24f)
-          horizontalLineTo(24f)
-          verticalLineTo(0f)
-          close()
-        }
       }
     }.build()
     return _colorless!!

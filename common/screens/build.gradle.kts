@@ -6,8 +6,9 @@ plugins {
 
 kotlin {
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
+        api(projects.core)
         api(libs.circuit.runtime)
       }
     }

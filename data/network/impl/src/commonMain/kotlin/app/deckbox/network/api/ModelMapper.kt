@@ -7,8 +7,10 @@ import app.deckbox.core.model.Legality
 import app.deckbox.core.model.SuperType
 import app.deckbox.core.model.Type
 import app.deckbox.network.PagedResponse
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
 
@@ -122,23 +124,37 @@ internal object ModelMapper {
   private fun to(model: TcgPlayerModel): Card.TcgPlayer {
     return Card.TcgPlayer(
       url = model.url,
-      updatedAt = model.updated?.apiToLocalDate(),
+      updatedAt = model.updated?.apiToLocalDate()
+        // TODO abstract this cause testability blows
+        ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
       prices = model.prices?.let { prices ->
         Card.TcgPlayer.Prices(
-          low = prices.low,
-          mid = prices.mid,
-          high = prices.high,
-          market = prices.market,
-          directLow = prices.directLow,
+          normal = prices.normal?.let(::to),
+          holofoil = prices.holofoil?.let(::to),
+          reverseHolofoil = prices.reverseHolofoil?.let(::to),
+          firstEditionHolofoil = prices.firstEditionHolofoil?.let(::to),
+          firstEditionNormal = prices.firstEditionNormal?.let(::to),
         )
       },
+    )
+  }
+
+  private fun to(model: TcgPlayerModel.PriceModel): Card.TcgPlayer.Price {
+    return Card.TcgPlayer.Price(
+      low = model.low,
+      mid = model.mid,
+      high = model.high,
+      market = model.market,
+      directLow = model.directLow,
     )
   }
 
   private fun to(model: CardMarketModel): Card.CardMarket {
     return Card.CardMarket(
       url = model.url,
-      updatedAt = model.updatedAt?.apiToLocalDate(),
+      updatedAt = model.updatedAt?.apiToLocalDate()
+        // TODO abstract this cause testability blows
+        ?: Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
       prices = model.prices?.let { prices ->
         Card.CardMarket.Prices(
           averageSellPrice = prices.averageSellPrice,

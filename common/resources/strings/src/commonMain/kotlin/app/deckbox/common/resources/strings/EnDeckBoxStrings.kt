@@ -23,6 +23,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
     }
   },
   cardPlaceholderContentDescription = "Pokemon Card Placeholder",
+  refreshPricesContentDescription = "Refresh Prices",
 
   decks = "Decks",
   decksTabContentDescription = "List of saved decks",
@@ -46,4 +47,22 @@ val EnDeckBoxStrings = DeckBoxStrings(
   browseSearchHint = "Search for any card",
   settings = "Settings",
   settingsTabContentDescription = "Change application settings",
+
+  tcgPlayerNormal = "Normal",
+  tcgPlayerHolofoil = "Holo",
+  tcgPlayerReverseHolofoil = "Reverse Holo",
+  tcgPlayerFirstEditionHolofoil = "1st Edition Holo",
+  tcgPlayerFirstEditionNormal = "1st Edition",
+
+  priceMarket = "Market",
+  priceLow = "Low",
+  priceMid = "Mid",
+  priceHigh = "High",
+
+  priceTrend = "Price trend",
+  oneDayAvg = "1 day avg",
+  sevenDayAvg = "7 day avg",
+  thirtyDayAvg = "30 day avg",
+
+  actionBuy = "Buy",
 )

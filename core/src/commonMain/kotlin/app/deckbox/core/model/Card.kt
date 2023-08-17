@@ -58,11 +58,18 @@ data class Card(
 
   data class TcgPlayer(
     val url: String,
-    val updatedAt: LocalDate?,
+    val updatedAt: LocalDate,
     val prices: Prices?,
   ) {
-
     data class Prices(
+      val normal: Price?,
+      val holofoil: Price?,
+      val reverseHolofoil: Price?,
+      val firstEditionHolofoil: Price?,
+      val firstEditionNormal: Price?,
+    )
+
+    data class Price(
       val low: Double? = null,
       val mid: Double? = null,
       val high: Double? = null,
@@ -73,7 +80,7 @@ data class Card(
 
   data class CardMarket(
     val url: String,
-    val updatedAt: LocalDate?,
+    val updatedAt: LocalDate,
     val prices: Prices?,
   ) {
 

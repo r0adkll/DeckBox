@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -86,7 +87,7 @@ internal fun Decks(
     },
     contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars),
   ) { paddingValues ->
-    CompactDeckContent(
+    DeckList(
       decks = state.decks,
       deckCardConfig = state.deckCardConfig,
       contentPadding = paddingValues,
@@ -102,7 +103,7 @@ internal fun Decks(
 }
 
 @Composable
-private fun CompactDeckContent(
+private fun DeckList(
   decks: List<Deck>,
   deckCardConfig: DeckCardConfig,
   contentPadding: PaddingValues,
@@ -124,7 +125,8 @@ private fun CompactDeckContent(
   LazyColumn(
     verticalArrangement = Arrangement.spacedBy(16.dp),
     contentPadding = contentPadding,
-    modifier = modifier,
+    modifier = modifier
+      .padding(horizontal = 16.dp),
     state = state,
   ) {
     items(

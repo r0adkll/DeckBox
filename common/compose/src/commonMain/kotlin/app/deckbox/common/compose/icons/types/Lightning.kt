@@ -46,24 +46,6 @@ val DeckBoxIcons.Types.Lightning: ImageVector
           lineTo(13.826f, 1.51495f)
           close()
         }
-        path(
-          fill = SolidColor(Color(0xFF000000)),
-          fillAlpha = 1.0f,
-          stroke = null,
-          strokeAlpha = 1.0f,
-          strokeLineWidth = 1.0f,
-          strokeLineCap = StrokeCap.Butt,
-          strokeLineJoin = StrokeJoin.Miter,
-          strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero,
-        ) {
-          moveTo(24f, 0f)
-          horizontalLineTo(0f)
-          verticalLineTo(24f)
-          horizontalLineTo(24f)
-          verticalLineTo(0f)
-          close()
-        }
       }
     }.build()
     return _lightning!!
