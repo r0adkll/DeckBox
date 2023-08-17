@@ -84,7 +84,7 @@ internal fun Expansions(
       )
 
       ExpansionsContent(
-        loadState = state.loadState,
+        expansionState = state.expansionState,
         style = state.expansionCardStyle,
         onClick = { state.eventSink(ExpansionClicked(it)) },
         contentPadding = PaddingValues(

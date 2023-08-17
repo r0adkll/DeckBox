@@ -67,8 +67,16 @@ class ExpansionsPresenter(
       }
     }
 
+    val groupedExpansionState = when (val state = filteredLoadState) {
+      ExpansionsLoadState.Loading -> ExpansionState.Loading
+      is ExpansionsLoadState.Error -> ExpansionState.Error(state.message)
+      is ExpansionsLoadState.Loaded -> ExpansionState.Loaded(
+        state.expansions.groupBy { it.series }
+      )
+    }
+
     return ExpansionsUiState(
-      loadState = filteredLoadState,
+      expansionState = groupedExpansionState,
       expansionCardStyle = expansionCardStyle,
       query = searchQuery,
     ) { event ->
