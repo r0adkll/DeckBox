@@ -2,6 +2,7 @@ package app.deckbox.features.cards.ui.composables
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,7 @@ import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
 import app.deckbox.common.compose.theme.PokemonTypeColor.toColor
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Type
+import com.seiko.imageloader.rememberImagePainter
 
 @Composable
 internal fun InfoCard(
@@ -80,117 +82,98 @@ internal fun InfoCard(
     }
 
     if (card != null) {
-      Row(
+      InfoChipGroup(
         modifier = Modifier.padding(
           start = 16.dp,
           end = 16.dp,
           top = 16.dp,
         ),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
       ) {
-        InfoChip(
-          label = "Set",
-          modifier = Modifier.weight(1f),
-        ) {
-          Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-          ) {
-//            Image(
-//              modifier = Modifier.size(24.dp),
-//              painter = rememberImagePainter(card.expansion.images.symbol),
-//              contentDescription = null,
-//            )
-            Text(
-              text = card.expansion.name,
-            )
+        InfoChip("Set") {
+          Text(card.expansion.name)
+        }
+
+        InfoChip("Number") {
+          Text(
+            text = buildAnnotatedString {
+              withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(card.number)
+              }
+              append(" of ")
+              withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(card.expansion.printedTotal.toString())
+              }
+            },
+          )
+        }
+
+        card.artist?.let { artist ->
+          InfoChip("Artist") {
+            Text(artist)
           }
         }
 
-        InfoChip(
-          label = "Number",
-          modifier = Modifier.weight(1f),
-        ) {
-          Row {
-            Text(
-              text = buildAnnotatedString {
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                  append(card.number)
-                }
-                append(" of ")
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                  append(card.expansion.printedTotal.toString())
-                }
-              },
-            )
+        card.rarity?.let { rarity ->
+          InfoChip("Rarity") {
+            Text(rarity)
           }
         }
 
-        InfoChip(
-          label = "Artist",
-          modifier = Modifier.weight(1f),
-        ) {
-          Text(card.artist ?: "Unknown")
+        if (card.subtypes.isNotEmpty()) {
+          InfoChip("Subtypes") {
+            Text(card.subtypes.joinToString())
+          }
         }
-      }
 
-      Row(
-        modifier = Modifier.padding(
-          start = 16.dp,
-          end = 16.dp,
-          top = 16.dp,
-        ),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-      ) {
-        InfoChip(
-          label = "Rarity",
-          modifier = Modifier.weight(1f),
-        ) {
-          Text(card.rarity ?: "Unknown")
+        if (!card.weaknesses.isNullOrEmpty()) {
+          InfoChip("Weaknesses") {
+            Row(
+              horizontalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+              card.weaknesses?.forEach { effect ->
+                TypeIcon(
+                  type = effect.type,
+                  modifier = Modifier.size(24.dp),
+                )
+                Text(effect.value)
+              }
+            }
+          }
         }
-        InfoChip(
-          label = "Retreat Cost",
-          modifier = Modifier.weight(1f),
-        ) {
-          card.convertedRetreatCost?.let {
+
+        if (!card.resistances.isNullOrEmpty()) {
+          InfoChip("Resistances") {
+            Row(
+              horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+              card.resistances?.forEach { effect ->
+                TypeIcon(
+                  type = effect.type,
+                  modifier = Modifier.size(24.dp),
+                )
+                Text(effect.value)
+              }
+            }
+          }
+        }
+
+        card.convertedRetreatCost?.let { retreatCost ->
+          InfoChip("Retreat Cost") {
             Row(
               horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-              repeat(it) {
+              repeat(retreatCost) {
                 TypeIcon(
                   type = Type.COLORLESS,
                   modifier = Modifier.size(24.dp),
                 )
               }
             }
-          } ?: Text("None")
+          }
         }
-        Spacer(Modifier.weight(1f))
       }
 
       Spacer(Modifier.height(16.dp))
-    }
-  }
-}
-
-@Composable
-private fun InfoChip(
-  label: String,
-  modifier: Modifier = Modifier,
-  content: @Composable () -> Unit,
-) {
-  Column(
-    modifier = modifier,
-  ) {
-    Text(
-      text = label.uppercase(),
-      style = MaterialTheme.typography.labelSmall.copy(
-        fontWeight = FontWeight.SemiBold,
-      ),
-    )
-    Spacer(Modifier.height(4.dp))
-    ProvideTextStyle(MaterialTheme.typography.bodyLarge) {
-      content()
     }
   }
 }
