@@ -16,6 +16,7 @@ import cafe.adriel.lyricist.LocalStrings
 internal fun PricingHeader(
   title: String,
   lastUpdated: String,
+  onBuyClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(
@@ -38,7 +39,7 @@ internal fun PricingHeader(
     }
 
     Button(
-      onClick = {},
+      onClick = onBuyClick,
       modifier = Modifier.padding(end = 16.dp),
     ) {
       Text(LocalStrings.current.actionBuy)

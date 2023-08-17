@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.settings.ExpansionCardStyle
+import app.deckbox.ui.expansions.list.ExpansionSeries
 import app.deckbox.ui.expansions.list.ExpansionState
 import app.deckbox.ui.expansions.list.ExpansionsLoadState
 import app.deckbox.ui.expansions.list.Series
@@ -105,10 +106,9 @@ private fun ErrorContent(
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ExpansionsContent(
-  expansions: Map<Series, List<Expansion>>,
+  expansions: List<ExpansionSeries>,
   style: ExpansionCardStyle,
   onClick: (Expansion) -> Unit,
   modifier: Modifier = Modifier,
@@ -120,14 +120,11 @@ private fun ExpansionsContent(
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     expansions.forEach { (series, expansions) ->
-      stickyHeader {
+      item {
         Text(
           text = series,
-          style = MaterialTheme.typography.labelMedium,
-          modifier = Modifier
-            .padding(
-              vertical = 8.dp,
-            ),
+          style = MaterialTheme.typography.labelLarge,
+          modifier = Modifier.padding(vertical = 8.dp),
         )
       }
 

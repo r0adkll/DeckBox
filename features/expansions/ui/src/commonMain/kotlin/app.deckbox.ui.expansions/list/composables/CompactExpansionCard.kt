@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
+import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Expansion
 import com.seiko.imageloader.rememberImagePainter
 import kotlin.math.roundToInt
@@ -51,7 +52,7 @@ internal fun CompactExpansionCard(
         )
         CardHeader(
           title = { Text(expansion.name) },
-          subtitle = { Text(expansion.series) },
+          subtitle = { Text(expansion.releaseDate.readableFormat) },
           leading = {
             val logoPainter = key(expansion.images.logo) { rememberImagePainter(expansion.images.logo) }
             Image(

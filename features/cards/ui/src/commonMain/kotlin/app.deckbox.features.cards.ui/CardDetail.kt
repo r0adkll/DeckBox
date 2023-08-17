@@ -108,6 +108,7 @@ internal fun CardDetail(
         Spacer(Modifier.height(16.dp))
         TcgPlayerPriceCard(
           tcgPlayer = tcgPlayer,
+          onBuyClick = { state.eventSink(CardDetailUiEvent.OpenUrl(tcgPlayer.url)) },
           modifier = Modifier.padding(horizontal = 16.dp),
         )
       }
@@ -116,6 +117,7 @@ internal fun CardDetail(
         Spacer(Modifier.height(16.dp))
         CardMarketPriceCard(
           cardMarket = cardMarket,
+          onBuyClick = { state.eventSink(CardDetailUiEvent.OpenUrl(cardMarket.url)) },
           modifier = Modifier.padding(horizontal = 16.dp),
         )
       }

@@ -71,7 +71,12 @@ class ExpansionsPresenter(
       ExpansionsLoadState.Loading -> ExpansionState.Loading
       is ExpansionsLoadState.Error -> ExpansionState.Error(state.message)
       is ExpansionsLoadState.Loaded -> ExpansionState.Loaded(
-        state.expansions.groupBy { it.series }
+        state.expansions
+          .groupBy { it.series }
+          .map { (key, value) -> ExpansionSeries(key, value) }
+          .sortedByDescending {
+            it.expansions.sumOf { it.releaseDate.toEpochDays() } / it.expansions.size
+          }
       )
     }
 
@@ -83,7 +88,6 @@ class ExpansionsPresenter(
       when (event) {
         is ExpansionsUiEvent.ChangeCardStyle -> settings.expansionCardStyle = event.style
         is ExpansionsUiEvent.ExpansionClicked -> {
-          bark { "Expansion Clicked: ${event.expansion.name}" }
           navigator.goTo(ExpansionDetailScreen(event.expansion.id))
         }
         is ExpansionsUiEvent.SearchUpdated -> searchQuery = event.query

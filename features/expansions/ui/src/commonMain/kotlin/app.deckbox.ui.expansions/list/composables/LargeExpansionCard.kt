@@ -26,6 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.common.compose.widgets.ImageAvatar
+import app.deckbox.common.compose.widgets.TagChip
+import app.deckbox.common.compose.widgets.TagStyle
 import app.deckbox.common.compose.widgets.Tags
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Expansion
@@ -74,33 +76,59 @@ internal fun LargeExpansionCard(
         .fillMaxWidth()
         .padding(horizontal = 24.dp),
     )
-    Tags(
-      tags = buildList {
-        if (expansion.legalities?.standard == Legality.LEGAL) {
-          add(LocalStrings.current.standardLegality)
-        }
-        if (expansion.legalities?.expanded == Legality.LEGAL) {
-          add(LocalStrings.current.expandedLegality)
-        }
-      },
-      modifier = Modifier
-        .padding(
-          horizontal = 16.dp,
-          vertical = 8.dp,
-        ),
-    )
+//    Tags(
+//      tags = buildList {
+//        if (expansion.legalities?.standard == Legality.LEGAL) {
+//          add(LocalStrings.current.standardLegality)
+//        }
+//        if (expansion.legalities?.expanded == Legality.LEGAL) {
+//          add(LocalStrings.current.expandedLegality)
+//        }
+//      },
+//      modifier = Modifier
+//        .padding(
+//          horizontal = 16.dp,
+//          vertical = 8.dp,
+//        ),
+//    )
     CollectionCounter(
       printedTotal = expansion.printedTotal,
     )
-    Text(
-      text = LocalStrings.current.expansionReleaseDate(expansion.releaseDate.readableFormat),
-      style = MaterialTheme.typography.labelSmall.copy(
-        color = MaterialTheme.colorScheme.outline,
-      ),
-      modifier = Modifier
-        .align(Alignment.End)
-        .padding(16.dp),
-    )
+
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.padding(
+        start = 16.dp,
+      )
+    ) {
+      if (expansion.legalities?.standard == Legality.LEGAL) {
+        Text(
+          text = LocalStrings.current.standardLegality,
+          style = MaterialTheme.typography.labelMedium,
+        )
+      } else if (expansion.legalities?.expanded == Legality.LEGAL) {
+        Text(
+          text = LocalStrings.current.expandedLegality,
+          style = MaterialTheme.typography.labelMedium,
+        )
+      } else if (expansion.legalities?.unlimited == Legality.LEGAL) {
+        Text(
+          text = LocalStrings.current.unlimitedLegality,
+          style = MaterialTheme.typography.labelMedium,
+        )
+      }
+
+      Text(
+        text = LocalStrings.current.expansionReleaseDate(expansion.releaseDate.readableFormat),
+        textAlign = TextAlign.End,
+        style = MaterialTheme.typography.labelSmall.copy(
+          color = MaterialTheme.colorScheme.outline,
+        ),
+        modifier = Modifier
+          .weight(1f)
+          .padding(16.dp),
+      )
+    }
   }
 }
 

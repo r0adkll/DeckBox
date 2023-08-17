@@ -20,10 +20,16 @@ data class ExpansionsUiState(
 sealed interface ExpansionState {
   object Loading : ExpansionState
   data class Loaded(
-    val groupedExpansions: Map<Series, List<Expansion>>,
+    val groupedExpansions: List<ExpansionSeries>,
   ) : ExpansionState
   data class Error(val message: String) : ExpansionState
 }
+
+@Stable
+data class ExpansionSeries(
+  val series: Series,
+  val expansions: List<Expansion>,
+)
 
 sealed interface ExpansionsUiEvent : CircuitUiEvent {
   data class ChangeCardStyle(val style: ExpansionCardStyle) : ExpansionsUiEvent
