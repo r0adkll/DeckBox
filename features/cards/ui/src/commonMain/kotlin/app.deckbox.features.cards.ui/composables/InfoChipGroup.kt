@@ -52,7 +52,7 @@ internal fun InfoChipGroup(
     val rows = ceil(measurables.size.toFloat() / columns.toFloat()).roundToInt()
     val columnHeights = (0 until rows).map { row ->
       val from = row * columns
-      val to  = (from + columns).coerceAtMost(measurables.size)
+      val to = (from + columns).coerceAtMost(measurables.size)
       placeables.subList(from, to)
         .maxBy { it.height }
         .height

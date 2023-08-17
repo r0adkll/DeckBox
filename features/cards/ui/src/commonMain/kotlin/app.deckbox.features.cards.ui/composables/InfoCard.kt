@@ -2,9 +2,7 @@ package app.deckbox.features.cards.ui.composables
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -14,7 +12,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +27,6 @@ import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
 import app.deckbox.common.compose.theme.PokemonTypeColor.toColor
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Type
-import com.seiko.imageloader.rememberImagePainter
 
 @Composable
 internal fun InfoCard(
@@ -128,7 +124,7 @@ internal fun InfoCard(
         if (!card.weaknesses.isNullOrEmpty()) {
           InfoChip("Weaknesses") {
             Row(
-              horizontalArrangement = Arrangement.spacedBy(2.dp)
+              horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
               card.weaknesses?.forEach { effect ->
                 TypeIcon(
@@ -144,7 +140,7 @@ internal fun InfoCard(
         if (!card.resistances.isNullOrEmpty()) {
           InfoChip("Resistances") {
             Row(
-              horizontalArrangement = Arrangement.spacedBy(4.dp)
+              horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
               card.resistances?.forEach { effect ->
                 TypeIcon(
