@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -16,8 +17,10 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -51,9 +54,9 @@ internal fun Decks(
   state: DecksUiState,
   modifier: Modifier = Modifier,
 ) {
-  val detailNavigationState = LocalDetailNavigation.current
-  var isTopBarElevated by remember { mutableStateOf(false) }
+  val lazyListState = rememberLazyListState()
 
+  val detailNavigationState = LocalDetailNavigation.current
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   Scaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -74,11 +77,15 @@ internal fun Decks(
     },
     floatingActionButton = {
       if (detailNavigationState is DetailNavigation.None) {
+        val isExpanded by remember {
+          derivedStateOf {
+            lazyListState.firstVisibleItemIndex == 0
+          }
+        }
         ExtendedFloatingActionButton(
-          text = { Text("Create") },
-          icon = {
-            Icon(Icons.Rounded.Add, contentDescription = null)
-          },
+          text = { Text(LocalStrings.current.fabActionNewDeckButton) },
+          icon = { Icon(Icons.Rounded.Add, contentDescription = null) },
+          expanded = isExpanded,
           onClick = {
             // TODO: Navigate to Deck Builder Screen
           },
@@ -91,7 +98,7 @@ internal fun Decks(
       decks = state.decks,
       deckCardConfig = state.deckCardConfig,
       contentPadding = paddingValues,
-      onScrolled = { isTopBarElevated = it },
+      state = lazyListState,
     )
 
     if (state.isLoading) {
@@ -107,21 +114,9 @@ private fun DeckList(
   decks: List<Deck>,
   deckCardConfig: DeckCardConfig,
   contentPadding: PaddingValues,
-  onScrolled: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
+  state: LazyListState = rememberLazyListState(),
 ) {
-  val state = rememberLazyListState()
-  val isScrolled by remember {
-    derivedStateOf {
-      state.firstVisibleItemIndex > 0 ||
-        state.firstVisibleItemScrollOffset > 0
-    }
-  }
-
-  LaunchedEffect(isScrolled) {
-    onScrolled(isScrolled)
-  }
-
   LazyColumn(
     verticalArrangement = Arrangement.spacedBy(16.dp),
     contentPadding = contentPadding,

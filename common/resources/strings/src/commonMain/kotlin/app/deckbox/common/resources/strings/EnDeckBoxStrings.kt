@@ -32,6 +32,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
   deckActionTestButton = "Test",
   deckActionDuplicateButton = "Duplicate",
   deckActionDeleteButton = "Delete",
+  fabActionNewDeckButton = "New deck",
 
   expansions = "Expansions",
   expansionsTabContentDescription = "List of expansion sets",

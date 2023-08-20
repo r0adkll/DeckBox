@@ -20,6 +20,7 @@ data class DeckBoxStrings(
   val deckActionTestButton: String,
   val deckActionDuplicateButton: String,
   val deckActionDeleteButton: String,
+  val fabActionNewDeckButton: String,
 
   // Expansions
   val expansions: String,
