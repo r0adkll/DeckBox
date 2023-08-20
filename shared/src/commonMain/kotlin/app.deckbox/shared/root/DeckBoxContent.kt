@@ -12,7 +12,6 @@ import app.deckbox.common.compose.LocalWindowSizeClass
 import app.deckbox.common.compose.extensions.shouldUseDarkColors
 import app.deckbox.common.compose.extensions.shouldUseDynamicColors
 import app.deckbox.common.compose.theme.DeckBoxTheme
-import app.deckbox.common.screens.UrlScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.shared.navigator.OpenUrlNavigator
 import cafe.adriel.lyricist.ProvideStrings
@@ -24,7 +23,6 @@ import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.CircuitConfig
 import com.slack.circuit.runtime.Navigator
-import com.slack.circuit.runtime.Screen
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
@@ -104,4 +102,3 @@ fun DeckBoxContent(
     modifier = modifier,
   )
 }
-

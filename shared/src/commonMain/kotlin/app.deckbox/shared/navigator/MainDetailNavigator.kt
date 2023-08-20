@@ -2,10 +2,8 @@ package app.deckbox.shared.navigator
 
 import app.deckbox.common.screens.DeckBoxScreen
 import app.deckbox.common.screens.RootScreen
-import app.deckbox.common.screens.UrlScreen
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.Screen
-import io.ktor.http.Url
 
 /**
  * A custom navigator for automatically navigating certain marked [DeckBoxScreen]s

@@ -20,7 +20,6 @@ import java.awt.Desktop
 import java.net.URI
 import kotlininject.merge.app.deckbox.shared.createMergedDesktopApplicationComponent
 
-
 @Suppress("CAST_NEVER_SUCCEEDS", "UNCHECKED_CAST", "USELESS_CAST", "KotlinRedundantDiagnosticSuppress")
 fun main() = application {
   val applicationComponent = remember {
