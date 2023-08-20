@@ -8,8 +8,8 @@ actual object CurrencyFormatter {
     return NumberFormat.getCurrencyInstance()
       .apply {
         currency = when (type) {
-          CurrencyType.USD -> Currency.getInstance("usd")
-          CurrencyType.EUR -> Currency.getInstance("eur")
+          CurrencyType.USD -> Currency.getInstance("USD") // These are case-sensitive!
+          CurrencyType.EUR -> Currency.getInstance("EUR")
         }
       }
       .format(value)

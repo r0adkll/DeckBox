@@ -15,14 +15,16 @@ class MainDetailNavigator(
   private val isDetailEnabled: Boolean,
 ) : Navigator {
   override fun goTo(screen: Screen) {
-    if (screen is DeckBoxScreen) {
-      if (isDetailEnabled && screen.presentation.isDetailScreen) {
-        detailNavigator.resetRoot(screen)
-      } else {
-        mainNavigator.goTo(screen)
+    when (screen) {
+      is DeckBoxScreen -> {
+        if (isDetailEnabled && screen.presentation.isDetailScreen) {
+          detailNavigator.resetRoot(screen)
+        } else {
+          mainNavigator.goTo(screen)
+        }
       }
-    } else {
-      mainNavigator.goTo(screen)
+
+      else -> mainNavigator.goTo(screen)
     }
   }
 

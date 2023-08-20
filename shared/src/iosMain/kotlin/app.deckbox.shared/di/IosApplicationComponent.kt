@@ -19,7 +19,7 @@ abstract class IosApplicationComponent() : SharedAppComponent {
   @AppScope
   @Provides
   fun provideApplicationId(): ApplicationInfo = ApplicationInfo(
-    packageName = NSBundle.mainBundle.bundleIdentifier ?: "app.tivi.client",
+    packageName = NSBundle.mainBundle.bundleIdentifier ?: "app.deckbox",
     debugBuild = Platform.isDebugBinary,
     flavor = Flavor.Standard,
     versionName = NSBundle.mainBundle.infoDictionary

@@ -16,6 +16,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "DeckBox"
 include(":androidApp")
+include(":desktopApp")
 include(":shared")
 include(":core")
 include(

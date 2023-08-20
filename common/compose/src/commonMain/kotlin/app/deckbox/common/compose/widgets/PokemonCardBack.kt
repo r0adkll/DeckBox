@@ -33,7 +33,7 @@ fun PokemonCardBack(
 ) {
   // compose.component.resources is currently borked on iOS targets until compose-mp 1.5.0+
   // So we just check and omit if that is the case
-  if (currentPlatform != Platform.IOS) {
+  if (currentPlatform == Platform.ANDROID) {
     Image(
       painter = painterResource(type.resourceName),
       contentDescription = LocalStrings.current.cardPlaceholderContentDescription,

@@ -1,9 +1,9 @@
 import app.deckbox.convention.addKspDependencyForCommon
 
 plugins {
-  alias(libs.plugins.composeMultiplatform)
   id("app.deckbox.android.library")
   id("app.deckbox.multiplatform")
+  id("app.deckbox.compose")
   alias(libs.plugins.ksp)
 }
 

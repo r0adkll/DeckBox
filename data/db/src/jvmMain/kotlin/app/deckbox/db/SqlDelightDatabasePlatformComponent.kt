@@ -12,6 +12,7 @@ actual interface SqlDelightDatabasePlatformComponent {
   @Provides
   fun provideJvmSqlDriver(): SqlDriver {
     val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+    DestructiveMigrationSchema.perform(driver)
     DeckBoxDatabase.Schema.create(driver)
     return driver
   }

@@ -39,7 +39,7 @@ class StoreRarityStore(
             }
         },
         writer = { _, rarities ->
-          db.rarityQueries.transaction {
+          db.transaction {
             rarities.map { Rarities(it) }.forEach {
               db.rarityQueries.insert(it)
             }

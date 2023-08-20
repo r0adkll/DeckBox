@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,13 +55,13 @@ import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.screens.RootScreen
 import app.deckbox.common.screens.SettingsScreen
+import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.extensions.fluentIf
 import app.deckbox.shared.navigator.MainDetailNavigator
+import app.deckbox.shared.navigator.OpenUrlNavigator
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.safeContentPadding
-import com.moriatsushi.insetsx.statusBars
-import com.moriatsushi.insetsx.systemBars
 import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.backstack.popUntil
 import com.slack.circuit.backstack.rememberSaveableBackStack
@@ -80,6 +79,7 @@ import com.slack.circuit.runtime.Screen
 internal fun Home(
   backstack: SaveableBackStack,
   navigator: Navigator,
+  windowInsets: WindowInsets,
   modifier: Modifier = Modifier,
 ) {
   val windowSizeClass = LocalWindowSizeClass.current
@@ -92,11 +92,14 @@ internal fun Home(
     detailBackStack.popUntil { false }
     detailBackStack.push(RootScreen())
   }
+  val detailUrlNavigator = remember(detailNavigator) {
+    OpenUrlNavigator(detailNavigator) { url -> navigator.goTo(UrlScreen(url)) }
+  }
 
-  val mainDetailNavigator = remember(navigator, detailNavigator, navigationType) {
+  val mainDetailNavigator = remember(navigator, detailUrlNavigator, navigationType) {
     MainDetailNavigator(
       mainNavigator = navigator,
-      detailNavigator = detailNavigator,
+      detailNavigator = detailUrlNavigator,
       isDetailEnabled = navigationType == NavigationType.RAIL ||
         navigationType == NavigationType.PERMANENT_DRAWER,
     )
@@ -152,7 +155,7 @@ internal fun Home(
           }
         },
         // We let content handle the status bar
-        contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
+        contentWindowInsets = windowInsets,
         modifier = modifier,
       ) { paddingValues ->
         Row(
@@ -199,7 +202,7 @@ internal fun Home(
               .fillMaxHeight(),
           ) {
             NavigableCircuitContent(
-              navigator = detailNavigator,
+              navigator = detailUrlNavigator,
               backstack = detailBackStack,
               unavailableRoute = { _, _ ->
                 // Do nothing here

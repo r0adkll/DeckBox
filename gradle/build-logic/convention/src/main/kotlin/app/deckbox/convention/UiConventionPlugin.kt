@@ -14,9 +14,9 @@ class UiConventionPlugin : Plugin<Project> {
   override fun apply(target: Project) = with(target) {
     // Apply other conventions
     with(pluginManager) {
-      apply("org.jetbrains.compose")
       apply("app.deckbox.android.library")
       apply("app.deckbox.multiplatform")
+      apply("app.deckbox.compose")
       libs.findPlugin("ksp").ifPresent { apply(it.get().pluginId) }
     }
 
