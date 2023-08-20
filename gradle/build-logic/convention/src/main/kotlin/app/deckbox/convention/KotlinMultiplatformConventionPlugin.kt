@@ -11,7 +11,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
@@ -24,15 +23,6 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
       apply("org.jetbrains.kotlin.multiplatform")
     }
 
-    // Compose Multiplatform doesn't current support Kotlin 1.8.22, so we
-    // need to override the compose kotlin compiler plugin version to make
-    // it compatible
-    if (pluginManager.hasPlugin("org.jetbrains.compose")) {
-      extensions.configure<ComposeExtension> {
-        kotlinCompilerPlugin.set("1.4.8")
-      }
-    }
-
     extensions.configure<KotlinMultiplatformExtension> {
       targetHierarchy.default()
 
@@ -41,8 +31,6 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
         android()
       }
 
-      val uniqueName = "${project.group}.${project.name}"
-//      println("Native Unique Name: $uniqueName")
       listOf(
         iosX64(),
         iosArm64(),

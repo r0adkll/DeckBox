@@ -1,7 +1,7 @@
 plugins {
-  alias(libs.plugins.composeMultiplatform)
   id("app.deckbox.android.library")
   id("app.deckbox.multiplatform")
+  id("app.deckbox.compose")
 }
 
 kotlin {

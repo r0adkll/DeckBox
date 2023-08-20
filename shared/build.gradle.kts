@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-  alias(libs.plugins.composeMultiplatform)
   id("app.deckbox.android.library")
   id("app.deckbox.multiplatform")
+  id("app.deckbox.compose")
   alias(libs.plugins.ksp)
 }
 
@@ -19,7 +19,7 @@ kotlin {
   }
 
   sourceSets {
-    commonMain {
+    val commonMain by getting {
       dependencies {
         api(projects.core)
         api(projects.common.screens)
@@ -56,6 +56,10 @@ kotlin {
         api(libs.circuit.overlay)
         api(libs.circuit.runtime)
       }
+    }
+
+    val jvmMain by getting {
+      resources.srcDir("src/commonMain/resources")
     }
 
     androidMain {

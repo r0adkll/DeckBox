@@ -25,6 +25,7 @@ import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.model.Card
 import com.valentinilk.shimmer.shimmer
 import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.roundToInt
 
 private const val DefaultColumns = 4
@@ -139,7 +140,7 @@ fun ShimmerLoadingGrid(
     val cardHeight = cardWidth / CardAspectRatio
 
     // Compute rows
-    val rows = ceil(maxHeight.toPx() / (cardHeight + DefaultVerticalItemSpacing.toPx())).roundToInt()
+    val rows = floor(maxHeight.toPx() / cardHeight).roundToInt()
 
     Column(
       modifier = Modifier

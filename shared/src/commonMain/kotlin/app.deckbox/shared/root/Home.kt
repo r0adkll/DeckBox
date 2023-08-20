@@ -80,6 +80,7 @@ import com.slack.circuit.runtime.Screen
 internal fun Home(
   backstack: SaveableBackStack,
   navigator: Navigator,
+  windowInsets: WindowInsets,
   modifier: Modifier = Modifier,
 ) {
   val windowSizeClass = LocalWindowSizeClass.current
@@ -152,7 +153,7 @@ internal fun Home(
           }
         },
         // We let content handle the status bar
-        contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
+        contentWindowInsets = windowInsets,
         modifier = modifier,
       ) { paddingValues ->
         Row(

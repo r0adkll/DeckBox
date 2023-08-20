@@ -46,6 +46,11 @@ gradlePlugin {
       implementationClass = "app.deckbox.convention.UiConventionPlugin"
     }
 
+    register("compose") {
+      id = "app.deckbox.compose"
+      implementationClass = "app.deckbox.convention.ComposeConventionPlugin"
+    }
+
     register("kotlinMultiplatform") {
       id = "app.deckbox.multiplatform"
       implementationClass = "app.deckbox.convention.KotlinMultiplatformConventionPlugin"
@@ -54,6 +59,11 @@ gradlePlugin {
     register("kotlinAndroid") {
       id = "app.deckbox.kotlin.android"
       implementationClass = "app.deckbox.convention.KotlinAndroidConventionPlugin"
+    }
+
+    register("kotlinJvm") {
+      id = "app.deckbox.kotlin.jvm"
+      implementationClass = "app.deckbox.convention.KotlinJvmConventionPlugin"
     }
 
     register("androidApplication") {
