@@ -5,6 +5,7 @@ package app.deckbox.shared
 
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.interop.LocalUIViewController
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.ViewConfiguration
@@ -16,6 +17,8 @@ import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.push
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import me.tatarka.inject.annotations.Inject
+import platform.Foundation.NSURL
+import platform.SafariServices.SFSafariViewController
 import platform.UIKit.UIViewController
 
 typealias DeckBoxUiViewController = () -> UIViewController
@@ -27,7 +30,7 @@ fun DeckBoxUiViewController(
   val backstack = rememberSaveableBackStack { push(DecksScreen()) }
   val navigator = rememberCircuitNavigator(backstack, onRootPop = { /* no-op */ })
 
-//    val uiViewController = LocalUIViewController.current
+  val uiViewController = LocalUIViewController.current
 
   // Increase the touch slop. The default value of 3.dp is a bit low imo, so we use the
   // Android default value of 8.dp
@@ -41,6 +44,10 @@ fun DeckBoxUiViewController(
       backstack = backstack,
       navigator = navigator,
       modifier = Modifier,
+      onOpenUrl = { url ->
+        val safari = SFSafariViewController(NSURL(string = url))
+        uiViewController.presentViewController(safari, animated = true, completion = null)
+      },
     )
   }
 }

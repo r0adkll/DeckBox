@@ -13,7 +13,6 @@ import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Expansion
 import app.deckbox.expansions.ExpansionsRepository
 import app.deckbox.ui.expansions.list.extensions.collectExpansionCardStyle
@@ -67,15 +66,27 @@ class ExpansionsPresenter(
       }
     }
 
+    val groupedExpansionState = when (val state = filteredLoadState) {
+      ExpansionsLoadState.Loading -> ExpansionState.Loading
+      is ExpansionsLoadState.Error -> ExpansionState.Error(state.message)
+      is ExpansionsLoadState.Loaded -> ExpansionState.Loaded(
+        state.expansions
+          .groupBy { it.series }
+          .map { (key, value) -> ExpansionSeries(key, value) }
+          .sortedByDescending {
+            it.expansions.sumOf { it.releaseDate.toEpochDays() } / it.expansions.size
+          },
+      )
+    }
+
     return ExpansionsUiState(
-      loadState = filteredLoadState,
+      expansionState = groupedExpansionState,
       expansionCardStyle = expansionCardStyle,
       query = searchQuery,
     ) { event ->
       when (event) {
         is ExpansionsUiEvent.ChangeCardStyle -> settings.expansionCardStyle = event.style
         is ExpansionsUiEvent.ExpansionClicked -> {
-          bark { "Expansion Clicked: ${event.expansion.name}" }
           navigator.goTo(ExpansionDetailScreen(event.expansion.id))
         }
         is ExpansionsUiEvent.SearchUpdated -> searchQuery = event.query

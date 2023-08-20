@@ -41,6 +41,7 @@ kotlin {
 
         // UI Modules
         api(projects.ui.browse)
+        api(projects.ui.filter)
 
         api(compose.runtime)
         api(compose.foundation)

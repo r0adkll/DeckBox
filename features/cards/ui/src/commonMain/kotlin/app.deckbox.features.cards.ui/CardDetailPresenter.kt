@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import app.deckbox.common.screens.CardDetailScreen
+import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
@@ -38,6 +39,7 @@ class CardDetailPresenter(
     ) { event ->
       when (event) {
         CardDetailUiEvent.NavigateBack -> navigator.pop()
+        is CardDetailUiEvent.OpenUrl -> navigator.goTo(UrlScreen(event.url))
       }
     }
   }

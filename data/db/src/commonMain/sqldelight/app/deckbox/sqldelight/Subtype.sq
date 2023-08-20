@@ -1,0 +1,13 @@
+CREATE TABLE subtypes (
+  value TEXT NOT NULL PRIMARY KEY
+);
+
+getAll:
+SELECT * FROM subtypes;
+
+insert:
+INSERT OR IGNORE INTO subtypes
+VALUES ?;
+
+deleteAll:
+DELETE FROM subtypes;

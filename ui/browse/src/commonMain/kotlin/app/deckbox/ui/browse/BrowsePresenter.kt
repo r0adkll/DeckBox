@@ -15,10 +15,10 @@ import app.cash.paging.PagingConfig
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.model.SearchFilter
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.model.MAX_PAGE_SIZE
 import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
+import app.deckbox.ui.filter.BrowseFilterPresenter
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -34,6 +34,7 @@ import me.tatarka.inject.annotations.Inject
 class BrowsePresenter(
   @Assisted private val navigator: Navigator,
   private val cardPagingSourceFactory: CardPagingSourceFactory,
+  private val filterPresenter: BrowseFilterPresenter,
 ) : Presenter<BrowseUiState> {
 
   private val queryPipeline = MutableSharedFlow<String?>()
@@ -52,18 +53,20 @@ class BrowsePresenter(
       searchQuery = searchQueryPipelineValue
     }
 
-    var filter by remember { mutableStateOf(SearchFilter()) }
-    val query by remember {
+    val filterUiState = filterPresenter.present()
+
+    val query by remember(filterUiState.filter) {
       derivedStateOf {
-        if (searchQuery.isNullOrBlank() && filter.isEmpty) {
+        if (searchQuery.isNullOrBlank() && filterUiState.filter.isEmpty) {
           CardQuery(
             orderBy = "-set.releaseDate",
             pageSize = 50, // TODO: Is this the best place for this? Should we set this globally?
           )
         } else {
           CardQuery(
-            query = "$searchQuery*",
-            filter = filter,
+            query = searchQuery?.let { "$it*" },
+            orderBy = "-set.releaseDate",
+            filter = filterUiState.filter,
             pageSize = 50, // TODO: Is this the best place for this? Should we set this globally?
           )
         }
@@ -75,17 +78,17 @@ class BrowsePresenter(
         config = PagingConfig(
           pageSize = MAX_PAGE_SIZE,
         ),
+        initialKey = 1,
         pagingSourceFactory = { cardPagingSourceFactory.create(query) },
       )
     }
 
     return BrowseUiState(
       query = searchQuery,
-      filter = filter,
+      filterUiState = filterUiState,
       cardsPager = pager,
     ) { event ->
       when (event) {
-        is BrowseUiEvent.Filter -> filter = event.filter
         is BrowseUiEvent.SearchUpdated -> {
           coroutineScope.launch { queryPipeline.emit(event.query) }
         }

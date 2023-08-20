@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,25 +23,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.settings.ExpansionCardStyle
-import app.deckbox.ui.expansions.list.ExpansionsLoadState
+import app.deckbox.ui.expansions.list.ExpansionSeries
+import app.deckbox.ui.expansions.list.ExpansionState
 import cafe.adriel.lyricist.LocalStrings
 
 @Composable
 internal fun ExpansionsContent(
-  loadState: ExpansionsLoadState,
+  expansionState: ExpansionState,
   style: ExpansionCardStyle,
   onClick: (Expansion) -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(),
 ) {
-  when (loadState) {
-    ExpansionsLoadState.Loading -> LoadingContent(modifier)
-    is ExpansionsLoadState.Error -> ErrorContent(loadState.message, modifier)
-    is ExpansionsLoadState.Loaded -> if (loadState.expansions.isEmpty()) {
+  when (expansionState) {
+    ExpansionState.Loading -> LoadingContent(modifier)
+    is ExpansionState.Error -> ErrorContent(expansionState.message, modifier)
+    is ExpansionState.Loaded -> if (expansionState.groupedExpansions.isEmpty()) {
       EmptyContent(modifier)
     } else {
       ExpansionsContent(
-        expansions = loadState.expansions,
+        expansions = expansionState.groupedExpansions,
         style = style,
         onClick = onClick,
         modifier = modifier,
@@ -103,7 +105,7 @@ private fun ErrorContent(
 
 @Composable
 private fun ExpansionsContent(
-  expansions: List<Expansion>,
+  expansions: List<ExpansionSeries>,
   style: ExpansionCardStyle,
   onClick: (Expansion) -> Unit,
   modifier: Modifier = Modifier,
@@ -114,26 +116,36 @@ private fun ExpansionsContent(
     contentPadding = contentPadding,
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
-    items(expansions) { expansion ->
-      val clickListener = { onClick(expansion) }
-      when (style) {
-        ExpansionCardStyle.Large -> {
-          LargeExpansionCard(
-            expansion = expansion,
-            onClick = clickListener,
-          )
-        }
-        ExpansionCardStyle.Small -> {
-          SmallExpansionCard(
-            expansion = expansion,
-            onClick = clickListener,
-          )
-        }
-        ExpansionCardStyle.Compact -> {
-          CompactExpansionCard(
-            expansion = expansion,
-            onClick = clickListener,
-          )
+    expansions.forEach { (series, expansions) ->
+      item {
+        Text(
+          text = series,
+          style = MaterialTheme.typography.labelLarge,
+          modifier = Modifier.padding(vertical = 8.dp),
+        )
+      }
+
+      items(expansions) { expansion ->
+        val clickListener = { onClick(expansion) }
+        when (style) {
+          ExpansionCardStyle.Large -> {
+            LargeExpansionCard(
+              expansion = expansion,
+              onClick = clickListener,
+            )
+          }
+          ExpansionCardStyle.Small -> {
+            SmallExpansionCard(
+              expansion = expansion,
+              onClick = clickListener,
+            )
+          }
+          ExpansionCardStyle.Compact -> {
+            CompactExpansionCard(
+              expansion = expansion,
+              onClick = clickListener,
+            )
+          }
         }
       }
     }

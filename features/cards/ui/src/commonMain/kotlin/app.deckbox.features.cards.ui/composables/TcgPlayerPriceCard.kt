@@ -19,6 +19,7 @@ import cafe.adriel.lyricist.LocalStrings
 @Composable
 fun TcgPlayerPriceCard(
   tcgPlayer: Card.TcgPlayer,
+  onBuyClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   OutlinedCard(
@@ -27,6 +28,7 @@ fun TcgPlayerPriceCard(
     PricingHeader(
       title = "TCG Player",
       lastUpdated = "Last updated @ ${tcgPlayer.updatedAt.readableFormat}",
+      onBuyClick = onBuyClick,
     )
 
     tcgPlayer.prices?.let { prices ->

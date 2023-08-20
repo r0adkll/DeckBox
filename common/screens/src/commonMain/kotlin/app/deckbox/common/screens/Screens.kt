@@ -43,11 +43,23 @@ class CardDetailScreen(
 ) : DeckBoxScreen(name = "CardDetail()") {
   constructor(card: Card) : this(card.id, card.name, card.image.large)
 
-  override val arguments get() = mapOf("cardId" to cardId)
+  override val arguments get() = mapOf(
+    "cardId" to cardId,
+    "cardName" to cardName,
+    "cardImageLarge" to cardImageLarge,
+  )
 }
 
 @CommonParcelize
+class FilterScreen : DeckBoxScreen(name = "Filter()")
+
+@CommonParcelize
 class SettingsScreen : DeckBoxScreen(name = "Settings()")
+
+@CommonParcelize
+data class UrlScreen(val url: String) : DeckBoxScreen(name = "UrlScreen()") {
+  override val arguments get() = mapOf("url" to url)
+}
 
 abstract class DeckBoxScreen(val name: String) : Screen {
   open val arguments: Map<String, *>? = null

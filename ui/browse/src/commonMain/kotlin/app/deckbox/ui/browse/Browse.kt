@@ -7,26 +7,33 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.widgets.AdaptiveExpandedThreshold
 import app.deckbox.common.compose.widgets.DefaultEmptyView
+import app.deckbox.common.compose.widgets.FilterIcon
 import app.deckbox.common.compose.widgets.PokemonCardGrid
 import app.deckbox.common.compose.widgets.SearchBar
 import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.compose.widgets.SearchEmptyView
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.logging.bark
+import app.deckbox.ui.filter.CardFilter
+import app.deckbox.ui.filter.FilterState
+import app.deckbox.ui.filter.FilterUiEvent
+import app.deckbox.ui.filter.SearchBarWithFilter
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.statusBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -41,39 +48,55 @@ internal fun Browse(
     modifier = modifier,
   ) {
     BoxWithConstraints(
-      modifier = Modifier
-        .fillMaxSize(),
+      modifier = Modifier.fillMaxSize(),
       contentAlignment = Alignment.TopStart,
     ) {
-      SearchBar(
-        initialValue = state.query,
-        onQueryUpdated = { query ->
-          bark { "Query: $query" }
-          state.eventSink(BrowseUiEvent.SearchUpdated(query))
-        },
-        onQueryCleared = {
-          state.eventSink(BrowseUiEvent.SearchCleared)
-        },
-        leading = {
-          Icon(
-            Icons.Rounded.Search,
-            contentDescription = null,
+      var filterState by remember { mutableStateOf(FilterState.HIDDEN) }
+
+      SearchBarWithFilter(
+        filterState = filterState,
+        onClose = { filterState = FilterState.HIDDEN },
+        onClear = { state.filterUiState.eventSink(FilterUiEvent.ClearFilter) },
+        searchBar = {
+          SearchBar(
+            initialValue = state.query,
+            onQueryUpdated = { query ->
+              state.eventSink(BrowseUiEvent.SearchUpdated(query))
+            },
+            onQueryCleared = {
+              state.eventSink(BrowseUiEvent.SearchCleared)
+            },
+            leading = {
+              Icon(
+                Icons.Rounded.Search,
+                contentDescription = null,
+              )
+            },
+            placeholder = { Text(LocalStrings.current.browseSearchHint) },
+            trailing = {
+              IconButton(
+                onClick = {
+                  filterState = FilterState.VISIBLE
+                },
+              ) {
+                FilterIcon(
+                  isEmpty = state.filterUiState.filter.isEmpty,
+                )
+              }
+            },
+            modifier = Modifier
+              .windowInsetsPadding(WindowInsets.statusBars)
+              .padding(horizontal = 16.dp)
+              .zIndex(1f),
           )
         },
-        placeholder = { Text(LocalStrings.current.browseSearchHint) },
-        trailing = {
-          IconButton(
-            onClick = {
-              // TODO:
-            },
-          ) {
-            Icon(Icons.Rounded.FilterAlt, contentDescription = "Filter your search")
-          }
+        filterTitle = { Text("Filter") },
+        filter = {
+          CardFilter(
+            state = state.filterUiState,
+          )
         },
-        modifier = Modifier
-          .windowInsetsPadding(WindowInsets.statusBars)
-          .zIndex(1f)
-          .padding(horizontal = 16.dp),
+        modifier = Modifier.zIndex(1f),
       )
 
       val numColumns = if (maxWidth > AdaptiveExpandedThreshold) 6 else 4
@@ -88,7 +111,7 @@ internal fun Browse(
           top = 8.dp + SearchBarHeight / 2,
         ),
         emptyContent = {
-          if (!state.query.isNullOrBlank() || state.filter?.isEmpty == false) {
+          if (!state.query.isNullOrBlank() || !state.filterUiState.filter.isEmpty) {
             SearchEmptyView(query = state.query)
           } else {
             DefaultEmptyView()

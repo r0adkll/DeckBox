@@ -1,5 +1,6 @@
 package app.deckbox.features.cards.public.model
 
+import app.deckbox.core.logging.bark
 import app.deckbox.core.model.RangeValue
 import app.deckbox.core.model.SearchField
 import app.deckbox.core.model.SearchFilter
@@ -25,7 +26,7 @@ data class CardQuery(
 
   private fun generateQueryParam(): String {
     return buildString {
-      if (query != null) {
+      if (!query.isNullOrBlank()) {
         when (filter?.field) {
           SearchField.TEXT -> appendValue("flavorText", query)
           SearchField.ABILITY_NAME -> appendValue("abilities.name", query)
@@ -41,7 +42,7 @@ data class CardQuery(
         appendOrList("types", filter.types.map { it.name.lowercase() })
         appendOrList("supertype", filter.superTypes.map { it.text.lowercase() })
         appendOrList("rarity", filter.rarity)
-        appendOrList("set.id", filter.expansions.map { it.id })
+        appendOrList("set.id", filter.expansions)
         appendOrList("weaknesses.type", filter.weaknesses.map { it.name.lowercase() })
         appendOrList("resistances.type", filter.resistances.map { it.name.lowercase() })
 
@@ -53,6 +54,8 @@ data class CardQuery(
         filter.evolvesFrom?.let { appendValue("evolvesFrom", it) }
         filter.evolvesTo?.let { appendValue("evolvesTo", it) }
       }
+    }.also {
+      bark { "q=$it, query=$query, filter=$filter" }
     }
   }
 }
@@ -87,14 +90,17 @@ fun StringBuilder.appendOrList(
   options: Collection<String>,
 ) {
   if (options.isEmpty()) return
-  if (options.size == 1) append("$field:${options.first()}")
-  append(
-    options.joinToString(
-      prefix = "(",
-      postfix = ")",
-      separator = " OR ",
-    ) { "$field:$it" },
-  )
+  if (options.size == 1) {
+    append("$field:${options.first()}")
+  } else {
+    append(
+      options.joinToString(
+        prefix = "(",
+        postfix = ")",
+        separator = " OR ",
+      ) { "$field:$it" },
+    )
+  }
   append(SPACE)
 }
 

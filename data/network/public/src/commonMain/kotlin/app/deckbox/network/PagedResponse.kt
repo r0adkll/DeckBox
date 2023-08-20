@@ -7,7 +7,7 @@ data class PagedResponse<Data>(
   val count: Int,
   val totalCount: Int,
 ) {
-  // TODO: Not sure how these values return in multi-page scenarios
+
   val hasMore: Boolean
     get() = ((page - 1) * pageSize + count) < totalCount
 }

@@ -1,9 +1,11 @@
 package app.deckbox.android
 
 import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import app.deckbox.android.di.ActivityComponent
@@ -37,6 +39,10 @@ class MainActivity : ComponentActivity() {
       component.deckBoxContent(
         backstack = backstack,
         navigator = navigator,
+        onOpenUrl = { url ->
+          val intent = CustomTabsIntent.Builder().build()
+          intent.launchUrl(this@MainActivity, Uri.parse(url))
+        },
         modifier = Modifier,
       )
     }

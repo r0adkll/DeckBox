@@ -10,6 +10,7 @@ import app.deckbox.network.api.CardResponse
 import app.deckbox.network.api.CardSetModel
 import app.deckbox.network.api.CardSetResponse
 import app.deckbox.network.api.ModelMapper
+import app.deckbox.network.api.SimpleResponse
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -163,6 +164,38 @@ class KtorPokemonTcgApi(
       }
     } else {
       Result.failure(ApiException("Unable to fetch Expansions: ${response.status}"))
+    }
+  }
+
+  override suspend fun getRarities(): Result<List<String>> {
+    val response = try {
+      client.get("rarities")
+    } catch (e: Throwable) {
+      bark(throwable = e) { "Error fetching rarities" }
+      return Result.failure(e)
+    }
+
+    return if (response.status.isSuccess()) {
+      val responseBody = response.body<SimpleResponse>()
+      Result.success(responseBody.data)
+    } else {
+      Result.failure(ApiException("Unable to fetch Rarities: ${response.status}"))
+    }
+  }
+
+  override suspend fun getSubtypes(): Result<List<String>> {
+    val response = try {
+      client.get("subtypes")
+    } catch (e: Throwable) {
+      bark(throwable = e) { "Error fetching subtypes" }
+      return Result.failure(e)
+    }
+
+    return if (response.status.isSuccess()) {
+      val responseBody = response.body<SimpleResponse>()
+      Result.success(responseBody.data)
+    } else {
+      Result.failure(ApiException("Unable to fetch subtypes: ${response.status}"))
     }
   }
 

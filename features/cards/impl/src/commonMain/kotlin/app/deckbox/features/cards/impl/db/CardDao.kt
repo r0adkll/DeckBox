@@ -14,6 +14,7 @@ interface CardDao {
   fun observe(id: String): Flow<Card>
   fun observe(ids: List<String>): Flow<List<Card>>
   fun observe(query: CardQuery): Flow<List<Card>>
+  fun observeByExpansion(expansionId: String): Flow<List<Card>>
 
   suspend fun insert(card: Card)
   suspend fun insert(cards: List<Card>)

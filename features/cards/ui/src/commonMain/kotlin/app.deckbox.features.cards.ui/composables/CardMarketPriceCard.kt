@@ -16,6 +16,7 @@ import cafe.adriel.lyricist.LocalStrings
 @Composable
 fun CardMarketPriceCard(
   cardMarket: Card.CardMarket,
+  onBuyClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   OutlinedCard(
@@ -24,6 +25,7 @@ fun CardMarketPriceCard(
     PricingHeader(
       title = "Cardmarket",
       lastUpdated = "Last updated @ ${cardMarket.updatedAt.readableFormat}",
+      onBuyClick = onBuyClick,
     )
 
     cardMarket.prices?.let { prices ->

@@ -45,11 +45,12 @@ dependencies {
   implementation(projects.shared)
   implementation(projects.common.screens)
 
+  implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.browser)
+
   implementation(libs.circuit.runtime)
   implementation(libs.circuit.foundation)
 
   ksp(projects.di.kotlinInjectMerge)
   ksp(libs.kotlininject.ksp)
-
-  implementation("androidx.activity:activity-compose:1.7.1")
 }

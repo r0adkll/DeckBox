@@ -19,6 +19,7 @@ data class CardDetailUiState(
 
 sealed interface CardDetailUiEvent : CircuitUiEvent {
   object NavigateBack : CardDetailUiEvent
+  data class OpenUrl(val url: String) : CardDetailUiEvent
 }
 
 val CardDetailUiState.pokemonCard: Card?

@@ -91,6 +91,19 @@ class SqlDelightCardDao(
     return emptyFlow()
   }
 
+  override fun observeByExpansion(expansionId: String): Flow<List<Card>> {
+    return database.cardQueries
+      .getByExpansionId(expansionId)
+      .asFlow()
+      .mapNotNull {
+        withContext(dispatcherProvider.databaseRead) {
+          database.transactionWithResult {
+            it.executeAsList().let(::hydrate)
+          }
+        }
+      }
+  }
+
   override suspend fun insert(card: Card) = withContext(dispatcherProvider.databaseWrite) {
     database.transaction {
       insertCard(card)

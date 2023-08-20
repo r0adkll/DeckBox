@@ -8,4 +8,6 @@ interface PokemonTcgApi {
   suspend fun getCards(filters: Map<String, String>? = null): Result<PagedResponse<Card>>
   suspend fun getExpansion(id: String): Result<Expansion>
   suspend fun getExpansions(): Result<List<Expansion>>
+  suspend fun getRarities(): Result<List<String>>
+  suspend fun getSubtypes(): Result<List<String>>
 }

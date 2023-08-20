@@ -4,15 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import app.cash.paging.Pager
-import app.cash.paging.PagingConfig
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.Card
+import app.deckbox.core.model.SearchFilter
 import app.deckbox.expansions.ExpansionsRepository
-import app.deckbox.features.cards.public.model.MAX_PAGE_SIZE
-import app.deckbox.features.cards.public.paging.ExpansionCardPagingSourceFactory
+import app.deckbox.features.cards.public.ExpansionCardRepository
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -26,7 +25,7 @@ class ExpansionDetailPresenter(
   @Assisted private val navigator: Navigator,
   @Assisted private val screen: ExpansionDetailScreen,
   private val expansionRepository: ExpansionsRepository,
-  private val expansionCardPagingSourceFactory: ExpansionCardPagingSourceFactory,
+  private val expansionCardRepository: ExpansionCardRepository,
 ) : Presenter<ExpansionDetailUiState> {
 
   @Composable
@@ -40,17 +39,24 @@ class ExpansionDetailPresenter(
 
     return when (val state = expansionLoadState) {
       is LoadState.Loaded -> {
-        val pager = remember {
-          Pager(
-            config = PagingConfig(
-              pageSize = MAX_PAGE_SIZE,
-            ),
-            pagingSourceFactory = { expansionCardPagingSourceFactory.create(state.data) },
-          )
+        val expansionCards by remember {
+          flow {
+            val cards = expansionCardRepository.getCards(state.data)
+              .sortedBy { it.number.toIntOrNull() ?: 1 }
+            emit(LoadState.Loaded(cards))
+          }
+        }.collectAsState(LoadState.Loading)
+
+        val filterPresenter = remember(expansionCards) {
+          ExpansionFilterPresenter((expansionCards as? LoadState.Loaded)?.data ?: emptyList())
         }
+
+        val filterState = filterPresenter.present()
+
         ExpansionDetailUiState.Loaded(
           expansion = state.data,
-          cardsPager = pager,
+          filterState = filterState,
+          cards = expansionCards.filterBy(filterState.filter),
         ) { event ->
           when (event) {
             ExpansionDetailUiEvent.NavigateBack -> navigator.pop()
@@ -58,7 +64,19 @@ class ExpansionDetailPresenter(
           }
         }
       }
+
       else -> ExpansionDetailUiState.Loading
     }
+  }
+}
+
+fun LoadState<out List<Card>>.filterBy(searchFilter: SearchFilter): LoadState<out List<Card>> {
+  return when (this) {
+    is LoadState.Loaded -> LoadState.Loaded(
+      data.filter { card ->
+        searchFilter.matches(card)
+      },
+    )
+    else -> this
   }
 }

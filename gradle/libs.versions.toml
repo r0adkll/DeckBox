@@ -51,6 +51,7 @@ androidx-activity-activity = { module = "androidx.activity:activity", version.re
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxactivity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-archCoreTesting = "androidx.arch.core:core-testing:2.2.0"
+androidx-browser = "androidx.browser:browser:1.6.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
@@ -131,6 +132,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 turbine = "app.cash.turbine:turbine:1.0.0"
 leakCanary = "com.squareup.leakcanary:leakcanary-android:2.12"
 robolectric = "org.robolectric:robolectric:4.10.3"
+strikt-core = "io.strikt:strikt-core:0.34.0"
 
 # Build logic dependencies
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
@@ -140,4 +142,3 @@ spotless-gradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [bundles]
-
