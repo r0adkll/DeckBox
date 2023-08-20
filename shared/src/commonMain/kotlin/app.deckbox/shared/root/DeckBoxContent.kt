@@ -14,6 +14,7 @@ import app.deckbox.common.compose.extensions.shouldUseDynamicColors
 import app.deckbox.common.compose.theme.DeckBoxTheme
 import app.deckbox.common.screens.UrlScreen
 import app.deckbox.common.settings.DeckBoxSettings
+import app.deckbox.shared.navigator.OpenUrlNavigator
 import cafe.adriel.lyricist.ProvideStrings
 import com.moriatsushi.insetsx.statusBars
 import com.moriatsushi.insetsx.systemBars
@@ -77,6 +78,7 @@ fun DeckBoxContentWithInsets(
 typealias DeckBoxContent = @Composable (
   backstack: SaveableBackStack,
   navigator: Navigator,
+  onOpenUrl: (String) -> Unit,
   modifier: Modifier,
 ) -> Unit
 
@@ -103,17 +105,3 @@ fun DeckBoxContent(
   )
 }
 
-private class OpenUrlNavigator(
-  private val navigator: Navigator,
-  private val onOpenUrl: (String) -> Unit,
-) : Navigator {
-  override fun goTo(screen: Screen) {
-    when (screen) {
-      is UrlScreen -> onOpenUrl(screen.url)
-      else -> navigator.goTo(screen)
-    }
-  }
-
-  override fun pop(): Screen? = navigator.pop()
-  override fun resetRoot(newRoot: Screen): List<Screen> = navigator.resetRoot(newRoot)
-}

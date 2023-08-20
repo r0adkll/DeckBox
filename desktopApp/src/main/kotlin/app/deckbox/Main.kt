@@ -10,12 +10,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import app.deckbox.common.screens.DecksScreen
+import app.deckbox.core.logging.bark
 import app.deckbox.shared.DesktopApplicationComponent
 import app.deckbox.shared.WindowComponent
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.push
 import com.slack.circuit.foundation.rememberCircuitNavigator
+import java.awt.Desktop
+import java.net.URI
 import kotlininject.merge.app.deckbox.shared.createMergedDesktopApplicationComponent
+
 
 @Suppress("CAST_NEVER_SUCCEEDS", "UNCHECKED_CAST", "USELESS_CAST", "KotlinRedundantDiagnosticSuppress")
 fun main() = application {
@@ -41,6 +45,15 @@ fun main() = application {
     component.deckBoxContent(
       backstack,
       navigator,
+      { url ->
+        try {
+          val uri = URI(url)
+          val dt = Desktop.getDesktop()
+          dt.browse(uri)
+        } catch (ex: Exception) {
+          bark(throwable = ex) { "Unable to open URL" }
+        }
+      },
       WindowInsets(
         top = 24.dp,
         bottom = 24.dp,

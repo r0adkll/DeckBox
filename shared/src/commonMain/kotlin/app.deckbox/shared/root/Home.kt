@@ -55,8 +55,10 @@ import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.screens.RootScreen
 import app.deckbox.common.screens.SettingsScreen
+import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.extensions.fluentIf
 import app.deckbox.shared.navigator.MainDetailNavigator
+import app.deckbox.shared.navigator.OpenUrlNavigator
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.safeContentPadding
@@ -90,11 +92,14 @@ internal fun Home(
     detailBackStack.popUntil { false }
     detailBackStack.push(RootScreen())
   }
+  val detailUrlNavigator = remember(detailNavigator) {
+    OpenUrlNavigator(detailNavigator) { url -> navigator.goTo(UrlScreen(url)) }
+  }
 
-  val mainDetailNavigator = remember(navigator, detailNavigator, navigationType) {
+  val mainDetailNavigator = remember(navigator, detailUrlNavigator, navigationType) {
     MainDetailNavigator(
       mainNavigator = navigator,
-      detailNavigator = detailNavigator,
+      detailNavigator = detailUrlNavigator,
       isDetailEnabled = navigationType == NavigationType.RAIL ||
         navigationType == NavigationType.PERMANENT_DRAWER,
     )
@@ -197,7 +202,7 @@ internal fun Home(
               .fillMaxHeight(),
           ) {
             NavigableCircuitContent(
-              navigator = detailNavigator,
+              navigator = detailUrlNavigator,
               backstack = detailBackStack,
               unavailableRoute = { _, _ ->
                 // Do nothing here
