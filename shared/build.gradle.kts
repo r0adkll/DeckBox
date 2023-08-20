@@ -58,10 +58,6 @@ kotlin {
       }
     }
 
-    val jvmMain by getting {
-      resources.srcDir("src/commonMain/resources")
-    }
-
     androidMain {
       dependencies {
         api(libs.androidx.activity.activity)
