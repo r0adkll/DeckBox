@@ -23,9 +23,14 @@ import app.deckbox.core.model.Format
 import app.deckbox.core.model.Legality
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.ui.filter.FilterUiEvent
-import app.deckbox.ui.filter.FilterUiEvent.*
+import app.deckbox.ui.filter.FilterUiEvent.ChangeVisibleExpansions
+import app.deckbox.ui.filter.FilterUiEvent.FilterChange
 import app.deckbox.ui.filter.FilterUiState
-import app.deckbox.ui.filter.spec.ExpansionsFilterAction.*
+import app.deckbox.ui.filter.spec.ExpansionsFilterAction.AddExpansion
+import app.deckbox.ui.filter.spec.ExpansionsFilterAction.AllExpanded
+import app.deckbox.ui.filter.spec.ExpansionsFilterAction.AllStandard
+import app.deckbox.ui.filter.spec.ExpansionsFilterAction.DeselectFormat
+import app.deckbox.ui.filter.spec.ExpansionsFilterAction.RemoveExpansion
 import app.deckbox.ui.filter.widgets.Chip
 import com.seiko.imageloader.rememberImagePainter
 
@@ -34,13 +39,13 @@ sealed interface ExpansionsFilterAction : FilterAction {
   object AllStandard : ExpansionsFilterAction {
     override fun applyToFilter(
       expansions: List<Expansion>,
-      filter: SearchFilter
+      filter: SearchFilter,
     ): SearchFilter {
       return filter.copy(
         expansions = expansions
           .filter { it.legalities?.standard == Legality.LEGAL }
           .map { it.id }
-          .toSet()
+          .toSet(),
       )
     }
   }
@@ -48,13 +53,13 @@ sealed interface ExpansionsFilterAction : FilterAction {
   object AllExpanded : ExpansionsFilterAction {
     override fun applyToFilter(
       expansions: List<Expansion>,
-      filter: SearchFilter
+      filter: SearchFilter,
     ): SearchFilter {
       return filter.copy(
         expansions = expansions
           .filter { it.legalities?.expanded == Legality.LEGAL }
           .map { it.id }
-          .toSet()
+          .toSet(),
       )
     }
   }
@@ -62,7 +67,7 @@ sealed interface ExpansionsFilterAction : FilterAction {
   data class DeselectFormat(val format: Format) : ExpansionsFilterAction {
     override fun applyToFilter(
       expansions: List<Expansion>,
-      filter: SearchFilter
+      filter: SearchFilter,
     ): SearchFilter {
       return filter.copy(
         expansions = filter.expansions.filter { expansionId ->
@@ -72,7 +77,7 @@ sealed interface ExpansionsFilterAction : FilterAction {
             Format.EXPANDED -> expansion?.legalities?.expanded != Legality.LEGAL
             else -> true
           }
-        }.toSet()
+        }.toSet(),
       )
     }
   }
@@ -80,10 +85,10 @@ sealed interface ExpansionsFilterAction : FilterAction {
   data class AddExpansion(val expansion: Expansion) : ExpansionsFilterAction {
     override fun applyToFilter(
       expansions: List<Expansion>,
-      filter: SearchFilter
+      filter: SearchFilter,
     ): SearchFilter {
       return filter.copy(
-        expansions = filter.expansions.plus(expansion.id)
+        expansions = filter.expansions.plus(expansion.id),
       )
     }
   }
@@ -91,10 +96,10 @@ sealed interface ExpansionsFilterAction : FilterAction {
   data class RemoveExpansion(val expansion: Expansion) : ExpansionsFilterAction {
     override fun applyToFilter(
       expansions: List<Expansion>,
-      filter: SearchFilter
+      filter: SearchFilter,
     ): SearchFilter {
       return filter.copy(
-        expansions = filter.expansions.minus(expansion.id)
+        expansions = filter.expansions.minus(expansion.id),
       )
     }
   }
@@ -106,7 +111,7 @@ object ExpansionsFilterSpec : FilterSpec() {
   @OptIn(ExperimentalMaterial3Api::class)
   override fun LazyListScope.buildContent(
     uiState: FilterUiState,
-    actionEmitter: (FilterUiEvent) -> Unit
+    actionEmitter: (FilterUiEvent) -> Unit,
   ) {
     // Filter
     item {
@@ -132,7 +137,7 @@ object ExpansionsFilterSpec : FilterSpec() {
               actionEmitter(FilterChange(AllStandard))
               actionEmitter(ChangeVisibleExpansions(Format.STANDARD))
             }
-          }
+          },
         )
         Chip(
           modifier = Modifier.padding(start = 8.dp, end = 16.dp),
@@ -147,7 +152,7 @@ object ExpansionsFilterSpec : FilterSpec() {
               actionEmitter(FilterChange(AllExpanded))
               actionEmitter(ChangeVisibleExpansions(Format.EXPANDED))
             }
-          }
+          },
         )
       }
     }
@@ -184,12 +189,13 @@ object ExpansionsFilterSpec : FilterSpec() {
           } else {
             actionEmitter(FilterChange(AddExpansion(expansion)))
           }
-        }
+        },
       )
     }
 
     if (uiState.visibleExpansionFormat == Format.STANDARD ||
-      uiState.visibleExpansionFormat == Format.EXPANDED) {
+      uiState.visibleExpansionFormat == Format.EXPANDED
+    ) {
       item {
         ListItem(
           colors = ListItemDefaults.colors(
@@ -201,8 +207,8 @@ object ExpansionsFilterSpec : FilterSpec() {
                 when (uiState.visibleExpansionFormat) {
                   Format.STANDARD -> Format.EXPANDED
                   else -> Format.UNLIMITED
-                }
-              )
+                },
+              ),
             )
           },
           headlineText = {
@@ -213,7 +219,7 @@ object ExpansionsFilterSpec : FilterSpec() {
               },
               style = MaterialTheme.typography.labelLarge,
             )
-          }
+          },
         )
       }
     }

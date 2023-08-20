@@ -53,5 +53,4 @@ dependencies {
 
   ksp(projects.di.kotlinInjectMerge)
   ksp(libs.kotlininject.ksp)
-
 }

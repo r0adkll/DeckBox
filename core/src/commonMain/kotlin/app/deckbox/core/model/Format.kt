@@ -5,7 +5,8 @@ enum class Format {
   EXPANDED,
   UNLIMITED,
   LEGACY,
-  THEME;
+  THEME,
+  ;
 
   companion object {
 

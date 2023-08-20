@@ -1,7 +1,6 @@
 package app.deckbox.ui.expansions.detail
 
 import androidx.compose.runtime.Stable
-import app.cash.paging.Pager
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Expansion

@@ -1,7 +1,6 @@
 package app.deckbox.features.cards.impl.db
 
 import app.deckbox.core.model.Card
-import app.deckbox.core.model.Expansion
 import app.deckbox.features.cards.public.model.CardQuery
 import kotlinx.coroutines.flow.Flow
 

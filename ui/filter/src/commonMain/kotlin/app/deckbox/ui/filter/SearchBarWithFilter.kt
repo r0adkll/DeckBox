@@ -142,12 +142,12 @@ fun SearchBarWithFilter(
       modifier = Modifier
         .windowInsetsPadding(WindowInsets.statusBars)
         .padding(
-          top = SearchBarHeight
+          top = SearchBarHeight,
         ),
     ) {
       Box(
         modifier = Modifier
-          .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp))
+          .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
       ) {
         filter()
       }

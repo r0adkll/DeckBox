@@ -80,7 +80,7 @@ internal fun Browse(
                 },
               ) {
                 FilterIcon(
-                  isEmpty = state.filterUiState.filter.isEmpty
+                  isEmpty = state.filterUiState.filter.isEmpty,
                 )
               }
             },

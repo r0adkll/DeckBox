@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
 private var _vector: ImageVector? = null
 
 val Icons.Rounded.LessThanEqual: ImageVector
@@ -23,7 +22,7 @@ val Icons.Rounded.LessThanEqual: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color.Black),
@@ -34,7 +33,7 @@ val Icons.Rounded.LessThanEqual: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(6f, 3f)
         curveTo(4.355f, 3f, 3f, 4.355f, 3f, 6f)
@@ -78,4 +77,3 @@ val Icons.Rounded.LessThanEqual: ImageVector
     }.build()
     return _vector!!
   }
-

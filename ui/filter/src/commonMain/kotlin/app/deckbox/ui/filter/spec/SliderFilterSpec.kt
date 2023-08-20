@@ -102,7 +102,7 @@ abstract class SliderFilterSpec : FilterSpec() {
                 applicator = { newValue ->
                   applyValue(uiState.filter, newValue)
                 },
-              )
+              ),
             ),
           )
         },

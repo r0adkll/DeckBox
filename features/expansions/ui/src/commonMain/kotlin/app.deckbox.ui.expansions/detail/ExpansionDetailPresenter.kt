@@ -75,7 +75,7 @@ fun LoadState<out List<Card>>.filterBy(searchFilter: SearchFilter): LoadState<ou
     is LoadState.Loaded -> LoadState.Loaded(
       data.filter { card ->
         searchFilter.matches(card)
-      }
+      },
     )
     else -> this
   }

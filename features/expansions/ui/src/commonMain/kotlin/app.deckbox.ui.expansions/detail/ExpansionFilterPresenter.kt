@@ -11,7 +11,7 @@ import app.deckbox.ui.filter.spec.RetreatCostFilterSpec
 import app.deckbox.ui.filter.spec.TypeFilterSpec
 
 class ExpansionFilterPresenter(
-  private val cards: List<Card>
+  private val cards: List<Card>,
 ) : FilterPresenter(
   specs = listOf(
     TypeFilterSpec(

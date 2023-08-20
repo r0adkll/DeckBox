@@ -15,13 +15,10 @@ import app.cash.paging.PagingConfig
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.logging.bark
-import app.deckbox.core.model.SearchFilter
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.model.MAX_PAGE_SIZE
 import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
 import app.deckbox.ui.filter.BrowseFilterPresenter
-import app.deckbox.ui.filter.FilterPresenter
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter

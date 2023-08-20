@@ -45,7 +45,7 @@ abstract class FilterSpec {
   private fun LazyListScope.sectioned(
     header: String,
     showDivider: Boolean = false,
-    block: LazyListScope.() -> Unit
+    block: LazyListScope.() -> Unit,
   ) {
     if (showDivider) item { Divider() }
     item {
@@ -58,7 +58,6 @@ abstract class FilterSpec {
     }
     block()
   }
-
 }
 
 /**

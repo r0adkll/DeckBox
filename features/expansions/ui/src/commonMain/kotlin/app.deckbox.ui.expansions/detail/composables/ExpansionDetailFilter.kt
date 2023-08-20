@@ -49,7 +49,7 @@ internal fun ExpansionDetailFilter(
         },
         colors = TopAppBarDefaults.smallTopAppBarColors(
           containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(SearchBarElevation),
-        )
+        ),
       )
     },
     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),

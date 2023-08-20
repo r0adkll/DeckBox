@@ -3,7 +3,6 @@ package app.deckbox.ui.browse
 import androidx.compose.runtime.Stable
 import app.cash.paging.Pager
 import app.deckbox.core.model.Card
-import app.deckbox.core.model.SearchFilter
 import app.deckbox.ui.filter.FilterUiState
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState

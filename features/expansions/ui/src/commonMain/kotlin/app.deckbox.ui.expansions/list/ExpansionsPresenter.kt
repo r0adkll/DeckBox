@@ -13,7 +13,6 @@ import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Expansion
 import app.deckbox.expansions.ExpansionsRepository
 import app.deckbox.ui.expansions.list.extensions.collectExpansionCardStyle
@@ -76,7 +75,7 @@ class ExpansionsPresenter(
           .map { (key, value) -> ExpansionSeries(key, value) }
           .sortedByDescending {
             it.expansions.sumOf { it.releaseDate.toEpochDays() } / it.expansions.size
-          }
+          },
       )
     }
 

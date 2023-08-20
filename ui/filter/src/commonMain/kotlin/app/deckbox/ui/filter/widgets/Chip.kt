@@ -36,10 +36,14 @@ internal fun Chip(
     color = backgroundColor,
     contentColor = contentColor,
     shape = RoundedCornerShape(8.dp),
-    border = if (!isSelected) BorderStroke(
-      width = 1.dp,
-      color = contentColor,
-    ) else null,
+    border = if (!isSelected) {
+      BorderStroke(
+        width = 1.dp,
+        color = contentColor,
+      )
+    } else {
+      null
+    },
     shadowElevation = if (isSelected) 2.dp else 0.dp,
     onClick = onClick,
   ) {

@@ -35,7 +35,7 @@ fun AttributePicker(
           } else {
             onSelected(attribute)
           }
-        }
+        },
       ) {
         Text(
           text = attribute.displayText,

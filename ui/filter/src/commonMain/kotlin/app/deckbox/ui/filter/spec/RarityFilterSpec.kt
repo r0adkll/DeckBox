@@ -23,10 +23,10 @@ sealed interface RarityFilterAction : FilterAction {
   data class AddRarity(val rarity: String) : RarityFilterAction {
     override fun applyToFilter(
       expansions: List<Expansion>,
-      filter: SearchFilter
+      filter: SearchFilter,
     ): SearchFilter {
       return filter.copy(
-        rarity = filter.rarity.plus(rarity)
+        rarity = filter.rarity.plus(rarity),
       )
     }
   }
@@ -34,10 +34,10 @@ sealed interface RarityFilterAction : FilterAction {
   data class RemoveRarity(val rarity: String) : RarityFilterAction {
     override fun applyToFilter(
       expansions: List<Expansion>,
-      filter: SearchFilter
+      filter: SearchFilter,
     ): SearchFilter {
       return filter.copy(
-        rarity = filter.rarity.minus(rarity)
+        rarity = filter.rarity.minus(rarity),
       )
     }
   }
@@ -50,7 +50,7 @@ object RarityFilterSpec : FilterSpec() {
 
   override fun LazyListScope.buildContent(
     uiState: FilterUiState,
-    actionEmitter: (FilterUiEvent) -> Unit
+    actionEmitter: (FilterUiEvent) -> Unit,
   ) {
     items(uiState.rarities) { rarity ->
       val isSelected = uiState.filter.rarity.contains(rarity)
@@ -76,9 +76,9 @@ object RarityFilterSpec : FilterSpec() {
             checked = isSelected,
             onCheckedChange = { isChecked ->
               clickListener(isChecked)
-            }
+            },
           )
-        }
+        },
       )
     }
   }

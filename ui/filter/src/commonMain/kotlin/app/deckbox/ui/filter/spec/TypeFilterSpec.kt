@@ -22,7 +22,7 @@ class TypeFilterSpec(
 
   override fun LazyListScope.buildContent(
     uiState: FilterUiState,
-    actionEmitter: (FilterUiEvent) -> Unit
+    actionEmitter: (FilterUiEvent) -> Unit,
   ) {
     item {
       TypePicker(
@@ -37,7 +37,7 @@ class TypeFilterSpec(
           start = 16.dp,
           end = 16.dp,
           bottom = 8.dp,
-        )
+        ),
       )
     }
   }

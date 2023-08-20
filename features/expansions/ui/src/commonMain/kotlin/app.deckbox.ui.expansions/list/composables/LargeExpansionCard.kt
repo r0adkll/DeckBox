@@ -26,9 +26,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.common.compose.widgets.ImageAvatar
-import app.deckbox.common.compose.widgets.TagChip
-import app.deckbox.common.compose.widgets.TagStyle
-import app.deckbox.common.compose.widgets.Tags
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Legality
@@ -99,7 +96,7 @@ internal fun LargeExpansionCard(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier.padding(
         start = 16.dp,
-      )
+      ),
     ) {
       if (expansion.legalities?.standard == Legality.LEGAL) {
         Text(

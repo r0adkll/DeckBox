@@ -8,7 +8,6 @@ import app.deckbox.core.model.SuperType
 import app.deckbox.ui.filter.spec.Attribute
 import app.deckbox.ui.filter.spec.FilterAction
 import app.deckbox.ui.filter.spec.FilterSpec
-import com.slack.circuit.runtime.CircuitUiState
 
 @Stable
 data class FilterUiState(

@@ -1,7 +1,6 @@
 package app.deckbox.ui.decks
 
 import DeckBoxRootAppBar
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues

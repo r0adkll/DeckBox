@@ -47,7 +47,7 @@ fun TypePicker(
           } else {
             onUnselected(type)
           }
-        }
+        },
       )
     }
   }
@@ -97,7 +97,7 @@ private fun TypeChip(
         style = MaterialTheme.typography.labelLarge.copy(
           color = contentColor,
         ),
-        modifier = Modifier.padding(end = 16.dp)
+        modifier = Modifier.padding(end = 16.dp),
       )
     }
   }
