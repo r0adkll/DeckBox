@@ -20,4 +20,3 @@ fun Project.configureCompose() {
     kotlinCompilerPlugin.set("1.4.8")
   }
 }
-
