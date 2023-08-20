@@ -1,0 +1,13 @@
+CREATE TABLE rarities (
+  value TEXT NOT NULL PRIMARY KEY
+);
+
+getAll:
+SELECT * FROM rarities;
+
+insert:
+INSERT OR IGNORE INTO rarities
+VALUES ?;
+
+deleteAll:
+DELETE FROM rarities;

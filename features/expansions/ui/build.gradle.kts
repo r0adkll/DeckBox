@@ -9,6 +9,7 @@ kotlin {
       dependencies {
         implementation(projects.features.expansions.public)
         implementation(projects.features.cards.public)
+        implementation(projects.ui.filter)
       }
     }
   }

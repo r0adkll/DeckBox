@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import app.cash.paging.LoadStateLoading
 import app.cash.paging.Pager
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemKey
+import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.model.Card
 import com.valentinilk.shimmer.shimmer
 import kotlin.math.ceil
@@ -75,6 +77,51 @@ fun PokemonCardGrid(
       modifier = modifier.fillMaxSize(),
     )
   } else if (isPagerEmpty && !isRefreshing) {
+    emptyContent()
+  }
+}
+
+@Composable
+fun PokemonCardGrid(
+  cards: LoadState<out List<Card>>,
+  onClick: (Card) -> Unit,
+  modifier: Modifier = Modifier,
+  state: LazyGridState = rememberLazyGridState(),
+  contentPadding: PaddingValues = PaddingValues(),
+  columns: Int = DefaultColumns,
+  emptyContent: @Composable () -> Unit = { DefaultEmptyView() },
+) {
+  LazyVerticalGrid(
+    columns = GridCells.Fixed(columns),
+    verticalArrangement = Arrangement.spacedBy(DefaultVerticalItemSpacing),
+    horizontalArrangement = Arrangement.spacedBy(DefaultHorizontalItemSpacing),
+    contentPadding = contentPadding,
+    state = state,
+    modifier = modifier.fillMaxSize(),
+  ) {
+    if (cards is LoadState.Loaded) {
+      items(
+        items = cards.data,
+        key = { it.id },
+      ) { card ->
+        PokemonCard(
+          card = card,
+          onClick = { onClick(card) },
+        )
+      }
+    }
+  }
+
+  val isEmpty = (cards as? LoadState.Loaded)?.data?.isEmpty() == true
+  val isRefreshing = cards is LoadState.Loading
+
+  if (isRefreshing) {
+    ShimmerLoadingGrid(
+      columns = columns,
+      contentPadding = contentPadding,
+      modifier = modifier.fillMaxSize(),
+    )
+  } else if (isEmpty) {
     emptyContent()
   }
 }

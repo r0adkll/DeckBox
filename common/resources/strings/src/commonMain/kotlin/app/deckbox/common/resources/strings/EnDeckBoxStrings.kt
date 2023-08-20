@@ -11,7 +11,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
   standardLegality = "Standard",
   expandedLegality = "Expanded",
   unlimitedLegality = "Unlimited",
-  genericEmptyCardsMessage = "A Snorlax has blocked your way. Please try another path.",
+  genericEmptyCardsMessage = "A Snorlax has blocked the path.\nPlease try another way.",
   genericSearchEmpty = { query ->
     buildAnnotatedString {
       append("Unable to find results for ")
@@ -65,4 +65,9 @@ val EnDeckBoxStrings = DeckBoxStrings(
   thirtyDayAvg = "30 day avg",
 
   actionBuy = "Buy",
+
+  lessThan = { "Less than $it" },
+  lessThanEqual = { "Less than or equal to $it" },
+  greaterThan = { "Greater than $it" },
+  greaterThanEqual = { "Greater than or equal to $it" },
 )

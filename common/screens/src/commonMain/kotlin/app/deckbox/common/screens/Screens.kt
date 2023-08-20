@@ -51,6 +51,9 @@ class CardDetailScreen(
 }
 
 @CommonParcelize
+class FilterScreen : DeckBoxScreen(name = "Filter()")
+
+@CommonParcelize
 class SettingsScreen : DeckBoxScreen(name = "Settings()")
 
 @CommonParcelize

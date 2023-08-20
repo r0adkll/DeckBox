@@ -2,6 +2,7 @@ package app.deckbox.features.cards.impl.db
 
 import app.cash.sqldelight.TransactionCallbacks
 import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
@@ -89,6 +90,19 @@ class SqlDelightCardDao(
   override fun observe(query: CardQuery): Flow<List<Card>> {
     // TODO: Support query filter here
     return emptyFlow()
+  }
+
+  override fun observeByExpansion(expansionId: String): Flow<List<Card>> {
+    return database.cardQueries
+      .getByExpansionId(expansionId)
+      .asFlow()
+      .mapNotNull {
+        withContext(dispatcherProvider.databaseRead) {
+          database.transactionWithResult {
+            it.executeAsList().let(::hydrate)
+          }
+        }
+      }
   }
 
   override suspend fun insert(card: Card) = withContext(dispatcherProvider.databaseWrite) {

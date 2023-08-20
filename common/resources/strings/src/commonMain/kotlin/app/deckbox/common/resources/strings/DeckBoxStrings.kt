@@ -56,6 +56,12 @@ data class DeckBoxStrings(
 
   val actionBuy: String,
 
+  // Filter
+  val lessThan: (Int) -> String,
+  val lessThanEqual: (Int) -> String,
+  val greaterThan: (Int) -> String,
+  val greaterThanEqual: (Int) -> String,
+
   // Settings
   val settings: String,
   val settingsTabContentDescription: String,

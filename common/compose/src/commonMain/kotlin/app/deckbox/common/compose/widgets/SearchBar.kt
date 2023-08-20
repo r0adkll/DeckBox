@@ -29,8 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 val SearchBarHeight = 56.dp
-private val SearchBarElevation = 6.dp
-private val SearchBarPadding = 16.dp
+val SearchBarElevation = 6.dp
+val SearchBarPadding = 16.dp
 
 @Composable
 fun SearchBar(
@@ -42,77 +42,74 @@ fun SearchBar(
   leading: @Composable () -> Unit,
   placeholder: @Composable () -> Unit,
 ) {
-  Column(
+  Row(
     modifier = modifier
       .background(
         color = MaterialTheme.colorScheme.surfaceColorAtElevation(SearchBarElevation),
         shape = RoundedCornerShape(50),
-      ),
+      )
+      .height(SearchBarHeight),
+    verticalAlignment = Alignment.CenterVertically,
   ) {
-    Row(
-      modifier = Modifier.height(SearchBarHeight),
-      verticalAlignment = Alignment.CenterVertically,
+    Spacer(Modifier.width(SearchBarPadding))
+    CompositionLocalProvider(
+      LocalContentColor provides MaterialTheme.colorScheme.onSurface,
     ) {
-      Spacer(Modifier.width(SearchBarPadding))
-      CompositionLocalProvider(
-        LocalContentColor provides MaterialTheme.colorScheme.onSurface,
-      ) {
-        leading()
-      }
-      Spacer(Modifier.width(SearchBarPadding))
+      leading()
+    }
+    Spacer(Modifier.width(SearchBarPadding))
 
-      Box(
-        Modifier.weight(1f),
-      ) {
-        var query by remember { mutableStateOf(initialValue) }
+    Box(
+      Modifier.weight(1f),
+    ) {
+      var query by remember { mutableStateOf(initialValue) }
 
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-        ) {
-          BasicTextField(
-            modifier = Modifier.weight(1f),
-            value = query ?: "",
-            textStyle = MaterialTheme.typography.bodyLarge.copy(
-              color = MaterialTheme.colorScheme.onSurface,
-            ),
-            onValueChange = { newValue ->
-              query = newValue
-              onQueryUpdated(newValue)
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        BasicTextField(
+          modifier = Modifier.weight(1f),
+          value = query ?: "",
+          textStyle = MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onSurface,
+          ),
+          onValueChange = { newValue ->
+            query = newValue
+            onQueryUpdated(newValue)
+          },
+        )
+
+        if (!query.isNullOrEmpty()) {
+          IconButton(
+            onClick = {
+              query = null
+              onQueryCleared()
             },
-          )
-
-          if (!query.isNullOrEmpty()) {
-            IconButton(
-              onClick = {
-                query = null
-                onQueryCleared()
-              },
-            ) {
-              Icon(Icons.Rounded.Close, contentDescription = null)
-            }
-          }
-        }
-
-        if (query.isNullOrBlank()) {
-          CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.bodyLarge,
-            LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
           ) {
-            placeholder()
+            Icon(Icons.Rounded.Close, contentDescription = null)
           }
         }
       }
 
-      if (trailing != null) {
-        Box(
-          modifier = Modifier.size(SearchBarHeight),
-          contentAlignment = Alignment.Center,
+      if (query.isNullOrBlank()) {
+        CompositionLocalProvider(
+          LocalTextStyle provides MaterialTheme.typography.bodyLarge,
+          LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
         ) {
-          CompositionLocalProvider(
-            LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
-          ) {
-            trailing()
-          }
+          placeholder()
+        }
+      }
+    }
+
+    if (trailing != null) {
+      Box(
+        modifier = Modifier.size(SearchBarHeight),
+        contentAlignment = Alignment.Center,
+      ) {
+        CompositionLocalProvider(
+          LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
+        ) {
+          trailing()
         }
       }
     }

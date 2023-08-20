@@ -233,7 +233,7 @@ class MergeComponentGenerator : Generator {
               subcomponentClassName,
               *subcomponentConstructorParams.map { it.name }.toTypedArray(),
             )
-            .addOriginatingKSFile(subcomponent.containingFile!!)
+//            .addOriginatingKSFile(subcomponent.containingFile!!)
             .build(),
         )
 
