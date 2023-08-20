@@ -19,7 +19,7 @@ kotlin {
   }
 
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         api(projects.core)
         api(projects.common.screens)

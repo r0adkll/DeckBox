@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 @Composable
 actual fun ApplyStatusBar(
   useDarkColors: Boolean,
-  colorScheme: ColorScheme
+  colorScheme: ColorScheme,
 ) {
   // Do nothing
 }
