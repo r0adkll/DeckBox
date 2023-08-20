@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,8 +60,6 @@ import app.deckbox.shared.navigator.MainDetailNavigator
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.safeContentPadding
-import com.moriatsushi.insetsx.statusBars
-import com.moriatsushi.insetsx.systemBars
 import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.backstack.popUntil
 import com.slack.circuit.backstack.rememberSaveableBackStack

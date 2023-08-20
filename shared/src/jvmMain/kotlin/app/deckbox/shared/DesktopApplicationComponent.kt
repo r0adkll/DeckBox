@@ -10,33 +10,29 @@ import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.shared.di.SharedAppComponent
 import com.r0adkll.kotlininject.merge.annotations.MergeComponent
-import java.util.concurrent.TimeUnit
 import java.util.prefs.Preferences
 import me.tatarka.inject.annotations.Provides
-import okhttp3.ConnectionPool
-import okhttp3.Dispatcher
-import okhttp3.OkHttpClient
 
 @AppScope
 @MergeComponent(MergeAppScope::class)
 abstract class DesktopApplicationComponent : SharedAppComponent {
 
-    @AppScope
-    @Provides
-    fun provideApplicationId(): ApplicationInfo = ApplicationInfo(
-        packageName = "app.deckbox",
-        debugBuild = true,
-        flavor = Flavor.Standard,
-        versionName = "1.0.0",
-        versionCode = 1,
-    )
+  @AppScope
+  @Provides
+  fun provideApplicationId(): ApplicationInfo = ApplicationInfo(
+    packageName = "app.deckbox",
+    debugBuild = true,
+    flavor = Flavor.Standard,
+    versionName = "1.0.0",
+    versionCode = 1,
+  )
 
-    @AppScope
-    @Provides
-    fun providePreferences(): Preferences = Preferences.userRoot().node("app.deckbox")
+  @AppScope
+  @Provides
+  fun providePreferences(): Preferences = Preferences.userRoot().node("app.deckbox")
 
-    @Provides
-    fun provideDensity(): Density = Density(density = 1f) // FIXME
+  @Provides
+  fun provideDensity(): Density = Density(density = 1f) // FIXME
 
 //    @AppScope
 //    @Provides
@@ -59,5 +55,5 @@ abstract class DesktopApplicationComponent : SharedAppComponent {
 //        .writeTimeout(20, TimeUnit.SECONDS)
 //        .build()
 
-    companion object
+  companion object
 }

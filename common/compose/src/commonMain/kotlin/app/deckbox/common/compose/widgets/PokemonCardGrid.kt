@@ -24,7 +24,6 @@ import app.cash.paging.compose.itemKey
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.model.Card
 import com.valentinilk.shimmer.shimmer
-import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
