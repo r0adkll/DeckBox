@@ -11,10 +11,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.moriatsushi.insetsx.systemBars
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,12 +19,10 @@ fun DeckBoxRootAppBar(
   title: String,
   modifier: Modifier = Modifier,
   scrollBehavior: TopAppBarScrollBehavior? = null,
-  elevation: Dp = 0.dp,
   actions: @Composable RowScope.() -> Unit = {},
 ) {
-  val elevationPx = with(LocalDensity.current) { elevation.toPx() }
   CenterAlignedTopAppBar(
-    modifier = modifier.graphicsLayer(shadowElevation = elevationPx),
+    modifier = modifier,
     windowInsets = WindowInsets.systemBars
       .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
     scrollBehavior = scrollBehavior,

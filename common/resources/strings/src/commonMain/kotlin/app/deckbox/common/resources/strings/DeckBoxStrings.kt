@@ -19,7 +19,9 @@ data class DeckBoxStrings(
   val deckLastUpdated: (timestamp: String) -> String,
   val deckActionTestButton: String,
   val deckActionDuplicateButton: String,
+  val deckActionDuplicateButtonContentDescription: String,
   val deckActionDeleteButton: String,
+  val deckActionDeleteButtonContentDescription: String,
   val fabActionNewDeckButton: String,
 
   // Expansions
