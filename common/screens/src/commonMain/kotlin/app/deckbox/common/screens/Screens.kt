@@ -15,6 +15,11 @@ class RootScreen : DeckBoxScreen(name = "Root")
 class DecksScreen : DeckBoxScreen(name = "Decks()")
 
 @CommonParcelize
+data class DeckBuilderScreen(
+  val id: String? = null,
+) : DeckBoxScreen(name = "DeckBuilder()")
+
+@CommonParcelize
 class BrowseScreen : DeckBoxScreen(name = "Browse()")
 
 @CommonParcelize
