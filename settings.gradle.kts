@@ -11,6 +11,9 @@ dependencyResolutionManagement {
   repositories {
     google()
     mavenCentral()
+
+    // Prerelease versions of Compose Multiplatform
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
   }
 }
 

@@ -73,7 +73,7 @@ internal fun CardDetail(
             Icon(Icons.Rounded.ArrowBack, contentDescription = null)
           }
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
           containerColor = Color.Transparent,
         ),
       )

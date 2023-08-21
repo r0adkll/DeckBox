@@ -47,7 +47,7 @@ internal fun ExpansionDetailFilter(
             Icon(Icons.Rounded.FilterAltOff, contentDescription = null)
           }
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
           containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(SearchBarElevation),
         ),
       )

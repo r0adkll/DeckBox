@@ -1,18 +1,18 @@
 [versions]
-agp = "8.0.2"
+agp = "8.1.0"
 androidxlifecycle = "2.6.1"
 androidxactivity = "1.7.2"
 androidx-test-ext-junit = "1.1.5"
 core-ktx = "1.10.1"
-coroutines = "1.7.2"
-compose-multiplatform = "1.4.1"
-circuit = "0.11.0"
-kotlin = "1.8.20"
+coroutines = "1.7.3"
+compose-multiplatform = "1.5.0-rc01"
+circuit = "0.13.0-beta01"
+kotlin = "1.9.0"
 kotlin-inject = "0.6.1"
 kotlinpoet = "1.14.2"
-ksp = "1.8.22-1.0.11"
+ksp = "1.9.0-1.0.13"
 ktlint = "0.49.1"
-ktor = "2.3.1"
+ktor = "2.3.3"
 lyricist = "1.4.2"
 multiplatformsettings = "1.0.0"
 okhttp = "4.11.0"
@@ -21,9 +21,9 @@ paging-multiplatform = "3.2.0-alpha05-0.2.3"
 junit = "4.13.2"
 espresso-core = "3.5.1"
 appcompat = "1.6.1"
-spotless = "6.19.0"
-sqldelight = "2.0.0-rc02"
-serialization = "1.5.0"
+spotless = "6.20.0"
+sqldelight = "2.0.0"
+serialization = "1.5.1"
 material3 = "1.1.1"
 
 [plugins]
@@ -32,7 +32,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
 android-test = { id = "com.android.test", version.ref = "agp" }
 buildConfig = "com.github.gmazzo.buildconfig:4.1.2"
-cacheFixPlugin = { id = "org.gradle.android.cache-fix", version = "2.7.2" }
+cacheFixPlugin = { id = "org.gradle.android.cache-fix", version = "2.7.3" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlin-core = { id = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -41,7 +41,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 gms-googleServices = "com.google.gms.google-services:4.3.15"
-firebase-crashlytics = "com.google.firebase.crashlytics:2.9.7"
+firebase-crashlytics = "com.google.firebase.crashlytics:2.9.8"
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
@@ -76,9 +76,9 @@ lyricist-compiler = { module = "cafe.adriel.lyricist:lyricist-processor", versio
 multiplatformsettings-core = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformsettings" }
 multiplatformsettings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformsettings" }
 
-compose-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.2.0"
+compose-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.1"
 insetsx = "com.moriatsushi.insetsx:insetsx:0.1.0-alpha10"
-imageloader = "io.github.qdsfdhvh:image-loader:1.6.0"
+imageloader = "io.github.qdsfdhvh:image-loader:1.6.4"
 materialcolorsutilities = "dev.sasikanth:material-color-utilities:1.0.0-alpha01"
 
 paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-multiplatform" }
@@ -89,7 +89,7 @@ kotlin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version
 kotlin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-extensions = { module = "org.jetbrains.kotlin:kotlin-android-extensions", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu:0.21.0"
+kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu:0.22.0"
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -115,7 +115,7 @@ ktor-client-contentnegotiation = { module = "io.ktor:ktor-client-content-negotia
 ktor-client-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 tools-desugarjdklibs = "com.android.tools:desugar_jdk_libs:2.0.3"
-store = "org.mobilenativefoundation.store:store5:5.0.0-beta02"
+store = "org.mobilenativefoundation.store:store5:5.0.0-beta03"
 
 # SqlDelight
 sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }

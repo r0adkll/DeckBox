@@ -211,7 +211,7 @@ object ExpansionsFilterSpec : FilterSpec() {
               ),
             )
           },
-          headlineText = {
+          headlineContent = {
             Text(
               text = when (uiState.visibleExpansionFormat) {
                 Format.STANDARD -> "View Expanded"
@@ -225,7 +225,6 @@ object ExpansionsFilterSpec : FilterSpec() {
     }
   }
 
-  @OptIn(ExperimentalMaterial3Api::class)
   @Composable
   private fun ExpansionFilterItem(
     expansion: Expansion,
@@ -249,7 +248,7 @@ object ExpansionsFilterSpec : FilterSpec() {
           modifier = Modifier.size(24.dp),
         )
       },
-      headlineText = {
+      headlineContent = {
         Text(expansion.name)
       },
       trailingContent = {

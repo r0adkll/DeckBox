@@ -70,7 +70,7 @@ object RarityFilterSpec : FilterSpec() {
         colors = ListItemDefaults.colors(
           containerColor = Color.Transparent,
         ),
-        headlineText = { Text(rarity) },
+        headlineContent = { Text(rarity) },
         trailingContent = {
           Switch(
             checked = isSelected,

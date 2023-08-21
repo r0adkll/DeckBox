@@ -39,7 +39,7 @@ fun DeckBoxAppBar(
   modifier: Modifier = Modifier,
   scrollBehavior: TopAppBarScrollBehavior? = null,
   actions: @Composable RowScope.() -> Unit = {},
-  colors: TopAppBarColors = TopAppBarDefaults.smallTopAppBarColors(),
+  colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
 ) {
   TopAppBar(
     modifier = modifier,
