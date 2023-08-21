@@ -6,6 +6,7 @@ import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.di.MergeActivityScope
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 
+@Suppress("UNUSED_PARAMETER")
 @CircuitInject(MergeActivityScope::class, DeckBuilderScreen::class)
 @Composable
 fun DeckBuilder(
