@@ -129,8 +129,8 @@ internal actual class GestureNavDecoration actual constructor(
                 (slideInHorizontally(tween(), SlightlyLeft) + fadeIn()).togetherWith(
                   slideOutHorizontally(
                     tween(),
-                    SlightlyRight
-                  ) + fadeOut()
+                    SlightlyRight,
+                  ) + fadeOut(),
                 )
               }.apply {
                 targetContentZIndex = -1f
