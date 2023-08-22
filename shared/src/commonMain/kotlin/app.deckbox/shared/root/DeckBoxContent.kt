@@ -20,8 +20,8 @@ import com.moriatsushi.insetsx.systemBars
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.LocalImageLoader
 import com.slack.circuit.backstack.SaveableBackStack
+import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
-import com.slack.circuit.foundation.CircuitConfig
 import com.slack.circuit.runtime.Navigator
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
@@ -42,7 +42,7 @@ fun DeckBoxContentWithInsets(
   @Assisted navigator: Navigator,
   @Assisted onOpenUrl: (String) -> Unit,
   @Assisted windowInsets: WindowInsets,
-  circuitConfig: CircuitConfig,
+  circuit: Circuit,
   imageLoader: Lazy<ImageLoader>,
   settings: DeckBoxSettings,
   @Assisted modifier: Modifier = Modifier,
@@ -56,7 +56,7 @@ fun DeckBoxContentWithInsets(
       LocalWindowSizeClass provides calculateWindowSizeClass(),
       LocalImageLoader provides remember { imageLoader.value },
     ) {
-      CircuitCompositionLocals(circuitConfig) {
+      CircuitCompositionLocals(circuit) {
         DeckBoxTheme(
           useDarkColors = settings.shouldUseDarkColors(),
           useDynamicColors = settings.shouldUseDynamicColors(),
@@ -86,7 +86,7 @@ fun DeckBoxContent(
   @Assisted backstack: SaveableBackStack,
   @Assisted navigator: Navigator,
   @Assisted onOpenUrl: (String) -> Unit,
-  circuitConfig: CircuitConfig,
+  circuit: Circuit,
   imageLoader: Lazy<ImageLoader>,
   settings: DeckBoxSettings,
   @Assisted modifier: Modifier = Modifier,
@@ -94,7 +94,7 @@ fun DeckBoxContent(
   DeckBoxContentWithInsets(
     backstack = backstack,
     navigator = navigator,
-    circuitConfig = circuitConfig,
+    circuit = circuit,
     imageLoader = imageLoader,
     settings = settings,
     onOpenUrl = onOpenUrl,

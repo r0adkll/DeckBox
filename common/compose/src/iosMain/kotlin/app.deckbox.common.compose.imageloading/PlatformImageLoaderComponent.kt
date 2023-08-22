@@ -4,6 +4,7 @@ import app.deckbox.core.di.ActivityScope
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.cache.memory.maxSizePercent
 import com.seiko.imageloader.component.setupDefaultComponents
+import kotlinx.cinterop.ExperimentalForeignApi
 import me.tatarka.inject.annotations.Provides
 import okio.Path
 import okio.Path.Companion.toPath
@@ -13,6 +14,7 @@ import platform.Foundation.NSUserDomainMask
 
 actual interface PlatformImageLoaderComponent {
 
+  @OptIn(ExperimentalForeignApi::class)
   @Provides
   @ActivityScope
   fun imageLoader(): ImageLoader {

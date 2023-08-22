@@ -1,6 +1,7 @@
-package app.deckbox.ui.decks
+package app.deckbox.ui.decks.list
 
 import DeckBoxRootAppBar
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -22,12 +24,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -39,6 +38,7 @@ import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.features.decks.public.ui.DeckCard
+import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.systemBars
@@ -51,9 +51,9 @@ internal fun Decks(
   state: DecksUiState,
   modifier: Modifier = Modifier,
 ) {
-  val detailNavigationState = LocalDetailNavigation.current
-  var isTopBarElevated by remember { mutableStateOf(false) }
+  val lazyListState = rememberLazyListState()
 
+  val detailNavigationState = LocalDetailNavigation.current
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   Scaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -63,7 +63,7 @@ internal fun Decks(
           title = LocalStrings.current.decks,
           actions = {
             IconButton(
-              onClick = { /*TODO: Nav to settings screen*/ },
+              onClick = { state.eventSink(DecksUiEvent.OpenAppSettings) },
             ) {
               Icon(Icons.Rounded.Settings, contentDescription = null)
             }
@@ -74,14 +74,16 @@ internal fun Decks(
     },
     floatingActionButton = {
       if (detailNavigationState is DetailNavigation.None) {
+        val isExpanded by remember {
+          derivedStateOf {
+            lazyListState.firstVisibleItemIndex == 0
+          }
+        }
         ExtendedFloatingActionButton(
-          text = { Text("Create") },
-          icon = {
-            Icon(Icons.Rounded.Add, contentDescription = null)
-          },
-          onClick = {
-            // TODO: Navigate to Deck Builder Screen
-          },
+          text = { Text(LocalStrings.current.fabActionNewDeckButton) },
+          icon = { Icon(Icons.Rounded.Add, contentDescription = null) },
+          expanded = isExpanded,
+          onClick = { state.eventSink(DecksUiEvent.CreateNewDeck) },
         )
       }
     },
@@ -90,8 +92,11 @@ internal fun Decks(
     DeckList(
       decks = state.decks,
       deckCardConfig = state.deckCardConfig,
+      onDeckEvent = { deck, event ->
+        state.eventSink(DecksUiEvent.CardEvent(deck, event))
+      },
       contentPadding = paddingValues,
-      onScrolled = { isTopBarElevated = it },
+      state = lazyListState,
     )
 
     if (state.isLoading) {
@@ -102,26 +107,16 @@ internal fun Decks(
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DeckList(
   decks: List<Deck>,
   deckCardConfig: DeckCardConfig,
+  onDeckEvent: (Deck, DeckCardEvent) -> Unit,
   contentPadding: PaddingValues,
-  onScrolled: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
+  state: LazyListState = rememberLazyListState(),
 ) {
-  val state = rememberLazyListState()
-  val isScrolled by remember {
-    derivedStateOf {
-      state.firstVisibleItemIndex > 0 ||
-        state.firstVisibleItemScrollOffset > 0
-    }
-  }
-
-  LaunchedEffect(isScrolled) {
-    onScrolled(isScrolled)
-  }
-
   LazyColumn(
     verticalArrangement = Arrangement.spacedBy(16.dp),
     contentPadding = contentPadding,
@@ -136,7 +131,9 @@ private fun DeckList(
       DeckCard(
         deck = deck,
         config = deckCardConfig,
-        onEvent = {},
+        onEvent = { event -> onDeckEvent(deck, event) },
+        interactionSource = state.interactionSource,
+        modifier = Modifier.animateItemPlacement(),
       )
     }
   }

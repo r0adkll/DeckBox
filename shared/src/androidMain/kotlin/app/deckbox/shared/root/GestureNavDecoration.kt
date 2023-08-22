@@ -19,7 +19,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -117,24 +117,28 @@ internal actual class GestureNavDecoration actual constructor(
           when {
             // adding to back stack
             backStackDepth > prevStackDepth -> {
-              (slideInHorizontally(tween(), SlightlyRight) + fadeIn()) with
+              (slideInHorizontally(tween(), SlightlyRight) + fadeIn()) togetherWith
                 (slideOutHorizontally(tween(), SlightlyLeft) + fadeOut())
             }
 
             // come back from back stack
             backStackDepth < prevStackDepth -> {
               if (recordPoppedFromGesture == initialState) {
-                EnterTransition.None with scaleOut(targetScale = 0.8f) + fadeOut()
+                EnterTransition.None togetherWith scaleOut(targetScale = 0.8f) + fadeOut()
               } else {
-                slideInHorizontally(tween(), SlightlyLeft) + fadeIn() with
-                  slideOutHorizontally(tween(), SlightlyRight) + fadeOut()
+                (slideInHorizontally(tween(), SlightlyLeft) + fadeIn()).togetherWith(
+                  slideOutHorizontally(
+                    tween(),
+                    SlightlyRight,
+                  ) + fadeOut(),
+                )
               }.apply {
                 targetContentZIndex = -1f
               }
             }
 
             // Root reset. Crossfade
-            else -> fadeIn() with fadeOut()
+            else -> fadeIn() togetherWith fadeOut()
           }
         },
       ) { record ->

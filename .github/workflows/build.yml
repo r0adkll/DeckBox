@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: android-build-outputs
-          path: androidApp/app/build/outputs
+          path: androidApp/build/outputs
 
       - name: Upload reports
         if: always()
@@ -171,14 +171,14 @@ jobs:
           cache-disabled: true
 
       - name: Build Desktop App
-        run: ./gradlew jvmTest :desktopApp:package
+        run: ./gradlew jvmTest :desktopApp:packageDistributionForCurrentOS
 
       - name: Upload build outputs
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: desktop-build-binaries
-          path: desktop-app/build/compose/binaries
+          path: desktopApp/build/compose/binaries
 
       - name: Upload reports
         if: always()

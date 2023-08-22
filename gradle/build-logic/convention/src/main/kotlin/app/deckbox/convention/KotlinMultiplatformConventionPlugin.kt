@@ -28,7 +28,7 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
 
       jvm()
       if (pluginManager.hasPlugin("com.android.library")) {
-        android()
+        androidTarget()
       }
 
       listOf(

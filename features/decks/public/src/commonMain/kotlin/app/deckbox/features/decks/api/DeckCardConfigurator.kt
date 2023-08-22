@@ -1,4 +1,4 @@
-package app.deckbox.features.decks.public
+package app.deckbox.features.decks.api
 
 import app.deckbox.core.settings.DeckCardConfig
 import kotlinx.coroutines.flow.Flow

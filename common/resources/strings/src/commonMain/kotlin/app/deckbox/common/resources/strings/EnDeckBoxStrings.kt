@@ -29,9 +29,12 @@ val EnDeckBoxStrings = DeckBoxStrings(
   decksTabContentDescription = "List of saved decks",
   deckDefaultNoName = "A deck has no name",
   deckLastUpdated = { timestamp -> "Last updated $timestamp" },
-  deckActionTestButton = "Test",
+  deckActionTestButton = "Experiment",
   deckActionDuplicateButton = "Duplicate",
+  deckActionDuplicateButtonContentDescription = "Duplicate deck",
   deckActionDeleteButton = "Delete",
+  deckActionDeleteButtonContentDescription = "Delete deck",
+  fabActionNewDeckButton = "New deck",
 
   expansions = "Expansions",
   expansionsTabContentDescription = "List of expansion sets",

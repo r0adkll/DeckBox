@@ -41,13 +41,13 @@ fun DeckBoxUiViewController(
 
   CompositionLocalProvider(LocalViewConfiguration provides vc) {
     deckBoxContent(
-      backstack = backstack,
-      navigator = navigator,
-      modifier = Modifier,
-      onOpenUrl = { url ->
+      backstack,
+      navigator,
+      { url ->
         val safari = SFSafariViewController(NSURL(string = url))
         uiViewController.presentViewController(safari, animated = true, completion = null)
       },
+      Modifier,
     )
   }
 }
