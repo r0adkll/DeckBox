@@ -37,13 +37,13 @@ class MainActivity : ComponentActivity() {
       val navigator = rememberCircuitNavigator(backstack)
 
       component.deckBoxContent(
-        backstack = backstack,
-        navigator = navigator,
-        onOpenUrl = { url ->
+        backstack,
+        navigator,
+        { url ->
           val intent = CustomTabsIntent.Builder().build()
           intent.launchUrl(this@MainActivity, Uri.parse(url))
         },
-        modifier = Modifier,
+        Modifier,
       )
     }
   }

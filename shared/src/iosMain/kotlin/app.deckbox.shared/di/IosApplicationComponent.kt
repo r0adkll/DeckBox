@@ -8,6 +8,7 @@ import app.deckbox.core.app.Flavor
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import com.r0adkll.kotlininject.merge.annotations.MergeComponent
+import kotlin.experimental.ExperimentalNativeApi
 import me.tatarka.inject.annotations.Provides
 import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
@@ -16,6 +17,7 @@ import platform.Foundation.NSUserDefaults
 @MergeComponent(MergeAppScope::class)
 abstract class IosApplicationComponent() : SharedAppComponent {
 
+  @OptIn(ExperimentalNativeApi::class)
   @AppScope
   @Provides
   fun provideApplicationId(): ApplicationInfo = ApplicationInfo(
