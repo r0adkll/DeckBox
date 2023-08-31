@@ -33,7 +33,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
@@ -46,7 +45,11 @@ import app.deckbox.common.compose.extensions.plus
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.*
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.CardClick
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.DecrementCard
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.IncrementCard
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NavigateBack
 import app.deckbox.ui.decks.builder.composables.DeckBuilderBottomSheet
 import app.deckbox.ui.decks.builder.composables.DeckCardList
 import app.deckbox.ui.decks.builder.composables.SheetHeaderHeight
@@ -196,4 +199,3 @@ fun DeckBuilder(
     }
   }
 }
-

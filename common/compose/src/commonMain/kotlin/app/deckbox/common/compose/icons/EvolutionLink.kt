@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
 private var _vector: ImageVector? = null
 
 val EvolutionLink: ImageVector
@@ -23,7 +22,7 @@ val EvolutionLink: ImageVector
       defaultWidth = 56.dp,
       defaultHeight = 135.dp,
       viewportWidth = 56f,
-      viewportHeight = 135f
+      viewportHeight = 135f,
     ).apply {
       group {
         path(
@@ -35,7 +34,7 @@ val EvolutionLink: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(56f, 0f)
           horizontalLineTo(0f)
@@ -54,7 +53,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(28f, 0f)
             lineTo(56f, 28f)
@@ -74,7 +73,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(28f, 56f)
             lineTo(56f, 84f)
@@ -94,7 +93,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(28f, 112f)
             lineTo(56f, 140f)
@@ -114,7 +113,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(18f, 0f)
             lineTo(46f, 28f)
@@ -134,7 +133,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(18f, 56f)
             lineTo(46f, 84f)
@@ -154,7 +153,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(18f, 112f)
             lineTo(46f, 140f)
@@ -176,7 +175,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(55f, 0f)
             lineTo(83f, 28f)
@@ -196,7 +195,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(55f, 56f)
             lineTo(83f, 84f)
@@ -216,7 +215,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(55f, 112f)
             lineTo(83f, 140f)
@@ -236,7 +235,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(45f, 0f)
             lineTo(73f, 28f)
@@ -256,7 +255,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(45f, 56f)
             lineTo(73f, 84f)
@@ -276,7 +275,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(45f, 112f)
             lineTo(73f, 140f)
@@ -298,7 +297,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(0f, 0f)
             lineTo(28f, 28f)
@@ -318,7 +317,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(0f, 56f)
             lineTo(28f, 84f)
@@ -338,7 +337,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(0f, 112f)
             lineTo(28f, 140f)
@@ -358,7 +357,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(-10f, 0f)
             lineTo(18f, 28f)
@@ -378,7 +377,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(-10f, 56f)
             lineTo(18f, 84f)
@@ -398,7 +397,7 @@ val EvolutionLink: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.EvenOdd
+            pathFillType = PathFillType.EvenOdd,
           ) {
             moveTo(-10f, 112f)
             lineTo(18f, 140f)
@@ -414,4 +413,3 @@ val EvolutionLink: ImageVector
     }.build()
     return _vector!!
   }
-

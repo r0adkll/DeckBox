@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -88,7 +87,7 @@ fun PokemonCard(
         count = count,
         collected = collected,
         modifier = Modifier
-          .align(Alignment.BottomStart)
+          .align(Alignment.BottomStart),
       )
     }
   }
@@ -148,7 +147,7 @@ private fun CardCounter(
       .clip(
         RoundedCornerShape(
           topEnd = CardCornerRadius,
-        )
+        ),
       ),
   ) {
     Text(
@@ -161,7 +160,7 @@ private fun CardCounter(
         .padding(
           horizontal = 8.dp,
           vertical = 6.dp,
-        )
+        ),
     )
     if (collected != null) {
       Text(
@@ -174,7 +173,7 @@ private fun CardCounter(
           .padding(
             horizontal = 8.dp,
             vertical = 6.dp,
-          )
+          ),
       )
     }
   }

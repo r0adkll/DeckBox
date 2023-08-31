@@ -8,11 +8,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -20,23 +16,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import app.deckbox.common.compose.icons.EvolutionLink
-import app.deckbox.common.compose.widgets.PokemonCard
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Evolution
 import app.deckbox.core.model.Stacked
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.LoadState
 
 private val DefaultEvolutionStageWidth = 16.dp
 private val SiblingCardSpacing = 1.dp
@@ -127,7 +118,7 @@ internal fun PokemonEvolution(
                 top = LinkPaddingVertical.toPx(),
                 right = positionX + stageWidth.toPx(),
                 bottom = size.height - LinkPaddingVertical.toPx(),
-              ){}
+              ) {}
             }
           }
         }

@@ -42,7 +42,7 @@ private val GradientColorStops = listOf(
 )
 
 fun Modifier.applyHoloAndDragEffect(
-  shape: Shape = RoundedCornerShape(DefaultCornerRadius)
+  shape: Shape = RoundedCornerShape(DefaultCornerRadius),
 ): Modifier = composed {
   var isDragging by remember { mutableStateOf(false) }
   var size by remember { mutableStateOf(IntSize(1, 1)) }
@@ -79,13 +79,13 @@ fun Modifier.applyHoloAndDragEffect(
         onDragStart = { isDragging = true },
         onDragEnd = { isDragging = false },
         onDragCancel = { isDragging = false },
-        onDrag =  { change, dragAmount ->
+        onDrag = { change, dragAmount ->
           if (change.positionChange() != Offset.Zero) {
             change.consume()
           }
           dragX += dragAmount.x
           dragY += dragAmount.y
-        }
+        },
       )
     }
     .graphicsLayer {

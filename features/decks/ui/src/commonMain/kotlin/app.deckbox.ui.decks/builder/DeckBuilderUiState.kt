@@ -3,7 +3,6 @@ package app.deckbox.ui.decks.builder
 import androidx.compose.runtime.Stable
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Deck
-import app.deckbox.core.model.Stacked
 import app.deckbox.core.model.SuperType
 import app.deckbox.ui.decks.builder.model.CardUiModel
 import com.slack.circuit.runtime.CircuitUiEvent

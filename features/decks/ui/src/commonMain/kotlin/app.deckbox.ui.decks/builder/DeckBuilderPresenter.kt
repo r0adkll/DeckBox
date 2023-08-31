@@ -119,7 +119,6 @@ class DeckBuilderPresenter(
           }
         }
 
-
         var oldestCardMarketUpdatedAt = LocalDate(3000, 1, 1)
         var cardMarketLow = 0.0
         sessionCards.forEach { stack ->

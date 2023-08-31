@@ -78,7 +78,7 @@ private fun PriceRow(
         )
         Text(
           text = LocalStrings.current.deckLastUpdated(price.lastUpdated),
-          style = MaterialTheme.typography.labelSmall
+          style = MaterialTheme.typography.labelSmall,
         )
       }
       Spacer(Modifier.width(16.dp))
@@ -99,13 +99,13 @@ private fun PriceRow(
           .padding(
             horizontal = 8.dp,
             vertical = 8.dp,
-          )
+          ),
       )
     }
     Spacer(Modifier.height(8.dp))
     FilledTonalButton(
       onClick = {},
-      modifier = Modifier.fillMaxWidth()
+      modifier = Modifier.fillMaxWidth(),
     ) {
       Text("Purchase @ $label")
     }

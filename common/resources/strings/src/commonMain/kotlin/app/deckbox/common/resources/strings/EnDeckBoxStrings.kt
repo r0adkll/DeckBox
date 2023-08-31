@@ -75,7 +75,8 @@ val EnDeckBoxStrings = DeckBoxStrings(
   greaterThanEqual = { "Greater than or equal to $it" },
   settings = "Settings",
   settingsTabContentDescription = "Change application settings",
-  decksEmptyStateMessage = "Looks like you don't have any decks!\nTry building one or importing an existing deck to see them appear here",
+  decksEmptyStateMessage = "Looks like you don't have any decks!\n" +
+    "Try building one or importing an existing deck to see them appear here",
   deckListHeaderPokemon = "Pokémon",
   deckListHeaderTrainer = "Trainer",
   deckListHeaderEnergy = "Energy",
@@ -85,5 +86,5 @@ val EnDeckBoxStrings = DeckBoxStrings(
     } else {
       "$count Copies"
     }
-  }
+  },
 )

@@ -12,7 +12,7 @@ class EvolutionTest {
 
   @Test
   fun `single card creates a single chain`() {
-    //given
+    // given
     val card = card("0", "Charmander")
 
     // when

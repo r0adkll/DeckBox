@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _vector: ImageVector? = null
 
@@ -23,7 +22,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
       defaultWidth = 384.dp,
       defaultHeight = 200.dp,
       viewportWidth = 384f,
-      viewportHeight = 200f
+      viewportHeight = 200f,
     ).apply {
       group {
         group {
@@ -37,7 +36,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(248f, 136f)
               horizontalLineTo(200f)
@@ -57,7 +56,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(120f, 8f)
               horizontalLineTo(72f)
@@ -77,7 +76,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(120f, 136f)
               horizontalLineTo(72f)
@@ -97,7 +96,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(376f, 136f)
               horizontalLineTo(328f)
@@ -117,7 +116,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(376f, 8f)
               horizontalLineTo(328f)
@@ -137,7 +136,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(216f, 72f)
               horizontalLineTo(168f)
@@ -157,7 +156,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(248f, 8f)
               horizontalLineTo(200f)
@@ -176,7 +175,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(71f, 75.3014f)
             curveTo(79.881f, 86.4503f, 83.642f, 95.0724f, 82.2831f, 101.168f)
@@ -236,7 +235,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(88f, 72.0001f)
               horizontalLineTo(40f)
@@ -255,7 +254,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(398.371f, 82.1205f)
             curveTo(400.384f, 83.6285f, 401.83f, 85.5723f, 402.711f, 87.952f)
@@ -294,7 +293,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(408f, 72f)
               horizontalLineTo(360f)
@@ -313,7 +312,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(14.3709f, 82.1205f)
             curveTo(16.3837f, 83.6285f, 17.8303f, 85.5723f, 18.7106f, 87.952f)
@@ -352,7 +351,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(24f, 72f)
               horizontalLineTo(-24f)
@@ -371,7 +370,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(29.2453f, 11.5866f)
             curveTo(32.5859f, 12.4952f, 35.0799f, 14.6357f, 36.7274f, 18.008f)
@@ -426,7 +425,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(56.0001f, 8f)
               horizontalLineTo(8.00006f)
@@ -445,7 +444,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(303.981f, 144.114f)
             curveTo(296.934f, 146.012f, 293.055f, 148.773f, 292.343f, 152.397f)
@@ -475,7 +474,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(312f, 136f)
               horizontalLineTo(264f)
@@ -494,7 +493,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(35.652f, 139.03f)
             lineTo(16.8282f, 165.63f)
@@ -515,7 +514,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(56.0001f, 136f)
               horizontalLineTo(8.00006f)
@@ -534,7 +533,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(256.276f, 75.6255f)
             curveTo(257.304f, 82.3798f, 258.741f, 86.3605f, 260.585f, 87.5676f)
@@ -561,7 +560,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(280f, 72.0001f)
               horizontalLineTo(232f)
@@ -580,7 +579,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(327.104f, 106.287f)
             lineTo(329.651f, 110.243f)
@@ -628,7 +627,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(344f, 72f)
               horizontalLineTo(296f)
@@ -647,7 +646,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(288f, 18.1043f)
             curveTo(296.936f, 18.2714f, 303.97f, 23.6721f, 309.102f, 34.3067f)
@@ -686,7 +685,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(312f, 8f)
               horizontalLineTo(264f)
@@ -705,7 +704,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(174.371f, 18.1205f)
             curveTo(176.384f, 19.6285f, 177.83f, 21.5723f, 178.711f, 23.952f)
@@ -744,7 +743,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(184f, 8f)
               horizontalLineTo(136f)
@@ -763,7 +762,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(162.994f, 142.662f)
             curveTo(165.555f, 143.896f, 167.574f, 145.504f, 169.051f, 147.484f)
@@ -797,7 +796,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(184f, 136f)
               horizontalLineTo(136f)
@@ -816,7 +815,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
             strokeLineCap = StrokeCap.Butt,
             strokeLineJoin = StrokeJoin.Miter,
             strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
+            pathFillType = PathFillType.NonZero,
           ) {
             moveTo(132.675f, 80.7845f)
             curveTo(140.699f, 82.714f, 146.6f, 89.1982f, 146.6f, 96.9f)
@@ -840,7 +839,7 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
               strokeLineCap = StrokeCap.Butt,
               strokeLineJoin = StrokeJoin.Miter,
               strokeLineMiter = 1.0f,
-              pathFillType = PathFillType.NonZero
+              pathFillType = PathFillType.NonZero,
             ) {
               moveTo(152f, 72f)
               horizontalLineTo(104f)
@@ -855,4 +854,3 @@ val DeckBoxIcons.TiledTypeIcons: ImageVector
     }.build()
     return _vector!!
   }
-

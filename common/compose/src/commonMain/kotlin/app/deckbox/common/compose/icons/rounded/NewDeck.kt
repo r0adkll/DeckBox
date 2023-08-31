@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons.rounded
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _newDeck: ImageVector? = null
 
@@ -23,7 +22,7 @@ val Icons.Rounded.NewDeck: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFF000000)),
@@ -34,7 +33,7 @@ val Icons.Rounded.NewDeck: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(19f, 18f)
         horizontalLineTo(5f)
@@ -62,7 +61,7 @@ val Icons.Rounded.NewDeck: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(20f, 12f)
         curveTo(20f, 13.1046f, 19.1046f, 14f, 18f, 14f)
@@ -92,7 +91,7 @@ val Icons.Rounded.NewDeck: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(18.4942f, 0.518037f)
         curveTo(18.7716f, 0.234f, 19.2284f, 0.234f, 19.5058f, 0.518f)
@@ -132,4 +131,3 @@ val Icons.Rounded.NewDeck: ImageVector
     }.build()
     return _newDeck!!
   }
-

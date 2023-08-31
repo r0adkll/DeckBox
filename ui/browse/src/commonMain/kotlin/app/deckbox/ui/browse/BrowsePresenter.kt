@@ -10,15 +10,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import app.cash.paging.Pager
-import app.cash.paging.PagingConfig
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
-import app.deckbox.features.cards.public.model.MAX_PAGE_SIZE
 import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.ui.filter.BrowseFilterPresenter
@@ -28,7 +25,6 @@ import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch

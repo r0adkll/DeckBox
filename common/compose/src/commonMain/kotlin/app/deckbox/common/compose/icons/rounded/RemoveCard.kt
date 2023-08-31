@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons.rounded
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _removeCard: ImageVector? = null
 
@@ -23,7 +22,7 @@ val Icons.Rounded.RemoveCard: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFF000000)),
@@ -34,7 +33,7 @@ val Icons.Rounded.RemoveCard: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(15f, 3f)
         curveTo(16.1046f, 3f, 17f, 3.8954f, 17f, 5f)
@@ -63,7 +62,7 @@ val Icons.Rounded.RemoveCard: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(13.878f, 21.1198f)
         lineTo(18.1177f, 16.8802f)
@@ -73,4 +72,3 @@ val Icons.Rounded.RemoveCard: ImageVector
     }.build()
     return _removeCard!!
   }
-

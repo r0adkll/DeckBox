@@ -17,9 +17,16 @@ class Evolution private constructor(
         node.evolvesFrom == card.card.name || // An existing node evolves from the card
         node.evolvesTo?.contains(card.card.name) == true || // An existing node evolves to the card
         (node.name == card.card.evolvesFrom) || // An existing node evolves to a card
-        (node.evolvesFrom == card.card.evolvesFrom && card.card.evolvesFrom != null) || // An existing node evolves from the same root as the card
-        node.evolvesTo?.contains(card.card.evolvesFrom ?: "") == true || // An existing node evolves to a card that this card evolves from (missing middle child)
-        card.card.evolvesTo?.contains(node.evolvesFrom ?: "") == true // An existing node evolves from a card that this card evolves to (missing middle child)
+        // An existing node evolves from the same root as the card
+        (node.evolvesFrom == card.card.evolvesFrom && card.card.evolvesFrom != null) ||
+        // An existing node evolves to a card that this card evolves from (missing middle child)
+        node.evolvesTo?.contains(
+          card.card.evolvesFrom ?: "",
+        ) == true ||
+        // An existing node evolves from a card that this card evolves to (missing middle child)
+        card.card.evolvesTo?.contains(
+          node.evolvesFrom ?: "",
+        ) == true
     }
   }
 
@@ -96,7 +103,7 @@ class Evolution private constructor(
       name = card.card.name,
       evolvesFrom = card.card.evolvesFrom,
       evolvesTo = card.card.evolvesTo,
-      cards = mutableListOf(card)
+      cards = mutableListOf(card),
     )
   }
 

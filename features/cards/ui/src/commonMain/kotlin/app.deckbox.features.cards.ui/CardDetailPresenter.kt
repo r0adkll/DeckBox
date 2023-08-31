@@ -53,7 +53,7 @@ class CardDetailPresenter(
       card = cardLoadState,
       deckState = deckSessionCard?.let {
         DeckState(it.count)
-      }
+      },
     ) { event ->
       when (event) {
         CardDetailUiEvent.NavigateBack -> navigator.pop()

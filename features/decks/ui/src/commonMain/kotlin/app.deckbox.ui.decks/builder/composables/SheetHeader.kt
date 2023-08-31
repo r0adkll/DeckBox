@@ -60,4 +60,3 @@ internal fun SheetHeader(
     Spacer(Modifier.width(16.dp))
   }
 }
-

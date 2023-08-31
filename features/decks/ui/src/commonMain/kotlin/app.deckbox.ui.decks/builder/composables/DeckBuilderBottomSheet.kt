@@ -119,7 +119,6 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
     DeckPrices(
       prices = state.price,
     )
-
   }
   Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
 }
@@ -135,7 +134,7 @@ private fun DeckTextField(
       .padding(end = 16.dp),
   ) {
     Box(
-      modifier = Modifier.padding(16.dp)
+      modifier = Modifier.padding(16.dp),
     ) {
       icon()
     }

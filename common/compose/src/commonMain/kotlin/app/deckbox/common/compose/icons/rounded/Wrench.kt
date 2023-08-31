@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
 private var _wrench: ImageVector? = null
 
 val Icons.Rounded.Wrench: ImageVector
@@ -23,7 +22,7 @@ val Icons.Rounded.Wrench: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color.Black),
@@ -34,7 +33,7 @@ val Icons.Rounded.Wrench: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(15f, 3f)
         curveTo(11.691f, 3f, 9f, 5.691f, 9f, 9f)
@@ -66,4 +65,3 @@ val Icons.Rounded.Wrench: ImageVector
     }.build()
     return _wrench!!
   }
-

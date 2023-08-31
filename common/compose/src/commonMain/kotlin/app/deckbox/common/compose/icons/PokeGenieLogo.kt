@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons
 
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _pokeGenie: ImageVector? = null
 
@@ -23,7 +22,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
       defaultWidth = 100.dp,
       defaultHeight = 100.dp,
       viewportWidth = 100f,
-      viewportHeight = 100f
+      viewportHeight = 100f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFFC7EDE6)),
@@ -34,7 +33,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(86.277f, 56.241f)
         curveToRelative(1.135f, -2.155f, 1.785f, -4.605f, 1.785f, -7.21f)
@@ -66,7 +65,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(67.43f, 21.492f)
         horizontalLineToRelative(-10f)
@@ -150,7 +149,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(33.069f, 79.493f)
         horizontalLineTo(23.1f)
@@ -234,7 +233,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(28.531f, 48.719f)
         curveToRelative(0f, 0f, 1.567f, 0f, 3.5f, 0f)
@@ -266,7 +265,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(30.281f, 44.219f)
         curveToRelative(-0.138f, 0f, -0.25f, -0.112f, -0.25f, -0.25f)
@@ -288,7 +287,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(24.031f, 48.719f)
         arcTo(0.5f, 0.5f, 0f, isMoreThanHalf = false, isPositiveArc = true, 23.531f, 49.219f)
@@ -305,7 +304,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(32.031f, 49.219f)
         horizontalLineToRelative(-3.5f)
@@ -359,7 +358,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(26.531f, 48.219f)
         curveToRelative(-0.159f, 0f, -0.841f, 0f, -1f, 0f)
@@ -379,7 +378,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(63.729f, 71.531f)
         horizontalLineTo(34.396f)
@@ -401,7 +400,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(31.271f, 50.21f)
         curveToRelative(-1.377f, -1.627f, -2.209f, -3.729f, -2.209f, -6.023f)
@@ -417,7 +416,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(47.729f, 44.188f)
         curveToRelative(0f, 0.968f, -0.148f, 1.901f, -0.423f, 2.779f)
@@ -434,7 +433,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(46.068f, 38.878f)
         curveToRelative(0.372f, 0.536f, 0.689f, 1.112f, 0.944f, 1.721f)
@@ -449,7 +448,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(45.125f, 44.188f)
         arcTo(6.667f, 6.667f, 0f, isMoreThanHalf = false, isPositiveArc = true, 38.458f, 50.855000000000004f)
@@ -466,7 +465,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(67.729f, 48.188f)
         lineTo(71.063f, 48.188f)
@@ -480,7 +479,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(65.74f, 48.188f)
         lineTo(65.375f, 48.188f)
@@ -494,7 +493,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(59.792f, 48.188f)
         lineTo(61.656f, 48.188f)
@@ -509,7 +508,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(35.125f, 59.531f)
         horizontalLineTo(39f)
@@ -526,7 +525,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(29.812f, 59.531f)
         lineTo(31.125f, 59.531f)
@@ -541,7 +540,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 10f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(45.125f, 44.188f)
         arcTo(6.667f, 6.667f, 0f, isMoreThanHalf = false, isPositiveArc = true, 38.458f, 50.855000000000004f)
@@ -559,7 +558,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(75.024f, 66.943f)
           horizontalLineToRelative(7.934f)
@@ -590,7 +589,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(59.047f, 63.203f)
           curveToRelative(0f, -1.85f, 1.239f, -3.483f, 3.003f, -4.038f)
@@ -657,7 +656,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(65.074f, 61.64f)
           curveToRelative(0.018f, 0f, 0.036f, -0.002f, 0.055f, -0.006f)
@@ -680,7 +679,7 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(70.233f, 67.444f)
           horizontalLineToRelative(1.107f)
@@ -695,4 +694,3 @@ val DeckBoxIcons.Logos.PokeGenie: ImageVector
     }.build()
     return _pokeGenie!!
   }
-

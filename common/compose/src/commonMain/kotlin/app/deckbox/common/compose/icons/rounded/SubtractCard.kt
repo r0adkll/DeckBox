@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
 private var _subtractCard: ImageVector? = null
 
 val Icons.Rounded.SubtractCard: ImageVector
@@ -23,7 +22,7 @@ val Icons.Rounded.SubtractCard: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFF000000)),
@@ -34,7 +33,7 @@ val Icons.Rounded.SubtractCard: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(15f, 3f)
         curveTo(16.1046f, 3f, 17f, 3.8954f, 17f, 5f)
@@ -62,7 +61,7 @@ val Icons.Rounded.SubtractCard: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(13f, 19f)
         horizontalLineTo(18.9957f)
@@ -70,4 +69,3 @@ val Icons.Rounded.SubtractCard: ImageVector
     }.build()
     return _subtractCard!!
   }
-

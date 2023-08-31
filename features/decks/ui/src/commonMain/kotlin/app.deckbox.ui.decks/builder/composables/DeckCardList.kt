@@ -165,7 +165,7 @@ private fun Header(
       .fillMaxWidth()
       .padding(
         vertical = 8.dp,
-        horizontal = 16.dp
+        horizontal = 16.dp,
       ),
     verticalAlignment = Alignment.CenterVertically,
   ) {

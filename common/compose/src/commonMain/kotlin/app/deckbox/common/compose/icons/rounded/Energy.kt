@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons.rounded
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _energy: ImageVector? = null
 
@@ -23,7 +22,7 @@ val Icons.Rounded.Energy: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color.Black),
@@ -34,7 +33,7 @@ val Icons.Rounded.Energy: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(18.399f, 11f)
         horizontalLineTo(14f)
@@ -52,4 +51,3 @@ val Icons.Rounded.Energy: ImageVector
     }.build()
     return _energy!!
   }
-

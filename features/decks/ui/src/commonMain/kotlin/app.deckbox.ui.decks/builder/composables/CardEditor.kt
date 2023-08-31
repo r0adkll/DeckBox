@@ -8,12 +8,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -57,7 +54,7 @@ internal fun CardEditor(
             .background(
               color = MaterialTheme.colorScheme.primaryContainer.copy(
                 alpha = 0.75f,
-              )
+              ),
             )
             .weight(1f)
             .fillMaxWidth()
@@ -73,10 +70,10 @@ internal fun CardEditor(
 //              ),
 //            contentAlignment = Alignment.Center,
 //          ) {
-            Icon(
-              Icons.Rounded.AddCard,
-              contentDescription = null,
-            )
+          Icon(
+            Icons.Rounded.AddCard,
+            contentDescription = null,
+          )
 //          }
         }
         val removeColor = if (count > 1) {
@@ -89,7 +86,7 @@ internal fun CardEditor(
             .background(
               color = removeColor.copy(
                 alpha = 0.75f,
-              )
+              ),
             )
             .weight(1f)
             .fillMaxWidth()
@@ -105,10 +102,10 @@ internal fun CardEditor(
 //              ),
 //            contentAlignment = Alignment.Center,
 //          ) {
-            Icon(
-              if (count > 1) Icons.Rounded.SubtractCard else Icons.Rounded.RemoveCard,
-              contentDescription = null,
-            )
+          Icon(
+            if (count > 1) Icons.Rounded.SubtractCard else Icons.Rounded.RemoveCard,
+            contentDescription = null,
+          )
 //          }
         }
       }

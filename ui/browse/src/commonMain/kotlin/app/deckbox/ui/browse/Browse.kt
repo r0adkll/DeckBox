@@ -79,7 +79,7 @@ internal fun Browse(
             leading = {
               if (state.isEditing) {
                 IconButton(
-                  onClick = { state.eventSink(BrowseUiEvent.NavigateBack) }
+                  onClick = { state.eventSink(BrowseUiEvent.NavigateBack) },
                 ) {
                   Icon(
                     Icons.Rounded.ArrowBack,

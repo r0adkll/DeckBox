@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -40,7 +39,6 @@ import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.features.decks.public.ui.DeckCard
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
-import app.deckbox.ui.decks.list.composables.EmptyState
 import app.deckbox.ui.decks.list.composables.WelcomeTips
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
@@ -109,7 +107,7 @@ internal fun Decks(
     } else if (state.decks.isEmpty()) {
       WelcomeTips(
         onNewDeckClick = { state.eventSink(DecksUiEvent.CreateNewDeck) },
-        modifier = Modifier.padding(paddingValues)
+        modifier = Modifier.padding(paddingValues),
       )
 //      EmptyState()
     }

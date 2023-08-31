@@ -175,7 +175,10 @@ internal fun Home(
         Row(
           modifier = Modifier
             .fillMaxSize()
-            .fluentIf(navigationType == NavigationType.BOTTOM_NAVIGATION && currentPresentation?.hideBottomNav != true) {
+            .fluentIf(
+              navigationType == NavigationType.BOTTOM_NAVIGATION &&
+                currentPresentation?.hideBottomNav != true,
+            ) {
               padding(paddingValues)
             },
         ) {
