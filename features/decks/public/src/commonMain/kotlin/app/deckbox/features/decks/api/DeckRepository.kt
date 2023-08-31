@@ -7,6 +7,6 @@ interface DeckRepository {
 
   fun observeDecks(): Flow<List<Deck>>
 
-  fun deleteDeck(deck: Deck)
-  fun duplicateDeck(deck: Deck)
+  suspend fun deleteDeck(deckId: String)
+  suspend fun duplicateDeck(deckId: String): String
 }

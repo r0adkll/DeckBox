@@ -31,15 +31,22 @@ private const val DefaultColumns = 4
 private val DefaultVerticalItemSpacing = 8.dp
 private val DefaultHorizontalItemSpacing = 8.dp
 
+data class CardCounts(
+  val count: Int,
+  val collected: Int?,
+)
+
 @Suppress("USELESS_IS_CHECK")
 @Composable
 fun PokemonCardGrid(
   cardPager: Pager<Int, Card>,
   onClick: (Card) -> Unit,
   modifier: Modifier = Modifier,
+  onLongClick: (Card) -> Unit = {},
   state: LazyGridState = rememberLazyGridState(),
   contentPadding: PaddingValues = PaddingValues(),
   columns: Int = DefaultColumns,
+  countSelector: (cardId: String) -> CardCounts? = { null },
   emptyContent: @Composable () -> Unit = { DefaultEmptyView() },
 ) {
   val lazyPagingItems = cardPager.flow.collectAsLazyPagingItems()
@@ -57,9 +64,13 @@ fun PokemonCardGrid(
     ) { index ->
       val item = lazyPagingItems[index]
       if (item != null) {
+        val cardCount = countSelector(item.id)
         PokemonCard(
           card = item,
           onClick = { onClick(item) },
+          onLongClick = { onLongClick(item) },
+          count = cardCount?.count,
+          collected = cardCount?.collected,
         )
       } else {
         ShimmerPokemonCard()

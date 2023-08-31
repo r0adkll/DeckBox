@@ -18,7 +18,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -26,24 +29,31 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import app.deckbox.common.compose.extensions.applyHoloAndDragEffect
+import app.deckbox.common.compose.icons.rounded.AddCard
+import app.deckbox.common.compose.icons.rounded.RemoveCard
+import app.deckbox.common.compose.icons.rounded.SubtractCard
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.features.cards.ui.composables.CardMarketPriceCard
 import app.deckbox.features.cards.ui.composables.InfoCard
 import app.deckbox.features.cards.ui.composables.TcgPlayerPriceCard
+import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.systemBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -61,11 +71,14 @@ internal fun CardDetail(
   state: CardDetailUiState,
   modifier: Modifier = Modifier,
 ) {
+  val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   Scaffold(
-    modifier = modifier,
+    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
       DeckBoxAppBar(
-        title = "",
+        title = state.deckState?.let {
+          LocalStrings.current.cardCountInDeck(it.count)
+        } ?: "",
         navigationIcon = {
           IconButton(
             onClick = { state.eventSink(CardDetailUiEvent.NavigateBack) },
@@ -73,10 +86,41 @@ internal fun CardDetail(
             Icon(Icons.Rounded.ArrowBack, contentDescription = null)
           }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-          containerColor = Color.Transparent,
-        ),
+        actions = {
+          state.deckState?.let { deckState ->
+            IconButton(
+              onClick = { state.eventSink(CardDetailUiEvent.DecrementCount) },
+            ) {
+              Icon(
+                if (deckState.count > 1) Icons.Rounded.SubtractCard else Icons.Rounded.RemoveCard,
+                contentDescription = null,
+              )
+            }
+            IconButton(
+              onClick = { state.eventSink(CardDetailUiEvent.IncrementCount) },
+            ) {
+              Icon(
+                Icons.Rounded.AddCard,
+                contentDescription = null,
+              )
+            }
+          }
+        },
+        scrollBehavior = scrollBehavior,
       )
+    },
+    floatingActionButton = {
+      var isFavorited by remember { mutableStateOf(false) }
+      FloatingActionButton(
+        onClick = {
+          isFavorited = !isFavorited
+        },
+      ) {
+        Icon(
+          if (isFavorited) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+          contentDescription = null,
+        )
+      }
     },
     contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars),
   ) { paddingValues ->
@@ -93,7 +137,8 @@ internal fun CardDetail(
           .padding(
             horizontal = 32.dp,
           )
-          .zIndex(2f),
+          .zIndex(2f)
+          .applyHoloAndDragEffect(),
       )
 
       Spacer(Modifier.height(16.dp))

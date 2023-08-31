@@ -1,6 +1,7 @@
 package app.deckbox.features.cards.impl.db
 
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.Stacked
 import app.deckbox.features.cards.public.model.CardQuery
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,7 @@ interface CardDao {
   fun observe(ids: List<String>): Flow<List<Card>>
   fun observe(query: CardQuery): Flow<List<Card>>
   fun observeByExpansion(expansionId: String): Flow<List<Card>>
+  fun observeByDeck(deckId: String): Flow<List<Stacked<Card>>>
 
   suspend fun insert(card: Card)
   suspend fun insert(cards: List<Card>)

@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -30,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
@@ -39,6 +39,7 @@ import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.features.decks.public.ui.DeckCard
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
+import app.deckbox.ui.decks.list.composables.WelcomeTips
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.systemBars
@@ -81,7 +82,7 @@ internal fun Decks(
         }
         ExtendedFloatingActionButton(
           text = { Text(LocalStrings.current.fabActionNewDeckButton) },
-          icon = { Icon(Icons.Rounded.Add, contentDescription = null) },
+          icon = { Icon(Icons.Rounded.NewDeck, contentDescription = null) },
           expanded = isExpanded,
           onClick = { state.eventSink(DecksUiEvent.CreateNewDeck) },
         )
@@ -103,6 +104,12 @@ internal fun Decks(
       Box(Modifier.fillMaxSize()) {
         SpinningPokeballLoadingIndicator(size = 82.dp)
       }
+    } else if (state.decks.isEmpty()) {
+      WelcomeTips(
+        onNewDeckClick = { state.eventSink(DecksUiEvent.CreateNewDeck) },
+        modifier = Modifier.padding(paddingValues),
+      )
+//      EmptyState()
     }
   }
 }

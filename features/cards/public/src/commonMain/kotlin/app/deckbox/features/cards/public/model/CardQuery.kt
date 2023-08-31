@@ -56,7 +56,7 @@ data class CardQuery(
       }
     }.also {
       bark { "q=$it, query=$query, filter=$filter" }
-    }
+    }.trim()
   }
 }
 
@@ -76,12 +76,12 @@ fun StringBuilder.appendValue(
   field: String,
   value: String,
 ) {
-  val quotedValue = if (value.contains(SPACE)) {
-    "\"$value\""
-  } else {
-    value
-  }
-  append("$field:$quotedValue")
+//  val quotedValue = if (value.contains(SPACE)) {
+//    "\"$value\""
+//  } else {
+//    value
+//  }
+  append("$field:$value")
   append(SPACE)
 }
 

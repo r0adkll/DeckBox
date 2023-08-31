@@ -2,6 +2,8 @@ package app.deckbox.shared.root
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -113,6 +115,12 @@ internal fun Home(
     derivedStateOf { detailBackStack.topRecord?.screen }
   }
 
+  val currentPresentation by remember {
+    derivedStateOf {
+      (backstack.topRecord?.screen as? DeckBoxScreen)?.presentation
+    }
+  }
+
   val strings = LocalStrings.current
   val navigationItems = remember { buildNavigationItems(strings) }
 
@@ -140,12 +148,18 @@ internal fun Home(
       Scaffold(
         bottomBar = {
           if (navigationType == NavigationType.BOTTOM_NAVIGATION) {
-            HomeNavigationBar(
-              selectedNavigation = rootScreen,
-              navigationItems = navigationItems,
-              onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
-              modifier = Modifier.fillMaxWidth(),
-            )
+            AnimatedVisibility(
+              visible = currentPresentation?.hideBottomNav == false,
+              enter = slideInVertically { it },
+              exit = slideOutVertically { it },
+            ) {
+              HomeNavigationBar(
+                selectedNavigation = rootScreen,
+                navigationItems = navigationItems,
+                onNavigationSelected = { mainDetailNavigator.resetRoot(it) },
+                modifier = Modifier.fillMaxWidth(),
+              )
+            }
           } else {
             Spacer(
               Modifier
@@ -161,7 +175,10 @@ internal fun Home(
         Row(
           modifier = Modifier
             .fillMaxSize()
-            .fluentIf(navigationType == NavigationType.BOTTOM_NAVIGATION) {
+            .fluentIf(
+              navigationType == NavigationType.BOTTOM_NAVIGATION &&
+                currentPresentation?.hideBottomNav != true,
+            ) {
               padding(paddingValues)
             },
         ) {

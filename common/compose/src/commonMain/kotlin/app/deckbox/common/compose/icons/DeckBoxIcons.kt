@@ -10,4 +10,6 @@ object DeckBoxIcons {
   object Outline
 
   object Filled
+
+  object Logos
 }

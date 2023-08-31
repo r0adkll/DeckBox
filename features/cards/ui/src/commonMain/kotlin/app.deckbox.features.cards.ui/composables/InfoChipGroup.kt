@@ -26,7 +26,7 @@ internal fun InfoChipGroup(
     content = content,
     modifier = modifier,
   ) { measurables, constraints ->
-    val rowSpacing = (measurables.size - 1) * horizontalArrangement.spacing.roundToPx()
+    val rowSpacing = (columns - 1) * horizontalArrangement.spacing.roundToPx()
     val chipWidth = (constraints.maxWidth - rowSpacing) / columns
 
     val chipConstraints = Constraints(

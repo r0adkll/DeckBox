@@ -1,0 +1,64 @@
+import kotlin.Int;
+
+CREATE TABLE deck_card_join (
+  deckId TEXT NOT NULL,
+  cardId TEXT NOT NULL,
+  count INTEGER AS Int NOT NULL,
+  PRIMARY KEY(deckId, cardId),
+  FOREIGN KEY(deckId) REFERENCES decks(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+  FOREIGN KEY(cardId) REFERENCES cards(id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE INDEX IF NOT EXISTS index_deck_card_join_cardId ON deck_card_join(cardId);
+
+getByDeck:
+SELECT * FROM deck_card_join
+WHERE deckId = :deckId;
+
+getCardsForDeck:
+SELECT count, cards.* FROM deck_card_join
+INNER JOIN cards ON deck_card_join.cardId = cards.id
+WHERE deckId = :deckId;
+
+insert:
+INSERT INTO deck_card_join
+VALUES ?;
+
+incrementCount {
+  UPDATE decks
+  SET updatedAt = :updatedAt
+  WHERE id = :deckId;
+
+  INSERT OR IGNORE INTO decks (id, updatedAt, createdAt)
+  VALUES (:deckId, :updatedAt, :createdAt);
+
+  UPDATE deck_card_join
+  SET count = count + :amount
+  WHERE deckId = :deckId
+    AND cardId = :cardId;
+
+  INSERT OR IGNORE INTO deck_card_join (deckId, cardId, count)
+  VALUES (:deckId, :cardId, :amount);
+}
+
+decrementCount {
+  UPDATE decks
+  SET updatedAt = :updatedAt
+  WHERE id = :deckId;
+
+  INSERT OR IGNORE INTO decks (id, updatedAt, createdAt)
+  VALUES (:deckId, :updatedAt, :createdAt);
+
+  UPDATE deck_card_join
+  SET count = count - :amount
+  WHERE deckId = :deckId
+    AND cardId = :cardId;
+
+  DELETE FROM deck_card_join
+  WHERE count <= 0;
+}
+
+delete:
+DELETE FROM deck_card_join
+WHERE deckId = :deckId
+AND cardId = :cardId;

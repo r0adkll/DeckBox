@@ -48,29 +48,43 @@ val EnDeckBoxStrings = DeckBoxStrings(
   browse = "Browse",
   browseTabContentDescription = "Browse all Pokemon cards",
   browseSearchHint = "Search for any card",
-  settings = "Settings",
-  settingsTabContentDescription = "Change application settings",
 
+  tcgPlayer = "TCGPlayer",
   tcgPlayerNormal = "Normal",
   tcgPlayerHolofoil = "Holo",
   tcgPlayerReverseHolofoil = "Reverse Holo",
   tcgPlayerFirstEditionHolofoil = "1st Edition Holo",
   tcgPlayerFirstEditionNormal = "1st Edition",
-
   priceMarket = "Market",
   priceLow = "Low",
+
   priceMid = "Mid",
   priceHigh = "High",
-
   priceTrend = "Price trend",
   oneDayAvg = "1 day avg",
+
+  cardMarket = "Cardmarket",
   sevenDayAvg = "7 day avg",
   thirtyDayAvg = "30 day avg",
-
   actionBuy = "Buy",
-
   lessThan = { "Less than $it" },
+
   lessThanEqual = { "Less than or equal to $it" },
+
   greaterThan = { "Greater than $it" },
   greaterThanEqual = { "Greater than or equal to $it" },
+  settings = "Settings",
+  settingsTabContentDescription = "Change application settings",
+  decksEmptyStateMessage = "Looks like you don't have any decks!\n" +
+    "Try building one or importing an existing deck to see them appear here",
+  deckListHeaderPokemon = "Pokémon",
+  deckListHeaderTrainer = "Trainer",
+  deckListHeaderEnergy = "Energy",
+  cardCountInDeck = { count ->
+    if (count == 1) {
+      "$count Copy"
+    } else {
+      "$count Copies"
+    }
+  },
 )

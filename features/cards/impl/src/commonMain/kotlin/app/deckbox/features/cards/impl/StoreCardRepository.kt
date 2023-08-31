@@ -4,6 +4,7 @@ import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.Stacked
 import app.deckbox.features.cards.impl.db.CardDao
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.network.PokemonTcgApi
@@ -26,8 +27,8 @@ import org.mobilenativefoundation.store.store5.StoreReadResponse
 @Inject
 @ContributesBinding(MergeAppScope::class)
 class StoreCardRepository(
-  db: CardDao,
   api: PokemonTcgApi,
+  private val db: CardDao,
   private val dispatcherProvider: DispatcherProvider,
 ) : CardRepository {
 
@@ -72,6 +73,10 @@ class StoreCardRepository(
         refresh = false,
       ),
     ).mapNotNull { (it.dataOrNull() as? CardResponse.Multiple)?.cards }
+  }
+
+  override fun observeCardsForDeck(deckId: String): Flow<List<Stacked<Card>>> {
+    return db.observeByDeck(deckId)
   }
 }
 

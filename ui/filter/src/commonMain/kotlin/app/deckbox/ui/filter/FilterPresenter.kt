@@ -70,7 +70,7 @@ open class FilterPresenter(
 ) {
 
   @Composable
-  fun present(): FilterUiState {
+  fun present(initialFilter: SearchFilter = SearchFilter()): FilterUiState {
     val fetchExpansions by rememberUpdatedState(getExpansions)
     val expansions by remember(fetchExpansions) {
       flow { emit(fetchExpansions()) }
@@ -88,7 +88,7 @@ open class FilterPresenter(
 
     var visibleFormat by remember { mutableStateOf(Format.STANDARD) }
 
-    var filter by rememberSaveable(stateSaver = SearchFilterSaver) { mutableStateOf(SearchFilter()) }
+    var filter by rememberSaveable(stateSaver = SearchFilterSaver) { mutableStateOf(initialFilter) }
 
     return FilterUiState(
       specs = specs,

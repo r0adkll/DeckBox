@@ -10,14 +10,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import app.cash.paging.Pager
-import app.cash.paging.PagingConfig
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.SearchFilter
+import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
-import app.deckbox.features.cards.public.model.MAX_PAGE_SIZE
 import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
+import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.ui.filter.BrowseFilterPresenter
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -25,6 +25,8 @@ import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
@@ -33,7 +35,10 @@ import me.tatarka.inject.annotations.Inject
 @Inject
 class BrowsePresenter(
   @Assisted private val navigator: Navigator,
+  @Assisted private val screen: BrowseScreen,
+  private val cardRepository: CardRepository,
   private val cardPagingSourceFactory: CardPagingSourceFactory,
+  private val deckBuilderRepository: DeckBuilderRepository,
   private val filterPresenter: BrowseFilterPresenter,
 ) : Presenter<BrowseUiState> {
 
@@ -53,7 +58,12 @@ class BrowsePresenter(
       searchQuery = searchQueryPipelineValue
     }
 
-    val filterUiState = filterPresenter.present()
+    val initialFilter = remember {
+      screen.superType?.let {
+        SearchFilter(superTypes = setOf(it))
+      } ?: SearchFilter()
+    }
+    val filterUiState = filterPresenter.present(initialFilter)
 
     val query by remember(filterUiState.filter) {
       derivedStateOf {
@@ -74,26 +84,42 @@ class BrowsePresenter(
     }
 
     val pager = remember(query) {
-      Pager(
-        config = PagingConfig(
-          pageSize = MAX_PAGE_SIZE,
-        ),
-        initialKey = 1,
-        pagingSourceFactory = { cardPagingSourceFactory.create(query) },
-      )
+      createPager { cardPagingSourceFactory.create(query) }
     }
 
+    val deckState by remember {
+      screen.deckId?.let { deckId ->
+        cardRepository.observeCardsForDeck(deckId)
+          .map { cards -> cards.associateBy { it.card.id } }
+      } ?: flowOf(null)
+    }.collectAsState(null)
+
     return BrowseUiState(
+      isEditing = screen.deckId != null,
       query = searchQuery,
       filterUiState = filterUiState,
       cardsPager = pager,
+      deckState = deckState,
     ) { event ->
       when (event) {
+        BrowseUiEvent.NavigateBack -> navigator.pop()
+        BrowseUiEvent.SearchCleared -> searchQuery = null
         is BrowseUiEvent.SearchUpdated -> {
           coroutineScope.launch { queryPipeline.emit(event.query) }
         }
-        BrowseUiEvent.SearchCleared -> searchQuery = null
-        is BrowseUiEvent.CardClicked -> navigator.goTo(CardDetailScreen(event.card))
+        is BrowseUiEvent.CardClicked -> {
+          if (screen.deckId != null) {
+            deckBuilderRepository.incrementCard(
+              deckId = screen.deckId!!,
+              cardId = event.card.id,
+            )
+          } else {
+            navigator.goTo(CardDetailScreen(event.card))
+          }
+        }
+        is BrowseUiEvent.CardLongClicked -> {
+          navigator.goTo(CardDetailScreen(event.card))
+        }
       }
     }
   }
