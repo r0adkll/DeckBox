@@ -79,14 +79,14 @@ class Evolution private constructor(
     }
   }
 
-//  override fun equals(other: Any?): Boolean {
-//    if (this === other) return true
-//    if (other == null || this::class != other::class) return false
-//
-//    other as Evolution
-//
-//    return nodes == other.nodes
-//  }
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other == null || this::class != other::class) return false
+
+    other as Evolution
+
+    return nodes == other.nodes
+  }
 
   override fun hashCode(): Int {
     return nodes.firstOrNull { it.evolvesFrom != null }?.evolvesFrom?.hashCode()
