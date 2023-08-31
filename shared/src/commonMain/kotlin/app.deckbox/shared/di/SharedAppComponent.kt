@@ -2,6 +2,8 @@ package app.deckbox.shared.di
 
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
+import app.deckbox.core.time.FatherTime
+import app.deckbox.core.time.GrandFatherTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
@@ -21,4 +23,8 @@ interface CoreComponent {
     computation = Dispatchers.Default,
     main = Dispatchers.Main,
   )
+
+  @AppScope
+  @Provides
+  fun provideFatherTime(): FatherTime = GrandFatherTime
 }

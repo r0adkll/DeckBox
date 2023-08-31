@@ -1,14 +1,36 @@
 package app.deckbox.db.mapping
 
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.Deck
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Legalities
 import app.deckbox.sqldelight.Abilities
 import app.deckbox.sqldelight.Attacks
 import app.deckbox.sqldelight.CardMarketPrices
 import app.deckbox.sqldelight.Cards
+import app.deckbox.sqldelight.Decks
 import app.deckbox.sqldelight.Expansions
 import app.deckbox.sqldelight.TcgPlayerPrices
+import kotlinx.datetime.LocalDateTime
+
+fun Decks.toModel(
+  now: LocalDateTime,
+): Deck {
+  return Deck(
+    id = id,
+    name = name ?: "",
+    description = description,
+    tags = tags ?: emptySet(),
+    cardImages = cardImages ?: emptySet(),
+    legalities = Legalities(
+      standard = standardLegality,
+      expanded = expandedLegality,
+      unlimited = unlimitedLegality,
+    ),
+    createdAt = createdAt ?: now,
+    updatedAt = updatedAt ?: now,
+  )
+}
 
 fun Cards.toModel(
   expansion: Expansions,

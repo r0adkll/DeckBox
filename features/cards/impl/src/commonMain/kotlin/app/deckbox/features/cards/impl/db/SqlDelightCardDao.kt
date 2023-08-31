@@ -2,19 +2,25 @@ package app.deckbox.features.cards.impl.db
 
 import app.cash.sqldelight.TransactionCallbacks
 import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.logging.LogPriority.ERROR
 import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.Stacked
+import app.deckbox.core.model.map
 import app.deckbox.db.mapping.toEntity
 import app.deckbox.db.mapping.toModel
+import app.deckbox.db.mapping.toStackedEntity
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.sqldelight.Cards
+import app.deckbox.sqldelight.GetCardsForDeck
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Inject
@@ -99,6 +105,20 @@ class SqlDelightCardDao(
         withContext(dispatcherProvider.databaseRead) {
           database.transactionWithResult {
             it.executeAsList().let(::hydrate)
+          }
+        }
+      }
+  }
+
+  override fun observeByDeck(deckId: String): Flow<List<Stacked<Card>>> {
+    return database.deckCardJoinQueries
+      .getCardsForDeck(deckId)
+      .asFlow()
+      .mapNotNull {
+        withContext(dispatcherProvider.databaseRead) {
+          database.transactionWithResult {
+            val stackedEntities = it.executeAsList().map(GetCardsForDeck::toStackedEntity)
+            hydrateStacks(stackedEntities)
           }
         }
       }
@@ -242,6 +262,47 @@ class SqlDelightCardDao(
         tcgPlayerPrices = tcgPlayerPrices[entity.id],
         cardMarketPrices = cardMarketPlayerPrices[entity.id],
       )
+    }
+  }
+
+  private fun hydrateStacks(entities: List<Stacked<Cards>>): List<Stacked<Card>> {
+    val ids = entities.map { it.card.id }
+    val expansionIds = entities.map { it.card.expansionId }.toSet()
+
+    val expansions = database.expansionQueries
+      .getByIds(expansionIds)
+      .executeAsList()
+
+    val abilities = database.abilityQueries
+      .getByIds(ids)
+      .executeAsList()
+      .groupBy { it.cardId }
+
+    val attacks = database.attackQueries
+      .getByIds(ids)
+      .executeAsList()
+      .groupBy { it.cardId }
+
+    val tcgPlayerPrices = database.tcgPlayerPricesQueries
+      .getByIds(ids)
+      .executeAsList()
+      .associateBy { it.cardId }
+
+    val cardMarketPlayerPrices = database.cardMarketPricesQueries
+      .getByIds(ids)
+      .executeAsList()
+      .associateBy { it.cardId }
+
+    return entities.map { stackedEntity ->
+      stackedEntity.map { entity ->
+        entity.toModel(
+          expansion = expansions.find { it.id == entity.expansionId }!!,
+          abilities = abilities[entity.id] ?: emptyList(),
+          attacks = attacks[entity.id] ?: emptyList(),
+          tcgPlayerPrices = tcgPlayerPrices[entity.id],
+          cardMarketPrices = cardMarketPlayerPrices[entity.id],
+        )
+      }
     }
   }
 }

@@ -6,22 +6,28 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.widgets.AdaptiveExpandedThreshold
+import app.deckbox.common.compose.widgets.CardCounts
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.FilterIcon
 import app.deckbox.common.compose.widgets.PokemonCardGrid
@@ -35,9 +41,12 @@ import app.deckbox.ui.filter.FilterState
 import app.deckbox.ui.filter.FilterUiEvent
 import app.deckbox.ui.filter.SearchBarWithFilter
 import cafe.adriel.lyricist.LocalStrings
+import com.moriatsushi.insetsx.ExperimentalSoftwareKeyboardApi
+import com.moriatsushi.insetsx.imePadding
 import com.moriatsushi.insetsx.statusBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 
+@OptIn(ExperimentalSoftwareKeyboardApi::class)
 @CircuitInject(MergeActivityScope::class, BrowseScreen::class)
 @Composable
 internal fun Browse(
@@ -51,6 +60,7 @@ internal fun Browse(
       modifier = Modifier.fillMaxSize(),
       contentAlignment = Alignment.TopStart,
     ) {
+      val focusManager = LocalFocusManager.current
       var filterState by remember { mutableStateOf(FilterState.HIDDEN) }
 
       SearchBarWithFilter(
@@ -67,10 +77,21 @@ internal fun Browse(
               state.eventSink(BrowseUiEvent.SearchCleared)
             },
             leading = {
-              Icon(
-                Icons.Rounded.Search,
-                contentDescription = null,
-              )
+              if (state.isEditing) {
+                IconButton(
+                  onClick = { state.eventSink(BrowseUiEvent.NavigateBack) }
+                ) {
+                  Icon(
+                    Icons.Rounded.ArrowBack,
+                    contentDescription = null,
+                  )
+                }
+              } else {
+                Icon(
+                  Icons.Rounded.Search,
+                  contentDescription = null,
+                )
+              }
             },
             placeholder = { Text(LocalStrings.current.browseSearchHint) },
             trailing = {
@@ -99,11 +120,24 @@ internal fun Browse(
         modifier = Modifier.zIndex(1f),
       )
 
+      val gridState = rememberLazyGridState()
+      val isScrolled by remember {
+        derivedStateOf { gridState.firstVisibleItemIndex > 0 || gridState.firstVisibleItemScrollOffset > 0 }
+      }
+      LaunchedEffect(isScrolled) {
+        if (isScrolled) {
+          focusManager.clearFocus()
+        }
+      }
+
       val numColumns = if (maxWidth > AdaptiveExpandedThreshold) 6 else 4
       PokemonCardGrid(
         cardPager = state.cardsPager,
         onClick = { card ->
           state.eventSink(BrowseUiEvent.CardClicked(card))
+        },
+        onLongClick = { card ->
+          state.eventSink(BrowseUiEvent.CardLongClicked(card))
         },
         contentPadding = PaddingValues(
           start = 16.dp,
@@ -112,12 +146,20 @@ internal fun Browse(
         ),
         emptyContent = {
           if (!state.query.isNullOrBlank() || !state.filterUiState.filter.isEmpty) {
-            SearchEmptyView(query = state.query)
+            SearchEmptyView(
+              query = state.query,
+              modifier = Modifier.imePadding(),
+            )
           } else {
             DefaultEmptyView()
           }
         },
         columns = numColumns,
+        countSelector = { cardId ->
+          val stack = state.deckState?.get(cardId)
+          stack?.let { CardCounts(it.count, it.collected) }
+        },
+        state = gridState,
         modifier = Modifier
           .windowInsetsPadding(WindowInsets.statusBars)
           .padding(top = 8.dp + SearchBarHeight / 2),

@@ -1,9 +1,9 @@
 package app.deckbox.core.model
 
 data class Legalities(
-  val unlimited: Legality?,
-  val standard: Legality?,
-  val expanded: Legality?,
+  val unlimited: Legality? = null,
+  val standard: Legality? = null,
+  val expanded: Legality? = null,
 )
 
 enum class Legality {

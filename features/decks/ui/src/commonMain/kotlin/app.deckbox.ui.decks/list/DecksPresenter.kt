@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.SettingsScreen
@@ -20,6 +21,7 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
@@ -34,6 +36,8 @@ class DecksPresenter(
 
   @Composable
   override fun present(): DecksUiState {
+    val coroutineScope = rememberCoroutineScope()
+
     val decksLoadState by remember {
       deckRepository.observeDecks()
         .map<List<Deck>, LoadState<List<Deck>>> { LoadState.Loaded(it) }
@@ -52,11 +56,18 @@ class DecksPresenter(
       when (event) {
         is DecksUiEvent.CardEvent -> when (event.event) {
           DeckCardEvent.Clicked -> navigator.goTo(DeckBuilderScreen(event.deck.id))
-          DeckCardEvent.Delete -> deckRepository.deleteDeck(event.deck)
-          DeckCardEvent.Duplicate -> deckRepository.duplicateDeck(event.deck)
+          DeckCardEvent.Delete -> coroutineScope.launch {
+            deckRepository.deleteDeck(event.deck.id)
+          }
+
+          DeckCardEvent.Duplicate -> coroutineScope.launch {
+            deckRepository.duplicateDeck(event.deck.id)
+          }
+
           DeckCardEvent.Export -> bark { "Export (${event.deck.name})" }
           DeckCardEvent.Test -> bark { "Experiment (${event.deck.name})" }
         }
+
         DecksUiEvent.CreateNewDeck -> navigator.goTo(DeckBuilderScreen())
         DecksUiEvent.OpenAppSettings -> navigator.goTo(SettingsScreen())
       }

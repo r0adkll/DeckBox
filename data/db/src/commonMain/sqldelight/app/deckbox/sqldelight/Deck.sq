@@ -1,0 +1,88 @@
+import app.deckbox.core.model.Legality;
+import kotlin.String;
+import kotlin.collections.Set;
+import kotlinx.datetime.LocalDateTime;
+
+CREATE TABLE decks (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT,
+  description TEXT,
+  tags TEXT AS Set<String>,
+  cardImages TEXT AS Set<String>,
+  standardLegality TEXT AS Legality,
+  expandedLegality TEXT AS Legality,
+  unlimitedLegality TEXT AS Legality,
+  createdAt TEXT AS LocalDateTime,
+  updatedAt TEXT AS LocalDateTime
+);
+
+getAll:
+SELECT * FROM decks;
+
+getById:
+SELECT * FROM decks
+WHERE id = ?;
+
+insert:
+INSERT INTO decks
+VALUES ?;
+
+upsertName {
+  UPDATE decks
+  SET name = :name,
+      updatedAt = :updatedAt
+  WHERE id = :id;
+
+  INSERT OR IGNORE INTO decks (id, name, updatedAt, createdAt)
+  VALUES (:id, :name, :updatedAt, :createdAt);
+}
+
+upsertDescription {
+  UPDATE decks
+  SET description = :description,
+      updatedAt = :updatedAt
+  WHERE id = :id;
+
+  INSERT OR IGNORE INTO decks(id, description, updatedAt, createdAt)
+  VALUES (:id, :description, :updatedAt, :createdAt);
+}
+
+getTags:
+SELECT tags FROM decks
+WHERE id = ?;
+
+upsertTags {
+  UPDATE decks
+  SET tags = :tags,
+      updatedAt = :updatedAt
+  WHERE id = :id;
+
+  INSERT OR IGNORE INTO decks(id, tags, updatedAt, createdAt)
+  VALUES (:id, :tags, :updatedAt, :createdAt);
+}
+
+getCardImages:
+SELECT cardImages FROM decks
+WHERE id = ?;
+
+upsertCardImages {
+  UPDATE decks
+  SET cardImages = :images,
+      updatedAt = :updatedAt
+  WHERE id = :id;
+
+  INSERT OR IGNORE INTO decks(id, cardImages, updatedAt, createdAt)
+  VALUES (:id, :images, :updatedAt, :createdAt);
+}
+
+updateLegalities:
+UPDATE decks
+SET standardLegality = :standard,
+    expandedLegality = :expanded,
+    unlimitedLegality = :unlimited,
+    updatedAt = :updatedAt
+WHERE id = :id;
+
+delete:
+DELETE FROM decks
+WHERE id = :id;

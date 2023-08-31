@@ -8,6 +8,8 @@ import app.deckbox.core.model.SuperType
 import app.deckbox.sqldelight.Attacks
 import app.deckbox.sqldelight.CardMarketPrices
 import app.deckbox.sqldelight.Cards
+import app.deckbox.sqldelight.Deck_card_join
+import app.deckbox.sqldelight.Decks
 import app.deckbox.sqldelight.Expansions
 import app.deckbox.sqldelight.TcgPlayerPrices
 import me.tatarka.inject.annotations.Inject
@@ -52,6 +54,18 @@ class DatabaseFactory(
     ),
     cardMarketPricesAdapter = CardMarketPrices.Adapter(
       updatedAtAdapter = LocalDateAdapter,
+    ),
+    decksAdapter = Decks.Adapter(
+      tagsAdapter = StringSetAdapter,
+      cardImagesAdapter = StringSetAdapter,
+      standardLegalityAdapter = EnumColumnAdapter(),
+      expandedLegalityAdapter = EnumColumnAdapter(),
+      unlimitedLegalityAdapter = EnumColumnAdapter(),
+      createdAtAdapter = LocalDateTimeAdapter,
+      updatedAtAdapter = LocalDateTimeAdapter,
+    ),
+    deck_card_joinAdapter = Deck_card_join.Adapter(
+      countAdapter = IntColumnAdapter,
     ),
   )
 }

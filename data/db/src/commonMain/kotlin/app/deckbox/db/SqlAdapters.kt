@@ -18,6 +18,18 @@ object StringListAdapter : ColumnAdapter<List<String>, String> {
   override fun encode(value: List<String>) = value.joinToString(separator = ",")
 }
 
+object StringSetAdapter : ColumnAdapter<Set<String>, String> {
+  override fun decode(databaseValue: String): Set<String> {
+    return if (databaseValue.isEmpty()) {
+      setOf()
+    } else {
+      databaseValue.split(",").toSet()
+    }
+  }
+
+  override fun encode(value: Set<String>) = value.joinToString(separator = ",")
+}
+
 object IntListAdapter : ColumnAdapter<List<Int>, String> {
   override fun decode(databaseValue: String): List<Int> {
     return if (databaseValue.isEmpty()) {

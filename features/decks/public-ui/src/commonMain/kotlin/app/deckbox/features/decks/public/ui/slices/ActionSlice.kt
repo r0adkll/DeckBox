@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.icons.rounded.Duplicate
 import app.deckbox.common.compose.icons.rounded.Experiment
+import app.deckbox.common.compose.widgets.OutlinedIconButton
+import app.deckbox.common.compose.widgets.SizedIcon
 import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardSlice
 import app.deckbox.features.decks.public.ui.LocalDeckInteractionSource
@@ -74,18 +76,16 @@ class ActionSlice : ComposeSlice {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
       ) {
-        OutlinedButton(
+        OutlinedIconButton(
           onClick = { eventSink(DeckCardEvent.Test) },
-          contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-        ) {
-          Icon(
-            Icons.Rounded.Experiment,
-            contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize),
-          )
-          Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-          Text(LocalStrings.current.deckActionTestButton)
-        }
+          icon = {
+            SizedIcon(
+              Icons.Rounded.Experiment,
+              contentDescription = null,
+            )
+          },
+          label = { Text(LocalStrings.current.deckActionTestButton) },
+        )
 
         Spacer(Modifier.weight(1f))
 

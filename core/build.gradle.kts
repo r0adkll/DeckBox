@@ -21,5 +21,11 @@ kotlin {
         implementation(libs.kotlin.test)
       }
     }
+
+    jvmTest {
+      dependencies {
+        implementation(libs.strikt.core)
+      }
+    }
   }
 }

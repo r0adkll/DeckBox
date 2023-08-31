@@ -1,6 +1,7 @@
 package app.deckbox.common.screens
 
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.SuperType
 import com.slack.circuit.runtime.Screen
 
 /**
@@ -17,10 +18,26 @@ class DecksScreen : DeckBoxScreen(name = "Decks()")
 @CommonParcelize
 data class DeckBuilderScreen(
   val id: String? = null,
-) : DeckBoxScreen(name = "DeckBuilder()")
+) : DeckBoxScreen(name = "DeckBuilder()") {
+  override val arguments get() = mapOf("id" to id)
+
+  @CommonIgnoredOnParcel
+  override val presentation = Presentation(hideBottomNav = true)
+}
 
 @CommonParcelize
-class BrowseScreen : DeckBoxScreen(name = "Browse()")
+data class BrowseScreen(
+  val deckId: String? = null,
+  val superType: SuperType? = null,
+) : DeckBoxScreen(name = "Browse()") {
+  override val arguments get() = mapOf(
+    "deckId" to deckId,
+    "superType" to superType,
+  )
+
+  @CommonIgnoredOnParcel
+  override val presentation = Presentation(hideBottomNav = deckId != null)
+}
 
 @CommonParcelize
 class ExpansionsScreen : DeckBoxScreen(name = "Expansions()")
@@ -45,14 +62,21 @@ class CardDetailScreen(
   val cardId: String,
   val cardName: String,
   val cardImageLarge: String,
+  val deckId: String? = null,
 ) : DeckBoxScreen(name = "CardDetail()") {
-  constructor(card: Card) : this(card.id, card.name, card.image.large)
+  constructor(
+    card: Card,
+    deckId: String? = null,
+  ) : this(card.id, card.name, card.image.large, deckId)
 
   override val arguments get() = mapOf(
     "cardId" to cardId,
     "cardName" to cardName,
     "cardImageLarge" to cardImageLarge,
   )
+
+  @CommonIgnoredOnParcel
+  override val presentation = Presentation(hideBottomNav = deckId != null)
 }
 
 @CommonParcelize

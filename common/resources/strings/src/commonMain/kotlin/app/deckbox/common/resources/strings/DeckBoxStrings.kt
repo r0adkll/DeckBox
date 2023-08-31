@@ -41,6 +41,7 @@ data class DeckBoxStrings(
   val browseSearchHint: String,
 
   // Card Detail
+  val tcgPlayer: String,
   val tcgPlayerNormal: String,
   val tcgPlayerHolofoil: String,
   val tcgPlayerReverseHolofoil: String,
@@ -52,6 +53,7 @@ data class DeckBoxStrings(
   val priceMid: String,
   val priceHigh: String,
 
+  val cardMarket: String,
   val priceTrend: String,
   val oneDayAvg: String,
   val sevenDayAvg: String,
@@ -68,4 +70,9 @@ data class DeckBoxStrings(
   // Settings
   val settings: String,
   val settingsTabContentDescription: String,
+
+  val decksEmptyStateMessage: String,
+  val deckListHeaderPokemon: String,
+  val deckListHeaderTrainer: String,
+  val deckListHeaderEnergy: String,
 )

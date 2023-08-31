@@ -40,8 +40,7 @@ class NetworkCardPagingSource(
 
   override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
     val result = api.getCards(
-      query
-        .copy(page = params.key?.plus(1) ?: 1)
+      query.copy(page = params.key ?: 1)
         .asQueryOptions()
     )
     return if (result.isSuccess) {
@@ -54,6 +53,7 @@ class NetworkCardPagingSource(
         data = response.data,
         prevKey = null,
         nextKey = response.page
+          .plus(1)
           .takeIf { response.hasMore },
       ) as PagingSourceLoadResult<Int, Card>
     } else {
