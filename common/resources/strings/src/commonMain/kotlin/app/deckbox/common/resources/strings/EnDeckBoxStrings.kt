@@ -79,4 +79,11 @@ val EnDeckBoxStrings = DeckBoxStrings(
   deckListHeaderPokemon = "Pokémon",
   deckListHeaderTrainer = "Trainer",
   deckListHeaderEnergy = "Energy",
+  cardCountInDeck = { count ->
+    if (count == 1) {
+      "$count Copy"
+    } else {
+      "$count Copies"
+    }
+  }
 )

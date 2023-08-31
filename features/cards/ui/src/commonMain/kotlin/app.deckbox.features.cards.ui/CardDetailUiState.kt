@@ -11,15 +11,24 @@ data class CardDetailUiState(
   val cardName: String,
   val cardImageUrl: String,
   val card: LoadState<out Card>,
+  val deckState: DeckState?,
   val evolvesFrom: List<Card> = emptyList(),
   val evolvesTo: List<Card> = emptyList(),
   val similar: List<Card> = emptyList(),
   val eventSink: (CardDetailUiEvent) -> Unit,
 ) : CircuitUiState
 
+@Stable
+data class DeckState(
+  val count: Int,
+)
+
 sealed interface CardDetailUiEvent : CircuitUiEvent {
-  object NavigateBack : CardDetailUiEvent
+  data object NavigateBack : CardDetailUiEvent
   data class OpenUrl(val url: String) : CardDetailUiEvent
+
+  data object IncrementCount : CardDetailUiEvent
+  data object DecrementCount : CardDetailUiEvent
 }
 
 val CardDetailUiState.pokemonCard: Card?

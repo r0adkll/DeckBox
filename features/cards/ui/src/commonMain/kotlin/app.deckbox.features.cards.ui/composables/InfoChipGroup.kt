@@ -7,6 +7,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import app.deckbox.core.logging.bark
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -26,7 +27,7 @@ internal fun InfoChipGroup(
     content = content,
     modifier = modifier,
   ) { measurables, constraints ->
-    val rowSpacing = (measurables.size - 1) * horizontalArrangement.spacing.roundToPx()
+    val rowSpacing = (columns - 1) * horizontalArrangement.spacing.roundToPx()
     val chipWidth = (constraints.maxWidth - rowSpacing) / columns
 
     val chipConstraints = Constraints(

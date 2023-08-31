@@ -11,10 +11,13 @@ import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
 import app.deckbox.features.cards.public.CardRepository
+import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
@@ -24,11 +27,23 @@ class CardDetailPresenter(
   @Assisted private val navigator: Navigator,
   @Assisted private val screen: CardDetailScreen,
   private val repository: CardRepository,
+  private val deckBuilderRepository: DeckBuilderRepository,
 ) : Presenter<CardDetailUiState> {
 
   @Composable
   override fun present(): CardDetailUiState {
     val cardLoadState by loadCard(screen.cardId)
+
+    // If we have passed a deck session id, then we should observe
+    // this card in that deck to monitor its count
+    val deckSessionCard by remember {
+      if (screen.deckId != null) {
+        repository.observeCardsForDeck(screen.deckId!!)
+          .map { it.find { it.card.id == screen.cardId } }
+      } else {
+        flowOf(null)
+      }
+    }.collectAsState(null)
 
     // TODO Load additional card information such as evolution info, similar cards, etc
 
@@ -36,10 +51,23 @@ class CardDetailPresenter(
       cardName = screen.cardName,
       cardImageUrl = screen.cardImageLarge,
       card = cardLoadState,
+      deckState = deckSessionCard?.let {
+        DeckState(it.count)
+      }
     ) { event ->
       when (event) {
         CardDetailUiEvent.NavigateBack -> navigator.pop()
         is CardDetailUiEvent.OpenUrl -> navigator.goTo(UrlScreen(event.url))
+        CardDetailUiEvent.DecrementCount -> {
+          screen.deckId?.let { deckId ->
+            deckBuilderRepository.decrementCard(deckId, screen.cardId)
+          }
+        }
+        CardDetailUiEvent.IncrementCount -> {
+          screen.deckId?.let { deckId ->
+            deckBuilderRepository.incrementCard(deckId, screen.cardId)
+          }
+        }
       }
     }
   }

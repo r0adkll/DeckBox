@@ -99,7 +99,7 @@ internal fun DeckCardList(
               PokemonCard(
                 card = stack.card,
                 count = stack.count.takeIf { it > 1 },
-                collected = stack.collected ?: 4,
+                collected = stack.collected,
                 onClick = { onCardClick(stack) },
                 onLongClick = { onCardLongClick(stack) },
                 modifier = Modifier.width(cardWidth),
