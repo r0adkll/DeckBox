@@ -8,6 +8,7 @@ import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Deck
 import app.deckbox.core.time.FatherTime
+import app.deckbox.db.mapping.asDecks
 import app.deckbox.db.mapping.toModel
 import app.deckbox.decks.impl.ids.DeckIdGenerator
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
@@ -151,7 +152,7 @@ class SqlDelightDeckDao(
         val newDeck = deck.copy(id = deckIdGenerator.generate())
         val newCards = deckCards.map { it.copy(deckId = newDeck.id) }
 
-        database.deckQueries.insert(newDeck)
+        database.deckQueries.insert(newDeck.asDecks())
         newCards.forEach { newCard ->
           database.deckCardJoinQueries.insert(newCard)
         }

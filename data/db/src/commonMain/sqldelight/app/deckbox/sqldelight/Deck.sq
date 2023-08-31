@@ -1,4 +1,3 @@
-import app.deckbox.core.model.Legality;
 import kotlin.String;
 import kotlin.collections.Set;
 import kotlinx.datetime.LocalDateTime;
@@ -8,20 +7,34 @@ CREATE TABLE decks (
   name TEXT,
   description TEXT,
   tags TEXT AS Set<String>,
-  cardImages TEXT AS Set<String>,
-  standardLegality TEXT AS Legality,
-  expandedLegality TEXT AS Legality,
-  unlimitedLegality TEXT AS Legality,
   createdAt TEXT AS LocalDateTime,
   updatedAt TEXT AS LocalDateTime
 );
 
 getAll:
-SELECT * FROM decks;
+SELECT
+  decks.*,
+  group_concat(cards.image_small) AS cardImages,
+  group_concat(cards.legalitiesStandard) AS legalitiesStandard,
+  group_concat(cards.legalitiesExpanded) AS legalitiesExpanded,
+  group_concat(cards.legalitiesUnlimited) AS legalitiesUnlimited
+FROM decks
+LEFT JOIN deck_card_join ON deck_card_join.deckId = decks.id
+LEFT JOIN cards ON deck_card_join.cardId = cards.id
+GROUP BY decks.id;
 
 getById:
-SELECT * FROM decks
-WHERE id = ?;
+SELECT
+  decks.*,
+  group_concat(cards.image_small) AS cardImages,
+  group_concat(cards.legalitiesStandard) AS legalitiesStandard,
+  group_concat(cards.legalitiesExpanded) AS legalitiesExpanded,
+  group_concat(cards.legalitiesUnlimited) AS legalitiesUnlimited
+FROM decks
+LEFT JOIN deck_card_join ON deck_card_join.deckId = decks.id
+LEFT JOIN cards ON deck_card_join.cardId = cards.id
+WHERE decks.id = ?
+GROUP BY deck_card_join.deckId;
 
 insert:
 INSERT INTO decks
@@ -60,28 +73,6 @@ upsertTags {
   INSERT OR IGNORE INTO decks(id, tags, updatedAt, createdAt)
   VALUES (:id, :tags, :updatedAt, :createdAt);
 }
-
-getCardImages:
-SELECT cardImages FROM decks
-WHERE id = ?;
-
-upsertCardImages {
-  UPDATE decks
-  SET cardImages = :images,
-      updatedAt = :updatedAt
-  WHERE id = :id;
-
-  INSERT OR IGNORE INTO decks(id, cardImages, updatedAt, createdAt)
-  VALUES (:id, :images, :updatedAt, :createdAt);
-}
-
-updateLegalities:
-UPDATE decks
-SET standardLegality = :standard,
-    expandedLegality = :expanded,
-    unlimitedLegality = :unlimited,
-    updatedAt = :updatedAt
-WHERE id = :id;
 
 delete:
 DELETE FROM decks
