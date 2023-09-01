@@ -41,4 +41,19 @@ sealed interface CardUiModel {
     override val size: Int
       get() = card.count
   }
+
+  sealed interface Tip : CardUiModel {
+    data object Pokemon : Tip {
+      override val id: String = "Tip.Pokemon"
+      override val size: Int = 0
+    }
+    data object Trainer : Tip {
+      override val id: String = "Tip.Trainer"
+      override val size: Int = 0
+    }
+    data object Energy : Tip {
+      override val id: String = "Tip.Energy"
+      override val size: Int = 0
+    }
+  }
 }

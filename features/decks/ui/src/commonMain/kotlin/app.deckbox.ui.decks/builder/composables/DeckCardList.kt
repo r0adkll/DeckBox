@@ -47,6 +47,7 @@ internal fun DeckCardList(
   onCardLongClick: (Stacked<Card>) -> Unit,
   onAddCardClick: (Stacked<Card>) -> Unit,
   onRemoveCardClick: (Stacked<Card>) -> Unit,
+  onTipClick: (CardUiModel.Tip) -> Unit,
   modifier: Modifier = Modifier,
   lazyGridState: LazyGridState = rememberLazyGridState(),
   columns: Int = 3,
@@ -77,6 +78,7 @@ internal fun DeckCardList(
             is CardUiModel.SectionHeader -> GridItemSpan(maxLineSpan)
             is CardUiModel.EvolutionLine -> GridItemSpan(maxLineSpan)
             is CardUiModel.Single -> GridItemSpan(1)
+            is CardUiModel.Tip -> GridItemSpan(3)
           }
         },
         contentType = { _, item -> item::class },
@@ -130,6 +132,12 @@ internal fun DeckCardList(
             title = model.title(),
             count = model.count,
             superType = model.superType,
+            modifier = Modifier.overWidth(CardSpacing * 2),
+          )
+
+          is CardUiModel.Tip -> DeckTip(
+            tip = model,
+            onClick = { onTipClick(model) },
             modifier = Modifier.overWidth(CardSpacing * 2),
           )
         }
