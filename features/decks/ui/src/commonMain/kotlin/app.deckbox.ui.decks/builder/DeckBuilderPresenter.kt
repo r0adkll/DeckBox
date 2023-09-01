@@ -1,9 +1,11 @@
 package app.deckbox.ui.decks.builder
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.LocalSaveableStateRegistry
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.BrowseScreen
@@ -13,6 +15,7 @@ import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
+import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Evolution
 import app.deckbox.core.model.SuperType
@@ -59,16 +62,19 @@ class DeckBuilderPresenter(
   @OptIn(ExperimentalCoroutinesApi::class)
   @Composable
   override fun present(): DeckBuilderUiState {
-    val sessionId = rememberSaveable { screen.id ?: repository.createSession() }
+
+    LaunchedEffect(screen.id) {
+      bark { "DeckBuilderPresenter(screen.id = ${screen.id})" }
+    }
 
     val session by remember {
-      repository.observeSession(sessionId)
+      repository.observeSession(screen.id)
         .map { DeckSession.Loaded(it) }
         .catch { DeckSession.Error }
     }.collectAsState(DeckSession.Loading)
 
-    val sessionCards by remember(sessionId) {
-      cardRepository.observeCardsForDeck(sessionId)
+    val sessionCards by remember(screen.id) {
+      cardRepository.observeCardsForDeck(screen.id)
     }.collectAsState(emptyList())
 
     // Split the cards by supertype and build the pokemon into evolution lines
@@ -179,7 +185,7 @@ class DeckBuilderPresenter(
       price = deckPrice,
       validation = validation,
       eventSink = { event ->
-        onEvent(sessionId, event)
+        onEvent(screen.id, event)
       },
     )
   }

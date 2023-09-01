@@ -24,6 +24,11 @@ data class DeckBoxStrings(
   val deckActionDeleteButtonContentDescription: String,
   val fabActionNewDeckButton: String,
 
+  // Booster Packs
+  val boosterPacks: String,
+  val boosterPacksTitleLong: String,
+  val boosterPacksTabContentDescription: String,
+
   // Expansions
   val expansions: String,
   val expansionsTabContentDescription: String,

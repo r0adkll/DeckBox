@@ -19,7 +19,6 @@ import app.deckbox.shared.di.UiComponent
 import app.deckbox.shared.root.DeckBoxContent
 import com.r0adkll.kotlininject.merge.annotations.ContributesSubcomponent
 import com.slack.circuit.backstack.rememberSaveableBackStack
-import com.slack.circuit.foundation.push
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import me.tatarka.inject.annotations.Provides
 

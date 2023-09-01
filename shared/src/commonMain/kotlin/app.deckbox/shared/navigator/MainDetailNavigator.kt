@@ -3,7 +3,7 @@ package app.deckbox.shared.navigator
 import app.deckbox.common.screens.DeckBoxScreen
 import app.deckbox.common.screens.RootScreen
 import com.slack.circuit.runtime.Navigator
-import com.slack.circuit.runtime.Screen
+import com.slack.circuit.runtime.screen.Screen
 
 /**
  * A custom navigator for automatically navigating certain marked [DeckBoxScreen]s

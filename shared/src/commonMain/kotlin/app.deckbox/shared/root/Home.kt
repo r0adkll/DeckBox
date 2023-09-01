@@ -42,15 +42,18 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.LocalWindowSizeClass
 import app.deckbox.common.compose.PlatformBackHandler
 import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.icons.filled.BoosterPack
 import app.deckbox.common.compose.icons.filled.Browse
 import app.deckbox.common.compose.icons.filled.Collection
 import app.deckbox.common.compose.icons.filled.Decks
+import app.deckbox.common.compose.icons.outline.BoosterPack
 import app.deckbox.common.compose.icons.outline.Browse
 import app.deckbox.common.compose.icons.outline.Collection
 import app.deckbox.common.compose.icons.outline.Decks
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.resources.strings.DeckBoxStrings
+import app.deckbox.common.screens.BoosterPackScreen
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.DeckBoxScreen
 import app.deckbox.common.screens.DecksScreen
@@ -65,18 +68,14 @@ import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.safeContentPadding
 import com.slack.circuit.backstack.SaveableBackStack
-import com.slack.circuit.backstack.popUntil
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.NavigableCircuitContent
-import com.slack.circuit.foundation.push
 import com.slack.circuit.foundation.rememberCircuitNavigator
-import com.slack.circuit.foundation.screen
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.overlay.rememberOverlayHost
 import com.slack.circuit.runtime.Navigator
-import com.slack.circuit.runtime.Screen
+import com.slack.circuit.runtime.screen.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Home(
   backstack: SaveableBackStack,
@@ -107,15 +106,15 @@ internal fun Home(
     )
   }
 
-  val rootScreen by remember {
+  val rootScreen by remember(backstack) {
     derivedStateOf { backstack.last().screen }
   }
 
-  val rootDetailScreen by remember {
+  val rootDetailScreen by remember(detailBackStack) {
     derivedStateOf { detailBackStack.topRecord?.screen }
   }
 
-  val currentPresentation by remember {
+  val currentPresentation by remember(backstack) {
     derivedStateOf {
       (backstack.topRecord?.screen as? DeckBoxScreen)?.presentation
     }
@@ -201,10 +200,12 @@ internal fun Home(
             )
           }
 
-          NavigableCircuitContentWithPrevious(
+          NavigableCircuitContent(
             navigator = mainDetailNavigator,
             backstack = backstack,
-            decoration = GestureNavDecoration(navigator),
+            decoration = remember(navigator) {
+              GestureNavDecoration(navigator)
+            },
             modifier = Modifier
               .weight(1f)
               .fillMaxHeight(),
@@ -390,6 +391,13 @@ private fun buildNavigationItems(strings: DeckBoxStrings): List<HomeNavigationIt
       contentDescription = strings.decksTabContentDescription,
       iconImageVector = DeckBoxIcons.Outline.Decks,
       selectedImageVector = DeckBoxIcons.Filled.Decks,
+    ),
+    HomeNavigationItem(
+      screen = BoosterPackScreen(),
+      label = strings.boosterPacks,
+      contentDescription = strings.boosterPacksTabContentDescription,
+      iconImageVector = Icons.Outlined.BoosterPack,
+      selectedImageVector = Icons.Filled.BoosterPack,
     ),
     HomeNavigationItem(
       screen = ExpansionsScreen(),

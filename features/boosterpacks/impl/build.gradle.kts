@@ -12,10 +12,9 @@ kotlin {
     commonMain {
       dependencies {
         implementation(projects.core)
-        implementation(projects.common.settings)
         implementation(projects.data.db)
 
-        api(projects.features.decks.public)
+        api(projects.features.cards.public)
 
         implementation(libs.store)
         implementation(libs.kotlinx.atomicfu)

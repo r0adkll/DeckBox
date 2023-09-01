@@ -77,10 +77,11 @@ internal fun CardDetail(
         actions = {
           state.deckState?.let { deckState ->
             IconButton(
+              enabled = deckState.count > 0,
               onClick = { state.eventSink(CardDetailUiEvent.DecrementCount) },
             ) {
               Icon(
-                if (deckState.count > 1) Icons.Rounded.SubtractCard else Icons.Rounded.RemoveCard,
+                Icons.Rounded.SubtractCard,
                 contentDescription = null,
               )
             }

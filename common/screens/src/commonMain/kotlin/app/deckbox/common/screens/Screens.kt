@@ -2,7 +2,7 @@ package app.deckbox.common.screens
 
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.SuperType
-import com.slack.circuit.runtime.Screen
+import com.slack.circuit.runtime.screen.Screen
 
 /**
  * This is a dummy screen to fill a blank detail side content since the backstack/navigator requires a
@@ -16,8 +16,11 @@ class RootScreen : DeckBoxScreen(name = "Root")
 class DecksScreen : DeckBoxScreen(name = "Decks()")
 
 @CommonParcelize
+class BoosterPackScreen : DeckBoxScreen(name = "BoosterPack()")
+
+@CommonParcelize
 data class DeckBuilderScreen(
-  val id: String? = null,
+  val id: String,
 ) : DeckBoxScreen(name = "DeckBuilder()") {
   override val arguments get() = mapOf("id" to id)
 

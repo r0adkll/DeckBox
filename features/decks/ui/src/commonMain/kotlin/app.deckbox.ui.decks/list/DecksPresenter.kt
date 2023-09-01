@@ -15,6 +15,7 @@ import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.features.decks.api.DeckCardConfigurator
 import app.deckbox.features.decks.api.DeckRepository
+import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -31,6 +32,7 @@ import me.tatarka.inject.annotations.Inject
 class DecksPresenter(
   @Assisted private val navigator: Navigator,
   private val deckRepository: DeckRepository,
+  private val deckBuilderRepository: DeckBuilderRepository,
   private val deckCardConfigurator: DeckCardConfigurator,
 ) : Presenter<DecksUiState> {
 
@@ -68,7 +70,11 @@ class DecksPresenter(
           DeckCardEvent.Test -> bark { "Experiment (${event.deck.name})" }
         }
 
-        DecksUiEvent.CreateNewDeck -> navigator.goTo(DeckBuilderScreen())
+        DecksUiEvent.CreateNewDeck -> navigator.goTo(
+          // TODO: Hate this, need to use the screen object as passed data persistent
+          //  so the new session Id has to be generated here
+          DeckBuilderScreen(deckBuilderRepository.createSession())
+        )
         DecksUiEvent.OpenAppSettings -> navigator.goTo(SettingsScreen())
       }
     }

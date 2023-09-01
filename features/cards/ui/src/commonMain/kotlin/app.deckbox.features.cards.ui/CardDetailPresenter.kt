@@ -36,10 +36,14 @@ class CardDetailPresenter(
 
     // If we have passed a deck session id, then we should observe
     // this card in that deck to monitor its count
-    val deckSessionCard by remember {
+    val deckState by remember {
       if (screen.deckId != null) {
         repository.observeCardsForDeck(screen.deckId!!)
-          .map { it.find { it.card.id == screen.cardId } }
+          .map {
+            it.find { it.card.id == screen.cardId }
+              ?.let { DeckState(it.count) }
+              ?: DeckState(0)
+          }
       } else {
         flowOf(null)
       }
@@ -51,9 +55,7 @@ class CardDetailPresenter(
       cardName = screen.cardName,
       cardImageUrl = screen.cardImageLarge,
       card = cardLoadState,
-      deckState = deckSessionCard?.let {
-        DeckState(it.count)
-      },
+      deckState = deckState,
     ) { event ->
       when (event) {
         CardDetailUiEvent.NavigateBack -> navigator.pop()

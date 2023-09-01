@@ -21,7 +21,7 @@ object ClassNames {
     val Presenter = ClassName("com.slack.circuit.runtime.presenter", "Presenter")
     val PresenterFactory = ClassName("com.slack.circuit.runtime.presenter", "Presenter", "Factory")
     val Context = ClassName("com.slack.circuit.runtime", "CircuitContext")
-    val Screen = ClassName("com.slack.circuit.runtime", "Screen")
+    val Screen = ClassName("com.slack.circuit.runtime.screen", "Screen")
     val Navigator = ClassName("com.slack.circuit.runtime", "Navigator")
   }
 }

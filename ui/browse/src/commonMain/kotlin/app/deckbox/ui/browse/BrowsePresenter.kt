@@ -114,11 +114,11 @@ class BrowsePresenter(
               cardId = event.card.id,
             )
           } else {
-            navigator.goTo(CardDetailScreen(event.card))
+            navigator.goTo(CardDetailScreen(event.card, deckId = screen.deckId))
           }
         }
         is BrowseUiEvent.CardLongClicked -> {
-          navigator.goTo(CardDetailScreen(event.card))
+          navigator.goTo(CardDetailScreen(event.card, deckId = screen.deckId))
         }
       }
     }

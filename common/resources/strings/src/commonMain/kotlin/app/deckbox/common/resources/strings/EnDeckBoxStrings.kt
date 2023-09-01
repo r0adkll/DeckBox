@@ -36,6 +36,10 @@ val EnDeckBoxStrings = DeckBoxStrings(
   deckActionDeleteButtonContentDescription = "Delete deck",
   fabActionNewDeckButton = "New deck",
 
+  boosterPacks = "Packs",
+  boosterPacksTabContentDescription = "List of custom booster packs",
+  boosterPacksTitleLong = "Booster packs",
+
   expansions = "Expansions",
   expansionsTabContentDescription = "List of expansion sets",
   expansionReleaseDate = { "Released on $it" },
