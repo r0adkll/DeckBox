@@ -11,7 +11,7 @@ sealed interface Validation {
 }
 
 data class DeckValidation(
-  val ruleValidations: List<Validation> = emptyList()
+  val ruleValidations: List<Validation> = emptyList(),
 ) {
   val isValid: Boolean
     get() = ruleValidations.all { it is Validation.Valid }

@@ -129,7 +129,6 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
     )
 
     Spacer(Modifier.height(16.dp))
-    Divider()
 
     state.validation.ruleValidations
       .filterIsInstance<Validation.Invalid>()
@@ -141,8 +140,8 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
           },
           colors = ListItemDefaults.colors(
             headlineColor = MaterialTheme.colorScheme.error,
-            leadingIconColor = MaterialTheme.colorScheme.error
-          )
+            leadingIconColor = MaterialTheme.colorScheme.error,
+          ),
         )
       }
   }

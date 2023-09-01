@@ -33,7 +33,7 @@ class RuleDeckValidator(
   override suspend fun validate(cards: List<Stacked<Card>>): DeckValidation {
     return withContext(dispatcherProvider.computation) {
       DeckValidation(
-        rules.map { it.check(cards) }
+        rules.map { it.check(cards) },
       )
     }
   }
