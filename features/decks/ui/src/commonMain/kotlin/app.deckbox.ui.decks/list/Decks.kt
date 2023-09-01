@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.extensions.plus
 import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
@@ -96,7 +97,7 @@ internal fun Decks(
       onDeckEvent = { deck, event ->
         state.eventSink(DecksUiEvent.CardEvent(deck, event))
       },
-      contentPadding = paddingValues,
+      contentPadding = paddingValues + PaddingValues(bottom = 88.dp),
       state = lazyListState,
     )
 

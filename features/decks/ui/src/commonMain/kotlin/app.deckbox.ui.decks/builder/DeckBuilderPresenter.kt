@@ -18,14 +18,18 @@ import app.deckbox.core.model.Evolution
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
+import app.deckbox.features.decks.api.validation.DeckValidation
+import app.deckbox.features.decks.api.validation.DeckValidator
 import app.deckbox.ui.decks.builder.model.CardUiModel
 import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.datetime.LocalDate
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
@@ -37,9 +41,11 @@ class DeckBuilderPresenter(
   @Assisted private val screen: DeckBuilderScreen,
   private val repository: DeckBuilderRepository,
   private val cardRepository: CardRepository,
+  private val deckValidator: DeckValidator,
   private val dispatcherProvider: DispatcherProvider,
 ) : Presenter<DeckBuilderUiState> {
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Composable
   override fun present(): DeckBuilderUiState {
     val sessionId = rememberSaveable { screen.id ?: repository.createSession() }
@@ -107,6 +113,12 @@ class DeckBuilderPresenter(
       }.flowOn(dispatcherProvider.computation)
     }.collectAsState(emptyList())
 
+    val validation by remember {
+      snapshotFlow { sessionCards }
+        .mapLatest { deckValidator.validate(it) }
+        .flowOn(dispatcherProvider.computation)
+    }.collectAsState(DeckValidation())
+
     val deckPrice by remember {
       snapshotFlow {
         var oldestTcgPlayerUpdatedAt = LocalDate(3000, 1, 1)
@@ -154,6 +166,7 @@ class DeckBuilderPresenter(
       session = session,
       cards = uiModels,
       price = deckPrice,
+      validation = validation,
       eventSink = { event ->
         onEvent(sessionId, event)
       },

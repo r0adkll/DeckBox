@@ -57,10 +57,6 @@ class DatabaseFactory(
     ),
     decksAdapter = Decks.Adapter(
       tagsAdapter = StringSetAdapter,
-      cardImagesAdapter = StringSetAdapter,
-      standardLegalityAdapter = EnumColumnAdapter(),
-      expandedLegalityAdapter = EnumColumnAdapter(),
-      unlimitedLegalityAdapter = EnumColumnAdapter(),
       createdAtAdapter = LocalDateTimeAdapter,
       updatedAtAdapter = LocalDateTimeAdapter,
     ),

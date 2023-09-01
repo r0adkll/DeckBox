@@ -12,12 +12,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.ShortText
 import androidx.compose.material.icons.rounded.Subject
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,6 +38,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Legalities
 import app.deckbox.core.model.Legality
+import app.deckbox.features.decks.api.validation.Validation
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent
 import app.deckbox.ui.decks.builder.DeckBuilderUiState
 import com.moriatsushi.insetsx.navigationBars
@@ -45,6 +51,7 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
   onHeaderClick: () -> Unit,
 ) {
   SheetHeader(
+    isValid = state.validation.isValid,
     totalCount = state.cards.sumOf { it.size },
     legalities = state.session.deckOrNull()?.legalities
       ?: Legalities(standard = Legality.LEGAL),
@@ -53,7 +60,8 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
   Column(
     modifier = Modifier
       .padding(vertical = 16.dp)
-      .focusGroup(),
+      .focusGroup()
+      .verticalScroll(rememberScrollState()),
   ) {
     var nameValue by remember(state.session.deckOrNull() != null) {
       mutableStateOf(TextFieldValue(state.session.deckOrNull()?.name ?: ""))
@@ -119,6 +127,23 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
     DeckPrices(
       prices = state.price,
     )
+
+    Spacer(Modifier.height(16.dp))
+
+    state.validation.ruleValidations
+      .filterIsInstance<Validation.Invalid>()
+      .forEach { invalid ->
+        ListItem(
+          headlineContent = { Text(invalid.reason) },
+          leadingContent = {
+            Icon(Icons.Rounded.ErrorOutline, contentDescription = null)
+          },
+          colors = ListItemDefaults.colors(
+            headlineColor = MaterialTheme.colorScheme.error,
+            leadingIconColor = MaterialTheme.colorScheme.error,
+          ),
+        )
+      }
   }
   Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
 }
