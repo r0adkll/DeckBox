@@ -172,61 +172,20 @@ internal fun CardDetail(
   }
 }
 
+// TODO: Add better loading state
 @Composable
 private fun CardImage(
   url: String,
   contentDescription: String,
   modifier: Modifier = Modifier,
 ) {
-  val coroutineScope = rememberCoroutineScope()
-
-  val scale = remember { Animatable(1f) }
-  val rotation = remember { Animatable(0f) }
-  val offset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
-
-  val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
-    coroutineScope.launch {
-      scale.snapTo((scale.value * zoomChange).coerceIn(0.75f, 2f))
-      rotation.snapTo(rotation.value + rotationChange)
-      offset.snapTo(offset.value + offsetChange)
-    }
-  }
-
   val imageAction by key(url) { rememberImageAction(url) }
   Box(
     modifier = modifier,
   ) {
     Image(
       painter = rememberImageActionPainter(imageAction),
-      modifier = Modifier
-        .fillMaxWidth()
-        .graphicsLayer(
-          scaleX = scale.value,
-          scaleY = scale.value,
-          rotationZ = rotation.value,
-          translationX = offset.value.x,
-          translationY = offset.value.y,
-        )
-        .transformable(state, enabled = false)
-        .pointerInput(url) {
-          coroutineScope {
-            awaitPointerEventScope {
-              while (true) {
-                val event = awaitPointerEvent()
-                if (event.type == PointerEventType.Release || event.type == PointerEventType.Exit) {
-                  launch {
-                    val s = async { scale.animateTo(1f) }
-                    val r = async { rotation.animateTo(0f) }
-                    val o = async { offset.animateTo(Offset.Zero) }
-                    s.await()
-                    r.await()
-                    o.await()
-                  }
-                }
-              }
-            }
-          }
-        },
+      modifier = Modifier.fillMaxWidth(),
       contentDescription = contentDescription,
       contentScale = ContentScale.FillWidth,
     )

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,6 +25,7 @@ val SheetHeaderHeight = 56.dp
 
 @Composable
 internal fun SheetHeader(
+  isValid: Boolean,
   totalCount: Int,
   legalities: Legalities,
   onHeaderClick: () -> Unit,
@@ -37,13 +39,21 @@ internal fun SheetHeader(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Spacer(Modifier.width(16.dp))
+    if (!isValid) {
+      Icon(
+        Icons.Rounded.ErrorOutline,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.error,
+      )
+      Spacer(Modifier.width(8.dp))
+    }
     Text(
       text = when {
         legalities.standard == Legality.LEGAL -> LocalStrings.current.standardLegality
         legalities.expanded == Legality.LEGAL -> LocalStrings.current.expandedLegality
         else -> LocalStrings.current.unlimitedLegality
-      },
-      style = MaterialTheme.typography.titleSmall,
+      }.uppercase(),
+      style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.SemiBold,
     )
     Spacer(Modifier.weight(1f))
