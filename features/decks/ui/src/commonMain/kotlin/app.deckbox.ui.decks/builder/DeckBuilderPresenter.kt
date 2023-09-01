@@ -11,7 +11,6 @@ import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.extensions.prependFilterIfNotEmpty
 import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Card

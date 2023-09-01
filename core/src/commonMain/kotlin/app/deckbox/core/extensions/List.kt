@@ -6,7 +6,7 @@ fun <T> List<T>.prependIfNotEmpty(item: T): List<T> {
 
 fun <T> List<T>.prependFilterIfNotEmpty(
   predicate: (T) -> Boolean,
-  item: T
+  item: T,
 ): List<T> {
   val filtered = filter(predicate)
   return if (filtered.isEmpty()) this else listOf(item) + this

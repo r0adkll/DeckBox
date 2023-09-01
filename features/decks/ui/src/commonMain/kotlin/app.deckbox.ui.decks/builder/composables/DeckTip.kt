@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CatchingPokemon
@@ -40,7 +39,6 @@ internal fun DeckTip(
       ),
     colors = cardColors(tip),
   ) {
-
     Row(
       modifier = Modifier
         .fillMaxWidth()
@@ -64,7 +62,7 @@ internal fun DeckTip(
       Row(
         modifier = Modifier.padding(
           vertical = 2.dp,
-        )
+        ),
       ) {
         Spacer(Modifier.width(16.dp))
         Text(
