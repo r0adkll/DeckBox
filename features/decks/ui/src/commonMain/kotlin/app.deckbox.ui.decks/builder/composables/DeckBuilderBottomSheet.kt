@@ -51,7 +51,7 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
   onHeaderClick: () -> Unit,
 ) {
   SheetHeader(
-    isValid = state.validation.isValid,
+    isValid = state.validation.isValid && !state.validation.isEmpty,
     totalCount = state.cards.sumOf { it.size },
     legalities = state.session.deckOrNull()?.legalities
       ?: Legalities(standard = Legality.LEGAL),

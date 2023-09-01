@@ -11,7 +11,7 @@ import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.extensions.prependIfEmpty
+import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Evolution
@@ -20,7 +20,18 @@ import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.features.decks.api.validation.DeckValidation
 import app.deckbox.features.decks.api.validation.DeckValidator
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddTag
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.CardClick
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.DecrementCard
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.EditDescription
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.EditName
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.IncrementCard
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NavigateBack
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.RemoveCard
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.RemoveTag
 import app.deckbox.ui.decks.builder.model.CardUiModel
+import app.deckbox.ui.decks.builder.model.CardUiModel.Tip
 import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -80,30 +91,30 @@ class DeckBuilderPresenter(
               else -> 1
             }
           }
-          ?: emptyList()
+          ?: listOf(Tip.Pokemon)
 
         val trainers = split[SuperType.TRAINER]
           ?.map { CardUiModel.Single(it) }
-          ?: emptyList()
+          ?: listOf(Tip.Trainer)
 
         val energy = split[SuperType.ENERGY]
           ?.map { CardUiModel.Single(it) }
-          ?: emptyList()
+          ?: listOf(Tip.Energy)
 
         // Concatenate the models
-        pokemon.prependIfEmpty(
+        pokemon.prependIfNotEmpty(
           CardUiModel.SectionHeader(
             superType = SuperType.POKEMON,
             count = pokemon.sumOf { it.size },
             title = { LocalStrings.current.deckListHeaderPokemon },
           ),
-        ) + trainers.prependIfEmpty(
+        ) + trainers.prependIfNotEmpty(
           CardUiModel.SectionHeader(
             superType = SuperType.TRAINER,
             count = trainers.sumOf { it.size },
             title = { LocalStrings.current.deckListHeaderTrainer },
           ),
-        ) + energy.prependIfEmpty(
+        ) + energy.prependIfNotEmpty(
           CardUiModel.SectionHeader(
             superType = SuperType.ENERGY,
             count = energy.sumOf { it.size },
@@ -175,17 +186,17 @@ class DeckBuilderPresenter(
 
   private fun onEvent(deckId: String, event: DeckBuilderUiEvent) {
     when (event) {
-      DeckBuilderUiEvent.NavigateBack -> navigator.pop()
-      is DeckBuilderUiEvent.AddCards -> navigator.goTo(BrowseScreen(deckId = deckId, superType = event.superType))
-      is DeckBuilderUiEvent.CardClick -> navigator.goTo(CardDetailScreen(event.card, deckId))
+      NavigateBack -> navigator.pop()
+      is AddCards -> navigator.goTo(BrowseScreen(deckId = deckId, superType = event.superType))
+      is CardClick -> navigator.goTo(CardDetailScreen(event.card, deckId))
 
-      is DeckBuilderUiEvent.EditName -> repository.editName(deckId, event.name)
-      is DeckBuilderUiEvent.EditDescription -> repository.editDescription(deckId, event.description)
-      is DeckBuilderUiEvent.AddTag -> repository.addTag(deckId, event.tag)
-      is DeckBuilderUiEvent.RemoveTag -> repository.removeTag(deckId, event.tag)
-      is DeckBuilderUiEvent.IncrementCard -> repository.incrementCard(deckId, event.cardId, event.amount)
-      is DeckBuilderUiEvent.DecrementCard -> repository.decrementCard(deckId, event.cardId, event.amount)
-      is DeckBuilderUiEvent.RemoveCard -> repository.removeCard(deckId, event.cardId)
+      is EditName -> repository.editName(deckId, event.name)
+      is EditDescription -> repository.editDescription(deckId, event.description)
+      is AddTag -> repository.addTag(deckId, event.tag)
+      is RemoveTag -> repository.removeTag(deckId, event.tag)
+      is IncrementCard -> repository.incrementCard(deckId, event.cardId, event.amount)
+      is DecrementCard -> repository.decrementCard(deckId, event.cardId, event.amount)
+      is RemoveCard -> repository.removeCard(deckId, event.cardId)
     }
   }
 

@@ -33,6 +33,7 @@ class RuleDeckValidator(
   override suspend fun validate(cards: List<Stacked<Card>>): DeckValidation {
     return withContext(dispatcherProvider.computation) {
       DeckValidation(
+        isEmpty = cards.isEmpty(),
         rules.map { it.check(cards) },
       )
     }

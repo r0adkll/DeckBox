@@ -76,4 +76,5 @@ data class DeckBoxStrings(
   val deckListHeaderTrainer: String,
   val deckListHeaderEnergy: String,
   val cardCountInDeck: (count: Int) -> String,
+  val deckTitleNoName: String,
 )

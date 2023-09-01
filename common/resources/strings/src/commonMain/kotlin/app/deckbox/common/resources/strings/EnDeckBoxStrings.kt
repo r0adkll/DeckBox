@@ -60,10 +60,10 @@ val EnDeckBoxStrings = DeckBoxStrings(
 
   priceMid = "Mid",
   priceHigh = "High",
-  priceTrend = "Price trend",
-  oneDayAvg = "1 day avg",
-
   cardMarket = "Cardmarket",
+  priceTrend = "Price trend",
+
+  oneDayAvg = "1 day avg",
   sevenDayAvg = "7 day avg",
   thirtyDayAvg = "30 day avg",
   actionBuy = "Buy",
@@ -87,4 +87,5 @@ val EnDeckBoxStrings = DeckBoxStrings(
       "$count Copies"
     }
   },
+  deckTitleNoName = "Enter a name for your deck",
 )

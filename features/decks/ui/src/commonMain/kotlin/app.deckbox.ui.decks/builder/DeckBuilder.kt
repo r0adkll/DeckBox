@@ -45,6 +45,7 @@ import app.deckbox.common.compose.extensions.plus
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.SuperType
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.CardClick
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.DecrementCard
@@ -53,6 +54,8 @@ import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NavigateBack
 import app.deckbox.ui.decks.builder.composables.DeckBuilderBottomSheet
 import app.deckbox.ui.decks.builder.composables.DeckCardList
 import app.deckbox.ui.decks.builder.composables.SheetHeaderHeight
+import app.deckbox.ui.decks.builder.model.CardUiModel
+import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import kotlinx.coroutines.launch
@@ -97,7 +100,7 @@ fun DeckBuilder(
           state.session.deckOrNull()?.let { deck ->
             val name = if (deck.name.isBlank()) {
               AnnotatedString(
-                "A deck has no name",
+                LocalStrings.current.deckTitleNoName,
                 SpanStyle(
                   fontStyle = FontStyle.Italic,
                   color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
@@ -170,6 +173,13 @@ fun DeckBuilder(
         },
         onRemoveCardClick = {
           state.eventSink(DecrementCard(it.card.id))
+        },
+        onTipClick = {
+          when (it) {
+            CardUiModel.Tip.Pokemon -> state.eventSink(AddCards(SuperType.POKEMON))
+            CardUiModel.Tip.Trainer -> state.eventSink(AddCards(SuperType.TRAINER))
+            CardUiModel.Tip.Energy -> state.eventSink(AddCards(SuperType.ENERGY))
+          }
         },
         lazyGridState = lazyGridState,
         contentPadding = it + PaddingValues(bottom = 88.dp),
