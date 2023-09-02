@@ -28,6 +28,7 @@ data class DeckBoxStrings(
   val boosterPacks: String,
   val boosterPacksTitleLong: String,
   val boosterPacksTabContentDescription: String,
+  val boosterPackTitleNoName: String,
 
   // Expansions
   val expansions: String,
@@ -82,4 +83,8 @@ data class DeckBoxStrings(
   val deckListHeaderEnergy: String,
   val cardCountInDeck: (count: Int) -> String,
   val deckTitleNoName: String,
+  val fabActionNewBoosterPack: String,
+  val actionCancel: String,
+  val actionDelete: String,
+  val actionDeleteAreYouSure: String,
 )

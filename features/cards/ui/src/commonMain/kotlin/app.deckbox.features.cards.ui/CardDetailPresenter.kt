@@ -10,11 +10,13 @@ import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
+import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -28,6 +30,7 @@ class CardDetailPresenter(
   @Assisted private val screen: CardDetailScreen,
   private val repository: CardRepository,
   private val deckBuilderRepository: DeckBuilderRepository,
+  private val boosterPackRepository: BoosterPackRepository,
 ) : Presenter<CardDetailUiState> {
 
   @Composable
@@ -37,16 +40,7 @@ class CardDetailPresenter(
     // If we have passed a deck session id, then we should observe
     // this card in that deck to monitor its count
     val deckState by remember {
-      if (screen.deckId != null) {
-        repository.observeCardsForDeck(screen.deckId!!)
-          .map {
-            it.find { it.card.id == screen.cardId }
-              ?.let { DeckState(it.count) }
-              ?: DeckState(0)
-          }
-      } else {
-        flowOf(null)
-      }
+      observeCountForCard()
     }.collectAsState(null)
 
     // TODO Load additional card information such as evolution info, similar cards, etc
@@ -64,10 +58,16 @@ class CardDetailPresenter(
           screen.deckId?.let { deckId ->
             deckBuilderRepository.decrementCard(deckId, screen.cardId)
           }
+          screen.packId?.let { packId ->
+            boosterPackRepository.decrementCard(packId, screen.cardId)
+          }
         }
         CardDetailUiEvent.IncrementCount -> {
           screen.deckId?.let { deckId ->
             deckBuilderRepository.incrementCard(deckId, screen.cardId)
+          }
+          screen.packId?.let { packId ->
+            boosterPackRepository.incrementCard(packId, screen.cardId)
           }
         }
       }
@@ -85,5 +85,23 @@ class CardDetailPresenter(
         )
       }
     }.collectAsState(LoadState.Loading)
+  }
+
+  private fun observeCountForCard(): Flow<DeckState?> {
+    return when {
+      screen.deckId != null -> repository.observeCardsForDeck(screen.deckId!!)
+        .map {
+          it.find { it.card.id == screen.cardId }
+            ?.let { DeckState(it.count) }
+            ?: DeckState(0)
+        }
+      screen.packId != null -> repository.observeCardsForBoosterPack(screen.packId!!)
+        .map {
+          it.find { it.card.id == screen.cardId }
+            ?.let { DeckState(it.count) }
+            ?: DeckState(0)
+        }
+      else -> flowOf(null)
+    }
   }
 }

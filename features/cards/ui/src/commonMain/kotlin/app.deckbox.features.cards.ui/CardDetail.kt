@@ -18,8 +18,10 @@ import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -104,6 +106,16 @@ internal fun CardDetail(
         onClick = {
           isFavorited = !isFavorited
         },
+        containerColor = if (isFavorited) {
+          MaterialTheme.colorScheme.tertiaryContainer
+        } else {
+          MaterialTheme.colorScheme.surfaceVariant
+        },
+        contentColor = if (isFavorited) {
+          MaterialTheme.colorScheme.tertiary
+        } else {
+          MaterialTheme.colorScheme.onSurfaceVariant
+        }
       ) {
         Icon(
           if (isFavorited) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,

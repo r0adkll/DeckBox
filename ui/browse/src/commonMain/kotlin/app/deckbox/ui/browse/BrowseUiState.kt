@@ -14,7 +14,7 @@ data class BrowseUiState(
   val query: String?,
   val filterUiState: FilterUiState,
   val cardsPager: Pager<Int, Card>,
-  val deckState: Map<String, Stacked<Card>>?,
+  val countState: Map<String, Stacked<Card>>?,
   val eventSink: (BrowseUiEvent) -> Unit,
 ) : CircuitUiState
 

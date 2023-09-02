@@ -8,6 +8,7 @@ kotlin {
       dependencies {
         implementation(projects.features.cards.public)
         implementation(projects.features.decks.public)
+        implementation(projects.features.boosterpacks.public)
       }
     }
 

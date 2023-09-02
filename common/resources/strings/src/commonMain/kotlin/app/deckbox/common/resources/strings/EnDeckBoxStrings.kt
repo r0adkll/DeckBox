@@ -37,8 +37,9 @@ val EnDeckBoxStrings = DeckBoxStrings(
   fabActionNewDeckButton = "New deck",
 
   boosterPacks = "Packs",
-  boosterPacksTabContentDescription = "List of custom booster packs",
   boosterPacksTitleLong = "Booster packs",
+  boosterPacksTabContentDescription = "List of custom booster packs",
+  boosterPackTitleNoName = "Enter pack name",
 
   expansions = "Expansions",
   expansionsTabContentDescription = "List of expansion sets",
@@ -92,4 +93,8 @@ val EnDeckBoxStrings = DeckBoxStrings(
     }
   },
   deckTitleNoName = "Enter a name for your deck",
+  fabActionNewBoosterPack = "New pack",
+  actionCancel = "Cancel",
+  actionDelete = "Delete",
+  actionDeleteAreYouSure = "Are you sure?",
 )

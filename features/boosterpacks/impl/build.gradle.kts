@@ -15,6 +15,7 @@ kotlin {
         implementation(projects.data.db)
 
         api(projects.features.cards.public)
+        api(projects.features.boosterpacks.public)
 
         implementation(libs.store)
         implementation(libs.kotlinx.atomicfu)

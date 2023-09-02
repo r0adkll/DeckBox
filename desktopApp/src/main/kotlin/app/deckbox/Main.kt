@@ -14,7 +14,6 @@ import app.deckbox.core.logging.bark
 import app.deckbox.shared.DesktopApplicationComponent
 import app.deckbox.shared.WindowComponent
 import com.slack.circuit.backstack.rememberSaveableBackStack
-import com.slack.circuit.foundation.push
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import java.awt.Desktop
 import java.net.URI

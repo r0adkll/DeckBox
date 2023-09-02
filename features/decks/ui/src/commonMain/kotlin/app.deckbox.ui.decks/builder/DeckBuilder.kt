@@ -42,6 +42,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.extensions.plus
+import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.di.MergeActivityScope
@@ -129,6 +130,17 @@ fun DeckBuilder(
           }
         },
         actions = {
+          IconButton(
+            onClick = {
+              // TODO: Overlay for booster pack picker
+
+            },
+          ) {
+            Icon(
+              Icons.Rounded.AddBoosterPack,
+              contentDescription = null,
+            )
+          }
           IconButton(
             onClick = { isEditing = !isEditing },
           ) {

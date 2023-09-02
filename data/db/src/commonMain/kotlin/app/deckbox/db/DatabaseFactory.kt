@@ -6,6 +6,8 @@ import app.cash.sqldelight.db.SqlDriver
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.model.SuperType
 import app.deckbox.sqldelight.Attacks
+import app.deckbox.sqldelight.Booster_pack_join
+import app.deckbox.sqldelight.Booster_packs
 import app.deckbox.sqldelight.CardMarketPrices
 import app.deckbox.sqldelight.Cards
 import app.deckbox.sqldelight.Deck_card_join
@@ -61,6 +63,13 @@ class DatabaseFactory(
       updatedAtAdapter = LocalDateTimeAdapter,
     ),
     deck_card_joinAdapter = Deck_card_join.Adapter(
+      countAdapter = IntColumnAdapter,
+    ),
+    booster_packsAdapter = Booster_packs.Adapter(
+      createdAtAdapter = LocalDateTimeAdapter,
+      updatedAtAdapter = LocalDateTimeAdapter,
+    ),
+    booster_pack_joinAdapter = Booster_pack_join.Adapter(
       countAdapter = IntColumnAdapter,
     ),
   )

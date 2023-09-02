@@ -13,6 +13,7 @@ import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.extensions.lowestMarketPrice
 import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.logging.bark
@@ -62,11 +63,6 @@ class DeckBuilderPresenter(
   @OptIn(ExperimentalCoroutinesApi::class)
   @Composable
   override fun present(): DeckBuilderUiState {
-
-    LaunchedEffect(screen.id) {
-      bark { "DeckBuilderPresenter(screen.id = ${screen.id})" }
-    }
-
     val session by remember {
       repository.observeSession(screen.id)
         .map { DeckSession.Loaded(it) }
@@ -204,22 +200,5 @@ class DeckBuilderPresenter(
       is DecrementCard -> repository.decrementCard(deckId, event.cardId, event.amount)
       is RemoveCard -> repository.removeCard(deckId, event.cardId)
     }
-  }
-
-  private fun Card.TcgPlayer.Prices.lowestMarketPrice(): Double? {
-    var lowestPrice = Double.MAX_VALUE
-    fun Card.TcgPlayer.Price.checkLowest() {
-      market?.let {
-        if (it < lowestPrice) lowestPrice = it
-      }
-    }
-
-    normal?.checkLowest()
-    holofoil?.checkLowest()
-    reverseHolofoil?.checkLowest()
-    firstEditionNormal?.checkLowest()
-    firstEditionHolofoil?.checkLowest()
-
-    return lowestPrice.takeIf { it != Double.MAX_VALUE }
   }
 }

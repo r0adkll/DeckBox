@@ -15,6 +15,7 @@ import app.deckbox.db.mapping.toModel
 import app.deckbox.db.mapping.toStackedEntity
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.sqldelight.Cards
+import app.deckbox.sqldelight.GetCardsForBoosterPack
 import app.deckbox.sqldelight.GetCardsForDeck
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.flow.Flow
@@ -117,6 +118,20 @@ class SqlDelightCardDao(
         withContext(dispatcherProvider.databaseRead) {
           database.transactionWithResult {
             val stackedEntities = it.executeAsList().map(GetCardsForDeck::toStackedEntity)
+            hydrateStacks(stackedEntities)
+          }
+        }
+      }
+  }
+
+  override fun observeByBoosterPack(packId: String): Flow<List<Stacked<Card>>> {
+    return database.boosterPackCardJoinQueries
+      .getCardsForBoosterPack(packId)
+      .asFlow()
+      .mapNotNull {
+        withContext(dispatcherProvider.databaseRead) {
+          database.transactionWithResult {
+            val stackedEntities = it.executeAsList().map(GetCardsForBoosterPack::toStackedEntity)
             hydrateStacks(stackedEntities)
           }
         }

@@ -1,4 +1,4 @@
-package app.deckbox.ui.decks.builder.composables
+package app.deckbox.common.compose.widgets
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -24,7 +24,7 @@ import app.deckbox.common.compose.icons.rounded.RemoveCard
 import app.deckbox.common.compose.icons.rounded.SubtractCard
 
 @Composable
-internal fun CardEditor(
+fun CardEditor(
   count: Int,
   isEditing: Boolean,
   onAddClick: () -> Unit,
@@ -61,20 +61,10 @@ internal fun CardEditor(
             .clickable(onClick = onAddClick),
           contentAlignment = Alignment.Center,
         ) {
-//          Box(
-//            modifier = Modifier
-//              .size(40.dp)
-//              .background(
-//                color = MaterialTheme.colorScheme.secondaryContainer,
-//                shape = CircleShape,
-//              ),
-//            contentAlignment = Alignment.Center,
-//          ) {
           Icon(
             Icons.Rounded.AddCard,
             contentDescription = null,
           )
-//          }
         }
         val removeColor = if (count > 1) {
           MaterialTheme.colorScheme.secondaryContainer
@@ -93,20 +83,10 @@ internal fun CardEditor(
             .clickable(onClick = onRemoveClick),
           contentAlignment = Alignment.Center,
         ) {
-//          Box(
-//            modifier = Modifier
-//              .size(40.dp)
-//              .background(
-//                color = MaterialTheme.colorScheme.secondaryContainer,
-//                shape = CircleShape,
-//              ),
-//            contentAlignment = Alignment.Center,
-//          ) {
           Icon(
             if (count > 1) Icons.Rounded.SubtractCard else Icons.Rounded.RemoveCard,
             contentDescription = null,
           )
-//          }
         }
       }
     }

@@ -16,9 +16,6 @@ class RootScreen : DeckBoxScreen(name = "Root")
 class DecksScreen : DeckBoxScreen(name = "Decks()")
 
 @CommonParcelize
-class BoosterPackScreen : DeckBoxScreen(name = "BoosterPack()")
-
-@CommonParcelize
 data class DeckBuilderScreen(
   val id: String,
 ) : DeckBoxScreen(name = "DeckBuilder()") {
@@ -29,17 +26,34 @@ data class DeckBuilderScreen(
 }
 
 @CommonParcelize
+class BoosterPackScreen : DeckBoxScreen(name = "BoosterPack()")
+
+@CommonParcelize
+data class BoosterPackBuilderScreen(
+  val id: String,
+) : DeckBoxScreen(name = "BoosterPackBuilder()") {
+  override val arguments get() = mapOf("id" to id)
+
+  @CommonIgnoredOnParcel
+  override val presentation = Presentation(hideBottomNav = true)
+}
+
+@CommonParcelize
 data class BrowseScreen(
   val deckId: String? = null,
+  val packId: String? = null,
   val superType: SuperType? = null,
 ) : DeckBoxScreen(name = "Browse()") {
   override val arguments get() = mapOf(
     "deckId" to deckId,
+    "packId" to packId,
     "superType" to superType,
   )
 
   @CommonIgnoredOnParcel
-  override val presentation = Presentation(hideBottomNav = deckId != null)
+  override val presentation = Presentation(
+    hideBottomNav = deckId != null || packId != null
+  )
 }
 
 @CommonParcelize
@@ -66,20 +80,26 @@ class CardDetailScreen(
   val cardName: String,
   val cardImageLarge: String,
   val deckId: String? = null,
+  val packId: String? = null,
 ) : DeckBoxScreen(name = "CardDetail()") {
   constructor(
     card: Card,
     deckId: String? = null,
-  ) : this(card.id, card.name, card.image.large, deckId)
+    packId: String? = null,
+  ) : this(card.id, card.name, card.image.large, deckId, packId)
 
   override val arguments get() = mapOf(
     "cardId" to cardId,
     "cardName" to cardName,
     "cardImageLarge" to cardImageLarge,
+    "deckId" to deckId,
+    "packId" to packId,
   )
 
   @CommonIgnoredOnParcel
-  override val presentation = Presentation(hideBottomNav = deckId != null)
+  override val presentation = Presentation(
+    hideBottomNav = deckId != null || packId != null,
+  )
 }
 
 @CommonParcelize

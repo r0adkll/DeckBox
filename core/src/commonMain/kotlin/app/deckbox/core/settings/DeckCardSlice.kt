@@ -12,29 +12,29 @@ sealed interface DeckCardSlice {
 
   @Serializable
   sealed interface Header : DeckCardSlice {
-    @Serializable object Export : Header
+    @Serializable data object Export : Header
 
-    @Serializable object Thumbnail : Header
+    @Serializable data object Thumbnail : Header
   }
 
   @Serializable
   sealed interface Images : DeckCardSlice {
-    @Serializable object Fanned : Images
+    @Serializable data object Fanned : Images
 
-    @Serializable object Grid : Images
+    @Serializable data object Grid : Images
   }
 
   @Serializable
-  object Tags : DeckCardSlice
+  data object Tags : DeckCardSlice
 
   @Serializable
-  object Description : DeckCardSlice
+  data object Description : DeckCardSlice
 
   @Serializable
   sealed interface Actions : DeckCardSlice {
-    @Serializable object Full : Actions
+    @Serializable data object Full : Actions
 
-    @Serializable object Compact : Actions
+    @Serializable data object Compact : Actions
   }
 
   companion object
