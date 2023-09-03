@@ -51,7 +51,7 @@ class ExpansionDetailPresenter(
           ExpansionFilterPresenter((expansionCards as? LoadState.Loaded)?.data ?: emptyList())
         }
 
-        val filterState = filterPresenter.present()
+        val filterState = filterPresenter.present(key = screen.expansionId)
 
         ExpansionDetailUiState.Loaded(
           expansion = state.data,

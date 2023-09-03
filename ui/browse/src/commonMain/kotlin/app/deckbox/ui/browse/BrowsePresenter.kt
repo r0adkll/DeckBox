@@ -68,7 +68,10 @@ class BrowsePresenter(
         SearchFilter(superTypes = setOf(it))
       } ?: SearchFilter()
     }
-    val filterUiState = filterPresenter.present(initialFilter)
+    val filterUiState = filterPresenter.present(
+      key = screen.hashCode().toString(),
+      initialFilter = initialFilter
+    )
 
     val query by remember(filterUiState.filter) {
       derivedStateOf {
@@ -139,7 +142,11 @@ class BrowsePresenter(
         }
 
         is BrowseUiEvent.CardLongClicked -> {
-          navigator.goTo(CardDetailScreen(event.card, deckId = screen.deckId))
+          navigator.goTo(CardDetailScreen(
+            card = event.card,
+            deckId = screen.deckId,
+            packId = screen.packId,
+          ))
         }
       }
     }
