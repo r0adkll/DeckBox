@@ -99,4 +99,8 @@ data class DeckBoxStrings(
   val timeAgoDays: (days: Int) -> String,
   val timeAgoMonths: (months: Int) -> String,
   val timeAgoYears: (years: Int) -> String,
+  val deckSortOrderUpdatedAt: String,
+  val deckSortOrderCreatedAt: String,
+  val deckSortOrderAlphabetically: String,
+  val deckSortOrderLegality: String,
 )

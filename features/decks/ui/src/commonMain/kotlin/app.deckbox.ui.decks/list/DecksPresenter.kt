@@ -5,14 +5,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.SettingsScreen
+import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardConfig
+import app.deckbox.core.settings.SortOption.UpdatedAt
+import app.deckbox.core.settings.orderDecksBy
 import app.deckbox.features.decks.api.DeckCardConfigurator
 import app.deckbox.features.decks.api.DeckRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
@@ -33,6 +37,7 @@ class DecksPresenter(
   private val deckRepository: DeckRepository,
   private val deckBuilderRepository: DeckBuilderRepository,
   private val deckCardConfigurator: DeckCardConfigurator,
+  private val deckBoxSettings: DeckBoxSettings,
 ) : Presenter<DecksUiState> {
 
   @Suppress("UNCHECKED_CAST")
@@ -53,10 +58,22 @@ class DecksPresenter(
       deckCardConfigurator.observeConfig()
     }.collectAsState(DeckCardConfig.DEFAULT)
 
+    val deckSortOrder by remember {
+      deckBoxSettings.observeDeckSortOrder()
+    }.collectAsState(UpdatedAt)
+
+    val sortedDecks by remember {
+      snapshotFlow {
+        decksLoadState.dataOrNull?.orderDecksBy(deckSortOrder)
+          ?: emptyList()
+      }
+    }.collectAsState(emptyList())
+
     return DecksUiState(
       isLoading = decksLoadState is LoadState.Loading,
       deckCardConfig = deckCardConfig,
-      decks = (decksLoadState as? LoadState.Loaded<out List<Deck>>)?.data ?: emptyList(),
+      deckSortOrder = deckSortOrder,
+      decks = sortedDecks,
     ) { event ->
       when (event) {
         is DecksUiEvent.CardEvent -> when (event.event) {
@@ -79,6 +96,7 @@ class DecksPresenter(
           DeckBuilderScreen(deckBuilderRepository.createSession())
         )
         DecksUiEvent.OpenAppSettings -> navigator.goTo(SettingsScreen())
+        is DecksUiEvent.ChangeSortOrder -> deckBoxSettings.deckSortOrder = event.sortOrder
       }
     }
   }

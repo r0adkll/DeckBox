@@ -21,7 +21,7 @@ fun DeckBoxRootAppBar(
   scrollBehavior: TopAppBarScrollBehavior? = null,
   actions: @Composable RowScope.() -> Unit = {},
 ) {
-  CenterAlignedTopAppBar(
+  TopAppBar(
     modifier = modifier,
     windowInsets = WindowInsets.systemBars
       .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),

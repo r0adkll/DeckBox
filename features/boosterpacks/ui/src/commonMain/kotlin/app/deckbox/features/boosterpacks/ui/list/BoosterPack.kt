@@ -27,6 +27,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -36,14 +37,17 @@ import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.compose.widgets.DefaultEmptyView
+import app.deckbox.common.compose.widgets.SortChip
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.BoosterPackScreen
 import app.deckbox.common.screens.DeckPickerScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Deck
+import app.deckbox.core.settings.SortOption
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.AddToDeck
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.BoosterPackClick
+import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.ChangeSortOption
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.CreateNew
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.Delete
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.Duplicate
@@ -64,13 +68,15 @@ fun BoosterPack(
   state: BoosterPackUiState,
   modifier: Modifier = Modifier,
 ) {
+  val eventSink = state.eventSink
+
   val coroutineScope = rememberCoroutineScope()
   val lazyListState = rememberLazyListState()
 
   val detailNavigationState = LocalDetailNavigation.current
   val overlayHost = LocalOverlayHost.current
 
-  val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Scaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
@@ -79,7 +85,7 @@ fun BoosterPack(
           title = LocalStrings.current.boosterPacksTitleLong,
           actions = {
             IconButton(
-              onClick = { state.eventSink(OpenAppSettings) },
+              onClick = { eventSink(OpenAppSettings) },
             ) {
               Icon(Icons.Rounded.Settings, contentDescription = null)
             }
@@ -100,7 +106,7 @@ fun BoosterPack(
           icon = { Icon(Icons.Rounded.NewBoosterPack, contentDescription = null) },
           containerColor = MaterialTheme.colorScheme.secondaryContainer,
           expanded = isExpanded,
-          onClick = { state.eventSink(CreateNew) },
+          onClick = { eventSink(CreateNew) },
         )
       }
     },
@@ -109,14 +115,16 @@ fun BoosterPack(
     state.packState.packs?.let { packs ->
       BoosterPackList(
         packs = packs,
-        onClick = { state.eventSink(BoosterPackClick(it)) },
-        onDelete = { state.eventSink(Delete(it)) },
-        onDuplicate = { state.eventSink(Duplicate(it)) },
+        sortOption = state.sortOption,
+        onChangeSortOption = { eventSink(ChangeSortOption(it)) },
+        onClick = { eventSink(BoosterPackClick(it)) },
+        onDelete = { eventSink(Delete(it)) },
+        onDuplicate = { eventSink(Duplicate(it)) },
         onAddToDeck = { pack ->
           coroutineScope.launch {
             val result = overlayHost.showBottomSheetScreen<Deck>(DeckPickerScreen())
             if (result != null) {
-              state.eventSink(AddToDeck(result, pack))
+              eventSink(AddToDeck(result, pack))
             }
           }
         },
@@ -133,7 +141,7 @@ fun BoosterPack(
       DefaultEmptyView()
     } else if (state.packState.packs.isNullOrEmpty()) {
       WelcomeTip(
-        onNewClick = { state.eventSink(CreateNew) },
+        onNewClick = { eventSink(CreateNew) },
         modifier = Modifier.padding(paddingValues),
       )
     }
@@ -143,6 +151,8 @@ fun BoosterPack(
 @Composable
 private fun BoosterPackList(
   packs: List<BoosterPack>,
+  sortOption: SortOption,
+  onChangeSortOption: (SortOption) -> Unit,
   onClick: (BoosterPack) -> Unit,
   onDelete: (BoosterPack) -> Unit,
   onDuplicate: (BoosterPack) -> Unit,
@@ -158,6 +168,20 @@ private fun BoosterPackList(
       .padding(horizontal = 16.dp),
     state = state,
   ) {
+    if (packs.isNotEmpty()) {
+      item {
+        Box(
+          modifier = Modifier.fillParentMaxWidth(),
+        ) {
+          SortChip(
+            value = sortOption,
+            sortOptions = SortOption.All,
+            onValueChanged = onChangeSortOption,
+            modifier = Modifier.align(Alignment.CenterEnd),
+          )
+        }
+      }
+    }
     items(
       items = packs,
       key = { it.id },

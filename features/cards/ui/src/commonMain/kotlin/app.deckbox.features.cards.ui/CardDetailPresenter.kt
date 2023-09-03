@@ -81,7 +81,7 @@ class CardDetailPresenter(
         val card = repository.getCard(id)
         emit(
           card?.let { LoadState.Loaded(card) }
-            ?: LoadState.Error("Unable to load card for ${screen.cardId}"),
+            ?: LoadState.Error,
         )
       }
     }.collectAsState(LoadState.Loading)

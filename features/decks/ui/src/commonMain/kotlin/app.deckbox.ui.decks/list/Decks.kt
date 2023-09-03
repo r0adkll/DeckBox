@@ -15,12 +15,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,8 +38,10 @@ import app.deckbox.common.screens.DecksScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardConfig
+import app.deckbox.core.settings.SortOption
 import app.deckbox.features.decks.public.ui.DeckCard
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
+import app.deckbox.ui.decks.list.composables.FilterBar
 import app.deckbox.ui.decks.list.composables.WelcomeTips
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
@@ -58,7 +58,7 @@ internal fun Decks(
   val lazyListState = rememberLazyListState()
 
   val detailNavigationState = LocalDetailNavigation.current
-  val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Scaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
@@ -96,6 +96,10 @@ internal fun Decks(
     DeckList(
       decks = state.decks,
       deckCardConfig = state.deckCardConfig,
+      sortOption = state.deckSortOrder,
+      onChangeSortOption = {
+        state.eventSink(DecksUiEvent.ChangeSortOrder(it))
+      },
       onDeckEvent = { deck, event ->
         state.eventSink(DecksUiEvent.CardEvent(deck, event))
       },
@@ -121,6 +125,8 @@ internal fun Decks(
 private fun DeckList(
   decks: List<Deck>,
   deckCardConfig: DeckCardConfig,
+  sortOption: SortOption,
+  onChangeSortOption: (SortOption) -> Unit,
   onDeckEvent: (Deck, DeckCardEvent) -> Unit,
   contentPadding: PaddingValues,
   modifier: Modifier = Modifier,
@@ -133,6 +139,16 @@ private fun DeckList(
       .padding(horizontal = 16.dp),
     state = state,
   ) {
+
+    if (decks.isNotEmpty()) {
+      item {
+        FilterBar(
+          option = sortOption,
+          onOptionClick = onChangeSortOption,
+        )
+      }
+    }
+
     items(
       items = decks,
       key = { it.id },

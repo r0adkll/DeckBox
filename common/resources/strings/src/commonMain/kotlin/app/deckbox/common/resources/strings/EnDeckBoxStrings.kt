@@ -108,5 +108,9 @@ val EnDeckBoxStrings = DeckBoxStrings(
   timeAgoHours = { hrs -> "$hrs hours ago" },
   timeAgoDays = { days -> "$days days ago" },
   timeAgoMonths = { months -> "$months months ago" },
-  timeAgoYears = { yrs -> "$yrs years ago"}
+  timeAgoYears = { yrs -> "$yrs years ago"},
+  deckSortOrderUpdatedAt = "Last updated",
+  deckSortOrderCreatedAt = "Created",
+  deckSortOrderAlphabetically = "Alphabetically",
+  deckSortOrderLegality = "Legality"
 )

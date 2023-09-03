@@ -4,10 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.BoosterPackScreen
 import app.deckbox.common.screens.SettingsScreen
+import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.settings.SortOption
+import app.deckbox.core.settings.orderBoosterPacksBy
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -24,6 +28,7 @@ class BoosterPackPresenter(
   @Assisted private val navigator: Navigator,
   private val boosterPackRepository: BoosterPackRepository,
   private val deckBuilderRepository: DeckBuilderRepository,
+  private val settings: DeckBoxSettings,
 ) : Presenter<BoosterPackUiState> {
 
   @Composable
@@ -38,8 +43,21 @@ class BoosterPackPresenter(
         .catch { BoosterPackLoadState.Error }
     }.collectAsState(BoosterPackLoadState.Loading)
 
+    val packSortOrder by remember {
+      settings.observeBoosterPackSortOrder()
+    }.collectAsState(SortOption.UpdatedAt)
+
+    val sortedPacks by remember {
+      snapshotFlow {
+        boosterPackLoadState.map {
+          it.orderBoosterPacksBy(packSortOrder)
+        }
+      }
+    }.collectAsState(BoosterPackLoadState.Loading)
+
     return BoosterPackUiState(
-      packState = boosterPackLoadState,
+      sortOption = packSortOrder,
+      packState = sortedPacks,
     ) { event ->
       when (event) {
         BoosterPackUiEvent.OpenAppSettings -> navigator.goTo(SettingsScreen())
@@ -48,6 +66,7 @@ class BoosterPackPresenter(
         is BoosterPackUiEvent.Delete -> boosterPackRepository.delete(event.pack.id)
         is BoosterPackUiEvent.Duplicate -> boosterPackRepository.duplicate(event.pack.id)
         is BoosterPackUiEvent.AddToDeck -> deckBuilderRepository.addBoosterPack(event.deck.id, event.pack.id)
+        is BoosterPackUiEvent.ChangeSortOption -> settings.boosterPackSortOrder = event.sortOption
       }
     }
   }
