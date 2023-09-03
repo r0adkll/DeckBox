@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
 private var _vector: ImageVector? = null
 
 val Icons.Rounded.AddDeck: ImageVector
@@ -116,4 +115,3 @@ val Icons.Rounded.AddDeck: ImageVector
     }.build()
     return _vector!!
   }
-

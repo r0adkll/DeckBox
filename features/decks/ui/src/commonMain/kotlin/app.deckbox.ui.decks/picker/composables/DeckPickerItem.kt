@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -81,7 +80,7 @@ private fun Thumbnail(
       modifier = modifier
         .size(56.dp)
         .clip(shape)
-        .background(MaterialTheme.colorScheme.secondaryContainer)
+        .background(MaterialTheme.colorScheme.secondaryContainer),
     )
   } else {
     Box(

@@ -1,17 +1,13 @@
 package app.deckbox.common.compose.icons
 
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.group
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _vector: ImageVector? = null
 
@@ -25,7 +21,7 @@ val DeckBoxIcons.Logos.HyperPotion: ImageVector
       defaultWidth = 48.dp,
       defaultHeight = 48.dp,
       viewportWidth = 48f,
-      viewportHeight = 48f
+      viewportHeight = 48f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFFFF4081)),
@@ -36,7 +32,7 @@ val DeckBoxIcons.Logos.HyperPotion: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(11.034f, 44f)
         curveToRelative(-0.519f, 0f, -0.787f, -0.342f, -0.877f, -0.489f)
@@ -60,7 +56,7 @@ val DeckBoxIcons.Logos.HyperPotion: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(30f, 14f)
         verticalLineToRelative(14.747f)
@@ -94,7 +90,7 @@ val DeckBoxIcons.Logos.HyperPotion: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(25f, 22.979f)
         lineToRelative(-2f, 0f)
@@ -120,7 +116,7 @@ val DeckBoxIcons.Logos.HyperPotion: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(24f, 6f)
         arcTo(3f, 3f, 0f, isMoreThanHalf = true, isPositiveArc = false, 24f, 12f)
@@ -136,7 +132,7 @@ val DeckBoxIcons.Logos.HyperPotion: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(24f, 8f)
         arcTo(1f, 1f, 0f, isMoreThanHalf = true, isPositiveArc = false, 24f, 10f)
@@ -152,7 +148,7 @@ val DeckBoxIcons.Logos.HyperPotion: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(27f, 30f)
         arcTo(2f, 2f, 0f, isMoreThanHalf = true, isPositiveArc = false, 27f, 34f)
@@ -178,4 +174,3 @@ val DeckBoxIcons.Logos.HyperPotion: ImageVector
     }.build()
     return _vector!!
   }
-

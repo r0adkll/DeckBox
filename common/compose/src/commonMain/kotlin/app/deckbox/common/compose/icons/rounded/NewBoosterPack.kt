@@ -22,7 +22,7 @@ val Icons.Rounded.NewBoosterPack: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFF000000)),
@@ -33,7 +33,7 @@ val Icons.Rounded.NewBoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(3f, 20f)
         curveTo(3f, 21.1046f, 3.8954f, 22f, 5f, 22f)
@@ -62,7 +62,7 @@ val Icons.Rounded.NewBoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(4f, 3f)
         curveTo(3f, 3f, 3f, 3f, 3f, 5.5f)
@@ -89,7 +89,7 @@ val Icons.Rounded.NewBoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(18.4942f, 1.51804f)
         curveTo(18.7716f, 1.234f, 19.2284f, 1.234f, 19.5058f, 1.518f)

@@ -139,7 +139,6 @@ private fun DeckList(
       .padding(horizontal = 16.dp),
     state = state,
   ) {
-
     if (decks.isNotEmpty()) {
       item {
         FilterBar(

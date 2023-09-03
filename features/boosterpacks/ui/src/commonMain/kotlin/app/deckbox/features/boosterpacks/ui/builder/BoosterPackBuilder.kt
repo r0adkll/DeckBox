@@ -49,7 +49,6 @@ import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.DeckPickerScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Deck
-import app.deckbox.core.model.SuperType
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddCards
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddToDeck
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.CardClick
@@ -59,7 +58,6 @@ import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.Na
 import app.deckbox.features.boosterpacks.ui.builder.composables.BoosterPackBottomSheet
 import app.deckbox.features.boosterpacks.ui.builder.composables.BoosterPackCardList
 import app.deckbox.features.boosterpacks.ui.builder.composables.SheetHeaderHeight
-import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject

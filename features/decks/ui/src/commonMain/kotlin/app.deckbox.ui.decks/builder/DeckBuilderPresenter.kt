@@ -1,12 +1,9 @@
 package app.deckbox.ui.decks.builder
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.LocalSaveableStateRegistry
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen

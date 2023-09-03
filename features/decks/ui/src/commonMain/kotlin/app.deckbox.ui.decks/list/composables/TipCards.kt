@@ -75,7 +75,8 @@ internal fun WelcomeCard(
 
     Text(
       text = "Try building your very first deck to get started and we'll try to give you some tips along the way.\n\n" +
-        "Decide on the main strategy of your deck. Will it focus on fast attacks, energy denial, or special abilities? This choice will guide your card selection.",
+        "Decide on the main strategy of your deck. Will it focus on fast attacks, energy denial, " +
+        "or special abilities? This choice will guide your card selection.",
       textAlign = TextAlign.Center,
       style = MaterialTheme.typography.bodyMedium,
       modifier = Modifier.padding(
@@ -88,7 +89,7 @@ internal fun WelcomeCard(
     OutlinedIconButton(
       onClick = onNewDeckClick,
       colors = ButtonDefaults.outlinedButtonColors(
-        contentColor = MaterialTheme.colorScheme.primary
+        contentColor = MaterialTheme.colorScheme.primary,
       ),
       border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
       icon = {
@@ -111,7 +112,7 @@ internal fun WelcomeCard(
     OutlinedIconButton(
       onClick = onNewDeckClick,
       colors = ButtonDefaults.outlinedButtonColors(
-        contentColor = MaterialTheme.colorScheme.primary
+        contentColor = MaterialTheme.colorScheme.primary,
       ),
       border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
       icon = {

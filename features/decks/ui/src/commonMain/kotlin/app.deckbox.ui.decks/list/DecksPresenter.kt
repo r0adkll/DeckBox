@@ -93,7 +93,7 @@ class DecksPresenter(
         DecksUiEvent.CreateNewDeck -> navigator.goTo(
           // TODO: Hate this, need to use the screen object as passed data persistent
           //  so the new session Id has to be generated here
-          DeckBuilderScreen(deckBuilderRepository.createSession())
+          DeckBuilderScreen(deckBuilderRepository.createSession()),
         )
         DecksUiEvent.OpenAppSettings -> navigator.goTo(SettingsScreen())
         is DecksUiEvent.ChangeSortOrder -> deckBoxSettings.deckSortOrder = event.sortOrder

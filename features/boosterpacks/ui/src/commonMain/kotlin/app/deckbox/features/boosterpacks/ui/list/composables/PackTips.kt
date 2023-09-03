@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.Booster
 import app.deckbox.common.compose.icons.DeckBoxIcons
-import app.deckbox.common.compose.icons.HyperPotion
 import app.deckbox.common.compose.icons.rounded.NewBoosterPack
 import app.deckbox.common.compose.widgets.OutlinedIconButton
 import app.deckbox.common.compose.widgets.SizedIcon
@@ -73,7 +72,8 @@ internal fun WelcomeCard(
     Spacer(Modifier.height(16.dp))
 
     Text(
-      text = "Booster packs are sets of re-usable cards that you can easily add to decks to make iterating even easier.\n\n" +
+      text = "Booster packs are sets of re-usable cards that you can easily add to decks to make " +
+        "iterating even easier.\n\n" +
         "Try making a pack for staple cards for the current meta.\n\n" +
         "Create energy packs to drop your favorites into your new deck.",
       textAlign = TextAlign.Center,
@@ -88,7 +88,7 @@ internal fun WelcomeCard(
     OutlinedIconButton(
       onClick = onNewClick,
       colors = ButtonDefaults.outlinedButtonColors(
-        contentColor = MaterialTheme.colorScheme.secondary
+        contentColor = MaterialTheme.colorScheme.secondary,
       ),
       border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
       icon = {

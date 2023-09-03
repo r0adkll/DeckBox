@@ -2,10 +2,8 @@ package app.deckbox.common.compose.overlays
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
@@ -28,7 +26,6 @@ import app.deckbox.common.screens.DeckBoxScreen
 import app.deckbox.common.screens.OverlayResultScreen
 import app.deckbox.core.logging.bark
 import com.slack.circuit.foundation.CircuitContent
-import com.slack.circuit.foundation.NavEvent
 import com.slack.circuit.overlay.Overlay
 import com.slack.circuit.overlay.OverlayHost
 import com.slack.circuit.overlay.OverlayNavigator
@@ -72,7 +69,7 @@ class BottomSheetOverlay<Model : Any, Result : Any>(
         Handle(
           Modifier
             .align(Alignment.CenterHorizontally)
-            .padding(vertical = 22.dp)
+            .padding(vertical = 22.dp),
         )
 
         content(model) { result ->
@@ -115,7 +112,7 @@ private fun Handle(
       .size(32.dp, 4.dp)
       .background(
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        shape = RoundedCornerShape(50)
+        shape = RoundedCornerShape(50),
       ),
   )
 }
@@ -135,7 +132,7 @@ suspend fun <R> OverlayHost.showBottomSheetScreen(screen: DeckBoxScreen): R? {
               bark { "Result: ${(screen as? OverlayResultScreen<R>)?.result}" }
               navigator.finish(
                 screen as? OverlayResultScreen<R>
-                  ?: error("Incorrect result type for the current overlay")
+                  ?: error("Incorrect result type for the current overlay"),
               )
             } else {
               error("Navigation not supported in overlays")
@@ -156,8 +153,8 @@ suspend fun <R> OverlayHost.showBottomSheetScreen(screen: DeckBoxScreen): R? {
           screen = model,
           navigator = overlayNavigator,
         )
-      }
-    )
+      },
+    ),
   ).result
 }
 

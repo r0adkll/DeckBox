@@ -12,7 +12,6 @@ import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject

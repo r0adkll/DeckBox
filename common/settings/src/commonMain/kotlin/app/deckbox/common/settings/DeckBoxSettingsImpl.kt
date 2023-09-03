@@ -5,8 +5,8 @@ import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.core.settings.DeckCardSlice
-import app.deckbox.core.settings.SortOption
 import app.deckbox.core.settings.ExpansionCardStyle
+import app.deckbox.core.settings.SortOption
 import app.deckbox.core.settings.asString
 import app.deckbox.core.settings.fromString
 import com.russhwolf.settings.ExperimentalSettingsApi

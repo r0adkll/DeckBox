@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
 private var _vector: ImageVector? = null
 
 val Icons.Rounded.AddBoosterPack: ImageVector
@@ -23,7 +22,7 @@ val Icons.Rounded.AddBoosterPack: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFF000000)),
@@ -34,7 +33,7 @@ val Icons.Rounded.AddBoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(8.00004f, 22f)
         horizontalLineTo(13f)
@@ -52,7 +51,7 @@ val Icons.Rounded.AddBoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(5.00005f, 10f)
         horizontalLineTo(19f)
@@ -97,7 +96,7 @@ val Icons.Rounded.AddBoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(5.00005f, 10f)
         horizontalLineTo(3.00004f)
@@ -119,7 +118,7 @@ val Icons.Rounded.AddBoosterPack: ImageVector
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(16f, 19f)
         horizontalLineTo(21.9957f)

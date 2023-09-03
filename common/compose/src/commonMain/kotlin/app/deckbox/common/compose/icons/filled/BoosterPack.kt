@@ -1,15 +1,14 @@
 package app.deckbox.common.compose.icons.filled
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-
 
 private var _boosterPack: ImageVector? = null
 
@@ -23,7 +22,7 @@ val Icons.Filled.BoosterPack: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFF000000)),
@@ -34,7 +33,7 @@ val Icons.Filled.BoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(3.99999f, 3f)
         curveTo(3f, 3f, 3f, 3f, 3f, 5.5f)
@@ -72,7 +71,7 @@ val Icons.Filled.BoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(5.99999f, 4.5f)
         curveTo(5.1268f, 4.5f, 5f, 5.5f, 5f, 5.5f)
@@ -97,7 +96,7 @@ val Icons.Filled.BoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(5f, 10f)
         lineTo(4.99999f, 19f)
@@ -117,7 +116,7 @@ val Icons.Filled.BoosterPack: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.EvenOdd
+        pathFillType = PathFillType.EvenOdd,
       ) {
         moveTo(4.99999f, 22f)
         curveTo(3.8954f, 22f, 3f, 21.1046f, 3f, 20f)

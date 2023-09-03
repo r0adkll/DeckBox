@@ -58,7 +58,7 @@ data class BrowseScreen(
 
   @CommonIgnoredOnParcel
   override val presentation = Presentation(
-    hideBottomNav = deckId != null || packId != null
+    hideBottomNav = deckId != null || packId != null,
   )
 }
 
@@ -127,7 +127,7 @@ data class UrlScreen(val url: String) : DeckBoxScreen(name = "UrlScreen()") {
  */
 @CommonParcelize
 data class OverlayResultScreen<T>(
-  @CommonIgnoredOnParcel val result: T? = null
+  @CommonIgnoredOnParcel val result: T? = null,
 ) : Screen
 
 //endregion

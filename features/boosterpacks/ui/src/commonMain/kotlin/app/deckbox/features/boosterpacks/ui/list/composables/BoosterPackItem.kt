@@ -158,7 +158,6 @@ private fun Actions(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-
       OutlinedIconButton(
         onClick = onAddToDeck,
         colors = ButtonDefaults.outlinedButtonColors(

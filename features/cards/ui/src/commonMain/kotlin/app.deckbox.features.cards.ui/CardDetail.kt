@@ -18,7 +18,6 @@ import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.extensions.applyHoloAndDragEffect
 import app.deckbox.common.compose.icons.rounded.AddCard
-import app.deckbox.common.compose.icons.rounded.RemoveCard
 import app.deckbox.common.compose.icons.rounded.SubtractCard
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.CardDetailScreen
@@ -115,7 +113,7 @@ internal fun CardDetail(
           MaterialTheme.colorScheme.tertiary
         } else {
           MaterialTheme.colorScheme.onSurfaceVariant
-        }
+        },
       ) {
         Icon(
           if (isFavorited) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,

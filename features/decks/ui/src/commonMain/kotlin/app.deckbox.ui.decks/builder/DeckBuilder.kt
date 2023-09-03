@@ -48,7 +48,6 @@ import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.screens.BoosterPackPickerScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.logging.bark
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.SuperType
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
@@ -65,7 +64,6 @@ import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.overlay.LocalOverlayHost
-import com.slack.circuit.overlay.rememberOverlayHost
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

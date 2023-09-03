@@ -38,6 +38,6 @@ sealed interface BoosterPackUiEvent {
   data class AddToDeck(
     val deck: Deck,
     val pack: BoosterPack,
-  ): BoosterPackUiEvent
+  ) : BoosterPackUiEvent
   data class ChangeSortOption(val sortOption: SortOption) : BoosterPackUiEvent
 }

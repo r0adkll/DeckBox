@@ -26,7 +26,7 @@ fun SizedIcon(
   contentDescription: String?,
   modifier: Modifier = Modifier,
   size: Dp = LocalIconSize.current,
-  tint: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+  tint: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
 ) {
   Icon(
     imageVector = icon,

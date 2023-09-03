@@ -80,7 +80,7 @@ private fun Thumbnail(
       modifier = modifier
         .size(56.dp)
         .clip(shape)
-        .background(MaterialTheme.colorScheme.secondaryContainer)
+        .background(MaterialTheme.colorScheme.secondaryContainer),
     )
   } else {
     Box(

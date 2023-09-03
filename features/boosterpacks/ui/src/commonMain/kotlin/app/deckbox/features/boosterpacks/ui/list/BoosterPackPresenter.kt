@@ -33,7 +33,6 @@ class BoosterPackPresenter(
 
   @Composable
   override fun present(): BoosterPackUiState {
-
     val boosterPackLoadState by remember {
       boosterPackRepository.observeBoosterPacks()
         .map { packs ->

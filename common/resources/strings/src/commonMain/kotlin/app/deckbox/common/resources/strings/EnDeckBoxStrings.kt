@@ -97,7 +97,8 @@ val EnDeckBoxStrings = DeckBoxStrings(
   actionCancel = "Cancel",
   actionDelete = "Delete",
   actionDeleteAreYouSure = "Are you sure?",
-  boosterPickerEmptyMessage = "You don't have any booster packs made. Try building some to start adding them to your decks.",
+  boosterPickerEmptyMessage = "You don't have any booster packs made. " +
+    "Try building some to start adding them to your decks.",
   boosterPackNoName = "Unnamed pack",
   deckNoName = "Unnamed deck",
   deckPickerTitle = "Choose a deck",
@@ -108,9 +109,9 @@ val EnDeckBoxStrings = DeckBoxStrings(
   timeAgoHours = { hrs -> "$hrs hours ago" },
   timeAgoDays = { days -> "$days days ago" },
   timeAgoMonths = { months -> "$months months ago" },
-  timeAgoYears = { yrs -> "$yrs years ago"},
+  timeAgoYears = { yrs -> "$yrs years ago" },
   deckSortOrderUpdatedAt = "Last updated",
   deckSortOrderCreatedAt = "Created",
   deckSortOrderAlphabetically = "Alphabetically",
-  deckSortOrderLegality = "Legality"
+  deckSortOrderLegality = "Legality",
 )
