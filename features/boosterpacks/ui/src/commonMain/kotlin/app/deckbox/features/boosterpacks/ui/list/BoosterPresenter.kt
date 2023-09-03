@@ -9,6 +9,7 @@ import app.deckbox.common.screens.BoosterPackScreen
 import app.deckbox.common.screens.SettingsScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
+import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -22,6 +23,7 @@ import me.tatarka.inject.annotations.Inject
 class BoosterPackPresenter(
   @Assisted private val navigator: Navigator,
   private val boosterPackRepository: BoosterPackRepository,
+  private val deckBuilderRepository: DeckBuilderRepository,
 ) : Presenter<BoosterPackUiState> {
 
   @Composable
@@ -29,7 +31,10 @@ class BoosterPackPresenter(
 
     val boosterPackLoadState by remember {
       boosterPackRepository.observeBoosterPacks()
-        .map { BoosterPackLoadState.Loaded(it) }
+        .map { packs ->
+          val sorted = packs.sortedBy { it.updatedAt }
+          BoosterPackLoadState.Loaded(sorted)
+        }
         .catch { BoosterPackLoadState.Error }
     }.collectAsState(BoosterPackLoadState.Loading)
 
@@ -42,6 +47,7 @@ class BoosterPackPresenter(
         is BoosterPackUiEvent.BoosterPackClick -> navigator.goTo(BoosterPackBuilderScreen(event.pack.id))
         is BoosterPackUiEvent.Delete -> boosterPackRepository.delete(event.pack.id)
         is BoosterPackUiEvent.Duplicate -> boosterPackRepository.duplicate(event.pack.id)
+        is BoosterPackUiEvent.AddToDeck -> deckBuilderRepository.addBoosterPack(event.deck.id, event.pack.id)
       }
     }
   }

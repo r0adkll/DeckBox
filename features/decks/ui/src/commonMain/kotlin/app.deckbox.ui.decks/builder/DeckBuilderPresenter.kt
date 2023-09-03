@@ -16,14 +16,13 @@ import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.extensions.lowestMarketPrice
 import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
-import app.deckbox.core.logging.bark
-import app.deckbox.core.model.Card
 import app.deckbox.core.model.Evolution
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.features.decks.api.validation.DeckValidation
 import app.deckbox.features.decks.api.validation.DeckValidator
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddTag
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.CardClick
@@ -198,6 +197,7 @@ class DeckBuilderPresenter(
       is RemoveTag -> repository.removeTag(deckId, event.tag)
       is IncrementCard -> repository.incrementCard(deckId, event.cardId, event.amount)
       is DecrementCard -> repository.decrementCard(deckId, event.cardId, event.amount)
+      is AddBoosterPack -> repository.addBoosterPack(deckId, event.pack.id)
       is RemoveCard -> repository.removeCard(deckId, event.cardId)
     }
   }

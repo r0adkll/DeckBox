@@ -97,7 +97,7 @@ class BrowsePresenter(
     }.collectAsState(null)
 
     return BrowseUiState(
-      isEditing = screen.deckId != null,
+      isEditing = screen.deckId != null || screen.packId != null,
       query = searchQuery,
       filterUiState = filterUiState,
       cardsPager = pager,

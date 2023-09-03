@@ -44,10 +44,14 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.extensions.plus
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.icons.rounded.AddDeck
+import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.screens.BoosterPackBuilderScreen
+import app.deckbox.common.screens.DeckPickerScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.Deck
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddCards
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddToDeck
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.CardClick
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.DecrementCard
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.IncrementCard
@@ -55,9 +59,11 @@ import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.Na
 import app.deckbox.features.boosterpacks.ui.builder.composables.BoosterPackBottomSheet
 import app.deckbox.features.boosterpacks.ui.builder.composables.BoosterPackCardList
 import app.deckbox.features.boosterpacks.ui.builder.composables.SheetHeaderHeight
+import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import com.slack.circuit.overlay.LocalOverlayHost
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,6 +75,7 @@ fun BoosterPackBuilder(
 ) {
   val coroutineScope = rememberCoroutineScope()
   val focusManager = LocalFocusManager.current
+  val overlayHost = LocalOverlayHost.current
 
   val bottomPadding = with(LocalDensity.current) {
     WindowInsets.navigationBars.getBottom(this).toDp()
@@ -100,7 +107,7 @@ fun BoosterPackBuilder(
           state.session.boosterPackOrNull()?.let { boosterPack ->
             val name = if (boosterPack.name.isNullOrBlank()) {
               AnnotatedString(
-                LocalStrings.current.boosterPackTitleNoName,
+                LocalStrings.current.boosterPackPickerTitle,
                 SpanStyle(
                   fontStyle = FontStyle.Italic,
                   color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
@@ -131,8 +138,12 @@ fun BoosterPackBuilder(
         actions = {
           IconButton(
             onClick = {
-              // TODO: Overlay to pick a deck
-
+              coroutineScope.launch {
+                val result = overlayHost.showBottomSheetScreen<Deck>(DeckPickerScreen())
+                if (result != null) {
+                  state.eventSink(AddToDeck(result))
+                }
+              }
             },
           ) {
             Icon(

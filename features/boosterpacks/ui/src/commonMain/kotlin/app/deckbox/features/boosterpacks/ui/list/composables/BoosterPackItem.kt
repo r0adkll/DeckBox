@@ -2,7 +2,6 @@ package app.deckbox.features.boosterpacks.ui.list.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.InteractionSource
@@ -15,17 +14,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Deck
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,17 +38,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import app.deckbox.common.compose.extensions.timeAgo
 import app.deckbox.common.compose.icons.outline.BoosterPack
 import app.deckbox.common.compose.icons.rounded.AddDeck
 import app.deckbox.common.compose.icons.rounded.Duplicate
-import app.deckbox.common.compose.icons.rounded.Experiment
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.common.compose.widgets.DeleteConfirmation
 import app.deckbox.common.compose.widgets.OutlinedIconButton
 import app.deckbox.common.compose.widgets.SizedIcon
 import app.deckbox.common.compose.widgets.TonalIcon
 import app.deckbox.core.extensions.ifNullOrBlank
-import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.BoosterPack
 import cafe.adriel.lyricist.LocalStrings
 import com.seiko.imageloader.rememberImagePainter
@@ -64,6 +58,7 @@ internal fun BoosterPackItem(
   onClick: () -> Unit,
   onDelete: () -> Unit,
   onDuplicate: () -> Unit,
+  onAddToDeck: () -> Unit,
   modifier: Modifier = Modifier,
   interactionSource: InteractionSource = remember { MutableInteractionSource() },
 ) {
@@ -87,7 +82,7 @@ internal fun BoosterPackItem(
         )
       },
       subtitle = {
-        Text(LocalStrings.current.deckLastUpdated(pack.updatedAt.readableFormat))
+        Text(pack.updatedAt.timeAgo)
       },
     )
 
@@ -96,6 +91,7 @@ internal fun BoosterPackItem(
     Actions(
       onDelete = onDelete,
       onDuplicate = onDuplicate,
+      onAddToDeck = onAddToDeck,
       interactionSource = interactionSource,
     )
   }
@@ -139,6 +135,7 @@ private fun Actions(
   modifier: Modifier = Modifier,
   onDelete: () -> Unit,
   onDuplicate: () -> Unit,
+  onAddToDeck: () -> Unit,
   interactionSource: InteractionSource = remember { MutableInteractionSource() },
 ) {
   var showDeleteConfirmation by remember { mutableStateOf(false) }
@@ -163,7 +160,7 @@ private fun Actions(
     ) {
 
       OutlinedIconButton(
-        onClick = { },
+        onClick = onAddToDeck,
         colors = ButtonDefaults.outlinedButtonColors(
           contentColor = MaterialTheme.colorScheme.secondary,
         ),

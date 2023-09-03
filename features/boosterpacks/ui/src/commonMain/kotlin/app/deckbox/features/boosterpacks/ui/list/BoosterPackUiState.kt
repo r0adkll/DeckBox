@@ -2,6 +2,7 @@ package app.deckbox.features.boosterpacks.ui.list
 
 import androidx.compose.runtime.Stable
 import app.deckbox.core.model.BoosterPack
+import app.deckbox.core.model.Deck
 import com.slack.circuit.runtime.CircuitUiState
 
 @Stable
@@ -25,4 +26,8 @@ sealed interface BoosterPackUiEvent {
   data class BoosterPackClick(val pack: BoosterPack) : BoosterPackUiEvent
   data class Delete(val pack: BoosterPack) : BoosterPackUiEvent
   data class Duplicate(val pack: BoosterPack) : BoosterPackUiEvent
+  data class AddToDeck(
+    val deck: Deck,
+    val pack: BoosterPack,
+  ): BoosterPackUiEvent
 }

@@ -6,6 +6,7 @@ import app.cash.sqldelight.coroutines.mapToOneOrNull
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
+import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Deck
 import app.deckbox.core.time.FatherTime
 import app.deckbox.db.mapping.asDecks
@@ -137,6 +138,31 @@ class SqlDelightDeckDao(
     }
   }
 
+  override suspend fun addBoosterPack(deckId: String, boosterPackId: String) {
+    withContext(dispatcherProvider.databaseWrite) {
+      database.transaction {
+        // Fetch booster pack cards
+        val boosterPackCards = database.boosterPackCardJoinQueries
+          .getByBoosterPack(boosterPackId)
+          .executeAsList()
+
+        if (boosterPackCards.isNotEmpty()) {
+          boosterPackCards.forEach { packCard ->
+            database.deckCardJoinQueries.incrementCount(
+              deckId = deckId,
+              cardId = packCard.cardId,
+              amount = packCard.count,
+              updatedAt = fatherTime.now(),
+              createdAt = fatherTime.now(),
+            )
+          }
+        } else {
+          bark { "No booster pack or empty pack found for ID($boosterPackId)" }
+        }
+      }
+    }
+  }
+
   override suspend fun delete(deckId: String) {
     withContext(dispatcherProvider.databaseWrite) {
       database.deckQueries.delete(deckId)
@@ -149,7 +175,11 @@ class SqlDelightDeckDao(
         val deck = database.deckQueries.getById(deckId).executeAsOne()
         val deckCards = database.deckCardJoinQueries.getByDeck(deckId).executeAsList()
 
-        val newDeck = deck.copy(id = deckIdGenerator.generate())
+        val newDeck = deck.copy(
+          id = deckIdGenerator.generate(),
+          updatedAt = fatherTime.now(),
+          createdAt = fatherTime.now(),
+        )
         val newCards = deckCards.map { it.copy(deckId = newDeck.id) }
 
         database.deckQueries.insert(newDeck.asDecks())

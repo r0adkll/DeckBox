@@ -26,4 +26,5 @@ interface DeckBuilderRepository {
   fun incrementCard(deckId: String, cardId: String, amount: Int = 1)
   fun decrementCard(deckId: String, cardId: String, amount: Int = 1)
   fun removeCard(deckId: String, cardId: String)
+  fun addBoosterPack(deckId: String, boosterPackId: String)
 }

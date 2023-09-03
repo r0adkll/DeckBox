@@ -93,7 +93,11 @@ class SqlDelightBoosterDao(
         val boosterPack = database.boosterPackQueries.getById(id).executeAsOne()
         val boosterPackCards = database.boosterPackCardJoinQueries.getByBoosterPack(id).executeAsList()
 
-        val newBoosterPack = boosterPack.copy(id = boosterPackIdGenerator.generate())
+        val newBoosterPack = boosterPack.copy(
+          id = boosterPackIdGenerator.generate(),
+          updatedAt = fatherTime.now(),
+          createdAt = fatherTime.now(),
+        )
         val newCards = boosterPackCards.map { it.copy(boosterPackId = newBoosterPack.id) }
 
         database.boosterPackQueries.insert(newBoosterPack.asBoosterPacks())

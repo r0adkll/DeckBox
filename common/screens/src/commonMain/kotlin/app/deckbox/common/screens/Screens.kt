@@ -16,6 +16,9 @@ class RootScreen : DeckBoxScreen(name = "Root")
 class DecksScreen : DeckBoxScreen(name = "Decks()")
 
 @CommonParcelize
+class DeckPickerScreen : DeckBoxScreen(name = "DeckPicker()")
+
+@CommonParcelize
 data class DeckBuilderScreen(
   val id: String,
 ) : DeckBoxScreen(name = "DeckBuilder()") {
@@ -37,6 +40,9 @@ data class BoosterPackBuilderScreen(
   @CommonIgnoredOnParcel
   override val presentation = Presentation(hideBottomNav = true)
 }
+
+@CommonParcelize
+class BoosterPackPickerScreen : DeckBoxScreen(name = "BoosterPackPicker()")
 
 @CommonParcelize
 data class BrowseScreen(
@@ -108,10 +114,23 @@ class FilterScreen : DeckBoxScreen(name = "Filter()")
 @CommonParcelize
 class SettingsScreen : DeckBoxScreen(name = "Settings()")
 
+//region Utility Screens
+
 @CommonParcelize
 data class UrlScreen(val url: String) : DeckBoxScreen(name = "UrlScreen()") {
   override val arguments get() = mapOf("url" to url)
 }
+
+/**
+ * This is a hack to pass data back from a screen that is in an Overlay container to
+ * be returned in the [com.slack.circuit.overlay.OverlayNavigator]
+ */
+@CommonParcelize
+data class OverlayResultScreen<T>(
+  @CommonIgnoredOnParcel val result: T? = null
+) : Screen
+
+//endregion
 
 abstract class DeckBoxScreen(val name: String) : Screen {
   open val arguments: Map<String, *>? = null

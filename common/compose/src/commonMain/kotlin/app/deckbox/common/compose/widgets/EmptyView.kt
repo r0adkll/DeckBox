@@ -24,6 +24,7 @@ import cafe.adriel.lyricist.LocalStrings
 
 private val DefaultPaddingSize = 48.dp
 private val IconSpacing = 24.dp
+private val ActionSpacing = 24.dp
 val DefaultIconSize = 96.dp
 
 @Composable
@@ -31,6 +32,7 @@ fun EmptyView(
   label: @Composable () -> Unit,
   image: @Composable () -> Unit,
   modifier: Modifier = Modifier,
+  action: (@Composable () -> Unit)? = null,
 ) {
   Column(
     modifier = modifier
@@ -50,12 +52,18 @@ fun EmptyView(
     ) {
       label()
     }
+
+    if (action != null) {
+      Spacer(Modifier.height(ActionSpacing))
+      action()
+    }
   }
 }
 
 @Composable
 fun DefaultEmptyView(
   modifier: Modifier = Modifier,
+  action: (@Composable () -> Unit)? = null,
 ) {
   EmptyView(
     label = { Text(LocalStrings.current.genericEmptyCardsMessage) },
@@ -67,6 +75,7 @@ fun DefaultEmptyView(
       )
     },
     modifier = modifier,
+    action = action,
   )
 }
 

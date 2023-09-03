@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
-@Suppress("UNCHECKED_CAST")
 @CircuitInject(MergeActivityScope::class, DecksScreen::class)
 @Inject
 class DecksPresenter(
@@ -36,14 +35,18 @@ class DecksPresenter(
   private val deckCardConfigurator: DeckCardConfigurator,
 ) : Presenter<DecksUiState> {
 
+  @Suppress("UNCHECKED_CAST")
   @Composable
   override fun present(): DecksUiState {
     val coroutineScope = rememberCoroutineScope()
 
     val decksLoadState by remember {
       deckRepository.observeDecks()
-        .map<List<Deck>, LoadState<List<Deck>>> { LoadState.Loaded(it) }
-        .catch { emit(LoadState.Error(it.message ?: "Error fetching decks") as LoadState<List<Deck>>) }
+        .map<List<Deck>, LoadState<List<Deck>>> { decks ->
+          val sorted = decks.sortedBy { it.updatedAt }
+          LoadState.Loaded(sorted)
+        }
+        .catch { emit(LoadState.Error as LoadState<List<Deck>>) }
     }.collectAsState(LoadState.Loading)
 
     val deckCardConfig by remember {
@@ -53,7 +56,7 @@ class DecksPresenter(
     return DecksUiState(
       isLoading = decksLoadState is LoadState.Loading,
       deckCardConfig = deckCardConfig,
-      decks = (decksLoadState as? LoadState.Loaded<List<Deck>>)?.data ?: emptyList(),
+      decks = (decksLoadState as? LoadState.Loaded<out List<Deck>>)?.data ?: emptyList(),
     ) { event ->
       when (event) {
         is DecksUiEvent.CardEvent -> when (event.event) {

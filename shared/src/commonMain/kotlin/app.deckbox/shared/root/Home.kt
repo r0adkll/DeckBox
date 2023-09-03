@@ -33,9 +33,11 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -62,6 +64,7 @@ import app.deckbox.common.screens.RootScreen
 import app.deckbox.common.screens.SettingsScreen
 import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.extensions.fluentIf
+import app.deckbox.core.logging.bark
 import app.deckbox.shared.navigator.MainDetailNavigator
 import app.deckbox.shared.navigator.OpenUrlNavigator
 import cafe.adriel.lyricist.LocalStrings
@@ -124,6 +127,8 @@ internal fun Home(
   val navigationItems = remember { buildNavigationItems(strings) }
 
   val overlayHost = rememberOverlayHost()
+  val currentOverlayData by rememberUpdatedState(overlayHost.currentOverlayData)
+  bark("Overlays") { "Current Overlay(Host: $overlayHost): ${currentOverlayData?.overlay}" }
   PlatformBackHandler(overlayHost.currentOverlayData != null) {
     overlayHost.currentOverlayData?.finish(Unit)
   }

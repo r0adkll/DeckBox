@@ -87,4 +87,16 @@ data class DeckBoxStrings(
   val actionCancel: String,
   val actionDelete: String,
   val actionDeleteAreYouSure: String,
+  val boosterPickerEmptyMessage: String,
+  val boosterPackNoName: String,
+  val deckNoName: String,
+  val deckPickerTitle: String,
+  val boosterPackPickerTitle: String,
+
+  val timeAgoNow: String,
+  val timeAgoMinutes: (minutes: Int) -> String,
+  val timeAgoHours: (hours: Int) -> String,
+  val timeAgoDays: (days: Int) -> String,
+  val timeAgoMonths: (months: Int) -> String,
+  val timeAgoYears: (years: Int) -> String,
 )

@@ -15,8 +15,16 @@ import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddCards
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddToDeck
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.CardClick
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.DecrementCard
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.EditName
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.IncrementCard
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NavigateBack
 import app.deckbox.features.boosterpacks.ui.builder.model.CardUiModel
 import app.deckbox.features.cards.public.CardRepository
+import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -35,6 +43,7 @@ class BoosterPackBuilderPresenter(
   @Assisted private val screen: BoosterPackBuilderScreen,
   private val repository: BoosterPackRepository,
   private val cardRepository: CardRepository,
+  private val deckBuilderRepository: DeckBuilderRepository,
   private val dispatcherProvider: DispatcherProvider,
 ) : Presenter<BoosterPackBuilderUiState> {
 
@@ -138,18 +147,19 @@ class BoosterPackBuilderPresenter(
       price = packPrice,
     ) { event ->
       when (event) {
-        BoosterPackBuilderUiEvent.NavigateBack -> navigator.pop()
-        is BoosterPackBuilderUiEvent.AddCards -> navigator.goTo(
+        NavigateBack -> navigator.pop()
+        is AddCards -> navigator.goTo(
           BrowseScreen(
             packId = screen.id,
             superType = event.superType,
           ),
         )
 
-        is BoosterPackBuilderUiEvent.CardClick -> navigator.goTo(CardDetailScreen(event.card, packId = screen.id))
-        is BoosterPackBuilderUiEvent.EditName -> repository.editName(screen.id, event.name)
-        is BoosterPackBuilderUiEvent.IncrementCard -> repository.incrementCard(screen.id, event.cardId, event.amount)
-        is BoosterPackBuilderUiEvent.DecrementCard -> repository.decrementCard(screen.id, event.cardId, event.amount)
+        is CardClick -> navigator.goTo(CardDetailScreen(event.card, packId = screen.id))
+        is EditName -> repository.editName(screen.id, event.name)
+        is IncrementCard -> repository.incrementCard(screen.id, event.cardId, event.amount)
+        is DecrementCard -> repository.decrementCard(screen.id, event.cardId, event.amount)
+        is AddToDeck -> deckBuilderRepository.addBoosterPack(event.deck.id, screen.id)
       }
     }
   }

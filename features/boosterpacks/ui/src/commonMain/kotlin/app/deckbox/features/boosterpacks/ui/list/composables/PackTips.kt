@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.icons.Booster
 import app.deckbox.common.compose.icons.DeckBoxIcons
 import app.deckbox.common.compose.icons.HyperPotion
 import app.deckbox.common.compose.icons.rounded.NewBoosterPack
@@ -52,7 +53,7 @@ internal fun WelcomeCard(
     ),
   ) {
     Image(
-      DeckBoxIcons.Logos.HyperPotion,
+      DeckBoxIcons.Logos.Booster,
       contentDescription = null,
       modifier = Modifier
         .align(Alignment.CenterHorizontally)

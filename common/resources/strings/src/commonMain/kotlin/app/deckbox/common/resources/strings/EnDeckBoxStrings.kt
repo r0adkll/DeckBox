@@ -37,7 +37,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
   fabActionNewDeckButton = "New deck",
 
   boosterPacks = "Packs",
-  boosterPacksTitleLong = "Booster packs",
+  boosterPacksTitleLong = "Booster Packs",
   boosterPacksTabContentDescription = "List of custom booster packs",
   boosterPackTitleNoName = "Enter pack name",
 
@@ -97,4 +97,16 @@ val EnDeckBoxStrings = DeckBoxStrings(
   actionCancel = "Cancel",
   actionDelete = "Delete",
   actionDeleteAreYouSure = "Are you sure?",
+  boosterPickerEmptyMessage = "You don't have any booster packs made. Try building some to start adding them to your decks.",
+  boosterPackNoName = "Unnamed pack",
+  deckNoName = "Unnamed deck",
+  deckPickerTitle = "Choose a deck",
+  boosterPackPickerTitle = "Choose a booster pack",
+
+  timeAgoNow = "now",
+  timeAgoMinutes = { min -> "$min minutes ago" },
+  timeAgoHours = { hrs -> "$hrs hours ago" },
+  timeAgoDays = { days -> "$days days ago" },
+  timeAgoMonths = { months -> "$months months ago" },
+  timeAgoYears = { yrs -> "$yrs years ago"}
 )

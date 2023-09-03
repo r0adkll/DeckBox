@@ -93,6 +93,7 @@ internal fun Browse(
                 )
               }
             },
+            isLeadingButton = state.isEditing,
             placeholder = { Text(LocalStrings.current.browseSearchHint) },
             trailing = {
               IconButton(

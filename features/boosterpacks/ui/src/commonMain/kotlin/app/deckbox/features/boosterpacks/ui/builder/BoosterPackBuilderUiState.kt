@@ -3,6 +3,7 @@ package app.deckbox.features.boosterpacks.ui.builder
 import androidx.compose.runtime.Stable
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.Deck
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.boosterpacks.ui.builder.model.CardUiModel
 import com.slack.circuit.runtime.CircuitUiState
@@ -52,4 +53,5 @@ sealed interface BoosterPackBuilderUiEvent {
   data class EditName(val name: String) : BoosterPackBuilderUiEvent
   data class IncrementCard(val cardId: String, val amount: Int = 1) : BoosterPackBuilderUiEvent
   data class DecrementCard(val cardId: String, val amount: Int = 1) : BoosterPackBuilderUiEvent
+  data class AddToDeck(val deck: Deck) : BoosterPackBuilderUiEvent
 }

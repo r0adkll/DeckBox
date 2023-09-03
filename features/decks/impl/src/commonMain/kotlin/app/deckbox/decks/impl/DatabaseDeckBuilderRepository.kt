@@ -93,4 +93,10 @@ class DatabaseDeckBuilderRepository(
       deckDao.removeCard(deckId, cardId)
     }
   }
+
+  override fun addBoosterPack(deckId: String, boosterPackId: String) {
+    scope.launch {
+      deckDao.addBoosterPack(deckId, boosterPackId)
+    }
+  }
 }
