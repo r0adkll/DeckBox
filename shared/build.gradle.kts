@@ -39,6 +39,9 @@ kotlin {
         api(projects.features.decks.impl)
         api(projects.features.decks.ui)
 
+        api(projects.features.boosterpacks.impl)
+        api(projects.features.boosterpacks.ui)
+
         // UI Modules
         api(projects.ui.browse)
         api(projects.ui.filter)

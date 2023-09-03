@@ -44,6 +44,11 @@ include(
   ":features:cards:ui",
 )
 include(
+  ":features:boosterpacks:public",
+  ":features:boosterpacks:impl",
+  ":features:boosterpacks:ui",
+)
+include(
   ":features:decks:public",
   ":features:decks:public-ui",
   ":features:decks:impl",

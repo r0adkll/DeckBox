@@ -6,6 +6,7 @@ import app.deckbox.core.di.AppScope
 import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.core.settings.DeckCardSlice
 import app.deckbox.core.settings.ExpansionCardStyle
+import app.deckbox.core.settings.SortOption
 import app.deckbox.core.settings.asString
 import app.deckbox.core.settings.fromString
 import com.russhwolf.settings.ExperimentalSettingsApi
@@ -32,6 +33,16 @@ class DeckBoxSettingsImpl(
   override var useDynamicColors: Boolean by booleanSetting(KEY_USE_DYNAMIC_COLORS, false)
   override fun observeUseDynamicColors(): Flow<Boolean> {
     return flowSettings.getBooleanFlow(KEY_USE_DYNAMIC_COLORS, false)
+  }
+
+  override var deckSortOrder: SortOption by enumSetting(KEY_DECK_SORT_ORDER, SortOption)
+  override fun observeDeckSortOrder(): Flow<SortOption> {
+    return flowSettings.getEnumFlow(KEY_DECK_SORT_ORDER, SortOption)
+  }
+
+  override var boosterPackSortOrder: SortOption by enumSetting(KEY_BOOSTER_PACK_SORT_ORDER, SortOption)
+  override fun observeBoosterPackSortOrder(): Flow<SortOption> {
+    return flowSettings.getEnumFlow(KEY_BOOSTER_PACK_SORT_ORDER, SortOption)
   }
 
   override var expansionCardStyle: ExpansionCardStyle by enumSetting(KEY_EXPANSION_CARD_STYLE, ExpansionCardStyle)
@@ -61,5 +72,7 @@ class DeckBoxSettingsImpl(
 
 internal const val KEY_THEME = "pref_theme"
 internal const val KEY_USE_DYNAMIC_COLORS = "pref_dynamic_colors"
+internal const val KEY_DECK_SORT_ORDER = "pref_deck_sort_order"
+internal const val KEY_BOOSTER_PACK_SORT_ORDER = "pref_booster_pack_sort_order"
 internal const val KEY_EXPANSION_CARD_STYLE = "pref_expansion_card_style"
 internal const val KEY_DECK_CARD_CONFIG = "pref_deck_card_config"

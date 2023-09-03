@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package app.deckbox.shared.root
-
-import android.annotation.SuppressLint
 import android.os.Build
 import android.window.BackEvent
 import android.window.OnBackAnimationCallback
@@ -11,7 +9,6 @@ import android.window.OnBackInvokedDispatcher
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
@@ -27,6 +24,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -39,20 +38,19 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.animations.lerp
+import com.slack.circuit.backstack.NavDecoration
 import com.slack.circuit.foundation.NavigatorDefaults
 import com.slack.circuit.runtime.Navigator
 import kotlin.math.absoluteValue
+import kotlinx.collections.immutable.ImmutableList
 
-@SuppressLint("NewApi")
-@OptIn(ExperimentalAnimationApi::class)
 internal actual class GestureNavDecoration actual constructor(
   private val navigator: Navigator,
-) : NavDecorationWithPrevious {
+) : NavDecoration {
 
   @Composable
   override fun <T> DecoratedContent(
-    arg: T,
-    previous: T?,
+    args: ImmutableList<T>,
     backStackDepth: Int,
     modifier: Modifier,
     content: @Composable (T) -> Unit,
@@ -60,15 +58,14 @@ internal actual class GestureNavDecoration actual constructor(
     if (Build.VERSION.SDK_INT < 34) {
       // on API 33 and below, we just use the default decoration
       NavigatorDefaults.DefaultDecoration.DecoratedContent(
-        arg = arg,
+        args = args,
         backStackDepth = backStackDepth,
         modifier = modifier,
         content = content,
       )
     } else {
       GestureDecoratedContent(
-        arg = arg,
-        previous = previous,
+        args = args,
         backStackDepth = backStackDepth,
         modifier = modifier,
         content = content,
@@ -79,12 +76,14 @@ internal actual class GestureNavDecoration actual constructor(
   @RequiresApi(34)
   @Composable
   private fun <T> GestureDecoratedContent(
-    arg: T,
-    previous: T?,
+    args: ImmutableList<T>,
     backStackDepth: Int,
     modifier: Modifier,
     content: @Composable (T) -> Unit,
   ) {
+    val current = args.first()
+    val previous = args.getOrNull(1)
+
     Box(modifier = modifier) {
       var showPrevious by remember { mutableStateOf(false) }
       var recordPoppedFromGesture by remember { mutableStateOf<T?>(null) }
@@ -96,12 +95,12 @@ internal actual class GestureNavDecoration actual constructor(
       }
 
       // Remember the previous stack depth so we know if the navigation is going "back".
-      var prevStackDepth by rememberSaveable { mutableStateOf(backStackDepth) }
+      var prevStackDepth by rememberSaveable { mutableIntStateOf(backStackDepth) }
       SideEffect {
         prevStackDepth = backStackDepth
       }
 
-      val transition = updateTransition(targetState = arg, label = "GestureNavDecoration")
+      val transition = updateTransition(targetState = current, label = "GestureNavDecoration")
 
       LaunchedEffect(transition.currentState) {
         // When the current state has changed (i.e. any transition has completed),
@@ -124,14 +123,11 @@ internal actual class GestureNavDecoration actual constructor(
             // come back from back stack
             backStackDepth < prevStackDepth -> {
               if (recordPoppedFromGesture == initialState) {
-                EnterTransition.None togetherWith scaleOut(targetScale = 0.8f) + fadeOut()
+                EnterTransition.None togetherWith
+                  scaleOut(targetScale = 0.8f) + fadeOut()
               } else {
-                (slideInHorizontally(tween(), SlightlyLeft) + fadeIn()).togetherWith(
-                  slideOutHorizontally(
-                    tween(),
-                    SlightlyRight,
-                  ) + fadeOut(),
-                )
+                slideInHorizontally(tween(), SlightlyLeft) + fadeIn() togetherWith
+                  slideOutHorizontally(tween(), SlightlyRight) + fadeOut()
               }.apply {
                 targetContentZIndex = -1f
               }
@@ -142,7 +138,7 @@ internal actual class GestureNavDecoration actual constructor(
           }
         },
       ) { record ->
-        var swipeProgress by remember { mutableStateOf(0f) }
+        var swipeProgress by remember { mutableFloatStateOf(0f) }
 
         if (backStackDepth > 1) {
           BackHandler(

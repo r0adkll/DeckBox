@@ -19,7 +19,6 @@ kotlin {
 
         implementation(libs.store)
         implementation(libs.kotlinx.atomicfu)
-        implementation(libs.uuid)
       }
     }
   }

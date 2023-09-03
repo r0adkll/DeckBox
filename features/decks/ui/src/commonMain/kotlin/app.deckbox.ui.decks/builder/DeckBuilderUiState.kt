@@ -1,6 +1,7 @@
 package app.deckbox.ui.decks.builder
 
 import androidx.compose.runtime.Stable
+import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Deck
 import app.deckbox.core.model.SuperType
@@ -60,4 +61,5 @@ sealed interface DeckBuilderUiEvent : CircuitUiEvent {
   data class IncrementCard(val cardId: String, val amount: Int = 1) : DeckBuilderUiEvent
   data class DecrementCard(val cardId: String, val amount: Int = 1) : DeckBuilderUiEvent
   data class RemoveCard(val cardId: String) : DeckBuilderUiEvent
+  data class AddBoosterPack(val pack: BoosterPack) : DeckBuilderUiEvent
 }

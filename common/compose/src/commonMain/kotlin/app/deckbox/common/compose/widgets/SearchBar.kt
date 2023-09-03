@@ -37,6 +37,7 @@ fun SearchBar(
   onQueryCleared: () -> Unit,
   modifier: Modifier = Modifier,
   initialValue: String? = null,
+  isLeadingButton: Boolean = false,
   trailing: (@Composable () -> Unit)? = null,
   leading: @Composable () -> Unit,
   placeholder: @Composable () -> Unit,
@@ -50,13 +51,21 @@ fun SearchBar(
       .height(SearchBarHeight),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(Modifier.width(SearchBarPadding))
+    if (!isLeadingButton) {
+      Spacer(Modifier.width(SearchBarPadding))
+    } else {
+      Spacer(Modifier.width(SearchBarPadding / 2))
+    }
     CompositionLocalProvider(
       LocalContentColor provides MaterialTheme.colorScheme.onSurface,
     ) {
       leading()
     }
-    Spacer(Modifier.width(SearchBarPadding))
+    if (!isLeadingButton) {
+      Spacer(Modifier.width(SearchBarPadding))
+    } else {
+      Spacer(Modifier.width(SearchBarPadding / 2))
+    }
 
     Box(
       Modifier.weight(1f),

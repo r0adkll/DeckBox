@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -36,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.extensions.applyHoloAndDragEffect
 import app.deckbox.common.compose.icons.rounded.AddCard
-import app.deckbox.common.compose.icons.rounded.RemoveCard
 import app.deckbox.common.compose.icons.rounded.SubtractCard
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.CardDetailScreen
@@ -77,10 +77,11 @@ internal fun CardDetail(
         actions = {
           state.deckState?.let { deckState ->
             IconButton(
+              enabled = deckState.count > 0,
               onClick = { state.eventSink(CardDetailUiEvent.DecrementCount) },
             ) {
               Icon(
-                if (deckState.count > 1) Icons.Rounded.SubtractCard else Icons.Rounded.RemoveCard,
+                Icons.Rounded.SubtractCard,
                 contentDescription = null,
               )
             }
@@ -102,6 +103,16 @@ internal fun CardDetail(
       FloatingActionButton(
         onClick = {
           isFavorited = !isFavorited
+        },
+        containerColor = if (isFavorited) {
+          MaterialTheme.colorScheme.tertiaryContainer
+        } else {
+          MaterialTheme.colorScheme.surfaceVariant
+        },
+        contentColor = if (isFavorited) {
+          MaterialTheme.colorScheme.tertiary
+        } else {
+          MaterialTheme.colorScheme.onSurfaceVariant
         },
       ) {
         Icon(

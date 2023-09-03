@@ -4,6 +4,7 @@ import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.core.settings.EnumSetting
 import app.deckbox.core.settings.EnumSettingProvider
 import app.deckbox.core.settings.ExpansionCardStyle
+import app.deckbox.core.settings.SortOption
 import kotlinx.coroutines.flow.Flow
 
 interface DeckBoxSettings {
@@ -13,6 +14,12 @@ interface DeckBoxSettings {
 
   var useDynamicColors: Boolean
   fun observeUseDynamicColors(): Flow<Boolean>
+
+  var deckSortOrder: SortOption
+  fun observeDeckSortOrder(): Flow<SortOption>
+
+  var boosterPackSortOrder: SortOption
+  fun observeBoosterPackSortOrder(): Flow<SortOption>
 
   var expansionCardStyle: ExpansionCardStyle
   fun observeExpansionCardStyle(): Flow<ExpansionCardStyle>

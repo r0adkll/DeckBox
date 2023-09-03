@@ -78,6 +78,10 @@ class StoreCardRepository(
   override fun observeCardsForDeck(deckId: String): Flow<List<Stacked<Card>>> {
     return db.observeByDeck(deckId)
   }
+
+  override fun observeCardsForBoosterPack(packId: String): Flow<List<Stacked<Card>>> {
+    return db.observeByBoosterPack(packId)
+  }
 }
 
 class CardFetcher(

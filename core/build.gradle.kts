@@ -12,6 +12,8 @@ kotlin {
         api(libs.kotlinx.coroutines.core)
         api(libs.kotlininject.runtime)
         api(libs.kotlinx.datetime)
+        api(libs.uuid)
+
         implementation(libs.kotlinx.serialization.json)
       }
     }

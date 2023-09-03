@@ -93,6 +93,7 @@ internal fun Browse(
                 )
               }
             },
+            isLeadingButton = state.isEditing,
             placeholder = { Text(LocalStrings.current.browseSearchHint) },
             trailing = {
               IconButton(
@@ -156,7 +157,7 @@ internal fun Browse(
         },
         columns = numColumns,
         countSelector = { cardId ->
-          val stack = state.deckState?.get(cardId)
+          val stack = state.countState?.get(cardId)
           stack?.let { CardCounts(it.count, it.collected) }
         },
         state = gridState,

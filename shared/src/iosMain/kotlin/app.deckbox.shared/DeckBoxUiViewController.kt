@@ -14,7 +14,6 @@ import androidx.compose.ui.window.ComposeUIViewController
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.shared.root.DeckBoxContent
 import com.slack.circuit.backstack.rememberSaveableBackStack
-import com.slack.circuit.foundation.push
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import me.tatarka.inject.annotations.Inject
 import platform.Foundation.NSURL

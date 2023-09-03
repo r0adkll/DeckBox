@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import app.deckbox.common.compose.icons.rounded.Energy
 import app.deckbox.common.compose.icons.rounded.Wrench
+import app.deckbox.common.compose.widgets.CardEditor
 import app.deckbox.common.compose.widgets.PokemonCard
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Stacked

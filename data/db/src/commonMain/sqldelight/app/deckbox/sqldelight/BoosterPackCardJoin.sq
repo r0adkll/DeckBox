@@ -1,0 +1,64 @@
+import kotlin.Int;
+
+CREATE TABLE booster_pack_join (
+  boosterPackId TEXT NOT NULL,
+  cardId TEXT NOT NULL,
+  count INTEGER AS Int NOT NULL,
+  PRIMARY KEY(boosterPackId, cardId),
+  FOREIGN KEY(boosterPackId) REFERENCES booster_packs(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+  FOREIGN KEY(cardId) REFERENCES cards(id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE INDEX IF NOT EXISTS index_booster_pack_card_join_cardId ON booster_pack_join(cardId);
+
+getByBoosterPack:
+SELECT * FROM booster_pack_join
+WHERE boosterPackId = ?;
+
+getCardsForBoosterPack:
+SELECT count, cards.* FROM booster_pack_join
+INNER JOIN cards ON booster_pack_join.cardId = cards.id
+WHERE boosterPackId = :boosterPackId;
+
+insert:
+INSERT INTO booster_pack_join
+VALUES ?;
+
+incrementCount {
+  UPDATE booster_packs
+  SET updatedAt = :updatedAt
+  WHERE id = :boosterPackId;
+
+  INSERT OR IGNORE INTO booster_packs (id, updatedAt, createdAt)
+  VALUES (:boosterPackId, :updatedAt, :createdAt);
+
+  UPDATE booster_pack_join
+  SET count = count + :amount
+  WHERE boosterPackId = :boosterPackId
+    AND cardId = :cardId;
+
+  INSERT OR IGNORE INTO booster_pack_join (boosterPackId, cardId, count)
+  VALUES (:boosterPackId, :cardId, :amount);
+}
+
+decrementCount {
+  UPDATE booster_packs
+  SET updatedAt = :updatedAt
+  WHERE id = :boosterPackId;
+
+  INSERT OR IGNORE INTO booster_packs (id, updatedAt, createdAt)
+  VALUES (:boosterPackId, :updatedAt, :createdAt);
+
+  UPDATE booster_pack_join
+  SET count = count - :amount
+  WHERE boosterPackId = :boosterPackId
+    AND cardId = :cardId;
+
+  DELETE FROM booster_pack_join
+  WHERE count <= 0;
+}
+
+delete:
+DELETE FROM deck_card_join
+WHERE deckId = :deckId
+AND cardId = :cardId;

@@ -12,4 +12,5 @@ interface CardRepository {
 
   fun observeCards(ids: List<String>): Flow<List<Card>>
   fun observeCardsForDeck(deckId: String): Flow<List<Stacked<Card>>>
+  fun observeCardsForBoosterPack(packId: String): Flow<List<Stacked<Card>>>
 }

@@ -16,6 +16,7 @@ interface DeckDao {
   suspend fun incrementCard(deckId: String, cardId: String, amount: Int)
   suspend fun decrementCard(deckId: String, cardId: String, amount: Int)
   suspend fun removeCard(deckId: String, cardId: String)
+  suspend fun addBoosterPack(deckId: String, boosterPackId: String)
 
   suspend fun delete(deckId: String)
   suspend fun duplicate(deckId: String): String

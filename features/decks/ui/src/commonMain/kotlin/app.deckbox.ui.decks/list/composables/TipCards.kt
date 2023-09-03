@@ -1,5 +1,6 @@
 package app.deckbox.ui.decks.list.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -72,7 +74,9 @@ internal fun WelcomeCard(
     Spacer(Modifier.height(16.dp))
 
     Text(
-      text = "Try building your very first deck to get started and we'll try to give you some tips along the way.",
+      text = "Try building your very first deck to get started and we'll try to give you some tips along the way.\n\n" +
+        "Decide on the main strategy of your deck. Will it focus on fast attacks, energy denial, " +
+        "or special abilities? This choice will guide your card selection.",
       textAlign = TextAlign.Center,
       style = MaterialTheme.typography.bodyMedium,
       modifier = Modifier.padding(
@@ -84,9 +88,14 @@ internal fun WelcomeCard(
 
     OutlinedIconButton(
       onClick = onNewDeckClick,
+      colors = ButtonDefaults.outlinedButtonColors(
+        contentColor = MaterialTheme.colorScheme.primary,
+      ),
+      border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
       icon = {
         SizedIcon(
           Icons.Rounded.NewDeck,
+          tint = MaterialTheme.colorScheme.primary,
           contentDescription = null,
         )
       },
@@ -102,9 +111,14 @@ internal fun WelcomeCard(
 
     OutlinedIconButton(
       onClick = onNewDeckClick,
+      colors = ButtonDefaults.outlinedButtonColors(
+        contentColor = MaterialTheme.colorScheme.primary,
+      ),
+      border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
       icon = {
         SizedIcon(
           Icons.Rounded.Download,
+          tint = MaterialTheme.colorScheme.primary,
           contentDescription = null,
         )
       },

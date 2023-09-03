@@ -24,6 +24,12 @@ data class DeckBoxStrings(
   val deckActionDeleteButtonContentDescription: String,
   val fabActionNewDeckButton: String,
 
+  // Booster Packs
+  val boosterPacks: String,
+  val boosterPacksTitleLong: String,
+  val boosterPacksTabContentDescription: String,
+  val boosterPackTitleNoName: String,
+
   // Expansions
   val expansions: String,
   val expansionsTabContentDescription: String,
@@ -77,4 +83,24 @@ data class DeckBoxStrings(
   val deckListHeaderEnergy: String,
   val cardCountInDeck: (count: Int) -> String,
   val deckTitleNoName: String,
+  val fabActionNewBoosterPack: String,
+  val actionCancel: String,
+  val actionDelete: String,
+  val actionDeleteAreYouSure: String,
+  val boosterPickerEmptyMessage: String,
+  val boosterPackNoName: String,
+  val deckNoName: String,
+  val deckPickerTitle: String,
+  val boosterPackPickerTitle: String,
+
+  val timeAgoNow: String,
+  val timeAgoMinutes: (minutes: Int) -> String,
+  val timeAgoHours: (hours: Int) -> String,
+  val timeAgoDays: (days: Int) -> String,
+  val timeAgoMonths: (months: Int) -> String,
+  val timeAgoYears: (years: Int) -> String,
+  val deckSortOrderUpdatedAt: String,
+  val deckSortOrderCreatedAt: String,
+  val deckSortOrderAlphabetically: String,
+  val deckSortOrderLegality: String,
 )

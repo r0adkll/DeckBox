@@ -1,7 +1,9 @@
 package app.deckbox.common.compose.widgets
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.OutlinedButton
@@ -40,12 +42,16 @@ fun OutlinedIconButton(
   icon: @Composable () -> Unit,
   label: @Composable () -> Unit,
   modifier: Modifier = Modifier,
+  colors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
+  border: BorderStroke? = ButtonDefaults.outlinedButtonBorder,
   enabled: Boolean = true,
 ) {
   OutlinedButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
+    colors = colors,
+    border = border,
     contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
   ) {
     CompositionLocalProvider(

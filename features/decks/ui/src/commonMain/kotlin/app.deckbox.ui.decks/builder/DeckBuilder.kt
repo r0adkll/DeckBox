@@ -42,10 +42,15 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.extensions.plus
+import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddCard
+import app.deckbox.common.compose.overlays.showBottomSheetScreen
+import app.deckbox.common.screens.BoosterPackPickerScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.SuperType
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.CardClick
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.DecrementCard
@@ -58,6 +63,7 @@ import app.deckbox.ui.decks.builder.model.CardUiModel
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import com.slack.circuit.overlay.LocalOverlayHost
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,6 +74,7 @@ fun DeckBuilder(
   modifier: Modifier = Modifier,
 ) {
   val coroutineScope = rememberCoroutineScope()
+  val overlayHost = LocalOverlayHost.current
   val focusManager = LocalFocusManager.current
 
   val bottomPadding = with(LocalDensity.current) {
@@ -129,6 +136,21 @@ fun DeckBuilder(
           }
         },
         actions = {
+          IconButton(
+            onClick = {
+              coroutineScope.launch {
+                val result = overlayHost.showBottomSheetScreen<BoosterPack>(BoosterPackPickerScreen())
+                if (result != null) {
+                  state.eventSink(AddBoosterPack(result))
+                }
+              }
+            },
+          ) {
+            Icon(
+              Icons.Rounded.AddBoosterPack,
+              contentDescription = null,
+            )
+          }
           IconButton(
             onClick = { isEditing = !isEditing },
           ) {

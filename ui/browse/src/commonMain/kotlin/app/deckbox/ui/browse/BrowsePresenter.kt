@@ -13,7 +13,10 @@ import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.Card
 import app.deckbox.core.model.SearchFilter
+import app.deckbox.core.model.Stacked
+import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
@@ -23,6 +26,7 @@ import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOf
@@ -39,6 +43,7 @@ class BrowsePresenter(
   private val cardRepository: CardRepository,
   private val cardPagingSourceFactory: CardPagingSourceFactory,
   private val deckBuilderRepository: DeckBuilderRepository,
+  private val boosterPackRepository: BoosterPackRepository,
   private val filterPresenter: BrowseFilterPresenter,
 ) : Presenter<BrowseUiState> {
 
@@ -87,19 +92,16 @@ class BrowsePresenter(
       createPager { cardPagingSourceFactory.create(query) }
     }
 
-    val deckState by remember {
-      screen.deckId?.let { deckId ->
-        cardRepository.observeCardsForDeck(deckId)
-          .map { cards -> cards.associateBy { it.card.id } }
-      } ?: flowOf(null)
+    val countState by remember {
+      observeCountState()
     }.collectAsState(null)
 
     return BrowseUiState(
-      isEditing = screen.deckId != null,
+      isEditing = screen.deckId != null || screen.packId != null,
       query = searchQuery,
       filterUiState = filterUiState,
       cardsPager = pager,
-      deckState = deckState,
+      countState = countState,
     ) { event ->
       when (event) {
         BrowseUiEvent.NavigateBack -> navigator.pop()
@@ -107,20 +109,49 @@ class BrowsePresenter(
         is BrowseUiEvent.SearchUpdated -> {
           coroutineScope.launch { queryPipeline.emit(event.query) }
         }
+
         is BrowseUiEvent.CardClicked -> {
-          if (screen.deckId != null) {
-            deckBuilderRepository.incrementCard(
-              deckId = screen.deckId!!,
-              cardId = event.card.id,
-            )
-          } else {
-            navigator.goTo(CardDetailScreen(event.card))
+          when {
+            screen.deckId != null -> {
+              deckBuilderRepository.incrementCard(
+                deckId = screen.deckId!!,
+                cardId = event.card.id,
+              )
+            }
+
+            screen.packId != null -> {
+              boosterPackRepository.incrementCard(
+                id = screen.packId!!,
+                cardId = event.card.id,
+              )
+            }
+
+            else -> {
+              navigator.goTo(
+                CardDetailScreen(
+                  event.card,
+                  deckId = screen.deckId,
+                  packId = screen.packId,
+                ),
+              )
+            }
           }
         }
+
         is BrowseUiEvent.CardLongClicked -> {
-          navigator.goTo(CardDetailScreen(event.card))
+          navigator.goTo(CardDetailScreen(event.card, deckId = screen.deckId))
         }
       }
+    }
+  }
+
+  private fun observeCountState(): Flow<Map<String, Stacked<Card>>?> {
+    return when {
+      screen.deckId != null -> cardRepository.observeCardsForDeck(screen.deckId!!)
+        .map { cards -> cards.associateBy { it.card.id } }
+      screen.packId != null -> cardRepository.observeCardsForBoosterPack(screen.packId!!)
+        .map { cards -> cards.associateBy { it.card.id } }
+      else -> flowOf(null)
     }
   }
 }

@@ -1,0 +1,51 @@
+import kotlinx.datetime.LocalDateTime;
+
+CREATE TABLE booster_packs (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT,
+  createdAt TEXT AS LocalDateTime NOT NULL,
+  updatedAt TEXT AS LocalDateTime NOT NULL
+);
+
+getAll:
+SELECT
+  booster_packs.*,
+  group_concat(cards.image_small) AS cardImages,
+  group_concat(cards.legalitiesStandard) AS legalitiesStandard,
+  group_concat(cards.legalitiesExpanded) AS legalitiesExpanded,
+  group_concat(cards.legalitiesUnlimited) AS legalitiesUnlimited
+FROM booster_packs
+LEFT JOIN booster_pack_join ON booster_pack_join.boosterPackId = booster_packs.id
+LEFT JOIN cards ON booster_pack_join.cardId = cards.id
+GROUP BY booster_packs.id;
+
+getById:
+SELECT
+  booster_packs.*,
+  group_concat(cards.image_small) AS cardImages,
+  group_concat(cards.legalitiesStandard) AS legalitiesStandard,
+  group_concat(cards.legalitiesExpanded) AS legalitiesExpanded,
+  group_concat(cards.legalitiesUnlimited) AS legalitiesUnlimited
+FROM booster_packs
+LEFT JOIN booster_pack_join ON booster_pack_join.boosterPackId = booster_packs.id
+LEFT JOIN cards ON booster_pack_join.cardId = cards.id
+WHERE booster_packs.id = ?
+GROUP BY booster_packs.id;
+
+insert:
+INSERT INTO booster_packs
+VALUES ?;
+
+upsertName {
+  UPDATE booster_packs
+  SET name = :name,
+      updatedAt = :updatedAt
+  WHERE id = :id;
+
+  INSERT OR IGNORE INTO booster_packs (id, name, updatedAt, createdAt)
+  VALUES (:id, :name, :updatedAt, :createdAt);
+}
+
+delete:
+DELETE FROM booster_packs
+WHERE id = :id;

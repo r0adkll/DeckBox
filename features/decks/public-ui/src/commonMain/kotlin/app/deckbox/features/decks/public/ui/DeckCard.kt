@@ -6,6 +6,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -31,6 +33,7 @@ fun DeckCard(
   config: DeckCardConfig,
   onEvent: (DeckCardEvent) -> Unit,
   modifier: Modifier = Modifier,
+  colors: CardColors = CardDefaults.cardColors(),
   interactionSource: InteractionSource = remember { MutableInteractionSource() },
 ) {
   CompositionLocalProvider(
@@ -38,6 +41,7 @@ fun DeckCard(
   ) {
     DeckCard(
       onClick = { onEvent(DeckCardEvent.Clicked) },
+      colors = colors,
       modifier = modifier,
     ) {
       config.slices.forEach { sliceConfig ->
@@ -54,11 +58,13 @@ fun DeckCard(
 private fun DeckCard(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  colors: CardColors = CardDefaults.cardColors(),
   content: @Composable ColumnScope.() -> Unit,
 ) {
   val shape = RoundedCornerShape(DeckCardCornerRadius)
   Card(
     shape = shape,
+    colors = colors,
     modifier = modifier
       .clip(shape)
       .clickable(

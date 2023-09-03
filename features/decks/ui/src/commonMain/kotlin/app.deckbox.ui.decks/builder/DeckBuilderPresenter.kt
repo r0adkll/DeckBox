@@ -4,22 +4,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.extensions.lowestMarketPrice
 import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
-import app.deckbox.core.model.Card
 import app.deckbox.core.model.Evolution
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.features.decks.api.validation.DeckValidation
 import app.deckbox.features.decks.api.validation.DeckValidator
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddTag
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.CardClick
@@ -59,16 +59,14 @@ class DeckBuilderPresenter(
   @OptIn(ExperimentalCoroutinesApi::class)
   @Composable
   override fun present(): DeckBuilderUiState {
-    val sessionId = rememberSaveable { screen.id ?: repository.createSession() }
-
     val session by remember {
-      repository.observeSession(sessionId)
+      repository.observeSession(screen.id)
         .map { DeckSession.Loaded(it) }
         .catch { DeckSession.Error }
     }.collectAsState(DeckSession.Loading)
 
-    val sessionCards by remember(sessionId) {
-      cardRepository.observeCardsForDeck(sessionId)
+    val sessionCards by remember(screen.id) {
+      cardRepository.observeCardsForDeck(screen.id)
     }.collectAsState(emptyList())
 
     // Split the cards by supertype and build the pokemon into evolution lines
@@ -179,7 +177,7 @@ class DeckBuilderPresenter(
       price = deckPrice,
       validation = validation,
       eventSink = { event ->
-        onEvent(sessionId, event)
+        onEvent(screen.id, event)
       },
     )
   }
@@ -196,24 +194,8 @@ class DeckBuilderPresenter(
       is RemoveTag -> repository.removeTag(deckId, event.tag)
       is IncrementCard -> repository.incrementCard(deckId, event.cardId, event.amount)
       is DecrementCard -> repository.decrementCard(deckId, event.cardId, event.amount)
+      is AddBoosterPack -> repository.addBoosterPack(deckId, event.pack.id)
       is RemoveCard -> repository.removeCard(deckId, event.cardId)
     }
-  }
-
-  private fun Card.TcgPlayer.Prices.lowestMarketPrice(): Double? {
-    var lowestPrice = Double.MAX_VALUE
-    fun Card.TcgPlayer.Price.checkLowest() {
-      market?.let {
-        if (it < lowestPrice) lowestPrice = it
-      }
-    }
-
-    normal?.checkLowest()
-    holofoil?.checkLowest()
-    reverseHolofoil?.checkLowest()
-    firstEditionNormal?.checkLowest()
-    firstEditionHolofoil?.checkLowest()
-
-    return lowestPrice.takeIf { it != Double.MAX_VALUE }
   }
 }

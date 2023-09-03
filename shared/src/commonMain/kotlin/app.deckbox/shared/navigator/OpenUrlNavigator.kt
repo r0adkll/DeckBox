@@ -2,7 +2,7 @@ package app.deckbox.shared.navigator
 
 import app.deckbox.common.screens.UrlScreen
 import com.slack.circuit.runtime.Navigator
-import com.slack.circuit.runtime.Screen
+import com.slack.circuit.runtime.screen.Screen
 
 class OpenUrlNavigator(
   private val navigator: Navigator,

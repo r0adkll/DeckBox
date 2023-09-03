@@ -1,11 +1,6 @@
 package app.deckbox.features.decks.public.ui.slices
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,21 +9,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.icons.rounded.Duplicate
 import app.deckbox.common.compose.icons.rounded.Experiment
+import app.deckbox.common.compose.widgets.DeleteConfirmation
 import app.deckbox.common.compose.widgets.OutlinedIconButton
 import app.deckbox.common.compose.widgets.SizedIcon
 import app.deckbox.core.model.Deck
@@ -77,10 +66,15 @@ class ActionSlice : ComposeSlice {
       ) {
         OutlinedIconButton(
           onClick = { eventSink(DeckCardEvent.Test) },
+          colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = MaterialTheme.colorScheme.primary,
+          ),
+          border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
           icon = {
             SizedIcon(
               Icons.Rounded.Experiment,
               contentDescription = null,
+              tint = MaterialTheme.colorScheme.primary,
             )
           },
           label = { Text(LocalStrings.current.deckActionTestButton) },
@@ -110,64 +104,6 @@ class ActionSlice : ComposeSlice {
         onCancel = { showDeleteConfirmation = false },
         modifier = Modifier.zIndex(1f),
       )
-    }
-  }
-}
-
-@Composable
-private fun DeleteConfirmation(
-  visible: Boolean,
-  onDelete: () -> Unit,
-  onCancel: () -> Unit,
-  modifier: Modifier = Modifier,
-) {
-  AnimatedVisibility(
-    visible = visible,
-    enter = slideInVertically { it } + fadeIn(initialAlpha = 0.5f),
-    exit = slideOutVertically { it } + fadeOut(targetAlpha = 0.5f),
-    modifier = modifier,
-  ) {
-    Row(
-      modifier = Modifier
-        .background(MaterialTheme.colorScheme.error, RoundedCornerShape(16.dp))
-        .fillMaxWidth()
-        .padding(
-          horizontal = SlicePaddingHorizontal,
-          vertical = 16.dp,
-        ),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-      CompositionLocalProvider(
-        LocalContentColor provides MaterialTheme.colorScheme.onError,
-      ) {
-        Text(
-          text = "Are you sure?",
-          style = MaterialTheme.typography.titleMedium,
-        )
-
-        Spacer(Modifier.weight(1f))
-
-        TextButton(
-          onClick = onCancel,
-          colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
-        ) {
-          Text("Cancel")
-        }
-
-        FilledTonalButton(
-          onClick = onDelete,
-          contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-        ) {
-          Icon(
-            Icons.Rounded.DeleteOutline,
-            contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize),
-          )
-          Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-          Text("Delete")
-        }
-      }
     }
   }
 }

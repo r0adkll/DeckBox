@@ -1,6 +1,7 @@
 package app.deckbox.features.decks.public.ui.slices
 
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Icon
@@ -8,10 +9,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.extensions.timeAgo
 import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.icons.outline.Decks
 import app.deckbox.common.compose.icons.outline.Export
 import app.deckbox.common.compose.widgets.CardHeader
-import app.deckbox.core.extensions.readableFormat
+import app.deckbox.common.compose.widgets.TonalIcon
 import app.deckbox.core.model.Deck
 import app.deckbox.core.settings.DeckCardSlice
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
@@ -26,6 +31,13 @@ class ExportHeaderSlice : ComposeSlice {
     eventSink: (DeckCardEvent) -> Unit,
   ) {
     CardHeader(
+      leading = {
+        TonalIcon(
+          DeckBoxIcons.Outline.Decks,
+          contentDescription = null,
+          modifier = Modifier.padding(top = 4.dp),
+        )
+      },
       title = {
         Text(
           text = deck.name.ifBlank { LocalStrings.current.deckDefaultNoName },
@@ -33,7 +45,7 @@ class ExportHeaderSlice : ComposeSlice {
         )
       },
       subtitle = {
-        Text(LocalStrings.current.deckLastUpdated(deck.updatedAt.readableFormat))
+        Text(deck.updatedAt.timeAgo)
       },
       trailing = {
         IconButton(
@@ -62,7 +74,7 @@ class ThumbnailHeaderSlice : ComposeSlice {
         )
       },
       subtitle = {
-        Text(LocalStrings.current.deckLastUpdated(deck.updatedAt.readableFormat))
+        Text(deck.updatedAt.timeAgo)
       },
       trailing = {
         IconButton(

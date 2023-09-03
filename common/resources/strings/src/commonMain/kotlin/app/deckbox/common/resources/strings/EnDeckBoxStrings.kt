@@ -36,6 +36,11 @@ val EnDeckBoxStrings = DeckBoxStrings(
   deckActionDeleteButtonContentDescription = "Delete deck",
   fabActionNewDeckButton = "New deck",
 
+  boosterPacks = "Packs",
+  boosterPacksTitleLong = "Booster Packs",
+  boosterPacksTabContentDescription = "List of custom booster packs",
+  boosterPackTitleNoName = "Enter pack name",
+
   expansions = "Expansions",
   expansionsTabContentDescription = "List of expansion sets",
   expansionReleaseDate = { "Released on $it" },
@@ -88,4 +93,25 @@ val EnDeckBoxStrings = DeckBoxStrings(
     }
   },
   deckTitleNoName = "Enter a name for your deck",
+  fabActionNewBoosterPack = "New pack",
+  actionCancel = "Cancel",
+  actionDelete = "Delete",
+  actionDeleteAreYouSure = "Are you sure?",
+  boosterPickerEmptyMessage = "You don't have any booster packs made. " +
+    "Try building some to start adding them to your decks.",
+  boosterPackNoName = "Unnamed pack",
+  deckNoName = "Unnamed deck",
+  deckPickerTitle = "Choose a deck",
+  boosterPackPickerTitle = "Choose a booster pack",
+
+  timeAgoNow = "now",
+  timeAgoMinutes = { min -> "$min minutes ago" },
+  timeAgoHours = { hrs -> "$hrs hours ago" },
+  timeAgoDays = { days -> "$days days ago" },
+  timeAgoMonths = { months -> "$months months ago" },
+  timeAgoYears = { yrs -> "$yrs years ago" },
+  deckSortOrderUpdatedAt = "Last updated",
+  deckSortOrderCreatedAt = "Created",
+  deckSortOrderAlphabetically = "Alphabetically",
+  deckSortOrderLegality = "Legality",
 )

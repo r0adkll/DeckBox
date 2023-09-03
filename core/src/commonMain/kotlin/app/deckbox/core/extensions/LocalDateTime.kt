@@ -13,6 +13,8 @@ val LocalDateTime.readableFormat: String
     return if (now.date == date) {
       "$hourAdjusted:$minute $amPM"
     } else {
-      "${month.name.capitalized()} $dayOfMonth, $year $hourAdjusted:$minute $amPM"
+      "${month.name.capitalized()} $dayOfMonth, $year $hourAdjusted:${minute.withSignificantZero()} $amPM"
     }
   }
+
+private fun Int.withSignificantZero(): String = if (this < 10) "0$this" else "$this"
