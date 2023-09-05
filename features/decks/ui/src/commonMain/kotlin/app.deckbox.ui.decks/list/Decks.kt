@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.extensions.plus
+import app.deckbox.common.compose.icons.rounded.Import
 import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
@@ -66,6 +68,11 @@ internal fun Decks(
         DeckBoxRootAppBar(
           title = LocalStrings.current.decks,
           actions = {
+            IconButton(
+              onClick = {  },
+            ) {
+              Icon(Icons.Rounded.Import, contentDescription = null)
+            }
             IconButton(
               onClick = { state.eventSink(DecksUiEvent.OpenAppSettings) },
             ) {
