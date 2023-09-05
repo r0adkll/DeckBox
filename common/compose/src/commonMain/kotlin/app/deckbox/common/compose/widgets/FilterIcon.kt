@@ -17,7 +17,7 @@ fun FilterIcon(
 ) {
   Icon(
     if (isEmpty) Icons.Outlined.FilterAlt else Icons.Rounded.FilterAlt,
-    tint = if (isEmpty) LocalContentColor.current else MaterialTheme.colorScheme.secondary,
+    tint = if (isEmpty) LocalContentColor.current else MaterialTheme.colorScheme.secondaryContainer,
     contentDescription = contentDescription ?: "Filter the list of cards",
     modifier = modifier,
   )

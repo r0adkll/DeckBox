@@ -30,6 +30,9 @@ import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
 import app.deckbox.common.compose.widgets.PokemonCardGrid
 import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.settings.columnsForStyles
+import app.deckbox.ui.expansions.detail.ExpansionDetailUiEvent.CardSelected
+import app.deckbox.ui.expansions.detail.ExpansionDetailUiEvent.ChangeGridStyle
 import app.deckbox.ui.expansions.detail.composables.ExpansionDetailFilter
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 
@@ -77,8 +80,9 @@ internal fun ExpansionDetail(
       ExpansionDetailUiState.Loading -> Loading(Modifier.padding(paddingValues))
       is ExpansionDetailUiState.Loaded -> PokemonCardGrid(
         cards = state.cards,
+        columns = state.cardGridStyle.columnsForStyles(),
         onClick = { card ->
-          state.eventSink(ExpansionDetailUiEvent.CardSelected(card))
+          state.eventSink(CardSelected(card))
         },
         contentPadding = paddingValues,
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -98,7 +102,9 @@ internal fun ExpansionDetail(
     ) {
       ExpansionDetailFilter(
         state = state.filterState,
+        cardGridStyle = state.cardGridStyle,
         onClose = { isFilterVisible = false },
+        onChangeGridStyle = { state.eventSink(ChangeGridStyle(it)) }
       )
     }
   }

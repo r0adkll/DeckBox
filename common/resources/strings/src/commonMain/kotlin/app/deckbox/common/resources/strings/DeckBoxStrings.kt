@@ -103,4 +103,7 @@ data class DeckBoxStrings(
   val deckSortOrderCreatedAt: String,
   val deckSortOrderAlphabetically: String,
   val deckSortOrderLegality: String,
+  val gridStyleCompact: String,
+  val gridStyleSmall: String,
+  val gridStyleLarge: String,
 )

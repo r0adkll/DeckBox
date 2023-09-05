@@ -15,7 +15,9 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.widgets.GridStyleDropdownIconButton
 import app.deckbox.common.compose.widgets.SearchBarElevation
+import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.ui.filter.CardFilter
 import app.deckbox.ui.filter.FilterUiEvent
 import app.deckbox.ui.filter.FilterUiState
@@ -24,7 +26,9 @@ import app.deckbox.ui.filter.FilterUiState
 @Composable
 internal fun ExpansionDetailFilter(
   state: FilterUiState,
+  cardGridStyle: PokemonGridStyle,
   onClose: () -> Unit,
+  onChangeGridStyle: (PokemonGridStyle) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Scaffold(
@@ -39,7 +43,12 @@ internal fun ExpansionDetailFilter(
           }
         },
         actions = {
+          GridStyleDropdownIconButton(
+            selected = cardGridStyle,
+            onOptionClick = onChangeGridStyle,
+          )
           IconButton(
+            enabled = !state.filter.isEmpty,
             onClick = {
               state.eventSink(FilterUiEvent.ClearFilter)
             },

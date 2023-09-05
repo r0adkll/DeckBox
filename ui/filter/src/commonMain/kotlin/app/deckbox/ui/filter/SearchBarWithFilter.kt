@@ -23,6 +23,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FilterAltOff
+import androidx.compose.material.icons.rounded.Grid3x3
+import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -42,6 +44,7 @@ import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.widgets.SearchBarElevation
 import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.compose.widgets.SearchBarPadding
+import app.deckbox.core.settings.PokemonGridStyle
 import com.moriatsushi.insetsx.statusBars
 
 enum class FilterState {
@@ -52,12 +55,14 @@ enum class FilterState {
 @Composable
 fun SearchBarWithFilter(
   filterState: FilterState,
+  isFilterEmpty: Boolean,
   onClose: () -> Unit,
   onClear: () -> Unit,
   modifier: Modifier = Modifier,
-  searchBar: @Composable () -> Unit,
-  filterTitle: @Composable () -> Unit,
   filter: @Composable () -> Unit,
+  filterTitle: @Composable () -> Unit,
+  filterActions: @Composable () -> Unit = {},
+  searchBar: @Composable () -> Unit,
 ) {
   Box(
     modifier = modifier,
@@ -116,7 +121,9 @@ fun SearchBarWithFilter(
         }
       },
       trailing = {
+        filterActions()
         IconButton(
+          enabled = !isFilterEmpty,
           onClick = onClear,
         ) {
           Icon(Icons.Rounded.FilterAltOff, contentDescription = null)
@@ -193,9 +200,9 @@ private fun FilterTopBar(
       }
     }
 
-    Box(
-      modifier = Modifier.size(SearchBarHeight),
-      contentAlignment = Alignment.Center,
+    Row(
+      modifier = Modifier.padding(16.dp),
+      verticalAlignment = Alignment.CenterVertically,
     ) {
       CompositionLocalProvider(
         LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,

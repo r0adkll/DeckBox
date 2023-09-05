@@ -12,10 +12,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
+import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.core.model.Stacked
+import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
@@ -47,6 +49,7 @@ class BrowsePresenter(
   private val deckBuilderRepository: DeckBuilderRepository,
   private val boosterPackRepository: BoosterPackRepository,
   private val filterPresenter: BrowseFilterPresenter,
+  private val settings: DeckBoxSettings,
 ) : Presenter<BrowseUiState> {
 
   private val queryPipeline = MutableSharedFlow<String?>()
@@ -104,12 +107,17 @@ class BrowsePresenter(
       observeCountState()
     }.collectAsState(null)
 
+    val gridStyle by remember {
+      settings.observeBrowseCardGridStyle()
+    }.collectAsState(PokemonGridStyle.Small)
+
     return BrowseUiState(
       isEditing = screen.deckId != null || screen.packId != null,
       query = searchQuery,
       filterUiState = filterUiState,
       cardsPager = pager,
       countState = countState,
+      cardGridStyle = gridStyle,
     ) { event ->
       when (event) {
         BrowseUiEvent.NavigateBack -> navigator.pop()
@@ -153,6 +161,8 @@ class BrowsePresenter(
             packId = screen.packId,
           ))
         }
+
+        is BrowseUiEvent.GridStyleChanged -> settings.browseCardGridStyle = event.style
       }
     }
   }

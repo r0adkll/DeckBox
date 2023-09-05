@@ -6,10 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.ExpansionDetailScreen
+import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.SearchFilter
+import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.expansions.ExpansionsRepository
 import app.deckbox.features.cards.public.ExpansionCardRepository
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -26,6 +28,7 @@ class ExpansionDetailPresenter(
   @Assisted private val screen: ExpansionDetailScreen,
   private val expansionRepository: ExpansionsRepository,
   private val expansionCardRepository: ExpansionCardRepository,
+  private val settings: DeckBoxSettings,
 ) : Presenter<ExpansionDetailUiState> {
 
   @Composable
@@ -53,14 +56,20 @@ class ExpansionDetailPresenter(
 
         val filterState = filterPresenter.present(key = screen.expansionId)
 
+        val cardGridStyle by remember {
+          settings.observeExpansionCardGridStyle()
+        }.collectAsState(PokemonGridStyle.Small)
+
         ExpansionDetailUiState.Loaded(
           expansion = state.data,
           filterState = filterState,
           cards = expansionCards.filterBy(filterState.filter),
+          cardGridStyle = cardGridStyle,
         ) { event ->
           when (event) {
             ExpansionDetailUiEvent.NavigateBack -> navigator.pop()
             is ExpansionDetailUiEvent.CardSelected -> navigator.goTo(CardDetailScreen(event.card))
+            is ExpansionDetailUiEvent.ChangeGridStyle -> settings.expansionCardGridStyle = event.style
           }
         }
       }
