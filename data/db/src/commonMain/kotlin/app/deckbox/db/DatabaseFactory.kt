@@ -13,6 +13,7 @@ import app.deckbox.sqldelight.Cards
 import app.deckbox.sqldelight.Deck_card_join
 import app.deckbox.sqldelight.Decks
 import app.deckbox.sqldelight.Expansions
+import app.deckbox.sqldelight.RemoteKey
 import app.deckbox.sqldelight.TcgPlayerPrices
 import me.tatarka.inject.annotations.Inject
 
@@ -72,5 +73,11 @@ class DatabaseFactory(
     booster_pack_joinAdapter = Booster_pack_join.Adapter(
       countAdapter = IntColumnAdapter,
     ),
+    RemoteKeyAdapter = RemoteKey.Adapter(
+      keyAdapter = IntColumnAdapter,
+      countAdapter = IntColumnAdapter,
+      totalCountAdapter = IntColumnAdapter,
+      nextKeyAdapter = IntColumnAdapter,
+    )
   )
 }

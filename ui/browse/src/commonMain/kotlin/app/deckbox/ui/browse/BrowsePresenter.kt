@@ -20,6 +20,7 @@ import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
+import app.deckbox.features.cards.public.paging.CardRemoteMediatorFactory
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.ui.filter.BrowseFilterPresenter
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -42,6 +43,7 @@ class BrowsePresenter(
   @Assisted private val screen: BrowseScreen,
   private val cardRepository: CardRepository,
   private val cardPagingSourceFactory: CardPagingSourceFactory,
+  private val cardRemoteMediatorFactory: CardRemoteMediatorFactory,
   private val deckBuilderRepository: DeckBuilderRepository,
   private val boosterPackRepository: BoosterPackRepository,
   private val filterPresenter: BrowseFilterPresenter,
@@ -92,7 +94,10 @@ class BrowsePresenter(
     }
 
     val pager = remember(query) {
-      createPager { cardPagingSourceFactory.create(query) }
+      createPager(
+        remoteMediatorFactory = { cardRemoteMediatorFactory.create(query) },
+        pagingSourceFactory = { cardPagingSourceFactory.create(query) },
+      )
     }
 
     val countState by remember {

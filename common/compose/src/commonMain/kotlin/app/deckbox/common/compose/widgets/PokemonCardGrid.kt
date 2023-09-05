@@ -63,18 +63,14 @@ fun PokemonCardGrid(
       key = lazyPagingItems.itemKey { it.id },
     ) { index ->
       val item = lazyPagingItems[index]
-      if (item != null) {
-        val cardCount = countSelector(item.id)
-        PokemonCard(
-          card = item,
-          onClick = { onClick(item) },
-          onLongClick = { onLongClick(item) },
-          count = cardCount?.count,
-          collected = cardCount?.collected,
-        )
-      } else {
-        ShimmerPokemonCard()
-      }
+      val cardCount = item?.let { countSelector(it.id) }
+      PokemonCard(
+        card = item,
+        onClick = { item?.let(onClick) },
+        onLongClick = { item?.let(onLongClick) },
+        count = cardCount?.count,
+        collected = cardCount?.collected,
+      )
     }
   }
 

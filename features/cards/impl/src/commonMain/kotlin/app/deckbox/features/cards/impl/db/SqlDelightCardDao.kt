@@ -1,5 +1,7 @@
 package app.deckbox.features.cards.impl.db
 
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransactionCallbacks
 import app.cash.sqldelight.coroutines.asFlow
 import app.deckbox.DeckBoxDatabase
@@ -61,6 +63,33 @@ class SqlDelightCardDao(
     database.transactionWithResult {
       database.cardQueries
         .getByExpansionId(expansionId)
+        .executeAsList()
+        .let(::hydrate)
+    }
+  }
+
+  override suspend fun fetchByRemoteKey(
+    query: String,
+    key: Int,
+    onQuery: (Query<Cards>) -> Unit,
+  ): List<Card> = withContext(dispatcherProvider.databaseRead) {
+    database.transactionWithResult {
+      database.remoteKeyQueries
+        .getCardsForQueryAndKey(query, key)
+        .also(onQuery)
+        .executeAsList()
+        .let(::hydrate)
+    }
+  }
+
+  override suspend fun fetchByRemoteKey(
+    remoteKeyId: Long,
+    onQuery: (Query<Cards>) -> Unit,
+  ): List<Card> = withContext(dispatcherProvider.databaseRead) {
+    database.transactionWithResult {
+      database.remoteKeyQueries
+        .getCardsForRemoteKey(remoteKeyId)
+        .also(onQuery)
         .executeAsList()
         .let(::hydrate)
     }
@@ -149,6 +178,12 @@ class SqlDelightCardDao(
       cards.forEach { card ->
         insertCard(card)
       }
+    }
+  }
+
+  override fun insert(callbacks: TransactionCallbacks, cards: List<Card>) {
+    cards.forEach { card ->
+      callbacks.insertCard(card)
     }
   }
 

@@ -1,0 +1,65 @@
+import kotlin.Int;
+
+-- This represents a relation to an API query that we can use to cache and retrieve
+--   results
+CREATE TABLE RemoteKey (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  query TEXT NOT NULL,
+  key INTEGER AS Int NOT NULL,
+  count INTEGER AS Int NOT NULL,
+  totalCount INTEGER AS Int NOT NULL,
+  nextKey INTEGER AS Int,
+  UNIQUE (query, key)
+);
+
+CREATE TABLE RemoteKeyCardJoin (
+  remoteKeyId INTEGER NOT NULL,
+  cardId TEXT NOT NULL,
+  PRIMARY KEY (remoteKeyId, cardId),
+  FOREIGN KEY(remoteKeyId) REFERENCES RemoteKey(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+  FOREIGN KEY(cardId) REFERENCES cards(id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+insert:
+INSERT OR REPLACE INTO RemoteKey (query, key, count, totalCount, nextKey)
+VALUES (:query, :key, :count, :totalCount, :nextKey);
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+insertRemoteKeyCard:
+INSERT OR IGNORE INTO RemoteKeyCardJoin
+VALUES ?;
+
+getAll:
+SELECT * FROM RemoteKey;
+
+getAllJoins:
+SELECT * FROM RemoteKeyCardJoin;
+
+getLatest:
+SELECT * FROM RemoteKey
+WHERE query = ?
+ORDER BY key DESC
+LIMIT 1;
+
+getForQueryAndKey:
+SELECT * FROM RemoteKey
+WHERE query = ?
+AND key = ?;
+
+deleteForQuery:
+DELETE FROM RemoteKey
+WHERE query = ?;
+
+getCardsForRemoteKey:
+SELECT cards.* FROM RemoteKeyCardJoin
+INNER JOIN cards ON RemoteKeyCardJoin.cardId = cards.id
+WHERE remoteKeyId = ?;
+
+getCardsForQueryAndKey:
+SELECT cards.* FROM RemoteKeyCardJoin
+INNER JOIN RemoteKey ON RemoteKeyCardJoin.remoteKeyId = RemoteKey.id
+INNER JOIN cards ON RemoteKeyCardJoin.cardId = cards.id
+WHERE RemoteKey.query = ?
+AND RemoteKey.key = ?;

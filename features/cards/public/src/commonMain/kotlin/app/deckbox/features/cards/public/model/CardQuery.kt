@@ -1,6 +1,5 @@
 package app.deckbox.features.cards.public.model
 
-import app.deckbox.core.logging.bark
 import app.deckbox.core.model.RangeValue
 import app.deckbox.core.model.SearchField
 import app.deckbox.core.model.SearchFilter
@@ -14,6 +13,17 @@ data class CardQuery(
   val pageSize: Int = MAX_PAGE_SIZE,
   val filter: SearchFilter? = null,
 ) {
+
+  /**
+   * Get the unique key for this query that we can use to do some caching
+   * for better user-ex
+   */
+  val key: String
+    get() = buildString {
+      query?.let { append(it) }
+      orderBy?.let { append(it) }
+      append(generateQueryParam())
+    }.ifBlank { "DEFAULT" }
 
   fun asQueryOptions(): Map<String, String> = buildMap {
     put("page", "$page")
@@ -54,8 +64,6 @@ data class CardQuery(
         filter.evolvesFrom?.let { appendValue("evolvesFrom", it) }
         filter.evolvesTo?.let { appendValue("evolvesTo", it) }
       }
-    }.also {
-      bark { "q=$it, query=$query, filter=$filter" }
     }.trim()
   }
 }
@@ -76,12 +84,12 @@ fun StringBuilder.appendValue(
   field: String,
   value: String,
 ) {
-//  val quotedValue = if (value.contains(SPACE)) {
-//    "\"$value\""
-//  } else {
-//    value
-//  }
-  append("$field:$value")
+  val quotedValue = if (value.contains(SPACE)) {
+    "\"$value\""
+  } else {
+    value
+  }
+  append("$field:$quotedValue")
   append(SPACE)
 }
 
