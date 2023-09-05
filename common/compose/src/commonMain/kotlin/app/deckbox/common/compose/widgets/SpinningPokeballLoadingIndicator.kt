@@ -33,7 +33,7 @@ fun SpinningPokeballLoadingIndicator(
     initialValue = 0f,
     targetValue = 360f,
     animationSpec = infiniteRepeatable(
-      animation = tween(300, easing = LinearEasing),
+      animation = tween(700, easing = LinearEasing),
       repeatMode = RepeatMode.Restart,
     ),
   )
