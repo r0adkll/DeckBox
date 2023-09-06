@@ -66,6 +66,18 @@ class StoreCardRepository(
       .let { (it as CardResponse.Multiple).cards }
   }
 
+  override suspend fun favorite(id: String, favorited: Boolean) {
+    db.favorite(id, favorited)
+  }
+
+  override fun observeFavorites(): Flow<Map<String, Boolean>> {
+    return db.observeFavorites()
+  }
+
+  override fun observeFavorite(id: String): Flow<Boolean> {
+    return db.observeFavorite(id)
+  }
+
   override fun observeCards(ids: List<String>): Flow<List<Card>> {
     return store.stream(
       request = StoreReadRequest.cached(

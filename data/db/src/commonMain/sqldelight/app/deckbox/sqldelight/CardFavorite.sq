@@ -1,0 +1,26 @@
+import kotlin.Boolean;
+
+CREATE TABLE favorites (
+  favorited INTEGER AS Boolean NOT NULL DEFAULT 0,
+  cardId TEXT NOT NULL PRIMARY KEY,
+
+  FOREIGN KEY(cardId) REFERENCES cards(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE INDEX IF NOT EXISTS index_favorite_cardId ON favorites(cardId);
+
+favorite {
+  UPDATE favorites
+  SET favorited = :favorited
+  WHERE cardId = :cardId;
+
+  INSERT OR IGNORE INTO favorites(favorited, cardId)
+  VALUES (:favorited, :cardId);
+}
+
+getAll:
+SELECT * FROM favorites;
+
+getById:
+SELECT * FROM favorites
+WHERE cardId = ?;

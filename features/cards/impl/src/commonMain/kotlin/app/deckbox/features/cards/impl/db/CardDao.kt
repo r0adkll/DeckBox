@@ -28,6 +28,10 @@ interface CardDao {
   suspend fun insert(cards: List<Card>)
   fun insert(callbacks: TransactionCallbacks, cards: List<Card>)
 
+  suspend fun favorite(id: String, value: Boolean)
+  fun observeFavorites(): Flow<Map<String, Boolean>>
+  fun observeFavorite(id: String): Flow<Boolean>
+
   suspend fun delete(id: String)
   suspend fun delete(ids: List<String>)
   suspend fun deleteAll()

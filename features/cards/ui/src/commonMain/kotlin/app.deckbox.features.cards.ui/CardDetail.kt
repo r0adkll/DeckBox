@@ -107,10 +107,10 @@ internal fun CardDetail(
       )
     },
     floatingActionButton = {
-      var isFavorited by remember { mutableStateOf(false) }
+      val isFavorited = state.isFavorited
       FloatingActionButton(
         onClick = {
-          isFavorited = !isFavorited
+          state.eventSink(CardDetailUiEvent.Favorite(!isFavorited))
         },
         containerColor = if (isFavorited) {
           MaterialTheme.colorScheme.tertiaryContainer

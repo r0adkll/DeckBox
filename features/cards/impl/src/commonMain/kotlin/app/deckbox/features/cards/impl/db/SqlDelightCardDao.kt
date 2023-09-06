@@ -4,6 +4,9 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransactionCallbacks
 import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOne
+import app.cash.sqldelight.coroutines.mapToOneOrDefault
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
@@ -17,6 +20,7 @@ import app.deckbox.db.mapping.toModel
 import app.deckbox.db.mapping.toStackedEntity
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.sqldelight.Cards
+import app.deckbox.sqldelight.Favorites
 import app.deckbox.sqldelight.GetCardsForBoosterPack
 import app.deckbox.sqldelight.GetCardsForDeck
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
@@ -185,6 +189,31 @@ class SqlDelightCardDao(
     cards.forEach { card ->
       callbacks.insertCard(card)
     }
+  }
+
+  override suspend fun favorite(id: String, value: Boolean) = withContext(dispatcherProvider.databaseWrite){
+    database.cardFavoriteQueries.favorite(
+      favorited = value,
+      cardId = id,
+    )
+  }
+
+  override fun observeFavorites(): Flow<Map<String, Boolean>> {
+    return database.cardFavoriteQueries
+      .getAll()
+      .asFlow()
+      .mapToList(dispatcherProvider.databaseRead)
+      .map { favorites ->
+        favorites.associateBy({ it.cardId }, { it.favorited })
+      }
+  }
+
+  override fun observeFavorite(id: String): Flow<Boolean> {
+    return database.cardFavoriteQueries
+      .getById(id)
+      .asFlow()
+      .mapToOneOrDefault(Favorites(false, id), dispatcherProvider.databaseRead)
+      .map { it.favorited }
   }
 
   /**
