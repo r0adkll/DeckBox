@@ -13,6 +13,7 @@ data class ExpansionsUiState(
   val expansionState: ExpansionState,
   val expansionCardStyle: ExpansionCardStyle,
   val query: String?,
+  val hasFavorites: Boolean,
   val eventSink: (ExpansionsUiEvent) -> Unit,
 ) : CircuitUiState
 
@@ -35,5 +36,6 @@ sealed interface ExpansionsUiEvent : CircuitUiEvent {
   data class ChangeCardStyle(val style: ExpansionCardStyle) : ExpansionsUiEvent
   data class ExpansionClicked(val expansion: Expansion) : ExpansionsUiEvent
   data class SearchUpdated(val query: String?) : ExpansionsUiEvent
-  object SearchCleared : ExpansionsUiEvent
+  data object SearchCleared : ExpansionsUiEvent
+  data object FavoritesClick : ExpansionsUiEvent
 }

@@ -30,8 +30,10 @@ import cafe.adriel.lyricist.LocalStrings
 @Composable
 internal fun ExpansionsContent(
   expansionState: ExpansionState,
+  hasFavorites: Boolean,
   style: ExpansionCardStyle,
   onClick: (Expansion) -> Unit,
+  onFavoritesClick: () -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(),
 ) {
@@ -43,8 +45,10 @@ internal fun ExpansionsContent(
     } else {
       ExpansionsContent(
         expansions = expansionState.groupedExpansions,
+        hasFavorites = hasFavorites,
         style = style,
         onClick = onClick,
+        onFavoritesClick = onFavoritesClick,
         modifier = modifier,
         contentPadding = contentPadding,
       )
@@ -106,8 +110,10 @@ private fun ErrorContent(
 @Composable
 private fun ExpansionsContent(
   expansions: List<ExpansionSeries>,
+  hasFavorites: Boolean,
   style: ExpansionCardStyle,
   onClick: (Expansion) -> Unit,
+  onFavoritesClick: () -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(),
 ) {
@@ -116,6 +122,14 @@ private fun ExpansionsContent(
     contentPadding = contentPadding,
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
+    if (hasFavorites) {
+      item {
+        FavoritesCard(
+          onClick = onFavoritesClick,
+        )
+      }
+    }
+
     expansions.forEach { (series, expansions) ->
       item {
         Text(

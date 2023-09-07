@@ -24,3 +24,8 @@ SELECT * FROM favorites;
 getById:
 SELECT * FROM favorites
 WHERE cardId = ?;
+
+getCards:
+SELECT cards.* FROM cards
+INNER JOIN favorites ON favorites.cardId = cards.id
+WHERE favorites.favorited = 1;

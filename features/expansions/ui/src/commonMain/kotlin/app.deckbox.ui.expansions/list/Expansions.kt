@@ -27,6 +27,7 @@ import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.ui.expansions.list.ExpansionsUiEvent.ChangeCardStyle
 import app.deckbox.ui.expansions.list.ExpansionsUiEvent.ExpansionClicked
+import app.deckbox.ui.expansions.list.ExpansionsUiEvent.FavoritesClick
 import app.deckbox.ui.expansions.list.ExpansionsUiEvent.SearchCleared
 import app.deckbox.ui.expansions.list.ExpansionsUiEvent.SearchUpdated
 import app.deckbox.ui.expansions.list.composables.ExpansionsContent
@@ -86,7 +87,9 @@ internal fun Expansions(
       ExpansionsContent(
         expansionState = state.expansionState,
         style = state.expansionCardStyle,
+        hasFavorites = state.hasFavorites,
         onClick = { state.eventSink(ExpansionClicked(it)) },
+        onFavoritesClick = { state.eventSink(FavoritesClick) },
         contentPadding = PaddingValues(
           start = 16.dp,
           end = 16.dp,

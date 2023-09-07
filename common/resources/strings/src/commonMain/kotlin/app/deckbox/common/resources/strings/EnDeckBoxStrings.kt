@@ -117,4 +117,5 @@ val EnDeckBoxStrings = DeckBoxStrings(
   gridStyleCompact = "Compact",
   gridStyleSmall = "Small",
   gridStyleLarge = "Large",
+  favorites = "Favorites",
 )

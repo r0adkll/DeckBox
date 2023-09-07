@@ -94,6 +94,10 @@ class StoreCardRepository(
   override fun observeCardsForBoosterPack(packId: String): Flow<List<Stacked<Card>>> {
     return db.observeByBoosterPack(packId)
   }
+
+  override fun observeCardsForFavorites(): Flow<List<Card>> {
+    return db.observeByFavorites()
+  }
 }
 
 class CardFetcher(

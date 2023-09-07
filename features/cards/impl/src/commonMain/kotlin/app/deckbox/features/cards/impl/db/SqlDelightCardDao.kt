@@ -171,6 +171,19 @@ class SqlDelightCardDao(
       }
   }
 
+  override fun observeByFavorites(): Flow<List<Card>> {
+    return database.cardFavoriteQueries
+      .getCards()
+      .asFlow()
+      .mapNotNull {
+        withContext(dispatcherProvider.databaseRead) {
+          database.transactionWithResult {
+            it.executeAsList().let(::hydrate)
+          }
+        }
+      }
+  }
+
   override suspend fun insert(card: Card) = withContext(dispatcherProvider.databaseWrite) {
     database.transaction {
       insertCard(card)

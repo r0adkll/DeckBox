@@ -23,6 +23,7 @@ interface CardDao {
   fun observeByExpansion(expansionId: String): Flow<List<Card>>
   fun observeByDeck(deckId: String): Flow<List<Stacked<Card>>>
   fun observeByBoosterPack(packId: String): Flow<List<Stacked<Card>>>
+  fun observeByFavorites(): Flow<List<Card>>
 
   suspend fun insert(card: Card)
   suspend fun insert(cards: List<Card>)

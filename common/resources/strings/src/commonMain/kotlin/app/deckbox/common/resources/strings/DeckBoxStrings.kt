@@ -106,4 +106,5 @@ data class DeckBoxStrings(
   val gridStyleCompact: String,
   val gridStyleSmall: String,
   val gridStyleLarge: String,
+  val favorites: String,
 )
