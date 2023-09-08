@@ -23,6 +23,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.icons.types.OverlappingTypeRow
 import app.deckbox.common.compose.icons.types.TypeIcon
 import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
 import app.deckbox.common.compose.theme.PokemonTypeColor.toColor
@@ -70,11 +71,13 @@ internal fun InfoCard(
         modifier = Modifier.weight(1f),
       )
 
-      val type = card?.types?.firstOrNull()
-      if (type != null) {
-        TypeIcon(
-          type = type,
-        )
+      val types = card?.types
+      if (!types.isNullOrEmpty()) {
+        OverlappingTypeRow {
+          types.forEach { type ->
+            TypeIcon(type)
+          }
+        }
       }
     }
 

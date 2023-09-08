@@ -118,4 +118,13 @@ val EnDeckBoxStrings = DeckBoxStrings(
   gridStyleSmall = "Small",
   gridStyleLarge = "Large",
   favorites = "Favorites",
+  similarCardsLabel = "Similar cards",
+  evolvesFromLabel = "Evolves from",
+  evolvesToLabel = "Evolves to",
+  similarCardsErrorLabel = "Uh-oh! Unable to load a list of similar cards",
+  similarCardsEmptyLabel = "No similar cards found",
+  evolvesFromErrorLabel = "Uh-oh! Unable to load evolves from cards",
+  evolvesFromEmptyLabel = "No cards found that this one evolves from",
+  evolvesToErrorLabel = "Uh-oh! Unable to load cards that this evolves to",
+  evolvesToEmptyLabel = "No cards found that this one evolves to",
 )

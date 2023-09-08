@@ -17,10 +17,12 @@ import app.deckbox.db.mapping.toEntity
 import app.deckbox.db.mapping.toModel
 import app.deckbox.db.mapping.toStackedEntity
 import app.deckbox.features.cards.public.model.CardQuery
+import app.deckbox.network.PagedResponse
 import app.deckbox.sqldelight.Cards
 import app.deckbox.sqldelight.Favorites
 import app.deckbox.sqldelight.GetCardsForBoosterPack
 import app.deckbox.sqldelight.GetCardsForDeck
+import app.deckbox.sqldelight.RemoteKeyCardJoin
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -182,6 +184,19 @@ class SqlDelightCardDao(
       }
   }
 
+  override fun observeByRemoteKey(query: String, key: Int): Flow<List<Card>> {
+    return database.remoteKeyQueries
+      .getCardsForQueryAndKey(query, key)
+      .asFlow()
+      .mapNotNull {
+        withContext(dispatcherProvider.databaseRead) {
+          database.transactionWithResult {
+            it.executeAsList().let(::hydrate)
+          }
+        }
+      }
+  }
+
   override suspend fun insert(card: Card) = withContext(dispatcherProvider.databaseWrite) {
     database.transaction {
       insertCard(card)
@@ -199,6 +214,38 @@ class SqlDelightCardDao(
   override fun insert(callbacks: TransactionCallbacks, cards: List<Card>) {
     cards.forEach { card ->
       callbacks.insertCard(card)
+    }
+  }
+
+  override suspend fun insert(query: CardQuery, pagedResponse: PagedResponse<Card>) {
+    withContext(dispatcherProvider.databaseWrite) {
+      val remoteKeyId = database.remoteKeyQueries.transactionWithResult {
+        database.remoteKeyQueries.insert(
+          query = query.key,
+          key = pagedResponse.page,
+          count = pagedResponse.count,
+          totalCount = pagedResponse.totalCount,
+          nextKey = pagedResponse.page.plus(1)
+            .takeIf { pagedResponse.hasMore },
+        )
+
+        database.remoteKeyQueries
+          .lastInsertRowId()
+          .executeAsOne()
+      }
+
+      insert(pagedResponse.data)
+
+      database.transaction {
+        pagedResponse.data.forEach { card ->
+          database.remoteKeyQueries.insertRemoteKeyCard(
+            RemoteKeyCardJoin(
+              remoteKeyId = remoteKeyId,
+              cardId = card.id,
+            ),
+          )
+        }
+      }
     }
   }
 

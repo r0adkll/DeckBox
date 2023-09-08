@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +39,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.extensions.applyHoloAndDragEffect
+import app.deckbox.common.compose.icons.Bulbasaur
+import app.deckbox.common.compose.icons.Charmander
+import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.icons.Snorlax
+import app.deckbox.common.compose.icons.Squirtle
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.icons.rounded.SubtractCard
 import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
@@ -46,8 +52,12 @@ import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.SuperType
+import app.deckbox.features.cards.ui.CardDetailUiEvent.CardClick
+import app.deckbox.features.cards.ui.CardDetailUiEvent.OpenUrl
 import app.deckbox.features.cards.ui.composables.CardMarketPriceCard
 import app.deckbox.features.cards.ui.composables.InfoCard
+import app.deckbox.features.cards.ui.composables.RelatedCards
 import app.deckbox.features.cards.ui.composables.TcgPlayerPriceCard
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
@@ -158,7 +168,7 @@ internal fun CardDetail(
         Spacer(Modifier.height(16.dp))
         TcgPlayerPriceCard(
           tcgPlayer = tcgPlayer,
-          onBuyClick = { state.eventSink(CardDetailUiEvent.OpenUrl(tcgPlayer.url)) },
+          onBuyClick = { state.eventSink(OpenUrl(tcgPlayer.url)) },
           modifier = Modifier.padding(horizontal = 16.dp),
         )
       }
@@ -167,12 +177,50 @@ internal fun CardDetail(
         Spacer(Modifier.height(16.dp))
         CardMarketPriceCard(
           cardMarket = cardMarket,
-          onBuyClick = { state.eventSink(CardDetailUiEvent.OpenUrl(cardMarket.url)) },
+          onBuyClick = { state.eventSink(OpenUrl(cardMarket.url)) },
           modifier = Modifier.padding(horizontal = 16.dp),
         )
       }
 
       Spacer(Modifier.height(16.dp))
+
+      RelatedCards(
+        loadState = state.similar,
+        title = { Text(LocalStrings.current.similarCardsLabel) },
+        errorLabel = { Text(LocalStrings.current.similarCardsErrorLabel) },
+        emptyLabel = { Text(LocalStrings.current.similarCardsEmptyLabel) },
+        emptyImage = DeckBoxIcons.Charmander,
+        onCardClick = { state.eventSink(CardClick(it)) }
+      )
+
+      Spacer(Modifier.height(16.dp))
+
+      if (state.pokemonCard?.supertype == SuperType.POKEMON) {
+
+        if (state.pokemonCard?.subtypes?.contains("Basic") != true) {
+          RelatedCards(
+            loadState = state.evolvesFrom,
+            title = { Text(LocalStrings.current.evolvesFromLabel) },
+            errorLabel = { Text(LocalStrings.current.evolvesFromErrorLabel) },
+            emptyLabel = { Text(LocalStrings.current.evolvesFromEmptyLabel) },
+            emptyImage = DeckBoxIcons.Squirtle,
+            onCardClick = { state.eventSink(CardClick(it)) }
+          )
+
+          Spacer(Modifier.height(16.dp))
+        }
+
+        RelatedCards(
+          loadState = state.evolvesTo,
+          title = { Text(LocalStrings.current.evolvesToLabel) },
+          errorLabel = { Text(LocalStrings.current.evolvesToErrorLabel) },
+          emptyLabel = { Text(LocalStrings.current.evolvesToEmptyLabel) },
+          emptyImage = DeckBoxIcons.Bulbasaur,
+          onCardClick = { state.eventSink(CardClick(it)) }
+        )
+      }
+
+      Spacer(Modifier.height(88.dp))
     }
   }
 }

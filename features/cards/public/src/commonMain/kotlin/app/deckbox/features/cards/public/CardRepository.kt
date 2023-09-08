@@ -2,6 +2,7 @@ package app.deckbox.features.cards.public
 
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Stacked
+import app.deckbox.features.cards.public.model.CardQuery
 import kotlinx.coroutines.flow.Flow
 
 interface CardRepository {
@@ -9,6 +10,7 @@ interface CardRepository {
   suspend fun getCard(id: String): Card?
   suspend fun getCards(vararg id: String): List<Card>
   suspend fun getCards(ids: List<String>): List<Card>
+  suspend fun getCards(query: CardQuery): List<Card>
 
   suspend fun favorite(id: String, favorited: Boolean)
   fun observeFavorites(): Flow<Map<String, Boolean>>

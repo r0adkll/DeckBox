@@ -6,18 +6,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.SearchFilter
+import app.deckbox.core.model.SuperType
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.cards.public.CardRepository
+import app.deckbox.features.cards.public.model.CardQuery
+import app.deckbox.features.cards.public.model.OrderByReleaseDate
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -47,7 +55,9 @@ class CardDetailPresenter(
       observeCountForCard()
     }.collectAsState(null)
 
-    // TODO Load additional card information such as evolution info, similar cards, etc
+    val similarCards by loadSimilarCards(cardLoadState)
+    val evolvesFrom by loadEvolvesFrom(cardLoadState)
+    val evolvesTo by loadEvolvesTo(cardLoadState)
 
     val isFavorited by remember {
       repository.observeFavorite(screen.cardId)
@@ -57,6 +67,9 @@ class CardDetailPresenter(
       cardName = screen.cardName,
       cardImageUrl = screen.cardImageLarge,
       card = cardLoadState,
+      similar = similarCards,
+      evolvesFrom = evolvesFrom,
+      evolvesTo = evolvesTo,
       deckState = deckState,
       isFavorited = isFavorited,
     ) { event ->
@@ -85,6 +98,16 @@ class CardDetailPresenter(
             repository.favorite(screen.cardId, event.value)
           }
         }
+
+        is CardDetailUiEvent.CardClick -> {
+          navigator.goTo(
+            CardDetailScreen(
+              card = event.card,
+              deckId = screen.deckId,
+              packId = screen.packId,
+            )
+          )
+        }
       }
     }
   }
@@ -99,6 +122,69 @@ class CardDetailPresenter(
             ?: LoadState.Error,
         )
       }
+    }.collectAsState(LoadState.Loading)
+  }
+
+  @Composable
+  private fun loadSimilarCards(loadState: LoadState<out Card>): State<LoadState<out List<Card>>> {
+    return loadQueryState(loadState) { card ->
+      val cleanName = card.name.replace(CleanNameRegex, "")
+      CardQuery(
+        orderBy = OrderByReleaseDate,
+        queryOverride = "name:\"$cleanName\" -id:${card.id}"
+      )
+    }
+  }
+
+  @Composable
+  private fun loadEvolvesFrom(loadState: LoadState<out Card>): State<LoadState<out List<Card>>> {
+    return loadQueryState(
+      loadState = loadState,
+      predicate = { it.evolvesFrom != null },
+    ) { card ->
+      CardQuery(
+        query = "\"${card.evolvesFrom!!}\"",
+        orderBy = OrderByReleaseDate,
+      )
+    }
+  }
+
+  @Composable
+  private fun loadEvolvesTo(loadState: LoadState<out Card>): State<LoadState<out List<Card>>> {
+    return loadQueryState(
+      loadState = loadState,
+      predicate = { it.supertype == SuperType.POKEMON },
+    ) { card ->
+      CardQuery(
+        orderBy = OrderByReleaseDate,
+        filter = SearchFilter(
+          evolvesFrom = card.name,
+        )
+      )
+    }
+  }
+
+  @Composable
+  private fun loadQueryState(
+    loadState: LoadState<out Card>,
+    predicate: (Card) -> Boolean = { true },
+    queryBuilder: (Card) -> CardQuery,
+  ): State<LoadState<out List<Card>>> {
+    return remember(loadState) {
+      loadState.dataOrNull?.let { card ->
+        if (predicate(card)) {
+          val query = queryBuilder(card)
+          flow {
+            val cards = repository.getCards(query)
+              .sortedByDescending { it.expansion.releaseDate }
+            emit(LoadState.Loaded(cards))
+          }.catch {
+            LoadState.Error
+          }
+        } else {
+          flowOf(LoadState.Loaded(emptyList()))
+        }
+      } ?: emptyFlow()
     }.collectAsState(LoadState.Loading)
   }
 
@@ -119,4 +205,8 @@ class CardDetailPresenter(
       else -> flowOf(null)
     }
   }
+}
+
+private val CleanNameRegex by lazy {
+  "\\s*\\(.*\\)".toRegex()
 }
