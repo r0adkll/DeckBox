@@ -4,6 +4,7 @@ import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.core.settings.EnumSetting
 import app.deckbox.core.settings.EnumSettingProvider
 import app.deckbox.core.settings.ExpansionCardStyle
+import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.core.settings.SortOption
 import kotlinx.coroutines.flow.Flow
 
@@ -26,6 +27,12 @@ interface DeckBoxSettings {
 
   var deckCardConfig: DeckCardConfig
   fun observeDeckCardConfig(): Flow<DeckCardConfig>
+
+  var browseCardGridStyle: PokemonGridStyle
+  fun observeBrowseCardGridStyle(): Flow<PokemonGridStyle>
+
+  var expansionCardGridStyle: PokemonGridStyle
+  fun observeExpansionCardGridStyle(): Flow<PokemonGridStyle>
 
   enum class Theme(override val storageKey: String) : EnumSetting {
     LIGHT("light"),

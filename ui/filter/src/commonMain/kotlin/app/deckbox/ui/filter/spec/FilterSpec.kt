@@ -6,6 +6,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.SearchFilter
@@ -51,9 +52,9 @@ abstract class FilterSpec {
     item {
       Text(
         text = header,
-        style = MaterialTheme.typography.labelMedium,
-        modifier = Modifier
-          .padding(16.dp),
+        style = MaterialTheme.typography.labelLarge,
+        fontWeight = FontWeight.SemiBold,
+        modifier = Modifier.padding(16.dp),
       )
     }
     block()

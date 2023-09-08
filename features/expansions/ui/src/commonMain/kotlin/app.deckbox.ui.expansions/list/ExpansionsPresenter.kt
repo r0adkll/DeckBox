@@ -15,6 +15,7 @@ import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Expansion
 import app.deckbox.expansions.ExpansionsRepository
+import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.ui.expansions.list.extensions.collectExpansionCardStyle
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -29,6 +30,7 @@ import me.tatarka.inject.annotations.Inject
 class ExpansionsPresenter(
   @Assisted private val navigator: Navigator,
   private val expansionsRepository: ExpansionsRepository,
+  private val cardRepository: CardRepository,
   private val settings: DeckBoxSettings,
 ) : Presenter<ExpansionsUiState> {
 
@@ -79,10 +81,16 @@ class ExpansionsPresenter(
       )
     }
 
+    val hasFavorites by remember {
+      cardRepository.observeFavorites()
+        .map { it.any { it.value } }
+    }.collectAsState(false)
+
     return ExpansionsUiState(
       expansionState = groupedExpansionState,
       expansionCardStyle = expansionCardStyle,
       query = searchQuery,
+      hasFavorites = hasFavorites,
     ) { event ->
       when (event) {
         is ExpansionsUiEvent.ChangeCardStyle -> settings.expansionCardStyle = event.style
@@ -91,6 +99,7 @@ class ExpansionsPresenter(
         }
         is ExpansionsUiEvent.SearchUpdated -> searchQuery = event.query
         ExpansionsUiEvent.SearchCleared -> searchQuery = null
+        ExpansionsUiEvent.FavoritesClick -> navigator.goTo(ExpansionDetailScreen(Expansion.FAVORITES))
       }
     }
   }

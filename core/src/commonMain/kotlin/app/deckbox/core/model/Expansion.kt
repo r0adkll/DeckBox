@@ -20,4 +20,21 @@ data class Expansion(
     val symbol: String,
     val logo: String,
   )
+
+  companion object {
+    const val FAVORITES = "favorites-id"
+
+    val Favorites = Expansion(
+      id = FAVORITES,
+      name = "Favorites",
+      releaseDate = LocalDate(2023, 1, 1),
+      total = 0,
+      series = "",
+      printedTotal = 0,
+      legalities = null,
+      ptcgoCode = null,
+      updatedAt = LocalDateTime(2023, 1, 1, 1, 0, 0, 0),
+      images = Images("", ""),
+    )
+  }
 }

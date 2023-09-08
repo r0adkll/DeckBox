@@ -2,15 +2,18 @@ package app.deckbox.features.cards.ui
 
 import DeckBoxAppBar
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -26,11 +29,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,9 @@ import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.extensions.applyHoloAndDragEffect
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.icons.rounded.SubtractCard
+import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
+import app.deckbox.common.compose.widgets.CardAspectRatio
+import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
@@ -99,10 +104,10 @@ internal fun CardDetail(
       )
     },
     floatingActionButton = {
-      var isFavorited by remember { mutableStateOf(false) }
+      val isFavorited = state.isFavorited
       FloatingActionButton(
         onClick = {
-          isFavorited = !isFavorited
+          state.eventSink(CardDetailUiEvent.Favorite(!isFavorited))
         },
         containerColor = if (isFavorited) {
           MaterialTheme.colorScheme.tertiaryContainer
@@ -130,6 +135,7 @@ internal fun CardDetail(
     ) {
       CardImage(
         url = state.cardImageUrl,
+        loadingContainerColor = state.pokemonCard?.types?.firstOrNull()?.toBackgroundColor() ?: Color.Unspecified,
         contentDescription = state.cardName,
         modifier = Modifier
           .fillMaxWidth()
@@ -171,12 +177,12 @@ internal fun CardDetail(
   }
 }
 
-// TODO: Add better loading state
 @Composable
 private fun CardImage(
   url: String,
   contentDescription: String,
   modifier: Modifier = Modifier,
+  loadingContainerColor: Color = Color.Unspecified,
 ) {
   val imageAction by key(url) { rememberImageAction(url) }
   Box(
@@ -184,15 +190,30 @@ private fun CardImage(
   ) {
     Image(
       painter = rememberImageActionPainter(imageAction),
-      modifier = Modifier.fillMaxWidth(),
       contentDescription = contentDescription,
       contentScale = ContentScale.FillWidth,
+      modifier = Modifier.fillMaxWidth(),
     )
 
     if (imageAction is ImageEvent) {
-      SpinningPokeballLoadingIndicator(
-        modifier = Modifier.align(Alignment.Center),
-      )
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .aspectRatio(CardAspectRatio)
+          .background(
+            color = if (loadingContainerColor == Color.Unspecified) {
+              MaterialTheme.colorScheme.secondaryContainer
+            } else {
+              loadingContainerColor
+            },
+            shape = RoundedCornerShape(32.dp),
+          ),
+      ) {
+        SpinningPokeballLoadingIndicator(
+          size = ContentLoadingSize,
+          modifier = Modifier.align(Alignment.Center),
+        )
+      }
     }
   }
 }

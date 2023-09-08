@@ -25,3 +25,6 @@ kotlin {
 }
 
 addKspDependencyForCommon(projects.di.kotlinInjectMerge)
+dependencies {
+  implementation(libs.firebase.crashlytics.buildtools)
+}

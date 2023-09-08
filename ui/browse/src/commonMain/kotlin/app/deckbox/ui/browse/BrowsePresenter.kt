@@ -12,14 +12,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
+import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.core.model.Stacked
+import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.paging.CardPagingSourceFactory
+import app.deckbox.features.cards.public.paging.CardRemoteMediatorFactory
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.ui.filter.BrowseFilterPresenter
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -42,9 +45,11 @@ class BrowsePresenter(
   @Assisted private val screen: BrowseScreen,
   private val cardRepository: CardRepository,
   private val cardPagingSourceFactory: CardPagingSourceFactory,
+  private val cardRemoteMediatorFactory: CardRemoteMediatorFactory,
   private val deckBuilderRepository: DeckBuilderRepository,
   private val boosterPackRepository: BoosterPackRepository,
   private val filterPresenter: BrowseFilterPresenter,
+  private val settings: DeckBoxSettings,
 ) : Presenter<BrowseUiState> {
 
   private val queryPipeline = MutableSharedFlow<String?>()
@@ -68,7 +73,10 @@ class BrowsePresenter(
         SearchFilter(superTypes = setOf(it))
       } ?: SearchFilter()
     }
-    val filterUiState = filterPresenter.present(initialFilter)
+    val filterUiState = filterPresenter.present(
+      key = screen.hashCode().toString(),
+      initialFilter = initialFilter,
+    )
 
     val query by remember(filterUiState.filter) {
       derivedStateOf {
@@ -89,12 +97,19 @@ class BrowsePresenter(
     }
 
     val pager = remember(query) {
-      createPager { cardPagingSourceFactory.create(query) }
+      createPager(
+        remoteMediatorFactory = { cardRemoteMediatorFactory.create(query) },
+        pagingSourceFactory = { cardPagingSourceFactory.create(query) },
+      )
     }
 
     val countState by remember {
       observeCountState()
     }.collectAsState(null)
+
+    val gridStyle by remember {
+      settings.observeBrowseCardGridStyle()
+    }.collectAsState(PokemonGridStyle.Small)
 
     return BrowseUiState(
       isEditing = screen.deckId != null || screen.packId != null,
@@ -102,6 +117,7 @@ class BrowsePresenter(
       filterUiState = filterUiState,
       cardsPager = pager,
       countState = countState,
+      cardGridStyle = gridStyle,
     ) { event ->
       when (event) {
         BrowseUiEvent.NavigateBack -> navigator.pop()
@@ -139,8 +155,16 @@ class BrowsePresenter(
         }
 
         is BrowseUiEvent.CardLongClicked -> {
-          navigator.goTo(CardDetailScreen(event.card, deckId = screen.deckId))
+          navigator.goTo(
+            CardDetailScreen(
+              card = event.card,
+              deckId = screen.deckId,
+              packId = screen.packId,
+            ),
+          )
         }
+
+        is BrowseUiEvent.GridStyleChanged -> settings.browseCardGridStyle = event.style
       }
     }
   }

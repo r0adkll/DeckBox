@@ -114,4 +114,8 @@ val EnDeckBoxStrings = DeckBoxStrings(
   deckSortOrderCreatedAt = "Created",
   deckSortOrderAlphabetically = "Alphabetically",
   deckSortOrderLegality = "Legality",
+  gridStyleCompact = "Compact",
+  gridStyleSmall = "Small",
+  gridStyleLarge = "Large",
+  favorites = "Favorites",
 )

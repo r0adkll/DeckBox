@@ -1,7 +1,10 @@
 package app.deckbox.features.cards.impl.db
 
+import app.cash.sqldelight.Query
 import app.cash.sqldelight.TransactionCallbacks
 import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOneOrDefault
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
@@ -15,6 +18,7 @@ import app.deckbox.db.mapping.toModel
 import app.deckbox.db.mapping.toStackedEntity
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.sqldelight.Cards
+import app.deckbox.sqldelight.Favorites
 import app.deckbox.sqldelight.GetCardsForBoosterPack
 import app.deckbox.sqldelight.GetCardsForDeck
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
@@ -61,6 +65,33 @@ class SqlDelightCardDao(
     database.transactionWithResult {
       database.cardQueries
         .getByExpansionId(expansionId)
+        .executeAsList()
+        .let(::hydrate)
+    }
+  }
+
+  override suspend fun fetchByRemoteKey(
+    query: String,
+    key: Int,
+    onQuery: (Query<Cards>) -> Unit,
+  ): List<Card> = withContext(dispatcherProvider.databaseRead) {
+    database.transactionWithResult {
+      database.remoteKeyQueries
+        .getCardsForQueryAndKey(query, key)
+        .also(onQuery)
+        .executeAsList()
+        .let(::hydrate)
+    }
+  }
+
+  override suspend fun fetchByRemoteKey(
+    remoteKeyId: Long,
+    onQuery: (Query<Cards>) -> Unit,
+  ): List<Card> = withContext(dispatcherProvider.databaseRead) {
+    database.transactionWithResult {
+      database.remoteKeyQueries
+        .getCardsForRemoteKey(remoteKeyId)
+        .also(onQuery)
         .executeAsList()
         .let(::hydrate)
     }
@@ -138,6 +169,19 @@ class SqlDelightCardDao(
       }
   }
 
+  override fun observeByFavorites(): Flow<List<Card>> {
+    return database.cardFavoriteQueries
+      .getCards()
+      .asFlow()
+      .mapNotNull {
+        withContext(dispatcherProvider.databaseRead) {
+          database.transactionWithResult {
+            it.executeAsList().let(::hydrate)
+          }
+        }
+      }
+  }
+
   override suspend fun insert(card: Card) = withContext(dispatcherProvider.databaseWrite) {
     database.transaction {
       insertCard(card)
@@ -150,6 +194,37 @@ class SqlDelightCardDao(
         insertCard(card)
       }
     }
+  }
+
+  override fun insert(callbacks: TransactionCallbacks, cards: List<Card>) {
+    cards.forEach { card ->
+      callbacks.insertCard(card)
+    }
+  }
+
+  override suspend fun favorite(id: String, value: Boolean) = withContext(dispatcherProvider.databaseWrite) {
+    database.cardFavoriteQueries.favorite(
+      favorited = value,
+      cardId = id,
+    )
+  }
+
+  override fun observeFavorites(): Flow<Map<String, Boolean>> {
+    return database.cardFavoriteQueries
+      .getAll()
+      .asFlow()
+      .mapToList(dispatcherProvider.databaseRead)
+      .map { favorites ->
+        favorites.associateBy({ it.cardId }, { it.favorited })
+      }
+  }
+
+  override fun observeFavorite(id: String): Flow<Boolean> {
+    return database.cardFavoriteQueries
+      .getById(id)
+      .asFlow()
+      .mapToOneOrDefault(Favorites(false, id), dispatcherProvider.databaseRead)
+      .map { it.favorited }
   }
 
   /**

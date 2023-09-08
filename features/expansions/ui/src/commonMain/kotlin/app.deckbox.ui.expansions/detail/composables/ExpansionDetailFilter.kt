@@ -1,5 +1,7 @@
 package app.deckbox.ui.expansions.detail.composables
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FilterAltOff
@@ -15,7 +17,9 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.widgets.GridStyleDropdownIconButton
 import app.deckbox.common.compose.widgets.SearchBarElevation
+import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.ui.filter.CardFilter
 import app.deckbox.ui.filter.FilterUiEvent
 import app.deckbox.ui.filter.FilterUiState
@@ -24,8 +28,11 @@ import app.deckbox.ui.filter.FilterUiState
 @Composable
 internal fun ExpansionDetailFilter(
   state: FilterUiState,
+  cardGridStyle: PokemonGridStyle,
   onClose: () -> Unit,
+  onChangeGridStyle: (PokemonGridStyle) -> Unit,
   modifier: Modifier = Modifier,
+  lazyListState: LazyListState = rememberLazyListState(),
 ) {
   Scaffold(
     topBar = {
@@ -39,7 +46,12 @@ internal fun ExpansionDetailFilter(
           }
         },
         actions = {
+          GridStyleDropdownIconButton(
+            selected = cardGridStyle,
+            onOptionClick = onChangeGridStyle,
+          )
           IconButton(
+            enabled = !state.filter.isEmpty,
             onClick = {
               state.eventSink(FilterUiEvent.ClearFilter)
             },
@@ -57,6 +69,7 @@ internal fun ExpansionDetailFilter(
   ) { paddingValues ->
     CardFilter(
       state = state,
+      lazyListState = lazyListState,
       contentPadding = paddingValues,
     )
   }

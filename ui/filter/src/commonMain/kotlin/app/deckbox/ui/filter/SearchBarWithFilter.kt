@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,12 +51,14 @@ enum class FilterState {
 @Composable
 fun SearchBarWithFilter(
   filterState: FilterState,
+  isFilterEmpty: Boolean,
   onClose: () -> Unit,
   onClear: () -> Unit,
   modifier: Modifier = Modifier,
-  searchBar: @Composable () -> Unit,
-  filterTitle: @Composable () -> Unit,
   filter: @Composable () -> Unit,
+  filterTitle: @Composable () -> Unit,
+  filterActions: @Composable () -> Unit = {},
+  searchBar: @Composable () -> Unit,
 ) {
   Box(
     modifier = modifier,
@@ -116,7 +117,9 @@ fun SearchBarWithFilter(
         }
       },
       trailing = {
+        filterActions()
         IconButton(
+          enabled = !isFilterEmpty,
           onClick = onClear,
         ) {
           Icon(Icons.Rounded.FilterAltOff, contentDescription = null)
@@ -193,9 +196,9 @@ private fun FilterTopBar(
       }
     }
 
-    Box(
-      modifier = Modifier.size(SearchBarHeight),
-      contentAlignment = Alignment.Center,
+    Row(
+      modifier = Modifier.padding(16.dp),
+      verticalAlignment = Alignment.CenterVertically,
     ) {
       CompositionLocalProvider(
         LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,

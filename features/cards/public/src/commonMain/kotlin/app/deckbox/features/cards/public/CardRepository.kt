@@ -10,7 +10,12 @@ interface CardRepository {
   suspend fun getCards(vararg id: String): List<Card>
   suspend fun getCards(ids: List<String>): List<Card>
 
+  suspend fun favorite(id: String, favorited: Boolean)
+  fun observeFavorites(): Flow<Map<String, Boolean>>
+  fun observeFavorite(id: String): Flow<Boolean>
+
   fun observeCards(ids: List<String>): Flow<List<Card>>
   fun observeCardsForDeck(deckId: String): Flow<List<Stacked<Card>>>
   fun observeCardsForBoosterPack(packId: String): Flow<List<Stacked<Card>>>
+  fun observeCardsForFavorites(): Flow<List<Card>>
 }

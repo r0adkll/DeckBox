@@ -41,29 +41,35 @@ const val CardAspectRatio = 0.7167969f
 
 @Composable
 fun PokemonCard(
-  card: Card,
+  card: Card?,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   onLongClick: () -> Unit = {},
   count: Int? = null,
   collected: Int? = null,
 ) {
-  val imageAction by key(card.id) {
-    rememberImageAction(card.image.small)
-  }
-
   TradingCard(
     onClick = onClick,
     onLongClick = onLongClick,
     modifier = modifier,
   ) {
-    Image(
-      painter = rememberImageActionPainter(imageAction),
-      contentDescription = card.name,
-      modifier = Modifier.fillMaxSize(),
-    )
+    val isLoading = if (card != null) {
+      val imageAction by key(card.id) {
+        rememberImageAction(card.image.small)
+      }
 
-    if (imageAction is ImageEvent) {
+      Image(
+        painter = rememberImageActionPainter(imageAction),
+        contentDescription = card.name,
+        modifier = Modifier.fillMaxSize(),
+      )
+
+      imageAction is ImageEvent
+    } else {
+      true
+    }
+
+    if (isLoading) {
       val transition = rememberInfiniteTransition()
 
       val alpha by transition.animateFloat(

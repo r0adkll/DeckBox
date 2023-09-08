@@ -30,12 +30,14 @@ import app.deckbox.common.compose.widgets.AdaptiveExpandedThreshold
 import app.deckbox.common.compose.widgets.CardCounts
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.FilterIcon
+import app.deckbox.common.compose.widgets.GridStyleDropdownIconButton
 import app.deckbox.common.compose.widgets.PokemonCardGrid
 import app.deckbox.common.compose.widgets.SearchBar
 import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.compose.widgets.SearchEmptyView
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.settings.columnsForStyles
 import app.deckbox.ui.filter.CardFilter
 import app.deckbox.ui.filter.FilterState
 import app.deckbox.ui.filter.FilterUiEvent
@@ -65,6 +67,7 @@ internal fun Browse(
 
       SearchBarWithFilter(
         filterState = filterState,
+        isFilterEmpty = state.filterUiState.filter.isEmpty,
         onClose = { filterState = FilterState.HIDDEN },
         onClear = { state.filterUiState.eventSink(FilterUiEvent.ClearFilter) },
         searchBar = {
@@ -113,6 +116,12 @@ internal fun Browse(
           )
         },
         filterTitle = { Text("Filter") },
+        filterActions = {
+          GridStyleDropdownIconButton(
+            selected = state.cardGridStyle,
+            onOptionClick = { newStyle -> state.eventSink(BrowseUiEvent.GridStyleChanged(newStyle)) },
+          )
+        },
         filter = {
           CardFilter(
             state = state.filterUiState,
@@ -131,7 +140,7 @@ internal fun Browse(
         }
       }
 
-      val numColumns = if (maxWidth > AdaptiveExpandedThreshold) 6 else 4
+      val numColumns = state.cardGridStyle.columnsForStyles(isLarge = maxWidth > AdaptiveExpandedThreshold)
       PokemonCardGrid(
         cardPager = state.cardsPager,
         onClick = { card ->

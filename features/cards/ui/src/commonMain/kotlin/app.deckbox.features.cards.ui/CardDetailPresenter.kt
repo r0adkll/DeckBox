@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.coroutines.LoadState
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
@@ -35,6 +37,8 @@ class CardDetailPresenter(
 
   @Composable
   override fun present(): CardDetailUiState {
+    val coroutineScope = rememberCoroutineScope()
+
     val cardLoadState by loadCard(screen.cardId)
 
     // If we have passed a deck session id, then we should observe
@@ -45,11 +49,16 @@ class CardDetailPresenter(
 
     // TODO Load additional card information such as evolution info, similar cards, etc
 
+    val isFavorited by remember {
+      repository.observeFavorite(screen.cardId)
+    }.collectAsState(false)
+
     return CardDetailUiState(
       cardName = screen.cardName,
       cardImageUrl = screen.cardImageLarge,
       card = cardLoadState,
       deckState = deckState,
+      isFavorited = isFavorited,
     ) { event ->
       when (event) {
         CardDetailUiEvent.NavigateBack -> navigator.pop()
@@ -68,6 +77,12 @@ class CardDetailPresenter(
           }
           screen.packId?.let { packId ->
             boosterPackRepository.incrementCard(packId, screen.cardId)
+          }
+        }
+
+        is CardDetailUiEvent.Favorite -> {
+          coroutineScope.launch {
+            repository.favorite(screen.cardId, event.value)
           }
         }
       }

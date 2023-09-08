@@ -1,16 +1,23 @@
 package app.deckbox.ui.filter.spec
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +35,9 @@ import app.deckbox.core.model.RangeValue
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.ui.filter.FilterUiEvent
 import app.deckbox.ui.filter.FilterUiState
+import app.deckbox.ui.filter.widgets.RangeModifierSelector
+import app.deckbox.ui.filter.widgets.Thumb
+import app.deckbox.ui.filter.widgets.Track
 import cafe.adriel.lyricist.LocalStrings
 import kotlin.math.roundToInt
 
@@ -75,6 +85,7 @@ abstract class SliderFilterSpec : FilterSpec() {
     )
   }
 
+  @OptIn(ExperimentalMaterial3Api::class)
   override fun LazyListScope.buildContent(
     uiState: FilterUiState,
     actionEmitter: (FilterUiEvent) -> Unit,
@@ -83,56 +94,96 @@ abstract class SliderFilterSpec : FilterSpec() {
       val value = mapValue(uiState.filter)
       var sliderValue by remember { mutableStateOf(value.value.toFloat()) }
       var modifierValue by remember { mutableStateOf(value.modifier) }
+
+      LaunchedEffect(uiState.filter) {
+        if (uiState.filter.isEmpty && (sliderValue != 0f || modifierValue != RangeValue.Modifier.NONE)) {
+          sliderValue = 0f
+          modifierValue = RangeValue.Modifier.NONE
+        }
+      }
+
+      val sendEvent: () -> Unit = {
+        actionEmitter(
+          FilterUiEvent.FilterChange(
+            SliderFilterAction(
+              value = RangeValue(
+                value = sliderValue.roundToInt(),
+                modifier = modifierValue,
+              ),
+              applicator = { newValue ->
+                applyValue(uiState.filter, newValue)
+              },
+            ),
+          ),
+        )
+      }
+
+      LaunchedEffect(modifierValue) {
+        sendEvent()
+      }
+
       Row { LabelContent(RangeValue(sliderValue.roundToInt(), modifierValue)) }
+
+      val interactionSource = remember { MutableInteractionSource() }
       Slider(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+        interactionSource = interactionSource,
         value = sliderValue,
         valueRange = range,
         onValueChange = { newValue ->
           sliderValue = newValue
         },
-        onValueChangeFinished = {
-          actionEmitter(
-            FilterUiEvent.FilterChange(
-              SliderFilterAction(
-                value = RangeValue(
-                  value = sliderValue.roundToInt(),
-                  modifier = modifierValue,
-                ),
-                applicator = { newValue ->
-                  applyValue(uiState.filter, newValue)
-                },
-              ),
-            ),
+        onValueChangeFinished = sendEvent,
+        track = { positions ->
+          Track(
+            sliderPositions = positions,
+          )
+        },
+        thumb = { _ ->
+          Thumb(
+            interactionSource = interactionSource,
           )
         },
       )
-      Row(Modifier.padding(horizontal = 12.dp)) {
-        ModifierIconButton(
-          modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
-          rangeModifier = RangeValue.Modifier.LT,
-          getter = { modifierValue },
-          setter = { modifierValue = it },
-        )
-        ModifierIconButton(
-          modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
-          rangeModifier = RangeValue.Modifier.LTE,
-          getter = { modifierValue },
-          setter = { modifierValue = it },
-        )
-        ModifierIconButton(
-          modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
-          rangeModifier = RangeValue.Modifier.GT,
-          getter = { modifierValue },
-          setter = { modifierValue = it },
-        )
-        ModifierIconButton(
-          modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
-          rangeModifier = RangeValue.Modifier.GTE,
-          getter = { modifierValue },
-          setter = { modifierValue = it },
-        )
-      }
+
+      Spacer(Modifier.height(8.dp))
+
+      RangeModifierSelector(
+        value = modifierValue,
+        onValueSelected = { modifierValue = it },
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 16.dp),
+      )
+
+      Spacer(Modifier.height(16.dp))
+
+//      Row(Modifier.padding(horizontal = 12.dp)) {
+//        ModifierIconButton(
+//          modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
+//          rangeModifier = RangeValue.Modifier.LT,
+//          getter = { modifierValue },
+//          setter = { modifierValue = it },
+//        )
+//        ModifierIconButton(
+//          modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
+//          rangeModifier = RangeValue.Modifier.LTE,
+//          getter = { modifierValue },
+//          setter = { modifierValue = it },
+//        )
+//        ModifierIconButton(
+//          modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
+//          rangeModifier = RangeValue.Modifier.GT,
+//          getter = { modifierValue },
+//          setter = { modifierValue = it },
+//        )
+//        ModifierIconButton(
+//          modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
+//          rangeModifier = RangeValue.Modifier.GTE,
+//          getter = { modifierValue },
+//          setter = { modifierValue = it },
+//        )
+//      }
     }
   }
 }
@@ -164,7 +215,11 @@ private fun ModifierIconButton(
         RangeValue.Modifier.NONE -> throw IllegalStateException("Can't use that modifier for a button")
       },
       contentDescription = null,
-      modifier = Modifier.alpha(if (isSelected) 1f else 0.26f),
+      tint = if (isSelected) {
+        MaterialTheme.colorScheme.secondary
+      } else {
+        LocalContentColor.current.copy(alpha = 0.38f)
+      },
     )
   }
 }

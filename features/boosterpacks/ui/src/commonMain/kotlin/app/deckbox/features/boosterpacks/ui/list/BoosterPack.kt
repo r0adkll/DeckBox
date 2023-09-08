@@ -36,6 +36,7 @@ import app.deckbox.common.compose.icons.rounded.NewBoosterPack
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
+import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.SortChip
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
@@ -135,7 +136,7 @@ fun BoosterPack(
 
     if (state.packState is BoosterPackLoadState.Loading) {
       Box(Modifier.fillMaxSize()) {
-        SpinningPokeballLoadingIndicator(size = 82.dp)
+        SpinningPokeballLoadingIndicator(size = ContentLoadingSize)
       }
     } else if (state.packState is BoosterPackLoadState.Error) {
       DefaultEmptyView()

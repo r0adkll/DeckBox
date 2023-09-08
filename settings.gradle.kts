@@ -57,6 +57,7 @@ include(
 include(
   ":ui:browse",
   ":ui:filter",
+  ":ui:settings",
 )
 include(
   ":di:kotlin-inject-merge",

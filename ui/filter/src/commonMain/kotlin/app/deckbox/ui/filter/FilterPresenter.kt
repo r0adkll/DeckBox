@@ -6,9 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import app.deckbox.common.compose.saver.SearchFilterSaver
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Format
 import app.deckbox.core.model.SearchFilter
@@ -24,6 +22,7 @@ import app.deckbox.ui.filter.spec.HpFilterSpec
 import app.deckbox.ui.filter.spec.RarityFilterSpec
 import app.deckbox.ui.filter.spec.RetreatCostFilterSpec
 import app.deckbox.ui.filter.spec.TypeFilterSpec
+import app.deckbox.ui.filter.state.rememberSearchFilter
 import kotlinx.coroutines.flow.flow
 import me.tatarka.inject.annotations.Inject
 
@@ -70,7 +69,10 @@ open class FilterPresenter(
 ) {
 
   @Composable
-  fun present(initialFilter: SearchFilter = SearchFilter()): FilterUiState {
+  fun present(
+    key: String,
+    initialFilter: SearchFilter = SearchFilter(),
+  ): FilterUiState {
     val fetchExpansions by rememberUpdatedState(getExpansions)
     val expansions by remember(fetchExpansions) {
       flow { emit(fetchExpansions()) }
@@ -88,7 +90,10 @@ open class FilterPresenter(
 
     var visibleFormat by remember { mutableStateOf(Format.STANDARD) }
 
-    var filter by rememberSaveable(stateSaver = SearchFilterSaver) { mutableStateOf(initialFilter) }
+    var filter by rememberSearchFilter(
+      key = key,
+      initial = initialFilter,
+    )
 
     return FilterUiState(
       specs = specs,
@@ -99,7 +104,9 @@ open class FilterPresenter(
       filter = filter,
     ) { event ->
       when (event) {
-        FilterUiEvent.ClearFilter -> filter = SearchFilter()
+        FilterUiEvent.ClearFilter -> {
+          filter = SearchFilter()
+        }
         is FilterUiEvent.FilterChange -> {
           filter = event.action.applyToFilter(expansions, filter)
         }

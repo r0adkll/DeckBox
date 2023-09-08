@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.widgets.ContentLoadingSize
+import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.ui.expansions.list.ExpansionSeries
@@ -30,8 +31,10 @@ import cafe.adriel.lyricist.LocalStrings
 @Composable
 internal fun ExpansionsContent(
   expansionState: ExpansionState,
+  hasFavorites: Boolean,
   style: ExpansionCardStyle,
   onClick: (Expansion) -> Unit,
+  onFavoritesClick: () -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(),
 ) {
@@ -43,8 +46,10 @@ internal fun ExpansionsContent(
     } else {
       ExpansionsContent(
         expansions = expansionState.groupedExpansions,
+        hasFavorites = hasFavorites,
         style = style,
         onClick = onClick,
+        onFavoritesClick = onFavoritesClick,
         modifier = modifier,
         contentPadding = contentPadding,
       )
@@ -78,7 +83,9 @@ private fun LoadingContent(
     modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
   ) {
-    CircularProgressIndicator()
+    SpinningPokeballLoadingIndicator(
+      size = ContentLoadingSize,
+    )
   }
 }
 
@@ -106,8 +113,10 @@ private fun ErrorContent(
 @Composable
 private fun ExpansionsContent(
   expansions: List<ExpansionSeries>,
+  hasFavorites: Boolean,
   style: ExpansionCardStyle,
   onClick: (Expansion) -> Unit,
+  onFavoritesClick: () -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(),
 ) {
@@ -116,6 +125,14 @@ private fun ExpansionsContent(
     contentPadding = contentPadding,
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
+    if (hasFavorites) {
+      item {
+        FavoritesCard(
+          onClick = onFavoritesClick,
+        )
+      }
+    }
+
     expansions.forEach { (series, expansions) ->
       item {
         Text(

@@ -18,7 +18,7 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 @AppScope
-@ContributesBinding(MergeAppScope::class)
+//@ContributesBinding(MergeAppScope::class)
 class NetworkCardPagingSourceFactory(
   private val api: PokemonTcgApi,
   private val db: CardDao,

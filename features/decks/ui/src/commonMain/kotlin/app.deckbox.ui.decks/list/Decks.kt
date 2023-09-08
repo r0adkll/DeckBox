@@ -30,9 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.extensions.plus
+import app.deckbox.common.compose.icons.rounded.Import
 import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
+import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.core.di.MergeActivityScope
@@ -66,6 +68,11 @@ internal fun Decks(
         DeckBoxRootAppBar(
           title = LocalStrings.current.decks,
           actions = {
+            IconButton(
+              onClick = { },
+            ) {
+              Icon(Icons.Rounded.Import, contentDescription = null)
+            }
             IconButton(
               onClick = { state.eventSink(DecksUiEvent.OpenAppSettings) },
             ) {
@@ -109,7 +116,7 @@ internal fun Decks(
 
     if (state.isLoading) {
       Box(Modifier.fillMaxSize()) {
-        SpinningPokeballLoadingIndicator(size = 82.dp)
+        SpinningPokeballLoadingIndicator(size = ContentLoadingSize)
       }
     } else if (state.decks.isEmpty()) {
       WelcomeTips(
