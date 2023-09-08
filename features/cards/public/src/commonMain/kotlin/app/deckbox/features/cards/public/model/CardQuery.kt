@@ -116,6 +116,7 @@ fun StringBuilder.appendRange(
   field: String,
   rangeValue: RangeValue,
 ) {
+  if (rangeValue.isEmpty) return
   val value = when (rangeValue.modifier) {
     RangeValue.Modifier.LT -> append("{* TO ${rangeValue.value}}")
     RangeValue.Modifier.LTE -> append("[* TO ${rangeValue.value}]")

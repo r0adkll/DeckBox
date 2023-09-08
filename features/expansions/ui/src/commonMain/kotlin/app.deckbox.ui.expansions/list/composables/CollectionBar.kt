@@ -1,6 +1,7 @@
 package app.deckbox.ui.expansions.list.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
@@ -22,13 +24,19 @@ internal fun CollectionBar(
   printedTotal: Int,
   modifier: Modifier = Modifier,
 ) {
+  val shape = RoundedCornerShape(50)
   // Progress Bar
   BoxWithConstraints(
     modifier = modifier
       .padding(top = 8.dp)
       .background(
         color = MaterialTheme.colorScheme.surface,
-        shape = RoundedCornerShape(50),
+        shape = shape,
+      )
+      .border(
+        width = 1.dp,
+        color = MaterialTheme.colorScheme.onSurface.copy(0.38f),
+        shape = shape,
       )
       .fillMaxWidth()
       .height(24.dp),
@@ -39,7 +47,12 @@ internal fun CollectionBar(
       modifier = Modifier
         .background(
           color = MaterialTheme.colorScheme.secondaryContainer,
-          shape = RoundedCornerShape(50),
+          shape = shape,
+        )
+        .border(
+          width = 1.dp,
+          color = MaterialTheme.colorScheme.secondary,
+          shape = shape,
         )
         .size(
           width = progressWidth,
@@ -50,6 +63,8 @@ internal fun CollectionBar(
         Text(
           text = "${progress.times(100).roundToInt()}%",
           style = MaterialTheme.typography.labelSmall,
+          color = MaterialTheme.colorScheme.onSecondaryContainer,
+          fontWeight = FontWeight.SemiBold,
           modifier = Modifier
             .align(Alignment.CenterEnd)
             .padding(end = 8.dp),

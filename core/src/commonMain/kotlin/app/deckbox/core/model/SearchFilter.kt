@@ -86,6 +86,7 @@ data class RangeValue(
   val isEmpty: Boolean get() = value == 0 && modifier == Modifier.NONE
 
   fun matches(amount: Int): Boolean {
+    if (isEmpty) return true
     return when (modifier) {
       Modifier.LT -> amount < value
       Modifier.LTE -> amount <= value

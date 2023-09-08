@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.widgets.ContentLoadingSize
+import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.ui.expansions.list.ExpansionSeries
@@ -82,7 +84,9 @@ private fun LoadingContent(
     modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
   ) {
-    CircularProgressIndicator()
+    SpinningPokeballLoadingIndicator(
+      size = ContentLoadingSize,
+    )
   }
 }
 

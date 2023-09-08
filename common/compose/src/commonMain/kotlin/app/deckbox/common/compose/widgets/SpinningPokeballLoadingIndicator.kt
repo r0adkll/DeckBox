@@ -22,6 +22,8 @@ import app.deckbox.common.compose.icons.MasterBall
 import app.deckbox.common.compose.icons.PokeBall
 import app.deckbox.common.compose.icons.UltraBall
 
+val ContentLoadingSize = 88.dp
+
 @Composable
 fun SpinningPokeballLoadingIndicator(
   modifier: Modifier = Modifier,

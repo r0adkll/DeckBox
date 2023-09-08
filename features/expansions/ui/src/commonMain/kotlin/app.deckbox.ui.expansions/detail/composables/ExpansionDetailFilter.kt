@@ -1,5 +1,7 @@
 package app.deckbox.ui.expansions.detail.composables
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FilterAltOff
@@ -30,6 +32,7 @@ internal fun ExpansionDetailFilter(
   onClose: () -> Unit,
   onChangeGridStyle: (PokemonGridStyle) -> Unit,
   modifier: Modifier = Modifier,
+  lazyListState: LazyListState = rememberLazyListState(),
 ) {
   Scaffold(
     topBar = {
@@ -66,6 +69,7 @@ internal fun ExpansionDetailFilter(
   ) { paddingValues ->
     CardFilter(
       state = state,
+      lazyListState = lazyListState,
       contentPadding = paddingValues,
     )
   }

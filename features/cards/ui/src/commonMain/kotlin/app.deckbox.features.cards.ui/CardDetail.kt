@@ -46,6 +46,7 @@ import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.icons.rounded.SubtractCard
 import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
 import app.deckbox.common.compose.widgets.CardAspectRatio
+import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.core.di.MergeActivityScope
@@ -213,7 +214,7 @@ private fun CardImage(
           ),
       ) {
         SpinningPokeballLoadingIndicator(
-          size = 88.dp,
+          size = ContentLoadingSize,
           modifier = Modifier.align(Alignment.Center),
         )
       }

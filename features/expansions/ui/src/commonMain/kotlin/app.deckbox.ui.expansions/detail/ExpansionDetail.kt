@@ -9,6 +9,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -90,6 +91,7 @@ internal fun ExpansionDetail(
     }
   }
 
+  val filterLazyListState = rememberLazyListState()
   if (state is ExpansionDetailUiState.Loaded) {
     AnimatedVisibility(
       visible = isFilterVisible,
@@ -102,6 +104,7 @@ internal fun ExpansionDetail(
     ) {
       ExpansionDetailFilter(
         state = state.filterState,
+        lazyListState = filterLazyListState,
         cardGridStyle = state.cardGridStyle,
         onClose = { isFilterVisible = false },
         onChangeGridStyle = { state.eventSink(ChangeGridStyle(it)) }

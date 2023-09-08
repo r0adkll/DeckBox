@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.Booster
 import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.EmptyView
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
@@ -80,7 +81,7 @@ private fun LoadingContent(
     contentAlignment = Alignment.Center,
   ) {
     SpinningPokeballLoadingIndicator(
-      size = 64.dp,
+      size = ContentLoadingSize,
     )
   }
 }
