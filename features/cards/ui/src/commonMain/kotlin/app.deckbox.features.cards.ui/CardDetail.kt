@@ -42,7 +42,6 @@ import app.deckbox.common.compose.extensions.applyHoloAndDragEffect
 import app.deckbox.common.compose.icons.Bulbasaur
 import app.deckbox.common.compose.icons.Charmander
 import app.deckbox.common.compose.icons.DeckBoxIcons
-import app.deckbox.common.compose.icons.Snorlax
 import app.deckbox.common.compose.icons.Squirtle
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.icons.rounded.SubtractCard
@@ -190,13 +189,12 @@ internal fun CardDetail(
         errorLabel = { Text(LocalStrings.current.similarCardsErrorLabel) },
         emptyLabel = { Text(LocalStrings.current.similarCardsEmptyLabel) },
         emptyImage = DeckBoxIcons.Charmander,
-        onCardClick = { state.eventSink(CardClick(it)) }
+        onCardClick = { state.eventSink(CardClick(it)) },
       )
 
       Spacer(Modifier.height(16.dp))
 
       if (state.pokemonCard?.supertype == SuperType.POKEMON) {
-
         if (state.pokemonCard?.subtypes?.contains("Basic") != true) {
           RelatedCards(
             loadState = state.evolvesFrom,
@@ -204,7 +202,7 @@ internal fun CardDetail(
             errorLabel = { Text(LocalStrings.current.evolvesFromErrorLabel) },
             emptyLabel = { Text(LocalStrings.current.evolvesFromEmptyLabel) },
             emptyImage = DeckBoxIcons.Squirtle,
-            onCardClick = { state.eventSink(CardClick(it)) }
+            onCardClick = { state.eventSink(CardClick(it)) },
           )
 
           Spacer(Modifier.height(16.dp))
@@ -216,7 +214,7 @@ internal fun CardDetail(
           errorLabel = { Text(LocalStrings.current.evolvesToErrorLabel) },
           emptyLabel = { Text(LocalStrings.current.evolvesToEmptyLabel) },
           emptyImage = DeckBoxIcons.Bulbasaur,
-          onCardClick = { state.eventSink(CardClick(it)) }
+          onCardClick = { state.eventSink(CardClick(it)) },
         )
       }
 

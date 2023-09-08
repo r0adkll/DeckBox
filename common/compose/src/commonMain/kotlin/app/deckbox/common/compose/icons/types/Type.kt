@@ -70,7 +70,7 @@ fun OverlappingTypeRow(
         } else {
           acc + (placeable.width * (1f - overlap)).roundToInt()
         }
-      }
+      },
     )
     val height = placeables.maxBy { it.height }.height
 

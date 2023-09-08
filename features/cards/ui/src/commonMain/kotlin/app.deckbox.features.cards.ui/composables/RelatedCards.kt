@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.DeckBoxIcons
-import app.deckbox.common.compose.icons.Snorlax
 import app.deckbox.common.compose.widgets.PokemonCard
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.core.coroutines.LoadState

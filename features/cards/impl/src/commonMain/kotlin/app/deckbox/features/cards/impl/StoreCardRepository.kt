@@ -3,7 +3,6 @@ package app.deckbox.features.cards.impl
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
-import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Stacked
 import app.deckbox.features.cards.impl.db.CardDao
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import me.tatarka.inject.annotations.Inject
 import org.mobilenativefoundation.store.store5.Fetcher

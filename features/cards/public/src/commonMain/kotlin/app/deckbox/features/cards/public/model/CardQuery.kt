@@ -14,7 +14,7 @@ data class CardQuery(
   val page: Int = 1,
   val pageSize: Int = MAX_PAGE_SIZE,
   val filter: SearchFilter? = null,
-  val queryOverride: String? = null
+  val queryOverride: String? = null,
 ) {
 
   /**

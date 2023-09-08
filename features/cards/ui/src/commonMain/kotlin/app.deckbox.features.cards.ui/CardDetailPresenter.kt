@@ -6,12 +6,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.core.model.SuperType
@@ -105,7 +103,7 @@ class CardDetailPresenter(
               card = event.card,
               deckId = screen.deckId,
               packId = screen.packId,
-            )
+            ),
           )
         }
       }
@@ -131,7 +129,7 @@ class CardDetailPresenter(
       val cleanName = card.name.replace(CleanNameRegex, "")
       CardQuery(
         orderBy = OrderByReleaseDate,
-        queryOverride = "name:\"$cleanName\" -id:${card.id}"
+        queryOverride = "name:\"$cleanName\" -id:${card.id}",
       )
     }
   }
@@ -159,7 +157,7 @@ class CardDetailPresenter(
         orderBy = OrderByReleaseDate,
         filter = SearchFilter(
           evolvesFrom = card.name,
-        )
+        ),
       )
     }
   }
