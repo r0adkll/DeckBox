@@ -35,7 +35,6 @@ import app.deckbox.core.model.RangeValue
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.ui.filter.FilterUiEvent
 import app.deckbox.ui.filter.FilterUiState
-import app.deckbox.ui.filter.widgets.DeckBoxSliderColors
 import app.deckbox.ui.filter.widgets.RangeModifierSelector
 import app.deckbox.ui.filter.widgets.Thumb
 import app.deckbox.ui.filter.widgets.Track
@@ -127,7 +126,7 @@ abstract class SliderFilterSpec : FilterSpec() {
 
       val interactionSource = remember { MutableInteractionSource() }
       Slider(
-        modifier = Modifier.padding(start = 20.dp, end = 20.dp, ),
+        modifier = Modifier.padding(start = 20.dp, end = 20.dp),
         interactionSource = interactionSource,
         value = sliderValue,
         valueRange = range,
@@ -144,7 +143,7 @@ abstract class SliderFilterSpec : FilterSpec() {
           Thumb(
             interactionSource = interactionSource,
           )
-        }
+        },
       )
 
       Spacer(Modifier.height(8.dp))
@@ -154,7 +153,7 @@ abstract class SliderFilterSpec : FilterSpec() {
         onValueSelected = { modifierValue = it },
         modifier = Modifier
           .fillMaxWidth()
-          .padding(horizontal = 16.dp)
+          .padding(horizontal = 16.dp),
       )
 
       Spacer(Modifier.height(16.dp))
@@ -220,7 +219,7 @@ private fun ModifierIconButton(
         MaterialTheme.colorScheme.secondary
       } else {
         LocalContentColor.current.copy(alpha = 0.38f)
-      }
+      },
     )
   }
 }

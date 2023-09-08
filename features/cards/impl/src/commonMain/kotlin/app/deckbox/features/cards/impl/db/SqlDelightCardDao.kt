@@ -1,11 +1,9 @@
 package app.deckbox.features.cards.impl.db
 
 import app.cash.sqldelight.Query
-import app.cash.sqldelight.Transacter
 import app.cash.sqldelight.TransactionCallbacks
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import app.cash.sqldelight.coroutines.mapToOne
 import app.cash.sqldelight.coroutines.mapToOneOrDefault
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
@@ -204,7 +202,7 @@ class SqlDelightCardDao(
     }
   }
 
-  override suspend fun favorite(id: String, value: Boolean) = withContext(dispatcherProvider.databaseWrite){
+  override suspend fun favorite(id: String, value: Boolean) = withContext(dispatcherProvider.databaseWrite) {
     database.cardFavoriteQueries.favorite(
       favorited = value,
       cardId = id,

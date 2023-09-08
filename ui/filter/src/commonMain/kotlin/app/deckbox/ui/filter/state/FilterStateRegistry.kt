@@ -30,7 +30,7 @@ class FilterStateRegistry {
 fun rememberSearchFilter(
   key: String,
   initial: SearchFilter = SearchFilter(),
-) : MutableState<SearchFilter> {
+): MutableState<SearchFilter> {
   val registry = LocalFilterStateRegistry.current
 
   val state = remember(key) { mutableStateOf(registry.getState(key, initial)) }

@@ -107,7 +107,7 @@ internal fun ExpansionDetail(
         lazyListState = filterLazyListState,
         cardGridStyle = state.cardGridStyle,
         onClose = { isFilterVisible = false },
-        onChangeGridStyle = { state.eventSink(ChangeGridStyle(it)) }
+        onChangeGridStyle = { state.eventSink(ChangeGridStyle(it)) },
       )
     }
   }

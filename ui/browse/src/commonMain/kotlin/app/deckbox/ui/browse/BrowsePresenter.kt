@@ -75,7 +75,7 @@ class BrowsePresenter(
     }
     val filterUiState = filterPresenter.present(
       key = screen.hashCode().toString(),
-      initialFilter = initialFilter
+      initialFilter = initialFilter,
     )
 
     val query by remember(filterUiState.filter) {
@@ -155,11 +155,13 @@ class BrowsePresenter(
         }
 
         is BrowseUiEvent.CardLongClicked -> {
-          navigator.goTo(CardDetailScreen(
-            card = event.card,
-            deckId = screen.deckId,
-            packId = screen.packId,
-          ))
+          navigator.goTo(
+            CardDetailScreen(
+              card = event.card,
+              deckId = screen.deckId,
+              packId = screen.packId,
+            ),
+          )
         }
 
         is BrowseUiEvent.GridStyleChanged -> settings.browseCardGridStyle = event.style

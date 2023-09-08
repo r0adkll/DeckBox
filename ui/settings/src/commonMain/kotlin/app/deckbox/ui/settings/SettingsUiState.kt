@@ -7,6 +7,4 @@ data class SettingsUiState(
   val eventSink: (SettingsUiEvent) -> Unit,
 ) : CircuitUiState
 
-sealed interface SettingsUiEvent {
-
-}
+sealed interface SettingsUiEvent

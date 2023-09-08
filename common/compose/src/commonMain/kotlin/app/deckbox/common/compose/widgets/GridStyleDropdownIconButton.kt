@@ -29,7 +29,7 @@ fun GridStyleDropdownIconButton(
           PokemonGridStyle.Large -> LocalStrings.current.gridStyleLarge
           PokemonGridStyle.Small -> LocalStrings.current.gridStyleSmall
           PokemonGridStyle.Compact -> LocalStrings.current.gridStyleCompact
-        }
+        },
       )
     },
     optionIcon = { option ->
@@ -39,7 +39,7 @@ fun GridStyleDropdownIconButton(
           PokemonGridStyle.Small -> Icons.Rounded.Grid4x4
           PokemonGridStyle.Compact -> Icons.Rounded.ViewCompact
         },
-        contentDescription = null
+        contentDescription = null,
       )
     },
     modifier = modifier,

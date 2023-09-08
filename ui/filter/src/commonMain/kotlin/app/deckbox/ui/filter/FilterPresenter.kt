@@ -6,9 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import app.deckbox.common.compose.saver.SearchFilterSaver
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Format
 import app.deckbox.core.model.SearchFilter

@@ -27,7 +27,7 @@ internal fun Header(
       .padding(
         horizontal = 16.dp,
         vertical = 8.dp,
-      )
+      ),
   )
 }
 

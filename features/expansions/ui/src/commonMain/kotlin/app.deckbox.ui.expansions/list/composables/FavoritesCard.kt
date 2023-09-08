@@ -2,7 +2,6 @@ package app.deckbox.ui.expansions.list.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
@@ -37,12 +36,12 @@ fun FavoritesCard(
       leading = {
         Box(
           modifier = Modifier,
-          contentAlignment = Alignment.Center
+          contentAlignment = Alignment.Center,
         ) {
           Icon(
             Icons.Rounded.Favorite,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.tertiary
+            tint = MaterialTheme.colorScheme.tertiary,
           )
         }
       },

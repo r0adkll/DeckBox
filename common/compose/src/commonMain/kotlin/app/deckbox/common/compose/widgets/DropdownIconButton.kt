@@ -8,7 +8,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,7 +59,9 @@ fun <T> DropdownIconButton(
                 contentDescription = null,
               )
             }
-          } else null,
+          } else {
+            null
+          },
           onClick = {
             isExpanded = false
             onOptionClick(option)

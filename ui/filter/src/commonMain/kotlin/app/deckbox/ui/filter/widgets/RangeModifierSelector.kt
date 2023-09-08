@@ -5,12 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -80,10 +78,9 @@ private fun VerticalDivider(
     modifier
       .fillMaxHeight()
       .width(1.dp)
-      .background(color = MaterialTheme.colorScheme.outline)
+      .background(color = MaterialTheme.colorScheme.outline),
   )
 }
-
 
 @Composable
 fun RangeModifierButton(
@@ -100,7 +97,7 @@ fun RangeModifierButton(
           MaterialTheme.colorScheme.secondaryContainer
         } else {
           Color.Transparent
-        }
+        },
       ),
     onClick = {
       if (isSelected) {
@@ -123,7 +120,7 @@ fun RangeModifierButton(
         MaterialTheme.colorScheme.secondary
       } else {
         LocalContentColor.current.copy(alpha = 0.38f)
-      }
+      },
     )
   }
 }

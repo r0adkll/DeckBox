@@ -19,11 +19,9 @@ class SettingsPresenter(
 
   @Composable
   override fun present(): SettingsUiState {
-
     return SettingsUiState(
-      options = ""
+      options = "",
     ) {
-
     }
   }
 }

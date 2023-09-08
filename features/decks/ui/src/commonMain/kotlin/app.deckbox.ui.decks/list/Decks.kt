@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -70,7 +69,7 @@ internal fun Decks(
           title = LocalStrings.current.decks,
           actions = {
             IconButton(
-              onClick = {  },
+              onClick = { },
             ) {
               Icon(Icons.Rounded.Import, contentDescription = null)
             }

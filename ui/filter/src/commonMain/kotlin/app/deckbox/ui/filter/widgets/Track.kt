@@ -110,7 +110,6 @@ class DeckBoxSliderColors(
   }
 }
 
-
 @Composable
 fun Track(
   sliderPositions: SliderPositions,

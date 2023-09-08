@@ -10,7 +10,6 @@ import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
-import app.deckbox.core.logging.LogPriority
 import app.deckbox.core.logging.LogPriority.ERROR
 import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
@@ -19,7 +18,6 @@ import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.paging.CardRemoteMediator
 import app.deckbox.features.cards.public.paging.CardRemoteMediatorFactory
 import app.deckbox.network.PokemonTcgApi
-import app.deckbox.sqldelight.RemoteKey
 import app.deckbox.sqldelight.RemoteKeyCardJoin
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.withContext
@@ -66,7 +64,7 @@ class DatabaseCardRemoteMediator(
 
           if (latestKey.nextKey == null) {
             return RemoteMediatorMediatorResultSuccess(
-              endOfPaginationReached = true
+              endOfPaginationReached = true,
             ) as RemoteMediatorMediatorResult
           }
 
@@ -82,7 +80,7 @@ class DatabaseCardRemoteMediator(
         api.getCards(
           query.copy(
             page = loadKey,
-          ).asQueryOptions()
+          ).asQueryOptions(),
         )
       }
 
@@ -111,7 +109,6 @@ class DatabaseCardRemoteMediator(
           cardDao.insert(response.data)
 
           database.transaction {
-
             // Now insert all the relations
             bark { "Inserting query relations for Id($remoteKeyId)" }
             response.data.forEach { card ->
@@ -119,16 +116,16 @@ class DatabaseCardRemoteMediator(
                 RemoteKeyCardJoin(
                   remoteKeyId = remoteKeyId,
                   cardId = card.id,
-                )
+                ),
               )
             }
           }
         }
 
         RemoteMediatorMediatorResultSuccess(
-          endOfPaginationReached = !response.hasMore
+          endOfPaginationReached = !response.hasMore,
         ) as RemoteMediatorMediatorResult
-      } else  {
+      } else {
         RemoteMediatorMediatorResultError(result.exceptionOrNull() ?: Exception("Network error"))
           as RemoteMediatorMediatorResult
       }

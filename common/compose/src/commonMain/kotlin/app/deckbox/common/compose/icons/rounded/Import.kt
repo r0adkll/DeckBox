@@ -22,7 +22,7 @@ val Icons.Rounded.Import: ImageVector
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
       viewportWidth = 24f,
-      viewportHeight = 24f
+      viewportHeight = 24f,
     ).apply {
       path(
         fill = SolidColor(Color.Black),
@@ -33,7 +33,7 @@ val Icons.Rounded.Import: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(8f, 2f)
         curveTo(6.895f, 2f, 6f, 2.895f, 6f, 4f)
@@ -69,4 +69,3 @@ val Icons.Rounded.Import: ImageVector
     }.build()
     return _vector!!
   }
-

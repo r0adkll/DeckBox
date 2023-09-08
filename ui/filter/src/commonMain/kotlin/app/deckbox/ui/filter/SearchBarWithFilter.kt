@@ -16,15 +16,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.FilterAltOff
-import androidx.compose.material.icons.rounded.Grid3x3
-import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -44,7 +41,6 @@ import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.widgets.SearchBarElevation
 import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.compose.widgets.SearchBarPadding
-import app.deckbox.core.settings.PokemonGridStyle
 import com.moriatsushi.insetsx.statusBars
 
 enum class FilterState {

@@ -9,11 +9,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Grid3x3
-import androidx.compose.material.icons.rounded.Grid4x4
-import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.ViewCompact
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -33,7 +29,6 @@ import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.widgets.AdaptiveExpandedThreshold
 import app.deckbox.common.compose.widgets.CardCounts
 import app.deckbox.common.compose.widgets.DefaultEmptyView
-import app.deckbox.common.compose.widgets.DropdownIconButton
 import app.deckbox.common.compose.widgets.FilterIcon
 import app.deckbox.common.compose.widgets.GridStyleDropdownIconButton
 import app.deckbox.common.compose.widgets.PokemonCardGrid
@@ -42,7 +37,6 @@ import app.deckbox.common.compose.widgets.SearchBarHeight
 import app.deckbox.common.compose.widgets.SearchEmptyView
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.core.settings.columnsForStyles
 import app.deckbox.ui.filter.CardFilter
 import app.deckbox.ui.filter.FilterState

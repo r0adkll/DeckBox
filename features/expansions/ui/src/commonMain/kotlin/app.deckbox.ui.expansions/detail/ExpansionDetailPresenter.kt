@@ -22,7 +22,6 @@ import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 

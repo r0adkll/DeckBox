@@ -65,7 +65,9 @@ fun PokemonCard(
       )
 
       imageAction is ImageEvent
-    } else true
+    } else {
+      true
+    }
 
     if (isLoading) {
       val transition = rememberInfiniteTransition()

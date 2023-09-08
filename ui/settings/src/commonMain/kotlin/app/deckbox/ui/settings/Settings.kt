@@ -14,10 +14,8 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.LiveHelp
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Collections
 import androidx.compose.material.icons.rounded.DataObject
 import androidx.compose.material.icons.rounded.Merge
-import androidx.compose.material.icons.rounded.Message
 import androidx.compose.material.icons.rounded.NewReleases
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Policy
@@ -38,7 +36,6 @@ import app.deckbox.common.compose.icons.DeckBoxIcons
 import app.deckbox.common.compose.icons.outline.Browse
 import app.deckbox.common.compose.icons.outline.Collection
 import app.deckbox.common.compose.icons.outline.Decks
-import app.deckbox.common.compose.icons.rounded.SubtractCard
 import app.deckbox.common.screens.SettingsScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.ui.settings.composables.Header
@@ -61,13 +58,12 @@ fun Settings(
         title = LocalStrings.current.settings,
         navigationIcon = {
           IconButton(
-            onClick = {  },
+            onClick = { },
           ) {
             Icon(Icons.Rounded.ArrowBack, contentDescription = null)
           }
         },
         actions = {
-
         },
         scrollBehavior = scrollBehavior,
       )
@@ -110,41 +106,37 @@ fun Settings(
             contentDescription = null,
             tint = MaterialTheme.colorScheme.secondary,
           )
-        }
+        },
       )
 
       MenuDivider()
       Header("Theme")
       ListItem(
         headlineContent = { Text("Deck card style") },
-        supportingContent = { Text("Change the appearance of decks in the app")},
+        supportingContent = { Text("Change the appearance of decks in the app") },
         leadingContent = { Icon(DeckBoxIcons.Outline.Decks, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
       ListItem(
         headlineContent = { Text("Expansion card style") },
-        supportingContent = { Text("Change the appearance of expansions in the app")},
+        supportingContent = { Text("Change the appearance of expansions in the app") },
         leadingContent = { Icon(DeckBoxIcons.Outline.Collection, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
       ListItem(
         headlineContent = { Text("Browse grid style") },
-        supportingContent = { Text("Change the density of cards in the browse screens")},
+        supportingContent = { Text("Change the density of cards in the browse screens") },
         leadingContent = { Icon(DeckBoxIcons.Outline.Browse, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
       ListItem(
         headlineContent = { Text("Expansion grid style") },
-        supportingContent = { Text("Change the density of cards in an expansion")},
+        supportingContent = { Text("Change the density of cards in an expansion") },
         leadingContent = { Icon(DeckBoxIcons.Outline.Collection, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
 
@@ -152,10 +144,9 @@ fun Settings(
       Header("Cache")
       ListItem(
         headlineContent = { Text("Manage offline data") },
-        supportingContent = { Text("Delete or edit the cached data")},
+        supportingContent = { Text("Delete or edit the cached data") },
         leadingContent = { Icon(Icons.Outlined.Cloud, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
 
@@ -163,10 +154,9 @@ fun Settings(
       Header("Help")
       ListItem(
         headlineContent = { Text("Feedback") },
-        supportingContent = { Text("Provide feedback on issues, features, etc")},
+        supportingContent = { Text("Provide feedback on issues, features, etc") },
         leadingContent = { Icon(Icons.Outlined.LiveHelp, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
 
@@ -176,7 +166,6 @@ fun Settings(
         headlineContent = { Text("Privacy Policy") },
         leadingContent = { Icon(Icons.Outlined.Policy, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
       // TODO: Better icon
@@ -184,7 +173,6 @@ fun Settings(
         headlineContent = { Text("Open source licenses") },
         leadingContent = { Icon(Icons.Rounded.DataObject, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
       // TODO: Better icon
@@ -192,21 +180,18 @@ fun Settings(
         headlineContent = { Text("Contribute") },
         leadingContent = { Icon(Icons.Rounded.Merge, contentDescription = null) },
         modifier = Modifier.clickable {
-
         },
       )
       ListItem(
         headlineContent = { Text("Developed by") },
         supportingContent = { Text("r0adkll") },
         modifier = Modifier.clickable {
-
         },
       )
       ListItem(
         headlineContent = { Text("Version") },
         supportingContent = { Text("0.1") },
       )
-
     }
   }
 }

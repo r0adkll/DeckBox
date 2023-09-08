@@ -78,6 +78,6 @@ class DatabaseFactory(
       countAdapter = IntColumnAdapter,
       totalCountAdapter = IntColumnAdapter,
       nextKeyAdapter = IntColumnAdapter,
-    )
+    ),
   )
 }
