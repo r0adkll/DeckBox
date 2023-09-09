@@ -7,8 +7,10 @@ import app.deckbox.core.model.Card
 import app.deckbox.core.model.Stacked
 import app.deckbox.features.cards.impl.db.CardDao
 import app.deckbox.features.cards.public.CardRepository
+import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.network.PokemonTcgApi
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.first
@@ -22,6 +24,8 @@ import org.mobilenativefoundation.store.store5.SourceOfTruth
 import org.mobilenativefoundation.store.store5.StoreBuilder
 import org.mobilenativefoundation.store.store5.StoreReadRequest
 import org.mobilenativefoundation.store.store5.StoreReadResponse
+import org.mobilenativefoundation.store.store5.impl.extensions.fresh
+import org.mobilenativefoundation.store.store5.impl.extensions.get
 
 @AppScope
 @Inject
@@ -36,6 +40,19 @@ class StoreCardRepository(
     .from(
       fetcher = CardFetcher(api),
       sourceOfTruth = CardSourceOfTruth(db),
+    )
+    .build()
+
+  @OptIn(ExperimentalCoroutinesApi::class)
+  private val queryStore = StoreBuilder
+    .from(
+      fetcher = Fetcher.ofResult { cardQuery: CardQuery -> api.getCards(cardQuery.asQueryOptions()).asFetcherResult() },
+      sourceOfTruth = SourceOfTruth.of(
+        reader = { query: CardQuery ->
+          db.observeByRemoteKey(query.key, query.page)
+        },
+        writer = { query, response -> db.insert(query, response) },
+      ),
     )
     .build()
 
@@ -64,6 +81,10 @@ class StoreCardRepository(
       .first()
       .requireData()
       .let { (it as CardResponse.Multiple).cards }
+  }
+
+  override suspend fun getCards(query: CardQuery): List<Card> {
+    return queryStore.fresh(query)
   }
 
   override suspend fun favorite(id: String, favorited: Boolean) {
@@ -111,6 +132,7 @@ class CardFetcher(
         .map { CardResponse.Single(it) }
         .asFetcherResult()
         .also { emit(it) }
+
       is CardKey.Ids -> api.getCards()
         .map { CardResponse.Multiple(it.data) }
         .asFetcherResult()
@@ -136,6 +158,7 @@ class CardSourceOfTruth(
         cardDao
           .observe(key.id)
           .map { CardResponse.Single(it) }
+
       is CardKey.Ids ->
         cardDao
           .observe(key.ids)

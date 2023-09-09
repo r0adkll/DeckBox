@@ -5,6 +5,7 @@ import app.cash.sqldelight.TransactionCallbacks
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Stacked
 import app.deckbox.features.cards.public.model.CardQuery
+import app.deckbox.network.PagedResponse
 import app.deckbox.sqldelight.Cards
 import kotlinx.coroutines.flow.Flow
 
@@ -24,10 +25,12 @@ interface CardDao {
   fun observeByDeck(deckId: String): Flow<List<Stacked<Card>>>
   fun observeByBoosterPack(packId: String): Flow<List<Stacked<Card>>>
   fun observeByFavorites(): Flow<List<Card>>
+  fun observeByRemoteKey(query: String, key: Int): Flow<List<Card>>
 
   suspend fun insert(card: Card)
   suspend fun insert(cards: List<Card>)
   fun insert(callbacks: TransactionCallbacks, cards: List<Card>)
+  suspend fun insert(query: CardQuery, pagedResponse: PagedResponse<Card>)
 
   suspend fun favorite(id: String, value: Boolean)
   fun observeFavorites(): Flow<Map<String, Boolean>>

@@ -6,12 +6,15 @@ import app.deckbox.core.model.SearchFilter
 
 const val MAX_PAGE_SIZE = 250
 
+const val OrderByReleaseDate = "-set.releaseDate"
+
 data class CardQuery(
   val query: String? = null,
   val orderBy: String? = null,
   val page: Int = 1,
   val pageSize: Int = MAX_PAGE_SIZE,
   val filter: SearchFilter? = null,
+  val queryOverride: String? = null,
 ) {
 
   /**
@@ -22,16 +25,20 @@ data class CardQuery(
     get() = buildString {
       query?.let { append(it) }
       orderBy?.let { append(it) }
-      append(generateQueryParam())
+      append(queryOverride ?: generateQueryParam())
     }.ifBlank { "DEFAULT" }
 
   fun asQueryOptions(): Map<String, String> = buildMap {
     put("page", "$page")
     put("pageSize", "$pageSize")
     orderBy?.let { put("orderBy", it) }
-    if (query != null || filter != null) {
-      put("q", generateQueryParam())
-    }
+    queryOverride
+      ?.let { put("q", it) }
+      ?: run {
+        if (query != null || filter != null) {
+          put("q", generateQueryParam())
+        }
+      }
   }
 
   private fun generateQueryParam(): String {

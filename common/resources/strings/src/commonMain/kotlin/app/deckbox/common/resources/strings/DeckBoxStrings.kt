@@ -107,4 +107,13 @@ data class DeckBoxStrings(
   val gridStyleSmall: String,
   val gridStyleLarge: String,
   val favorites: String,
+  val similarCardsLabel: String,
+  val evolvesFromLabel: String,
+  val evolvesToLabel: String,
+  val similarCardsErrorLabel: String,
+  val similarCardsEmptyLabel: String,
+  val evolvesFromErrorLabel: String,
+  val evolvesFromEmptyLabel: String,
+  val evolvesToErrorLabel: String,
+  val evolvesToEmptyLabel: String,
 )
