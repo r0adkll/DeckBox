@@ -38,10 +38,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Legalities
 import app.deckbox.core.model.Legality
+import app.deckbox.features.decks.api.validation.DeckValidation
 import app.deckbox.features.decks.api.validation.Validation
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent
 import app.deckbox.ui.decks.builder.DeckBuilderUiState
+import app.deckbox.ui.decks.builder.DeckPriceState
 import com.moriatsushi.insetsx.navigationBars
+import kotlinx.collections.immutable.immutableListOf
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -50,9 +54,13 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
   focusRequester: FocusRequester,
   onHeaderClick: () -> Unit,
 ) {
+  val validation = state.validation.dataOrNull ?: DeckValidation()
+  val cards = state.cards.dataOrNull ?: persistentListOf()
+  val price = state.price.dataOrNull ?: DeckPriceState()
+
   SheetHeader(
-    isValid = state.validation.isValid && !state.validation.isEmpty,
-    totalCount = state.cards.sumOf { it.size },
+    isValid = validation.isValid && !validation.isEmpty,
+    totalCount = cards.sumOf { it.size },
     legalities = state.session.deckOrNull()?.legalities
       ?: Legalities(standard = Legality.LEGAL),
     onHeaderClick = onHeaderClick,
@@ -125,12 +133,12 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
     )
 
     DeckPrices(
-      prices = state.price,
+      prices = price,
     )
 
     Spacer(Modifier.height(16.dp))
 
-    state.validation.ruleValidations
+    validation.ruleValidations
       .filterIsInstance<Validation.Invalid>()
       .forEach { invalid ->
         ListItem(
@@ -145,6 +153,7 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
         )
       }
   }
+
   Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
 }
 

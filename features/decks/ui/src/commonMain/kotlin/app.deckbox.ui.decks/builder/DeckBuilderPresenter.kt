@@ -9,6 +9,8 @@ import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.DispatcherProvider
+import app.deckbox.core.coroutines.LoadState
+import app.deckbox.core.coroutines.map
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.extensions.lowestMarketPrice
 import app.deckbox.core.extensions.prependIfNotEmpty
@@ -36,6 +38,7 @@ import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
@@ -67,109 +70,119 @@ class DeckBuilderPresenter(
 
     val sessionCards by remember(screen.id) {
       cardRepository.observeCardsForDeck(screen.id)
-    }.collectAsState(emptyList())
+        .map { LoadState.Loaded(it.toImmutableList()) }
+        .catch { LoadState.Error }
+    }.collectAsState(LoadState.Loading)
 
     // Split the cards by supertype and build the pokemon into evolution lines
     val uiModels by remember {
       snapshotFlow {
-        val split = sessionCards.groupBy { it.card.supertype }
+        sessionCards.map { cards ->
+          val split = cards.groupBy { it.card.supertype }
 
-        val pokemon = split[SuperType.POKEMON]
-          ?.let { Evolution.create(it) }
-          ?.flatMap { evolution ->
-            if (evolution.size == 1) {
-              evolution.nodes.first().cards.map { CardUiModel.Single(it) }
-            } else {
-              listOf(CardUiModel.EvolutionLine(evolution))
+          val pokemon = split[SuperType.POKEMON]
+            ?.let { Evolution.create(it) }
+            ?.flatMap { evolution ->
+              if (evolution.size == 1) {
+                evolution.nodes.first().cards.map { CardUiModel.Single(it) }
+              } else {
+                listOf(CardUiModel.EvolutionLine(evolution))
+              }
             }
-          }
-          ?.sortedBy {
-            when (it) {
-              is CardUiModel.EvolutionLine -> 0
-              else -> 1
+            ?.sortedBy {
+              when (it) {
+                is CardUiModel.EvolutionLine -> 0
+                else -> 1
+              }
             }
-          }
-          ?: listOf(Tip.Pokemon)
+            ?: listOf(Tip.Pokemon)
 
-        val trainers = split[SuperType.TRAINER]
-          ?.map { CardUiModel.Single(it) }
-          ?: listOf(Tip.Trainer)
+          val trainers = split[SuperType.TRAINER]
+            ?.map { CardUiModel.Single(it) }
+            ?: listOf(Tip.Trainer)
 
-        val energy = split[SuperType.ENERGY]
-          ?.map { CardUiModel.Single(it) }
-          ?: listOf(Tip.Energy)
+          val energy = split[SuperType.ENERGY]
+            ?.map { CardUiModel.Single(it) }
+            ?: listOf(Tip.Energy)
 
-        // Concatenate the models
-        pokemon.prependIfNotEmpty(
-          CardUiModel.SectionHeader(
-            superType = SuperType.POKEMON,
-            count = pokemon.sumOf { it.size },
-            title = { LocalStrings.current.deckListHeaderPokemon },
-          ),
-        ) + trainers.prependIfNotEmpty(
-          CardUiModel.SectionHeader(
-            superType = SuperType.TRAINER,
-            count = trainers.sumOf { it.size },
-            title = { LocalStrings.current.deckListHeaderTrainer },
-          ),
-        ) + energy.prependIfNotEmpty(
-          CardUiModel.SectionHeader(
-            superType = SuperType.ENERGY,
-            count = energy.sumOf { it.size },
-            title = { LocalStrings.current.deckListHeaderEnergy },
-          ),
-        )
+          // Concatenate the models
+          pokemon.prependIfNotEmpty(
+            CardUiModel.SectionHeader(
+              superType = SuperType.POKEMON,
+              count = pokemon.sumOf { it.size },
+              title = { LocalStrings.current.deckListHeaderPokemon },
+            ),
+          ) + trainers.prependIfNotEmpty(
+            CardUiModel.SectionHeader(
+              superType = SuperType.TRAINER,
+              count = trainers.sumOf { it.size },
+              title = { LocalStrings.current.deckListHeaderTrainer },
+            ),
+          ) + energy.prependIfNotEmpty(
+            CardUiModel.SectionHeader(
+              superType = SuperType.ENERGY,
+              count = energy.sumOf { it.size },
+              title = { LocalStrings.current.deckListHeaderEnergy },
+            ),
+          )
+        }.map { it.toImmutableList() }
       }.flowOn(dispatcherProvider.computation)
-    }.collectAsState(emptyList())
+    }.collectAsState(LoadState.Loading)
 
     val validation by remember {
       snapshotFlow { sessionCards }
-        .mapLatest { deckValidator.validate(it) }
+        .mapLatest {
+          it.map { cards ->
+            deckValidator.validate(cards)
+          }
+        }
         .flowOn(dispatcherProvider.computation)
-    }.collectAsState(DeckValidation())
+    }.collectAsState(LoadState.Loading)
 
     val deckPrice by remember {
       snapshotFlow {
-        var oldestTcgPlayerUpdatedAt = LocalDate(3000, 1, 1)
-        var tcgPlayerMarketLow = 0.0
-        sessionCards.forEach { stack ->
-          val cardPrice = stack.card.tcgPlayer?.prices?.lowestMarketPrice() ?: 0.0
-          tcgPlayerMarketLow += stack.count * cardPrice
-          stack.card.tcgPlayer?.updatedAt?.let { date ->
-            if (date < oldestTcgPlayerUpdatedAt) oldestTcgPlayerUpdatedAt = date
+        sessionCards.map { cards ->
+          var oldestTcgPlayerUpdatedAt = LocalDate(3000, 1, 1)
+          var tcgPlayerMarketLow = 0.0
+          cards.forEach { stack ->
+            val cardPrice = stack.card.tcgPlayer?.prices?.lowestMarketPrice() ?: 0.0
+            tcgPlayerMarketLow += stack.count * cardPrice
+            stack.card.tcgPlayer?.updatedAt?.let { date ->
+              if (date < oldestTcgPlayerUpdatedAt) oldestTcgPlayerUpdatedAt = date
+            }
           }
-        }
 
-        var oldestCardMarketUpdatedAt = LocalDate(3000, 1, 1)
-        var cardMarketLow = 0.0
-        sessionCards.forEach { stack ->
-          val cardPrice = stack.card.cardMarket?.prices?.averageSellPrice ?: 0.0
-          cardMarketLow += stack.count * cardPrice
-          stack.card.cardMarket?.updatedAt?.let { date ->
-            if (date < oldestCardMarketUpdatedAt) oldestCardMarketUpdatedAt = date
+          var oldestCardMarketUpdatedAt = LocalDate(3000, 1, 1)
+          var cardMarketLow = 0.0
+          cards.forEach { stack ->
+            val cardPrice = stack.card.cardMarket?.prices?.averageSellPrice ?: 0.0
+            cardMarketLow += stack.count * cardPrice
+            stack.card.cardMarket?.updatedAt?.let { date ->
+              if (date < oldestCardMarketUpdatedAt) oldestCardMarketUpdatedAt = date
+            }
           }
-        }
 
-        DeckPriceState(
-          tcgPlayer = tcgPlayerMarketLow
-            .takeIf { it > 0.0 }
-            ?.let { marketPrice ->
-              DeckPrice(
-                lastUpdated = oldestTcgPlayerUpdatedAt.readableFormat,
-                market = marketPrice,
-              )
-            },
-          cardMarket = cardMarketLow
-            .takeIf { it > 0.0 }
-            ?.let { marketPrice ->
-              DeckPrice(
-                lastUpdated = oldestCardMarketUpdatedAt.readableFormat,
-                market = marketPrice,
-              )
-            },
-        )
+          DeckPriceState(
+            tcgPlayer = tcgPlayerMarketLow
+              .takeIf { it > 0.0 }
+              ?.let { marketPrice ->
+                DeckPrice(
+                  lastUpdated = oldestTcgPlayerUpdatedAt.readableFormat,
+                  market = marketPrice,
+                )
+              },
+            cardMarket = cardMarketLow
+              .takeIf { it > 0.0 }
+              ?.let { marketPrice ->
+                DeckPrice(
+                  lastUpdated = oldestCardMarketUpdatedAt.readableFormat,
+                  market = marketPrice,
+                )
+              },
+          )
+        }
       }.flowOn(dispatcherProvider.computation)
-    }.collectAsState(DeckPriceState(null, null))
+    }.collectAsState(LoadState.Loading)
 
     return DeckBuilderUiState(
       session = session,

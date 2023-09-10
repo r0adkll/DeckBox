@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -45,10 +46,15 @@ import app.deckbox.common.compose.extensions.plus
 import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
+import app.deckbox.common.compose.widgets.ContentLoadingSize
+import app.deckbox.common.compose.widgets.DefaultEmptyView
+import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.BoosterPackPickerScreen
 import app.deckbox.common.screens.DeckBuilderScreen
+import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.BoosterPack
+import app.deckbox.core.model.Card
 import app.deckbox.core.model.SuperType
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
@@ -64,6 +70,7 @@ import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.overlay.LocalOverlayHost
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,6 +83,7 @@ fun DeckBuilder(
   val coroutineScope = rememberCoroutineScope()
   val overlayHost = LocalOverlayHost.current
   val focusManager = LocalFocusManager.current
+  val eventSink = state.eventSink
 
   val bottomPadding = with(LocalDensity.current) {
     WindowInsets.navigationBars.getBottom(this).toDp()
@@ -130,7 +138,7 @@ fun DeckBuilder(
         },
         navigationIcon = {
           IconButton(
-            onClick = { state.eventSink(NavigateBack) },
+            onClick = { eventSink(NavigateBack) },
           ) {
             Icon(Icons.Rounded.ArrowBack, contentDescription = null)
           }
@@ -141,7 +149,7 @@ fun DeckBuilder(
               coroutineScope.launch {
                 val result = overlayHost.showBottomSheetScreen<BoosterPack>(BoosterPackPickerScreen())
                 if (result != null) {
-                  state.eventSink(AddBoosterPack(result))
+                  eventSink(AddBoosterPack(result))
                 }
               }
             },
@@ -177,35 +185,24 @@ fun DeckBuilder(
     sheetDragHandle = null,
     sheetPeekHeight = SheetHeaderHeight + bottomPadding,
     sheetTonalElevation = 3.dp,
-  ) {
+  ) { paddingValues ->
     Box(
       modifier = Modifier.fillMaxSize(),
     ) {
       val lazyGridState = rememberLazyGridState()
 
-      DeckCardList(
-        isEditing = isEditing,
-        models = state.cards,
-        onCardClick = {
-          state.eventSink(CardClick(it.card))
-        },
-        onCardLongClick = { isEditing = true },
-        onAddCardClick = {
-          state.eventSink(IncrementCard(it.card.id))
-        },
-        onRemoveCardClick = {
-          state.eventSink(DecrementCard(it.card.id))
-        },
-        onTipClick = {
-          when (it) {
-            CardUiModel.Tip.Pokemon -> state.eventSink(AddCards(SuperType.POKEMON))
-            CardUiModel.Tip.Trainer -> state.eventSink(AddCards(SuperType.TRAINER))
-            CardUiModel.Tip.Energy -> state.eventSink(AddCards(SuperType.ENERGY))
-          }
-        },
-        lazyGridState = lazyGridState,
-        contentPadding = it + PaddingValues(bottom = 88.dp),
-      )
+      when (state.cards) {
+        is LoadState.Loaded -> LoadedContent(
+          models = state.cards.data,
+          isEditing = isEditing,
+          onEditClick = { isEditing = true },
+          eventSink = eventSink,
+          contentPadding = paddingValues,
+          lazyGridState = lazyGridState,
+        )
+        LoadState.Error -> ErrorContent()
+        LoadState.Loading -> LoadingContent()
+      }
 
       val isScrolled by remember {
         derivedStateOf {
@@ -215,7 +212,7 @@ fun DeckBuilder(
 
       ExtendedFloatingActionButton(
         expanded = !isScrolled,
-        onClick = { state.eventSink(AddCards()) },
+        onClick = { eventSink(AddCards()) },
         text = { Text("Add cards") },
         icon = { Icon(Icons.Rounded.AddCard, contentDescription = null) },
         modifier = Modifier
@@ -230,4 +227,61 @@ fun DeckBuilder(
       )
     }
   }
+}
+
+@Composable
+private fun LoadingContent(
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier = modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
+  ) {
+    SpinningPokeballLoadingIndicator(
+      size = ContentLoadingSize,
+    )
+  }
+}
+
+@Composable
+private fun ErrorContent(
+  modifier: Modifier = Modifier,
+) {
+  DefaultEmptyView(modifier = modifier)
+}
+
+@Composable
+private fun LoadedContent(
+  models: ImmutableList<CardUiModel>,
+  isEditing: Boolean,
+  onEditClick: () -> Unit,
+  eventSink: (DeckBuilderUiEvent) -> Unit,
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(),
+  lazyGridState: LazyGridState = rememberLazyGridState(),
+) {
+  DeckCardList(
+    isEditing = isEditing,
+    models = models,
+    onCardClick = {
+      eventSink(CardClick(it.card))
+    },
+    onCardLongClick = { onEditClick() },
+    onAddCardClick = {
+      eventSink(IncrementCard(it.card.id))
+    },
+    onRemoveCardClick = {
+      eventSink(DecrementCard(it.card.id))
+    },
+    onTipClick = {
+      when (it) {
+        CardUiModel.Tip.Pokemon -> eventSink(AddCards(SuperType.POKEMON))
+        CardUiModel.Tip.Trainer -> eventSink(AddCards(SuperType.TRAINER))
+        CardUiModel.Tip.Energy -> eventSink(AddCards(SuperType.ENERGY))
+      }
+    },
+    lazyGridState = lazyGridState,
+    contentPadding = contentPadding + PaddingValues(bottom = 88.dp),
+    modifier = modifier,
+  )
 }
