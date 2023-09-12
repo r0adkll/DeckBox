@@ -19,7 +19,6 @@ import app.deckbox.core.model.Evolution
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
-import app.deckbox.features.decks.api.validation.DeckValidation
 import app.deckbox.features.decks.api.validation.DeckValidator
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards

@@ -44,7 +44,6 @@ import app.deckbox.ui.decks.builder.DeckBuilderUiEvent
 import app.deckbox.ui.decks.builder.DeckBuilderUiState
 import app.deckbox.ui.decks.builder.DeckPriceState
 import com.moriatsushi.insetsx.navigationBars
-import kotlinx.collections.immutable.immutableListOf
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalFoundationApi::class)

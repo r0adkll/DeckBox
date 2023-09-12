@@ -54,7 +54,6 @@ import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.BoosterPack
-import app.deckbox.core.model.Card
 import app.deckbox.core.model.SuperType
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
