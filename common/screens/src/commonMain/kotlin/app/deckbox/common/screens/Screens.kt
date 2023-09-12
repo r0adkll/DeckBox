@@ -29,6 +29,16 @@ data class DeckBuilderScreen(
 }
 
 @CommonParcelize
+data class PlayTestScreen(
+  val deckId: String,
+) : DeckBoxScreen(name = "PlayTest()") {
+  override val arguments get() = mapOf("deckId" to deckId)
+
+  @CommonIgnoredOnParcel
+  override val presentation = Presentation(hideBottomNav = true)
+}
+
+@CommonParcelize
 class BoosterPackScreen : DeckBoxScreen(name = "BoosterPack()")
 
 @CommonParcelize

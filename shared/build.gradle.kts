@@ -42,6 +42,9 @@ kotlin {
         api(projects.features.boosterpacks.impl)
         api(projects.features.boosterpacks.ui)
 
+        api(projects.features.playtest.impl)
+        api(projects.features.playtest.ui)
+
         // UI Modules
         api(projects.ui.browse)
         api(projects.ui.filter)
