@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.ContentLoadingSize
+import app.deckbox.common.compose.widgets.SearchEmptyView
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.settings.ExpansionCardStyle
@@ -30,6 +31,7 @@ import cafe.adriel.lyricist.LocalStrings
 
 @Composable
 internal fun ExpansionsContent(
+  query: String?,
   expansionState: ExpansionState,
   hasFavorites: Boolean,
   style: ExpansionCardStyle,
@@ -42,7 +44,9 @@ internal fun ExpansionsContent(
     ExpansionState.Loading -> LoadingContent(modifier)
     is ExpansionState.Error -> ErrorContent(expansionState.message, modifier)
     is ExpansionState.Loaded -> if (expansionState.groupedExpansions.isEmpty()) {
-      EmptyContent(modifier)
+      SearchEmptyView(
+        query = query,
+      )
     } else {
       ExpansionsContent(
         expansions = expansionState.groupedExpansions,
@@ -54,24 +58,6 @@ internal fun ExpansionsContent(
         contentPadding = contentPadding,
       )
     }
-  }
-}
-
-@Composable
-private fun EmptyContent(
-  modifier: Modifier = Modifier,
-) {
-  Column(
-    modifier = modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
-  ) {
-    Icon(
-      Icons.Outlined.Place,
-      contentDescription = null,
-    )
-    Spacer(Modifier.height(16.dp))
-    Text(LocalStrings.current.expansionsEmptyMessage)
   }
 }
 

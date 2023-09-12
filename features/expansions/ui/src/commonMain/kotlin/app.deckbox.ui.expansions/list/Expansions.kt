@@ -85,6 +85,7 @@ internal fun Expansions(
       )
 
       ExpansionsContent(
+        query = state.query,
         expansionState = state.expansionState,
         style = state.expansionCardStyle,
         hasFavorites = state.hasFavorites,
