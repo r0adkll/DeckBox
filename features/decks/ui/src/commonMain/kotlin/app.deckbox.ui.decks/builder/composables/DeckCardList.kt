@@ -37,13 +37,14 @@ import app.deckbox.core.model.Card
 import app.deckbox.core.model.Stacked
 import app.deckbox.core.model.SuperType
 import app.deckbox.ui.decks.builder.model.CardUiModel
+import kotlinx.collections.immutable.ImmutableList
 
 private val CardSpacing = 16.dp
 
 @Composable
 internal fun DeckCardList(
   isEditing: Boolean,
-  models: List<CardUiModel>,
+  models: ImmutableList<CardUiModel>,
   onCardClick: (Stacked<Card>) -> Unit,
   onCardLongClick: (Stacked<Card>) -> Unit,
   onAddCardClick: (Stacked<Card>) -> Unit,

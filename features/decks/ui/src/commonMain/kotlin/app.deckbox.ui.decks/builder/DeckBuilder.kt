@@ -200,8 +200,8 @@ fun DeckBuilder(
           contentPadding = paddingValues,
           lazyGridState = lazyGridState,
         )
-        LoadState.Error -> ErrorContent()
-        LoadState.Loading -> LoadingContent()
+        LoadState.Error -> ErrorContent(Modifier.padding(paddingValues))
+        LoadState.Loading -> LoadingContent(Modifier.padding(paddingValues))
       }
 
       val isScrolled by remember {

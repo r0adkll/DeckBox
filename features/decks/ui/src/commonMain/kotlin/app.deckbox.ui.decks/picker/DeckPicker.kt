@@ -31,6 +31,7 @@ import app.deckbox.core.model.Deck
 import app.deckbox.ui.decks.picker.composables.DeckPickerItem
 import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import kotlinx.collections.immutable.ImmutableList
 
 private val MinSheetHeight = 300.dp
 
@@ -118,7 +119,7 @@ private fun EmptyContent(
 
 @Composable
 private fun LoadedContent(
-  decks: List<Deck>,
+  decks: ImmutableList<Deck>,
   onDeckClick: (Deck) -> Unit,
   modifier: Modifier = Modifier,
 ) {

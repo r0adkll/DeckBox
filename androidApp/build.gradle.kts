@@ -30,9 +30,20 @@ android {
   }
 
   packaging {
-    resources {
-      excludes += "/META-INF/{AL2.0,LGPL2.1}"
-    }
+    resources.excludes += setOf(
+      // Exclude AndroidX version files
+      "META-INF/*.version",
+      // Exclude consumer proguard files
+      "META-INF/proguard/*",
+      // Exclude the Firebase/Fabric/other random properties files
+      "/*.properties",
+      "fabric/*.properties",
+      "META-INF/*.properties",
+      // License files
+      "LICENSE*",
+      // Exclude Kotlin unused files
+      "META-INF/**/previous-compilation-data.bin",
+    )
   }
 
   buildTypes {

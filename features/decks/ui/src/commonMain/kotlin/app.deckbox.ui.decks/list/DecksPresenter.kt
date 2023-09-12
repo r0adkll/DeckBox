@@ -24,6 +24,8 @@ import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -65,9 +67,10 @@ class DecksPresenter(
     val sortedDecks by remember {
       snapshotFlow {
         decksLoadState.dataOrNull?.orderDecksBy(deckSortOrder)
-          ?: emptyList()
+          ?.toImmutableList()
+          ?: persistentListOf()
       }
-    }.collectAsState(emptyList())
+    }.collectAsState(persistentListOf())
 
     return DecksUiState(
       isLoading = decksLoadState is LoadState.Loading,

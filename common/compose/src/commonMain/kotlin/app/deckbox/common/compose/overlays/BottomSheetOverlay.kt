@@ -118,7 +118,6 @@ private fun Handle(
 }
 
 suspend fun <R> OverlayHost.showBottomSheetScreen(screen: DeckBoxScreen): R? {
-  bark { "Showing BottomSheetOverlay for $screen" }
   return show(
     BottomSheetOverlay<DeckBoxScreen, OverlayResultScreen<R>>(
       model = screen,
