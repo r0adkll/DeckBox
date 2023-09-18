@@ -2,12 +2,13 @@ package com.r0adkll.kotlininject.merge
 
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
+import com.r0adkll.kotlininject.merge.annotations.ContributesMultibinding
 import com.r0adkll.kotlininject.merge.annotations.ContributesSubcomponent
 import com.r0adkll.kotlininject.merge.annotations.ContributesTo
-import com.r0adkll.kotlininject.merge.util.findAnnotation
-import com.r0adkll.kotlininject.merge.util.getParentScope
-import com.r0adkll.kotlininject.merge.util.getScope
-import com.r0adkll.kotlininject.merge.util.hasAnnotation
+import com.r0adkll.kotlininject.merge.util.ksp.findAnnotation
+import com.r0adkll.kotlininject.merge.util.ksp.getParentScope
+import com.r0adkll.kotlininject.merge.util.ksp.getScope
+import com.r0adkll.kotlininject.merge.util.ksp.hasAnnotation
 import com.r0adkll.kotlininject.merge.util.toClassName
 import com.squareup.kotlinpoet.ClassName
 import kotlin.reflect.KClass
@@ -20,6 +21,9 @@ class GeneratedContributionCache {
     val (scope, annotation) = when {
       element.hasAnnotation(ContributesBinding::class) -> {
         element.findAnnotation(ContributesBinding::class)!!.getScope()!! to ContributesBinding::class
+      }
+      element.hasAnnotation(ContributesMultibinding::class) -> {
+        element.findAnnotation(ContributesMultibinding::class)!!.getScope()!! to ContributesMultibinding::class
       }
       element.hasAnnotation(ContributesTo::class) -> {
         element.findAnnotation(ContributesTo::class)!!.getScope()!! to ContributesTo::class
