@@ -16,4 +16,7 @@ data class DeckValidation(
 ) {
   val isValid: Boolean
     get() = ruleValidations.all { it is Validation.Valid }
+
+  val isNotEmpty: Boolean
+    get() = !isEmpty
 }

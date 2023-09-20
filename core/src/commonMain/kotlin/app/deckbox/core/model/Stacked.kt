@@ -34,6 +34,15 @@ fun <T, R> Stacked<T>.map(mapper: (T) -> R): Stacked<R> {
   )
 }
 
+/**
+ * Flatten a counted list of cards into a flat list of cards
+ * that have duplicates.
+ * @return a raw list of cards, unstacked.
+ */
+fun <CardT> List<Stacked<CardT>>.flatten(): List<CardT> = flatMap { stack ->
+  (0 until stack.count).map { stack.card }
+}
+
 // /**
 // * Stack a list of cards into a list of stacked counted cards by their name
 // * @param collection Optional. The collection count in which to also provide the collection count to the stacked card
@@ -70,13 +79,4 @@ fun <T, R> Stacked<T>.map(mapper: (T) -> R): Stacked<R> {
 //      val collectionCount = collection?.getCount(countedCard.first) ?: 0
 //      StackedCard(countedCard.first, countedCard.second, collectionCount)
 //    }
-// }
-
-// /**
-// * Unstacked a counted list of cards into a flat list of cards
-// * that have duplicates.
-// * @return a raw list of cards, unstacked.
-// */
-// fun <CardT> List<StackedCard<CardT>>.unstack(): List<CardT> = flatMap { stack ->
-//  (0 until stack.count).map { stack.card }
 // }
