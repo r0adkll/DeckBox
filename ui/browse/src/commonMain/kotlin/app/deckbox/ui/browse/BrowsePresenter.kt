@@ -26,6 +26,8 @@ import app.deckbox.features.cards.public.paging.CardRemoteMediatorFactory
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.ui.filter.BrowseFilterPresenter
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import com.slack.circuit.retained.collectAsRetainedState
+import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.FlowPreview
@@ -57,12 +59,12 @@ class BrowsePresenter(
   @OptIn(FlowPreview::class)
   @Composable
   override fun present(): BrowseUiState {
-    var searchQuery by rememberSaveable { mutableStateOf<String?>(null) }
+    var searchQuery by rememberRetained { mutableStateOf<String?>(null) }
 
     val coroutineScope = rememberCoroutineScope()
     val searchQueryPipelineValue by remember {
       queryPipeline.debounce(1000L)
-    }.collectAsState(null)
+    }.collectAsRetainedState(null)
 
     LaunchedEffect(searchQueryPipelineValue) {
       searchQuery = searchQueryPipelineValue
@@ -105,11 +107,11 @@ class BrowsePresenter(
 
     val countState by remember {
       observeCountState()
-    }.collectAsState(null)
+    }.collectAsRetainedState(null)
 
     val gridStyle by remember {
       settings.observeBrowseCardGridStyle()
-    }.collectAsState(PokemonGridStyle.Small)
+    }.collectAsRetainedState(PokemonGridStyle.Small)
 
     return BrowseUiState(
       isEditing = screen.deckId != null || screen.packId != null,

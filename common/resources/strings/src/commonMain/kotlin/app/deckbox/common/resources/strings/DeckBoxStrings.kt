@@ -116,4 +116,5 @@ data class DeckBoxStrings(
   val evolvesFromEmptyLabel: String,
   val evolvesToErrorLabel: String,
   val evolvesToEmptyLabel: String,
+  val cardDetailAddToDeck: String,
 )

@@ -62,6 +62,7 @@ kotlin {
         api(libs.circuit.foundation)
         api(libs.circuit.overlay)
         api(libs.circuit.runtime)
+        api(libs.circuitx.gesturenav)
       }
     }
 

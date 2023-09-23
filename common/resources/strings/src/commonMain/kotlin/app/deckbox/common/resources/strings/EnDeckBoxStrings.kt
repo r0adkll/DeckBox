@@ -127,4 +127,5 @@ val EnDeckBoxStrings = DeckBoxStrings(
   evolvesFromEmptyLabel = "No cards found that this one evolves from",
   evolvesToErrorLabel = "Uh-oh! Unable to load cards that this evolves to",
   evolvesToEmptyLabel = "No cards found that this one evolves to",
+  cardDetailAddToDeck = "Add to deck",
 )

@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.coroutines.LoadState
@@ -45,6 +47,10 @@ class CardDetailPresenter(
   override fun present(): CardDetailUiState {
     val coroutineScope = rememberCoroutineScope()
 
+    // TODO: Create a common Message object that can be used to decorate and display
+    //  snackbars, toasts, etc.
+    var snackbarMessage by remember { mutableStateOf<String?>(null) }
+
     val cardLoadState by loadCard(screen.cardId)
 
     // If we have passed a deck session id, then we should observe
@@ -70,6 +76,7 @@ class CardDetailPresenter(
       evolvesTo = evolvesTo,
       deckState = deckState,
       isFavorited = isFavorited,
+      snackbarMessage = snackbarMessage,
     ) { event ->
       when (event) {
         CardDetailUiEvent.NavigateBack -> navigator.pop()
@@ -106,6 +113,12 @@ class CardDetailPresenter(
             ),
           )
         }
+
+        is CardDetailUiEvent.AddToDeck -> {
+          deckBuilderRepository.incrementCard(event.deck.id, screen.cardId)
+          snackbarMessage = "Added to \"${event.deck.name}\""
+        }
+        CardDetailUiEvent.ClearSnackBar -> snackbarMessage = null
       }
     }
   }
