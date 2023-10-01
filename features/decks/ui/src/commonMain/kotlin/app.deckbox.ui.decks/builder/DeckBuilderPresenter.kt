@@ -5,6 +5,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import app.deckbox.common.screens.BoosterPackBuilderScreen
+import app.deckbox.common.screens.BoosterPackScreen
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
@@ -12,6 +14,7 @@ import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.coroutines.map
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.extensions.addIfEmpty
 import app.deckbox.core.extensions.lowestMarketPrice
 import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
@@ -29,11 +32,13 @@ import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.EditDescription
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.EditName
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.IncrementCard
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NavigateBack
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NewBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.RemoveCard
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.RemoveTag
 import app.deckbox.ui.decks.builder.model.CardUiModel
 import app.deckbox.ui.decks.builder.model.CardUiModel.Tip
 import cafe.adriel.lyricist.LocalStrings
+import com.benasher44.uuid.uuid4
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -77,32 +82,52 @@ class DeckBuilderPresenter(
     val uiModels by remember {
       snapshotFlow {
         sessionCards.map { cards ->
-          val split = cards.groupBy { it.card.supertype }
+          val pokemon = mutableListOf<CardUiModel>()
+          val trainers = mutableListOf<CardUiModel>()
+          val energy = mutableListOf<CardUiModel>()
 
-          val pokemon = split[SuperType.POKEMON]
-            ?.let { Evolution.create(it) }
-            ?.flatMap { evolution ->
-              if (evolution.size == 1) {
-                evolution.nodes.first().cards.map { CardUiModel.Single(it) }
-              } else {
-                listOf(CardUiModel.EvolutionLine(evolution))
+          val evolutions = Evolution.create(cards)
+          evolutions.forEach { evolution ->
+            if (evolution.size == 1) {
+              evolution.firstNodeCards().forEach { card ->
+                when (card.card.supertype) {
+                  SuperType.ENERGY -> energy += CardUiModel.Single(card)
+                  SuperType.TRAINER -> trainers += CardUiModel.Single(card)
+                  else -> pokemon += CardUiModel.Single(card)
+                }
               }
+            } else {
+              pokemon += CardUiModel.EvolutionLine(evolution)
             }
-            ?.sortedBy {
+          }
+
+          pokemon.apply {
+            sortBy {
               when (it) {
-                is CardUiModel.EvolutionLine -> 0
-                else -> 1
+                is CardUiModel.EvolutionLine -> it.evolution.firstNodeCards().first().card.name
+                is CardUiModel.Single -> "zzzz${it.card.card.name}"
+                else -> BottomSortName
               }
             }
-            ?: listOf(Tip.Pokemon)
+          }.addIfEmpty(Tip.Pokemon)
 
-          val trainers = split[SuperType.TRAINER]
-            ?.map { CardUiModel.Single(it) }
-            ?: listOf(Tip.Trainer)
+          trainers.apply {
+            sortBy {
+              when (it) {
+                is CardUiModel.Single -> it.card.card.name
+                else -> BottomSortName
+              }
+            }
+          }.addIfEmpty(Tip.Trainer)
 
-          val energy = split[SuperType.ENERGY]
-            ?.map { CardUiModel.Single(it) }
-            ?: listOf(Tip.Energy)
+          energy.apply {
+            sortBy {
+              when (it) {
+                is CardUiModel.Single -> it.card.card.name
+                else -> BottomSortName
+              }
+            }
+          }.addIfEmpty(Tip.Energy)
 
           // Concatenate the models
           pokemon.prependIfNotEmpty(
@@ -207,7 +232,10 @@ class DeckBuilderPresenter(
       is IncrementCard -> repository.incrementCard(deckId, event.cardId, event.amount)
       is DecrementCard -> repository.decrementCard(deckId, event.cardId, event.amount)
       is AddBoosterPack -> repository.addBoosterPack(deckId, event.pack.id)
+      is NewBoosterPack -> navigator.goTo(BoosterPackBuilderScreen(uuid4().toString()))
       is RemoveCard -> repository.removeCard(deckId, event.cardId)
     }
   }
 }
+
+private const val BottomSortName = "zzzzzzzzzzzz"

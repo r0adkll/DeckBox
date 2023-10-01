@@ -1,7 +1,6 @@
 package app.deckbox.features.cards.ui
 
 import DeckBoxAppBar
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -41,7 +39,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,26 +51,33 @@ import app.deckbox.common.compose.icons.Bulbasaur
 import app.deckbox.common.compose.icons.Charmander
 import app.deckbox.common.compose.icons.DeckBoxIcons
 import app.deckbox.common.compose.icons.Squirtle
+import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.icons.rounded.AddDeck
 import app.deckbox.common.compose.icons.rounded.SubtractCard
+import app.deckbox.common.compose.message.UiMessageSnackBarEmitter
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
 import app.deckbox.common.compose.widgets.CardAspectRatio
 import app.deckbox.common.compose.widgets.ContentLoadingSize
-import app.deckbox.common.compose.widgets.OutlinedIconButton
-import app.deckbox.common.compose.widgets.SizedIcon
+import app.deckbox.common.compose.widgets.DismissableSnackbarHost
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
+import app.deckbox.common.screens.BoosterPackPickerScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckPickerScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Deck
 import app.deckbox.core.model.SuperType
+import app.deckbox.features.cards.ui.CardDetailUiEvent.AddToBoosterPack
 import app.deckbox.features.cards.ui.CardDetailUiEvent.AddToDeck
 import app.deckbox.features.cards.ui.CardDetailUiEvent.CardClick
+import app.deckbox.features.cards.ui.CardDetailUiEvent.ClearUiMessage
 import app.deckbox.features.cards.ui.CardDetailUiEvent.DecrementCount
 import app.deckbox.features.cards.ui.CardDetailUiEvent.IncrementCount
 import app.deckbox.features.cards.ui.CardDetailUiEvent.NavigateBack
+import app.deckbox.features.cards.ui.CardDetailUiEvent.NewBoosterPack
+import app.deckbox.features.cards.ui.CardDetailUiEvent.NewDeck
 import app.deckbox.features.cards.ui.CardDetailUiEvent.OpenUrl
 import app.deckbox.features.cards.ui.composables.CardMarketPriceCard
 import app.deckbox.features.cards.ui.composables.InfoCard
@@ -96,30 +100,18 @@ internal fun CardDetail(
   state: CardDetailUiState,
   modifier: Modifier = Modifier,
 ) {
-  val coroutineScope = rememberCoroutineScope()
-  val overlayHost = LocalOverlayHost.current
   val eventSink = state.eventSink
 
+  val coroutineScope = rememberCoroutineScope()
+  val overlayHost = LocalOverlayHost.current
   val snackbarHostState = remember { SnackbarHostState() }
 
-  val dismissSnackbarState = rememberDismissState(
-    confirmValueChange = { value ->
-      if (value != DismissValue.Default) {
-        snackbarHostState.currentSnackbarData?.dismiss()
-        true
-      } else {
-        false
-      }
-    }
+  // Emit any uiMessage's to the provided Snackbar
+  UiMessageSnackBarEmitter(
+    uiMessage = state.uiMessage,
+    snackbarHostState = snackbarHostState,
+    onEmit = { msg -> eventSink(ClearUiMessage(msg.id)) },
   )
-
-  state.snackbarMessage?.let { message ->
-    LaunchedEffect(message) {
-      snackbarHostState.showSnackbar(message)
-      // Notify the view model that the message has been dismissed
-      eventSink(CardDetailUiEvent.ClearSnackBar)
-    }
-  }
 
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   Scaffold(
@@ -137,9 +129,9 @@ internal fun CardDetail(
           }
         },
         actions = {
-          state.deckState?.let { deckState ->
+          if (state.deckState != null) {
             IconButton(
-              enabled = deckState.count > 0,
+              enabled = state.deckState.count > 0,
               onClick = { eventSink(DecrementCount) },
             ) {
               Icon(
@@ -155,24 +147,39 @@ internal fun CardDetail(
                 contentDescription = null,
               )
             }
-          } ?: run {
-            OutlinedIconButton(
-              icon = { SizedIcon(Icons.Rounded.AddDeck, contentDescription = null,) },
-              label = { Text(LocalStrings.current.cardDetailAddToDeck) },
-              colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = MaterialTheme.colorScheme.primary,
-              ),
-              border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+          } else {
+            IconButton(
               onClick = {
                 coroutineScope.launch {
-                  val result = overlayHost.showBottomSheetScreen<Deck>(DeckPickerScreen())
-                  if (result != null) {
-                    eventSink(AddToDeck(result))
+                  when (val result = overlayHost.showBottomSheetScreen(BoosterPackPickerScreen())) {
+                    BoosterPackPickerScreen.Response.NewPack -> eventSink(NewBoosterPack)
+                    is BoosterPackPickerScreen.Response.Pack -> eventSink(AddToBoosterPack(result.boosterPack))
+                    null -> Unit // Do nothing
                   }
                 }
               },
-              modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            ) {
+              Icon(
+                Icons.Rounded.AddBoosterPack,
+                contentDescription = null,
+              )
+            }
+            IconButton(
+              onClick = {
+                coroutineScope.launch {
+                  when (val result = overlayHost.showBottomSheetScreen(DeckPickerScreen())) {
+                    DeckPickerScreen.Response.NewDeck -> eventSink(NewDeck)
+                    is DeckPickerScreen.Response.Deck -> eventSink(AddToDeck(result.deck))
+                    null -> Unit // Do nothing
+                  }
+                }
+              },
+            ) {
+              Icon(
+                Icons.Rounded.AddDeck,
+                contentDescription = null,
+              )
+            }
           }
         },
         scrollBehavior = scrollBehavior,
@@ -202,16 +209,7 @@ internal fun CardDetail(
       }
     },
     snackbarHost = {
-      SnackbarHost(hostState = snackbarHostState) { data ->
-        SwipeToDismiss(
-          state = dismissSnackbarState,
-          background = {},
-          dismissContent = { Snackbar(snackbarData = data) },
-          modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth(),
-        )
-      }
+      DismissableSnackbarHost(hostState = snackbarHostState)
     },
     contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars),
   ) { paddingValues ->

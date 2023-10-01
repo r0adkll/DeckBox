@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Legalities
 import app.deckbox.core.model.Legality
+import app.deckbox.core.model.SuperType
 import app.deckbox.features.decks.api.validation.DeckValidation
 import app.deckbox.features.decks.api.validation.Validation
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent
@@ -60,6 +61,9 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
   SheetHeader(
     isValid = validation.isValid && !validation.isEmpty,
     totalCount = cards.sumOf { it.size },
+    pokemonCount = cards.sumOf { it.sizeOf(SuperType.POKEMON) },
+    trainerCount = cards.sumOf { it.sizeOf(SuperType.TRAINER) },
+    energyCount = cards.sumOf { it.sizeOf(SuperType.ENERGY) },
     legalities = state.session.deckOrNull()?.legalities
       ?: Legalities(standard = Legality.LEGAL),
     onHeaderClick = onHeaderClick,

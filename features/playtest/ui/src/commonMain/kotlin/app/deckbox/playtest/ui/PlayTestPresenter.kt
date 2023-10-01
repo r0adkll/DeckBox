@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.PlayTestScreen
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
@@ -15,6 +16,8 @@ import app.deckbox.core.model.flatten
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.DeckRepository
 import app.deckbox.features.decks.api.validation.DeckValidator
+import app.deckbox.playtest.ui.model.Board
+import app.deckbox.playtest.ui.model.newGame
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -32,22 +35,29 @@ class PlayTestPresenter(
   @Assisted private val navigator: Navigator,
   @Assisted private val screen: PlayTestScreen,
   private val deckValidator: DeckValidator,
-  private val deckRepository: DeckRepository,
   private val cardRepository: CardRepository,
 ) : Presenter<PlayTestUiState> {
 
   @Composable
   override fun present(): PlayTestUiState {
-
     val deckState by fetchAndValidateDeckState()
 
+    return when (val deck = deckState) {
+      DeckState.Loading -> PlayTestUiState.Loading
+      is DeckState.Error -> PlayTestUiState.Error(deck.validation)
+      is DeckState.Loaded -> {
+        var board by remember { mutableStateOf(newGame(deck.cards)) }
 
-
-
-    return PlayTestUiState(
-      deckState = deckState,
-    ) {
-      TODO("Handle events")
+        PlayTestUiState.InGame(
+          board = board,
+        ) { event ->
+          when (event) {
+            is PlayTestUiEvent.BoardAction -> {
+              board = event.action.apply(board)
+            }
+          }
+        }
+      }
     }
   }
 

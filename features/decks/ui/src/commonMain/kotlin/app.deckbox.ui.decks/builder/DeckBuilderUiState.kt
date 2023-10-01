@@ -64,4 +64,5 @@ sealed interface DeckBuilderUiEvent : CircuitUiEvent {
   data class DecrementCard(val cardId: String, val amount: Int = 1) : DeckBuilderUiEvent
   data class RemoveCard(val cardId: String) : DeckBuilderUiEvent
   data class AddBoosterPack(val pack: BoosterPack) : DeckBuilderUiEvent
+  data object NewBoosterPack : DeckBuilderUiEvent
 }

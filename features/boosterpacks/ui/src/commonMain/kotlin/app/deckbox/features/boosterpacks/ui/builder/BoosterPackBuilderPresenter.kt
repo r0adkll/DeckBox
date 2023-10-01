@@ -8,6 +8,7 @@ import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
+import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.extensions.lowestMarketPrice
@@ -22,10 +23,12 @@ import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.De
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.EditName
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.IncrementCard
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NavigateBack
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NewDeck
 import app.deckbox.features.boosterpacks.ui.builder.model.CardUiModel
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import cafe.adriel.lyricist.LocalStrings
+import com.benasher44.uuid.uuid4
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -148,6 +151,7 @@ class BoosterPackBuilderPresenter(
     ) { event ->
       when (event) {
         NavigateBack -> navigator.pop()
+        NewDeck -> navigator.goTo(DeckBuilderScreen(deckBuilderRepository.createSession()))
         is AddCards -> navigator.goTo(
           BrowseScreen(
             packId = screen.id,

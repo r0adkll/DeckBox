@@ -1,5 +1,8 @@
 package app.deckbox.ui.decks.builder
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,9 +14,11 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.EditOff
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,6 +48,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.PlatformBackHandler
 import app.deckbox.common.compose.extensions.plus
 import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddCard
@@ -61,6 +68,7 @@ import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.CardClick
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.DecrementCard
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.IncrementCard
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NavigateBack
+import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NewBoosterPack
 import app.deckbox.ui.decks.builder.composables.DeckBuilderBottomSheet
 import app.deckbox.ui.decks.builder.composables.DeckCardList
 import app.deckbox.ui.decks.builder.composables.SheetHeaderHeight
@@ -97,6 +105,7 @@ fun DeckBuilder(
       scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded
     }
   }
+
   LaunchedEffect(isBottomSheetCollapsed) {
     if (isBottomSheetCollapsed) {
       focusManager.clearFocus()
@@ -105,70 +114,57 @@ fun DeckBuilder(
 
   var isEditing by remember { mutableStateOf(false) }
 
+  /*
+   * Intercept the platform back action and opt to cancel editing mode before
+   * popping the screen
+   */
+  PlatformBackHandler(
+    enabled = isEditing,
+    onBack = { isEditing = false }
+  )
+
+//  /*
+//   * Show / Hide the Bottom sheet depending on edit mode
+//   */
+//  LaunchedEffect(isEditing) {
+//    if (isEditing) {
+//      scaffoldState.bottomSheetState.hide()
+//    } else if (scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
+//      scaffoldState.bottomSheetState.partialExpand()
+//    }
+//  }
+
   BottomSheetScaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     scaffoldState = scaffoldState,
     topBar = {
-      LargeTopAppBar(
-        title = {
-          state.session.deckOrNull()?.let { deck ->
-            val name = if (deck.name.isBlank()) {
-              AnnotatedString(
-                LocalStrings.current.deckTitleNoName,
-                SpanStyle(
-                  fontStyle = FontStyle.Italic,
-                  color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                ),
-              )
-            } else {
-              AnnotatedString(deck.name)
-            }
-
-            Text(
-              text = name,
-              modifier = Modifier.clickable {
-                coroutineScope.launch {
-                  scaffoldState.bottomSheetState.expand()
-                  nameFocusRequester.requestFocus()
-                }
-              },
-            )
-          }
-        },
-        navigationIcon = {
-          IconButton(
-            onClick = { eventSink(NavigateBack) },
-          ) {
-            Icon(Icons.Rounded.ArrowBack, contentDescription = null)
-          }
-        },
-        actions = {
-          IconButton(
-            onClick = {
+      Crossfade(
+        targetState = isEditing,
+      ) { isEditingMode ->
+        if (isEditingMode) {
+          EditingAppBar(
+            onExitClick = { isEditing = false },
+            scrollBehavior = scrollBehavior,
+          )
+        } else {
+          BuilderAppBar(
+            state = state,
+            onEditClick = { isEditing = !isEditing},
+            onAddToBoosterPackClick = {
               coroutineScope.launch {
-                val result = overlayHost.showBottomSheetScreen<BoosterPack>(BoosterPackPickerScreen())
-                if (result != null) {
-                  eventSink(AddBoosterPack(result))
+                when (val result = overlayHost.showBottomSheetScreen(BoosterPackPickerScreen())) {
+                  BoosterPackPickerScreen.Response.NewPack -> eventSink(NewBoosterPack)
+                  is BoosterPackPickerScreen.Response.Pack -> eventSink(AddBoosterPack(result.boosterPack))
+                  null -> Unit // Do nothing
                 }
               }
             },
-          ) {
-            Icon(
-              Icons.Rounded.AddBoosterPack,
-              contentDescription = null,
-            )
-          }
-          IconButton(
-            onClick = { isEditing = !isEditing },
-          ) {
-            Icon(
-              if (isEditing) Icons.Rounded.EditOff else Icons.Rounded.Edit,
-              contentDescription = null,
-            )
-          }
-        },
-        scrollBehavior = scrollBehavior,
-      )
+            scaffoldState = scaffoldState,
+            nameFocusRequester = nameFocusRequester,
+            scrollBehavior = scrollBehavior,
+          )
+        }
+      }
     },
     sheetContent = {
       DeckBuilderBottomSheet(
@@ -209,11 +205,8 @@ fun DeckBuilder(
         }
       }
 
-      ExtendedFloatingActionButton(
-        expanded = !isScrolled,
-        onClick = { eventSink(AddCards()) },
-        text = { Text("Add cards") },
-        icon = { Icon(Icons.Rounded.AddCard, contentDescription = null) },
+      AnimatedVisibility(
+        visible = !isEditing,
         modifier = Modifier
           .align(Alignment.BottomEnd)
           .padding(
@@ -222,10 +215,123 @@ fun DeckBuilder(
           )
           .windowInsetsPadding(
             WindowInsets.navigationBars,
-          ),
-      )
+          )
+      ) {
+        ExtendedFloatingActionButton(
+          expanded = !isScrolled,
+          onClick = { eventSink(AddCards()) },
+          text = { Text("Add cards") },
+          icon = { Icon(Icons.Rounded.AddCard, contentDescription = null) },
+        )
+      }
     }
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BuilderAppBar(
+  state: DeckBuilderUiState,
+  onEditClick: () -> Unit,
+  onAddToBoosterPackClick: () -> Unit,
+  scaffoldState: BottomSheetScaffoldState,
+  nameFocusRequester: FocusRequester,
+  scrollBehavior: TopAppBarScrollBehavior,
+  modifier: Modifier = Modifier,
+) {
+  val coroutineScope = rememberCoroutineScope()
+  val eventSink = state.eventSink
+
+  LargeTopAppBar(
+    title = {
+      state.session.deckOrNull()?.let { deck ->
+        val name = if (deck.name.isBlank()) {
+          AnnotatedString(
+            LocalStrings.current.deckTitleNoName,
+            SpanStyle(
+              fontStyle = FontStyle.Italic,
+              color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            ),
+          )
+        } else {
+          AnnotatedString(deck.name)
+        }
+
+        Text(
+          text = name,
+          modifier = Modifier.clickable {
+            coroutineScope.launch {
+              scaffoldState.bottomSheetState.expand()
+              nameFocusRequester.requestFocus()
+            }
+          },
+        )
+      }
+    },
+    navigationIcon = {
+      IconButton(
+        onClick = { eventSink(NavigateBack) },
+      ) {
+        Icon(Icons.Rounded.ArrowBack, contentDescription = null)
+      }
+    },
+    actions = {
+      IconButton(
+        onClick = onAddToBoosterPackClick,
+      ) {
+        Icon(
+          Icons.Rounded.AddBoosterPack,
+          contentDescription = null,
+        )
+      }
+      IconButton(
+        onClick = onEditClick,
+      ) {
+        Icon(
+          Icons.Rounded.Edit,
+          contentDescription = null,
+        )
+      }
+    },
+    scrollBehavior = scrollBehavior,
+    modifier = modifier,
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EditingAppBar(
+  onExitClick: () -> Unit,
+  scrollBehavior: TopAppBarScrollBehavior,
+  modifier: Modifier = Modifier,
+) {
+  LargeTopAppBar(
+    title = {
+      Text(LocalStrings.current.deckBuilderEditingTitle)
+    },
+    navigationIcon = {
+      IconButton(
+        onClick = onExitClick,
+      ) {
+        Icon(Icons.Rounded.Close, contentDescription = null)
+      }
+    },
+    actions = {
+      IconButton(
+        onClick = onExitClick,
+      ) {
+        Icon(
+          Icons.Rounded.EditOff,
+          contentDescription = null,
+        )
+      }
+    },
+    scrollBehavior = scrollBehavior,
+    modifier = modifier,
+    colors = TopAppBarDefaults.largeTopAppBarColors(
+      containerColor = MaterialTheme.colorScheme.secondaryContainer,
+    )
+  )
 }
 
 @Composable

@@ -1,10 +1,12 @@
 package app.deckbox.ui.decks.builder.composables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ErrorOutline
@@ -16,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.icons.filled.Cards
 import app.deckbox.core.model.Legalities
 import app.deckbox.core.model.Legality
@@ -27,46 +30,51 @@ val SheetHeaderHeight = 56.dp
 internal fun SheetHeader(
   isValid: Boolean,
   totalCount: Int,
+  pokemonCount: Int,
+  trainerCount: Int,
+  energyCount: Int,
   legalities: Legalities,
   onHeaderClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  Row(
+  Box(
     modifier = modifier
       .fillMaxWidth()
       .height(SheetHeaderHeight)
       .clickable(onClick = onHeaderClick),
-    verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(Modifier.width(16.dp))
-    if (!isValid) {
-      Icon(
-        Icons.Rounded.ErrorOutline,
-        contentDescription = null,
-        tint = MaterialTheme.colorScheme.error,
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.align(Alignment.CenterStart)
+    ) {
+      Spacer(Modifier.width(16.dp))
+      if (!isValid) {
+        Icon(
+          Icons.Rounded.ErrorOutline,
+          contentDescription = null,
+          tint = MaterialTheme.colorScheme.error,
+        )
+        Spacer(Modifier.width(8.dp))
+      }
+      Text(
+        text = when {
+          legalities.standard == Legality.LEGAL -> LocalStrings.current.standardLegality
+          legalities.expanded == Legality.LEGAL -> LocalStrings.current.expandedLegality
+          else -> LocalStrings.current.unlimitedLegality
+        }.uppercase(),
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.SemiBold,
       )
-      Spacer(Modifier.width(8.dp))
     }
-    Text(
-      text = when {
-        legalities.standard == Legality.LEGAL -> LocalStrings.current.standardLegality
-        legalities.expanded == Legality.LEGAL -> LocalStrings.current.expandedLegality
-        else -> LocalStrings.current.unlimitedLegality
-      }.uppercase(),
-      style = MaterialTheme.typography.titleMedium,
-      fontWeight = FontWeight.SemiBold,
+    CardCounter(
+      total = totalCount,
+      pokemon = pokemonCount,
+      trainer = trainerCount,
+      energy = energyCount,
+      modifier = modifier
+        .align(Alignment.CenterEnd)
+        .padding(end = 16.dp)
+        .zIndex(1f),
     )
-    Spacer(Modifier.weight(1f))
-    Text(
-      text = totalCount.toString(),
-      style = MaterialTheme.typography.titleSmall,
-      fontWeight = FontWeight.SemiBold,
-    )
-    Spacer(Modifier.width(8.dp))
-    Icon(
-      Icons.Filled.Cards,
-      contentDescription = null,
-    )
-    Spacer(Modifier.width(16.dp))
   }
 }

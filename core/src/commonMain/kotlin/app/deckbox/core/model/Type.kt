@@ -26,3 +26,18 @@ enum class Type {
     }
   }
 }
+
+fun energyTypeFromCardName(name: String): Type {
+  val energyName = BasicEnergyRegex.find(name)
+    ?.groups
+    ?.get(2)
+    ?.value
+
+  return if (energyName != null) {
+    Type.find(energyName)
+  } else {
+    Type.COLORLESS
+  }
+}
+
+private val BasicEnergyRegex = """(Basic )?(.+) Energy""".toRegex()

@@ -14,5 +14,6 @@ data class DeckPickerUiState(
 
 sealed interface DeckPickerUiEvent {
   data object Close : DeckPickerUiEvent
+  data object NewDeck : DeckPickerUiEvent
   data class DeckPicked(val deck: Deck) : DeckPickerUiEvent
 }

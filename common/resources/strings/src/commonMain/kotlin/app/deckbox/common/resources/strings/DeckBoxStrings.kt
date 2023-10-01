@@ -116,5 +116,9 @@ data class DeckBoxStrings(
   val evolvesFromEmptyLabel: String,
   val evolvesToErrorLabel: String,
   val evolvesToEmptyLabel: String,
-  val cardDetailAddToDeck: String,
+
+  val cardDetailAddedToDeck: (name: String) -> String,
+  val cardDetailAddedToBoosterPack: (name: String?) -> String,
+  val deckBuilderEditingTitle: String,
+  val deckPickerEmptyMessage: String,
 )

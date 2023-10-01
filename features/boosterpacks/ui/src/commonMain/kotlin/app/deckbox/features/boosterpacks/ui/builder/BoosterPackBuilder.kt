@@ -55,6 +55,7 @@ import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.Ca
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.DecrementCard
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.IncrementCard
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NavigateBack
+import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NewDeck
 import app.deckbox.features.boosterpacks.ui.builder.composables.BoosterPackBottomSheet
 import app.deckbox.features.boosterpacks.ui.builder.composables.BoosterPackCardList
 import app.deckbox.features.boosterpacks.ui.builder.composables.SheetHeaderHeight
@@ -137,9 +138,10 @@ fun BoosterPackBuilder(
           IconButton(
             onClick = {
               coroutineScope.launch {
-                val result = overlayHost.showBottomSheetScreen<Deck>(DeckPickerScreen())
-                if (result != null) {
-                  state.eventSink(AddToDeck(result))
+                when (val result = overlayHost.showBottomSheetScreen(DeckPickerScreen())) {
+                  DeckPickerScreen.Response.NewDeck -> state.eventSink(NewDeck)
+                  is DeckPickerScreen.Response.Deck -> state.eventSink(AddToDeck(result.deck))
+                  null -> Unit // Do Nothing
                 }
               }
             },

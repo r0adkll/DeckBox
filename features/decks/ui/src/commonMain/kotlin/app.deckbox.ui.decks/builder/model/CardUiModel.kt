@@ -12,6 +12,8 @@ sealed interface CardUiModel {
   val id: String
   val size: Int
 
+  fun sizeOf(superType: SuperType): Int
+
   data class SectionHeader(
     val superType: SuperType,
     val title: @Composable () -> String,
@@ -21,6 +23,7 @@ sealed interface CardUiModel {
       get() = superType.hashCode().toString()
 
     override val size: Int = 0
+    override fun sizeOf(superType: SuperType): Int = 0
   }
 
   data class EvolutionLine(
@@ -31,6 +34,12 @@ sealed interface CardUiModel {
 
     override val size: Int
       get() = evolution.count
+
+    override fun sizeOf(superType: SuperType): Int {
+      return evolution.nodes.flatMap { it.cards }
+        .filter { it.card.supertype == superType }
+        .sumOf { it.count }
+    }
   }
 
   data class Single(
@@ -40,20 +49,27 @@ sealed interface CardUiModel {
       get() = card.card.id
     override val size: Int
       get() = card.count
+
+    override fun sizeOf(superType: SuperType): Int {
+      return if (card.card.supertype == superType) card.count else 0
+    }
   }
 
   sealed interface Tip : CardUiModel {
     data object Pokemon : Tip {
       override val id: String = "Tip.Pokemon"
       override val size: Int = 0
+      override fun sizeOf(superType: SuperType): Int = 0
     }
     data object Trainer : Tip {
       override val id: String = "Tip.Trainer"
       override val size: Int = 0
+      override fun sizeOf(superType: SuperType): Int = 0
     }
     data object Energy : Tip {
       override val id: String = "Tip.Energy"
       override val size: Int = 0
+      override fun sizeOf(superType: SuperType): Int = 0
     }
   }
 }

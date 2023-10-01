@@ -7,6 +7,11 @@ fun <T> List<T>.prependIfNotEmpty(item: T): List<T> {
   return if (isEmpty()) this else listOf(item) + this
 }
 
+fun <T> MutableList<T>.addIfEmpty(item: T): MutableList<T> {
+  if (isEmpty()) add(item)
+  return this
+}
+
 fun <T> List<T>.prependFilterIfNotEmpty(
   predicate: (T) -> Boolean,
   item: T,

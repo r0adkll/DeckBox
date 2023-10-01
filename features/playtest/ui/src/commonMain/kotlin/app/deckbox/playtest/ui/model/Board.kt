@@ -26,23 +26,37 @@ data class Board(
   }
 }
 
+fun newGame(cards: ImmutableList<Card>): Board {
+  return Board(
+    player = Player(
+      type = Player.Type.PLAYER,
+      deck = cards,
+    ),
+    opponent = Player(
+      type = Player.Type.OPPONENT,
+      deck = cards, // TODO: Factor in opponent here
+    ),
+    turn = Turn(),
+  )
+}
+
 @Immutable
 data class Turn(
-  val count: Int,
-  val whoIs: Player.Type,
+  val count: Int = 0,
+  val whoIs: Player.Type = Player.Type.PLAYER,
 )
 
 @Immutable
 data class Player(
   val type: Type,
-  val hand: ImmutableList<Card>,
+  val hand: ImmutableList<Card> = persistentListOf(),
   val deck: ImmutableList<Card>,
-  val discard: ImmutableList<Card>,
-  val lostZone: ImmutableList<Card>,
-  val prizes: ImmutableMap<Int, Card>,
-  val bench: Bench,
-  val active: PlayedCard?,
-  val stadium: Card?,
+  val discard: ImmutableList<Card> = persistentListOf(),
+  val lostZone: ImmutableList<Card> = persistentListOf(),
+  val prizes: ImmutableMap<Int, Card> = persistentMapOf(),
+  val bench: Bench = Bench(),
+  val active: PlayedCard? = null,
+  val stadium: Card? = null,
 ) {
   enum class Type {
     PLAYER,

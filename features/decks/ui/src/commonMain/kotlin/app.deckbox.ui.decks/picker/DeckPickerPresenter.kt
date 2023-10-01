@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import app.deckbox.common.compose.overlays.overlayResult
 import app.deckbox.common.screens.DeckPickerScreen
+import app.deckbox.common.screens.DeckPickerScreen.Response
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Deck
@@ -45,7 +46,8 @@ class DeckPickerPresenter(
     ) { event ->
       when (event) {
         DeckPickerUiEvent.Close -> navigator.pop()
-        is DeckPickerUiEvent.DeckPicked -> navigator.overlayResult(event.deck)
+        DeckPickerUiEvent.NewDeck -> navigator.overlayResult(Response.NewDeck)
+        is DeckPickerUiEvent.DeckPicked -> navigator.overlayResult(Response.Deck(event.deck))
       }
     }
   }

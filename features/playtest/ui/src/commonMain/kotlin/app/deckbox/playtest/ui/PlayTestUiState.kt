@@ -3,14 +3,24 @@ package app.deckbox.playtest.ui
 import androidx.compose.runtime.Immutable
 import app.deckbox.core.model.Card
 import app.deckbox.features.decks.api.validation.DeckValidation
+import app.deckbox.playtest.ui.model.Action
+import app.deckbox.playtest.ui.model.Board
 import com.slack.circuit.runtime.CircuitUiState
 import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
-data class PlayTestUiState(
-  val deckState: DeckState,
-  val eventSink: (PlayTestUiEvent) -> Unit,
-) : CircuitUiState
+sealed class PlayTestUiState : CircuitUiState {
+  data object Loading : PlayTestUiState()
+
+  data class InGame(
+    val board: Board,
+    val eventSink: (PlayTestUiEvent) -> Unit,
+  ) : PlayTestUiState()
+
+  data class Error(
+    val validation: DeckValidation,
+  ) : PlayTestUiState()
+}
 
 @Immutable
 sealed interface DeckState {
@@ -19,4 +29,6 @@ sealed interface DeckState {
   data class Error(val validation: DeckValidation) : DeckState
 }
 
-sealed interface PlayTestUiEvent
+sealed interface PlayTestUiEvent {
+  data class BoardAction(val action: Action) : PlayTestUiEvent
+}

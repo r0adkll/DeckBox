@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.PlatformBackHandler
 import app.deckbox.common.screens.DeckBoxScreen
+import app.deckbox.common.screens.OverlayDeckBoxScreen
 import app.deckbox.common.screens.OverlayResultScreen
 import app.deckbox.core.logging.bark
 import com.slack.circuit.foundation.CircuitContent
@@ -117,9 +118,11 @@ private fun Handle(
   )
 }
 
-suspend fun <R> OverlayHost.showBottomSheetScreen(screen: DeckBoxScreen): R? {
+suspend fun <ResponseT> OverlayHost.showBottomSheetScreen(
+  screen: OverlayDeckBoxScreen<ResponseT>,
+): ResponseT? {
   return show(
-    BottomSheetOverlay<DeckBoxScreen, OverlayResultScreen<R>>(
+    BottomSheetOverlay<DeckBoxScreen, OverlayResultScreen<ResponseT>>(
       model = screen,
       onDismiss = { OverlayResultScreen() },
       content = { model, navigator ->
@@ -128,9 +131,9 @@ suspend fun <R> OverlayHost.showBottomSheetScreen(screen: DeckBoxScreen): R? {
           @Suppress("UNCHECKED_CAST")
           override fun goTo(screen: Screen) {
             if (screen is OverlayResultScreen<*>) {
-              bark { "Result: ${(screen as? OverlayResultScreen<R>)?.result}" }
+              bark { "Result: ${(screen as? OverlayResultScreen<ResponseT>)?.result}" }
               navigator.finish(
-                screen as? OverlayResultScreen<R>
+                screen as? OverlayResultScreen<ResponseT>
                   ?: error("Incorrect result type for the current overlay"),
               )
             } else {

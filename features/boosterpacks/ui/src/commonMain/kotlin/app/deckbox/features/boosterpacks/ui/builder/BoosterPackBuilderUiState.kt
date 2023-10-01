@@ -50,6 +50,7 @@ sealed interface BoosterPackBuilderUiEvent {
   data class AddCards(val superType: SuperType? = null) : BoosterPackBuilderUiEvent
   data class CardClick(val card: Card) : BoosterPackBuilderUiEvent
 
+  data object NewDeck : BoosterPackBuilderUiEvent
   data class EditName(val name: String) : BoosterPackBuilderUiEvent
   data class IncrementCard(val cardId: String, val amount: Int = 1) : BoosterPackBuilderUiEvent
   data class DecrementCard(val cardId: String, val amount: Int = 1) : BoosterPackBuilderUiEvent

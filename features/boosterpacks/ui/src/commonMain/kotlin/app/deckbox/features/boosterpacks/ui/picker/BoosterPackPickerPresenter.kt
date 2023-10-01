@@ -5,7 +5,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import app.deckbox.common.compose.overlays.overlayResult
+import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.BoosterPackPickerScreen
+import app.deckbox.common.screens.BoosterPackPickerScreen.Response
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackLoadState
@@ -38,7 +40,8 @@ class BoosterPackPickerPresenter(
     ) { event ->
       when (event) {
         BoosterPackPickerUiEvent.Close -> navigator.pop()
-        is BoosterPackPickerUiEvent.BoosterPackClick -> navigator.overlayResult(event.boosterPack)
+        BoosterPackPickerUiEvent.NewPackClick -> navigator.overlayResult(Response.NewPack)
+        is BoosterPackPickerUiEvent.BoosterPackClick -> navigator.overlayResult(Response.Pack(event.boosterPack))
       }
     }
   }
