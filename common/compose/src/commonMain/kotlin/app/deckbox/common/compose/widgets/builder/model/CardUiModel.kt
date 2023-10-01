@@ -1,4 +1,4 @@
-package app.deckbox.ui.decks.builder.model
+package app.deckbox.common.compose.widgets.builder.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable

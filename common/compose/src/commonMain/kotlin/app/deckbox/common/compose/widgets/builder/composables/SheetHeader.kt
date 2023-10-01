@@ -1,4 +1,4 @@
-package app.deckbox.ui.decks.builder.composables
+package app.deckbox.common.compose.widgets.builder.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import app.deckbox.common.compose.icons.filled.Cards
 import app.deckbox.core.model.Legalities
 import app.deckbox.core.model.Legality
 import cafe.adriel.lyricist.LocalStrings

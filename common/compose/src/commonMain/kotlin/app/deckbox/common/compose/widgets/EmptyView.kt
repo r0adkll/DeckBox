@@ -80,7 +80,7 @@ fun DefaultEmptyView(
         modifier = Modifier.size(DefaultIconSize),
       )
     },
-    modifier = modifier,
+    modifier = modifier.fillMaxSize(),
     action = action,
   )
 }
@@ -99,6 +99,6 @@ fun SearchEmptyView(
         modifier = Modifier.size(DefaultIconSize),
       )
     },
-    modifier = modifier,
+    modifier = modifier.fillMaxSize(),
   )
 }

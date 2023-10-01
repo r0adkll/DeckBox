@@ -1,11 +1,6 @@
-package app.deckbox.ui.decks.builder.composables
+package app.deckbox.common.compose.widgets.builder.composables
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CatchingPokemon
@@ -71,7 +65,7 @@ internal fun CardCounter(
         }
         .padding(
           horizontal = 16.dp,
-          vertical = 8.dp
+          vertical = 8.dp,
         )
         .animateContentSize(),
     ) {

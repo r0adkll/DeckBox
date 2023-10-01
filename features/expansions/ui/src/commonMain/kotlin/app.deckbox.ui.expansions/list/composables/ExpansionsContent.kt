@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Place
@@ -38,6 +40,7 @@ internal fun ExpansionsContent(
   onClick: (Expansion) -> Unit,
   onFavoritesClick: () -> Unit,
   modifier: Modifier = Modifier,
+  state: LazyListState = rememberLazyListState(),
   contentPadding: PaddingValues = PaddingValues(),
 ) {
   when (expansionState) {
@@ -49,6 +52,7 @@ internal fun ExpansionsContent(
       )
     } else {
       ExpansionsContent(
+        state = state,
         expansions = expansionState.groupedExpansions,
         hasFavorites = hasFavorites,
         style = style,
@@ -104,9 +108,11 @@ private fun ExpansionsContent(
   onClick: (Expansion) -> Unit,
   onFavoritesClick: () -> Unit,
   modifier: Modifier = Modifier,
+  state: LazyListState = rememberLazyListState(),
   contentPadding: PaddingValues = PaddingValues(),
 ) {
   LazyColumn(
+    state = state,
     modifier = modifier,
     contentPadding = contentPadding,
     verticalArrangement = Arrangement.spacedBy(8.dp),

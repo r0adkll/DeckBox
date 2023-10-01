@@ -131,6 +131,6 @@ val EnDeckBoxStrings = DeckBoxStrings(
   cardDetailAddedToBoosterPack = { name ->
     name?.let { "Added to \"$it\"" } ?: "Added to booster pack"
   },
-  deckBuilderEditingTitle = "Editing",
+  builderEditingTitle = "Editing",
   deckPickerEmptyMessage = "You don't have any decks. Try creating one to start building.",
 )

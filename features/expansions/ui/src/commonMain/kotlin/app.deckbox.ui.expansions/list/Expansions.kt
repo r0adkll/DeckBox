@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DensityLarge
 import androidx.compose.material.icons.rounded.DensityMedium
@@ -16,8 +17,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.widgets.SearchBar
@@ -84,7 +90,19 @@ internal fun Expansions(
           .padding(horizontal = 16.dp),
       )
 
+      val focusManager = LocalFocusManager.current
+      val lazyListState = rememberLazyListState()
+      val isScrolled by remember {
+        derivedStateOf { lazyListState.firstVisibleItemIndex > 0 || lazyListState.firstVisibleItemScrollOffset > 0 }
+      }
+      LaunchedEffect(isScrolled) {
+        if (isScrolled) {
+          focusManager.clearFocus()
+        }
+      }
+
       ExpansionsContent(
+        state = lazyListState,
         query = state.query,
         expansionState = state.expansionState,
         style = state.expansionCardStyle,

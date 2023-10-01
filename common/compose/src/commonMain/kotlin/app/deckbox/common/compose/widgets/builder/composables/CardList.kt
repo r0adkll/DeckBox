@@ -1,6 +1,7 @@
-package app.deckbox.features.boosterpacks.ui.builder.composables
+package app.deckbox.common.compose.widgets.builder.composables
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,77 +33,117 @@ import app.deckbox.common.compose.icons.rounded.Energy
 import app.deckbox.common.compose.icons.rounded.Wrench
 import app.deckbox.common.compose.widgets.CardEditor
 import app.deckbox.common.compose.widgets.PokemonCard
+import app.deckbox.common.compose.widgets.PokemonEvolution
+import app.deckbox.common.compose.widgets.builder.model.CardUiModel
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Stacked
 import app.deckbox.core.model.SuperType
-import app.deckbox.features.boosterpacks.ui.builder.model.CardUiModel
+import kotlinx.collections.immutable.ImmutableList
 
-private val ListSpacing = 16.dp
-private val CardSpacing = 8.dp
+private val CardSpacing = 16.dp
 
 @Composable
-internal fun BoosterPackCardList(
+internal fun CardList(
   isEditing: Boolean,
-  models: List<CardUiModel>,
+  models: ImmutableList<CardUiModel>,
   onCardClick: (Stacked<Card>) -> Unit,
   onCardLongClick: (Stacked<Card>) -> Unit,
   onAddCardClick: (Stacked<Card>) -> Unit,
   onRemoveCardClick: (Stacked<Card>) -> Unit,
+  onTipClick: (CardUiModel.Tip) -> Unit,
   modifier: Modifier = Modifier,
   lazyGridState: LazyGridState = rememberLazyGridState(),
-  columns: Int = 4,
+  columns: Int = 3,
   contentPadding: PaddingValues = PaddingValues(),
 ) {
-  LazyVerticalGrid(
-    modifier = modifier,
-    state = lazyGridState,
-    contentPadding = PaddingValues(
-      top = contentPadding.calculateTopPadding(),
-      start = ListSpacing,
-      end = ListSpacing,
-      bottom = contentPadding.calculateBottomPadding(),
-    ),
-    columns = GridCells.Fixed(columns),
-    horizontalArrangement = Arrangement.spacedBy(CardSpacing),
-    verticalArrangement = Arrangement.spacedBy(CardSpacing),
-  ) {
-    itemsIndexed(
-      items = models,
-      key = { _, item -> item.id },
-      span = { _, model ->
-        when (model) {
-          is CardUiModel.SectionHeader -> GridItemSpan(maxLineSpan)
-          is CardUiModel.Single -> GridItemSpan(1)
-        }
-      },
-      contentType = { _, item -> item::class },
-    ) { _, model ->
-      when (model) {
-        is CardUiModel.Single -> {
-          CardEditor(
-            count = model.card.count,
-            isEditing = isEditing,
-            onAddClick = { onAddCardClick(model.card) },
-            onRemoveClick = { onRemoveCardClick(model.card) },
-          ) {
-            PokemonCard(
-              card = model.card.card,
-              count = model.card.count.takeIf { it > 1 },
-              collected = model.card.collected,
-              onClick = {
-                onCardClick(model.card)
-              },
-              onLongClick = { onCardLongClick(model.card) },
-            )
-          }
-        }
+  BoxWithConstraints {
+    // Calculate best card width
+    val cardWidth = (maxWidth - ((columns + 1) * CardSpacing)) / columns
 
-        is CardUiModel.SectionHeader -> Header(
-          title = model.title(),
-          count = model.count,
-          superType = model.superType,
-          modifier = Modifier.overWidth(ListSpacing * 2),
-        )
+    LazyVerticalGrid(
+      modifier = modifier,
+      state = lazyGridState,
+      contentPadding = PaddingValues(
+        top = contentPadding.calculateTopPadding(),
+        start = CardSpacing,
+        end = CardSpacing,
+        bottom = contentPadding.calculateBottomPadding(),
+      ),
+      columns = GridCells.Fixed(columns),
+      horizontalArrangement = Arrangement.spacedBy(CardSpacing),
+      verticalArrangement = Arrangement.spacedBy(CardSpacing),
+    ) {
+      itemsIndexed(
+        items = models,
+        key = { _, item -> item.id },
+        span = { _, model ->
+          when (model) {
+            is CardUiModel.SectionHeader -> GridItemSpan(maxLineSpan)
+            is CardUiModel.EvolutionLine -> GridItemSpan(maxLineSpan)
+            is CardUiModel.Single -> GridItemSpan(1)
+            is CardUiModel.Tip -> GridItemSpan(3)
+          }
+        },
+        contentType = { _, item -> item::class },
+      ) { _, model ->
+        when (model) {
+          is CardUiModel.EvolutionLine -> PokemonEvolution(
+            evolution = model.evolution,
+            cardWidth = cardWidth,
+            contentPaddingHorizontal = 16.dp,
+            modifier = Modifier
+              .overWidth(CardSpacing * 2)
+              .fillMaxWidth(),
+          ) { stack ->
+            CardEditor(
+              count = stack.count,
+              isEditing = isEditing,
+              onAddClick = { onAddCardClick(stack) },
+              onRemoveClick = { onRemoveCardClick(stack) },
+            ) {
+              PokemonCard(
+                card = stack.card,
+                count = stack.count.takeIf { it > 1 },
+                collected = stack.collected,
+                onClick = { onCardClick(stack) },
+                onLongClick = { onCardLongClick(stack) },
+                modifier = Modifier.width(cardWidth),
+              )
+            }
+          }
+
+          is CardUiModel.Single -> {
+            CardEditor(
+              count = model.card.count,
+              isEditing = isEditing,
+              onAddClick = { onAddCardClick(model.card) },
+              onRemoveClick = { onRemoveCardClick(model.card) },
+            ) {
+              PokemonCard(
+                card = model.card.card,
+                count = model.card.count.takeIf { it > 1 },
+                collected = model.card.collected,
+                onClick = {
+                  onCardClick(model.card)
+                },
+                onLongClick = { onCardLongClick(model.card) },
+              )
+            }
+          }
+
+          is CardUiModel.SectionHeader -> Header(
+            title = model.title(),
+            count = model.count,
+            superType = model.superType,
+            modifier = Modifier.overWidth(CardSpacing * 2),
+          )
+
+          is CardUiModel.Tip -> BuilderTip(
+            tip = model,
+            onClick = { onTipClick(model) },
+            modifier = Modifier.overWidth(CardSpacing * 2),
+          )
+        }
       }
     }
   }

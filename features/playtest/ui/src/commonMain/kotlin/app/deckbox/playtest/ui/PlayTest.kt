@@ -2,9 +2,11 @@ package app.deckbox.playtest.ui
 
 import Psyduck
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +29,9 @@ fun PlayTest(
   modifier: Modifier = Modifier,
 ) {
   Box(
-    modifier = modifier.fillMaxSize(),
+    modifier = modifier
+      .background(MaterialTheme.colorScheme.background)
+      .fillMaxSize(),
   ) {
     when (state) {
       PlayTestUiState.Loading -> SpinningPokeballLoadingIndicator(Modifier.align(Alignment.Center))

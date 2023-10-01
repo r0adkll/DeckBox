@@ -334,9 +334,9 @@ private fun EnergyImageBubble(
           with (painter) {
             // We want to scale the image so that its card image window matches the height dimension of this
             // port view.
-            val scale = CardWindowUtil.windowScale(painter.intrinsicSize.height, 40.dp.toPx())
+            val scale = CardWindowUtil.windowScale(painter.intrinsicSize.height, size.toPx())
             val scaledWindow = CardWindowUtil.scaledImageWindow(painter.intrinsicSize, scale)
-            val additionalOffsetX = (scaledWindow.width - 40.dp.toPx()) / 2
+            val additionalOffsetX = (scaledWindow.width - size.toPx()) / 2
 
             translate(
               left = -(scaledWindow.left + additionalOffsetX),

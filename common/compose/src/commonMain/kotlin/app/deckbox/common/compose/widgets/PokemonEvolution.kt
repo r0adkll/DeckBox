@@ -1,4 +1,4 @@
-package app.deckbox.ui.decks.builder.composables
+package app.deckbox.common.compose.widgets
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -10,7 +10,6 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,7 +33,7 @@ private val SiblingCardSpacing = 1.dp
 private val LinkPaddingVertical = 6.dp
 
 @Composable
-internal fun PokemonEvolution(
+fun PokemonEvolution(
   evolution: Evolution,
   modifier: Modifier = Modifier,
   cardWidth: Dp = 100.dp,

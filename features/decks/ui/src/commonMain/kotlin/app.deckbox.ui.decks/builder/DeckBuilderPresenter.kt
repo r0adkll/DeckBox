@@ -5,8 +5,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import app.deckbox.common.compose.widgets.builder.model.CardUiModel
+import app.deckbox.common.compose.widgets.builder.model.CardUiModel.Tip
 import app.deckbox.common.screens.BoosterPackBuilderScreen
-import app.deckbox.common.screens.BoosterPackScreen
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
@@ -35,8 +36,6 @@ import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NavigateBack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NewBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.RemoveCard
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.RemoveTag
-import app.deckbox.ui.decks.builder.model.CardUiModel
-import app.deckbox.ui.decks.builder.model.CardUiModel.Tip
 import cafe.adriel.lyricist.LocalStrings
 import com.benasher44.uuid.uuid4
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject

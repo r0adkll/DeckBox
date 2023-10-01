@@ -1,4 +1,4 @@
-package app.deckbox.ui.decks.builder.composables
+package app.deckbox.common.compose.widgets.builder.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
@@ -24,10 +24,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.rounded.Energy
 import app.deckbox.common.compose.icons.rounded.Wrench
-import app.deckbox.ui.decks.builder.model.CardUiModel
+import app.deckbox.common.compose.widgets.builder.model.CardUiModel
 
 @Composable
-internal fun DeckTip(
+internal fun BuilderTip(
   tip: CardUiModel.Tip,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
