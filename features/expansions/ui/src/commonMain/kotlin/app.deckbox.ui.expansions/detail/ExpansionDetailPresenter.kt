@@ -59,7 +59,17 @@ class ExpansionDetailPresenter(
           ExpansionFilterPresenter((expansionCards as? LoadState.Loaded)?.data ?: emptyList())
         }
 
-        val filterState = filterPresenter.present(key = screen.expansionId)
+        /**
+         * Due to a compose multiplatform bug of calling composable functions from a subclass of an interface/abstract
+         * that contains the function we can't rely on default parameters as they will crash on iOS. For now, just
+         * pass the default at the top-level call-site
+         *
+         * https://github.com/JetBrains/compose-multiplatform/issues/3318
+         *
+         * TODO: Not 100% happy with the overall filter implementation and should re-visit it at some point to
+         *  improve its implementation
+         */
+        val filterState = filterPresenter.present(screen.expansionId, SearchFilter())
 
         val cardGridStyle by remember {
           settings.observeExpansionCardGridStyle()
