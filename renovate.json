@@ -1,0 +1,44 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "baseBranches": [
+    "modern"
+  ],
+  "assignees": [
+    "r0adkll"
+  ],
+  "addLabels": [
+    "renovate"
+  ],
+  "packageRules": [
+    {
+      "groupName": "Kotlin, KSP and Compose Compiler",
+      "groupSlug": "kotlin",
+      "matchPackageNames": [
+        "com.google.devtools.ksp",
+        "androidx.compose.compiler",
+        "org.jetbrains.kotlin"
+      ]
+    },
+    {
+      "description": "Automatically merge minor and patch-level updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Disable updates to SNAPSHOTS",
+      "matchDatasources": [
+        "maven"
+      ],
+      "allowedVersions": "!/SNAPSHOT$/"
+    }
+  ]
+}
