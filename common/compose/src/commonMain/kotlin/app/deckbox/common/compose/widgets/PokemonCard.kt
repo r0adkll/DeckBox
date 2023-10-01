@@ -36,7 +36,7 @@ import com.seiko.imageloader.rememberImageAction
 import com.seiko.imageloader.rememberImageActionPainter
 import com.valentinilk.shimmer.shimmer
 
-internal val CardCornerRadius = 8.dp
+val CardCornerRadius = 8.dp
 const val CardAspectRatio = 0.7167969f
 
 @Composable

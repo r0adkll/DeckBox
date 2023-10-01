@@ -1,11 +1,16 @@
 package app.deckbox.playtest.ui.model
 
 import androidx.compose.runtime.Immutable
+import app.deckbox.core.extensions.shuffle
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.SuperType
+import kotlin.random.Random
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 
 @Immutable
 data class Board(
@@ -27,11 +32,43 @@ data class Board(
 }
 
 fun newGame(cards: ImmutableList<Card>): Board {
+  val shuffledCards = cards
+    .shuffle(7)
+    .toMutableList()
+
+  fun draw() = shuffledCards.removeFirst()
+  fun drawOf(predicate: (Card) -> Boolean) = shuffledCards.find(predicate).also(shuffledCards::remove)
+  fun Card.play() = PlayedCard(
+    pokemons = persistentListOf(this),
+    energy = (0..1).mapNotNull { drawOf { it.supertype == SuperType.ENERGY } }.toImmutableList(),
+    damage = 20,
+    isPoisoned = Random.nextBoolean(),
+    isBurned = Random.nextBoolean(),
+  )
+
+  val prizes = (0 until 6).associateWith { draw() }.toImmutableMap()
+  val hand = (0 until 7).map { draw() }.toImmutableList()
+  val discard = (0 until 2).map { draw() }.toImmutableList()
+  val bench = Bench(
+    cards = mapOf(
+      0 to drawOf { it.supertype == SuperType.POKEMON }!!.play(),
+      1 to drawOf { it.supertype == SuperType.POKEMON }!!.play(),
+    ).toImmutableMap()
+  )
+  val active = draw().play()
+
+  val player = Player(
+    type = Player.Type.PLAYER,
+    deck = shuffledCards.toImmutableList(),
+    hand = hand,
+    discard = discard,
+    prizes = prizes,
+    bench = bench,
+    active = active,
+  )
+
   return Board(
-    player = Player(
-      type = Player.Type.PLAYER,
-      deck = cards,
-    ),
+    player = player,
     opponent = Player(
       type = Player.Type.OPPONENT,
       deck = cards, // TODO: Factor in opponent here

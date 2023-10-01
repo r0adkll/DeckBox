@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.common.screens.DecksScreen
+import app.deckbox.common.screens.PlayTestScreen
 import app.deckbox.common.screens.SettingsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.coroutines.LoadState
@@ -90,7 +91,10 @@ class DecksPresenter(
           }
 
           DeckCardEvent.Export -> bark { "Export (${event.deck.name})" }
-          DeckCardEvent.Test -> bark { "Experiment (${event.deck.name})" }
+          DeckCardEvent.Test -> {
+            bark { "Experiment (${event.deck.name})" }
+            navigator.goTo(PlayTestScreen(event.deck.id))
+          }
         }
 
         DecksUiEvent.CreateNewDeck -> navigator.goTo(

@@ -3,6 +3,7 @@ package app.deckbox.playtest.ui.composables
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.types.OverlappingTypeRow
@@ -102,13 +105,16 @@ internal fun InPlayCard(
     val cardConstraints = constraints.copy(
       maxHeight = adjustedHeight,
     )
+    val looseCardConstraints = cardConstraints.copy(
+      minWidth = 0
+    )
 
     val pokemons = measurables.filter {
       it.layoutId is CardId
     }.map { it to it.measure(cardConstraints) }
 
     val damage = measurables.find { it.layoutId is Damage }
-    val damagePlaceable = damage?.measure(constraints)
+    val damagePlaceable = damage?.measure(looseCardConstraints)
 
     val energy = measurables.find { it.layoutId is Energy }
     val energyPlaceable = energy?.measure(constraints)
@@ -117,7 +123,7 @@ internal fun InPlayCard(
     val toolsPlaceable = tools?.measure(cardConstraints)
 
     val statusMarker = measurables.find { it.layoutId is StatusMarker }
-    val statusMarkerPlaceable = statusMarker?.measure(constraints)
+    val statusMarkerPlaceable = statusMarker?.measure(looseCardConstraints)
 
     layout(constraints.maxWidth, adjustedHeight) {
       pokemons.forEachIndexed { index, (_, placeable) ->
@@ -207,15 +213,16 @@ internal fun DamageIndicator(
 ) {
   Text(
     text = (-damage * 10).toString(),
-    style = MaterialTheme.typography.labelSmall,
+    style = MaterialTheme.typography.labelMedium,
+    fontWeight = FontWeight.SemiBold,
     modifier = modifier
       .background(
         color = MaterialTheme.colorScheme.tertiaryContainer,
         shape = RoundedCornerShape(8.dp),
       )
       .padding(
-        horizontal = 12.dp,
-        vertical = 8.dp,
+        horizontal = 4.dp,
+        vertical = 2.dp,
       ),
   )
 }
@@ -225,6 +232,7 @@ internal fun BurnPoisonMarker(
   isBurned: Boolean,
   isPoisoned: Boolean,
   modifier: Modifier = Modifier,
+  size: Dp = 8.dp
 ) {
   OverlappingTypeRow(
     modifier = modifier,
@@ -232,7 +240,7 @@ internal fun BurnPoisonMarker(
     if (isBurned) {
       Spacer(
         modifier = Modifier
-          .size(64.dp)
+          .size(size)
           .background(
             color = Color.Red,
             shape = CircleShape,
@@ -242,7 +250,7 @@ internal fun BurnPoisonMarker(
     if (isPoisoned) {
       Spacer(
         modifier = Modifier
-          .size(64.dp)
+          .size(size)
           .background(
             color = Color.Green,
             shape = CircleShape,
@@ -259,6 +267,7 @@ internal fun EnergyRow(
 ) {
   Row(
     modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(2.dp),
   ) {
     energy.forEach { card ->
       if (card.subtypes.contains(SubType.Basic)) {
@@ -277,22 +286,23 @@ internal fun EnergyRow(
 private fun EnergyTypeBubble(
   type: Type,
   modifier: Modifier = Modifier,
+  size: Dp = 16.dp,
 ) {
   Image(
     type.asImageVector(),
     contentDescription = type.displayName,
     modifier = modifier
-      .size(40.dp)
+      .size(size)
       .background(
         color = type.toColor(),
         shape = CircleShape,
       )
       .border(
-        width = 2.dp,
+        width = 1.dp,
         color = MaterialTheme.colorScheme.outline.copy(alpha = 0.38f),
         shape = CircleShape,
       )
-      .padding(8.dp),
+      .padding(2.dp),
     colorFilter = ColorFilter.tint(type.toContentColor(true)),
   )
 }
@@ -301,13 +311,14 @@ private fun EnergyTypeBubble(
 private fun EnergyImageBubble(
   imageUrl: String,
   modifier: Modifier = Modifier,
+  size: Dp = 16.dp,
 ) {
   val painter = key(imageUrl) { rememberImagePainter(imageUrl) }
   Box(
     modifier = modifier
-      .size(40.dp)
+      .size(size)
       .border(
-        width = 2.dp,
+        width = 1.dp,
         color = MaterialTheme.colorScheme.outline.copy(alpha = 0.38f),
         shape = CircleShape,
       )
