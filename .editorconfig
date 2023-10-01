@@ -28,3 +28,7 @@ indent_size = 4
 
 [*.{xml,yml,yaml}]
 indent_size = 2
+
+[*.json]
+indent_size = 2
+ij_continuation_indent_size = 2

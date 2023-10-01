@@ -17,6 +17,13 @@ dependencyResolutionManagement {
   }
 }
 
+val isCi = providers.environmentVariable("CI").isPresent
+buildCache {
+  local {
+    isEnabled = !isCi
+  }
+}
+
 rootProject.name = "DeckBox"
 include(":androidApp")
 include(":desktopApp")
