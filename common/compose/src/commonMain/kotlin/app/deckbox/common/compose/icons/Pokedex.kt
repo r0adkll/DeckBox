@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-
 private var _vector: ImageVector? = null
 
 val DeckBoxIcons.Logos.Pokedex: ImageVector
@@ -23,7 +22,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
       defaultWidth = 48.dp,
       defaultHeight = 48.dp,
       viewportWidth = 48f,
-      viewportHeight = 48f
+      viewportHeight = 48f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFF37474F)),
@@ -34,7 +33,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(33f, 27f)
         lineToRelative(6f, 0.001f)
@@ -54,7 +53,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(39f, 29f)
         arcTo(4f, 4f, 0f, isMoreThanHalf = true, isPositiveArc = false, 39f, 37f)
@@ -76,7 +75,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(13f, 23f)
         horizontalLineTo(32f)
@@ -93,7 +92,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(11f, 25.001f)
         verticalLineTo(41f)
@@ -120,7 +119,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(23f, 28f)
         horizontalLineTo(10.976f)
@@ -150,7 +149,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
         strokeLineCap = StrokeCap.Butt,
         strokeLineJoin = StrokeJoin.Miter,
         strokeLineMiter = 1.0f,
-        pathFillType = PathFillType.NonZero
+        pathFillType = PathFillType.NonZero,
       ) {
         moveTo(31f, 38f)
         curveToRelative(0f, 0.552f, -0.447f, 1f, -1f, 1f)
@@ -183,7 +182,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(19f, 11f)
           horizontalLineTo(29f)
@@ -207,7 +206,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(11f, 30f)
           horizontalLineTo(13f)
@@ -224,7 +223,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(9f, 32f)
           horizontalLineTo(15f)
@@ -243,7 +242,7 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
           strokeLineCap = StrokeCap.Butt,
           strokeLineJoin = StrokeJoin.Miter,
           strokeLineMiter = 1.0f,
-          pathFillType = PathFillType.NonZero
+          pathFillType = PathFillType.NonZero,
         ) {
           moveTo(39f, 31f)
           arcTo(2f, 2f, 0f, isMoreThanHalf = true, isPositiveArc = false, 39f, 35f)
@@ -265,4 +264,3 @@ val DeckBoxIcons.Logos.Pokedex: ImageVector
     }.build()
     return _vector!!
   }
-

@@ -9,7 +9,7 @@ import app.deckbox.features.decks.api.validation.Validation
 import com.r0adkll.kotlininject.merge.annotations.ContributesMultibinding
 
 @ContributesMultibinding(MergeAppScope::class)
-object RadiantRule : Rule{
+object RadiantRule : Rule {
   override val name: String get() = "radiant-rule"
 
   override fun check(cards: List<Stacked<Card>>): Validation {

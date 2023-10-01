@@ -9,14 +9,11 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,11 +24,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.deckbox.common.compose.icons.Booster
 import app.deckbox.common.compose.icons.DeckBoxIcons
 import app.deckbox.common.compose.icons.Pokedex
-import app.deckbox.common.compose.icons.Skateboard
-import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddDeck
 import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultEmptyView
@@ -62,13 +56,13 @@ fun DeckPicker(
       LoadingContent()
     } else if (state.decks.isEmpty()) {
       EmptyContent(
-        onNewClick = { eventSink(DeckPickerUiEvent.NewDeck) }
+        onNewClick = { eventSink(DeckPickerUiEvent.NewDeck) },
       )
     } else {
       LoadedContent(
         decks = state.decks,
         onDeckClick = { deck -> eventSink(DeckPickerUiEvent.DeckPicked(deck)) },
-        onNewClick = { eventSink(DeckPickerUiEvent.NewDeck) }
+        onNewClick = { eventSink(DeckPickerUiEvent.NewDeck) },
       )
     }
   }
@@ -123,7 +117,7 @@ private fun EmptyContent(
         },
         label = {
           Text(LocalStrings.current.fabActionNewDeckButton)
-        }
+        },
       )
     },
     modifier = modifier
@@ -150,7 +144,7 @@ private fun LoadedContent(
       bottom = with(LocalDensity.current) {
         WindowInsets.navigationBars.getBottom(this).toDp()
       },
-    )
+    ),
   ) {
     item {
       Text(

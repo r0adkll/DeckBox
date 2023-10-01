@@ -44,7 +44,7 @@ internal fun SheetHeader(
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.align(Alignment.CenterStart)
+      modifier = Modifier.align(Alignment.CenterStart),
     ) {
       Spacer(Modifier.width(16.dp))
       if (!isValid) {

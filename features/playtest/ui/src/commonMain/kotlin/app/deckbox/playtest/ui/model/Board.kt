@@ -53,7 +53,7 @@ fun newGame(cards: ImmutableList<Card>): Board {
     cards = mapOf(
       0 to drawOf { it.supertype == SuperType.POKEMON }!!.play(),
       1 to drawOf { it.supertype == SuperType.POKEMON }!!.play(),
-    ).toImmutableMap()
+    ).toImmutableMap(),
   )
   val active = draw().play()
 
@@ -97,7 +97,7 @@ data class Player(
 ) {
   enum class Type {
     PLAYER,
-    OPPONENT
+    OPPONENT,
   }
 }
 
@@ -121,5 +121,5 @@ data class PlayedCard(
 enum class StatusEffect {
   CONFUSED,
   SLEEPING,
-  PARALYZED
+  PARALYZED,
 }

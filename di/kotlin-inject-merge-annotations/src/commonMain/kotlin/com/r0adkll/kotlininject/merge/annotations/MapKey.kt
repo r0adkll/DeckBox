@@ -10,7 +10,7 @@ annotation class MapKey
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class StringKey(
-  val value: String
+  val value: String,
 )
 
 @MapKey
@@ -18,7 +18,7 @@ annotation class StringKey(
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class IntKey(
-  val value: Int
+  val value: Int,
 )
 
 @MapKey
@@ -26,6 +26,5 @@ annotation class IntKey(
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class LongKey(
-  val value: Long
+  val value: Long,
 )
-

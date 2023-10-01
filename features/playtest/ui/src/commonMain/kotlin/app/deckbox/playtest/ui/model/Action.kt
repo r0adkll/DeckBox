@@ -28,7 +28,6 @@ sealed class Action {
      */
     abstract fun apply(board: Board, actor: Player): Player
 
-
     override fun apply(board: Board): Board {
       val actor = board[player]
       return when (player) {
@@ -71,7 +70,6 @@ sealed class Action {
       }
     }
 
-
     /**
      * Attach a [Card] from the [player]'s hand to the [player]'s active
      * pokemon.
@@ -96,7 +94,6 @@ sealed class Action {
           }
         }
       }
-
 
       private fun attach(source: Source.CardBuilder, card: Card): Boolean = when (card.supertype) {
         SuperType.ENERGY -> {
@@ -126,7 +123,6 @@ sealed class Action {
         else -> false
       }
     }
-
 
     /**
      * Detach a [Card] form the [player]'s active card to the specified [target]
@@ -168,7 +164,6 @@ sealed class Action {
       }
     }
 
-
     /**
      * Discard a [PlayedCard] and all attachments into the [target]
      * @param source the [PlayedCard] source on the [Player] object to take action upon
@@ -204,7 +199,6 @@ sealed class Action {
       }
     }
 
-
     /**
      * Action Group for Hand based actions
      */
@@ -230,7 +224,6 @@ sealed class Action {
         }
       }
 
-
       /**
        * Play a stadium card from the [player]'s hand
        * @param stadiumCard the Stadium card to play
@@ -247,7 +240,6 @@ sealed class Action {
           val actor = board[player]
           val otherActor = board[otherPlayer]
           if (otherActor.stadium == null || otherActor.stadium.name != stadiumCard.name) {
-
             // Cause the other stadium to be discarded
             val updatedOtherActor = otherActor.stadium?.let {
               otherActor.copy(stadium = null, discard = otherActor.discard.plus(otherActor.stadium).toImmutableList())
@@ -265,7 +257,6 @@ sealed class Action {
           }
         }
 
-
         // Not used
         override fun apply(board: Board, actor: Player): Player = actor
 
@@ -277,7 +268,6 @@ sealed class Action {
         }
       }
     }
-
 
     /**
      * Action Group for Deck-Based actions
@@ -303,7 +293,6 @@ sealed class Action {
         }
       }
 
-
       /**
        * Shuffles the user's hand back into the deck
        */
@@ -323,7 +312,6 @@ sealed class Action {
         var previousHand = emptyList<String>()
           private set
 
-
         override fun apply(board: Board, actor: Player): Player {
           previousOrder = actor.deck.map { it.id }
           previousHand = actor.hand.map { it.id }
@@ -331,7 +319,6 @@ sealed class Action {
           return actor.copy(hand = persistentListOf(), deck = shuffledDeck.toImmutableList())
         }
       }
-
 
       /**
        * Draw a # of cards from either the top or bottom of the deck
@@ -364,7 +351,6 @@ sealed class Action {
         }
       }
 
-
       /**
        * Deck Subgroup for search based actions. This includes drawing the search based selections
        * or stacking them at the top/bottom of the deck
@@ -387,7 +373,6 @@ sealed class Action {
             )
           }
         }
-
 
         /**
          * Stack the selected cards on the top or bottom of the deck
@@ -414,7 +399,6 @@ sealed class Action {
       }
     }
 
-
     /**
      * Action Group for Active-Card based actions
      */
@@ -437,7 +421,6 @@ sealed class Action {
         }
       }
 
-
       /**
        * Apply a status (condition) to the [player]s active card.
        * @param status the status (condition) to apply
@@ -452,7 +435,6 @@ sealed class Action {
           } ?: actor
         }
       }
-
 
       /**
        * Swap the active card with the specified [benchPosition]
@@ -475,7 +457,6 @@ sealed class Action {
         }
       }
     }
-
 
     /**
      * Action Group for Prize based actions
@@ -501,7 +482,6 @@ sealed class Action {
         }
       }
 
-
       /**
        * Add a list of cards from [source] to the [player]'s prize cards
        */
@@ -513,7 +493,7 @@ sealed class Action {
 
         override fun apply(board: Board, actor: Player): Player {
           val prizes = actor.prizes.toMutableMap()
-          val lastIndex = prizes.keys.max().plus(1)/* ?: 6*/
+          val lastIndex = prizes.keys.max().plus(1)
           cards.forEachIndexed { index, pokemonCard ->
             prizes[lastIndex + index] = pokemonCard
           }

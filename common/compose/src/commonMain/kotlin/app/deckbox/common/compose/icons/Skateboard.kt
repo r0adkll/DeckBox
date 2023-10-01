@@ -197,4 +197,3 @@ val DeckBoxIcons.Logos.Skateboard: ImageVector
     }.build()
     return _vector!!
   }
-

@@ -3,7 +3,6 @@ package app.deckbox.common.compose.message
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import com.benasher44.uuid.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +29,7 @@ fun UiMessage(
 fun UiMessageManager.showUiMessage(scope: CoroutineScope, text: @Composable () -> String) {
   scope.launch {
     emitMessage(
-      UiMessage(text = text)
+      UiMessage(text = text),
     )
   }
 }

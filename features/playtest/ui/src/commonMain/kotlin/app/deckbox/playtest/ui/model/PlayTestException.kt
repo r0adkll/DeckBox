@@ -1,6 +1,5 @@
 package app.deckbox.playtest.ui.model
 
-
 sealed class PlayTestException(message: String? = null) : Exception(message) {
 
   /**

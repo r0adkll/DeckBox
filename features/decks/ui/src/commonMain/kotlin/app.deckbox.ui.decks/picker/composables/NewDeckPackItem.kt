@@ -15,9 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddDeck
-import app.deckbox.common.compose.icons.rounded.NewBoosterPack
 import app.deckbox.common.compose.icons.rounded.NewDeck
 import cafe.adriel.lyricist.LocalStrings
 

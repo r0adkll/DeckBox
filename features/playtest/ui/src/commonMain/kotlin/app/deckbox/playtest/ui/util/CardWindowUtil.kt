@@ -21,7 +21,7 @@ object CardWindowUtil {
 
     return Rect(
       offset = Offset(xOffset, yOffset),
-      size = Size(width, height)
+      size = Size(width, height),
     )
   }
 

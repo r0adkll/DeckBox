@@ -4,11 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import app.deckbox.common.compose.message.UiMessage
 import app.deckbox.common.compose.message.UiMessageManager
 import app.deckbox.common.compose.message.showUiMessage
 import app.deckbox.common.screens.BoosterPackBuilderScreen
@@ -151,7 +149,6 @@ class CardDetailPresenter(
             uiMessageManager.clearMessage(event.id)
           }
         }
-
       }
     }
   }

@@ -7,7 +7,6 @@ import app.deckbox.decks.impl.validation.invalid
 import app.deckbox.decks.impl.validation.success
 import app.deckbox.features.decks.api.validation.Validation
 import com.r0adkll.kotlininject.merge.annotations.ContributesMultibinding
-import com.r0adkll.kotlininject.merge.annotations.MapKey
 
 @ContributesMultibinding(MergeAppScope::class)
 object SizeRule : Rule {

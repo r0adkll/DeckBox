@@ -49,6 +49,6 @@ fun EditingAppBar(
     modifier = modifier,
     colors = TopAppBarDefaults.largeTopAppBarColors(
       containerColor = containerColor,
-    )
+    ),
   )
 }

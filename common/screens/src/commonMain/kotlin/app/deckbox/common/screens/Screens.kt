@@ -1,8 +1,8 @@
 package app.deckbox.common.screens
 
-import app.deckbox.core.model.Deck as DeckModel
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.Deck as DeckModel
 import app.deckbox.core.model.SuperType
 import com.slack.circuit.runtime.screen.Screen
 

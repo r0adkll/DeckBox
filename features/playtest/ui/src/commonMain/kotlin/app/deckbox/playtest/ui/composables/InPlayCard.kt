@@ -106,7 +106,7 @@ internal fun InPlayCard(
       maxHeight = adjustedHeight,
     )
     val looseCardConstraints = cardConstraints.copy(
-      minWidth = 0
+      minWidth = 0,
     )
 
     val pokemons = measurables.filter {
@@ -190,7 +190,7 @@ internal fun InPlayCard(
        * _____________
        * |           |
        * |           |
-       * |    [O]    |
+       * | [O]    |
        * |           |
        * |           |
        * |___________|
@@ -232,7 +232,7 @@ internal fun BurnPoisonMarker(
   isBurned: Boolean,
   isPoisoned: Boolean,
   modifier: Modifier = Modifier,
-  size: Dp = 8.dp
+  size: Dp = 8.dp,
 ) {
   OverlappingTypeRow(
     modifier = modifier,
@@ -331,7 +331,7 @@ private fun EnergyImageBubble(
           !painter.intrinsicSize.height.isNaN()
         ) {
           // Image is loaded, compute rectal-window
-          with (painter) {
+          with(painter) {
             // We want to scale the image so that its card image window matches the height dimension of this
             // port view.
             val scale = CardWindowUtil.windowScale(painter.intrinsicSize.height, size.toPx())
@@ -360,7 +360,6 @@ internal fun ToolsColumn(
     modifier = modifier,
   ) {
     tools.forEach {
-
     }
   }
 }

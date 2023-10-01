@@ -101,6 +101,6 @@ fun BoosterPackBuilder(
     legalities = boosterPack?.legalities ?: Legalities(standard = Legality.LEGAL),
     modifier = modifier,
     columns = 4,
-    cardSpacing = 8.dp
+    cardSpacing = 8.dp,
   )
 }

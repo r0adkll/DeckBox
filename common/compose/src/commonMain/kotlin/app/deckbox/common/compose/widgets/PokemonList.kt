@@ -11,6 +11,5 @@ fun PokemonList(
   Column(
     modifier = modifier,
   ) {
-
   }
 }

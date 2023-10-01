@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.deckbox.common.compose.icons.DeckBoxIcons
-import app.deckbox.common.compose.icons.Snorlax
 import app.deckbox.common.compose.widgets.DefaultIconSize
 import app.deckbox.common.compose.widgets.EmptyView
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
@@ -44,7 +43,7 @@ fun PlayTest(
               contentDescription = null,
               modifier = Modifier.size(DefaultIconSize),
             )
-          }
+          },
         )
       }
       is PlayTestUiState.InGame -> {
