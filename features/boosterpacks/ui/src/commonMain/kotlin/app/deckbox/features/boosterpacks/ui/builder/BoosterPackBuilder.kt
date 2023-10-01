@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.compose.widgets.builder.CardBuilder
@@ -100,5 +101,6 @@ fun BoosterPackBuilder(
     legalities = boosterPack?.legalities ?: Legalities(standard = Legality.LEGAL),
     modifier = modifier,
     columns = 4,
+    cardSpacing = 8.dp
   )
 }

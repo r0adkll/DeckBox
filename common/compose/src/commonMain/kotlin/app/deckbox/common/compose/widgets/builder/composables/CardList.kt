@@ -40,7 +40,9 @@ import app.deckbox.core.model.Stacked
 import app.deckbox.core.model.SuperType
 import kotlinx.collections.immutable.ImmutableList
 
-private val CardSpacing = 16.dp
+internal const val DefaultColumns = 3
+internal val DefaultCardSpacing = 16.dp
+private val HorizontalPadding = 16.dp
 
 @Composable
 internal fun CardList(
@@ -53,25 +55,26 @@ internal fun CardList(
   onTipClick: (CardUiModel.Tip) -> Unit,
   modifier: Modifier = Modifier,
   lazyGridState: LazyGridState = rememberLazyGridState(),
-  columns: Int = 3,
+  columns: Int = DefaultColumns,
+  cardSpacing: Dp = DefaultCardSpacing,
   contentPadding: PaddingValues = PaddingValues(),
 ) {
   BoxWithConstraints {
     // Calculate best card width
-    val cardWidth = (maxWidth - ((columns + 1) * CardSpacing)) / columns
+    val cardWidth = (maxWidth - ((columns - 1) * cardSpacing) - (2 * HorizontalPadding)) / columns
 
     LazyVerticalGrid(
       modifier = modifier,
       state = lazyGridState,
       contentPadding = PaddingValues(
         top = contentPadding.calculateTopPadding(),
-        start = CardSpacing,
-        end = CardSpacing,
+        start = HorizontalPadding,
+        end = HorizontalPadding,
         bottom = contentPadding.calculateBottomPadding(),
       ),
       columns = GridCells.Fixed(columns),
-      horizontalArrangement = Arrangement.spacedBy(CardSpacing),
-      verticalArrangement = Arrangement.spacedBy(CardSpacing),
+      horizontalArrangement = Arrangement.spacedBy(cardSpacing),
+      verticalArrangement = Arrangement.spacedBy(cardSpacing),
     ) {
       itemsIndexed(
         items = models,
@@ -92,7 +95,7 @@ internal fun CardList(
             cardWidth = cardWidth,
             contentPaddingHorizontal = 16.dp,
             modifier = Modifier
-              .overWidth(CardSpacing * 2)
+              .overWidth(HorizontalPadding * 2)
               .fillMaxWidth(),
           ) { stack ->
             CardEditor(
@@ -135,13 +138,13 @@ internal fun CardList(
             title = model.title(),
             count = model.count,
             superType = model.superType,
-            modifier = Modifier.overWidth(CardSpacing * 2),
+            modifier = Modifier.overWidth(HorizontalPadding * 2),
           )
 
           is CardUiModel.Tip -> BuilderTip(
             tip = model,
             onClick = { onTipClick(model) },
-            modifier = Modifier.overWidth(CardSpacing * 2),
+            modifier = Modifier.overWidth(HorizontalPadding * 2),
           )
         }
       }

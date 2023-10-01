@@ -66,7 +66,7 @@ internal fun ColumnScope.BuilderBottomSheet(
       .focusGroup()
       .verticalScroll(rememberScrollState()),
   ) {
-    var nameValue by remember {
+    var nameValue by remember(name)  {
       mutableStateOf(TextFieldValue(name))
     }
     BuilderTextField(

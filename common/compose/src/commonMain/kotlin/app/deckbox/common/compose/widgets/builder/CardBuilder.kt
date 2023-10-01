@@ -42,6 +42,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.PlatformBackHandler
 import app.deckbox.common.compose.extensions.plus
@@ -52,6 +53,8 @@ import app.deckbox.common.compose.widgets.EditingAppBar
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.compose.widgets.builder.composables.BuilderBottomSheet
 import app.deckbox.common.compose.widgets.builder.composables.CardList
+import app.deckbox.common.compose.widgets.builder.composables.DefaultCardSpacing
+import app.deckbox.common.compose.widgets.builder.composables.DefaultColumns
 import app.deckbox.common.compose.widgets.builder.composables.SheetHeaderHeight
 import app.deckbox.common.compose.widgets.builder.model.CardUiModel
 import app.deckbox.core.coroutines.LoadState
@@ -83,6 +86,7 @@ fun CardBuilder(
   isValid: Boolean = true,
   legalities: Legalities = Legalities(),
   columns: Int = DefaultColumns,
+  cardSpacing: Dp = DefaultCardSpacing,
 ) {
   val coroutineScope = rememberCoroutineScope()
   val focusManager = LocalFocusManager.current
@@ -188,6 +192,7 @@ fun CardBuilder(
           contentPadding = paddingValues,
           lazyGridState = lazyGridState,
           columns = columns,
+          cardSpacing = cardSpacing,
         )
 
         LoadState.Error -> ErrorContent(Modifier.padding(paddingValues))
@@ -304,10 +309,11 @@ private fun LoadedContent(
   onAddCardClick: (Stacked<Card>) -> Unit,
   onRemoveCardClick: (Stacked<Card>) -> Unit,
   onTipClick: (CardUiModel.Tip) -> Unit,
+  columns: Int,
+  cardSpacing: Dp,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(),
   lazyGridState: LazyGridState = rememberLazyGridState(),
-  columns: Int = DefaultColumns,
 ) {
   CardList(
     isEditing = isEditing,
@@ -321,7 +327,6 @@ private fun LoadedContent(
     contentPadding = contentPadding + PaddingValues(bottom = 88.dp),
     modifier = modifier,
     columns = columns,
+    cardSpacing = cardSpacing,
   )
 }
-
-private const val DefaultColumns = 3
