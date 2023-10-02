@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.common.screens.DecksScreen
+import app.deckbox.common.screens.PlayTestScreen
 import app.deckbox.common.screens.SettingsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.coroutines.LoadState
@@ -24,6 +25,8 @@ import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -65,9 +68,10 @@ class DecksPresenter(
     val sortedDecks by remember {
       snapshotFlow {
         decksLoadState.dataOrNull?.orderDecksBy(deckSortOrder)
-          ?: emptyList()
+          ?.toImmutableList()
+          ?: persistentListOf()
       }
-    }.collectAsState(emptyList())
+    }.collectAsState(persistentListOf())
 
     return DecksUiState(
       isLoading = decksLoadState is LoadState.Loading,
@@ -87,7 +91,10 @@ class DecksPresenter(
           }
 
           DeckCardEvent.Export -> bark { "Export (${event.deck.name})" }
-          DeckCardEvent.Test -> bark { "Experiment (${event.deck.name})" }
+          DeckCardEvent.Test -> {
+            bark { "Experiment (${event.deck.name})" }
+            navigator.goTo(PlayTestScreen(event.deck.id))
+          }
         }
 
         DecksUiEvent.CreateNewDeck -> navigator.goTo(

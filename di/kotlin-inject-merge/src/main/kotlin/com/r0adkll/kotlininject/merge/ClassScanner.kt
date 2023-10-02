@@ -8,9 +8,10 @@ import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.r0adkll.kotlininject.merge.GeneratedProperty.ReferenceProperty
 import com.r0adkll.kotlininject.merge.GeneratedProperty.ScopeProperty
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
+import com.r0adkll.kotlininject.merge.annotations.ContributesMultibinding
 import com.r0adkll.kotlininject.merge.annotations.ContributesTo
 import com.r0adkll.kotlininject.merge.annotations.ContributesSubcomponent
-import com.r0adkll.kotlininject.merge.util.findActualType
+import com.r0adkll.kotlininject.merge.util.ksp.findActualType
 import com.squareup.kotlinpoet.ClassName
 import java.lang.IllegalStateException
 import kotlin.reflect.KClass
@@ -39,6 +40,7 @@ class ClassScanner(
   ) : Sequence<KSClassDeclaration> {
     val packageName = when (annotation) {
       ContributesBinding::class -> HINT_BINDING_PACKAGE
+      ContributesMultibinding::class -> HINT_MULTIBINDING_PACKAGE
       ContributesTo::class -> HINT_CONTRIBUTES_PACKAGE
       ContributesSubcomponent::class -> HINT_SUBCOMPONENT_PACKAGE
       else -> throw IllegalArgumentException("Unrecognized annotation to look up")

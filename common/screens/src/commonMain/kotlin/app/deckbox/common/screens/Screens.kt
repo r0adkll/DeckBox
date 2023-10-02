@@ -1,6 +1,8 @@
 package app.deckbox.common.screens
 
+import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.Deck as DeckModel
 import app.deckbox.core.model.SuperType
 import com.slack.circuit.runtime.screen.Screen
 
@@ -16,13 +18,29 @@ class RootScreen : DeckBoxScreen(name = "Root")
 class DecksScreen : DeckBoxScreen(name = "Decks()")
 
 @CommonParcelize
-class DeckPickerScreen : DeckBoxScreen(name = "DeckPicker()")
+class DeckPickerScreen : OverlayDeckBoxScreen<DeckPickerScreen.Response>(name = "DeckPicker()") {
+
+  sealed interface Response {
+    data class Deck(val deck: DeckModel) : Response
+    data object NewDeck : Response
+  }
+}
 
 @CommonParcelize
 data class DeckBuilderScreen(
   val id: String,
 ) : DeckBoxScreen(name = "DeckBuilder()") {
   override val arguments get() = mapOf("id" to id)
+
+  @CommonIgnoredOnParcel
+  override val presentation = Presentation(hideBottomNav = true)
+}
+
+@CommonParcelize
+data class PlayTestScreen(
+  val deckId: String,
+) : DeckBoxScreen(name = "PlayTest()") {
+  override val arguments get() = mapOf("deckId" to deckId)
 
   @CommonIgnoredOnParcel
   override val presentation = Presentation(hideBottomNav = true)
@@ -42,7 +60,15 @@ data class BoosterPackBuilderScreen(
 }
 
 @CommonParcelize
-class BoosterPackPickerScreen : DeckBoxScreen(name = "BoosterPackPicker()")
+class BoosterPackPickerScreen : OverlayDeckBoxScreen<BoosterPackPickerScreen.Response>(
+  name = "BoosterPackPicker()",
+) {
+
+  sealed interface Response {
+    data class Pack(val boosterPack: BoosterPack) : Response
+    data object NewPack : Response
+  }
+}
 
 @CommonParcelize
 data class BrowseScreen(
@@ -50,11 +76,12 @@ data class BrowseScreen(
   val packId: String? = null,
   val superType: SuperType? = null,
 ) : DeckBoxScreen(name = "Browse()") {
-  override val arguments get() = mapOf(
-    "deckId" to deckId,
-    "packId" to packId,
-    "superType" to superType,
-  )
+  override val arguments
+    get() = mapOf(
+      "deckId" to deckId,
+      "packId" to packId,
+      "superType" to superType,
+    )
 
   @CommonIgnoredOnParcel
   override val presentation = Presentation(
@@ -94,13 +121,14 @@ class CardDetailScreen(
     packId: String? = null,
   ) : this(card.id, card.name, card.image.large, deckId, packId)
 
-  override val arguments get() = mapOf(
-    "cardId" to cardId,
-    "cardName" to cardName,
-    "cardImageLarge" to cardImageLarge,
-    "deckId" to deckId,
-    "packId" to packId,
-  )
+  override val arguments
+    get() = mapOf(
+      "cardId" to cardId,
+      "cardName" to cardName,
+      "cardImageLarge" to cardImageLarge,
+      "deckId" to deckId,
+      "packId" to packId,
+    )
 
   @CommonIgnoredOnParcel
   override val presentation = Presentation(
@@ -131,6 +159,8 @@ data class OverlayResultScreen<T>(
 ) : Screen
 
 //endregion
+
+abstract class OverlayDeckBoxScreen<ResponseT>(name: String) : DeckBoxScreen(name)
 
 abstract class DeckBoxScreen(val name: String) : Screen {
   open val arguments: Map<String, *>? = null

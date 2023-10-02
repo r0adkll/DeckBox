@@ -35,6 +35,7 @@ sealed interface BoosterPackUiEvent {
   data class BoosterPackClick(val pack: BoosterPack) : BoosterPackUiEvent
   data class Delete(val pack: BoosterPack) : BoosterPackUiEvent
   data class Duplicate(val pack: BoosterPack) : BoosterPackUiEvent
+  data object NewDeck : BoosterPackUiEvent
   data class AddToDeck(
     val deck: Deck,
     val pack: BoosterPack,

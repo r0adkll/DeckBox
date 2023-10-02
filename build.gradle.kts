@@ -21,12 +21,13 @@ plugins {
 }
 
 allprojects {
+  val projectName = this.path
   tasks.withType<KotlinCompilationTask<*>>().configureEach {
     compilerOptions {
       // Treat all Kotlin warnings as errors
       allWarningsAsErrors.set(true)
 
-      if (project.hasProperty("deckbox.enableComposeCompilerReports")) {
+      if (project.hasProperty("deckbox.enableComposeCompilerReports") && projectName != ":common:compose") {
         freeCompilerArgs.addAll(
           "-P",
           "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +

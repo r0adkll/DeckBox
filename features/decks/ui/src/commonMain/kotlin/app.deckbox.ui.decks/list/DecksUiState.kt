@@ -7,13 +7,14 @@ import app.deckbox.core.settings.SortOption
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
+import kotlinx.collections.immutable.ImmutableList
 
 @Stable
 data class DecksUiState(
   val isLoading: Boolean = false,
   val deckCardConfig: DeckCardConfig,
   val deckSortOrder: SortOption,
-  val decks: List<Deck> = emptyList(),
+  val decks: ImmutableList<Deck>,
   val eventSink: (DecksUiEvent) -> Unit,
 ) : CircuitUiState
 

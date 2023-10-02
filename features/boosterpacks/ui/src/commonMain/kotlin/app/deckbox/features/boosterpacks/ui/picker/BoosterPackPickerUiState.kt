@@ -14,4 +14,5 @@ data class BoosterPackPickerUiState(
 sealed interface BoosterPackPickerUiEvent {
   data object Close : BoosterPackPickerUiEvent
   data class BoosterPackClick(val boosterPack: BoosterPack) : BoosterPackPickerUiEvent
+  data object NewPackClick : BoosterPackPickerUiEvent
 }

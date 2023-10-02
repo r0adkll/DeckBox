@@ -2,14 +2,10 @@ package app.deckbox.ui.browse
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.settings.DeckBoxSettings
@@ -26,6 +22,8 @@ import app.deckbox.features.cards.public.paging.CardRemoteMediatorFactory
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.ui.filter.BrowseFilterPresenter
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import com.slack.circuit.retained.collectAsRetainedState
+import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.FlowPreview
@@ -52,20 +50,20 @@ class BrowsePresenter(
   private val settings: DeckBoxSettings,
 ) : Presenter<BrowseUiState> {
 
-  private val queryPipeline = MutableSharedFlow<String?>()
-
   @OptIn(FlowPreview::class)
   @Composable
   override fun present(): BrowseUiState {
-    var searchQuery by rememberSaveable { mutableStateOf<String?>(null) }
+    val queryPipeline = rememberRetained(screen) {
+      MutableSharedFlow<String?>()
+    }
 
     val coroutineScope = rememberCoroutineScope()
-    val searchQueryPipelineValue by remember {
-      queryPipeline.debounce(1000L)
-    }.collectAsState(null)
+    val searchQuery by queryPipeline
+      .debounce(500L)
+      .collectAsRetainedState(null)
 
-    LaunchedEffect(searchQueryPipelineValue) {
-      searchQuery = searchQueryPipelineValue
+    LaunchedEffect(searchQuery) {
+      queryPipeline.emit(searchQuery)
     }
 
     val initialFilter = remember {
@@ -105,11 +103,11 @@ class BrowsePresenter(
 
     val countState by remember {
       observeCountState()
-    }.collectAsState(null)
+    }.collectAsRetainedState(null)
 
     val gridStyle by remember {
       settings.observeBrowseCardGridStyle()
-    }.collectAsState(PokemonGridStyle.Small)
+    }.collectAsRetainedState(PokemonGridStyle.Small)
 
     return BrowseUiState(
       isEditing = screen.deckId != null || screen.packId != null,
@@ -121,7 +119,9 @@ class BrowsePresenter(
     ) { event ->
       when (event) {
         BrowseUiEvent.NavigateBack -> navigator.pop()
-        BrowseUiEvent.SearchCleared -> searchQuery = null
+        BrowseUiEvent.SearchCleared -> {
+          coroutineScope.launch { queryPipeline.emit(null) }
+        }
         is BrowseUiEvent.SearchUpdated -> {
           coroutineScope.launch { queryPipeline.emit(event.query) }
         }

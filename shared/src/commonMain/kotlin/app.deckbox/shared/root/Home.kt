@@ -36,7 +36,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -63,7 +62,6 @@ import app.deckbox.common.screens.RootScreen
 import app.deckbox.common.screens.SettingsScreen
 import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.extensions.fluentIf
-import app.deckbox.core.logging.bark
 import app.deckbox.shared.navigator.MainDetailNavigator
 import app.deckbox.shared.navigator.OpenUrlNavigator
 import cafe.adriel.lyricist.LocalStrings
@@ -77,6 +75,7 @@ import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.overlay.rememberOverlayHost
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.screen.Screen
+import com.slack.circuitx.gesturenavigation.GestureNavigationDecoration
 
 @Composable
 internal fun Home(
@@ -126,8 +125,6 @@ internal fun Home(
   val navigationItems = remember { buildNavigationItems(strings) }
 
   val overlayHost = rememberOverlayHost()
-  val currentOverlayData by rememberUpdatedState(overlayHost.currentOverlayData)
-  bark("Overlays") { "Current Overlay(Host: $overlayHost): ${currentOverlayData?.overlay}" }
   PlatformBackHandler(overlayHost.currentOverlayData != null) {
     overlayHost.currentOverlayData?.finish(Unit)
   }
@@ -207,9 +204,9 @@ internal fun Home(
           NavigableCircuitContent(
             navigator = mainDetailNavigator,
             backstack = backstack,
-            decoration = remember(navigator) {
-              GestureNavDecoration(navigator)
-            },
+            decoration = GestureNavigationDecoration(
+              onBackInvoked = mainDetailNavigator::pop,
+            ),
             modifier = Modifier
               .weight(1f)
               .fillMaxHeight(),

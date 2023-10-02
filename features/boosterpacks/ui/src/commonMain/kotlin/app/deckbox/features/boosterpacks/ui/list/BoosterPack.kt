@@ -52,6 +52,7 @@ import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.ChangeSortOp
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.CreateNew
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.Delete
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.Duplicate
+import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.NewDeck
 import app.deckbox.features.boosterpacks.ui.list.BoosterPackUiEvent.OpenAppSettings
 import app.deckbox.features.boosterpacks.ui.list.composables.BoosterPackItem
 import app.deckbox.features.boosterpacks.ui.list.composables.WelcomeTip
@@ -123,9 +124,10 @@ fun BoosterPack(
         onDuplicate = { eventSink(Duplicate(it)) },
         onAddToDeck = { pack ->
           coroutineScope.launch {
-            val result = overlayHost.showBottomSheetScreen<Deck>(DeckPickerScreen())
-            if (result != null) {
-              eventSink(AddToDeck(result, pack))
+            when (val result = overlayHost.showBottomSheetScreen(DeckPickerScreen())) {
+              is DeckPickerScreen.Response.Deck -> eventSink(AddToDeck(result.deck, pack))
+              DeckPickerScreen.Response.NewDeck -> eventSink(NewDeck)
+              null -> Unit
             }
           }
         },

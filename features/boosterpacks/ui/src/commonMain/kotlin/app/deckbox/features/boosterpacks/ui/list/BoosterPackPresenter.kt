@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.BoosterPackScreen
+import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.common.screens.SettingsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
@@ -61,6 +62,7 @@ class BoosterPackPresenter(
       when (event) {
         BoosterPackUiEvent.OpenAppSettings -> navigator.goTo(SettingsScreen())
         BoosterPackUiEvent.CreateNew -> navigator.goTo(BoosterPackBuilderScreen(boosterPackRepository.createSession()))
+        BoosterPackUiEvent.NewDeck -> navigator.goTo(DeckBuilderScreen(deckBuilderRepository.createSession()))
         is BoosterPackUiEvent.BoosterPackClick -> navigator.goTo(BoosterPackBuilderScreen(event.pack.id))
         is BoosterPackUiEvent.Delete -> boosterPackRepository.delete(event.pack.id)
         is BoosterPackUiEvent.Duplicate -> boosterPackRepository.duplicate(event.pack.id)

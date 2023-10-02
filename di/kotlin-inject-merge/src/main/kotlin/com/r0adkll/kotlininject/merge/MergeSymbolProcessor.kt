@@ -9,6 +9,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.r0adkll.kotlininject.merge.generators.CircuitInjectGenerator
 import com.r0adkll.kotlininject.merge.generators.ContributesBindingGenerator
+import com.r0adkll.kotlininject.merge.generators.ContributesMultibindingGenerator
 import com.r0adkll.kotlininject.merge.generators.ContributesSubcomponentGenerator
 import com.r0adkll.kotlininject.merge.generators.ContributesToGenerator
 import com.r0adkll.kotlininject.merge.generators.GeneratedSpec
@@ -73,6 +74,7 @@ class MergeSymbolProcessor(
     return listOf(
       CircuitInjectGenerator(),
       ContributesBindingGenerator(),
+      ContributesMultibindingGenerator(),
       ContributesToGenerator(),
       ContributesSubcomponentGenerator(),
       MergeComponentGenerator(),

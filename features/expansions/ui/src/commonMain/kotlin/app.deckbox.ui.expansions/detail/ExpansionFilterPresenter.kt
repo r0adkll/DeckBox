@@ -1,7 +1,10 @@
 package app.deckbox.ui.expansions.detail
 
+import androidx.compose.runtime.Composable
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.SearchFilter
 import app.deckbox.ui.filter.FilterPresenter
+import app.deckbox.ui.filter.FilterUiState
 import app.deckbox.ui.filter.spec.AttackCostFilterSpec
 import app.deckbox.ui.filter.spec.AttackDamageFilterSpec
 import app.deckbox.ui.filter.spec.AttributeFilterSpec
@@ -39,4 +42,17 @@ class ExpansionFilterPresenter(
   getExpansions = { emptyList() },
   getRarities = { cards.mapNotNull { it.rarity }.toSet().toList() },
   getSubtypes = { cards.flatMap { it.subtypes }.toSet().toList() },
-)
+) {
+
+  /**
+   * There is a bug where Composable functions inside an interface (or abstract class/superclass)
+   * will crash on iOS for "No function found for symbol" due to some linkage error. The workaround is
+   * to propagate the function call up to the subclasses and call its super.
+   *
+   * https://github.com/JetBrains/compose-multiplatform/issues/3318
+   */
+  @Composable
+  override fun present(key: String, initialFilter: SearchFilter): FilterUiState {
+    return super.present(key, initialFilter)
+  }
+}

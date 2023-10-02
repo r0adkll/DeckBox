@@ -10,6 +10,7 @@ kotlin {
       dependencies {
         api(projects.core)
         api(libs.circuit.runtime)
+        api(libs.circuit.retained)
       }
     }
   }

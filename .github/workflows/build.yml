@@ -59,7 +59,7 @@ jobs:
 
   android:
     needs: [code-style]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 60
 #    env:
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_URL: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_URL }}
@@ -69,7 +69,7 @@ jobs:
     steps:
       - name: Generate build number
         shell: bash
-        run: echo "ORG_GRADLE_PROJECT_TIVI_VERSIONCODE=$(( $GITHUB_RUN_NUMBER + 10000 ))" >> $GITHUB_ENV
+        run: echo "ORG_GRADLE_PROJECT_DECKBOX_VERSIONCODE=$(( $GITHUB_RUN_NUMBER + 10000 ))" >> $GITHUB_ENV
 
       - uses: actions/checkout@v3
 

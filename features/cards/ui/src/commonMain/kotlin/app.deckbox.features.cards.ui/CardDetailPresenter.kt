@@ -6,7 +6,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import app.deckbox.common.compose.message.UiMessageManager
+import app.deckbox.common.compose.message.showUiMessage
+import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.CardDetailScreen
+import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
@@ -18,7 +23,10 @@ import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.model.OrderByReleaseDate
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
+import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import com.slack.circuit.retained.collectAsRetainedState
+import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.flow.Flow
@@ -45,21 +53,24 @@ class CardDetailPresenter(
   override fun present(): CardDetailUiState {
     val coroutineScope = rememberCoroutineScope()
 
+    val uiMessageManager = remember { UiMessageManager() }
+    val message by uiMessageManager.message.collectAsState(null)
+
     val cardLoadState by loadCard(screen.cardId)
 
     // If we have passed a deck session id, then we should observe
     // this card in that deck to monitor its count
-    val deckState by remember {
+    val deckState by rememberRetained {
       observeCountForCard()
-    }.collectAsState(null)
+    }.collectAsRetainedState(null)
 
     val similarCards by loadSimilarCards(cardLoadState)
     val evolvesFrom by loadEvolvesFrom(cardLoadState)
     val evolvesTo by loadEvolvesTo(cardLoadState)
 
-    val isFavorited by remember {
+    val isFavorited by rememberRetained {
       repository.observeFavorite(screen.cardId)
-    }.collectAsState(false)
+    }.collectAsRetainedState(false)
 
     return CardDetailUiState(
       cardName = screen.cardName,
@@ -70,6 +81,7 @@ class CardDetailPresenter(
       evolvesTo = evolvesTo,
       deckState = deckState,
       isFavorited = isFavorited,
+      uiMessage = message,
     ) { event ->
       when (event) {
         CardDetailUiEvent.NavigateBack -> navigator.pop()
@@ -106,13 +118,44 @@ class CardDetailPresenter(
             ),
           )
         }
+
+        is CardDetailUiEvent.AddToDeck -> {
+          deckBuilderRepository.incrementCard(event.deck.id, screen.cardId)
+          uiMessageManager.showUiMessage(coroutineScope) {
+            LocalStrings.current.cardDetailAddedToDeck(event.deck.name)
+          }
+        }
+
+        is CardDetailUiEvent.AddToBoosterPack -> {
+          boosterPackRepository.incrementCard(event.boosterPack.id, screen.cardId)
+          uiMessageManager.showUiMessage(coroutineScope) {
+            LocalStrings.current.cardDetailAddedToBoosterPack(event.boosterPack.name)
+          }
+        }
+
+        CardDetailUiEvent.NewDeck -> {
+          val sessionId = deckBuilderRepository.createSession()
+          deckBuilderRepository.incrementCard(sessionId, screen.cardId)
+          navigator.goTo(DeckBuilderScreen(sessionId))
+        }
+        CardDetailUiEvent.NewBoosterPack -> {
+          val sessionId = boosterPackRepository.createSession()
+          boosterPackRepository.incrementCard(sessionId, screen.cardId)
+          navigator.goTo(BoosterPackBuilderScreen(sessionId))
+        }
+
+        is CardDetailUiEvent.ClearUiMessage -> {
+          coroutineScope.launch {
+            uiMessageManager.clearMessage(event.id)
+          }
+        }
       }
     }
   }
 
   @Composable
   private fun loadCard(id: String): State<LoadState<out Card>> {
-    return remember {
+    return rememberRetained {
       flow {
         val card = repository.getCard(id)
         emit(
@@ -120,7 +163,7 @@ class CardDetailPresenter(
             ?: LoadState.Error,
         )
       }
-    }.collectAsState(LoadState.Loading)
+    }.collectAsRetainedState(LoadState.Loading)
   }
 
   @Composable
@@ -168,7 +211,7 @@ class CardDetailPresenter(
     predicate: (Card) -> Boolean = { true },
     queryBuilder: (Card) -> CardQuery,
   ): State<LoadState<out List<Card>>> {
-    return remember(loadState) {
+    return rememberRetained(loadState) {
       loadState.dataOrNull?.let { card ->
         if (predicate(card)) {
           val query = queryBuilder(card)
@@ -183,7 +226,7 @@ class CardDetailPresenter(
           flowOf(LoadState.Loaded(emptyList()))
         }
       } ?: emptyFlow()
-    }.collectAsState(LoadState.Loading)
+    }.collectAsRetainedState(LoadState.Loading)
   }
 
   private fun observeCountForCard(): Flow<DeckState?> {

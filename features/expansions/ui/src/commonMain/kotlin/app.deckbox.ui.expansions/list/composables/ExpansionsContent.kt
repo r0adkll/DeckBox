@@ -9,10 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Error
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,30 +22,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.ContentLoadingSize
+import app.deckbox.common.compose.widgets.SearchEmptyView
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.settings.ExpansionCardStyle
 import app.deckbox.ui.expansions.list.ExpansionSeries
 import app.deckbox.ui.expansions.list.ExpansionState
-import cafe.adriel.lyricist.LocalStrings
 
 @Composable
 internal fun ExpansionsContent(
+  query: String?,
   expansionState: ExpansionState,
   hasFavorites: Boolean,
   style: ExpansionCardStyle,
   onClick: (Expansion) -> Unit,
   onFavoritesClick: () -> Unit,
   modifier: Modifier = Modifier,
+  state: LazyListState = rememberLazyListState(),
   contentPadding: PaddingValues = PaddingValues(),
 ) {
   when (expansionState) {
     ExpansionState.Loading -> LoadingContent(modifier)
     is ExpansionState.Error -> ErrorContent(expansionState.message, modifier)
     is ExpansionState.Loaded -> if (expansionState.groupedExpansions.isEmpty()) {
-      EmptyContent(modifier)
+      SearchEmptyView(
+        query = query,
+      )
     } else {
       ExpansionsContent(
+        state = state,
         expansions = expansionState.groupedExpansions,
         hasFavorites = hasFavorites,
         style = style,
@@ -54,24 +60,6 @@ internal fun ExpansionsContent(
         contentPadding = contentPadding,
       )
     }
-  }
-}
-
-@Composable
-private fun EmptyContent(
-  modifier: Modifier = Modifier,
-) {
-  Column(
-    modifier = modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
-  ) {
-    Icon(
-      Icons.Outlined.Place,
-      contentDescription = null,
-    )
-    Spacer(Modifier.height(16.dp))
-    Text(LocalStrings.current.expansionsEmptyMessage)
   }
 }
 
@@ -118,9 +106,11 @@ private fun ExpansionsContent(
   onClick: (Expansion) -> Unit,
   onFavoritesClick: () -> Unit,
   modifier: Modifier = Modifier,
+  state: LazyListState = rememberLazyListState(),
   contentPadding: PaddingValues = PaddingValues(),
 ) {
   LazyColumn(
+    state = state,
     modifier = modifier,
     contentPadding = contentPadding,
     verticalArrangement = Arrangement.spacedBy(8.dp),

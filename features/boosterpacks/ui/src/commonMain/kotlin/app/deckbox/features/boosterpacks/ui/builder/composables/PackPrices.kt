@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_PARAMETER")
-
 package app.deckbox.features.boosterpacks.ui.builder.composables
 
 import androidx.compose.foundation.background

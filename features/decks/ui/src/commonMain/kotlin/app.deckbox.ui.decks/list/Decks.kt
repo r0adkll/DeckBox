@@ -49,6 +49,7 @@ import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.systemBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @CircuitInject(MergeActivityScope::class, DecksScreen::class)
@@ -130,7 +131,7 @@ internal fun Decks(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DeckList(
-  decks: List<Deck>,
+  decks: ImmutableList<Deck>,
   deckCardConfig: DeckCardConfig,
   sortOption: SortOption,
   onChangeSortOption: (SortOption) -> Unit,

@@ -42,6 +42,9 @@ kotlin {
         api(projects.features.boosterpacks.impl)
         api(projects.features.boosterpacks.ui)
 
+        api(projects.features.playtest.impl)
+        api(projects.features.playtest.ui)
+
         // UI Modules
         api(projects.ui.browse)
         api(projects.ui.filter)
@@ -59,6 +62,7 @@ kotlin {
         api(libs.circuit.foundation)
         api(libs.circuit.overlay)
         api(libs.circuit.runtime)
+        api(libs.circuitx.gesturenav)
       }
     }
 

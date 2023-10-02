@@ -1,18 +1,20 @@
 package app.deckbox.features.boosterpacks.ui.builder
 
 import androidx.compose.runtime.Stable
+import app.deckbox.common.compose.widgets.builder.model.CardUiModel
+import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Deck
 import app.deckbox.core.model.SuperType
-import app.deckbox.features.boosterpacks.ui.builder.model.CardUiModel
 import com.slack.circuit.runtime.CircuitUiState
+import kotlinx.collections.immutable.ImmutableList
 
 @Stable
 data class BoosterPackBuilderUiState(
   val session: BoosterPackSession,
-  val cards: List<CardUiModel>,
-  val price: PackPriceState,
+  val cards: LoadState<out ImmutableList<CardUiModel>>,
+  val price: LoadState<out PackPriceState>,
   val eventSink: (BoosterPackBuilderUiEvent) -> Unit,
 ) : CircuitUiState
 
@@ -50,6 +52,7 @@ sealed interface BoosterPackBuilderUiEvent {
   data class AddCards(val superType: SuperType? = null) : BoosterPackBuilderUiEvent
   data class CardClick(val card: Card) : BoosterPackBuilderUiEvent
 
+  data object NewDeck : BoosterPackBuilderUiEvent
   data class EditName(val name: String) : BoosterPackBuilderUiEvent
   data class IncrementCard(val cardId: String, val amount: Int = 1) : BoosterPackBuilderUiEvent
   data class DecrementCard(val cardId: String, val amount: Int = 1) : BoosterPackBuilderUiEvent

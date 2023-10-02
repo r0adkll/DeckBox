@@ -2,8 +2,7 @@ package app.deckbox.common.compose.widgets
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
@@ -26,7 +25,7 @@ fun SizedIcon(
   contentDescription: String?,
   modifier: Modifier = Modifier,
   size: Dp = LocalIconSize.current,
-  tint: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
+  tint: Color = LocalContentColor.current,
 ) {
   Icon(
     imageVector = icon,

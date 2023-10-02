@@ -3,12 +3,11 @@ package com.r0adkll.kotlininject.merge.generators
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.validate
-import com.r0adkll.kotlininject.merge.DeferredSymbol
 import com.r0adkll.kotlininject.merge.MergeContext
 import com.r0adkll.kotlininject.merge.REFERENCE_SUFFIX
 import com.r0adkll.kotlininject.merge.SCOPE_SUFFIX
 import com.r0adkll.kotlininject.merge.util.buildFile
-import com.r0adkll.kotlininject.merge.util.getSymbolsWithClassAnnotation
+import com.r0adkll.kotlininject.merge.util.ksp.getSymbolsWithClassAnnotation
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier

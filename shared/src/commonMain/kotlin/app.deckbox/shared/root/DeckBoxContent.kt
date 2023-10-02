@@ -22,6 +22,8 @@ import com.seiko.imageloader.LocalImageLoader
 import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
+import com.slack.circuit.retained.LocalRetainedStateRegistry
+import com.slack.circuit.retained.continuityRetainedStateRegistry
 import com.slack.circuit.runtime.Navigator
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
@@ -55,6 +57,7 @@ fun DeckBoxContentWithInsets(
     CompositionLocalProvider(
       LocalWindowSizeClass provides calculateWindowSizeClass(),
       LocalImageLoader provides remember { imageLoader.value },
+      LocalRetainedStateRegistry provides continuityRetainedStateRegistry(),
     ) {
       CircuitCompositionLocals(circuit) {
         DeckBoxTheme(

@@ -127,4 +127,10 @@ val EnDeckBoxStrings = DeckBoxStrings(
   evolvesFromEmptyLabel = "No cards found that this one evolves from",
   evolvesToErrorLabel = "Uh-oh! Unable to load cards that this evolves to",
   evolvesToEmptyLabel = "No cards found that this one evolves to",
+  cardDetailAddedToDeck = { name -> "Added to \"$name\"" },
+  cardDetailAddedToBoosterPack = { name ->
+    name?.let { "Added to \"$it\"" } ?: "Added to booster pack"
+  },
+  builderEditingTitle = "Editing",
+  deckPickerEmptyMessage = "You don't have any decks. Try creating one to start building.",
 )

@@ -56,6 +56,11 @@ include(
   ":features:boosterpacks:ui",
 )
 include(
+  ":features:playtest:public",
+  ":features:playtest:impl",
+  ":features:playtest:ui",
+)
+include(
   ":features:decks:public",
   ":features:decks:public-ui",
   ":features:decks:impl",

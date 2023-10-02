@@ -5,17 +5,18 @@ import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.validate
 import com.r0adkll.kotlininject.merge.MergeContext
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
+import com.r0adkll.kotlininject.merge.annotations.ContributesMultibinding
 import com.r0adkll.kotlininject.merge.annotations.ContributesSubcomponent
 import com.r0adkll.kotlininject.merge.annotations.ContributesTo
 import com.r0adkll.kotlininject.merge.annotations.MergeComponent
 import com.r0adkll.kotlininject.merge.util.addIfNonNull
 import com.r0adkll.kotlininject.merge.util.buildClass
 import com.r0adkll.kotlininject.merge.util.buildFile
-import com.r0adkll.kotlininject.merge.util.findActualType
-import com.r0adkll.kotlininject.merge.util.findAnnotation
-import com.r0adkll.kotlininject.merge.util.getScope
-import com.r0adkll.kotlininject.merge.util.getSymbolsWithClassAnnotation
-import com.r0adkll.kotlininject.merge.util.isInterface
+import com.r0adkll.kotlininject.merge.util.kotlinpoet.addBinding
+import com.r0adkll.kotlininject.merge.util.ksp.findAnnotation
+import com.r0adkll.kotlininject.merge.util.ksp.getScope
+import com.r0adkll.kotlininject.merge.util.ksp.getSymbolsWithClassAnnotation
+import com.r0adkll.kotlininject.merge.util.ksp.isInterface
 import com.r0adkll.kotlininject.merge.util.toClassName
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -30,7 +31,6 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import kotlin.reflect.KClass
 import me.tatarka.inject.annotations.Component
-import me.tatarka.inject.annotations.Provides
 
 class MergeComponentGenerator : Generator {
 
@@ -130,6 +130,14 @@ class MergeComponentGenerator : Generator {
       scope = scope,
     )
 
+    val multiBindings = classScanner.findContributedClasses(
+      annotation = ContributesMultibinding::class,
+      scope = scope,
+    ) + contributionCache.getContributedClasses(
+      annotation = ContributesMultibinding::class,
+      scope = scope,
+    )
+
     // Build the kotlin poet code
     return TypeSpec.buildClass(classSimpleName) {
       // Add this original file + contributed modules to the metadata
@@ -193,28 +201,12 @@ class MergeComponentGenerator : Generator {
 
       // Generate all the contributed bindings
       bindings.forEach { binding ->
-        addProperty(
-          PropertySpec
-            .builder(
-              name = "bind",
-              type = binding.superTypes.first().findActualType().toClassName(),
-            )
-            .apply {
-              if (binding.containingFile != null) {
-                addOriginatingKSFile(binding.containingFile!!)
-              }
-            }
-            .receiver(
-              binding.toClassName(),
-            )
-            .getter(
-              FunSpec.getterBuilder()
-                .addAnnotation(Provides::class)
-                .addStatement("return this")
-                .build(),
-            )
-            .build(),
-        )
+        addBinding(binding, ContributesBinding::class)
+      }
+
+      // Generate all the contributed multi-bindings
+      multiBindings.forEach { multiBinding ->
+        addBinding(multiBinding, ContributesMultibinding::class)
       }
 
       // Now iterate through all the subcomponents, and add them
@@ -223,7 +215,7 @@ class MergeComponentGenerator : Generator {
         val subcomponentClassName = className.nestedClass(subcomponentClassSimpleName)
         val subcomponentConstructorParams = getConstructorParameters(subcomponent)
 
-        // Generate a creation method for hte component
+        // Generate a creation method for the component
         addFunction(
           FunSpec.builder("create${subcomponent.simpleName.asString().replaceFirstChar { it.uppercaseChar() }}")
             .returns(subcomponentClassName)
@@ -233,7 +225,6 @@ class MergeComponentGenerator : Generator {
               subcomponentClassName,
               *subcomponentConstructorParams.map { it.name }.toTypedArray(),
             )
-//            .addOriginatingKSFile(subcomponent.containingFile!!)
             .build(),
         )
 

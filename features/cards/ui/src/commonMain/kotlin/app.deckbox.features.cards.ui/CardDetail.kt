@@ -25,12 +25,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,16 +45,32 @@ import app.deckbox.common.compose.icons.Bulbasaur
 import app.deckbox.common.compose.icons.Charmander
 import app.deckbox.common.compose.icons.DeckBoxIcons
 import app.deckbox.common.compose.icons.Squirtle
+import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddCard
+import app.deckbox.common.compose.icons.rounded.AddDeck
 import app.deckbox.common.compose.icons.rounded.SubtractCard
+import app.deckbox.common.compose.message.UiMessageSnackBarEmitter
+import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.compose.theme.PokemonTypeColor.toBackgroundColor
 import app.deckbox.common.compose.widgets.CardAspectRatio
 import app.deckbox.common.compose.widgets.ContentLoadingSize
+import app.deckbox.common.compose.widgets.DismissableSnackbarHost
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
+import app.deckbox.common.screens.BoosterPackPickerScreen
 import app.deckbox.common.screens.CardDetailScreen
+import app.deckbox.common.screens.DeckPickerScreen
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.Deck
 import app.deckbox.core.model.SuperType
+import app.deckbox.features.cards.ui.CardDetailUiEvent.AddToBoosterPack
+import app.deckbox.features.cards.ui.CardDetailUiEvent.AddToDeck
 import app.deckbox.features.cards.ui.CardDetailUiEvent.CardClick
+import app.deckbox.features.cards.ui.CardDetailUiEvent.ClearUiMessage
+import app.deckbox.features.cards.ui.CardDetailUiEvent.DecrementCount
+import app.deckbox.features.cards.ui.CardDetailUiEvent.IncrementCount
+import app.deckbox.features.cards.ui.CardDetailUiEvent.NavigateBack
+import app.deckbox.features.cards.ui.CardDetailUiEvent.NewBoosterPack
+import app.deckbox.features.cards.ui.CardDetailUiEvent.NewDeck
 import app.deckbox.features.cards.ui.CardDetailUiEvent.OpenUrl
 import app.deckbox.features.cards.ui.composables.CardMarketPriceCard
 import app.deckbox.features.cards.ui.composables.InfoCard
@@ -65,6 +83,8 @@ import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.seiko.imageloader.model.ImageEvent
 import com.seiko.imageloader.rememberImageAction
 import com.seiko.imageloader.rememberImageActionPainter
+import com.slack.circuit.overlay.LocalOverlayHost
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @CircuitInject(MergeActivityScope::class, CardDetailScreen::class)
@@ -73,6 +93,19 @@ internal fun CardDetail(
   state: CardDetailUiState,
   modifier: Modifier = Modifier,
 ) {
+  val eventSink = state.eventSink
+
+  val coroutineScope = rememberCoroutineScope()
+  val overlayHost = LocalOverlayHost.current
+  val snackbarHostState = remember { SnackbarHostState() }
+
+  // Emit any uiMessage's to the provided Snackbar
+  UiMessageSnackBarEmitter(
+    uiMessage = state.uiMessage,
+    snackbarHostState = snackbarHostState,
+    onEmit = { msg -> eventSink(ClearUiMessage(msg.id)) },
+  )
+
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   Scaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -83,16 +116,16 @@ internal fun CardDetail(
         } ?: "",
         navigationIcon = {
           IconButton(
-            onClick = { state.eventSink(CardDetailUiEvent.NavigateBack) },
+            onClick = { eventSink(NavigateBack) },
           ) {
             Icon(Icons.Rounded.ArrowBack, contentDescription = null)
           }
         },
         actions = {
-          state.deckState?.let { deckState ->
+          if (state.deckState != null) {
             IconButton(
-              enabled = deckState.count > 0,
-              onClick = { state.eventSink(CardDetailUiEvent.DecrementCount) },
+              enabled = state.deckState.count > 0,
+              onClick = { eventSink(DecrementCount) },
             ) {
               Icon(
                 Icons.Rounded.SubtractCard,
@@ -100,10 +133,43 @@ internal fun CardDetail(
               )
             }
             IconButton(
-              onClick = { state.eventSink(CardDetailUiEvent.IncrementCount) },
+              onClick = { eventSink(IncrementCount) },
             ) {
               Icon(
                 Icons.Rounded.AddCard,
+                contentDescription = null,
+              )
+            }
+          } else {
+            IconButton(
+              onClick = {
+                coroutineScope.launch {
+                  when (val result = overlayHost.showBottomSheetScreen(BoosterPackPickerScreen())) {
+                    BoosterPackPickerScreen.Response.NewPack -> eventSink(NewBoosterPack)
+                    is BoosterPackPickerScreen.Response.Pack -> eventSink(AddToBoosterPack(result.boosterPack))
+                    null -> Unit // Do nothing
+                  }
+                }
+              },
+            ) {
+              Icon(
+                Icons.Rounded.AddBoosterPack,
+                contentDescription = null,
+              )
+            }
+            IconButton(
+              onClick = {
+                coroutineScope.launch {
+                  when (val result = overlayHost.showBottomSheetScreen(DeckPickerScreen())) {
+                    DeckPickerScreen.Response.NewDeck -> eventSink(NewDeck)
+                    is DeckPickerScreen.Response.Deck -> eventSink(AddToDeck(result.deck))
+                    null -> Unit // Do nothing
+                  }
+                }
+              },
+            ) {
+              Icon(
+                Icons.Rounded.AddDeck,
                 contentDescription = null,
               )
             }
@@ -116,7 +182,7 @@ internal fun CardDetail(
       val isFavorited = state.isFavorited
       FloatingActionButton(
         onClick = {
-          state.eventSink(CardDetailUiEvent.Favorite(!isFavorited))
+          eventSink(CardDetailUiEvent.Favorite(!isFavorited))
         },
         containerColor = if (isFavorited) {
           MaterialTheme.colorScheme.tertiaryContainer
@@ -134,6 +200,9 @@ internal fun CardDetail(
           contentDescription = null,
         )
       }
+    },
+    snackbarHost = {
+      DismissableSnackbarHost(hostState = snackbarHostState)
     },
     contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars),
   ) { paddingValues ->
@@ -167,7 +236,7 @@ internal fun CardDetail(
         Spacer(Modifier.height(16.dp))
         TcgPlayerPriceCard(
           tcgPlayer = tcgPlayer,
-          onBuyClick = { state.eventSink(OpenUrl(tcgPlayer.url)) },
+          onBuyClick = { eventSink(OpenUrl(tcgPlayer.url)) },
           modifier = Modifier.padding(horizontal = 16.dp),
         )
       }
@@ -176,7 +245,7 @@ internal fun CardDetail(
         Spacer(Modifier.height(16.dp))
         CardMarketPriceCard(
           cardMarket = cardMarket,
-          onBuyClick = { state.eventSink(OpenUrl(cardMarket.url)) },
+          onBuyClick = { eventSink(OpenUrl(cardMarket.url)) },
           modifier = Modifier.padding(horizontal = 16.dp),
         )
       }
@@ -189,7 +258,7 @@ internal fun CardDetail(
         errorLabel = { Text(LocalStrings.current.similarCardsErrorLabel) },
         emptyLabel = { Text(LocalStrings.current.similarCardsEmptyLabel) },
         emptyImage = DeckBoxIcons.Charmander,
-        onCardClick = { state.eventSink(CardClick(it)) },
+        onCardClick = { eventSink(CardClick(it)) },
       )
 
       Spacer(Modifier.height(16.dp))
@@ -202,7 +271,7 @@ internal fun CardDetail(
             errorLabel = { Text(LocalStrings.current.evolvesFromErrorLabel) },
             emptyLabel = { Text(LocalStrings.current.evolvesFromEmptyLabel) },
             emptyImage = DeckBoxIcons.Squirtle,
-            onCardClick = { state.eventSink(CardClick(it)) },
+            onCardClick = { eventSink(CardClick(it)) },
           )
 
           Spacer(Modifier.height(16.dp))
@@ -214,7 +283,7 @@ internal fun CardDetail(
           errorLabel = { Text(LocalStrings.current.evolvesToErrorLabel) },
           emptyLabel = { Text(LocalStrings.current.evolvesToEmptyLabel) },
           emptyImage = DeckBoxIcons.Bulbasaur,
-          onCardClick = { state.eventSink(CardClick(it)) },
+          onCardClick = { eventSink(CardClick(it)) },
         )
       }
 

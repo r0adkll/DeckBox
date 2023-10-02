@@ -59,7 +59,20 @@ class BrowseFilterPresenter(
   getExpansions = { expansionsRepository.getExpansions() },
   getRarities = { rarityStore.get() },
   getSubtypes = { subtypeStore.get() },
-)
+) {
+
+  /**
+   * There is a bug where Composable functions inside an interface (or abstract class/superclass)
+   * will crash on iOS for "No function found for symbol" due to some linkage error. The workaround is
+   * to propagate the function call up to the subclasses and call its super.
+   *
+   * https://github.com/JetBrains/compose-multiplatform/issues/3318
+   */
+  @Composable
+  override fun present(key: String, initialFilter: SearchFilter): FilterUiState {
+    return super.present(key, initialFilter)
+  }
+}
 
 open class FilterPresenter(
   private val specs: List<FilterSpec>,
@@ -69,7 +82,7 @@ open class FilterPresenter(
 ) {
 
   @Composable
-  fun present(
+  open fun present(
     key: String,
     initialFilter: SearchFilter = SearchFilter(),
   ): FilterUiState {

@@ -11,6 +11,10 @@ class Evolution private constructor(
   val count: Int
     get() = nodes.sumOf { it.cards.sumOf { it.count } }
 
+  fun firstNodeCards(): List<Stacked<Card>> {
+    return nodes.first().cards
+  }
+
   fun matches(card: Stacked<Card>): Boolean {
     return nodes.any { node ->
       node.name == card.card.name || // Direct node match
