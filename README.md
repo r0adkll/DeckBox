@@ -4,6 +4,8 @@
 
 # DeckBox 2.0.0 (🚧 work-in-progress 🚧)
 
+![CI](https://github.com/r0adkll/DeckBox/actions/workflows/build.yml/badge.svg)
+
 **DeckBox** is an unofficial deck building app for creating and managing your Pokémon TCG decklists. Whether you are building and tweaking the top decks in the meta or just experimenting with some spicy rogue decks, search through a large collection of Pokémon cards that span from the latest expansion all the way back to the base set
 
 ## This is a **WIP** re-write of DeckBox in the latest tech stack
