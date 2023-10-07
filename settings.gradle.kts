@@ -27,6 +27,7 @@ buildCache {
 rootProject.name = "DeckBox"
 include(":androidApp")
 include(":desktopApp")
+include(":serverApp")
 include(":shared")
 include(":core")
 include(
