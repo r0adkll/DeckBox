@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     name: "danger-pr"
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Danger
         uses: docker://ghcr.io/danger/danger-kotlin:1.2.0
         with:
@@ -31,7 +31,7 @@ jobs:
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -59,7 +59,7 @@ jobs:
 
   android:
     needs: [code-style]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 60
 #    env:
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_URL: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_URL }}
@@ -71,7 +71,7 @@ jobs:
         shell: bash
         run: echo "ORG_GRADLE_PROJECT_DECKBOX_VERSIONCODE=$(( $GITHUB_RUN_NUMBER + 10000 ))" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -155,7 +155,7 @@ jobs:
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -269,7 +269,7 @@ jobs:
 #      ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_REMOTE_BUILD_CACHE_PASSWORD }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
