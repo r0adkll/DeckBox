@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material3.ButtonDefaults
@@ -20,12 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.icons.DeckBoxIcons
+import app.deckbox.common.compose.icons.Pokedex
 import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.widgets.OutlinedIconButton
 import app.deckbox.common.compose.widgets.SizedIcon
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 internal fun WelcomeTips(
@@ -42,7 +43,6 @@ internal fun WelcomeTips(
   }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun WelcomeCard(
   onNewDeckClick: () -> Unit,
@@ -55,9 +55,10 @@ internal fun WelcomeCard(
     ),
   ) {
     Image(
-      painter = painterResource(DrawableResource("icon.webp")),
+      DeckBoxIcons.Logos.Pokedex,
       contentDescription = null,
       modifier = Modifier
+        .size(80.dp)
         .align(Alignment.CenterHorizontally)
         .padding(top = 16.dp),
     )

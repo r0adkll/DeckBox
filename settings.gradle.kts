@@ -72,6 +72,10 @@ include(
   ":features:collection:ui",
 )
 include(
+  ":features:tournament:public",
+  ":features:tournament:impl",
+)
+include(
   ":ui:browse",
   ":ui:filter",
   ":ui:settings",

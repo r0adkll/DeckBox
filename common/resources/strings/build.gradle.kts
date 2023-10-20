@@ -11,6 +11,8 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
+        api(projects.core)
+
         api(libs.lyricist)
         api(compose.foundation)
       }

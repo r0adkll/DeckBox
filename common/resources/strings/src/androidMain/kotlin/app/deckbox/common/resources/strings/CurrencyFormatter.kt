@@ -7,6 +7,7 @@ import android.icu.text.NumberFormat
 import android.icu.util.Currency
 import android.os.Build
 import androidx.annotation.RequiresApi
+import app.deckbox.core.CurrencyType
 import java.util.Locale
 
 actual object CurrencyFormatter {

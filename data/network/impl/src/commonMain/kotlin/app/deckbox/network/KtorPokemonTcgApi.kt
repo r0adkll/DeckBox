@@ -33,32 +33,16 @@ typealias PokemonTcgApiKey = String
 @Inject
 @ContributesBinding(MergeAppScope::class)
 class KtorPokemonTcgApi(
+  private val httpClient: HttpClient,
   private val apiKey: PokemonTcgApiKey = BuildConfig.POKEMON_TCG_API_KEY,
 ) : PokemonTcgApi {
-  private val client = HttpClient {
-    install(ContentNegotiation) {
-      json(
-        Json {
-          isLenient = true
-          ignoreUnknownKeys = true
-        },
-      )
-    }
 
-    install(HttpCache)
-
-    install(Logging) {
-      level = LogLevel.INFO
-      logger = object : Logger {
-        override fun log(message: String) {
-          bark(INFO) { message }
-        }
+  private val client by lazy {
+    httpClient.config {
+      defaultRequest {
+        header("X-Api-Key", apiKey)
+        url(BASE_URL)
       }
-    }
-
-    defaultRequest {
-      header("X-Api-Key", apiKey)
-      url(BASE_URL)
     }
   }
 
