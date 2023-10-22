@@ -6,8 +6,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -45,12 +47,11 @@ fun BoosterPackBuilder(
   val coroutineScope = rememberCoroutineScope()
   val overlayHost = LocalOverlayHost.current
   val eventSink = state.eventSink
-
+  val nameFocusRequester = remember { FocusRequester() }
   val boosterPack = state.session.boosterPackOrNull()
   val boosterPackName = boosterPack?.name ?: ""
 
   CardBuilder(
-    name = boosterPackName,
     title = {
       if (boosterPackName.isBlank()) {
         AnnotatedString(
@@ -74,7 +75,10 @@ fun BoosterPackBuilder(
       )
     },
     bottomSheetContent = {
-      BoosterPackBottomSheet(state)
+      BoosterPackBottomSheet(
+        state = state,
+        focusRequester = nameFocusRequester
+      )
     },
     onNavClick = { eventSink(NavigateBack) },
     onAddClick = {
@@ -96,7 +100,6 @@ fun BoosterPackBuilder(
         CardUiModel.Tip.Energy -> eventSink(AddCards(SuperType.ENERGY))
       }
     },
-    onNameChange = { newName -> eventSink(EditName(newName)) },
     cardsState = state.cards,
     legalities = boosterPack?.legalities ?: Legalities(standard = Legality.LEGAL),
     modifier = modifier,

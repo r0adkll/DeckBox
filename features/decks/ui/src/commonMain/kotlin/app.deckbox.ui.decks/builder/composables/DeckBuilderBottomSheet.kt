@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ErrorOutline
+import androidx.compose.material.icons.rounded.ShortText
 import androidx.compose.material.icons.rounded.Subject
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -21,6 +22,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.builder.composables.BuilderTextField
@@ -33,6 +36,7 @@ import app.deckbox.ui.decks.builder.DeckPriceState
 @Composable
 internal fun ColumnScope.DeckBuilderBottomSheet(
   state: DeckBuilderUiState,
+  focusRequester: FocusRequester,
 ) {
   val eventSink = state.eventSink
   val validation = state.validation.dataOrNull ?: DeckValidation()
@@ -41,6 +45,30 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
   var descriptionValue by remember(state.session.deckOrNull() != null) {
     mutableStateOf(TextFieldValue(state.session.deckOrNull()?.description ?: ""))
   }
+  var nameValue by remember(state.session.deckOrNull() != null) {
+    mutableStateOf(TextFieldValue(state.session.deckOrNull()?.name ?: ""))
+  }
+  BuilderTextField(
+    icon = { Icon(Icons.Rounded.ShortText, contentDescription = null) },
+  ) {
+    TextField(
+      value = nameValue,
+      onValueChange = { value ->
+        nameValue = value
+        eventSink(DeckBuilderUiEvent.EditName(value.text))
+      },
+      placeholder = {
+        Text("Name")
+      },
+      label = {
+        Text("Name")
+      },
+      modifier = Modifier
+        .fillMaxWidth()
+        .focusRequester(focusRequester),
+    )
+  }
+  Spacer(Modifier.height(16.dp))
   BuilderTextField(
     icon = { Icon(Icons.Rounded.Subject, contentDescription = null) },
   ) {

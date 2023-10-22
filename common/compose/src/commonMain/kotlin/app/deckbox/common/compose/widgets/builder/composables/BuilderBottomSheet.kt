@@ -38,13 +38,10 @@ import kotlinx.collections.immutable.persistentListOf
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun ColumnScope.BuilderBottomSheet(
-  name: String,
   isValid: Boolean,
   legalities: Legalities,
   cardsState: LoadState<out ImmutableList<CardUiModel>>,
-  focusRequester: FocusRequester,
   onHeaderClick: () -> Unit,
-  onNameChange: (String) -> Unit,
   content: @Composable ColumnScope.() -> Unit,
 ) {
   val cards = cardsState.dataOrNull ?: persistentListOf()
@@ -64,30 +61,6 @@ internal fun ColumnScope.BuilderBottomSheet(
       .focusGroup()
       .verticalScroll(rememberScrollState()),
   ) {
-    var nameValue by remember(name) {
-      mutableStateOf(TextFieldValue(name))
-    }
-    BuilderTextField(
-      icon = { Icon(Icons.Rounded.ShortText, contentDescription = null) },
-    ) {
-      TextField(
-        value = nameValue,
-        onValueChange = { value ->
-          nameValue = value
-          onNameChange(value.text)
-        },
-        placeholder = {
-          Text("Name")
-        },
-        label = {
-          Text("Name")
-        },
-        modifier = Modifier
-          .fillMaxWidth()
-          .focusRequester(focusRequester),
-      )
-    }
-    Spacer(Modifier.height(16.dp))
     content()
   }
 
