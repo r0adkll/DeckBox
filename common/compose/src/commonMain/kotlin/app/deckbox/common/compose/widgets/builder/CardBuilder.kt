@@ -104,8 +104,10 @@ fun CardBuilder(
     }
   }
 
+
   LaunchedEffect(isBottomSheetCollapsed) {
     if (isBottomSheetCollapsed) {
+      keyBoardController?.hide()
       focusManager.clearFocus()
     }
   }
