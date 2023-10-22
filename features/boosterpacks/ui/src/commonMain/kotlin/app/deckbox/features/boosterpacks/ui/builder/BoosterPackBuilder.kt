@@ -28,7 +28,6 @@ import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.Ad
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddToDeck
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.CardClick
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.DecrementCard
-import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.EditName
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.IncrementCard
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NavigateBack
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NewDeck
@@ -102,8 +101,8 @@ fun BoosterPackBuilder(
     },
     cardsState = state.cards,
     legalities = boosterPack?.legalities ?: Legalities(standard = Legality.LEGAL),
-    modifier = modifier,
     columns = 4,
     cardSpacing = 8.dp,
+    modifier = modifier
   )
 }

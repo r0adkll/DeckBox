@@ -36,11 +36,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -65,7 +67,7 @@ import com.moriatsushi.insetsx.navigationBars
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CardBuilder(
   title: @Composable () -> AnnotatedString,
@@ -86,6 +88,7 @@ fun CardBuilder(
 ) {
   val coroutineScope = rememberCoroutineScope()
   val focusManager = LocalFocusManager.current
+  val keyBoardController = LocalSoftwareKeyboardController.current
 
   val bottomPadding = with(LocalDensity.current) {
     WindowInsets.navigationBars.getBottom(this).toDp()
@@ -126,6 +129,8 @@ fun CardBuilder(
         indication = null,
         onClick = {
           isEditing = false
+          keyBoardController?.hide()
+          focusManager.clearFocus()
         },
       ),
     scaffoldState = scaffoldState,

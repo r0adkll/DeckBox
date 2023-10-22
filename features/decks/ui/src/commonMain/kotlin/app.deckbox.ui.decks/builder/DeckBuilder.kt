@@ -28,7 +28,6 @@ import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddCards
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.CardClick
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.DecrementCard
-import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.EditName
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.IncrementCard
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NavigateBack
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.NewBoosterPack
@@ -48,7 +47,6 @@ fun DeckBuilder(
   val overlayHost = LocalOverlayHost.current
   val eventSink = state.eventSink
   val nameFocusRequester = remember { FocusRequester() }
-
   val deck = state.session.deckOrNull()
   val deckName = deck?.name ?: ""
   val validation = state.validation.dataOrNull ?: DeckValidation()
@@ -102,9 +100,8 @@ fun DeckBuilder(
       }
     },
     cardsState = state.cards,
-    modifier = modifier,
-
     isValid = validation.isValid && !validation.isEmpty,
     legalities = deck?.legalities ?: Legalities(standard = Legality.LEGAL),
+    modifier = modifier,
   )
 }
