@@ -6,10 +6,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -46,7 +44,6 @@ fun BoosterPackBuilder(
   val coroutineScope = rememberCoroutineScope()
   val overlayHost = LocalOverlayHost.current
   val eventSink = state.eventSink
-  val nameFocusRequester = remember { FocusRequester() }
   val boosterPack = state.session.boosterPackOrNull()
   val boosterPackName = boosterPack?.name ?: ""
 
@@ -73,10 +70,10 @@ fun BoosterPackBuilder(
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
       )
     },
-    bottomSheetContent = {
+    bottomSheetContent = {focusRequester ->
       BoosterPackBottomSheet(
         state = state,
-        focusRequester = nameFocusRequester
+        focusRequester = focusRequester,
       )
     },
     onNavClick = { eventSink(NavigateBack) },

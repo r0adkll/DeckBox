@@ -27,7 +27,7 @@ import app.deckbox.features.boosterpacks.ui.builder.PackPriceState
 @Composable
 internal fun ColumnScope.BoosterPackBottomSheet(
   state: BoosterPackBuilderUiState,
-  focusRequester: FocusRequester,
+  focusRequester: FocusRequester
 ) {
   val eventSink = state.eventSink
   var nameValue by remember(state.session.boosterPackOrNull() != null) {

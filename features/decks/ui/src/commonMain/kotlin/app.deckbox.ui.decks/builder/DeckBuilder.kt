@@ -6,10 +6,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -46,7 +44,6 @@ fun DeckBuilder(
   val coroutineScope = rememberCoroutineScope()
   val overlayHost = LocalOverlayHost.current
   val eventSink = state.eventSink
-  val nameFocusRequester = remember { FocusRequester() }
   val deck = state.session.deckOrNull()
   val deckName = deck?.name ?: ""
   val validation = state.validation.dataOrNull ?: DeckValidation()
@@ -73,10 +70,10 @@ fun DeckBuilder(
         icon = { Icon(Icons.Rounded.AddCard, contentDescription = null) },
       )
     },
-    bottomSheetContent = {
+    bottomSheetContent = {focusRequester ->
       DeckBuilderBottomSheet(
         state = state,
-        focusRequester = nameFocusRequester
+        focusRequester = focusRequester,
       )
     },
     onNavClick = { eventSink(NavigateBack) },
@@ -102,6 +99,6 @@ fun DeckBuilder(
     cardsState = state.cards,
     isValid = validation.isValid && !validation.isEmpty,
     legalities = deck?.legalities ?: Legalities(standard = Legality.LEGAL),
-    modifier = modifier,
+    modifier = modifier
   )
 }

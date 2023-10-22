@@ -40,9 +40,10 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun ColumnScope.BuilderBottomSheet(
   isValid: Boolean,
   legalities: Legalities,
+  focusRequester: FocusRequester,
   cardsState: LoadState<out ImmutableList<CardUiModel>>,
   onHeaderClick: () -> Unit,
-  content: @Composable ColumnScope.() -> Unit,
+  content: @Composable ColumnScope.(FocusRequester) -> Unit,
 ) {
   val cards = cardsState.dataOrNull ?: persistentListOf()
 
@@ -61,7 +62,7 @@ internal fun ColumnScope.BuilderBottomSheet(
       .focusGroup()
       .verticalScroll(rememberScrollState()),
   ) {
-    content()
+    content(focusRequester)
   }
 
   Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))

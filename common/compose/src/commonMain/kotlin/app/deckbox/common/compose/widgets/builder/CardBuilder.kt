@@ -72,7 +72,7 @@ import kotlinx.coroutines.launch
 fun CardBuilder(
   title: @Composable () -> AnnotatedString,
   floatingActionButton: @Composable (isScrolled: Boolean) -> Unit,
-  bottomSheetContent: @Composable ColumnScope.() -> Unit,
+  bottomSheetContent: @Composable ColumnScope.(FocusRequester) -> Unit,
   onNavClick: () -> Unit,
   onAddClick: () -> Unit,
   onCardClick: (Stacked<Card>) -> Unit,
@@ -131,8 +131,8 @@ fun CardBuilder(
         indication = null,
         onClick = {
           isEditing = false
-          keyBoardController?.hide()
           focusManager.clearFocus()
+          keyBoardController?.hide()
         },
       ),
     scaffoldState = scaffoldState,
@@ -163,12 +163,15 @@ fun CardBuilder(
         isValid = isValid,
         legalities = legalities,
         cardsState = cardsState,
+        focusRequester = nameFocusRequester,
         onHeaderClick = {
           coroutineScope.launch {
             scaffoldState.bottomSheetState.expand()
           }
         },
-        content = bottomSheetContent,
+        content = {focusRequester ->
+          bottomSheetContent(focusRequester)
+        },
       )
     },
     sheetDragHandle = null,
