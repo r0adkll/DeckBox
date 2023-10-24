@@ -4,37 +4,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -53,11 +30,7 @@ import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.EditingAppBar
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
-import app.deckbox.common.compose.widgets.builder.composables.BuilderBottomSheet
-import app.deckbox.common.compose.widgets.builder.composables.CardList
-import app.deckbox.common.compose.widgets.builder.composables.DefaultCardSpacing
-import app.deckbox.common.compose.widgets.builder.composables.DefaultColumns
-import app.deckbox.common.compose.widgets.builder.composables.SheetHeaderHeight
+import app.deckbox.common.compose.widgets.builder.composables.*
 import app.deckbox.common.compose.widgets.builder.model.CardUiModel
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.model.Card
@@ -169,7 +142,7 @@ fun CardBuilder(
             scaffoldState.bottomSheetState.expand()
           }
         },
-        content = {focusRequester ->
+        content = { focusRequester ->
           bottomSheetContent(focusRequester)
         },
       )
