@@ -7,10 +7,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
@@ -45,11 +50,19 @@ fun BoosterPackBuilder(
   val overlayHost = LocalOverlayHost.current
   val eventSink = state.eventSink
   val boosterPack = state.session.boosterPackOrNull()
-  val boosterPackName = boosterPack?.name ?: ""
+
+  var boosterPackName by remember(state.session.boosterPackOrNull() != null) {
+    mutableStateOf(TextFieldValue(state.session.boosterPackOrNull()?.name ?: ""))
+  }
 
   CardBuilder(
+    name = boosterPackName,
+    onNameChange = { value ->
+      boosterPackName = value
+      eventSink(BoosterPackBuilderUiEvent.EditName(value.text))
+    },
     title = {
-      if (boosterPackName.isBlank()) {
+      if (boosterPackName.text.isBlank()) {
         AnnotatedString(
           LocalStrings.current.boosterPackPickerTitle,
           SpanStyle(
@@ -58,7 +71,7 @@ fun BoosterPackBuilder(
           ),
         )
       } else {
-        AnnotatedString(boosterPackName)
+        AnnotatedString(boosterPackName.text)
       }
     },
     floatingActionButton = { isScrolled ->
@@ -70,11 +83,8 @@ fun BoosterPackBuilder(
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
       )
     },
-    bottomSheetContent = {focusRequester ->
-      BoosterPackBottomSheet(
-        state = state,
-        focusRequester = focusRequester,
-      )
+    bottomSheetContent = {
+      BoosterPackBottomSheet(state)
     },
     onNavClick = { eventSink(NavigateBack) },
     onAddClick = {
@@ -100,6 +110,6 @@ fun BoosterPackBuilder(
     legalities = boosterPack?.legalities ?: Legalities(standard = Legality.LEGAL),
     columns = 4,
     cardSpacing = 8.dp,
-    modifier = modifier
+    modifier = modifier,
   )
 }

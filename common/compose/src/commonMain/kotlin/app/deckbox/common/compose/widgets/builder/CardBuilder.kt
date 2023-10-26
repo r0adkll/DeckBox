@@ -5,45 +5,44 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.PlatformBackHandler
@@ -53,11 +52,11 @@ import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.EditingAppBar
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
-import app.deckbox.common.compose.widgets.builder.composables.DefaultColumns
-import app.deckbox.common.compose.widgets.builder.composables.DefaultCardSpacing
 import app.deckbox.common.compose.widgets.builder.composables.BuilderBottomSheet
-import app.deckbox.common.compose.widgets.builder.composables.SheetHeaderHeight
 import app.deckbox.common.compose.widgets.builder.composables.CardList
+import app.deckbox.common.compose.widgets.builder.composables.DefaultCardSpacing
+import app.deckbox.common.compose.widgets.builder.composables.DefaultColumns
+import app.deckbox.common.compose.widgets.builder.composables.SheetHeaderHeight
 import app.deckbox.common.compose.widgets.builder.model.CardUiModel
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.model.Card
@@ -67,18 +66,20 @@ import com.moriatsushi.insetsx.navigationBars
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardBuilder(
+  name: TextFieldValue,
   title: @Composable () -> AnnotatedString,
   floatingActionButton: @Composable (isScrolled: Boolean) -> Unit,
-  bottomSheetContent: @Composable ColumnScope.(FocusRequester) -> Unit,
+  bottomSheetContent: @Composable ColumnScope.() -> Unit,
   onNavClick: () -> Unit,
   onAddClick: () -> Unit,
   onCardClick: (Stacked<Card>) -> Unit,
   onAddCardClick: (Stacked<Card>) -> Unit,
   onRemoveCardClick: (Stacked<Card>) -> Unit,
   onTipClick: (CardUiModel.Tip) -> Unit,
+  onNameChange: (TextFieldValue) -> Unit,
   cardsState: LoadState<out ImmutableList<CardUiModel>>,
   modifier: Modifier = Modifier,
   isValid: Boolean = true,
@@ -88,7 +89,6 @@ fun CardBuilder(
 ) {
   val coroutineScope = rememberCoroutineScope()
   val focusManager = LocalFocusManager.current
-  val keyBoardController = LocalSoftwareKeyboardController.current
 
   val bottomPadding = with(LocalDensity.current) {
     WindowInsets.navigationBars.getBottom(this).toDp()
@@ -104,10 +104,8 @@ fun CardBuilder(
     }
   }
 
-
   LaunchedEffect(isBottomSheetCollapsed) {
     if (isBottomSheetCollapsed) {
-      keyBoardController?.hide()
       focusManager.clearFocus()
     }
   }
@@ -132,7 +130,6 @@ fun CardBuilder(
         onClick = {
           isEditing = false
           focusManager.clearFocus()
-          keyBoardController?.hide()
         },
       ),
     scaffoldState = scaffoldState,
@@ -160,6 +157,7 @@ fun CardBuilder(
     },
     sheetContent = {
       BuilderBottomSheet(
+        name = name,
         isValid = isValid,
         legalities = legalities,
         cardsState = cardsState,
@@ -169,9 +167,8 @@ fun CardBuilder(
             scaffoldState.bottomSheetState.expand()
           }
         },
-        content = { focusRequester ->
-          bottomSheetContent(focusRequester)
-        },
+        onNameChange = onNameChange,
+        content = bottomSheetContent,
       )
     },
     sheetDragHandle = null,

@@ -7,10 +7,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.compose.widgets.builder.CardBuilder
@@ -45,12 +50,18 @@ fun DeckBuilder(
   val overlayHost = LocalOverlayHost.current
   val eventSink = state.eventSink
   val deck = state.session.deckOrNull()
-  val deckName = deck?.name ?: ""
   val validation = state.validation.dataOrNull ?: DeckValidation()
-
+  var deckName by remember(state.session.deckOrNull() != null) {
+    mutableStateOf(TextFieldValue(state.session.deckOrNull()?.name ?: ""))
+  }
   CardBuilder(
+    name = deckName,
+    onNameChange = { value ->
+      deckName = value
+      eventSink(DeckBuilderUiEvent.EditName(value.text))
+    },
     title = {
-      if (deckName.isBlank()) {
+      if (deckName.text.isBlank()) {
         AnnotatedString(
           LocalStrings.current.deckTitleNoName,
           SpanStyle(
@@ -59,7 +70,7 @@ fun DeckBuilder(
           ),
         )
       } else {
-        AnnotatedString(deckName)
+        AnnotatedString(deckName.text)
       }
     },
     floatingActionButton = { isScrolled ->
@@ -70,11 +81,8 @@ fun DeckBuilder(
         icon = { Icon(Icons.Rounded.AddCard, contentDescription = null) },
       )
     },
-    bottomSheetContent = {focusRequester ->
-      DeckBuilderBottomSheet(
-        state = state,
-        focusRequester = focusRequester,
-      )
+    bottomSheetContent = {
+      DeckBuilderBottomSheet(state)
     },
     onNavClick = { eventSink(NavigateBack) },
     onAddClick = {
@@ -99,6 +107,6 @@ fun DeckBuilder(
     cardsState = state.cards,
     isValid = validation.isValid && !validation.isEmpty,
     legalities = deck?.legalities ?: Legalities(standard = Legality.LEGAL),
-    modifier = modifier
+    modifier = modifier,
   )
 }
