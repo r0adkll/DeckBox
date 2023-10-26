@@ -42,6 +42,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.PlatformBackHandler
@@ -68,19 +69,17 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardBuilder(
-  name: String,
+  name: TextFieldValue,
   title: @Composable () -> AnnotatedString,
   floatingActionButton: @Composable (isScrolled: Boolean) -> Unit,
   bottomSheetContent: @Composable ColumnScope.() -> Unit,
-
   onNavClick: () -> Unit,
   onAddClick: () -> Unit,
   onCardClick: (Stacked<Card>) -> Unit,
   onAddCardClick: (Stacked<Card>) -> Unit,
   onRemoveCardClick: (Stacked<Card>) -> Unit,
   onTipClick: (CardUiModel.Tip) -> Unit,
-  onNameChange: (String) -> Unit,
-
+  onNameChange: (TextFieldValue) -> Unit,
   cardsState: LoadState<out ImmutableList<CardUiModel>>,
   modifier: Modifier = Modifier,
   isValid: Boolean = true,
@@ -130,6 +129,7 @@ fun CardBuilder(
         indication = null,
         onClick = {
           isEditing = false
+          focusManager.clearFocus()
         },
       ),
     scaffoldState = scaffoldState,

@@ -18,10 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -34,17 +30,16 @@ import app.deckbox.core.model.SuperType
 import com.moriatsushi.insetsx.navigationBars
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun ColumnScope.BuilderBottomSheet(
-  name: String,
+  name: TextFieldValue,
   isValid: Boolean,
   legalities: Legalities,
-  cardsState: LoadState<out ImmutableList<CardUiModel>>,
   focusRequester: FocusRequester,
+  cardsState: LoadState<out ImmutableList<CardUiModel>>,
   onHeaderClick: () -> Unit,
-  onNameChange: (String) -> Unit,
+  onNameChange: (TextFieldValue) -> Unit,
   content: @Composable ColumnScope.() -> Unit,
 ) {
   val cards = cardsState.dataOrNull ?: persistentListOf()
@@ -64,17 +59,13 @@ internal fun ColumnScope.BuilderBottomSheet(
       .focusGroup()
       .verticalScroll(rememberScrollState()),
   ) {
-    var nameValue by remember(name) {
-      mutableStateOf(TextFieldValue(name))
-    }
     BuilderTextField(
       icon = { Icon(Icons.Rounded.ShortText, contentDescription = null) },
     ) {
       TextField(
-        value = nameValue,
+        value = name,
         onValueChange = { value ->
-          nameValue = value
-          onNameChange(value.text)
+          onNameChange(value)
         },
         placeholder = {
           Text("Name")

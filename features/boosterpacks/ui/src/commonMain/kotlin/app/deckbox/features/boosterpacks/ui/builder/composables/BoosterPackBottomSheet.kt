@@ -15,7 +15,6 @@ internal fun ColumnScope.BoosterPackBottomSheet(
   state: BoosterPackBuilderUiState,
 ) {
   Divider()
-
   PackPrices(
     prices = state.price.dataOrNull ?: PackPriceState(),
   )

@@ -6,11 +6,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
@@ -26,7 +31,6 @@ import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.Ad
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddToDeck
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.CardClick
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.DecrementCard
-import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.EditName
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.IncrementCard
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NavigateBack
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.NewDeck
@@ -45,14 +49,20 @@ fun BoosterPackBuilder(
   val coroutineScope = rememberCoroutineScope()
   val overlayHost = LocalOverlayHost.current
   val eventSink = state.eventSink
-
   val boosterPack = state.session.boosterPackOrNull()
-  val boosterPackName = boosterPack?.name ?: ""
+
+  var boosterPackName by remember(state.session.boosterPackOrNull() != null) {
+    mutableStateOf(TextFieldValue(state.session.boosterPackOrNull()?.name ?: ""))
+  }
 
   CardBuilder(
     name = boosterPackName,
+    onNameChange = { value ->
+      boosterPackName = value
+      eventSink(BoosterPackBuilderUiEvent.EditName(value.text))
+    },
     title = {
-      if (boosterPackName.isBlank()) {
+      if (boosterPackName.text.isBlank()) {
         AnnotatedString(
           LocalStrings.current.boosterPackPickerTitle,
           SpanStyle(
@@ -61,7 +71,7 @@ fun BoosterPackBuilder(
           ),
         )
       } else {
-        AnnotatedString(boosterPackName)
+        AnnotatedString(boosterPackName.text)
       }
     },
     floatingActionButton = { isScrolled ->
@@ -96,11 +106,10 @@ fun BoosterPackBuilder(
         CardUiModel.Tip.Energy -> eventSink(AddCards(SuperType.ENERGY))
       }
     },
-    onNameChange = { newName -> eventSink(EditName(newName)) },
     cardsState = state.cards,
     legalities = boosterPack?.legalities ?: Legalities(standard = Legality.LEGAL),
-    modifier = modifier,
     columns = 4,
     cardSpacing = 8.dp,
+    modifier = modifier,
   )
 }
