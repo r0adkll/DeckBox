@@ -8,6 +8,26 @@ import nl.adaptivity.xmlutil.core.impl.multiplatform.StringReader
 import nl.adaptivity.xmlutil.core.impl.multiplatform.use
 import nl.adaptivity.xmlutil.toEvent
 
+
+/**
+ * Reading xml events until one matches initial configuration conditions,
+ * upon doing so can push an additional configuration that again is waiting until
+ * certain conditions are met, building some model, or pushing additional configurations
+ *
+ * Skraper {
+ *   val tournaments = mutableListOf<Tournament>()
+ *   on<StartElementEvent> { event ->
+ *     if (event matches ...) {
+ *
+ *        on<StartElementEvent> {
+ *
+ *        }
+ *
+ *     }
+ *   }
+ * }
+ *
+ */
 class Skraper {
 
   @OptIn(ExperimentalXmlUtilApi::class)
