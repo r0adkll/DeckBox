@@ -54,9 +54,6 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
             // https://kotlinlang.org/docs/whatsnew19.html#preview-of-custom-memory-allocator
             freeCompilerArgs.add("-Xallocator=custom")
 
-            // https://kotlinlang.org/docs/whatsnew19.html#compiler-option-for-c-interop-implicit-integer-conversions
-            freeCompilerArgs.add("-XXLanguage:+ImplicitSignedToUnsignedIntegerConversion")
-
             // Enable debug symbols:
             // https://kotlinlang.org/docs/native-ios-symbolication.html
             freeCompilerArgs.add("-Xadd-light-debug=enable")
