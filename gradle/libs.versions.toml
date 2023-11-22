@@ -17,7 +17,7 @@ ktor = "2.3.7"
 lyricist = "1.6.2"
 multiplatformsettings = "1.1.1"
 okhttp = "4.12.0"
-paging = "3.2.1"
+paging = "3.3.0-alpha02"
 paging-multiplatform = "3.3.0-alpha02-0.4.0"
 junit = "4.13.2"
 espresso-core = "3.5.1"
@@ -57,6 +57,7 @@ androidx-browser = "androidx.browser:browser:1.7.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
 androidx-preferences = "androidx.preference:preference:1.2.1"
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 
@@ -85,7 +86,6 @@ insetsx = "com.moriatsushi.insetsx:insetsx:0.1.0-alpha10"
 imageloader = "io.github.qdsfdhvh:image-loader:1.6.8"
 materialcolorsutilities = "dev.sasikanth:material-color-utilities:1.0.0-alpha01"
 
-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-multiplatform" }
 paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "paging-multiplatform" }
 
 # Kotlin

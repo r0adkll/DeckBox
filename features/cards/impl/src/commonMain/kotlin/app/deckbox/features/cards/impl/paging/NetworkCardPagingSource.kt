@@ -1,10 +1,6 @@
 package app.deckbox.features.cards.impl.paging
 
-import app.cash.paging.PagingSourceLoadParams
-import app.cash.paging.PagingSourceLoadResult
-import app.cash.paging.PagingSourceLoadResultError
-import app.cash.paging.PagingSourceLoadResultPage
-import app.cash.paging.PagingState
+import androidx.paging.PagingState
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Card
@@ -38,7 +34,7 @@ class NetworkCardPagingSource(
 
   override fun getRefreshKey(state: PagingState<Int, Card>): Int? = null
 
-  override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
+  override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Card> {
     val result = api.getCards(
       query.copy(page = params.key ?: 1)
         .asQueryOptions()
@@ -49,16 +45,15 @@ class NetworkCardPagingSource(
       // Cache response
       db.insert(response.data)
 
-      PagingSourceLoadResultPage(
+      LoadResult.Page(
         data = response.data,
         prevKey = null,
         nextKey = response.page
           .plus(1)
           .takeIf { response.hasMore },
-      ) as PagingSourceLoadResult<Int, Card>
+      )
     } else {
-      PagingSourceLoadResultError<Int, Card>(result.exceptionOrNull() ?: Exception("Unable to load cards"))
-        as PagingSourceLoadResult<Int, Card>
+      LoadResult.Error(result.exceptionOrNull() ?: Exception("Unable to load cards"))
     }
   }
 }

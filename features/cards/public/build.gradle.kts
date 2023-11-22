@@ -9,7 +9,7 @@ kotlin {
       dependencies {
         implementation(projects.core)
 
-        api(libs.paging.common)
+        api(libs.androidx.paging.common)
       }
     }
   }
