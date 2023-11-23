@@ -53,8 +53,6 @@ kotlin {
 
       dependencies {
         implementation(libs.androidx.activity.compose)
-        api(libs.androidx.paging.runtime)
-        api(libs.androidx.paging.compose)
       }
     }
   }

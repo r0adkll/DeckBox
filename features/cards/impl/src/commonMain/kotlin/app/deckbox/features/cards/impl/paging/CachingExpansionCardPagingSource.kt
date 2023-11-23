@@ -1,10 +1,6 @@
 package app.deckbox.features.cards.impl.paging
 
-import app.cash.paging.PagingSourceLoadParams
-import app.cash.paging.PagingSourceLoadResult
-import app.cash.paging.PagingSourceLoadResultError
-import app.cash.paging.PagingSourceLoadResultPage
-import app.cash.paging.PagingState
+import androidx.paging.PagingState
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.model.Card
@@ -40,17 +36,17 @@ class CachingExpansionCardPagingSource(
 
   override fun getRefreshKey(state: PagingState<Int, Card>): Int? = null
 
-  override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
+  override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Card> {
     // First fetch all expansions from database if this is the
     // first load
     return if (params.key == null || params.key == 0) {
       val databaseCards = db.fetchByExpansion(expansion.id)
       if (databaseCards.size >= expansion.total) {
-        PagingSourceLoadResultPage(
+        LoadResult.Page(
           data = databaseCards.sortedBy { it.number.toIntOrNull() ?: 1 },
           prevKey = null,
           nextKey = null,
-        ) as PagingSourceLoadResult<Int, Card>
+        )
       } else {
         loadFromNetwork(params)
       }
@@ -59,7 +55,7 @@ class CachingExpansionCardPagingSource(
     }
   }
 
-  private suspend fun loadFromNetwork(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
+  private suspend fun loadFromNetwork(params: LoadParams<Int>): LoadResult<Int, Card> {
     val result = api.getCards(
       buildQuery(
         page = params.key?.plus(1) ?: 1,
@@ -73,15 +69,14 @@ class CachingExpansionCardPagingSource(
       // Cache response
       db.insert(response.data)
 
-      PagingSourceLoadResultPage(
+      LoadResult.Page(
         data = response.data,
         prevKey = null,
         nextKey = response.page
           .takeIf { response.hasMore },
-      ) as PagingSourceLoadResult<Int, Card>
+      )
     } else {
-      PagingSourceLoadResultError<Int, Card>(result.exceptionOrNull() ?: Exception("Unable to load cards"))
-        as PagingSourceLoadResult<Int, Card>
+      LoadResult.Error(result.exceptionOrNull() ?: Exception("Unable to load cards"))
     }
   }
 }

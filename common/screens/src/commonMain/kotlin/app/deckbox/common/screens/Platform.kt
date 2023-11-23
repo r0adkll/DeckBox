@@ -14,7 +14,7 @@ expect annotation class CommonParcelize()
 @OptIn(ExperimentalMultiplatform::class)
 @OptionalExpectation
 @Target(AnnotationTarget.PROPERTY)
-@Retention(AnnotationRetention.BINARY)
+@Retention(AnnotationRetention.SOURCE)
 expect annotation class CommonIgnoredOnParcel()
 
 // For Android @TypeParceler

@@ -1,6 +1,6 @@
 package app.deckbox.features.cards.impl.paging
 
-import app.cash.paging.PagingSource
+import androidx.paging.PagingSource
 import app.cash.sqldelight.Query
 import app.deckbox.core.logging.bark
 import kotlin.properties.Delegates
