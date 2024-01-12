@@ -33,7 +33,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
 android-test = { id = "com.android.test", version.ref = "agp" }
-buildConfig = "com.github.gmazzo.buildconfig:4.2.0"
+buildConfig = "com.github.gmazzo.buildconfig:5.3.5"
 cacheFixPlugin = { id = "org.gradle.android.cache-fix", version = "3.0" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlin-core = { id = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
