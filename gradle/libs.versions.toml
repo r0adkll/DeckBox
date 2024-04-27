@@ -24,7 +24,7 @@ espresso-core = "3.5.1"
 appcompat = "1.6.1"
 spotless = "6.23.3"
 sqldelight = "2.0.0"
-serialization = "1.6.2"
+serialization = "1.6.3"
 material3 = "1.2.1"
 firebase-crashlytics-buildtools = "2.9.9"
 
