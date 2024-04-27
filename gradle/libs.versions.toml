@@ -81,7 +81,7 @@ lyricist-compiler = { module = "cafe.adriel.lyricist:lyricist-processor", versio
 multiplatformsettings-core = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformsettings" }
 multiplatformsettings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformsettings" }
 
-compose-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.1"
+compose-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
 insetsx = "com.moriatsushi.insetsx:insetsx:0.1.0-alpha10"
 imageloader = "io.github.qdsfdhvh:image-loader:1.6.8"
 materialcolorsutilities = "dev.sasikanth:material-color-utilities:1.0.0-alpha01"
