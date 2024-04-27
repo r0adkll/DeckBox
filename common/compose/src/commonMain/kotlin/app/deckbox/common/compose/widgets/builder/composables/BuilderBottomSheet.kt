@@ -1,6 +1,5 @@
 package app.deckbox.common.compose.widgets.builder.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -13,7 +12,7 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ShortText
+import androidx.compose.material.icons.automirrored.rounded.ShortText
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,7 +29,7 @@ import app.deckbox.core.model.SuperType
 import com.moriatsushi.insetsx.navigationBars
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
 internal fun ColumnScope.BuilderBottomSheet(
   name: TextFieldValue,
@@ -60,7 +59,7 @@ internal fun ColumnScope.BuilderBottomSheet(
       .verticalScroll(rememberScrollState()),
   ) {
     BuilderTextField(
-      icon = { Icon(Icons.Rounded.ShortText, contentDescription = null) },
+      icon = { Icon(Icons.AutoMirrored.Rounded.ShortText, contentDescription = null) },
     ) {
       TextField(
         value = name,

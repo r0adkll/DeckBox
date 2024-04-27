@@ -4,11 +4,11 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.HourglassBottom
 import androidx.compose.material.icons.rounded.HourglassTop
 import androidx.compose.material.icons.rounded.Policy
-import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.material.icons.rounded.SortByAlpha
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import app.deckbox.core.settings.SortOption
 import cafe.adriel.lyricist.LocalStrings
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SortChip(
   value: SortOption,
@@ -50,7 +49,7 @@ fun SortChip(
       },
       leadingIcon = {
         Icon(
-          Icons.Rounded.Sort,
+          Icons.AutoMirrored.Rounded.Sort,
           contentDescription = null,
           modifier = Modifier.size(FilterChipDefaults.IconSize),
         )

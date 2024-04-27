@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.widgets.OutlinedIconButton
 import app.deckbox.common.compose.widgets.SizedIcon
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -54,7 +55,7 @@ internal fun WelcomeCard(
     ),
   ) {
     Image(
-      painter = painterResource("icon.webp"),
+      painter = painterResource(DrawableResource("icon.webp")),
       contentDescription = null,
       modifier = Modifier
         .align(Alignment.CenterHorizontally)

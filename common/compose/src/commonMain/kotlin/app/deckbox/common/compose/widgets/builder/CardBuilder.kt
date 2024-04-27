@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
@@ -253,7 +253,7 @@ private fun BuilderAppBar(
       IconButton(
         onClick = onNavClick,
       ) {
-        Icon(Icons.Rounded.ArrowBack, contentDescription = null)
+        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
       }
     },
     actions = {

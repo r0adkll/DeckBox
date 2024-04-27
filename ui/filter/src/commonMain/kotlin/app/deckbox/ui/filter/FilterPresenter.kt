@@ -84,7 +84,14 @@ open class FilterPresenter(
   @Composable
   open fun present(
     key: String,
-    initialFilter: SearchFilter = SearchFilter(),
+  ): FilterUiState {
+    return present(key, SearchFilter())
+  }
+
+  @Composable
+  open fun present(
+    key: String,
+    initialFilter: SearchFilter,
   ): FilterUiState {
     val fetchExpansions by rememberUpdatedState(getExpansions)
     val expansions by remember(fetchExpansions) {

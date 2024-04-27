@@ -2,13 +2,13 @@ package app.deckbox.common.compose.widgets
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,9 +19,9 @@ fun DismissableSnackbarHost(
   hostState: SnackbarHostState,
   modifier: Modifier = Modifier,
 ) {
-  val dismissSnackbarState = rememberDismissState(
+  val dismissSnackbarState = rememberSwipeToDismissBoxState(
     confirmValueChange = { value ->
-      if (value != DismissValue.Default) {
+      if (value != SwipeToDismissBoxValue.Settled) {
         hostState.currentSnackbarData?.dismiss()
         true
       } else {
@@ -34,10 +34,10 @@ fun DismissableSnackbarHost(
     hostState = hostState,
     modifier = modifier,
   ) { data ->
-    SwipeToDismiss(
+    SwipeToDismissBox(
       state = dismissSnackbarState,
-      background = {},
-      dismissContent = { Snackbar(snackbarData = data) },
+      backgroundContent = {},
+      content = { Snackbar(snackbarData = data) },
       modifier = Modifier
         .padding(horizontal = 16.dp)
         .fillMaxWidth(),
