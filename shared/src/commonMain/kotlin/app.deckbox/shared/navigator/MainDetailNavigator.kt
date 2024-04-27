@@ -3,7 +3,9 @@ package app.deckbox.shared.navigator
 import app.deckbox.common.screens.DeckBoxScreen
 import app.deckbox.common.screens.RootScreen
 import com.slack.circuit.runtime.Navigator
+import com.slack.circuit.runtime.screen.PopResult
 import com.slack.circuit.runtime.screen.Screen
+import kotlinx.collections.immutable.ImmutableList
 
 /**
  * A custom navigator for automatically navigating certain marked [DeckBoxScreen]s
@@ -28,14 +30,22 @@ class MainDetailNavigator(
     }
   }
 
-  override fun pop(): Screen? {
-    return mainNavigator.pop()
+  override fun pop(result: PopResult?): Screen? {
+    return mainNavigator.pop(result)
   }
 
-  override fun resetRoot(newRoot: Screen): List<Screen> {
+  override fun resetRoot(newRoot: Screen, saveState: Boolean, restoreState: Boolean): ImmutableList<Screen> {
     // We should reset to root for the detail navigator too so that any side content
     // gets reset when the main nav context changes
     detailNavigator.resetRoot(RootScreen())
-    return mainNavigator.resetRoot(newRoot)
+    return mainNavigator.resetRoot(newRoot, saveState, restoreState)
+  }
+
+  override fun peek(): Screen? {
+    return mainNavigator.peek()
+  }
+
+  override fun peekBackStack(): ImmutableList<Screen> {
+    return mainNavigator.peekBackStack()
   }
 }

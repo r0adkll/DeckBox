@@ -31,7 +31,9 @@ import com.slack.circuit.overlay.Overlay
 import com.slack.circuit.overlay.OverlayHost
 import com.slack.circuit.overlay.OverlayNavigator
 import com.slack.circuit.runtime.Navigator
+import com.slack.circuit.runtime.screen.PopResult
 import com.slack.circuit.runtime.screen.Screen
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 class BottomSheetOverlay<Model : Any, Result : Any>(
@@ -141,12 +143,20 @@ suspend fun <ResponseT> OverlayHost.showBottomSheetScreen(
             }
           }
 
-          override fun pop(): Screen? {
+          override fun peek(): Screen? {
+            TODO("Not yet implemented")
+          }
+
+          override fun peekBackStack(): ImmutableList<Screen> {
+            TODO("Not yet implemented")
+          }
+
+          override fun pop(result: PopResult?): Screen? {
             navigator.finish(OverlayResultScreen())
             return null
           }
 
-          override fun resetRoot(newRoot: Screen): List<Screen> {
+          override fun resetRoot(newRoot: Screen, saveState: Boolean, restoreState: Boolean): ImmutableList<Screen> {
             error("Operation not allowed in overlays")
           }
         }
