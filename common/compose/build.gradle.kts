@@ -1,4 +1,5 @@
 import app.deckbox.convention.addKspDependencyForCommon
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
   id("app.deckbox.android.library")
@@ -53,10 +54,16 @@ kotlin {
 
       dependencies {
         implementation(libs.androidx.activity.compose)
-        api(libs.androidx.paging.runtime)
-        api(libs.androidx.paging.compose)
       }
     }
+  }
+}
+
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+  compilerOptions {
+    // Have to disable this due to 'duplicate library name'
+    // https://youtrack.jetbrains.com/issue/KT-51110
+    allWarningsAsErrors = false
   }
 }
 

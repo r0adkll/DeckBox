@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.lyricist.LocalStrings
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -20,7 +21,7 @@ fun PokemonCardBack(
   type: CardBackType = CardBackType.English,
 ) {
   Image(
-    painter = painterResource(type.resourceName),
+    painter = painterResource(DrawableResource(type.resourceName)),
     contentDescription = LocalStrings.current.cardPlaceholderContentDescription,
     modifier = modifier,
   )

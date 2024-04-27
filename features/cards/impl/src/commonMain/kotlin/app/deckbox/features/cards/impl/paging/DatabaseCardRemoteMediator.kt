@@ -1,11 +1,8 @@
 package app.deckbox.features.cards.impl.paging
 
-import app.cash.paging.ExperimentalPagingApi
-import app.cash.paging.LoadType
-import app.cash.paging.PagingState
-import app.cash.paging.RemoteMediatorMediatorResult
-import app.cash.paging.RemoteMediatorMediatorResultError
-import app.cash.paging.RemoteMediatorMediatorResultSuccess
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
+import androidx.paging.PagingState
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
@@ -24,7 +21,6 @@ import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
-@OptIn(ExperimentalPagingApi::class)
 @Inject
 @AppScope
 @ContributesBinding(MergeAppScope::class)
@@ -51,21 +47,20 @@ class DatabaseCardRemoteMediator(
   override suspend fun load(
     loadType: LoadType,
     state: PagingState<Int, Card>,
-  ): RemoteMediatorMediatorResult {
+  ): MediatorResult {
     return try {
       val loadKey = when (loadType) {
         LoadType.REFRESH -> null
-        LoadType.PREPEND -> return RemoteMediatorMediatorResultSuccess(endOfPaginationReached = true)
-          as RemoteMediatorMediatorResult
+        LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
         LoadType.APPEND -> {
           val latestKey = database.remoteKeyQueries
             .getLatest(query.key)
             .executeAsOne()
 
           if (latestKey.nextKey == null) {
-            return RemoteMediatorMediatorResultSuccess(
+            return MediatorResult.Success(
               endOfPaginationReached = true,
-            ) as RemoteMediatorMediatorResult
+            )
           }
 
           latestKey.nextKey
@@ -122,17 +117,15 @@ class DatabaseCardRemoteMediator(
           }
         }
 
-        RemoteMediatorMediatorResultSuccess(
+        MediatorResult.Success(
           endOfPaginationReached = !response.hasMore,
-        ) as RemoteMediatorMediatorResult
+        )
       } else {
-        RemoteMediatorMediatorResultError(result.exceptionOrNull() ?: Exception("Network error"))
-          as RemoteMediatorMediatorResult
+        MediatorResult.Error(result.exceptionOrNull() ?: Exception("Network error"))
       }
     } catch (t: Throwable) {
       bark(ERROR, throwable = t) { "Mediator Error" }
-      RemoteMediatorMediatorResultError(t)
-        as RemoteMediatorMediatorResult
+      MediatorResult.Error(t)
     }
   }
 }

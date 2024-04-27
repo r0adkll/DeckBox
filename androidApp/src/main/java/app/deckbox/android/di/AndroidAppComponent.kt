@@ -2,6 +2,7 @@ package app.deckbox.android.di
 
 import android.app.Application
 import android.content.Context
+import app.deckbox.android.BuildConfig
 import app.deckbox.android.DeckBoxApplication
 import app.deckbox.core.app.ApplicationInfo
 import app.deckbox.core.app.Flavor
@@ -11,7 +12,6 @@ import app.deckbox.shared.di.SharedAppComponent
 import com.r0adkll.kotlininject.merge.annotations.MergeComponent
 import kotlininject.merge.app.deckbox.android.di.MergedAndroidAppComponent
 import me.tatarka.inject.annotations.Provides
-import org.jetbrains.compose.components.resources.BuildConfig
 
 @AppScope
 @MergeComponent(MergeAppScope::class)

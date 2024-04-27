@@ -14,7 +14,9 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 class KotlinMultiplatformConventionPlugin : Plugin<Project> {
@@ -24,7 +26,7 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
     }
 
     extensions.configure<KotlinMultiplatformExtension> {
-      targetHierarchy.default()
+      applyDefaultHierarchyTemplate()
 
       jvm()
       if (pluginManager.hasPlugin("com.android.library")) {
@@ -43,13 +45,53 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
 
       targets.withType<KotlinNativeTarget>().configureEach {
         binaries.all {
-          // Enable debug symbols:
-          // https://kotlinlang.org/docs/native-ios-symbolication.html
-          freeCompilerArgs += "-Xadd-light-debug=enable"
-
           // Add linker flag for SQLite. See:
           // https://github.com/touchlab/SQLiter/issues/77
           linkerOpts("-lsqlite3")
+        }
+
+        compilations.configureEach {
+          compilerOptions.configure {
+            // Try out preview custom allocator in K/N 1.9
+            // https://kotlinlang.org/docs/whatsnew19.html#preview-of-custom-memory-allocator
+            freeCompilerArgs.add("-Xallocator=custom")
+
+            // https://kotlinlang.org/docs/whatsnew19.html#compiler-option-for-c-interop-implicit-integer-conversions
+            freeCompilerArgs.add("-XXLanguage:+ImplicitSignedToUnsignedIntegerConversion")
+
+            // Enable debug symbols:
+            // https://kotlinlang.org/docs/native-ios-symbolication.html
+            freeCompilerArgs.add("-Xadd-light-debug=enable")
+
+            // Various opt-ins
+            freeCompilerArgs.addAll(
+              "-opt-in=kotlinx.cinterop.ExperimentalForeignApi",
+              "-opt-in=kotlinx.cinterop.BetaInteropApi",
+            )
+          }
+        }
+      }
+
+      targets.configureEach {
+        compilations.configureEach {
+          compilerOptions.configure {
+            freeCompilerArgs.add("-Xexpect-actual-classes")
+          }
+        }
+      }
+
+      metadata {
+        compilations.configureEach {
+          if (name == KotlinSourceSet.COMMON_MAIN_SOURCE_SET_NAME) {
+            compileTaskProvider.configure {
+              // We replace the default library names with something more unique (the project path).
+              // This allows us to avoid the annoying issue of `duplicate library name: foo_commonMain`
+              // https://youtrack.jetbrains.com/issue/KT-57914
+              val projectPath = this@with.path.substring(1).replace(":", "_")
+              this as KotlinCompileCommon
+              moduleName.set("${projectPath}_commonMain")
+            }
+          }
         }
       }
 

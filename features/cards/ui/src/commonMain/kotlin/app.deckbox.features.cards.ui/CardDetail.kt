@@ -16,7 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,7 +60,6 @@ import app.deckbox.common.screens.BoosterPackPickerScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckPickerScreen
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.model.Deck
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.cards.ui.CardDetailUiEvent.AddToBoosterPack
 import app.deckbox.features.cards.ui.CardDetailUiEvent.AddToDeck
@@ -118,7 +117,7 @@ internal fun CardDetail(
           IconButton(
             onClick = { eventSink(NavigateBack) },
           ) {
-            Icon(Icons.Rounded.ArrowBack, contentDescription = null)
+            Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
           }
         },
         actions = {

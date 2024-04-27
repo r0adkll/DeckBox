@@ -10,15 +10,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.LiveHelp
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.Cloud
-import androidx.compose.material.icons.outlined.LiveHelp
 import androidx.compose.material.icons.outlined.Policy
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.DataObject
 import androidx.compose.material.icons.rounded.Merge
 import androidx.compose.material.icons.rounded.NewReleases
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.Policy
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -60,7 +59,7 @@ fun Settings(
           IconButton(
             onClick = { },
           ) {
-            Icon(Icons.Rounded.ArrowBack, contentDescription = null)
+            Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
           }
         },
         actions = {
@@ -155,7 +154,7 @@ fun Settings(
       ListItem(
         headlineContent = { Text("Feedback") },
         supportingContent = { Text("Provide feedback on issues, features, etc") },
-        leadingContent = { Icon(Icons.Outlined.LiveHelp, contentDescription = null) },
+        leadingContent = { Icon(Icons.AutoMirrored.Outlined.LiveHelp, contentDescription = null) },
         modifier = Modifier.clickable {
         },
       )

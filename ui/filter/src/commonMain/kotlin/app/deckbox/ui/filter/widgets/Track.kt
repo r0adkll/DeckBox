@@ -14,8 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SliderPositions
+import androidx.compose.material3.SliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -25,9 +26,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.lerp
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.DpSize
@@ -36,7 +35,6 @@ import androidx.compose.ui.unit.dp
 
 private val TrackHeight = 32.dp
 private val TrackBorderWidth = 1.dp
-private val TickSize = 2.dp
 private val ThumbDefaultElevation = 1.dp
 private val ThumbPressedElevation = 6.dp
 private val ThumbSize = DpSize(20.dp, 20.dp)
@@ -110,9 +108,10 @@ class DeckBoxSliderColors(
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Track(
-  sliderPositions: SliderPositions,
+  sliderState: SliderState,
   modifier: Modifier = Modifier,
   colors: DeckBoxSliderColors = DeckBoxSliderColors.defaults(),
   enabled: Boolean = true,
@@ -120,8 +119,6 @@ fun Track(
   val thumbColor = colors.thumbColor(enabled)
   val inactiveTrackColor = colors.trackColor(enabled, active = false)
   val activeTrackColor = colors.trackColor(enabled, active = true)
-  val inactiveTickColor = colors.tickColor(enabled, active = false)
-  val activeTickColor = colors.tickColor(enabled, active = true)
   Canvas(
     modifier
       .fillMaxWidth()
@@ -132,7 +129,6 @@ fun Track(
     val sliderRight = Offset(size.width, center.y)
     val sliderStart = if (isRtl) sliderRight else sliderLeft
     val sliderEnd = if (isRtl) sliderLeft else sliderRight
-    val tickSize = TickSize.toPx()
     val trackStrokeWidth = TrackHeight.toPx()
     val trackFillWidth = (TrackHeight - TrackBorderWidth * 2).toPx()
 
@@ -145,13 +141,13 @@ fun Track(
     )
     val sliderValueEnd = Offset(
       sliderStart.x +
-        (sliderEnd.x - sliderStart.x) * sliderPositions.activeRange.endInclusive,
+        (sliderEnd.x - sliderStart.x) * sliderState.valueRange.endInclusive,
       center.y,
     )
 
     val sliderValueStart = Offset(
       sliderStart.x +
-        (sliderEnd.x - sliderStart.x) * sliderPositions.activeRange.start,
+        (sliderEnd.x - sliderStart.x) * sliderState.valueRange.start,
       center.y,
     )
 
@@ -169,20 +165,6 @@ fun Track(
       trackFillWidth,
       StrokeCap.Round,
     )
-    sliderPositions.tickFractions.groupBy {
-      it > sliderPositions.activeRange.endInclusive ||
-        it < sliderPositions.activeRange.start
-    }.forEach { (outsideFraction, list) ->
-      drawPoints(
-        list.map {
-          Offset(lerp(sliderStart, sliderEnd, it).x, center.y)
-        },
-        PointMode.Points,
-        (if (outsideFraction) inactiveTickColor else activeTickColor).value,
-        tickSize,
-        StrokeCap.Round,
-      )
-    }
   }
 }
 

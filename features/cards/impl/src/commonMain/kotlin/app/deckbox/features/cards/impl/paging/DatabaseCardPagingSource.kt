@@ -1,11 +1,7 @@
 package app.deckbox.features.cards.impl.paging
 
-import app.cash.paging.PagingSource
-import app.cash.paging.PagingSourceLoadParams
-import app.cash.paging.PagingSourceLoadResult
-import app.cash.paging.PagingSourceLoadResultError
-import app.cash.paging.PagingSourceLoadResultPage
-import app.cash.paging.PagingState
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
@@ -45,7 +41,7 @@ class DatabaseCardPagingSource(
 
   override fun getRefreshKey(state: PagingState<Int, Card>): Int? = null
 
-  override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Card> {
+  override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Card> {
     return withContext(dispatcherProvider.databaseRead) {
       try {
         val loadKey = params.key ?: DefaultPageKey
@@ -62,11 +58,11 @@ class DatabaseCardPagingSource(
         // If we don't have a local remote key, or the local key's count is 0,
         // then just return empty success, and let the mediator load from network
         if (remoteKey?.count == 0) {
-          return@withContext PagingSourceLoadResultPage(
+          return@withContext LoadResult.Page(
             data = emptyList<Card>(),
             prevKey = null,
             nextKey = null,
-          ) as PagingSourceLoadResult<Int, Card>
+          )
         }
 
         // Okay, we have a key, which means we should have cards, so lets attempt to load them
@@ -91,25 +87,24 @@ class DatabaseCardPagingSource(
             }
           }
 
-          PagingSourceLoadResultPage(
+          LoadResult.Page(
             data = cards,
             prevKey = null,
             nextKey = remoteKey.nextKey,
             itemsBefore = remoteKey.itemsBefore,
             itemsAfter = remoteKey.itemsAfter,
-          ) as PagingSourceLoadResult<Int, Card>
+          )
         } else {
           bark { "RemoteKey is null for (${query.key}, loadKey = $loadKey)" }
-          PagingSourceLoadResultPage(
+          LoadResult.Page(
             data = emptyList(),
             prevKey = null,
             nextKey = null,
-          ) as PagingSourceLoadResult<Int, Card>
+          )
         }
       } catch (t: Throwable) {
         bark(throwable = t) { "Error fetching page from database" }
-        PagingSourceLoadResultError<Int, Card>(t)
-          as PagingSourceLoadResult<Int, Card>
+        LoadResult.Error(t)
       }
     }
   }

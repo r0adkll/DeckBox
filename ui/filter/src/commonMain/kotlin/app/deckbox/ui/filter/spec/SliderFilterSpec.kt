@@ -23,7 +23,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.rounded.GreaterThan
@@ -136,7 +135,7 @@ abstract class SliderFilterSpec : FilterSpec() {
         onValueChangeFinished = sendEvent,
         track = { positions ->
           Track(
-            sliderPositions = positions,
+            sliderState = positions,
           )
         },
         thumb = { _ ->

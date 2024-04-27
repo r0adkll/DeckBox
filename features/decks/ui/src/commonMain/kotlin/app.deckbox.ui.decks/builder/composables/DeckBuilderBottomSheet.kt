@@ -6,9 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Subject
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Subject
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -45,7 +46,7 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
     mutableStateOf(TextFieldValue(state.session.deckOrNull()?.description ?: ""))
   }
   BuilderTextField(
-    icon = { Icon(Icons.Rounded.Subject, contentDescription = null) },
+    icon = { Icon(Icons.AutoMirrored.Rounded.Subject, contentDescription = null) },
   ) {
     TextField(
       value = descriptionValue,
@@ -66,7 +67,7 @@ internal fun ColumnScope.DeckBuilderBottomSheet(
   }
 
   Spacer(Modifier.height(16.dp))
-  Divider()
+  HorizontalDivider()
 
   var collectionMode by remember { mutableStateOf(false) }
   ListItem(
