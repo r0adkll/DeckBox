@@ -2,7 +2,12 @@ package app.deckbox.common.compose.imageloading
 
 import app.deckbox.core.di.ActivityScope
 import com.seiko.imageloader.ImageLoader
+import com.seiko.imageloader.cache.memory.maxSizePercent
 import com.seiko.imageloader.component.setupDefaultComponents
+import com.seiko.imageloader.intercept.bitmapMemoryCache
+import com.seiko.imageloader.intercept.bitmapMemoryCacheConfig
+import com.seiko.imageloader.intercept.imageMemoryCacheConfig
+import com.seiko.imageloader.intercept.painterMemoryCacheConfig
 import java.io.File
 import me.tatarka.inject.annotations.Provides
 import okio.Path.Companion.toOkioPath
@@ -18,8 +23,16 @@ actual interface PlatformImageLoaderComponent {
         setupDefaultComponents()
       }
       interceptor {
-        memoryCacheConfig {
-          maxSizeBytes(1 * 1024 * 1024 * 1024) // 1GB
+        bitmapMemoryCacheConfig {
+          maxSizePercent(0.25)
+        }
+        // cache 50 image
+        imageMemoryCacheConfig {
+          maxSize(50)
+        }
+        // cache 50 painter
+        painterMemoryCacheConfig {
+          maxSize(50)
         }
         diskCacheConfig {
           directory(getCacheDir().toOkioPath().resolve("image_cache"))
