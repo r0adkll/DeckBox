@@ -83,7 +83,7 @@ multiplatformsettings-coroutines = { module = "com.russhwolf:multiplatform-setti
 
 compose-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.1"
 insetsx = "com.moriatsushi.insetsx:insetsx:0.1.0-alpha10"
-imageloader = "io.github.qdsfdhvh:image-loader:1.6.8"
+imageloader = "io.github.qdsfdhvh:image-loader:1.7.8"
 materialcolorsutilities = "dev.sasikanth:material-color-utilities:1.0.0-alpha01"
 
 paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "paging-multiplatform" }
