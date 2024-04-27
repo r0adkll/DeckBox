@@ -1,23 +1,23 @@
 [versions]
-agp = "8.2.2"
+agp = "8.3.2"
 androidxlifecycle = "2.6.1"
-androidxactivity = "1.8.2"
+androidxactivity = "1.9.0"
 androidx-test-ext-junit = "1.1.5"
-core-ktx = "1.12.0"
-coroutines = "1.7.3"
+core-ktx = "1.13.0"
+coroutines = "1.8.0"
 compose-compiler = "1.5.3"
 compose-multiplatform = "1.5.12"
 circuit = "0.15.0"
-kotlin = "1.9.20"
+kotlin = "1.9.22"
 kotlin-inject = "0.6.3"
-kotlinpoet = "1.15.3"
-ksp = "1.9.21-1.0.16"
+kotlinpoet = "1.16.0"
+ksp = "1.9.22-1.0.17"
 ktlint = "0.49.1"
 ktor = "2.3.7"
 lyricist = "1.6.2"
 multiplatformsettings = "1.1.1"
 okhttp = "4.12.0"
-paging = "3.3.0-alpha02"
+paging = "3.3.0-beta01"
 paging-multiplatform = "3.3.0-alpha02-0.4.0"
 junit = "4.13.2"
 espresso-core = "3.5.1"
@@ -25,7 +25,7 @@ appcompat = "1.6.1"
 spotless = "6.23.3"
 sqldelight = "2.0.0"
 serialization = "1.6.2"
-material3 = "1.1.2"
+material3 = "1.2.1"
 firebase-crashlytics-buildtools = "2.9.9"
 
 [plugins]
@@ -33,7 +33,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
 android-test = { id = "com.android.test", version.ref = "agp" }
-buildConfig = "com.github.gmazzo.buildconfig:4.2.0"
+buildConfig = "com.github.gmazzo.buildconfig:5.3.5"
 cacheFixPlugin = { id = "org.gradle.android.cache-fix", version = "3.0" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlin-core = { id = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -42,7 +42,7 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-gms-googleServices = "com.google.gms.google-services:4.4.0"
+gms-googleServices = "com.google.gms.google-services:4.4.1"
 firebase-crashlytics = "com.google.firebase.crashlytics:2.9.9"
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -53,7 +53,7 @@ androidx-activity-activity = { module = "androidx.activity:activity", version.re
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxactivity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-archCoreTesting = "androidx.arch.core:core-testing:2.2.0"
-androidx-browser = "androidx.browser:browser:1.7.0"
+androidx-browser = "androidx.browser:browser:1.8.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
@@ -69,9 +69,9 @@ circuit-retained = { module = "com.slack.circuit:circuit-retained", version.ref 
 circuitx-gesturenav = { module = "com.slack.circuit:circuitx-gesture-navigation", version.ref = "circuit" }
 
 # Firebase
-google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.5.0"
-google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics-ktx:18.6.0"
-google-firebase-perf = "com.google.firebase:firebase-perf-ktx:20.5.1"
+google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.6.2"
+google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics-ktx:18.6.4"
+google-firebase-perf = "com.google.firebase:firebase-perf-ktx:20.5.2"
 
 #Lyricist
 lyricist = { module = "cafe.adriel.lyricist:lyricist", version.ref = "lyricist" }
@@ -137,7 +137,7 @@ uuid = "com.benasher44:uuid:0.8.2"
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 turbine = "app.cash.turbine:turbine:1.0.0"
-leakCanary = "com.squareup.leakcanary:leakcanary-android:2.13"
+leakCanary = "com.squareup.leakcanary:leakcanary-android:2.14"
 robolectric = "org.robolectric:robolectric:4.11.1"
 strikt-core = "io.strikt:strikt-core:0.34.1"
 
