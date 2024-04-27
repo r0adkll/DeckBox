@@ -24,7 +24,7 @@ espresso-core = "3.5.1"
 appcompat = "1.6.1"
 spotless = "6.23.3"
 sqldelight = "2.0.2"
-serialization = "1.6.2"
+serialization = "1.6.3"
 material3 = "1.2.1"
 firebase-crashlytics-buildtools = "2.9.9"
 
@@ -81,9 +81,9 @@ lyricist-compiler = { module = "cafe.adriel.lyricist:lyricist-processor", versio
 multiplatformsettings-core = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformsettings" }
 multiplatformsettings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformsettings" }
 
-compose-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.1"
+compose-material3-windowsizeclass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
 insetsx = "com.moriatsushi.insetsx:insetsx:0.1.0-alpha10"
-imageloader = "io.github.qdsfdhvh:image-loader:1.6.8"
+imageloader = "io.github.qdsfdhvh:image-loader:1.7.8"
 materialcolorsutilities = "dev.sasikanth:material-color-utilities:1.0.0-alpha01"
 
 paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "paging-multiplatform" }
@@ -131,7 +131,7 @@ sqldelight-async = { module = "app.cash.sqldelight:async-extensions", version.re
 sqldelight-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-primitive = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqldelight" }
 
-uuid = "com.benasher44:uuid:0.8.2"
+uuid = "com.benasher44:uuid:0.8.4"
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
