@@ -26,7 +26,7 @@ typealias DeckBoxUiViewController = () -> UIViewController
 fun DeckBoxUiViewController(
   deckBoxContent: DeckBoxContent,
 ): UIViewController = ComposeUIViewController {
-  val backstack = rememberSaveableBackStack { push(DecksScreen()) }
+  val backstack = rememberSaveableBackStack(listOf(DecksScreen()))
   val navigator = rememberCircuitNavigator(backstack, onRootPop = { /* no-op */ })
 
   val uiViewController = LocalUIViewController.current
