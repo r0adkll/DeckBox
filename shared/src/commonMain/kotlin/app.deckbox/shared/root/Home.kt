@@ -89,7 +89,7 @@ internal fun Home(
     NavigationType.forWindowSizeSize(windowSizeClass)
   }
 
-  val detailBackStack = rememberSaveableBackStack { push(RootScreen()) }
+  val detailBackStack = rememberSaveableBackStack(listOf(RootScreen()))
   val detailNavigator = rememberCircuitNavigator(detailBackStack) {
     detailBackStack.popUntil { false }
     detailBackStack.push(RootScreen())
@@ -203,7 +203,7 @@ internal fun Home(
 
           NavigableCircuitContent(
             navigator = mainDetailNavigator,
-            backstack = backstack,
+            backStack = backstack,
             decoration = GestureNavigationDecoration(
               onBackInvoked = mainDetailNavigator::pop,
             ),
@@ -222,7 +222,7 @@ internal fun Home(
           ) {
             NavigableCircuitContent(
               navigator = detailUrlNavigator,
-              backstack = detailBackStack,
+              backStack = detailBackStack,
               unavailableRoute = { _, _ ->
                 // Do nothing here
               },
