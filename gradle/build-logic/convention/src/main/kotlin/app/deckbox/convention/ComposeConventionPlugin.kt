@@ -17,8 +17,14 @@ class ComposeConventionPlugin : Plugin<Project> {
 
 fun Project.configureCompose() {
   with(extensions.getByType<ComposeExtension>()) {
-    libs.findVersion("compose-compiler").ifPresent {
-      kotlinCompilerPlugin.set(it.toString())
-    }
+    kotlinCompilerPlugin.set(dependencies.compiler.forKotlin("1.9.22"))
+
+    kotlinCompilerPluginArgs.addAll(
+      // Ignore the 'incompatible' Compose Compiler for 1.9.23
+      "suppressKotlinVersionCompatibilityCheck=1.9.23",
+      // Enable 'strong skipping'
+      // https://medium.com/androiddevelopers/jetpack-compose-strong-skipping-mode-explained-cbdb2aa4b900
+      "experimentalStrongSkipping=true",
+    )
   }
 }
