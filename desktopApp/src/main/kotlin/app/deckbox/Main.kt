@@ -37,7 +37,7 @@ fun main() = application {
       applicationComponent.createWindowComponent() as WindowComponent
     }
 
-    val backstack = rememberSaveableBackStack { push(DecksScreen()) }
+    val backstack = rememberSaveableBackStack(listOf(DecksScreen()))
     val navigator = rememberCircuitNavigator(backstack) { /* no-op */ }
 
     component.deckBoxContent(
