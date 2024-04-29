@@ -1,0 +1,70 @@
+import kotlin.Int;
+import kotlinx.datetime.LocalDate;
+
+CREATE TABLE collection (
+  updatedAt TEXT AS LocalDate NOT NULL,
+
+  normalCount INTEGER AS Int NOT NULL DEFAULT 0,
+  holofoilCount INTEGER AS Int NOT NULL DEFAULT 0,
+  reverseHolofoilCount INTEGER AS Int NOT NULL DEFAULT 0,
+  firstEditionNormalCount INTEGER AS Int NOT NULL DEFAULT 0,
+  firstEditionHolofoilCount INTEGER AS Int NOT NULL DEFAULT 0,
+
+  cardId TEXT NOT NULL PRIMARY KEY,
+  FOREIGN KEY (cardId) REFERENCES cards(id) ON DELETE CASCADE
+);
+
+getByCard:
+SELECT * FROM collection
+WHERE collection.cardId = ?;
+
+sumByCard:
+SELECT normalCount + holofoilCount + reverseHolofoilCount + firstEditionNormalCount + firstEditionHolofoilCount AS count
+FROM collection
+WHERE cardId = ?;
+
+getByExpansion:
+SELECT collection.* FROM collection
+INNER JOIN cards ON collection.cardId = cards.id
+WHERE cards.expansionId = :expansionId;
+
+sumByExpansion:
+SELECT cards.expansionId, SUM(normalCount + holofoilCount + reverseHolofoilCount + firstEditionNormalCount + firstEditionHolofoilCount)
+FROM collection
+INNER JOIN cards ON collection.cardId = cards.id
+WHERE cards.expansionId = :expansionId
+GROUP BY cards.expansionId;
+
+incrementCounts {
+  UPDATE collection
+  SET updatedAt = :updatedAt
+  WHERE cardId = :cardId;
+
+  INSERT OR IGNORE INTO collection (
+    cardId,
+    updatedAt,
+    normalCount,
+    holofoilCount,
+    reverseHolofoilCount,
+    firstEditionNormalCount,
+    firstEditionHolofoilCount
+  )
+  VALUES (
+    :cardId,
+    :updatedAt,
+    :normalCount,
+    :holofoilCount,
+    :reverseHolofoilCount,
+    :firstEditionNormalCount,
+    :firstEditionHolofoilCount
+  );
+
+  UPDATE collection
+  SET
+    normalCount = normalCount + :normalAmount,
+    holofoilCount = holofoilCount + :holofoilAmount,
+    reverseHolofoilCount = reverseHolofoilCount + :reverseHolofoilAmount,
+    firstEditionNormalCount = firstEditionNormalCount + :firstEditionNormalAmount,
+    firstEditionHolofoilCount = firstEditionHolofoilCount + :firstEditionHolofoilAmount
+  WHERE cardId = :cardId;
+}
