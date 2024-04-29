@@ -17,7 +17,7 @@ ktor = "2.3.10"
 lyricist = "1.7.0"
 multiplatformsettings = "1.1.1"
 okhttp = "4.12.0"
-paging = "3.3.0-beta01"
+paging = "3.3.0-alpha02"
 paging-multiplatform = "3.3.0-alpha02-0.5.1"
 junit = "4.13.2"
 espresso-core = "3.5.1"
@@ -86,6 +86,7 @@ insetsx = "com.moriatsushi.insetsx:insetsx:0.1.0-alpha10"
 imageloader = "io.github.qdsfdhvh:image-loader:1.7.8"
 materialcolorsutilities = "dev.sasikanth:material-color-utilities:1.0.0-alpha01"
 
+paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-multiplatform" }
 paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "paging-multiplatform" }
 
 # Kotlin

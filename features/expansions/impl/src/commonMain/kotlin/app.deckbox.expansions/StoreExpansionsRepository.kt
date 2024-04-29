@@ -1,6 +1,5 @@
 package app.deckbox.expansions
 
-import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.logging.bark
@@ -29,9 +28,8 @@ import org.mobilenativefoundation.store.store5.impl.extensions.get
 @Inject
 @ContributesBinding(MergeAppScope::class)
 class StoreExpansionsRepository(
-  private val expansionsDao: ExpansionsDao,
-  private val api: PokemonTcgApi,
-  private val dispatcherProvider: DispatcherProvider,
+  expansionsDao: ExpansionsDao,
+  api: PokemonTcgApi,
 ) : ExpansionsRepository {
 
   private val store = StoreBuilder

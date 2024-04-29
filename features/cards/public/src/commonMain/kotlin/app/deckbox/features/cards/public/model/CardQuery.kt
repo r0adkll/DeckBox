@@ -91,12 +91,7 @@ fun StringBuilder.appendValue(
   field: String,
   value: String,
 ) {
-  val quotedValue = if (value.contains(SPACE)) {
-    "\"$value\""
-  } else {
-    value
-  }
-  append("$field:$quotedValue")
+  append("$field:${value.urlSafeValue}")
   append(SPACE)
 }
 
@@ -106,14 +101,14 @@ fun StringBuilder.appendOrList(
 ) {
   if (options.isEmpty()) return
   if (options.size == 1) {
-    append("$field:${options.first()}")
+    append("$field:${options.first().urlSafeValue}")
   } else {
     append(
       options.joinToString(
         prefix = "(",
         postfix = ")",
         separator = " OR ",
-      ) { "$field:$it" },
+      ) { "$field:${it.urlSafeValue}" },
     )
   }
   append(SPACE)
@@ -133,6 +128,12 @@ fun StringBuilder.appendRange(
   }
   append("$field:$value")
   append(SPACE)
+}
+
+val String.urlSafeValue: String get() = if (this.contains(SPACE)) {
+  "\"$this\""
+} else {
+  this
 }
 
 internal const val SPACE = " "
