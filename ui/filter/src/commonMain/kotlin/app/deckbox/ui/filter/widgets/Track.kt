@@ -170,11 +170,11 @@ fun Track(
 
 @OptIn(ExperimentalMaterial3Api::class)
 val SliderState.coercedValueAsFraction
-    get() = calcFraction(
-      valueRange.start,
-      valueRange.endInclusive,
-      value.coerceIn(valueRange.start, valueRange.endInclusive)
-    )
+  get() = calcFraction(
+    valueRange.start,
+    valueRange.endInclusive,
+    value.coerceIn(valueRange.start, valueRange.endInclusive),
+  )
 
 private fun calcFraction(a: Float, b: Float, pos: Float) =
   (if (b - a == 0f) 0f else (pos - a) / (b - a)).coerceIn(0f, 1f)
