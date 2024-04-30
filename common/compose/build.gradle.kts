@@ -34,6 +34,7 @@ kotlin {
         @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
         api(compose.components.resources)
 
+        api(libs.paging.common)
         api(libs.paging.compose)
       }
     }
@@ -53,6 +54,7 @@ kotlin {
       dependsOn(jvmCommon)
 
       dependencies {
+        api(libs.androidx.paging.common)
         implementation(libs.androidx.activity.compose)
       }
     }

@@ -9,13 +9,13 @@ sealed interface DetailNavigation {
    * This represents that the current device is compact and will
    * never have a main-detail screen pattern
    */
-  object None : DetailNavigation
+  data object None : DetailNavigation
 
   /**
    * This represents that the current device supports a main-detail pattern
    * but doesn't have a detail screen shown at the moment
    */
-  object Hidden : DetailNavigation
+  data object Hidden : DetailNavigation
 
   /**
    * This represents that the current device supports a main-detail pattern
