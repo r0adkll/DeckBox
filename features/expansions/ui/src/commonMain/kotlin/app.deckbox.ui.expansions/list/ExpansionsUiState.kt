@@ -1,6 +1,7 @@
 package app.deckbox.ui.expansions.list
 
 import androidx.compose.runtime.Stable
+import app.deckbox.core.model.Collected
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.settings.ExpansionCardStyle
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -19,7 +20,7 @@ data class ExpansionsUiState(
 
 @Stable
 sealed interface ExpansionState {
-  object Loading : ExpansionState
+  data object Loading : ExpansionState
   data class Loaded(
     val groupedExpansions: List<ExpansionSeries>,
   ) : ExpansionState
@@ -29,7 +30,7 @@ sealed interface ExpansionState {
 @Stable
 data class ExpansionSeries(
   val series: Series,
-  val expansions: List<Expansion>,
+  val expansions: List<Collected<Expansion>>,
 )
 
 sealed interface ExpansionsUiEvent : CircuitUiEvent {

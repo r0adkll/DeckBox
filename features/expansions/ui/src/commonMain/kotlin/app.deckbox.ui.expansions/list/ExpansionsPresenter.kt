@@ -13,9 +13,12 @@ import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.common.screens.ExpansionsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.di.MergeActivityScope
+import app.deckbox.core.model.Collection
 import app.deckbox.core.model.Expansion
+import app.deckbox.core.model.collected
 import app.deckbox.expansions.ExpansionsRepository
 import app.deckbox.features.cards.public.CardRepository
+import app.deckbox.features.collection.api.CollectionRepository
 import app.deckbox.ui.expansions.list.extensions.collectExpansionCardStyle
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -31,6 +34,7 @@ class ExpansionsPresenter(
   @Assisted private val navigator: Navigator,
   private val expansionsRepository: ExpansionsRepository,
   private val cardRepository: CardRepository,
+  private val collectionRepository: CollectionRepository,
   private val settings: DeckBoxSettings,
 ) : Presenter<ExpansionsUiState> {
 
@@ -46,6 +50,10 @@ class ExpansionsPresenter(
           ExpansionsLoadState.Error("Unable to load expansions")
         }
     }.collectAsState(ExpansionsLoadState.Loading)
+
+    val collectionState by remember {
+      collectionRepository.observeCollection()
+    }.collectAsState(Collection.empty())
 
     val expansionCardStyle by settings.collectExpansionCardStyle()
 
@@ -74,9 +82,16 @@ class ExpansionsPresenter(
       is ExpansionsLoadState.Loaded -> ExpansionState.Loaded(
         state.expansions
           .groupBy { it.series }
-          .map { (key, value) -> ExpansionSeries(key, value) }
+          .mapValues { (_, expansions) ->
+            expansions.map { expansion ->
+              expansion.collected(collectionState[expansion.id])
+            }
+          }
+          .map { (series, expansions) ->
+            ExpansionSeries(series, expansions)
+          }
           .sortedByDescending {
-            it.expansions.sumOf { it.releaseDate.toEpochDays() } / it.expansions.size
+            it.expansions.sumOf { it.item.releaseDate.toEpochDays() } / it.expansions.size
           },
       )
     }
@@ -106,7 +121,7 @@ class ExpansionsPresenter(
 }
 
 sealed interface ExpansionsLoadState {
-  object Loading : ExpansionsLoadState
+  data object Loading : ExpansionsLoadState
 
   @Stable
   data class Loaded(val expansions: List<Expansion>) : ExpansionsLoadState

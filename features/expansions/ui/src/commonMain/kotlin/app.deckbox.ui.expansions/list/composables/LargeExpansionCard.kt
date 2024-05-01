@@ -11,14 +11,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -27,19 +25,19 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.common.compose.widgets.ImageAvatar
 import app.deckbox.core.extensions.readableFormat
+import app.deckbox.core.model.Collected
 import app.deckbox.core.model.Expansion
 import app.deckbox.core.model.Legality
 import cafe.adriel.lyricist.LocalStrings
 import com.seiko.imageloader.rememberImagePainter
-import kotlin.random.Random
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LargeExpansionCard(
-  expansion: Expansion,
+  collectedExpansion: Collected<Expansion>,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val expansion = collectedExpansion.item
   Card(
     modifier = modifier.fillMaxWidth(),
     onClick = onClick,
@@ -73,6 +71,7 @@ internal fun LargeExpansionCard(
         .fillMaxWidth()
         .padding(horizontal = 24.dp),
     )
+
 //    Tags(
 //      tags = buildList {
 //        if (expansion.legalities?.standard == Legality.LEGAL) {
@@ -88,7 +87,9 @@ internal fun LargeExpansionCard(
 //          vertical = 8.dp,
 //        ),
 //    )
+
     CollectionCounter(
+      count = collectedExpansion.count,
       printedTotal = expansion.printedTotal,
     )
 
@@ -145,12 +146,10 @@ private fun Logo(
 
 @Composable
 private fun CollectionCounter(
+  count: Int,
   printedTotal: Int,
   modifier: Modifier = Modifier,
 ) {
-  val count = remember {
-    Random.nextInt(printedTotal) // TODO: Collection Implementation
-  }
   Column(
     modifier
       .padding(top = 8.dp)

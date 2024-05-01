@@ -13,9 +13,8 @@ kotlin {
       dependencies {
         implementation(projects.core)
         implementation(projects.data.db)
-        implementation(projects.data.network.public)
 
-        api(projects.features.cards.public)
+        api(projects.features.collection.public)
 
         implementation(libs.store)
         implementation(libs.kotlinx.atomicfu)

@@ -5,6 +5,7 @@ import app.deckbox.common.compose.message.UiMessage
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.CollectionCount
 import app.deckbox.core.model.Deck
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
@@ -15,6 +16,7 @@ data class CardDetailUiState(
   val cardImageUrl: String,
   val card: LoadState<out Card>,
   val deckState: DeckState?,
+  val collectionCount: CollectionCount,
   val isFavorited: Boolean,
   val evolvesFrom: LoadState<out List<Card>>,
   val evolvesTo: LoadState<out List<Card>>,
@@ -42,6 +44,13 @@ sealed interface CardDetailUiEvent : CircuitUiEvent {
 
   data object IncrementCount : CardDetailUiEvent
   data object DecrementCount : CardDetailUiEvent
+  data class IncrementCollectionCount(
+    val variant: Card.Variant,
+  ) : CardDetailUiEvent
+
+  data class DecrementCollectionCount(
+    val variant: Card.Variant,
+  ) : CardDetailUiEvent
 }
 
 val CardDetailUiState.pokemonCard: Card?

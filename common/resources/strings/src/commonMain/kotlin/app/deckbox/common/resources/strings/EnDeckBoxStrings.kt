@@ -45,6 +45,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
   expansionsTabContentDescription = "List of expansion sets",
   expansionReleaseDate = { "Released on $it" },
   collection = "Collection",
+  inCollection = "in Collection",
   collectionCountOfTotal = { count, total -> "$count of $total" },
   expansionSearchHint = "Search expansions",
   expansionSearchEmptyMessage = { "No expansions found for $it, please try searching again" },

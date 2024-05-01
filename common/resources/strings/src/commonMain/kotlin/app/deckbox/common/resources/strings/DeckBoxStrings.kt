@@ -35,6 +35,7 @@ data class DeckBoxStrings(
   val expansionsTabContentDescription: String,
   val expansionReleaseDate: (date: String) -> String,
   val collection: String,
+  val inCollection: String,
   val collectionCountOfTotal: (count: Int, total: Int) -> String,
   val expansionSearchHint: String,
   val expansionSearchEmptyMessage: (query: String) -> String,

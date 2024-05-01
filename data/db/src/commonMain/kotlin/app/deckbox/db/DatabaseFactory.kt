@@ -10,6 +10,7 @@ import app.deckbox.sqldelight.Booster_pack_join
 import app.deckbox.sqldelight.Booster_packs
 import app.deckbox.sqldelight.CardMarketPrices
 import app.deckbox.sqldelight.Cards
+import app.deckbox.sqldelight.Collection
 import app.deckbox.sqldelight.Deck_card_join
 import app.deckbox.sqldelight.Decks
 import app.deckbox.sqldelight.Expansions
@@ -78,6 +79,14 @@ class DatabaseFactory(
       countAdapter = IntColumnAdapter,
       totalCountAdapter = IntColumnAdapter,
       nextKeyAdapter = IntColumnAdapter,
+    ),
+    collectionAdapter = Collection.Adapter(
+      updatedAtAdapter = LocalDateTimeAdapter,
+      normalCountAdapter = IntColumnAdapter,
+      holofoilCountAdapter = IntColumnAdapter,
+      reverseHolofoilCountAdapter = IntColumnAdapter,
+      firstEditionNormalCountAdapter = IntColumnAdapter,
+      firstEditionHolofoilCountAdapter = IntColumnAdapter,
     ),
   )
 }

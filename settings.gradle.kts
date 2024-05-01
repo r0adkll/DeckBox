@@ -67,6 +67,10 @@ include(
   ":features:decks:ui",
 )
 include(
+  ":features:collection:public",
+  ":features:collection:impl",
+)
+include(
   ":ui:browse",
   ":ui:filter",
   ":ui:settings",

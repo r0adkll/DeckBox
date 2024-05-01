@@ -1,23 +1,14 @@
 package app.deckbox.core.model
 
-class Collection(
-  private val counts: Map<String, Count>,
+data class Collection<Key>(
+  private val counts: Map<Key, Int>,
 ) {
 
-  fun getCount(card: Card): Int {
-    return counts[card.id]?.totalCount ?: 0
+  operator fun get(key: Key): Int {
+    return counts[key] ?: 0
   }
 
-  data class Count(
-    val expansionId: String,
-    val expansionName: String,
-    val variationCounts: Map<String, Int>,
-  ) {
-
-    /**
-     * The total count across all variations
-     */
-    val totalCount: Int
-      get() = variationCounts.values.sum()
+  companion object {
+    fun <T : Any> empty(): Collection<T> = Collection(emptyMap())
   }
 }

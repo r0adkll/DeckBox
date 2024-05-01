@@ -1,8 +1,8 @@
 import kotlin.Int;
-import kotlinx.datetime.LocalDate;
+import kotlinx.datetime.LocalDateTime;
 
 CREATE TABLE collection (
-  updatedAt TEXT AS LocalDate NOT NULL,
+  updatedAt TEXT AS LocalDateTime NOT NULL,
 
   normalCount INTEGER AS Int NOT NULL DEFAULT 0,
   holofoilCount INTEGER AS Int NOT NULL DEFAULT 0,
@@ -18,21 +18,16 @@ getByCard:
 SELECT * FROM collection
 WHERE collection.cardId = ?;
 
-sumByCard:
-SELECT normalCount + holofoilCount + reverseHolofoilCount + firstEditionNormalCount + firstEditionHolofoilCount AS count
+sumsByExpansion:
+SELECT cards.expansionId, collection.cardId, (normalCount + holofoilCount + reverseHolofoilCount + firstEditionNormalCount + firstEditionHolofoilCount) AS expansionTotalCount
 FROM collection
-WHERE cardId = ?;
-
-getByExpansion:
-SELECT collection.* FROM collection
 INNER JOIN cards ON collection.cardId = cards.id
 WHERE cards.expansionId = :expansionId;
 
-sumByExpansion:
-SELECT cards.expansionId, SUM(normalCount + holofoilCount + reverseHolofoilCount + firstEditionNormalCount + firstEditionHolofoilCount)
+sumsByAll:
+SELECT cards.expansionId, COUNT(collection.cardId) AS expansionTotalCount
 FROM collection
 INNER JOIN cards ON collection.cardId = cards.id
-WHERE cards.expansionId = :expansionId
 GROUP BY cards.expansionId;
 
 incrementCounts {
@@ -52,11 +47,11 @@ incrementCounts {
   VALUES (
     :cardId,
     :updatedAt,
-    :normalCount,
-    :holofoilCount,
-    :reverseHolofoilCount,
-    :firstEditionNormalCount,
-    :firstEditionHolofoilCount
+    0,
+    0,
+    0,
+    0,
+    0
   );
 
   UPDATE collection
@@ -67,4 +62,11 @@ incrementCounts {
     firstEditionNormalCount = firstEditionNormalCount + :firstEditionNormalAmount,
     firstEditionHolofoilCount = firstEditionHolofoilCount + :firstEditionHolofoilAmount
   WHERE cardId = :cardId;
+
+  DELETE FROM collection
+  WHERE normalCount <= 0
+    AND holofoilCount <= 0
+    AND reverseHolofoilCount <= 0
+    AND firstEditionNormalCount <= 0
+    AND firstEditionHolofoilCount <= 0;
 }

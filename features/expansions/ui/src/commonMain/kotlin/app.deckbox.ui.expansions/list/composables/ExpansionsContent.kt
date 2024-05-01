@@ -123,7 +123,7 @@ private fun ExpansionsContent(
       }
     }
 
-    expansions.forEach { (series, expansions) ->
+    expansions.forEach { (series, collectedExpansions) ->
       item {
         Text(
           text = series,
@@ -132,24 +132,24 @@ private fun ExpansionsContent(
         )
       }
 
-      items(expansions) { expansion ->
-        val clickListener = { onClick(expansion) }
+      items(collectedExpansions) { collectedExpansion ->
+        val clickListener = { onClick(collectedExpansion.item) }
         when (style) {
           ExpansionCardStyle.Large -> {
             LargeExpansionCard(
-              expansion = expansion,
+              collectedExpansion = collectedExpansion,
               onClick = clickListener,
             )
           }
           ExpansionCardStyle.Small -> {
             SmallExpansionCard(
-              expansion = expansion,
+              collectedExpansion = collectedExpansion,
               onClick = clickListener,
             )
           }
           ExpansionCardStyle.Compact -> {
             CompactExpansionCard(
-              expansion = expansion,
+              collectedExpansion = collectedExpansion,
               onClick = clickListener,
             )
           }
