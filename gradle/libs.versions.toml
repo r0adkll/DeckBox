@@ -3,7 +3,7 @@ agp = "8.4.0"
 androidxlifecycle = "2.6.1"
 androidxactivity = "1.9.0"
 androidx-test-ext-junit = "1.1.5"
-core-ktx = "1.13.0"
+core-ktx = "1.13.1"
 coroutines = "1.8.0"
 # This is used in the build logic
 compose-multiplatform = "1.6.2"
@@ -26,7 +26,7 @@ spotless = "6.25.0"
 sqldelight = "2.0.2"
 serialization = "1.6.3"
 material3 = "1.2.1"
-firebase-crashlytics-buildtools = "2.9.9"
+firebase-crashlytics-buildtools = "3.0.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -43,7 +43,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 gms-googleServices = "com.google.gms.google-services:4.4.1"
-firebase-crashlytics = "com.google.firebase.crashlytics:2.9.9"
+firebase-crashlytics = "com.google.firebase.crashlytics:3.0.0"
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
@@ -70,8 +70,8 @@ circuitx-gesturenav = { module = "com.slack.circuit:circuitx-gesture-navigation"
 
 # Firebase
 google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.6.2"
-google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics-ktx:18.6.4"
-google-firebase-perf = "com.google.firebase:firebase-perf-ktx:20.5.2"
+google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics-ktx:19.0.0"
+google-firebase-perf = "com.google.firebase:firebase-perf-ktx:21.0.0"
 
 #Lyricist
 lyricist = { module = "cafe.adriel.lyricist:lyricist", version.ref = "lyricist" }
