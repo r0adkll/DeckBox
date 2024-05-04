@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
+import app.deckbox.common.compose.widgets.CollectionBar
 import app.deckbox.common.compose.widgets.ImageAvatar
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Collected
@@ -90,7 +91,7 @@ internal fun LargeExpansionCard(
 
     CollectionCounter(
       count = collectedExpansion.count,
-      printedTotal = expansion.printedTotal,
+      total = expansion.printedTotal,
     )
 
     Row(
@@ -147,7 +148,7 @@ private fun Logo(
 @Composable
 private fun CollectionCounter(
   count: Int,
-  printedTotal: Int,
+  total: Int,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -161,7 +162,7 @@ private fun CollectionCounter(
         style = MaterialTheme.typography.labelMedium,
       )
       Text(
-        text = LocalStrings.current.collectionCountOfTotal(count, printedTotal),
+        text = LocalStrings.current.collectionCountOfTotal(count, total),
         style = MaterialTheme.typography.labelMedium.copy(textAlign = TextAlign.End),
 
         modifier = Modifier.weight(1f),
@@ -171,7 +172,7 @@ private fun CollectionCounter(
     CollectionBar(
       modifier = Modifier.padding(top = 4.dp),
       count = count,
-      printedTotal = printedTotal,
+      total = total,
     )
   }
 }

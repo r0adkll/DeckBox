@@ -51,6 +51,9 @@ val EnDeckBoxStrings = DeckBoxStrings(
   expansionSearchEmptyMessage = { "No expansions found for $it, please try searching again" },
   expansionsEmptyMessage = "No expansions found. Please check another castle.",
   expansionsErrorMessage = "Uh-oh! Looks like the expansion sets failed to load.",
+  fabActionEditCollection = "Edit collection",
+  collectionEditingTitle = "Editing collection",
+
   browse = "Browse",
   browseTabContentDescription = "Browse all Pokemon cards",
   browseSearchHint = "Search for any card",

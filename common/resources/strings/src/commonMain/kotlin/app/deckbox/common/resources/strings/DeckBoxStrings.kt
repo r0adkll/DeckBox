@@ -41,6 +41,8 @@ data class DeckBoxStrings(
   val expansionSearchEmptyMessage: (query: String) -> String,
   val expansionsEmptyMessage: String,
   val expansionsErrorMessage: String,
+  val fabActionEditCollection: String,
+  val collectionEditingTitle: String,
 
   // Browse
   val browse: String,

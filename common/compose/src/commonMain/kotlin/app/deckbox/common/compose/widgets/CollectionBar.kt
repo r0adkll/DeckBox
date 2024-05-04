@@ -1,4 +1,4 @@
-package app.deckbox.ui.expansions.list.composables
+package app.deckbox.common.compose.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 @Composable
-internal fun CollectionBar(
+fun CollectionBar(
   count: Int,
-  printedTotal: Int,
+  total: Int,
   modifier: Modifier = Modifier,
 ) {
   val shape = RoundedCornerShape(50)
@@ -41,7 +41,7 @@ internal fun CollectionBar(
       .fillMaxWidth()
       .height(24.dp),
   ) {
-    val progress = count.toFloat() / printedTotal.toFloat()
+    val progress = count.toFloat() / total.toFloat()
     val progressWidth = maxWidth * progress
     Box(
       modifier = Modifier

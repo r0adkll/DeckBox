@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -96,7 +97,14 @@ fun PokemonCardGrid(
   state: LazyGridState = rememberLazyGridState(),
   contentPadding: PaddingValues = PaddingValues(),
   columns: Int = DefaultColumns,
+  headerContent: LazyGridScope.() -> Unit = {},
   emptyContent: @Composable () -> Unit = { DefaultEmptyView() },
+  itemContent: @Composable (Card) -> Unit = { card ->
+    PokemonCard(
+      card = card,
+      onClick = { onClick(card) },
+    )
+  },
 ) {
   LazyVerticalGrid(
     columns = GridCells.Fixed(columns),
@@ -106,15 +114,13 @@ fun PokemonCardGrid(
     state = state,
     modifier = modifier.fillMaxSize(),
   ) {
+    headerContent()
     if (cards is LoadState.Loaded) {
       items(
         items = cards.data,
         key = { it.id },
       ) { card ->
-        PokemonCard(
-          card = card,
-          onClick = { onClick(card) },
-        )
+        itemContent(card)
       }
     }
   }

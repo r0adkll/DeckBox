@@ -37,6 +37,7 @@ kotlin {
         api(projects.features.cards.ui)
 
         api(projects.features.collection.impl)
+        api(projects.features.collection.ui)
 
         api(projects.features.decks.impl)
         api(projects.features.decks.ui)

@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 
 class BottomSheetOverlay<Model : Any, Result : Any>(
   private val model: Model,
+  private val skipHalfExpanded: Boolean = false,
   private val onDismiss: (() -> Result)? = null,
   private val content: @Composable (Model, OverlayNavigator<Result>) -> Unit,
 ) : Overlay<Result> {
@@ -50,6 +51,7 @@ class BottomSheetOverlay<Model : Any, Result : Any>(
 
     val sheetState = rememberModalBottomSheetState(
       initialValue = ModalBottomSheetValue.Hidden,
+      skipHalfExpanded = skipHalfExpanded,
     )
 
     var pendingResult by remember { mutableStateOf<Result?>(null) }
@@ -122,10 +124,12 @@ private fun Handle(
 
 suspend fun <ResponseT> OverlayHost.showBottomSheetScreen(
   screen: OverlayDeckBoxScreen<ResponseT>,
+  skipHalfExpanded: Boolean = false,
 ): ResponseT? {
   return show(
     BottomSheetOverlay<DeckBoxScreen, OverlayResultScreen<ResponseT>>(
       model = screen,
+      skipHalfExpanded = skipHalfExpanded,
       onDismiss = { OverlayResultScreen() },
       content = { model, navigator ->
         val overlayNavigator = object : Navigator {

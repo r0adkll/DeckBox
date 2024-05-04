@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
+import app.deckbox.common.compose.widgets.CollectionBar
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Collected
 import app.deckbox.core.model.Expansion
@@ -61,7 +62,7 @@ internal fun SmallExpansionCard(
     CollectionBar(
       modifier = Modifier.padding(horizontal = 16.dp),
       count = collectedExpansion.count,
-      printedTotal = expansion.printedTotal,
+      total = expansion.printedTotal,
     )
 
     Row(

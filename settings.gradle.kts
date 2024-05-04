@@ -69,6 +69,7 @@ include(
 include(
   ":features:collection:public",
   ":features:collection:impl",
+  ":features:collection:ui",
 )
 include(
   ":ui:browse",

@@ -108,6 +108,24 @@ class ExpansionDetailScreen(
 }
 
 @CommonParcelize
+class CardCollectionEditorScreen(
+  val cardId: String,
+  val cardName: String,
+  val cardImageLarge: String,
+) : OverlayDeckBoxScreen<Unit>(name = "CardCollectionEditor()") {
+  constructor(
+    card: Card,
+  ) : this(card.id, card.name, card.image.large)
+
+  override val arguments
+    get() = mapOf(
+      "cardId" to cardId,
+      "cardName" to cardName,
+      "cardImageLarge" to cardImageLarge,
+    )
+}
+
+@CommonParcelize
 class CardDetailScreen(
   val cardId: String,
   val cardName: String,
