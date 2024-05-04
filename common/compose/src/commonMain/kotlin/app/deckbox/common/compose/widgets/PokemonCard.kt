@@ -41,6 +41,63 @@ const val CardAspectRatio = 0.7167969f
 
 @Composable
 fun PokemonCard(
+  url: String,
+  name: String,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  onLongClick: () -> Unit = {},
+  count: Int? = null,
+  collected: Int? = null,
+) {
+  TradingCard(
+    onClick = onClick,
+    onLongClick = onLongClick,
+    modifier = modifier,
+  ) {
+    val imageAction by key(url) {
+      rememberImageAction(url)
+    }
+
+    Image(
+      painter = rememberImageActionPainter(imageAction),
+      contentDescription = name,
+      modifier = Modifier.fillMaxSize(),
+    )
+
+    val isLoading = imageAction is ImageEvent
+
+    if (isLoading) {
+      val transition = rememberInfiniteTransition()
+
+      val alpha by transition.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 0.75f,
+        animationSpec = infiniteRepeatable(
+          animation = tween(500),
+          repeatMode = RepeatMode.Reverse,
+        ),
+      )
+
+      PokemonCardBack(
+        modifier = Modifier
+          .fillMaxSize()
+          .alpha(alpha),
+      )
+    }
+
+    if (count != null || collected != null) {
+      CardCounter(
+        count = count,
+        collected = collected,
+        modifier = Modifier
+          .align(Alignment.BottomStart),
+      )
+    }
+  }
+}
+
+@Composable
+fun PokemonCard(
   card: Card?,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -88,7 +145,7 @@ fun PokemonCard(
       )
     }
 
-    if (count != null) {
+    if (count != null || collected != null) {
       CardCounter(
         count = count,
         collected = collected,
@@ -144,7 +201,7 @@ private fun TradingCard(
 
 @Composable
 private fun CardCounter(
-  count: Int,
+  count: Int?,
   collected: Int?,
   modifier: Modifier = Modifier,
 ) {
@@ -156,18 +213,20 @@ private fun CardCounter(
         ),
       ),
   ) {
-    Text(
-      text = count.toString(),
-      style = MaterialTheme.typography.labelLarge,
-      fontWeight = FontWeight.SemiBold,
-      color = MaterialTheme.colorScheme.onPrimary,
-      modifier = Modifier
-        .background(MaterialTheme.colorScheme.primary)
-        .padding(
-          horizontal = 8.dp,
-          vertical = 6.dp,
-        ),
-    )
+    if (count != null) {
+      Text(
+        text = count.toString(),
+        style = MaterialTheme.typography.labelLarge,
+        fontWeight = FontWeight.SemiBold,
+        color = MaterialTheme.colorScheme.onPrimary,
+        modifier = Modifier
+          .background(MaterialTheme.colorScheme.primary)
+          .padding(
+            horizontal = 8.dp,
+            vertical = 6.dp,
+          ),
+      )
+    }
     if (collected != null) {
       Text(
         text = collected.toString(),

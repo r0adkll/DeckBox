@@ -8,33 +8,29 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
+import app.deckbox.common.compose.widgets.CollectionBar
 import app.deckbox.core.extensions.readableFormat
+import app.deckbox.core.model.Collected
 import app.deckbox.core.model.Expansion
 import cafe.adriel.lyricist.LocalStrings
 import com.seiko.imageloader.rememberImagePainter
-import kotlin.random.Random
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SmallExpansionCard(
-  expansion: Expansion,
+  collectedExpansion: Collected<Expansion>,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val count = remember {
-    Random.nextInt(expansion.printedTotal) // TODO: Collection Implementation
-  }
+  val expansion = collectedExpansion.item
 
   Card(
     modifier = modifier.fillMaxWidth(),
@@ -65,8 +61,8 @@ internal fun SmallExpansionCard(
 
     CollectionBar(
       modifier = Modifier.padding(horizontal = 16.dp),
-      count = count,
-      printedTotal = expansion.printedTotal,
+      count = collectedExpansion.count,
+      total = expansion.printedTotal,
     )
 
     Row(
@@ -78,7 +74,7 @@ internal fun SmallExpansionCard(
       ),
     ) {
       Text(
-        text = LocalStrings.current.collectionCountOfTotal(count, expansion.printedTotal),
+        text = LocalStrings.current.collectionCountOfTotal(collectedExpansion.count, expansion.printedTotal),
         style = MaterialTheme.typography.labelMedium.copy(
           textAlign = TextAlign.Start,
         ),

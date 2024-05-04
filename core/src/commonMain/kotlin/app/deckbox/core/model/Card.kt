@@ -2,8 +2,10 @@ package app.deckbox.core.model
 
 import kotlinx.datetime.LocalDate
 
+typealias CardId = String
+
 data class Card(
-  val id: String,
+  val id: CardId,
   val name: String,
   val image: Image,
   val supertype: SuperType,
@@ -56,6 +58,17 @@ data class Card(
     val large: String,
   )
 
+  enum class Variant {
+    Normal,
+    Holofoil,
+    ReverseHolofoil,
+    FirstEditionNormal,
+    FirstEditionHolofoil,
+    ;
+
+    fun amountIf(other: Variant, amount: Int): Int = if (this == other) amount else 0
+  }
+
   data class TcgPlayer(
     val url: String,
     val updatedAt: LocalDate,
@@ -67,7 +80,14 @@ data class Card(
       val reverseHolofoil: Price?,
       val firstEditionHolofoil: Price?,
       val firstEditionNormal: Price?,
-    )
+    ) {
+      val isEmpty: Boolean
+        get() = normal == null &&
+          holofoil == null &&
+          reverseHolofoil == null &&
+          firstEditionNormal == null &&
+          firstEditionHolofoil == null
+    }
 
     data class Price(
       val low: Double? = null,
@@ -76,6 +96,16 @@ data class Card(
       val market: Double? = null,
       val directLow: Double? = null,
     )
+
+    fun forVariant(variant: Variant): Price? {
+      return when (variant) {
+        Variant.Normal -> prices?.normal
+        Variant.Holofoil -> prices?.holofoil
+        Variant.ReverseHolofoil -> prices?.reverseHolofoil
+        Variant.FirstEditionNormal -> prices?.firstEditionNormal
+        Variant.FirstEditionHolofoil -> prices?.firstEditionHolofoil
+      }
+    }
   }
 
   data class CardMarket(

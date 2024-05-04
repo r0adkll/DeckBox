@@ -6,7 +6,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import app.deckbox.common.compose.message.UiMessageManager
 import app.deckbox.common.compose.message.showUiMessage
 import app.deckbox.common.screens.BoosterPackBuilderScreen
@@ -16,12 +15,14 @@ import app.deckbox.common.screens.UrlScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.CollectionCount
 import app.deckbox.core.model.SearchFilter
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
 import app.deckbox.features.cards.public.model.OrderByReleaseDate
+import app.deckbox.features.collection.api.CollectionRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -39,6 +40,9 @@ import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
+private const val DefaultIncrementAmount = 1
+private const val DefaultDecrementAmount = -1
+
 @CircuitInject(MergeActivityScope::class, CardDetailScreen::class)
 @Inject
 class CardDetailPresenter(
@@ -47,6 +51,7 @@ class CardDetailPresenter(
   private val repository: CardRepository,
   private val deckBuilderRepository: DeckBuilderRepository,
   private val boosterPackRepository: BoosterPackRepository,
+  private val collectionRepository: CollectionRepository,
 ) : Presenter<CardDetailUiState> {
 
   @Composable
@@ -64,6 +69,10 @@ class CardDetailPresenter(
       observeCountForCard()
     }.collectAsRetainedState(null)
 
+    val collectionCount by rememberRetained {
+      collectionRepository.observeCollectionForCard(screen.cardId)
+    }.collectAsRetainedState(CollectionCount(screen.cardId))
+
     val similarCards by loadSimilarCards(cardLoadState)
     val evolvesFrom by loadEvolvesFrom(cardLoadState)
     val evolvesTo by loadEvolvesTo(cardLoadState)
@@ -80,6 +89,7 @@ class CardDetailPresenter(
       evolvesFrom = evolvesFrom,
       evolvesTo = evolvesTo,
       deckState = deckState,
+      collectionCount = collectionCount,
       isFavorited = isFavorited,
       uiMessage = message,
     ) { event ->
@@ -100,6 +110,17 @@ class CardDetailPresenter(
           }
           screen.packId?.let { packId ->
             boosterPackRepository.incrementCard(packId, screen.cardId)
+          }
+        }
+
+        is CardDetailUiEvent.IncrementCollectionCount -> {
+          coroutineScope.launch {
+            incrementCountFor(event.variant, DefaultIncrementAmount)
+          }
+        }
+        is CardDetailUiEvent.DecrementCollectionCount -> {
+          coroutineScope.launch {
+            incrementCountFor(event.variant, DefaultDecrementAmount)
           }
         }
 
@@ -245,6 +266,17 @@ class CardDetailPresenter(
         }
       else -> flowOf(null)
     }
+  }
+
+  private suspend fun incrementCountFor(variant: Card.Variant, amount: Int) {
+    collectionRepository.incrementCounts(
+      cardId = screen.cardId,
+      normal = variant.amountIf(Card.Variant.Normal, amount),
+      holofoil = variant.amountIf(Card.Variant.Holofoil, amount),
+      reverseHolofoil = variant.amountIf(Card.Variant.ReverseHolofoil, amount),
+      firstEditionNormal = variant.amountIf(Card.Variant.FirstEditionNormal, amount),
+      firstEditionHolofoil = variant.amountIf(Card.Variant.FirstEditionHolofoil, amount),
+    )
   }
 }
 

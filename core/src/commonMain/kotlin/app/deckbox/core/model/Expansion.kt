@@ -3,8 +3,10 @@ package app.deckbox.core.model
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
+typealias ExpansionId = String
+
 data class Expansion(
-  val id: String,
+  val id: ExpansionId,
   val name: String,
   val releaseDate: LocalDate,
   val total: Int,

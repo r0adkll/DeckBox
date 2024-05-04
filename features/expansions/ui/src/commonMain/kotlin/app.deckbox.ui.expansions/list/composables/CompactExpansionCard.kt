@@ -18,16 +18,17 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardHeader
 import app.deckbox.core.extensions.readableFormat
+import app.deckbox.core.model.Collected
 import app.deckbox.core.model.Expansion
 import com.seiko.imageloader.rememberImagePainter
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 @Composable
 internal fun CompactExpansionCard(
-  expansion: Expansion,
+  collectedExpansion: Collected<Expansion>,
   onClick: () -> Unit,
 ) {
+  val expansion = collectedExpansion.item
   val shape = RoundedCornerShape(12.dp)
   Surface(
     modifier = Modifier
@@ -36,8 +37,7 @@ internal fun CompactExpansionCard(
     color = MaterialTheme.colorScheme.surfaceVariant,
     shape = shape,
   ) {
-    // TODO: Collection implementation
-    val count = Random.nextInt(expansion.printedTotal)
+    val count = collectedExpansion.count
     val progress = count.toFloat() / expansion.printedTotal.toFloat()
 
     Layout(

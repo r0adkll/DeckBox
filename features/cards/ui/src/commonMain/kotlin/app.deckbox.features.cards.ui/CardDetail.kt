@@ -72,6 +72,7 @@ import app.deckbox.features.cards.ui.CardDetailUiEvent.NewBoosterPack
 import app.deckbox.features.cards.ui.CardDetailUiEvent.NewDeck
 import app.deckbox.features.cards.ui.CardDetailUiEvent.OpenUrl
 import app.deckbox.features.cards.ui.composables.CardMarketPriceCard
+import app.deckbox.features.cards.ui.composables.CollectionCard
 import app.deckbox.features.cards.ui.composables.InfoCard
 import app.deckbox.features.cards.ui.composables.RelatedCards
 import app.deckbox.features.cards.ui.composables.TcgPlayerPriceCard
@@ -228,6 +229,19 @@ internal fun CardDetail(
       InfoCard(
         name = state.cardName,
         card = state.pokemonCard,
+        modifier = Modifier.padding(horizontal = 16.dp),
+      )
+
+      Spacer(Modifier.height(16.dp))
+      CollectionCard(
+        count = state.collectionCount,
+        tcgPlayer = state.pokemonCard?.tcgPlayer,
+        onIncrementClick = { variant ->
+          eventSink(CardDetailUiEvent.IncrementCollectionCount(variant))
+        },
+        onDecrementClick = { variant ->
+          eventSink(CardDetailUiEvent.DecrementCollectionCount(variant))
+        },
         modifier = Modifier.padding(horizontal = 16.dp),
       )
 

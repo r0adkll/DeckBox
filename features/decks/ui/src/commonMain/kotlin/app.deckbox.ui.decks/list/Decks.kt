@@ -58,6 +58,7 @@ internal fun Decks(
   state: DecksUiState,
   modifier: Modifier = Modifier,
 ) {
+  val eventSink = state.eventSink
   val lazyListState = rememberLazyListState()
 
   val detailNavigationState = LocalDetailNavigation.current
@@ -75,7 +76,7 @@ internal fun Decks(
               Icon(Icons.Rounded.Import, contentDescription = null)
             }
             IconButton(
-              onClick = { state.eventSink(DecksUiEvent.OpenAppSettings) },
+              onClick = { eventSink(DecksUiEvent.OpenAppSettings) },
             ) {
               Icon(Icons.Rounded.Settings, contentDescription = null)
             }
@@ -95,7 +96,7 @@ internal fun Decks(
           text = { Text(LocalStrings.current.fabActionNewDeckButton) },
           icon = { Icon(Icons.Rounded.NewDeck, contentDescription = null) },
           expanded = isExpanded,
-          onClick = { state.eventSink(DecksUiEvent.CreateNewDeck) },
+          onClick = { eventSink(DecksUiEvent.CreateNewDeck) },
         )
       }
     },
@@ -106,10 +107,10 @@ internal fun Decks(
       deckCardConfig = state.deckCardConfig,
       sortOption = state.deckSortOrder,
       onChangeSortOption = {
-        state.eventSink(DecksUiEvent.ChangeSortOrder(it))
+        eventSink(DecksUiEvent.ChangeSortOrder(it))
       },
       onDeckEvent = { deck, event ->
-        state.eventSink(DecksUiEvent.CardEvent(deck, event))
+        eventSink(DecksUiEvent.CardEvent(deck, event))
       },
       contentPadding = paddingValues + PaddingValues(bottom = 88.dp),
       state = lazyListState,
@@ -121,7 +122,7 @@ internal fun Decks(
       }
     } else if (state.decks.isEmpty()) {
       WelcomeTips(
-        onNewDeckClick = { state.eventSink(DecksUiEvent.CreateNewDeck) },
+        onNewDeckClick = { eventSink(DecksUiEvent.CreateNewDeck) },
         modifier = Modifier.padding(paddingValues),
       )
     }

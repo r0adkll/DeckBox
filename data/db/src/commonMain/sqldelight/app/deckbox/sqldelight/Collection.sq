@@ -1,0 +1,72 @@
+import kotlin.Int;
+import kotlinx.datetime.LocalDateTime;
+
+CREATE TABLE collection (
+  updatedAt TEXT AS LocalDateTime NOT NULL,
+
+  normalCount INTEGER AS Int NOT NULL DEFAULT 0,
+  holofoilCount INTEGER AS Int NOT NULL DEFAULT 0,
+  reverseHolofoilCount INTEGER AS Int NOT NULL DEFAULT 0,
+  firstEditionNormalCount INTEGER AS Int NOT NULL DEFAULT 0,
+  firstEditionHolofoilCount INTEGER AS Int NOT NULL DEFAULT 0,
+
+  cardId TEXT NOT NULL PRIMARY KEY,
+  FOREIGN KEY (cardId) REFERENCES cards(id) ON DELETE CASCADE
+);
+
+getByCard:
+SELECT * FROM collection
+WHERE collection.cardId = ?;
+
+sumsByExpansion:
+SELECT cards.expansionId, collection.cardId, (normalCount + holofoilCount + reverseHolofoilCount + firstEditionNormalCount + firstEditionHolofoilCount) AS expansionTotalCount
+FROM collection
+INNER JOIN cards ON collection.cardId = cards.id
+WHERE cards.expansionId = :expansionId;
+
+sumsByAll:
+SELECT cards.expansionId, COUNT(collection.cardId) AS expansionTotalCount
+FROM collection
+INNER JOIN cards ON collection.cardId = cards.id
+GROUP BY cards.expansionId;
+
+incrementCounts {
+  UPDATE collection
+  SET updatedAt = :updatedAt
+  WHERE cardId = :cardId;
+
+  INSERT OR IGNORE INTO collection (
+    cardId,
+    updatedAt,
+    normalCount,
+    holofoilCount,
+    reverseHolofoilCount,
+    firstEditionNormalCount,
+    firstEditionHolofoilCount
+  )
+  VALUES (
+    :cardId,
+    :updatedAt,
+    0,
+    0,
+    0,
+    0,
+    0
+  );
+
+  UPDATE collection
+  SET
+    normalCount = normalCount + :normalAmount,
+    holofoilCount = holofoilCount + :holofoilAmount,
+    reverseHolofoilCount = reverseHolofoilCount + :reverseHolofoilAmount,
+    firstEditionNormalCount = firstEditionNormalCount + :firstEditionNormalAmount,
+    firstEditionHolofoilCount = firstEditionHolofoilCount + :firstEditionHolofoilAmount
+  WHERE cardId = :cardId;
+
+  DELETE FROM collection
+  WHERE normalCount <= 0
+    AND holofoilCount <= 0
+    AND reverseHolofoilCount <= 0
+    AND firstEditionNormalCount <= 0
+    AND firstEditionHolofoilCount <= 0;
+}
