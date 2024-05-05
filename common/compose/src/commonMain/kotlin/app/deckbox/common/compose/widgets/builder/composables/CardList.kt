@@ -53,6 +53,7 @@ internal fun CardList(
   onAddCardClick: (Stacked<Card>) -> Unit,
   onRemoveCardClick: (Stacked<Card>) -> Unit,
   onTipClick: (CardUiModel.Tip) -> Unit,
+  onTipExtraClick: (CardUiModel.Tip) -> Unit,
   modifier: Modifier = Modifier,
   lazyGridState: LazyGridState = rememberLazyGridState(),
   columns: Int = DefaultColumns,
@@ -144,6 +145,7 @@ internal fun CardList(
           is CardUiModel.Tip -> BuilderTip(
             tip = model,
             onClick = { onTipClick(model) },
+            onExtraClick = { onTipExtraClick(model) },
             modifier = Modifier.overWidth(HorizontalPadding * 2),
           )
         }

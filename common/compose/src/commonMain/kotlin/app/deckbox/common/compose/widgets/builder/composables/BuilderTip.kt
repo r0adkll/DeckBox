@@ -30,6 +30,7 @@ import app.deckbox.common.compose.widgets.builder.model.CardUiModel
 internal fun BuilderTip(
   tip: CardUiModel.Tip,
   onClick: () -> Unit,
+  onExtraClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
@@ -79,6 +80,12 @@ internal fun BuilderTip(
 
     Spacer(Modifier.height(16.dp))
 
+    TipExtraContent(
+      tip = tip,
+      onClick = onExtraClick,
+      modifier = Modifier.padding(bottom = 8.dp),
+    )
+
     OutlinedButton(
       colors = ButtonDefaults.outlinedButtonColors(contentColor = actionColors(tip)),
       border = BorderStroke(1.dp, actionColors(tip)),
@@ -98,35 +105,54 @@ internal fun BuilderTip(
 private fun cardColors(tip: CardUiModel.Tip): CardColors = when (tip) {
   CardUiModel.Tip.Pokemon -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
   CardUiModel.Tip.Trainer -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-  CardUiModel.Tip.Energy -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+  is CardUiModel.Tip.Energy -> CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
 }
 
 @Composable
 private fun tipIcon(tip: CardUiModel.Tip): ImageVector = when (tip) {
   CardUiModel.Tip.Pokemon -> Icons.Rounded.CatchingPokemon
-  CardUiModel.Tip.Energy -> Icons.Rounded.Energy
   CardUiModel.Tip.Trainer -> Icons.Rounded.Wrench
+  is CardUiModel.Tip.Energy -> Icons.Rounded.Energy
 }
 
 @Composable
 private fun tipTitle(tip: CardUiModel.Tip): String = when (tip) {
   CardUiModel.Tip.Pokemon -> "Adding Pokémon Cards"
   CardUiModel.Tip.Trainer -> "Adding Trainer Cards"
-  CardUiModel.Tip.Energy -> "Adding Energy Cards"
+  is CardUiModel.Tip.Energy -> "Adding Energy Cards"
 }
 
 @Composable
 private fun tipAction(tip: CardUiModel.Tip): String = when (tip) {
   CardUiModel.Tip.Pokemon -> "Search for Pokémon cards"
   CardUiModel.Tip.Trainer -> "Search for Trainer cards"
-  CardUiModel.Tip.Energy -> "Search for Energy cards"
+  is CardUiModel.Tip.Energy -> "Search for Energy cards"
+}
+
+@Composable
+private fun TipExtraContent(
+  tip: CardUiModel.Tip,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) = when (tip) {
+  CardUiModel.Tip.Energy.Default,
+  CardUiModel.Tip.Pokemon,
+  CardUiModel.Tip.Trainer,
+  -> {}
+  is CardUiModel.Tip.Energy.Suggested -> {
+    SuggestedCardTip(
+      card = tip.card,
+      onClick = onClick,
+      modifier = modifier,
+    )
+  }
 }
 
 @Composable
 private fun actionColors(tip: CardUiModel.Tip) = when (tip) {
   CardUiModel.Tip.Pokemon -> MaterialTheme.colorScheme.primary
   CardUiModel.Tip.Trainer -> MaterialTheme.colorScheme.secondary
-  CardUiModel.Tip.Energy -> MaterialTheme.colorScheme.tertiary
+  is CardUiModel.Tip.Energy -> MaterialTheme.colorScheme.tertiary
 }
 
 private fun tips(tip: CardUiModel.Tip): List<String> = when (tip) {
@@ -147,7 +173,7 @@ private fun tips(tip: CardUiModel.Tip): List<String> = when (tip) {
     "Include cards to counter common strategies or adapt to metagame trends.",
   )
 
-  CardUiModel.Tip.Energy -> listOf(
+  is CardUiModel.Tip.Energy -> listOf(
     "Include 10-15 energy cards matching your Pokémon types.",
     "Consider special energy cards that provide extra benefits.",
     "Balance energy distribution based on your Pokémon's attack requirements.",

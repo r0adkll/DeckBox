@@ -103,9 +103,10 @@ fun BoosterPackBuilder(
       when (tip) {
         CardUiModel.Tip.Pokemon -> eventSink(AddCards(SuperType.POKEMON))
         CardUiModel.Tip.Trainer -> eventSink(AddCards(SuperType.TRAINER))
-        CardUiModel.Tip.Energy -> eventSink(AddCards(SuperType.ENERGY))
+        is CardUiModel.Tip.Energy -> eventSink(AddCards(SuperType.ENERGY))
       }
     },
+    onTipExtraClick = { /*Do Nothing*/ },
     cardsState = state.cards,
     legalities = boosterPack?.legalities ?: Legalities(standard = Legality.LEGAL),
     columns = 4,

@@ -31,6 +31,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Card
+import app.deckbox.core.model.Stacked
 import com.seiko.imageloader.model.ImageEvent
 import com.seiko.imageloader.rememberImageAction
 import com.seiko.imageloader.rememberImageActionPainter
@@ -49,10 +50,17 @@ fun PokemonCard(
   count: Int? = null,
   collected: Int? = null,
 ) {
-  TradingCard(
+  PokemonCard(
     onClick = onClick,
     onLongClick = onLongClick,
     modifier = modifier,
+    counter = {
+      PokemonCardCounter(
+        count = count,
+        collected = collected,
+        modifier = Modifier.align(Alignment.BottomStart),
+      )
+    },
   ) {
     val imageAction by key(url) {
       rememberImageAction(url)
@@ -64,36 +72,27 @@ fun PokemonCard(
       modifier = Modifier.fillMaxSize(),
     )
 
-    val isLoading = imageAction is ImageEvent
-
-    if (isLoading) {
-      val transition = rememberInfiniteTransition()
-
-      val alpha by transition.animateFloat(
-        initialValue = 0.5f,
-        targetValue = 0.75f,
-        animationSpec = infiniteRepeatable(
-          animation = tween(500),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      )
-
-      PokemonCardBack(
-        modifier = Modifier
-          .fillMaxSize()
-          .alpha(alpha),
-      )
-    }
-
-    if (count != null || collected != null) {
-      CardCounter(
-        count = count,
-        collected = collected,
-        modifier = Modifier
-          .align(Alignment.BottomStart),
-      )
-    }
+    PokemonCardLoadingContent(
+      isLoading = imageAction is ImageEvent,
+    )
   }
+}
+
+@Composable
+fun PokemonCard(
+  card: Stacked<Card>,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  onLongClick: () -> Unit = {},
+) {
+  PokemonCard(
+    card = card.card,
+    onClick = onClick,
+    onLongClick = onLongClick,
+    count = card.count,
+    collected = card.collected,
+    modifier = modifier,
+  )
 }
 
 @Composable
@@ -105,10 +104,17 @@ fun PokemonCard(
   count: Int? = null,
   collected: Int? = null,
 ) {
-  TradingCard(
+  PokemonCard(
     onClick = onClick,
     onLongClick = onLongClick,
     modifier = modifier,
+    counter = {
+      PokemonCardCounter(
+        count = count,
+        collected = collected,
+        modifier = Modifier.align(Alignment.BottomStart),
+      )
+    },
   ) {
     val isLoading = if (card != null) {
       val imageAction by key(card.id) {
@@ -126,33 +132,67 @@ fun PokemonCard(
       true
     }
 
-    if (isLoading) {
-      val transition = rememberInfiniteTransition()
+    PokemonCardLoadingContent(
+      isLoading = isLoading,
+    )
+  }
+}
 
-      val alpha by transition.animateFloat(
-        initialValue = 0.5f,
-        targetValue = 0.75f,
-        animationSpec = infiniteRepeatable(
-          animation = tween(500),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      )
+@Composable
+internal fun PokemonCard(
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit = {},
+  onLongClick: () -> Unit = {},
+  counter: @Composable BoxScope.() -> Unit,
+  content: @Composable BoxScope.() -> Unit,
+) {
+  TradingCard(
+    onClick = onClick,
+    onLongClick = onLongClick,
+    modifier = modifier,
+  ) {
+    content()
+    counter()
+  }
+}
 
-      PokemonCardBack(
-        modifier = Modifier
-          .fillMaxSize()
-          .alpha(alpha),
-      )
-    }
+@Composable
+private fun PokemonCardCounter(
+  count: Int?,
+  collected: Int?,
+  modifier: Modifier = Modifier,
+) {
+  if (count != null || collected != null) {
+    CardCounter(
+      count = count,
+      collected = collected,
+      modifier = modifier,
+    )
+  }
+}
 
-    if (count != null || collected != null) {
-      CardCounter(
-        count = count,
-        collected = collected,
-        modifier = Modifier
-          .align(Alignment.BottomStart),
-      )
-    }
+@Composable
+private fun PokemonCardLoadingContent(
+  isLoading: Boolean,
+  modifier: Modifier = Modifier,
+) {
+  if (isLoading) {
+    val transition = rememberInfiniteTransition()
+
+    val alpha by transition.animateFloat(
+      initialValue = 0.5f,
+      targetValue = 0.75f,
+      animationSpec = infiniteRepeatable(
+        animation = tween(500),
+        repeatMode = RepeatMode.Reverse,
+      ),
+    )
+
+    PokemonCardBack(
+      modifier = modifier
+        .fillMaxSize()
+        .alpha(alpha),
+    )
   }
 }
 
