@@ -101,7 +101,13 @@ fun DeckBuilder(
       when (tip) {
         CardUiModel.Tip.Pokemon -> eventSink(AddCards(SuperType.POKEMON))
         CardUiModel.Tip.Trainer -> eventSink(AddCards(SuperType.TRAINER))
-        CardUiModel.Tip.Energy -> eventSink(AddCards(SuperType.ENERGY))
+        is CardUiModel.Tip.Energy -> eventSink(AddCards(SuperType.ENERGY))
+      }
+    },
+    onTipExtraClick = { tip ->
+      when (tip) {
+        is CardUiModel.Tip.Energy.Suggested -> eventSink(IncrementCard(tip.card.card.id, tip.card.count))
+        else -> Unit
       }
     },
     cardsState = state.cards,

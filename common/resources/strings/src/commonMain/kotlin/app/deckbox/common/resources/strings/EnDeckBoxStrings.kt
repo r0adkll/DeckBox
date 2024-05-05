@@ -35,6 +35,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
   deckActionDeleteButton = "Delete",
   deckActionDeleteButtonContentDescription = "Delete deck",
   fabActionNewDeckButton = "New deck",
+  addSuggestedEnergyCards = { count, name -> "Add $count $name cards to the deck" },
 
   boosterPacks = "Packs",
   boosterPacksTitleLong = "Booster Packs",

@@ -66,10 +66,23 @@ sealed interface CardUiModel {
       override val size: Int = 0
       override fun sizeOf(superType: SuperType): Int = 0
     }
-    data object Energy : Tip {
-      override val id: String = "Tip.Energy"
-      override val size: Int = 0
+    sealed interface Energy : Tip {
+      override val size: Int get() = 0
       override fun sizeOf(superType: SuperType): Int = 0
+
+      data object Default : Energy {
+        override val id: String = "Tip.Energy.Default"
+      }
+
+      data class Suggested(
+        val card: Stacked<Card>,
+      ) : Energy {
+        override val id: String = "Tip.Energy.Suggested"
+      }
+
+      companion object {
+        const val DefaultEnergyAmount = 14
+      }
     }
   }
 }

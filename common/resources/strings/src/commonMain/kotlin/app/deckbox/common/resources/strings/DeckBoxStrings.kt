@@ -23,6 +23,7 @@ data class DeckBoxStrings(
   val deckActionDeleteButton: String,
   val deckActionDeleteButtonContentDescription: String,
   val fabActionNewDeckButton: String,
+  val addSuggestedEnergyCards: (count: Int, name: String) -> String,
 
   // Booster Packs
   val boosterPacks: String,

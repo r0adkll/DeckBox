@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.compose.widgets.builder.model.CardUiModel
 import app.deckbox.common.compose.widgets.builder.model.CardUiModel.Tip
+import app.deckbox.common.compose.widgets.builder.model.CardUiModel.Tip.Energy.Companion.DefaultEnergyAmount
 import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.BrowseScreen
 import app.deckbox.common.screens.CardDetailScreen
@@ -19,9 +20,16 @@ import app.deckbox.core.extensions.addIfEmpty
 import app.deckbox.core.extensions.lowestMarketPrice
 import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
+import app.deckbox.core.model.Card
 import app.deckbox.core.model.Evolution
+import app.deckbox.core.model.Stacked
 import app.deckbox.core.model.SuperType
+import app.deckbox.core.model.Type
+import app.deckbox.core.model.energyTypeFromCardName
+import app.deckbox.core.model.map
+import app.deckbox.core.model.stack
 import app.deckbox.features.cards.public.CardRepository
+import app.deckbox.features.cards.public.usecase.BasicEnergyUseCase
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
 import app.deckbox.features.decks.api.validation.DeckValidator
 import app.deckbox.ui.decks.builder.DeckBuilderUiEvent.AddBoosterPack
@@ -41,9 +49,11 @@ import com.benasher44.uuid.uuid4
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -59,6 +69,7 @@ class DeckBuilderPresenter(
   private val repository: DeckBuilderRepository,
   private val cardRepository: CardRepository,
   private val deckValidator: DeckValidator,
+  private val basicEnergyUseCase: BasicEnergyUseCase,
   private val dispatcherProvider: DispatcherProvider,
 ) : Presenter<DeckBuilderUiState> {
 
@@ -76,6 +87,13 @@ class DeckBuilderPresenter(
         .map { LoadState.Loaded(it.toImmutableList()) }
         .catch { LoadState.Error }
     }.collectAsState(LoadState.Loading)
+
+    val basicEnergyCards by remember(screen.id) {
+      flow {
+        val result = basicEnergyUseCase.execute()
+        emit(result.getOrNull() ?: emptyList())
+      }
+    }.collectAsState(emptyList())
 
     // Split the cards by supertype and build the pokemon into evolution lines
     val uiModels by remember {
@@ -126,7 +144,7 @@ class DeckBuilderPresenter(
                 else -> BottomSortName
               }
             }
-          }.addIfEmpty(Tip.Energy)
+          }.addIfEmpty(computeEnergyTip(cards, basicEnergyCards))
 
           // Concatenate the models
           pokemon.prependIfNotEmpty(
@@ -234,6 +252,53 @@ class DeckBuilderPresenter(
       is NewBoosterPack -> navigator.goTo(BoosterPackBuilderScreen(uuid4().toString()))
       is RemoveCard -> repository.removeCard(deckId, event.cardId)
     }
+  }
+
+  private fun computeEnergyTip(
+    cards: ImmutableList<Stacked<Card>>,
+    basicEnergyCards: List<Card>,
+  ): Tip.Energy {
+    val sum = cards.sumOf { it.count }
+    val pokemon = cards.filter { it.card.supertype == SuperType.POKEMON }
+    val energy = cards.filter { it.card.supertype == SuperType.ENERGY }
+
+    if (pokemon.isEmpty()) return Tip.Energy.Default
+    if (energy.isNotEmpty()) return Tip.Energy.Default
+
+    // Compute the number of cards we can suggest
+    val count = (60 - sum).coerceIn(0..DefaultEnergyAmount)
+    if (count == 0) return Tip.Energy.Default
+
+    // Compute the basic energy type we want to suggest
+    val type = pokemon
+      .mapNotNull {
+        if (it.card.types.isNullOrEmpty()) {
+          null
+        } else {
+          it.map { it.types!! }
+        }
+      }
+      .flatMap { stack ->
+        stack.card.map { type ->
+          type.stack(stack.count)
+        }
+      }
+      .groupingBy { it.card }
+      .aggregate<Stacked<Type>, Type, Int> { _, accumulator, element, _ ->
+        (accumulator ?: 0) + element.count
+      }
+      .maxByOrNull { it.value }
+      ?.key
+
+    // If we couldn't determine a type, then just exit to default
+    if (type == null) return Tip.Energy.Default
+
+    // Find Basic Energy Card for Type
+    val basicEnergyCard = basicEnergyCards.find {
+      energyTypeFromCardName(it.name) == type
+    } ?: return Tip.Energy.Default
+
+    return Tip.Energy.Suggested(basicEnergyCard.stack(count))
   }
 }
 
