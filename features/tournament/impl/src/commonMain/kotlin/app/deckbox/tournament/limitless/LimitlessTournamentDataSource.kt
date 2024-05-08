@@ -31,7 +31,7 @@ class LimitlessTournamentDataSource(
 ) : TournamentDataSource {
 
   override suspend fun getTournaments(): Result<List<Tournament>> = withContext(dispatcherProvider.io) {
-    val result = Result.success(TournamentsHtmlResponse) // FIXME: fetchHtmlDom(TOURNAMENTS_URL)
+    val result = fetchHtmlDom("$TOURNAMENTS_URL?format=standard")
 
     if (result.isSuccess) {
       val bodyText = result.getOrThrow()
@@ -58,7 +58,7 @@ class LimitlessTournamentDataSource(
   override suspend fun getParticipants(tournamentId: String): Result<List<Participant>> = withContext(
     dispatcherProvider.io,
   ) {
-    val result = Result.success(ParticipantListHtmlResponse) // FIXME: fetchHtmlDom("$TOURNAMENTS_URL/$tournamentId")
+    val result = fetchHtmlDom("$TOURNAMENTS_URL/$tournamentId")
 
     if (result.isSuccess) {
       val bodyText = result.getOrThrow()
@@ -83,7 +83,7 @@ class LimitlessTournamentDataSource(
   }
 
   override suspend fun getDeckList(deckListId: String): Result<DeckList> = withContext(dispatcherProvider.io) {
-    val result = Result.success(DeckListHtmlResponse) // FIXME: fetchHtmlDom("$DECK_LIST_URL/$deckListId")
+    val result = fetchHtmlDom("$DECK_LIST_URL/$deckListId")
 
     if (result.isSuccess) {
       val bodyText = result.getOrThrow()
@@ -113,10 +113,9 @@ class LimitlessTournamentDataSource(
     }
   }
 
-  @Suppress("UNUSED_PARAMETER")
   private suspend fun fetchHtmlDom(url: String): Result<String> {
     val response = httpClient.get {
-      url(TOURNAMENTS_URL)
+      url(url)
     }
 
     if (response.status.isSuccess()) {

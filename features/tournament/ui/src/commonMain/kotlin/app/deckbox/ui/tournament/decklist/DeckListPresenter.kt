@@ -97,9 +97,8 @@ class DeckListPresenter(
       when (event) {
         DeckListUiEvent.NavigateBack -> navigator.pop()
         DeckListUiEvent.Import -> coroutineScope.launch {
-          val deckList = deckListState.dataOrNull ?: return@launch
           val stackedCards = cards.value.dataOrNull ?: return@launch
-          importDeck(deckList, stackedCards)
+          importDeck(stackedCards)
         }
         is DeckListUiEvent.CardClick -> navigator.goTo(CardDetailScreen(event.card, isFullScreen = true))
         is DeckListUiEvent.PurchaseDeck -> navigator.goTo(UrlScreen(event.bulkPurchaseUrl))
@@ -186,9 +185,12 @@ class DeckListPresenter(
     }.collectAsState(LoadState.Loading)
   }
 
-  private suspend fun importDeck(deckList: DeckList, cards: List<Stacked<Card>>) {
+  private suspend fun importDeck(cards: List<Stacked<Card>>) {
+
+    // TODO: We should add source meta data to decks so we can indicate/track where a deck was imported
+    //  from and respect the source affiliate Urls
     val newDeckId = deckRepository.importDeck(
-      name = deckList.name,
+      name = screen.archetypeName,
       cards = cards,
     )
 

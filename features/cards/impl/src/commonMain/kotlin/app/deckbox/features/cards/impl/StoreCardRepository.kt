@@ -3,6 +3,7 @@ package app.deckbox.features.cards.impl
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.AppScope
 import app.deckbox.core.di.MergeAppScope
+import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Stacked
 import app.deckbox.features.cards.impl.db.CardDao
@@ -16,7 +17,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import me.tatarka.inject.annotations.Inject
@@ -27,7 +30,6 @@ import org.mobilenativefoundation.store.store5.StoreBuilder
 import org.mobilenativefoundation.store.store5.StoreReadRequest
 import org.mobilenativefoundation.store.store5.StoreReadResponse
 import org.mobilenativefoundation.store.store5.impl.extensions.fresh
-import org.mobilenativefoundation.store.store5.impl.extensions.get
 
 @AppScope
 @Inject
@@ -71,18 +73,33 @@ class StoreCardRepository(
     return getCards(id.toList())
   }
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   override suspend fun getCards(ids: List<String>): List<Card> {
     val key = CardKey.Ids(ids)
     return store.stream(
       request = StoreReadRequest.cached(
         key = key,
-        refresh = true,
+        refresh = false,
       ),
     )
       .filterNot { it is StoreReadResponse.Loading || it is StoreReadResponse.NoNewData }
+      .flatMapLatest { response ->
+        val cardResponse = response.requireData() as CardResponse.Multiple
+        if (cardResponse.cards.size != ids.size) {
+          // If we return an impartial, attempt to fetch fresh
+          bark { "Incomplete card set, fetching fresh" }
+          // Filter out the missing card ids to make the re-fetch as fast as possible
+          val missingCards = ids.filter { id -> cardResponse.cards.none { it.id == id } }
+          store.stream(StoreReadRequest.fresh(CardKey.Ids(missingCards)))
+            .filterNot { it is StoreReadResponse.Loading || it is StoreReadResponse.NoNewData }
+            .map {
+              (it.requireData() as CardResponse.Multiple).cards + cardResponse.cards
+            }
+        } else {
+          flowOf(cardResponse.cards)
+        }
+      }
       .first()
-      .requireData()
-      .let { (it as CardResponse.Multiple).cards }
   }
 
   override suspend fun getCards(query: CardQuery): List<Card> {

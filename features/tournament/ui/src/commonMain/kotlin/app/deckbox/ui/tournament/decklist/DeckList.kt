@@ -106,12 +106,14 @@ fun DeckList(
           lazyGridState.firstVisibleItemIndex == 0
         }
       }
-      ExtendedFloatingActionButton(
-        text = { Text(LocalStrings.current.fabActionImport) },
-        icon = { Icon(Icons.Rounded.Import, contentDescription = null) },
-        expanded = isExpanded,
-        onClick = { eventSink(DeckListUiEvent.Import) },
-      )
+      if (state.importEnabled) {
+        ExtendedFloatingActionButton(
+          text = { Text(LocalStrings.current.fabActionImport) },
+          icon = { Icon(Icons.Rounded.Import, contentDescription = null) },
+          expanded = isExpanded,
+          onClick = { eventSink(DeckListUiEvent.Import) },
+        )
+      }
     },
   ) { paddingValues ->
     when (val cardsState = state.cardsLoadState) {

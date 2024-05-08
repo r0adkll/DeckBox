@@ -1,7 +1,6 @@
 package app.deckbox.tournament.xml.parsers
 
 import app.deckbox.core.CurrencyType
-import app.deckbox.core.logging.bark
 import app.deckbox.tournament.xml.SoupParser
 import app.deckbox.tournament.xml.builders.CardBuilder
 import app.deckbox.tournament.xml.builders.CardPriceBuilder
@@ -141,10 +140,8 @@ class PriceParser(
 ) : SoupParser() {
   override fun onText(text: String) {
     val trimmedText = text.trim()
-    bark { "PriceParser:onText($trimmedText)" }
     PriceRegex.matchEntire(trimmedText)?.let { match ->
       match.groupValues.getOrNull(1)?.toDoubleOrNull()?.let(onPrice)
-        ?: bark { "Unable to find price in RegEx for ${match.groupValues}" }
     }
   }
 

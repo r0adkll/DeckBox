@@ -53,7 +53,14 @@ class DefaultFetchDeckListCardsUseCase(
     bark { "Cards Fetched! $cards" }
 
     // Validate that we fetched the correct amount of cards
-    if (cards.size != deckList.cards.size) return Result.failure(Errors.CardsFetchError)
+    if (cards.size != deckList.cards.size) {
+      // Find the missing cards
+      val missingCards = cardIds.filter { id ->
+        cards.none { it.id == id }
+      }
+      bark { "Missing Cards: $missingCards" }
+      return Result.failure(Errors.CardsFetchError)
+    }
 
     // Now stack the cards with the supplied 'count' information from the deck list meta-data
     val indexedCards = deckList.cards.associateBy { it.key }
