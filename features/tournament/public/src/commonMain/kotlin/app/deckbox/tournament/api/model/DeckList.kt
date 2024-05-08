@@ -4,21 +4,20 @@ import app.deckbox.core.CurrencyType
 
 data class DeckList(
   val name: String,
-  val price: Price,
+  val price: Map<CurrencyType, Double>,
+  val bulkPurchaseUrl: String,
   val cards: List<Card>,
 ) {
 
-  data class Price(
-    val amount: Double,
-    val currency: CurrencyType,
-  )
-
   data class Card(
-    val count: Int,
     val name: String,
-    val set: CardSet,
+    val count: Int,
+    val setCode: String,
+    val number: String,
     val prices: Map<CurrencyType, Price>,
   ) {
+    val key: String
+      get() = "$setCode-$number"
 
     data class Price(
       val amount: Double,
@@ -26,9 +25,4 @@ data class DeckList(
       val url: String,
     )
   }
-
-  data class CardSet(
-    val code: String,
-    val name: String,
-  )
 }

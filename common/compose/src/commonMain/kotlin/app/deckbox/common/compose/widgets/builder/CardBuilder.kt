@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -47,7 +48,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.PlatformBackHandler
 import app.deckbox.common.compose.extensions.plus
-import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultEmptyView
 import app.deckbox.common.compose.widgets.EditingAppBar
@@ -74,7 +74,6 @@ fun CardBuilder(
   floatingActionButton: @Composable (isScrolled: Boolean) -> Unit,
   bottomSheetContent: @Composable ColumnScope.() -> Unit,
   onNavClick: () -> Unit,
-  onAddClick: () -> Unit,
   onCardClick: (Stacked<Card>) -> Unit,
   onAddCardClick: (Stacked<Card>) -> Unit,
   onRemoveCardClick: (Stacked<Card>) -> Unit,
@@ -83,6 +82,7 @@ fun CardBuilder(
   onNameChange: (TextFieldValue) -> Unit,
   cardsState: LoadState<out ImmutableList<CardUiModel>>,
   modifier: Modifier = Modifier,
+  topBarActions: @Composable RowScope.() -> Unit = {},
   isValid: Boolean = true,
   legalities: Legalities = Legalities(),
   columns: Int = DefaultColumns,
@@ -146,7 +146,7 @@ fun CardBuilder(
         } else {
           BuilderAppBar(
             onNavClick = onNavClick,
-            onAddClick = onAddClick,
+            topBarActions = topBarActions,
             onEditClick = { isEditing = !isEditing },
             scaffoldState = scaffoldState,
             nameFocusRequester = nameFocusRequester,
@@ -230,11 +230,11 @@ fun CardBuilder(
 private fun BuilderAppBar(
   onNavClick: () -> Unit,
   onEditClick: () -> Unit,
-  onAddClick: () -> Unit,
   scaffoldState: BottomSheetScaffoldState,
   nameFocusRequester: FocusRequester,
   scrollBehavior: TopAppBarScrollBehavior,
   modifier: Modifier = Modifier,
+  topBarActions: @Composable RowScope.() -> Unit = {},
   title: @Composable () -> AnnotatedString,
 ) {
   val coroutineScope = rememberCoroutineScope()
@@ -259,14 +259,7 @@ private fun BuilderAppBar(
       }
     },
     actions = {
-      IconButton(
-        onClick = onAddClick,
-      ) {
-        Icon(
-          Icons.Rounded.AddBoosterPack,
-          contentDescription = null,
-        )
-      }
+      topBarActions()
       IconButton(
         onClick = onEditClick,
       ) {

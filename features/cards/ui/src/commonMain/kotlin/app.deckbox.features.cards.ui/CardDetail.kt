@@ -31,6 +31,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -307,23 +308,28 @@ internal fun CardDetail(
 
 @Composable
 private fun CardImage(
-  url: String,
+  url: String?,
   contentDescription: String,
   modifier: Modifier = Modifier,
   loadingContainerColor: Color = Color.Unspecified,
 ) {
-  val imageAction by key(url) { rememberImageAction(url) }
+  val imageAction by key(url) {
+    url?.let { rememberImageAction(it) }
+      ?: mutableStateOf(null)
+  }
   Box(
     modifier = modifier,
   ) {
-    Image(
-      painter = rememberImageActionPainter(imageAction),
-      contentDescription = contentDescription,
-      contentScale = ContentScale.FillWidth,
-      modifier = Modifier.fillMaxWidth(),
-    )
+    if (imageAction != null) {
+      Image(
+        painter = rememberImageActionPainter(imageAction!!),
+        contentDescription = contentDescription,
+        contentScale = ContentScale.FillWidth,
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
 
-    if (imageAction is ImageEvent) {
+    if (imageAction is ImageEvent || imageAction == null) {
       Box(
         modifier = Modifier
           .fillMaxWidth()

@@ -74,6 +74,7 @@ include(
 include(
   ":features:tournament:public",
   ":features:tournament:impl",
+  ":features:tournament:ui",
 )
 include(
   ":ui:browse",

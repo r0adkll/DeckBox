@@ -14,7 +14,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Lan
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -35,6 +37,7 @@ import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.compose.widgets.ContentLoadingSize
+import app.deckbox.common.compose.widgets.DropdownIconButton
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.core.di.MergeActivityScope
@@ -70,11 +73,29 @@ internal fun Decks(
         DeckBoxRootAppBar(
           title = LocalStrings.current.decks,
           actions = {
-            IconButton(
-              onClick = { },
-            ) {
-              Icon(Icons.Rounded.Import, contentDescription = null)
-            }
+            DropdownIconButton(
+              options = DeckImportOptions.entries,
+              onOptionClick = { option ->
+                when (option) {
+                  DeckImportOptions.Tournaments -> eventSink(DecksUiEvent.ImportTournamentDeck)
+                  DeckImportOptions.Text -> eventSink(DecksUiEvent.ImportDeck)
+                }
+              },
+              optionIcon = { option ->
+                Icon(
+                  when (option) {
+                    DeckImportOptions.Tournaments -> Icons.Rounded.Lan
+                    DeckImportOptions.Text -> Icons.Rounded.TextFields
+                  },
+                  contentDescription = option.text(),
+                )
+              },
+              optionText = { Text(it.text()) },
+              icon = {
+                Icon(Icons.Rounded.Import, contentDescription = null)
+              },
+            )
+
             IconButton(
               onClick = { eventSink(DecksUiEvent.OpenAppSettings) },
             ) {

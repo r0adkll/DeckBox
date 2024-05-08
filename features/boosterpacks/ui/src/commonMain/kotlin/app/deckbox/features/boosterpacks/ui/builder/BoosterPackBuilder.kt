@@ -18,7 +18,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.icons.rounded.AddDeck
 import app.deckbox.common.compose.overlays.showBottomSheetScreen

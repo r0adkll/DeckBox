@@ -77,3 +77,4 @@ upsertTags {
 delete:
 DELETE FROM decks
 WHERE id = :id;
+

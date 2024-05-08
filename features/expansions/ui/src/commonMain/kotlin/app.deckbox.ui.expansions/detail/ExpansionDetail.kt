@@ -53,6 +53,7 @@ import app.deckbox.common.compose.icons.rounded.EditSquare
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.compose.widgets.CardCornerRadius
 import app.deckbox.common.compose.widgets.CollectionBar
+import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.FilterIcon
 import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
 import app.deckbox.common.compose.widgets.PokemonCard
@@ -295,7 +296,7 @@ private fun Loading(
     contentAlignment = Alignment.Center,
   ) {
     PokeballLoadingIndicator(
-      size = 92.dp,
+      size = ContentLoadingSize,
     )
   }
 }

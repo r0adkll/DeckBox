@@ -13,7 +13,7 @@ import com.slack.circuit.runtime.CircuitUiState
 @Stable
 data class CardDetailUiState(
   val cardName: String,
-  val cardImageUrl: String,
+  val cardImageUrl: String?,
   val card: LoadState<out Card>,
   val deckState: DeckState?,
   val collectionCount: CollectionCount,

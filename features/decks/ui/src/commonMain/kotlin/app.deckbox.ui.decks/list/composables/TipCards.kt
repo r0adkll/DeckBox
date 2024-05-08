@@ -26,7 +26,6 @@ import app.deckbox.common.compose.icons.Pokedex
 import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.widgets.OutlinedIconButton
 import app.deckbox.common.compose.widgets.SizedIcon
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @Composable
 internal fun WelcomeTips(

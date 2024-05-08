@@ -21,6 +21,8 @@ data class DecksUiState(
 sealed interface DecksUiEvent : CircuitUiEvent {
   data object CreateNewDeck : DecksUiEvent
   data object OpenAppSettings : DecksUiEvent
+  data object ImportDeck : DecksUiEvent
+  data object ImportTournamentDeck : DecksUiEvent
   data class ChangeSortOrder(val sortOrder: SortOption) : DecksUiEvent
   data class CardEvent(val deck: Deck, val event: DeckCardEvent) : DecksUiEvent
 }

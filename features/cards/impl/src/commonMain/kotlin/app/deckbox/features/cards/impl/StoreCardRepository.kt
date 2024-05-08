@@ -8,6 +8,8 @@ import app.deckbox.core.model.Stacked
 import app.deckbox.features.cards.impl.db.CardDao
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.cards.public.model.CardQuery
+import app.deckbox.features.cards.public.model.appendOrList
+import app.deckbox.features.cards.public.model.buildQuery
 import app.deckbox.network.PokemonTcgApi
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -74,7 +76,7 @@ class StoreCardRepository(
     return store.stream(
       request = StoreReadRequest.cached(
         key = key,
-        refresh = false,
+        refresh = true,
       ),
     )
       .filterNot { it is StoreReadResponse.Loading || it is StoreReadResponse.NoNewData }
@@ -133,7 +135,11 @@ class CardFetcher(
         .asFetcherResult()
         .also { emit(it) }
 
-      is CardKey.Ids -> api.getCards()
+      is CardKey.Ids -> api.getCards(
+        buildQuery {
+          appendOrList("id", key.ids)
+        },
+      )
         .map { CardResponse.Multiple(it.data) }
         .asFetcherResult()
         .also { emit(it) }

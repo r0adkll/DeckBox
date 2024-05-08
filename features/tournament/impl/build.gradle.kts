@@ -15,13 +15,14 @@ kotlin {
         implementation(projects.data.db)
 
         api(projects.features.cards.public)
+        api(projects.features.expansions.public)
         api(projects.features.tournament.public)
 
         implementation(libs.store)
         implementation(libs.kotlinx.atomicfu)
         implementation(libs.ktor.client.core)
 
-        implementation("io.github.pdvrieze.xmlutil:core:0.86.2")
+        implementation(libs.ksoup.html)
       }
     }
   }

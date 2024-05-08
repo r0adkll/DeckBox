@@ -6,9 +6,9 @@ import app.deckbox.tournament.api.model.Tournament
 
 interface TournamentRepository {
 
-  suspend fun getTournaments(): List<Tournament>
+  suspend fun getTournaments(): Result<List<Tournament>>
 
-  suspend fun getParticipants(tournament: Tournament): List<Participant>
+  suspend fun getParticipants(tournamentId: String): Result<List<Participant>>
 
-  suspend fun getDeckList(tournament: Tournament, participant: Participant): DeckList
+  suspend fun getDeckList(deckListId: String): Result<DeckList>
 }

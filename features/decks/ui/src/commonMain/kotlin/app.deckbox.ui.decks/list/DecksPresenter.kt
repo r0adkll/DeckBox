@@ -10,6 +10,7 @@ import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.PlayTestScreen
 import app.deckbox.common.screens.SettingsScreen
+import app.deckbox.common.screens.TournamentsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
@@ -104,6 +105,12 @@ class DecksPresenter(
         )
         DecksUiEvent.OpenAppSettings -> navigator.goTo(SettingsScreen())
         is DecksUiEvent.ChangeSortOrder -> deckBoxSettings.deckSortOrder = event.sortOrder
+
+        DecksUiEvent.ImportDeck -> {
+          // TODO: Navigate to text deck importer
+        }
+
+        DecksUiEvent.ImportTournamentDeck -> navigator.goTo(TournamentsScreen())
       }
     }
   }

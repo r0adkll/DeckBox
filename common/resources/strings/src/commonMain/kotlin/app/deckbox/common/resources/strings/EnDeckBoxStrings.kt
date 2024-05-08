@@ -4,6 +4,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import app.deckbox.core.model.Format
 import cafe.adriel.lyricist.LyricistStrings
 
 @LyricistStrings(languageTag = "en", default = true)
@@ -24,6 +25,15 @@ val EnDeckBoxStrings = DeckBoxStrings(
   },
   cardPlaceholderContentDescription = "Pokemon Card Placeholder",
   refreshPricesContentDescription = "Refresh Prices",
+  format = { format ->
+    when (format) {
+      Format.STANDARD -> "Standard"
+      Format.EXPANDED -> "Expanded"
+      Format.UNLIMITED -> "Unlimited"
+      Format.LEGACY -> "Legacy"
+      Format.THEME -> "Theme"
+    }
+  },
 
   decks = "Decks",
   decksTabContentDescription = "List of saved decks",
@@ -36,6 +46,8 @@ val EnDeckBoxStrings = DeckBoxStrings(
   deckActionDeleteButtonContentDescription = "Delete deck",
   fabActionNewDeckButton = "New deck",
   addSuggestedEnergyCards = { count, name -> "Add $count $name cards to the deck" },
+  importTournaments = "Tournaments",
+  importText = "Text",
 
   boosterPacks = "Packs",
   boosterPacksTitleLong = "Booster Packs",
@@ -78,11 +90,14 @@ val EnDeckBoxStrings = DeckBoxStrings(
   thirtyDayAvg = "30 day avg",
   actionBuy = "Buy",
   lessThan = { "Less than $it" },
-
   lessThanEqual = { "Less than or equal to $it" },
-
   greaterThan = { "Greater than $it" },
   greaterThanEqual = { "Greater than or equal to $it" },
+
+  tournamentsTitle = "Tournaments",
+  tournamentsErrorMessage = "Unable to load the list of recent tournaments",
+  fabActionImport = "Import deck",
+
   settings = "Settings",
   settingsTabContentDescription = "Change application settings",
   decksEmptyStateMessage = "Looks like you don't have any decks!\n" +

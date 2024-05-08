@@ -51,3 +51,25 @@ fun DeckBoxAppBar(
     colors = colors,
   )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeckBoxAppBar(
+  title: @Composable () -> Unit,
+  navigationIcon: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
+  scrollBehavior: TopAppBarScrollBehavior? = null,
+  actions: @Composable RowScope.() -> Unit = {},
+  colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+) {
+  TopAppBar(
+    modifier = modifier,
+    windowInsets = WindowInsets.systemBars
+      .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+    scrollBehavior = scrollBehavior,
+    title = title,
+    navigationIcon = navigationIcon,
+    actions = actions,
+    colors = colors,
+  )
+}

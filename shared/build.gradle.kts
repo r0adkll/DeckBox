@@ -48,6 +48,9 @@ kotlin {
         api(projects.features.playtest.impl)
         api(projects.features.playtest.ui)
 
+        api(projects.features.tournament.impl)
+        api(projects.features.tournament.ui)
+
         // UI Modules
         api(projects.ui.browse)
         api(projects.ui.filter)

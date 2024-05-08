@@ -83,7 +83,7 @@ class CardDetailPresenter(
 
     return CardDetailUiState(
       cardName = screen.cardName,
-      cardImageUrl = screen.cardImageLarge,
+      cardImageUrl = screen.cardImageLarge ?: cardLoadState.dataOrNull?.image?.large,
       card = cardLoadState,
       similar = similarCards,
       evolvesFrom = evolvesFrom,
