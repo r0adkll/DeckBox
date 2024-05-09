@@ -37,7 +37,6 @@ import app.deckbox.common.compose.icons.Snorlax
 import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultIconSize
 import app.deckbox.common.compose.widgets.EmptyView
-import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.TournamentsScreen
 import app.deckbox.core.coroutines.LoadState

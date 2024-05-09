@@ -29,7 +29,6 @@ import app.deckbox.core.model.Stacked
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.decks.api.DeckRepository
 import app.deckbox.tournament.api.TournamentRepository
-import app.deckbox.tournament.api.model.DeckList
 import app.deckbox.tournament.api.usecase.FetchDeckListCardsUseCase
 import cafe.adriel.lyricist.LocalStrings
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
@@ -186,7 +185,6 @@ class DeckListPresenter(
   }
 
   private suspend fun importDeck(cards: List<Stacked<Card>>) {
-
     // TODO: We should add source meta data to decks so we can indicate/track where a deck was imported
     //  from and respect the source affiliate Urls
     val newDeckId = deckRepository.importDeck(
