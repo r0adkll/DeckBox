@@ -38,6 +38,7 @@ import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultIconSize
 import app.deckbox.common.compose.widgets.EmptyView
 import app.deckbox.common.compose.widgets.PokeballLoadingIndicator
+import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.TournamentScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
@@ -103,7 +104,7 @@ private fun LoadingContent(
     modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
   ) {
-    PokeballLoadingIndicator(
+    SpinningPokeballLoadingIndicator(
       size = ContentLoadingSize,
     )
   }
