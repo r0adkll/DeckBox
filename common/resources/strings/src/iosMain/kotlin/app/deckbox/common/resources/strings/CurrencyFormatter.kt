@@ -1,5 +1,6 @@
 package app.deckbox.common.resources.strings
 
+import app.deckbox.core.CurrencyType
 import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 import platform.Foundation.NSNumberFormatterCurrencyStyle

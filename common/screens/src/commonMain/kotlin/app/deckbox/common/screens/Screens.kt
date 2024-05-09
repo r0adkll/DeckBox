@@ -3,6 +3,7 @@ package app.deckbox.common.screens
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Deck as DeckModel
+import app.deckbox.core.model.Format
 import app.deckbox.core.model.SuperType
 import com.slack.circuit.runtime.screen.Screen
 
@@ -129,15 +130,17 @@ class CardCollectionEditorScreen(
 class CardDetailScreen(
   val cardId: String,
   val cardName: String,
-  val cardImageLarge: String,
+  val cardImageLarge: String? = null,
   val deckId: String? = null,
   val packId: String? = null,
+  private val isFullScreen: Boolean = false,
 ) : DeckBoxScreen(name = "CardDetail()") {
   constructor(
     card: Card,
     deckId: String? = null,
     packId: String? = null,
-  ) : this(card.id, card.name, card.image.large, deckId, packId)
+    isFullScreen: Boolean = false,
+  ) : this(card.id, card.name, card.image.large, deckId, packId, isFullScreen)
 
   override val arguments
     get() = mapOf(
@@ -146,16 +149,56 @@ class CardDetailScreen(
       "cardImageLarge" to cardImageLarge,
       "deckId" to deckId,
       "packId" to packId,
+      "isFullScreen" to isFullScreen,
     )
 
   @CommonIgnoredOnParcel
   override val presentation = Presentation(
-    hideBottomNav = deckId != null || packId != null,
+    hideBottomNav = deckId != null || packId != null || isFullScreen,
   )
 }
 
+sealed class ImportScreen(name: String) : DeckBoxScreen(name)
+
 @CommonParcelize
-class FilterScreen : DeckBoxScreen(name = "Filter()")
+class TournamentsScreen : ImportScreen(name = "Tournaments()") {
+
+  @CommonIgnoredOnParcel
+  override val presentation: Presentation = Presentation(hideBottomNav = true)
+}
+
+@CommonParcelize
+class TournamentScreen(
+  val tournamentId: String,
+  val tournamentName: String,
+  val tournamentFormat: Format,
+) : ImportScreen(name = "Tournament()") {
+
+  override val arguments: Map<String, *>
+    get() = mapOf(
+      "tournamentId" to tournamentId,
+      "tournamentName" to tournamentName,
+      "tournamentFormat" to tournamentFormat,
+    )
+
+  @CommonIgnoredOnParcel
+  override val presentation: Presentation = Presentation(hideBottomNav = true)
+}
+
+@CommonParcelize
+class DeckListScreen(
+  val deckListId: String,
+  val archetypeName: String,
+) : ImportScreen(name = "DeckList()") {
+  override val arguments: Map<String, *>
+    get() = mapOf(
+      "deckListId" to deckListId,
+      "archetypeName" to archetypeName,
+    )
+
+  @CommonIgnoredOnParcel
+  override val presentation: Presentation = Presentation(hideBottomNav = true)
+}
 
 @CommonParcelize
 class SettingsScreen : DeckBoxScreen(name = "Settings()")

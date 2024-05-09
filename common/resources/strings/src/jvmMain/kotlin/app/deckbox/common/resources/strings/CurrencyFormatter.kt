@@ -1,5 +1,6 @@
 package app.deckbox.common.resources.strings
 
+import app.deckbox.core.CurrencyType
 import java.text.NumberFormat
 import java.util.Currency
 

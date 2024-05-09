@@ -1,7 +1,6 @@
 package app.deckbox.network
 
 import app.deckbox.core.di.MergeAppScope
-import app.deckbox.core.logging.LogPriority.INFO
 import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Expansion
@@ -14,18 +13,12 @@ import app.deckbox.network.api.SimpleResponse
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.cache.HttpCache
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.http.appendPathSegments
 import io.ktor.http.isSuccess
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
+import io.ktor.http.parameters
 import me.tatarka.inject.annotations.Inject
 
 typealias PokemonTcgApiKey = String
@@ -33,32 +26,16 @@ typealias PokemonTcgApiKey = String
 @Inject
 @ContributesBinding(MergeAppScope::class)
 class KtorPokemonTcgApi(
+  private val httpClient: HttpClient,
   private val apiKey: PokemonTcgApiKey = BuildConfig.POKEMON_TCG_API_KEY,
 ) : PokemonTcgApi {
-  private val client = HttpClient {
-    install(ContentNegotiation) {
-      json(
-        Json {
-          isLenient = true
-          ignoreUnknownKeys = true
-        },
-      )
-    }
 
-    install(HttpCache)
-
-    install(Logging) {
-      level = LogLevel.INFO
-      logger = object : Logger {
-        override fun log(message: String) {
-          bark(INFO) { message }
-        }
+  private val client by lazy {
+    httpClient.config {
+      defaultRequest {
+        header("X-Api-Key", apiKey)
+        url(BASE_URL)
       }
-    }
-
-    defaultRequest {
-      header("X-Api-Key", apiKey)
-      url(BASE_URL)
     }
   }
 
@@ -148,6 +125,34 @@ class KtorPokemonTcgApi(
   override suspend fun getExpansions(): Result<List<Expansion>> {
     val response = try {
       client.get("sets")
+    } catch (e: Throwable) {
+      bark(throwable = e) { "Error fetching expansions" }
+      return Result.failure(e)
+    }
+
+    return if (response.status.isSuccess()) {
+      try {
+        val responseBody = response.body<CardSetResponse>()
+        val expansions = ModelMapper.toExpansions(responseBody.sets)
+        Result.success(expansions)
+      } catch (e: Throwable) {
+        bark(throwable = e) { "Error fetching expansions" }
+        Result.failure(e)
+      }
+    } else {
+      Result.failure(ApiException("Unable to fetch Expansions: ${response.status}"))
+    }
+  }
+
+  override suspend fun getExpansions(ptcgCodes: Set<String>): Result<List<Expansion>> {
+    val response = try {
+      client.get("sets") {
+        url {
+          parameters {
+            append("q", ptcgCodes.joinToString(" OR ") { "ptcgoCode:$it" })
+          }
+        }
+      }
     } catch (e: Throwable) {
       bark(throwable = e) { "Error fetching expansions" }
       return Result.failure(e)

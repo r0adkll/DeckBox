@@ -21,7 +21,10 @@ class SettingsPresenter(
   override fun present(): SettingsUiState {
     return SettingsUiState(
       options = "",
-    ) {
+    ) { event ->
+      when (event) {
+        SettingsUiEvent.NavigateBack -> navigator.pop()
+      }
     }
   }
 }

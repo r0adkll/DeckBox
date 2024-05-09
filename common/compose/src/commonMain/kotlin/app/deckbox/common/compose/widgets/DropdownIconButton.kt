@@ -71,3 +71,43 @@ fun <T> DropdownIconButton(
     }
   }
 }
+
+@Composable
+fun <T> DropdownIconButton(
+  options: List<T>,
+  onOptionClick: (T) -> Unit,
+  icon: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
+  optionText: @Composable (T) -> Unit = { Text(it.toString()) },
+  optionIcon: (@Composable (T) -> Unit)? = null,
+) {
+  var isExpanded by remember { mutableStateOf(false) }
+  Box(modifier) {
+    IconButton(
+      onClick = { isExpanded = true },
+      content = icon,
+    )
+
+    DropdownMenu(
+      expanded = isExpanded,
+      onDismissRequest = { isExpanded = false },
+    ) {
+      options.forEach { option ->
+        DropdownMenuItem(
+          text = {
+            ProvideTextStyle(
+              MaterialTheme.typography.labelLarge,
+            ) {
+              optionText(option)
+            }
+          },
+          leadingIcon = optionIcon?.let { { it(option) } },
+          onClick = {
+            isExpanded = false
+            onOptionClick(option)
+          },
+        )
+      }
+    }
+  }
+}

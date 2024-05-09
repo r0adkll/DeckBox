@@ -38,6 +38,14 @@ class SqlDelightExpansionsDao(
       .map { entity -> entity.map { it.toModel() } }
   }
 
+  override fun observeExpansions(ptcgCodes: Set<String>): Flow<List<Expansion>> {
+    return database.expansionQueries
+      .getByPtcgCodes(ptcgCodes)
+      .asFlow()
+      .mapToList(dispatcherProvider.databaseRead)
+      .map { entity -> entity.map { it.toModel() } }
+  }
+
   override fun observeExpansion(id: String): Flow<Expansion> {
     return database.expansionQueries
       .getById(id)

@@ -7,11 +7,15 @@ import app.deckbox.DeckBoxDatabase
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.logging.bark
+import app.deckbox.core.model.Card
 import app.deckbox.core.model.Deck
+import app.deckbox.core.model.Stacked
 import app.deckbox.core.time.FatherTime
 import app.deckbox.db.mapping.asDecks
 import app.deckbox.db.mapping.toModel
 import app.deckbox.decks.impl.ids.DeckIdGenerator
+import app.deckbox.sqldelight.Deck_card_join
+import app.deckbox.sqldelight.Decks
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -188,6 +192,35 @@ class SqlDelightDeckDao(
         }
 
         newDeck.id
+      }
+    }
+  }
+
+  override suspend fun import(deckId: String, name: String, cards: List<Stacked<Card>>) {
+    withContext(dispatcherProvider.databaseWrite) {
+      database.transaction {
+        // Insert the new deck into the DB
+        database.deckQueries.insert(
+          Decks(
+            id = deckId,
+            name = name,
+            description = null,
+            tags = null,
+            createdAt = fatherTime.now(),
+            updatedAt = fatherTime.now(),
+          ),
+        )
+
+        // Insert all the card relations
+        cards.forEach { stackedCard ->
+          database.deckCardJoinQueries.insert(
+            Deck_card_join(
+              deckId = deckId,
+              cardId = stackedCard.card.id,
+              count = stackedCard.count,
+            ),
+          )
+        }
       }
     }
   }

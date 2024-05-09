@@ -5,6 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -40,6 +43,7 @@ import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.ui.settings.composables.Header
 import app.deckbox.ui.settings.composables.MenuDivider
 import cafe.adriel.lyricist.LocalStrings
+import com.moriatsushi.insetsx.systemBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 
 @Suppress("UNUSED_PARAMETER")
@@ -50,6 +54,7 @@ fun Settings(
   state: SettingsUiState,
   modifier: Modifier = Modifier,
 ) {
+  val eventSink = state.eventSink
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   Scaffold(
     topBar = {
@@ -57,7 +62,7 @@ fun Settings(
         title = LocalStrings.current.settings,
         navigationIcon = {
           IconButton(
-            onClick = { },
+            onClick = { eventSink(SettingsUiEvent.NavigateBack) },
           ) {
             Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
           }
@@ -68,6 +73,7 @@ fun Settings(
       )
     },
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars),
   ) { paddingValues ->
     Column(
       modifier = Modifier

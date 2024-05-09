@@ -7,6 +7,7 @@ interface ExpansionsDao {
 
   suspend fun getExpansions(): List<Expansion>
   fun observeExpansions(): Flow<List<Expansion>>
+  fun observeExpansions(ptcgCodes: Set<String>): Flow<List<Expansion>>
   fun observeExpansion(id: String): Flow<Expansion>
   suspend fun insertExpansions(expansions: List<Expansion>)
   suspend fun deleteExpansion(id: String)

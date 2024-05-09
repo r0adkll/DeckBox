@@ -35,6 +35,10 @@ getByIds:
 SELECT * FROM expansions
 WHERE id IN ?;
 
+getByPtcgCodes:
+SELECT * FROM expansions
+WHERE ptcgoCode IN ?;
+
 deleteAll:
 DELETE FROM expansions;
 

@@ -9,6 +9,7 @@ kotlin {
         implementation(projects.features.cards.public)
         implementation(projects.features.decks.public)
         implementation(projects.features.decks.publicUi)
+        implementation(projects.features.tournament.public)
       }
     }
   }

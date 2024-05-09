@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.resources.strings.CurrencyFormatter
-import app.deckbox.common.resources.strings.CurrencyType
+import app.deckbox.core.CurrencyType
 import app.deckbox.core.extensions.readableFormat
 import app.deckbox.core.model.Card
 import cafe.adriel.lyricist.LocalStrings

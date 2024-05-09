@@ -1,6 +1,8 @@
 package app.deckbox.decks.impl.db
 
+import app.deckbox.core.model.Card
 import app.deckbox.core.model.Deck
+import app.deckbox.core.model.Stacked
 import kotlinx.coroutines.flow.Flow
 
 interface DeckDao {
@@ -20,4 +22,6 @@ interface DeckDao {
 
   suspend fun delete(deckId: String)
   suspend fun duplicate(deckId: String): String
+
+  suspend fun import(deckId: String, name: String, cards: List<Stacked<Card>>)
 }

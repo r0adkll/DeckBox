@@ -3,6 +3,7 @@ package app.deckbox.features.boosterpacks.ui.builder
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.rounded.AddCard
+import app.deckbox.common.compose.icons.rounded.AddDeck
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.compose.widgets.builder.CardBuilder
 import app.deckbox.common.compose.widgets.builder.model.CardUiModel
@@ -86,16 +88,25 @@ fun BoosterPackBuilder(
     bottomSheetContent = {
       BoosterPackBottomSheet(state)
     },
-    onNavClick = { eventSink(NavigateBack) },
-    onAddClick = {
-      coroutineScope.launch {
-        when (val result = overlayHost.showBottomSheetScreen(DeckPickerScreen())) {
-          DeckPickerScreen.Response.NewDeck -> eventSink(NewDeck)
-          is DeckPickerScreen.Response.Deck -> eventSink(AddToDeck(result.deck))
-          null -> Unit // Do Nothing
-        }
+    topBarActions = {
+      IconButton(
+        onClick = {
+          coroutineScope.launch {
+            when (val result = overlayHost.showBottomSheetScreen(DeckPickerScreen())) {
+              DeckPickerScreen.Response.NewDeck -> eventSink(NewDeck)
+              is DeckPickerScreen.Response.Deck -> eventSink(AddToDeck(result.deck))
+              null -> Unit // Do Nothing
+            }
+          }
+        },
+      ) {
+        Icon(
+          Icons.Rounded.AddDeck,
+          contentDescription = null,
+        )
       }
     },
+    onNavClick = { eventSink(NavigateBack) },
     onCardClick = { card -> eventSink(CardClick(card.card)) },
     onAddCardClick = { card -> eventSink(IncrementCard(card.card.id)) },
     onRemoveCardClick = { card -> eventSink(DecrementCard(card.card.id)) },

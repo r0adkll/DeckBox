@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.resources.strings.CurrencyFormatter
-import app.deckbox.common.resources.strings.CurrencyType
+import app.deckbox.core.CurrencyType
 import app.deckbox.ui.decks.builder.DeckPrice
 import app.deckbox.ui.decks.builder.DeckPriceState
 import cafe.adriel.lyricist.LocalStrings

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -45,20 +46,21 @@ internal val DefaultCardSpacing = 16.dp
 private val HorizontalPadding = 16.dp
 
 @Composable
-internal fun CardList(
-  isEditing: Boolean,
+fun CardList(
   models: ImmutableList<CardUiModel>,
   onCardClick: (Stacked<Card>) -> Unit,
-  onCardLongClick: (Stacked<Card>) -> Unit,
-  onAddCardClick: (Stacked<Card>) -> Unit,
-  onRemoveCardClick: (Stacked<Card>) -> Unit,
-  onTipClick: (CardUiModel.Tip) -> Unit,
-  onTipExtraClick: (CardUiModel.Tip) -> Unit,
   modifier: Modifier = Modifier,
+  isEditing: Boolean = false,
+  onCardLongClick: (Stacked<Card>) -> Unit = { },
+  onAddCardClick: (Stacked<Card>) -> Unit = { },
+  onRemoveCardClick: (Stacked<Card>) -> Unit = { },
+  onTipClick: (CardUiModel.Tip) -> Unit = { },
+  onTipExtraClick: (CardUiModel.Tip) -> Unit = { },
   lazyGridState: LazyGridState = rememberLazyGridState(),
   columns: Int = DefaultColumns,
   cardSpacing: Dp = DefaultCardSpacing,
   contentPadding: PaddingValues = PaddingValues(),
+  headerContent: LazyGridScope.() -> Unit = {},
 ) {
   BoxWithConstraints {
     // Calculate best card width
@@ -77,6 +79,7 @@ internal fun CardList(
       horizontalArrangement = Arrangement.spacedBy(cardSpacing),
       verticalArrangement = Arrangement.spacedBy(cardSpacing),
     ) {
+      headerContent()
       itemsIndexed(
         items = models,
         key = { _, item -> item.id },

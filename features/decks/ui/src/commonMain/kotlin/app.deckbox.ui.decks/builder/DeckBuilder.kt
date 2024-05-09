@@ -3,6 +3,7 @@ package app.deckbox.ui.decks.builder
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import app.deckbox.common.compose.icons.rounded.AddBoosterPack
 import app.deckbox.common.compose.icons.rounded.AddCard
 import app.deckbox.common.compose.overlays.showBottomSheetScreen
 import app.deckbox.common.compose.widgets.builder.CardBuilder
@@ -85,13 +87,22 @@ fun DeckBuilder(
       DeckBuilderBottomSheet(state)
     },
     onNavClick = { eventSink(NavigateBack) },
-    onAddClick = {
-      coroutineScope.launch {
-        when (val result = overlayHost.showBottomSheetScreen(BoosterPackPickerScreen())) {
-          BoosterPackPickerScreen.Response.NewPack -> eventSink(NewBoosterPack)
-          is BoosterPackPickerScreen.Response.Pack -> eventSink(AddBoosterPack(result.boosterPack))
-          null -> Unit // Do nothing
-        }
+    topBarActions = {
+      IconButton(
+        onClick = {
+          coroutineScope.launch {
+            when (val result = overlayHost.showBottomSheetScreen(BoosterPackPickerScreen())) {
+              BoosterPackPickerScreen.Response.NewPack -> eventSink(NewBoosterPack)
+              is BoosterPackPickerScreen.Response.Pack -> eventSink(AddBoosterPack(result.boosterPack))
+              null -> Unit // Do nothing
+            }
+          }
+        },
+      ) {
+        Icon(
+          Icons.Rounded.AddBoosterPack,
+          contentDescription = null,
+        )
       }
     },
     onCardClick = { card -> eventSink(CardClick(card.card)) },

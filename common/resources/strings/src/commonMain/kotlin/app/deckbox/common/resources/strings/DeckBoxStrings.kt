@@ -1,6 +1,7 @@
 package app.deckbox.common.resources.strings
 
 import androidx.compose.ui.text.AnnotatedString
+import app.deckbox.core.model.Format
 
 data class DeckBoxStrings(
   // Common / Misc
@@ -11,6 +12,7 @@ data class DeckBoxStrings(
   val genericSearchEmpty: (query: String?) -> AnnotatedString,
   val cardPlaceholderContentDescription: String,
   val refreshPricesContentDescription: String,
+  val format: (Format) -> String,
 
   // Decks
   val decks: String,
@@ -24,6 +26,8 @@ data class DeckBoxStrings(
   val deckActionDeleteButtonContentDescription: String,
   val fabActionNewDeckButton: String,
   val addSuggestedEnergyCards: (count: Int, name: String) -> String,
+  val importTournaments: String,
+  val importText: String,
 
   // Booster Packs
   val boosterPacks: String,
@@ -76,6 +80,11 @@ data class DeckBoxStrings(
   val lessThanEqual: (Int) -> String,
   val greaterThan: (Int) -> String,
   val greaterThanEqual: (Int) -> String,
+
+  // Tournaments
+  val tournamentsTitle: String,
+  val tournamentsErrorMessage: String,
+  val fabActionImport: String,
 
   // Settings
   val settings: String,

@@ -49,6 +49,11 @@ class StoreExpansionsRepository(
     return response.expansions
   }
 
+  override suspend fun getExpansions(ptcgCodes: Set<String>): List<Expansion> {
+    val response = store.get(ExpansionKey.ByPtcgCodes(ptcgCodes)) as ExpansionResponse.All
+    return response.expansions
+  }
+
   @OptIn(ExperimentalCoroutinesApi::class)
   override fun observeExpansions(): Flow<List<Expansion>> {
     return store.stream(StoreReadRequest.cached(ExpansionKey.All, refresh = true))
@@ -75,6 +80,10 @@ class ExpansionFetcher(
         .map { ExpansionResponse.All(it) }
         .asFetcherResult()
         .also { emit(it) }
+      is ExpansionKey.ByPtcgCodes -> api.getExpansions(key.codes)
+        .map { ExpansionResponse.All(it) }
+        .asFetcherResult()
+        .also { emit(it) }
       is ExpansionKey.ById -> api.getExpansion(key.id)
         .map { ExpansionResponse.Single(it) }
         .asFetcherResult()
@@ -92,6 +101,7 @@ class ExpansionSourceOfTruth(
     when (key) {
       ExpansionKey.All -> expansionsDao.deleteExpansions()
       is ExpansionKey.ById -> expansionsDao.deleteExpansion(key.id)
+      is ExpansionKey.ByPtcgCodes -> Unit // Do nothing here
     }
   }
 
@@ -110,6 +120,11 @@ class ExpansionSourceOfTruth(
       is ExpansionKey.ById -> expansionsDao.observeExpansion(key.id)
         .onEach { bark { "Expansion Found($key): $it" } }
         .map { ExpansionResponse.Single(it) }
+      is ExpansionKey.ByPtcgCodes -> expansionsDao.observeExpansions(key.codes)
+        .map { ExpansionResponse.All(it) }
+        .mapLatest {
+          if (it.expansions.isEmpty()) null else it
+        }
     }
   }
 
@@ -128,8 +143,9 @@ fun <T : Any> Result<T>.asFetcherResult(): FetcherResult<T> = when {
 }
 
 sealed interface ExpansionKey {
-  object All : ExpansionKey
-  class ById(val id: String) : ExpansionKey
+  data object All : ExpansionKey
+  data class ById(val id: String) : ExpansionKey
+  data class ByPtcgCodes(val codes: Set<String>) : ExpansionKey
 }
 
 sealed interface ExpansionResponse {
