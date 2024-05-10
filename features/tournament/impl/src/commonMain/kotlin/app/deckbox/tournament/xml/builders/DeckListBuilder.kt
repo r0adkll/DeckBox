@@ -3,7 +3,9 @@ package app.deckbox.tournament.xml.builders
 import app.deckbox.core.CurrencyType
 import app.deckbox.tournament.api.model.DeckList
 
-class DeckListBuilder {
+class DeckListBuilder(
+  val id: String,
+) {
 
   var deckName: String? = null
   var price = mutableMapOf<CurrencyType, Double>()
@@ -17,6 +19,7 @@ class DeckListBuilder {
       cards.isNotEmpty()
     ) {
       return DeckList(
+        id = id,
         name = deckName!!,
         price = price,
         bulkPurchaseUrl = bulkPurchaseUrl!!,

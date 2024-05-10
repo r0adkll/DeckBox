@@ -81,11 +81,13 @@ fun DeckList(
               //  read here to determine what price to show them.
               val usdPrice = deckListState.data.price[CurrencyType.USD]
               if (usdPrice != null) {
+                val url = deckListState.data.bulkPurchaseUrl
                 PriceChip(
                   price = usdPrice,
                   currencyType = CurrencyType.USD,
+                  enabled = url != null,
                   onClick = {
-                    eventSink(DeckListUiEvent.PurchaseDeck(deckListState.data.bulkPurchaseUrl))
+                    eventSink(DeckListUiEvent.PurchaseDeck(url!!))
                   },
                   modifier = Modifier.padding(end = 16.dp),
                 )

@@ -29,6 +29,7 @@ import app.deckbox.core.CurrencyType
 internal fun PriceChip(
   price: Double,
   currencyType: CurrencyType,
+  enabled: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   color: Color = MaterialTheme.colorScheme.secondary,
@@ -41,7 +42,7 @@ internal fun PriceChip(
         color = color,
         shape = RoundedCornerShape(8.dp),
       )
-      .clickable(onClick = onClick)
+      .clickable(onClick = onClick, enabled = enabled)
       .padding(
         horizontal = 12.dp,
         vertical = 8.dp,
@@ -55,12 +56,14 @@ internal fun PriceChip(
       fontFamily = FontFamily.Monospace,
       color = color,
     )
-    Spacer(Modifier.width(8.dp))
-    Icon(
-      Icons.AutoMirrored.Rounded.OpenInNew,
-      contentDescription = null,
-      modifier = Modifier.size(18.dp),
-      tint = color,
-    )
+    if (enabled) {
+      Spacer(Modifier.width(8.dp))
+      Icon(
+        Icons.AutoMirrored.Rounded.OpenInNew,
+        contentDescription = null,
+        modifier = Modifier.size(18.dp),
+        tint = color,
+      )
+    }
   }
 }

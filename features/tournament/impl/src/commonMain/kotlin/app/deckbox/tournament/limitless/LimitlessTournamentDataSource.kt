@@ -89,7 +89,7 @@ class LimitlessTournamentDataSource(
       val bodyText = result.getOrThrow()
       bark { "Fetched DeckList($deckListId) Dom: Len(${bodyText.length})" }
       try {
-        val deckListBuilder = DeckListBuilder()
+        val deckListBuilder = DeckListBuilder(deckListId)
         val parser = DeckListParser(deckListBuilder)
 
         // Scrape the HTML dom text for the tournament information that we want

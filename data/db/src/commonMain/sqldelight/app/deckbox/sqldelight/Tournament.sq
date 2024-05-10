@@ -1,0 +1,28 @@
+import app.deckbox.core.model.Format;
+import kotlin.Int;
+import kotlinx.datetime.LocalDate;
+
+CREATE TABLE tournaments (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  date TEXT AS LocalDate NOT NULL,
+  country TEXT NOT NULL,
+  format TEXT AS Format NOT NULL,
+  participantCount INTEGER AS Int NOT NULL,
+  winnerId TEXT NOT NULL,
+  winnerName TEXT NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO tournaments
+VALUES ?;
+
+getAll:
+SELECT * FROM tournaments;
+
+getById:
+SELECT * FROM tournaments
+WHERE id = ?;
+
+deleteAll:
+DELETE FROM tournaments;

@@ -1,0 +1,26 @@
+import kotlin.Int;
+import kotlin.String;
+import kotlin.collections.List;
+
+CREATE TABLE participants (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  country TEXT NOT NULL,
+  place INTEGER AS Int NOT NULL,
+  archetypeId TEXT NOT NULL,
+  archetypeName TEXT NOT NULL,
+  archetypeVariant TEXT,
+  archetypeSymbols TEXT AS List<String> NOT NULL,
+  deckListId TEXT NOT NULL,
+
+  tournamentId TEXT NOT NULL,
+  FOREIGN KEY (tournamentId) REFERENCES tournaments(id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO participants
+VALUES ?;
+
+getByTournament:
+SELECT * FROM participants
+WHERE tournamentId = ?;

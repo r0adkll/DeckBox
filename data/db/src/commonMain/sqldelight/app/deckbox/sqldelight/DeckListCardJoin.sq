@@ -1,0 +1,30 @@
+import kotlin.Int;
+
+CREATE TABLE deck_list_card_join (
+  deckId TEXT NOT NULL,
+  cardId TEXT NOT NULL,
+  count INTEGER AS Int NOT NULL,
+  PRIMARY KEY(deckId, cardId),
+  FOREIGN KEY(deckId) REFERENCES deck_lists(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+  FOREIGN KEY(cardId) REFERENCES deck_list_cards(id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE INDEX IF NOT EXISTS index_deck_list_card_join_cardId ON deck_list_card_join(cardId);
+
+getByDeckList:
+SELECT * FROM deck_list_card_join
+WHERE deckId = :deckId;
+
+getCardsForDeckList:
+SELECT count, deck_list_cards.* FROM deck_list_card_join
+INNER JOIN deck_list_cards ON deck_list_card_join.cardId = deck_list_cards.id
+WHERE deckId = :deckId;
+
+insert:
+INSERT INTO deck_list_card_join
+VALUES ?;
+
+delete:
+DELETE FROM deck_card_join
+WHERE deckId = :deckId
+AND cardId = :cardId;
