@@ -1,0 +1,14 @@
+CREATE TABLE deck_list_cards (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  setCode TEXT NOT NULL,
+  number TEXT NOT NULL,
+  priceUsd REAL,
+  priceUsdUrl TEXT,
+  priceEur REAL,
+  priceEurUrl TEXT
+);
+
+insert:
+INSERT OR REPLACE INTO deck_list_cards
+VALUES ?;

@@ -28,8 +28,8 @@ class DefaultFetchDeckListCardsUseCase(
 
     // Validate that we have an expansion for each requested set code
     val mappedExpansions = expansionSetCodes.mapNotNull { setCode ->
-      expansions.find { expansion -> expansion.ptcgoCode == setCode }
-    }.associateBy { it.ptcgoCode }
+      expansions.find { expansion -> (expansion.ptcgoCode ?: expansion.id).equals(setCode, true) }
+    }.associateBy { it.ptcgoCode ?: it.id }
 
     bark {
       "Mapped Expansions(\n${mappedExpansions.entries.joinToString(", \n") { "  [${it.key}] = ${it.value}" }}\n)"
@@ -37,7 +37,13 @@ class DefaultFetchDeckListCardsUseCase(
 
     // If we didn't then we should fail this fetch b/c it can't succeed
     val didFetchAllExpansions = mappedExpansions.size == expansionSetCodes.size
-    if (!didFetchAllExpansions) return Result.failure(Errors.ExpansionFetchError)
+    if (!didFetchAllExpansions) {
+      val missingExapnsions = expansionSetCodes.filter { setCode ->
+        expansions.none { (it.ptcgoCode ?: it.id).equals(setCode, ignoreCase = true) }
+      }
+      bark { "Missing Expansions: $missingExapnsions" }
+      return Result.failure(Errors.ExpansionFetchError)
+    }
 
     // Now iterate through the list of decklist cards and form their API ids
     val cardIds = deckList.cards.map { card ->

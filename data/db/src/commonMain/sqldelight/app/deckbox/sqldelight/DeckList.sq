@@ -1,0 +1,15 @@
+CREATE TABLE deck_lists (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  priceUsd REAL,
+  priceEur REAL,
+  purchaseUrl TEXT
+);
+
+insert:
+INSERT OR REPLACE INTO deck_lists
+VALUES ?;
+
+getById:
+SELECT * FROM deck_lists
+WHERE id = ?;

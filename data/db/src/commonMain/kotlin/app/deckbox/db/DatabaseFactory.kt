@@ -12,10 +12,13 @@ import app.deckbox.sqldelight.CardMarketPrices
 import app.deckbox.sqldelight.Cards
 import app.deckbox.sqldelight.Collection
 import app.deckbox.sqldelight.Deck_card_join
+import app.deckbox.sqldelight.Deck_list_card_join
 import app.deckbox.sqldelight.Decks
 import app.deckbox.sqldelight.Expansions
+import app.deckbox.sqldelight.Participants
 import app.deckbox.sqldelight.RemoteKey
 import app.deckbox.sqldelight.TcgPlayerPrices
+import app.deckbox.sqldelight.Tournaments
 import me.tatarka.inject.annotations.Inject
 
 @Inject
@@ -87,6 +90,18 @@ class DatabaseFactory(
       reverseHolofoilCountAdapter = IntColumnAdapter,
       firstEditionNormalCountAdapter = IntColumnAdapter,
       firstEditionHolofoilCountAdapter = IntColumnAdapter,
+    ),
+    tournamentsAdapter = Tournaments.Adapter(
+      dateAdapter = LocalDateAdapter,
+      formatAdapter = EnumColumnAdapter(),
+      participantCountAdapter = IntColumnAdapter,
+    ),
+    participantsAdapter = Participants.Adapter(
+      placeAdapter = IntColumnAdapter,
+      archetypeSymbolsAdapter = StringListAdapter,
+    ),
+    deck_list_card_joinAdapter = Deck_list_card_join.Adapter(
+      countAdapter = IntColumnAdapter,
     ),
   )
 }
