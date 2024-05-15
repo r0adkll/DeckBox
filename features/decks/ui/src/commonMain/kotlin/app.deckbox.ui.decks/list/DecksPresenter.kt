@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.screens.DeckBuilderScreen
+import app.deckbox.common.screens.DeckTextImporterScreen
 import app.deckbox.common.screens.DecksScreen
 import app.deckbox.common.screens.PlayTestScreen
 import app.deckbox.common.screens.SettingsScreen
@@ -106,10 +107,7 @@ class DecksPresenter(
         DecksUiEvent.OpenAppSettings -> navigator.goTo(SettingsScreen())
         is DecksUiEvent.ChangeSortOrder -> deckBoxSettings.deckSortOrder = event.sortOrder
 
-        DecksUiEvent.ImportDeck -> {
-          // TODO: Navigate to text deck importer
-        }
-
+        DecksUiEvent.ImportDeck -> navigator.goTo(DeckTextImporterScreen())
         DecksUiEvent.ImportTournamentDeck -> navigator.goTo(TournamentsScreen())
       }
     }

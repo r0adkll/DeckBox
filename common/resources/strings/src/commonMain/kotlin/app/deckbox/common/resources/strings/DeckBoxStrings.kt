@@ -28,6 +28,7 @@ data class DeckBoxStrings(
   val addSuggestedEnergyCards: (count: Int, name: String) -> String,
   val importTournaments: String,
   val importText: String,
+  val importTextTitle: String,
 
   // Booster Packs
   val boosterPacks: String,
