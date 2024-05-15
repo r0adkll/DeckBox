@@ -3,7 +3,6 @@ package app.deckbox.decks.impl.import
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.di.MergeAppScope
 import app.deckbox.core.logging.bark
-import app.deckbox.core.model.Card
 import app.deckbox.core.model.stack
 import app.deckbox.expansions.ExpansionsRepository
 import app.deckbox.features.cards.public.CardRepository
@@ -12,7 +11,6 @@ import app.deckbox.features.decks.api.import.CardSpec.ParseResult
 import app.deckbox.features.decks.api.import.CardSpec.Validation
 import app.deckbox.features.decks.api.import.DeckSpec
 import app.deckbox.features.decks.api.import.DeckTextParser
-import app.deckbox.features.decks.api.import.DeckTextParser.Errors
 import com.r0adkll.kotlininject.merge.annotations.ContributesBinding
 import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Inject
@@ -56,7 +54,7 @@ class DefaultDeckTextParser(
 
     val expansions = try {
       expansionRepository.getExpansions(expansionSetCodes)
-    } catch (e: Exception)  {
+    } catch (e: Exception) {
       bark { "Error loading expansions: $expansionSetCodes" }
       null
     }
@@ -73,7 +71,9 @@ class DefaultDeckTextParser(
 
         if (expansion == null) {
           spec.copy(validation = Validation.Failure.InvalidSetCode(parsedSetCode))
-        } else spec
+        } else {
+          spec
+        }
       }
 
     // Now iterate through the list of decklist cards and form their API ids
@@ -100,11 +100,11 @@ class DefaultDeckTextParser(
             spec.copy(
               validation = Validation.Success(
                 card = card.stack(cardResult.count),
-              )
+              ),
             )
           } ?: spec.copy(
-            validation = Validation.Failure.InvalidNumber(cardResult.setCode, cardResult.setNumber)
-          )
+          validation = Validation.Failure.InvalidNumber(cardResult.setCode, cardResult.setNumber),
+        )
       }
 
     return@withContext DeckSpec(
@@ -136,7 +136,7 @@ class DefaultDeckTextParser(
             result = ParseResult.Error.Invalid,
           )
         }.also {
-          bark { "Line(${line}) => $it" }
+          bark { "Line($line) => $it" }
         }
       }
   }

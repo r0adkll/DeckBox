@@ -25,7 +25,7 @@ sealed interface ParsedLoadState {
   data class Error(val error: DeckTextParser.Errors) : ParsedLoadState
 }
 
-sealed interface DeckTextImporterUiEvent : CircuitUiEvent{
+sealed interface DeckTextImporterUiEvent : CircuitUiEvent {
   data object NavigateBack : DeckTextImporterUiEvent
   data object Import : DeckTextImporterUiEvent
   data object ClearInput : DeckTextImporterUiEvent
