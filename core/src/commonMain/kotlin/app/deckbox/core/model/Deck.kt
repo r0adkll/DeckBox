@@ -2,8 +2,10 @@ package app.deckbox.core.model
 
 import kotlinx.datetime.LocalDateTime
 
+typealias DeckId = String
+
 data class Deck(
-  val id: String,
+  val id: DeckId,
   val name: String,
   val description: String? = null,
   val tags: Set<String> = emptySet(),

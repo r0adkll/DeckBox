@@ -50,6 +50,7 @@ class StoreExpansionsRepository(
   }
 
   override suspend fun getExpansions(ptcgCodes: Set<String>): List<Expansion> {
+    if (ptcgCodes.isEmpty()) return emptyList()
     val response = store.get(ExpansionKey.ByPtcgCodes(ptcgCodes)) as ExpansionResponse.All
     return response.expansions
   }

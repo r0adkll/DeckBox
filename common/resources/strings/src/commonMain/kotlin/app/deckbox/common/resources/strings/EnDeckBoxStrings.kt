@@ -48,6 +48,7 @@ val EnDeckBoxStrings = DeckBoxStrings(
   addSuggestedEnergyCards = { count, name -> "Add $count $name cards to the deck" },
   importTournaments = "Tournaments",
   importText = "Text",
+  importTextTitle = "Import Text",
 
   boosterPacks = "Packs",
   boosterPacksTitleLong = "Booster Packs",

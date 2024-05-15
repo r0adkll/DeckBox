@@ -201,6 +201,13 @@ class DeckListScreen(
 }
 
 @CommonParcelize
+class DeckTextImporterScreen : ImportScreen(name = "DeckTextImporter()") {
+
+  @CommonIgnoredOnParcel
+  override val presentation: Presentation = Presentation(hideBottomNav = true)
+}
+
+@CommonParcelize
 class SettingsScreen : DeckBoxScreen(name = "Settings()")
 
 //region Utility Screens
