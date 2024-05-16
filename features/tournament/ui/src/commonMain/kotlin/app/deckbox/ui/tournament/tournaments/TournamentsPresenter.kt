@@ -3,7 +3,10 @@ package app.deckbox.ui.tournament.tournaments
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import app.deckbox.common.screens.TournamentScreen
 import app.deckbox.common.screens.TournamentsScreen
 import app.deckbox.core.coroutines.LoadState
@@ -26,10 +29,13 @@ class TournamentsPresenter(
 
   @Composable
   override fun present(): TournamentsUiState {
+    var refreshCounter by remember { mutableIntStateOf(0) }
+    var forceRefresh by remember { mutableStateOf(false) }
+
     // Load the tournament information
-    val tournamentsLoadState by remember {
+    val tournamentsLoadState by remember(refreshCounter) {
       flow {
-        val result = tournamentsRepository.getTournaments()
+        val result = tournamentsRepository.getTournaments(forceRefresh)
         if (result.isSuccess) {
           emit(LoadState.Loaded(result.getOrThrow()))
         } else {
@@ -50,6 +56,11 @@ class TournamentsPresenter(
             tournamentFormat = event.tournament.format,
           ),
         )
+
+        TournamentsUiEvent.Refresh -> {
+          forceRefresh = true
+          refreshCounter++
+        }
       }
     }
   }

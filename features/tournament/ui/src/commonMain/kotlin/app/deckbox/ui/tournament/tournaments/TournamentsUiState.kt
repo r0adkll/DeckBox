@@ -14,5 +14,6 @@ data class TournamentsUiState(
 
 sealed interface TournamentsUiEvent : CircuitUiEvent {
   data object NavigateBack : TournamentsUiEvent
+  data object Refresh : TournamentsUiEvent
   data class TournamentClick(val tournament: Tournament) : TournamentsUiEvent
 }

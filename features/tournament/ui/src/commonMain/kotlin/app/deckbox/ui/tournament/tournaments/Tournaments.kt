@@ -18,12 +18,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.Error
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -80,31 +85,12 @@ fun Tournaments(
       )
     },
   ) { paddingValues ->
-    when (val tournamentState = state.tournaments) {
-      LoadState.Loading -> LoadingContent(Modifier.padding(paddingValues))
-      LoadState.Error -> ErrorContent(Modifier.padding(paddingValues))
-      is LoadState.Loaded -> LoadedContent(
-        tournaments = tournamentState.data,
-        onTournamentClick = { tournament ->
-          eventSink(TournamentsUiEvent.TournamentClick(tournament))
-        },
-        state = lazyListState,
-        paddingValues = paddingValues,
-      )
-    }
-  }
-}
-
-@Composable
-private fun LoadingContent(
-  modifier: Modifier = Modifier,
-) {
-  Box(
-    modifier = modifier.fillMaxSize(),
-    contentAlignment = Alignment.Center,
-  ) {
-    SpinningPokeballLoadingIndicator(
-      size = ContentLoadingSize,
+    TournamentsContent(
+      tournaments = state.tournaments,
+      onTournamentClick = { tournament -> eventSink(TournamentsUiEvent.TournamentClick(tournament)) },
+      onRefresh = { eventSink(TournamentsUiEvent.Refresh) },
+      state = lazyListState,
+      paddingValues = paddingValues,
     )
   }
 }
@@ -130,7 +116,7 @@ private fun ErrorContent(
 }
 
 @Composable
-private fun EmptyState(
+private fun EmptyContent(
   modifier: Modifier = Modifier,
 ) {
   EmptyView(
@@ -146,33 +132,53 @@ private fun EmptyState(
   )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun LoadedContent(
-  tournaments: List<Tournament>,
+private fun TournamentsContent(
+  tournaments: LoadState<out List<Tournament>>,
   onTournamentClick: (Tournament) -> Unit,
+  onRefresh: () -> Unit,
   state: LazyListState,
   paddingValues: PaddingValues,
   modifier: Modifier = Modifier,
 ) {
-  LazyColumn(
-    state = state,
-    contentPadding = paddingValues,
-    modifier = modifier,
-  ) {
-    items(
-      items = tournaments,
-      key = { it.id },
-    ) { tournament ->
-      TournamentListItem(
-        tournament = tournament,
-        modifier = Modifier.clickable {
-          onTournamentClick(tournament)
-        },
-      )
+  val pullRefreshState = rememberPullRefreshState(
+    refreshing = tournaments is LoadState.Loading,
+    onRefresh = onRefresh,
+  )
+  Box(modifier.pullRefresh(pullRefreshState)) {
+    LazyColumn(
+      state = state,
+      contentPadding = paddingValues,
+      modifier = modifier,
+    ) {
+      if (tournaments is LoadState.Loaded) {
+        items(
+          items = tournaments.data,
+          key = { it.id },
+        ) { tournament ->
+          TournamentListItem(
+            tournament = tournament,
+            modifier = Modifier.clickable {
+              onTournamentClick(tournament)
+            },
+          )
+        }
+      }
     }
-  }
 
-  if (tournaments.isEmpty()) {
-    EmptyState()
+    if (tournaments.dataOrNull?.isEmpty() == true) {
+      EmptyContent()
+    } else if (tournaments is LoadState.Error) {
+      ErrorContent()
+    }
+
+    PullRefreshIndicator(
+      refreshing = tournaments is LoadState.Loading,
+      state = pullRefreshState,
+      backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
+      contentColor = MaterialTheme.colorScheme.primary,
+      modifier = Modifier.align(Alignment.TopCenter),
+    )
   }
 }
