@@ -39,10 +39,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.icons.DeckBoxIcons
 import app.deckbox.common.compose.icons.Snorlax
-import app.deckbox.common.compose.widgets.ContentLoadingSize
 import app.deckbox.common.compose.widgets.DefaultIconSize
 import app.deckbox.common.compose.widgets.EmptyView
-import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.TournamentsScreen
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope

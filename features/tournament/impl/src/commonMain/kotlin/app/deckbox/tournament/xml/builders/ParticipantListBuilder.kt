@@ -1,6 +1,5 @@
 package app.deckbox.tournament.xml.builders
 
-import app.deckbox.core.logging.bark
 import app.deckbox.tournament.api.model.DeckArchetype
 import app.deckbox.tournament.api.model.Participant
 
@@ -52,7 +51,6 @@ class ParticipantBuilder {
         deckListId = deckListId,
       )
     } else {
-      bark { "ParticipantBuilder: Missing required fields [$id, $name, $place, $countryCode, $archetypeId, $archetypeName, $deckListId]" }
       return null
     }
   }
