@@ -35,8 +35,7 @@ class ParticipantBuilder {
       place != null &&
       countryCode != null &&
       archetypeId != null &&
-      archetypeName != null &&
-      deckListId != null
+      archetypeName != null
     ) {
       return Participant(
         id = id!!,
@@ -49,7 +48,7 @@ class ParticipantBuilder {
           variant = archetypeVariant,
           symbols = archetypeSymbols,
         ),
-        deckListId = deckListId!!,
+        deckListId = deckListId,
       )
     } else {
       return null

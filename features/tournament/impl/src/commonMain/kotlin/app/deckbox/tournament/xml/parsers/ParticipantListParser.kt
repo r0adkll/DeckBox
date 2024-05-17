@@ -92,7 +92,10 @@ private class ParticipantContentParser(
         }
       }
       "img" -> {
-        val countryCode = attributes["alt"] ?: return
+        val countryCode = attributes["alt"] ?: run {
+          bark { "Failed to find country code in ($attributes)" }
+          return
+        }
         participantBuilder.countryCode = countryCode
       }
     }

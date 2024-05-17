@@ -11,7 +11,7 @@ CREATE TABLE participants (
   archetypeName TEXT NOT NULL,
   archetypeVariant TEXT,
   archetypeSymbols TEXT AS List<String> NOT NULL,
-  deckListId TEXT NOT NULL,
+  deckListId TEXT,
 
   tournamentId TEXT NOT NULL,
   FOREIGN KEY (tournamentId) REFERENCES tournaments(id) ON DELETE CASCADE

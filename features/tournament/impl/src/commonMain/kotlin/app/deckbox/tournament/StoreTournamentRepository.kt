@@ -52,8 +52,13 @@ class StoreTournamentRepository(
     ),
   ).build()
 
-  override suspend fun getTournaments(): Result<List<Tournament>> {
-    return tournamentsStore.stream(StoreReadRequest.cached(Unit, false))
+  override suspend fun getTournaments(fresh: Boolean): Result<List<Tournament>> {
+    val request = if (fresh) {
+      StoreReadRequest.freshWithFallBackToSourceOfTruth(Unit)
+    } else {
+      StoreReadRequest.cached(Unit, false)
+    }
+    return tournamentsStore.stream(request)
       .filterNot { it is StoreReadResponse.Loading || it is StoreReadResponse.NoNewData }
       .first()
       .asResult()
