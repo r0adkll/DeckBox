@@ -5,11 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,6 +27,7 @@ internal fun ParticipantListItem(
   participant: Participant,
   modifier: Modifier = Modifier,
 ) {
+  val enabled = participant.deckListId != null
   ListItem(
     modifier = modifier,
     leadingContent = {
@@ -36,7 +40,21 @@ internal fun ParticipantListItem(
     },
     headlineContent = { Text(participant.name) },
     supportingContent = { Text(participant.archetype.name) },
-    trailingContent = { ArchetypeRow(participant.archetype.symbols) },
+    trailingContent = {
+      ArchetypeRow(
+        images = participant.archetype.symbols,
+        modifier = if (enabled) Modifier else Modifier.alpha(0.3f),
+      )
+    },
+    colors = if (enabled) {
+      ListItemDefaults.colors()
+    } else {
+      ListItemDefaults.colors(
+        headlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+        leadingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+        supportingColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+      )
+    },
   )
 }
 

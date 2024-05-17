@@ -144,6 +144,7 @@ internal fun Decks(
     } else if (state.decks.isEmpty()) {
       WelcomeTips(
         onNewDeckClick = { eventSink(DecksUiEvent.CreateNewDeck) },
+        onImportDeckClick = { eventSink(DecksUiEvent.ImportTournamentDeck) },
         modifier = Modifier.padding(paddingValues),
       )
     }

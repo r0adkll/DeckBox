@@ -46,7 +46,7 @@ class TournamentDetailPresenter(
         TournamentDetailUiEvent.NavigateBack -> navigator.pop()
         is TournamentDetailUiEvent.ParticipantClick -> navigator.goTo(
           DeckListScreen(
-            deckListId = event.participant.deckListId,
+            deckListId = event.participant.deckListId!!,
             archetypeName = event.participant.archetype.name,
           ),
         )

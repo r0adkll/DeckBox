@@ -37,7 +37,9 @@ class TournamentsPresenter(
       flow {
         val result = tournamentsRepository.getTournaments(forceRefresh)
         if (result.isSuccess) {
-          emit(LoadState.Loaded(result.getOrThrow()))
+          val tournaments = result.getOrThrow()
+            .sortedByDescending { it.date }
+          emit(LoadState.Loaded(tournaments))
         } else {
           emit(LoadState.Error)
         }

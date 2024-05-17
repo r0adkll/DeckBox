@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Lan
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,6 +30,7 @@ import app.deckbox.common.compose.widgets.SizedIcon
 @Composable
 internal fun WelcomeTips(
   onNewDeckClick: () -> Unit,
+  onImportDeckClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -37,6 +38,7 @@ internal fun WelcomeTips(
   ) {
     WelcomeCard(
       onNewDeckClick = onNewDeckClick,
+      onImportDeckClick = onImportDeckClick,
       modifier = Modifier.padding(16.dp),
     )
   }
@@ -45,6 +47,7 @@ internal fun WelcomeTips(
 @Composable
 internal fun WelcomeCard(
   onNewDeckClick: () -> Unit,
+  onImportDeckClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
@@ -111,19 +114,19 @@ internal fun WelcomeCard(
     Spacer(Modifier.height(8.dp))
 
     OutlinedIconButton(
-      onClick = onNewDeckClick,
+      onClick = onImportDeckClick,
       colors = ButtonDefaults.outlinedButtonColors(
         contentColor = MaterialTheme.colorScheme.primary,
       ),
       border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
       icon = {
         SizedIcon(
-          Icons.Rounded.Download,
+          Icons.Rounded.Lan,
           tint = MaterialTheme.colorScheme.primary,
           contentDescription = null,
         )
       },
-      label = { Text("Import existing deck") },
+      label = { Text("Import tournament deck") },
       modifier = Modifier
         .fillMaxWidth()
         .padding(

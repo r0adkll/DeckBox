@@ -165,7 +165,7 @@ private fun LoadedContent(
     ) { participant ->
       ParticipantListItem(
         participant = participant,
-        modifier = Modifier.clickable {
+        modifier = Modifier.clickable(enabled = participant.deckListId != null) {
           onParticipantClick(participant)
         },
       )

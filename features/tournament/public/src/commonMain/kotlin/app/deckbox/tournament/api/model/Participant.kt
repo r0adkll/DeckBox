@@ -6,5 +6,5 @@ data class Participant(
   val country: String,
   val place: Int,
   val archetype: DeckArchetype,
-  val deckListId: String,
+  val deckListId: String?,
 )
