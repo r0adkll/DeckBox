@@ -31,7 +31,6 @@ kotlin {
         api(compose.material3)
         api(compose.materialIconsExtended)
         api(compose.animation)
-        @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
         api(compose.components.resources)
 
         api(libs.paging.common)
