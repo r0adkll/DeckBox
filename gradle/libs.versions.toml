@@ -142,7 +142,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 turbine = "app.cash.turbine:turbine:1.1.0"
 leakCanary = "com.squareup.leakcanary:leakcanary-android:2.14"
-robolectric = "org.robolectric:robolectric:4.12.1"
+robolectric = "org.robolectric:robolectric:4.12.2"
 strikt-core = "io.strikt:strikt-core:0.34.1"
 
 # Build logic dependencies
