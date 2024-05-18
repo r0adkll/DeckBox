@@ -22,7 +22,7 @@ fun Project.configureCompose() {
     kotlinCompilerPluginArgs.addAll(
       // Enable 'strong skipping'
       // https://medium.com/androiddevelopers/jetpack-compose-strong-skipping-mode-explained-cbdb2aa4b900
-      "experimentalStrongSkipping=true",
+      "strongSkipping=true",
     )
   }
 }
