@@ -1,14 +1,16 @@
 package app.deckbox.features.decks.public.ui.events
 
+import app.deckbox.features.decks.public.ui.DeckExportOption
+
 sealed interface DeckCardEvent {
   // Header
-  object Export : DeckCardEvent
+  data class Export(val option: DeckExportOption) : DeckCardEvent
 
   // Actions
-  object Delete : DeckCardEvent
-  object Duplicate : DeckCardEvent
-  object Test : DeckCardEvent
+  data object Delete : DeckCardEvent
+  data object Duplicate : DeckCardEvent
+  data object Test : DeckCardEvent
 
   // General
-  object Clicked : DeckCardEvent
+  data object Clicked : DeckCardEvent
 }

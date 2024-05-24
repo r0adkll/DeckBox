@@ -12,7 +12,7 @@ enum class PokemonGridStyle(
     val All: List<PokemonGridStyle> by lazy { values().toList() }
 
     override fun fromStorageKey(key: String?): PokemonGridStyle {
-      return values().find { it.storageKey == key } ?: Small
+      return entries.find { it.storageKey == key } ?: Small
     }
   }
 }

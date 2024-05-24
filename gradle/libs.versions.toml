@@ -28,6 +28,7 @@ sqldelight = "2.0.2"
 serialization = "1.6.3"
 material3 = "1.2.1"
 firebase-crashlytics-buildtools = "3.0.0"
+core = "1.13.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -152,5 +153,6 @@ kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", ve
 spotless-gradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebase-crashlytics-buildtools" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
 
 [bundles]

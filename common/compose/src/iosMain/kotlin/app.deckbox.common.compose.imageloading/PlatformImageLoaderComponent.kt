@@ -1,6 +1,6 @@
 package app.deckbox.common.compose.imageloading
 
-import app.deckbox.core.di.ActivityScope
+import app.deckbox.core.di.AppScope
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.cache.memory.maxSizePercent
 import com.seiko.imageloader.component.setupDefaultComponents
@@ -19,7 +19,7 @@ actual interface PlatformImageLoaderComponent {
 
   @OptIn(ExperimentalForeignApi::class)
   @Provides
-  @ActivityScope
+  @AppScope
   fun imageLoader(): ImageLoader {
     val cacheDir: Path by lazy {
       NSFileManager.defaultManager.URLForDirectory(

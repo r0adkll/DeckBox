@@ -1,0 +1,4 @@
+<resources>
+  <string name="action_export_text">As text</string>
+  <string name="action_export_image">As image</string>
+</resources>

@@ -6,6 +6,7 @@ import app.deckbox.core.di.AppScope
 import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.core.settings.DeckCardSlice
 import app.deckbox.core.settings.ExpansionCardStyle
+import app.deckbox.core.settings.ImageExportConfig
 import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.core.settings.SortOption
 import app.deckbox.core.settings.asString
@@ -79,6 +80,21 @@ class DeckBoxSettingsImpl(
           ?: DeckCardConfig.DEFAULT
       }
   }
+
+  override var imageExportConfig: ImageExportConfig by customSetting(
+    key = KEY_IMAGE_EXPORT_CONFIG,
+    defaultValue = ImageExportConfig.DEFAULT,
+    getter = { ImageExportConfig.fromString(it) },
+    setter = { it.asString() },
+  )
+
+  override fun observeImageExportConfig(): Flow<ImageExportConfig> {
+    return flowSettings.getStringOrNullFlow(KEY_IMAGE_EXPORT_CONFIG)
+      .map { value ->
+        value?.let { ImageExportConfig.fromString(it) }
+          ?: ImageExportConfig.DEFAULT
+      }
+  }
 }
 
 internal const val KEY_THEME = "pref_theme"
@@ -89,3 +105,4 @@ internal const val KEY_EXPANSION_CARD_STYLE = "pref_expansion_card_style"
 internal const val KEY_BROWSE_GRID_STYLE = "pref_browse_grid_style"
 internal const val KEY_EXPANSION_GRID_STYLE = "pref_expansion_grid_style"
 internal const val KEY_DECK_CARD_CONFIG = "pref_deck_card_config"
+internal const val KEY_IMAGE_EXPORT_CONFIG = "pref_image_export_config"

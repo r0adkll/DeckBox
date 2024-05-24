@@ -17,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> DropdownIconButton(
@@ -78,6 +80,7 @@ fun <T> DropdownIconButton(
   onOptionClick: (T) -> Unit,
   icon: @Composable () -> Unit,
   modifier: Modifier = Modifier,
+  offset: DpOffset = DpOffset(0.dp, 0.dp),
   optionText: @Composable (T) -> Unit = { Text(it.toString()) },
   optionIcon: (@Composable (T) -> Unit)? = null,
 ) {
@@ -90,6 +93,7 @@ fun <T> DropdownIconButton(
 
     DropdownMenu(
       expanded = isExpanded,
+      offset = offset,
       onDismissRequest = { isExpanded = false },
     ) {
       options.forEach { option ->
