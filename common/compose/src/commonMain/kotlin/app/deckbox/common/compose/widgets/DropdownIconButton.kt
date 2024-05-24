@@ -1,6 +1,7 @@
 package app.deckbox.common.compose.widgets
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
@@ -19,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import app.deckbox.common.compose.extensions.alpha
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun <T> DropdownIconButton(
@@ -27,6 +30,8 @@ fun <T> DropdownIconButton(
   onOptionClick: (T) -> Unit,
   icon: @Composable () -> Unit,
   modifier: Modifier = Modifier,
+  title: @Composable () -> Unit = {},
+  offset: DpOffset = DpOffset(0.dp, 0.dp),
   optionText: @Composable (T) -> Unit = { Text(it.toString()) },
   optionIcon: (@Composable (T) -> Unit)? = null,
 ) {
@@ -39,8 +44,10 @@ fun <T> DropdownIconButton(
 
     DropdownMenu(
       expanded = isExpanded,
+      offset = offset,
       onDismissRequest = { isExpanded = false },
     ) {
+      title()
       options.forEach { option ->
         val isSelected = option == selected
         DropdownMenuItem(
@@ -80,6 +87,7 @@ fun <T> DropdownIconButton(
   onOptionClick: (T) -> Unit,
   icon: @Composable () -> Unit,
   modifier: Modifier = Modifier,
+  title: @Composable () -> Unit = {},
   offset: DpOffset = DpOffset(0.dp, 0.dp),
   optionText: @Composable (T) -> Unit = { Text(it.toString()) },
   optionIcon: (@Composable (T) -> Unit)? = null,
@@ -96,6 +104,7 @@ fun <T> DropdownIconButton(
       offset = offset,
       onDismissRequest = { isExpanded = false },
     ) {
+      title()
       options.forEach { option ->
         DropdownMenuItem(
           text = {
@@ -114,4 +123,19 @@ fun <T> DropdownIconButton(
       }
     }
   }
+}
+
+@Composable
+fun DropdownHeaderText(
+  text: String,
+  modifier: Modifier = Modifier
+) {
+  Text(
+    text = text,
+    style = MaterialTheme.typography.labelMedium.alpha(0.5f),
+    modifier = Modifier.padding(
+      horizontal = 16.dp,
+      vertical = 8.dp,
+    )
+  )
 }

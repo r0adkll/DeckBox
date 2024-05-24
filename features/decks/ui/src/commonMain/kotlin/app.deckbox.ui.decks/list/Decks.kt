@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.extensions.plus
 import app.deckbox.common.compose.icons.rounded.Import
@@ -37,6 +38,7 @@ import app.deckbox.common.compose.icons.rounded.NewDeck
 import app.deckbox.common.compose.navigation.DetailNavigation
 import app.deckbox.common.compose.navigation.LocalDetailNavigation
 import app.deckbox.common.compose.widgets.ContentLoadingSize
+import app.deckbox.common.compose.widgets.DropdownHeaderText
 import app.deckbox.common.compose.widgets.DropdownIconButton
 import app.deckbox.common.compose.widgets.SpinningPokeballLoadingIndicator
 import app.deckbox.common.screens.DecksScreen
@@ -52,7 +54,10 @@ import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.systemBars
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
+import deckbox.features.decks.ui.generated.resources.Res
+import deckbox.features.decks.ui.generated.resources.import_deck_menu_header
 import kotlinx.collections.immutable.ImmutableList
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @CircuitInject(MergeActivityScope::class, DecksScreen::class)
@@ -75,6 +80,7 @@ internal fun Decks(
           actions = {
             DropdownIconButton(
               options = DeckImportOptions.entries,
+              offset = DpOffset(0.dp, (-56).dp),
               onOptionClick = { option ->
                 when (option) {
                   DeckImportOptions.Tournaments -> eventSink(DecksUiEvent.ImportTournamentDeck)
@@ -91,6 +97,11 @@ internal fun Decks(
                 )
               },
               optionText = { Text(it.text()) },
+              title = {
+                DropdownHeaderText(
+                  text = stringResource(Res.string.import_deck_menu_header),
+                )
+              },
               icon = {
                 Icon(Icons.Rounded.Import, contentDescription = null)
               },
