@@ -1,6 +1,5 @@
 package app.deckbox.common.compose.imageloading
 
-import app.deckbox.core.di.ActivityScope
 import app.deckbox.core.di.AppScope
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.cache.memory.maxSizePercent

@@ -1,4 +1,3 @@
-import app.deckbox.convention.addKspDependencyForAllTargets
 import app.deckbox.convention.addKspDependencyForCommon
 
 plugins {

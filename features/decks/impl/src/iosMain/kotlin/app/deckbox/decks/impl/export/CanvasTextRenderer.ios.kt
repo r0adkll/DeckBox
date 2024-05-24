@@ -8,11 +8,12 @@ import org.jetbrains.skia.TextLine
 
 actual fun DrawScope.renderCardCount(
   count: Int,
-  size: Size
+  size: Size,
 ) {
   drawContext.canvas.nativeCanvas.drawTextLine(
     TextLine.Companion.make(count.toString(), null),
-    0f, 0f,
+    0f,
+    0f,
     Paint(),
   )
 }

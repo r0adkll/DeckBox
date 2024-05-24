@@ -15,7 +15,6 @@ import app.deckbox.common.screens.TournamentsScreen
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.logging.bark
 import app.deckbox.core.model.Deck
 import app.deckbox.core.model.DeckShareAction
 import app.deckbox.core.settings.DeckCardConfig
@@ -24,7 +23,6 @@ import app.deckbox.core.settings.orderDecksBy
 import app.deckbox.features.decks.api.DeckCardConfigurator
 import app.deckbox.features.decks.api.DeckRepository
 import app.deckbox.features.decks.api.builder.DeckBuilderRepository
-import app.deckbox.features.decks.api.export.DeckExporter
 import app.deckbox.features.decks.public.ui.DeckExportOption
 import app.deckbox.features.decks.public.ui.events.DeckCardEvent
 import app.deckbox.sharing.api.ShareManager
@@ -127,8 +125,8 @@ class DecksPresenter(
         type = when (option) {
           DeckExportOption.Text -> DeckShareAction.ExportType.Text
           DeckExportOption.Image -> DeckShareAction.ExportType.Image
-        }
-      )
+        },
+      ),
     )
   }
 }

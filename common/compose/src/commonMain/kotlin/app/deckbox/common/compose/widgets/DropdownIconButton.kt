@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.extensions.alpha
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun <T> DropdownIconButton(
@@ -128,7 +127,7 @@ fun <T> DropdownIconButton(
 @Composable
 fun DropdownHeaderText(
   text: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Text(
     text = text,
@@ -136,6 +135,6 @@ fun DropdownHeaderText(
     modifier = Modifier.padding(
       horizontal = 16.dp,
       vertical = 8.dp,
-    )
+    ),
   )
 }

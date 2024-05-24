@@ -1,8 +1,7 @@
 package app.deckbox.common.compose.imageloading
 
-import app.deckbox.core.di.MergeActivityScope
-import app.deckbox.core.logging.LogPriority as HeartwoodLogPriority
 import app.deckbox.core.di.MergeAppScope
+import app.deckbox.core.logging.LogPriority as HeartwoodLogPriority
 import app.deckbox.core.logging.bark
 import com.r0adkll.kotlininject.merge.annotations.ContributesTo
 import com.seiko.imageloader.util.LogPriority

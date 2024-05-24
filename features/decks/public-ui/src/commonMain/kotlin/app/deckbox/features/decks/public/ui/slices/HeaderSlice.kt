@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import app.deckbox.common.compose.extensions.alpha
 import app.deckbox.common.compose.extensions.timeAgo
 import app.deckbox.common.compose.icons.DeckBoxIcons
 import app.deckbox.common.compose.icons.outline.Decks
