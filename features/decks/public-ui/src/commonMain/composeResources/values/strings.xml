@@ -1,0 +1,5 @@
+<resources>
+  <string name="action_export_text">Text</string>
+  <string name="action_export_image">Image</string>
+  <string name="export_deck_menu_header">Export…</string>
+</resources>

@@ -10,7 +10,7 @@ enum class ExpansionCardStyle(
 
   companion object : EnumSettingProvider<ExpansionCardStyle> {
     override fun fromStorageKey(key: String?): ExpansionCardStyle {
-      return values().find { it.storageKey == key } ?: Large
+      return entries.find { it.storageKey == key } ?: Large
     }
   }
 }

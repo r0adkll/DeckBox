@@ -4,6 +4,7 @@ import app.deckbox.core.settings.DeckCardConfig
 import app.deckbox.core.settings.EnumSetting
 import app.deckbox.core.settings.EnumSettingProvider
 import app.deckbox.core.settings.ExpansionCardStyle
+import app.deckbox.core.settings.ImageExportConfig
 import app.deckbox.core.settings.PokemonGridStyle
 import app.deckbox.core.settings.SortOption
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +28,9 @@ interface DeckBoxSettings {
 
   var deckCardConfig: DeckCardConfig
   fun observeDeckCardConfig(): Flow<DeckCardConfig>
+
+  var imageExportConfig: ImageExportConfig
+  fun observeImageExportConfig(): Flow<ImageExportConfig>
 
   var browseCardGridStyle: PokemonGridStyle
   fun observeBrowseCardGridStyle(): Flow<PokemonGridStyle>

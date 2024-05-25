@@ -51,6 +51,8 @@ kotlin {
         api(projects.features.tournament.impl)
         api(projects.features.tournament.ui)
 
+        api(projects.features.sharing.impl)
+
         // UI Modules
         api(projects.ui.browse)
         api(projects.ui.filter)

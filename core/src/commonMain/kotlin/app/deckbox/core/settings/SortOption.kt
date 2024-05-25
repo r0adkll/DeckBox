@@ -14,11 +14,11 @@ enum class SortOption(
 
   companion object : EnumSettingProvider<SortOption> {
     val All: List<SortOption> by lazy {
-      values().toList()
+      entries
     }
 
     override fun fromStorageKey(key: String?): SortOption {
-      return values().find { it.storageKey == key } ?: UpdatedAt
+      return entries.find { it.storageKey == key } ?: UpdatedAt
     }
   }
 }

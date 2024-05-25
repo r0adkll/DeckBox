@@ -9,7 +9,6 @@ import deckbox.common.compose.generated.resources.pokemon_back_en
 import deckbox.common.compose.generated.resources.pokemon_back_jap
 import deckbox.common.compose.generated.resources.pokemon_back_legacy
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 enum class CardBackType(val resource: DrawableResource) {
@@ -18,7 +17,6 @@ enum class CardBackType(val resource: DrawableResource) {
   Legacy(Res.drawable.pokemon_back_legacy),
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PokemonCardBack(
   modifier: Modifier = Modifier,

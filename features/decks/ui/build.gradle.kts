@@ -10,6 +10,9 @@ kotlin {
         implementation(projects.features.decks.public)
         implementation(projects.features.decks.publicUi)
         implementation(projects.features.tournament.public)
+        implementation(projects.features.sharing.public)
+
+        implementation(compose.components.resources)
       }
     }
   }
