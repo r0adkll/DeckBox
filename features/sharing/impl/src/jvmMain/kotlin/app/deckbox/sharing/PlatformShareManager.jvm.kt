@@ -9,7 +9,7 @@ import me.tatarka.inject.annotations.Inject
 
 @ContributesBinding(MergeActivityScope::class)
 @Inject
-class DesktopShareManager(
+class PlatformShareManager(
   private val deckExporter: DeckExporter,
 ) : ShareManager {
 

@@ -74,7 +74,7 @@ class ImageConverter(
         val positionY = (index / columns) * rowHeightPx + spacingY.toFloat()
         val cardSize = Size(exportConfig.widthPx.toFloat(), exportConfig.widthPx.toFloat() * CardAspectRatio)
 
-        with (image.painter) {
+        with(image.painter) {
           translate(positionX, positionY) {
             draw(cardSize)
             renderCardCount(
@@ -84,7 +84,7 @@ class ImageConverter(
               textSize = 128.sp,
               padding = PaddingValues(
                 horizontal = 64.dp,
-                vertical = 88.dp
+                vertical = 88.dp,
               ),
               cornerRadius = 32.dp,
             )

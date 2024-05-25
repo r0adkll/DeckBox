@@ -23,7 +23,7 @@ import platform.UIKit.UIViewController
 
 @ContributesBinding(MergeActivityScope::class)
 @Inject
-class IosShareManager(
+class PlatformShareManager(
   private val uiViewController: UIViewController,
   private val deckExporter: DeckExporter,
 ) : ShareManager {
@@ -66,7 +66,9 @@ class IosShareManager(
 
   @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
   private fun ByteArray.toData(): NSData = memScoped {
-    NSData.create(bytes = allocArrayOf(this@toData),
-      length = this@toData.size.toULong())
+    NSData.create(
+      bytes = allocArrayOf(this@toData),
+      length = this@toData.size.toULong(),
+    )
   }
 }

@@ -26,7 +26,7 @@ import me.tatarka.inject.annotations.Inject
 
 @ContributesBinding(MergeActivityScope::class)
 @Inject
-class AndroidShareManager(
+class PlatformShareManager(
   private val activity: Activity,
   private val deckExporter: DeckExporter,
   private val dispatcherProvider: DispatcherProvider,

@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
 
 private lateinit var _cachedPaint: Paint
 
@@ -51,7 +50,7 @@ actual fun DrawScope.renderCardCount(
     color = color,
     topLeft = Offset(
       x = 0f,
-      y = size.height - boxHeight
+      y = size.height - boxHeight,
     ),
     size = Size(boxWidth, boxHeight),
     cornerRadius = CornerRadius(cornerRadius.toPx()),
@@ -60,7 +59,7 @@ actual fun DrawScope.renderCardCount(
   drawContext.canvas.nativeCanvas.drawText(
     count.toString(),
     boxWidth / 2f,
-    size.height - (bounds.height()/2f) - padding.calculateBottomPadding().toPx()/2,
+    size.height - (bounds.height() / 2f) - padding.calculateBottomPadding().toPx() / 2,
     _cachedPaint,
   )
 }

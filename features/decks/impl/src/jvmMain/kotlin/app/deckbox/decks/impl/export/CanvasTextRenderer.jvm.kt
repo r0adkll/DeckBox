@@ -46,7 +46,7 @@ actual fun DrawScope.renderCardCount(
     color = color,
     topLeft = Offset(
       x = 0f,
-      y = size.height - boxHeight
+      y = size.height - boxHeight,
     ),
     size = Size(boxWidth, boxHeight),
     cornerRadius = CornerRadius(cornerRadius.toPx()),
@@ -55,7 +55,7 @@ actual fun DrawScope.renderCardCount(
   drawContext.canvas.nativeCanvas.drawTextLine(
     textLine,
     boxWidth / 2f,
-    size.height - (textLine.height/2f) - padding.calculateBottomPadding().toPx()/2,
+    size.height - (textLine.height / 2f) - padding.calculateBottomPadding().toPx() / 2,
     Paint().apply { this.color = Color.WHITE },
   )
 }
