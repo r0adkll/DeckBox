@@ -1,13 +1,17 @@
 package app.deckbox.decks.impl.export
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.deckbox.common.settings.DeckBoxSettings
 import app.deckbox.core.coroutines.DispatcherProvider
 import app.deckbox.core.model.Card
@@ -73,7 +77,17 @@ class ImageConverter(
         with (image.painter) {
           translate(positionX, positionY) {
             draw(cardSize)
-            renderCardCount(image.card.count, cardSize)
+            renderCardCount(
+              count = image.card.count,
+              size = cardSize,
+              color = Color(0xFF006493),
+              textSize = 128.sp,
+              padding = PaddingValues(
+                horizontal = 64.dp,
+                vertical = 88.dp
+              ),
+              cornerRadius = 32.dp,
+            )
           }
         }
       }

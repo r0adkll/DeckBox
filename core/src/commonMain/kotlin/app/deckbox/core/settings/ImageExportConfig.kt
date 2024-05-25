@@ -15,7 +15,7 @@ data class ImageExportConfig(
   companion object {
     val DEFAULT = ImageExportConfig(
       maxColumns = 8,
-      widthPx = 1000,
+      widthPx = 600,
       horizontalSpacing = 0,
       verticalSpacing = 0,
     )
