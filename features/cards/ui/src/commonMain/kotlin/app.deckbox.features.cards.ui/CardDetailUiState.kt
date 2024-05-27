@@ -17,7 +17,7 @@ data class CardDetailUiState(
   val card: LoadState<out Card>,
   val deckState: DeckState?,
   val collectionCount: CollectionCount,
-  val isFavorited: Boolean,
+  val isFavorite: Boolean,
   val evolvesFrom: LoadState<out List<Card>>,
   val evolvesTo: LoadState<out List<Card>>,
   val similar: LoadState<out List<Card>>,

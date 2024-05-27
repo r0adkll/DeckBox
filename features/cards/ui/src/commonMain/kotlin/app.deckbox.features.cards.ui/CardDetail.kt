@@ -199,7 +199,7 @@ internal fun CardDetail(
       )
     },
     floatingActionButton = {
-      val isFavorite = state.isFavorited
+      val isFavorite = state.isFavorite
       val containerColor by animateColorAsState(
         if (isFavorite) {
           MaterialTheme.colorScheme.tertiaryContainer

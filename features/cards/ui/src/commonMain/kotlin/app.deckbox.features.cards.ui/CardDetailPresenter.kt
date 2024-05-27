@@ -77,7 +77,7 @@ class CardDetailPresenter(
     val evolvesFrom by loadEvolvesFrom(cardLoadState)
     val evolvesTo by loadEvolvesTo(cardLoadState)
 
-    val isFavorited by rememberRetained {
+    val isFavorite by rememberRetained {
       repository.observeFavorite(screen.cardId)
     }.collectAsRetainedState(false)
 
@@ -90,7 +90,7 @@ class CardDetailPresenter(
       evolvesTo = evolvesTo,
       deckState = deckState,
       collectionCount = collectionCount,
-      isFavorited = isFavorited,
+      isFavorite = isFavorite,
       uiMessage = message,
     ) { event ->
       when (event) {

@@ -134,14 +134,12 @@ class CardDetailScreen(
   val cardImageLarge: String? = null,
   val deckId: String? = null,
   val packId: String? = null,
-  private val isFullScreen: Boolean = false,
 ) : DeckBoxScreen(name = "CardDetail()") {
   constructor(
     card: Card,
     deckId: String? = null,
     packId: String? = null,
-    isFullScreen: Boolean = false,
-  ) : this(card.id, card.name, card.image.large, deckId, packId, isFullScreen)
+  ) : this(card.id, card.name, card.image.large, deckId, packId)
 
   override val arguments
     get() = mapOf(
@@ -150,13 +148,10 @@ class CardDetailScreen(
       "cardImageLarge" to cardImageLarge,
       "deckId" to deckId,
       "packId" to packId,
-      "isFullScreen" to isFullScreen,
     )
 
   @CommonIgnoredOnParcel
-  override val presentation = Presentation(
-    hideBottomNav = true, // deckId != null || packId != null || isFullScreen,
-  )
+  override val presentation = Presentation.Fullscreen
 }
 
 @CommonParcelize
@@ -187,7 +182,7 @@ class CardDetailPagerScreen(
     ) : PagedCards()
   }
 
-  override val arguments: Map<String, *>?
+  override val arguments: Map<String, *>
     get() = mapOf(
       "pagedCards" to pagedCards,
     )

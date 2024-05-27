@@ -19,7 +19,6 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
@@ -143,20 +142,4 @@ class CardDetailPagerPresenter(
       screens = cardScreens,
     )
   }
-
-//  @Composable
-//  private fun detailPageFromRemoteKey(asRemoteKey: PagedCards.AsRemoteKey): CardDetailPage {
-//    val cardScreens by remember {
-//      flow {
-//
-//
-//        emit(listOf(asRemoteKey.initialCard))
-//      }
-//    }.collectAsState(listOf(asRemoteKey.initialCard))
-//
-//    return CardDetailPage(
-//      initialScreen = asRemoteKey.initialCard,
-//      screens = emptyList(),
-//    )
-//  }
 }
