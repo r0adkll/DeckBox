@@ -18,6 +18,7 @@ import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.extensions.lowestMarketPrice
 import app.deckbox.core.extensions.prependIfNotEmpty
 import app.deckbox.core.extensions.readableFormat
+import app.deckbox.core.model.Evolution
 import app.deckbox.core.model.SuperType
 import app.deckbox.features.boosterpacks.api.BoosterPackRepository
 import app.deckbox.features.boosterpacks.ui.builder.BoosterPackBuilderUiEvent.AddCards
@@ -72,9 +73,24 @@ class BoosterPackBuilderPresenter(
         sessionCards.map { cards ->
           val split = cards.groupBy { it.card.supertype }
 
-          val pokemon = split[SuperType.POKEMON]
-            ?.map { CardUiModel.Single(it) }
-            ?: emptyList()
+          val pokemon = split[SuperType.POKEMON] ?: emptyList()
+          val pokemonUiModels = Evolution.create(pokemon)
+            .flatMap { evolution ->
+              if (evolution.size == 1) {
+                evolution.firstNodeCards().map { card ->
+                  CardUiModel.Single(card)
+                }
+              } else {
+                listOf(CardUiModel.EvolutionLine(evolution))
+              }
+            }
+            .sortedBy {
+              when (it) {
+                is CardUiModel.EvolutionLine -> it.evolution.firstNodeCards().first().card.name
+                is CardUiModel.Single -> "zzzz${it.card.card.name}"
+                else -> BottomSortName
+              }
+            }
 
           val trainers = split[SuperType.TRAINER]
             ?.map { CardUiModel.Single(it) }
@@ -85,10 +101,10 @@ class BoosterPackBuilderPresenter(
             ?: emptyList()
 
           // Concatenate the models
-          pokemon.prependIfNotEmpty(
+          pokemonUiModels.prependIfNotEmpty(
             CardUiModel.SectionHeader(
               superType = SuperType.POKEMON,
-              count = pokemon.sumOf { it.size },
+              count = pokemonUiModels.sumOf { it.size },
               title = { LocalStrings.current.deckListHeaderPokemon },
             ),
           ) + trainers.prependIfNotEmpty(
@@ -184,3 +200,5 @@ class BoosterPackBuilderPresenter(
     }
   }
 }
+
+private const val BottomSortName = "zzzzzzzzzzzz"

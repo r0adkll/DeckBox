@@ -66,7 +66,7 @@ fun BoosterPackBuilder(
     title = {
       if (boosterPackName.text.isBlank()) {
         AnnotatedString(
-          LocalStrings.current.boosterPackPickerTitle,
+          LocalStrings.current.boosterPackTitleNoName,
           SpanStyle(
             fontStyle = FontStyle.Italic,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
