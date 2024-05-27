@@ -60,6 +60,7 @@ import app.deckbox.common.compose.widgets.PokemonCard
 import app.deckbox.common.compose.widgets.PokemonCardGrid
 import app.deckbox.common.screens.CardCollectionEditorScreen
 import app.deckbox.common.screens.ExpansionDetailScreen
+import app.deckbox.core.coroutines.LoadState
 import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.Card
 import app.deckbox.core.settings.columnsForStyles
@@ -162,11 +163,13 @@ internal fun ExpansionDetail(
         },
         contentPadding = paddingValues,
         headerContent = {
-          item(
-            key = "DetailHeader",
-            span = { GridItemSpan(maxLineSpan) },
-          ) {
-            DetailHeader(state)
+          if (state.cards is LoadState.Loaded) {
+            item(
+              key = "DetailHeader",
+              span = { GridItemSpan(maxLineSpan) },
+            ) {
+              DetailHeader(state)
+            }
           }
         },
         itemContent = { card ->
@@ -235,6 +238,7 @@ private fun DetailHeader(
     CollectionBar(
       count = state.collection.total,
       total = state.expansion.printedTotal,
+      backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
     )
     Spacer(Modifier.height(8.dp))
   }

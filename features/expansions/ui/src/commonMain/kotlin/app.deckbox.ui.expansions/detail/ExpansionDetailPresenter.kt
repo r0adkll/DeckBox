@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import app.deckbox.common.screens.CardDetailPagerScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.ExpansionDetailScreen
 import app.deckbox.common.settings.DeckBoxSettings
@@ -104,7 +105,16 @@ class ExpansionDetailPresenter(
         ) { event ->
           when (event) {
             NavigateBack -> navigator.pop()
-            is CardSelected -> navigator.goTo(CardDetailScreen(event.card))
+            is CardSelected -> {
+              navigator.goTo(
+                CardDetailPagerScreen(
+                  pagedCards = CardDetailPagerScreen.PagedCards.AsExpansion(
+                    initialCard = CardDetailScreen(event.card),
+                    expansionId = screen.expansionId,
+                  ),
+                ),
+              )
+            }
             is ChangeGridStyle -> settings.expansionCardGridStyle = event.style
             is IncrememntCollectionCount -> coroutineScope.launch {
               incrementCollectionCount(event.card.id, event.variant, DefaultIncrementAmount)
@@ -128,7 +138,6 @@ class ExpansionDetailPresenter(
   ) {
     collectionRepository.incrementCounts(
       cardId = cardId,
-
     )
   }
 

@@ -27,3 +27,5 @@ expect annotation class CommonTypeParceler<T, P : CommonParceler<in T>>()
 
 // For Android Parceler
 expect interface CommonParceler<T>
+
+expect interface CommonParcelable

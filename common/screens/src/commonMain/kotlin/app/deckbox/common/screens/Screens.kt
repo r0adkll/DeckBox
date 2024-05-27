@@ -3,6 +3,7 @@ package app.deckbox.common.screens
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Deck as DeckModel
+import app.deckbox.core.model.ExpansionId
 import app.deckbox.core.model.Format
 import app.deckbox.core.model.SuperType
 import com.slack.circuit.runtime.screen.Screen
@@ -154,8 +155,45 @@ class CardDetailScreen(
 
   @CommonIgnoredOnParcel
   override val presentation = Presentation(
-    hideBottomNav = deckId != null || packId != null || isFullScreen,
+    hideBottomNav = true, // deckId != null || packId != null || isFullScreen,
   )
+}
+
+@CommonParcelize
+class CardDetailPagerScreen(
+  val pagedCards: PagedCards,
+) : DeckBoxScreen(name = "CardDetailPager()") {
+
+  @CommonParcelize
+  sealed class PagedCards : CommonParcelable {
+    data class AsList(
+      val initialCard: CardDetailScreen,
+      val cards: List<CardDetailScreen>,
+    ) : PagedCards()
+
+    data class AsDeck(
+      val initialCard: CardDetailScreen,
+      val deckId: String,
+    ) : PagedCards()
+
+    data class AsBoosterPack(
+      val initialCard: CardDetailScreen,
+      val packId: String,
+    ) : PagedCards()
+
+    data class AsExpansion(
+      val initialCard: CardDetailScreen,
+      val expansionId: ExpansionId,
+    ) : PagedCards()
+  }
+
+  override val arguments: Map<String, *>?
+    get() = mapOf(
+      "pagedCards" to pagedCards,
+    )
+
+  @CommonIgnoredOnParcel
+  override val presentation: Presentation = Presentation.Fullscreen
 }
 
 sealed class ImportScreen(name: String) : DeckBoxScreen(name)
@@ -238,4 +276,8 @@ abstract class DeckBoxScreen(val name: String) : Screen {
 data class Presentation(
   val hideBottomNav: Boolean = false,
   val isDetailScreen: Boolean = false,
-)
+) {
+  companion object {
+    val Fullscreen: Presentation get() = Presentation(hideBottomNav = true)
+  }
+}

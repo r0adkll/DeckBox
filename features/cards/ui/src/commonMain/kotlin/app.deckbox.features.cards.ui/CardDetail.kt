@@ -1,22 +1,28 @@
 package app.deckbox.features.cards.ui
 
 import DeckBoxAppBar
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import app.deckbox.common.compose.extensions.applyHoloAndDragEffect
@@ -77,6 +84,8 @@ import app.deckbox.features.cards.ui.composables.CollectionCard
 import app.deckbox.features.cards.ui.composables.InfoCard
 import app.deckbox.features.cards.ui.composables.RelatedCards
 import app.deckbox.features.cards.ui.composables.TcgPlayerPriceCard
+import app.deckbox.features.cards.ui.pager.LocalCardPagerBottomOffset
+import app.deckbox.features.cards.ui.pager.LocalCardPagerEnabled
 import cafe.adriel.lyricist.LocalStrings
 import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.systemBars
@@ -107,6 +116,9 @@ internal fun CardDetail(
     onEmit = { msg -> eventSink(ClearUiMessage(msg.id)) },
   )
 
+  val pagerBottomOffset = LocalCardPagerBottomOffset.current
+  val pagerIsEnabled = LocalCardPagerEnabled.current
+
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   Scaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -119,7 +131,14 @@ internal fun CardDetail(
           IconButton(
             onClick = { eventSink(NavigateBack) },
           ) {
-            Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
+            Icon(
+              if (pagerIsEnabled) {
+                Icons.Rounded.Close
+              } else {
+                Icons.AutoMirrored.Rounded.ArrowBack
+              },
+              contentDescription = null,
+            )
           }
         },
         actions = {
@@ -180,24 +199,30 @@ internal fun CardDetail(
       )
     },
     floatingActionButton = {
-      val isFavorited = state.isFavorited
-      FloatingActionButton(
-        onClick = {
-          eventSink(CardDetailUiEvent.Favorite(!isFavorited))
-        },
-        containerColor = if (isFavorited) {
+      val isFavorite = state.isFavorited
+      val containerColor by animateColorAsState(
+        if (isFavorite) {
           MaterialTheme.colorScheme.tertiaryContainer
         } else {
           MaterialTheme.colorScheme.surfaceVariant
         },
-        contentColor = if (isFavorited) {
+      )
+      val contentColor by animateColorAsState(
+        if (isFavorite) {
           MaterialTheme.colorScheme.tertiary
         } else {
           MaterialTheme.colorScheme.onSurfaceVariant
         },
+      )
+      FloatingActionButton(
+        onClick = {
+          eventSink(CardDetailUiEvent.Favorite(!isFavorite))
+        },
+        containerColor = containerColor,
+        contentColor = contentColor,
       ) {
         Icon(
-          if (isFavorited) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+          if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
           contentDescription = null,
         )
       }
@@ -205,11 +230,18 @@ internal fun CardDetail(
     snackbarHost = {
       DismissableSnackbarHost(hostState = snackbarHostState)
     },
-    contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.navigationBars),
+    contentWindowInsets = WindowInsets.systemBars
+      .add(WindowInsets(bottom = pagerBottomOffset)),
   ) { paddingValues ->
     Column(
       modifier = Modifier
-        .padding(paddingValues)
+        .padding(
+          PaddingValues(
+            start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
+            end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+            top = paddingValues.calculateTopPadding(),
+          ),
+        )
         .verticalScroll(rememberScrollState()),
     ) {
       CardImage(
@@ -302,6 +334,11 @@ internal fun CardDetail(
       }
 
       Spacer(Modifier.height(88.dp))
+      Spacer(
+        Modifier
+          .padding(bottom = paddingValues.calculateBottomPadding())
+          .windowInsetsBottomHeight(WindowInsets.navigationBars),
+      )
     }
   }
 }
