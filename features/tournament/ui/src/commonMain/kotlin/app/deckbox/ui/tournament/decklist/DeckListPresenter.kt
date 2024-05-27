@@ -99,7 +99,7 @@ class DeckListPresenter(
           val stackedCards = cards.value.dataOrNull ?: return@launch
           importDeck(stackedCards)
         }
-        is DeckListUiEvent.CardClick -> navigator.goTo(CardDetailScreen(event.card, isFullScreen = true))
+        is DeckListUiEvent.CardClick -> navigator.goTo(CardDetailScreen(event.card))
         is DeckListUiEvent.PurchaseDeck -> navigator.goTo(UrlScreen(event.bulkPurchaseUrl))
       }
     }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.snapshotFlow
 import app.deckbox.common.compose.widgets.builder.model.CardUiModel
 import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.BrowseScreen
+import app.deckbox.common.screens.CardDetailPagerScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.DispatcherProvider
@@ -167,7 +168,14 @@ class BoosterPackBuilderPresenter(
           ),
         )
 
-        is CardClick -> navigator.goTo(CardDetailScreen(event.card, packId = screen.id))
+        is CardClick -> navigator.goTo(
+          CardDetailPagerScreen(
+            CardDetailPagerScreen.PagedCards.AsBoosterPack(
+              initialCard = CardDetailScreen(event.card, packId = screen.id),
+              packId = screen.id,
+            ),
+          ),
+        )
         is EditName -> repository.editName(screen.id, event.name)
         is IncrementCard -> repository.incrementCard(screen.id, event.cardId, event.amount)
         is DecrementCard -> repository.decrementCard(screen.id, event.cardId, event.amount)

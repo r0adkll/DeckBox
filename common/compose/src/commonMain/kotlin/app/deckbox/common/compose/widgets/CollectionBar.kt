@@ -11,18 +11,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
+
+private const val BorderOpacity = 0.38f
 
 @Composable
 fun CollectionBar(
   count: Int,
   total: Int,
   modifier: Modifier = Modifier,
+  backgroundColor: Color = MaterialTheme.colorScheme.surface,
+  borderColor: Color = MaterialTheme.colorScheme.contentColorFor(backgroundColor)
+    .copy(alpha = BorderOpacity),
 ) {
   val shape = RoundedCornerShape(50)
   // Progress Bar
@@ -30,16 +38,17 @@ fun CollectionBar(
     modifier = modifier
       .padding(top = 8.dp)
       .background(
-        color = MaterialTheme.colorScheme.surface,
+        color = backgroundColor,
         shape = shape,
       )
       .border(
         width = 1.dp,
-        color = MaterialTheme.colorScheme.onSurface.copy(0.38f),
+        color = borderColor,
         shape = shape,
       )
       .fillMaxWidth()
-      .height(24.dp),
+      .height(24.dp)
+      .clip(shape),
   ) {
     val progress = count.toFloat() / total.toFloat()
     val progressWidth = maxWidth * progress

@@ -3,6 +3,7 @@ package app.deckbox.common.screens
 import app.deckbox.core.model.BoosterPack
 import app.deckbox.core.model.Card
 import app.deckbox.core.model.Deck as DeckModel
+import app.deckbox.core.model.ExpansionId
 import app.deckbox.core.model.Format
 import app.deckbox.core.model.SuperType
 import com.slack.circuit.runtime.screen.Screen
@@ -133,14 +134,12 @@ class CardDetailScreen(
   val cardImageLarge: String? = null,
   val deckId: String? = null,
   val packId: String? = null,
-  private val isFullScreen: Boolean = false,
 ) : DeckBoxScreen(name = "CardDetail()") {
   constructor(
     card: Card,
     deckId: String? = null,
     packId: String? = null,
-    isFullScreen: Boolean = false,
-  ) : this(card.id, card.name, card.image.large, deckId, packId, isFullScreen)
+  ) : this(card.id, card.name, card.image.large, deckId, packId)
 
   override val arguments
     get() = mapOf(
@@ -149,13 +148,47 @@ class CardDetailScreen(
       "cardImageLarge" to cardImageLarge,
       "deckId" to deckId,
       "packId" to packId,
-      "isFullScreen" to isFullScreen,
     )
 
   @CommonIgnoredOnParcel
-  override val presentation = Presentation(
-    hideBottomNav = deckId != null || packId != null || isFullScreen,
-  )
+  override val presentation = Presentation.Fullscreen
+}
+
+@CommonParcelize
+class CardDetailPagerScreen(
+  val pagedCards: PagedCards,
+) : DeckBoxScreen(name = "CardDetailPager()") {
+
+  @CommonParcelize
+  sealed class PagedCards : CommonParcelable {
+    data class AsList(
+      val initialCard: CardDetailScreen,
+      val cards: List<CardDetailScreen>,
+    ) : PagedCards()
+
+    data class AsDeck(
+      val initialCard: CardDetailScreen,
+      val deckId: String,
+    ) : PagedCards()
+
+    data class AsBoosterPack(
+      val initialCard: CardDetailScreen,
+      val packId: String,
+    ) : PagedCards()
+
+    data class AsExpansion(
+      val initialCard: CardDetailScreen,
+      val expansionId: ExpansionId,
+    ) : PagedCards()
+  }
+
+  override val arguments: Map<String, *>
+    get() = mapOf(
+      "pagedCards" to pagedCards,
+    )
+
+  @CommonIgnoredOnParcel
+  override val presentation: Presentation = Presentation.Fullscreen
 }
 
 sealed class ImportScreen(name: String) : DeckBoxScreen(name)
@@ -238,4 +271,8 @@ abstract class DeckBoxScreen(val name: String) : Screen {
 data class Presentation(
   val hideBottomNav: Boolean = false,
   val isDetailScreen: Boolean = false,
-)
+) {
+  companion object {
+    val Fullscreen: Presentation get() = Presentation(hideBottomNav = true)
+  }
+}

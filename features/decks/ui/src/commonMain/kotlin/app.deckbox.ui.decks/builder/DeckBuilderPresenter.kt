@@ -10,6 +10,7 @@ import app.deckbox.common.compose.widgets.builder.model.CardUiModel.Tip
 import app.deckbox.common.compose.widgets.builder.model.CardUiModel.Tip.Energy.Companion.DefaultEnergyAmount
 import app.deckbox.common.screens.BoosterPackBuilderScreen
 import app.deckbox.common.screens.BrowseScreen
+import app.deckbox.common.screens.CardDetailPagerScreen
 import app.deckbox.common.screens.CardDetailScreen
 import app.deckbox.common.screens.DeckBuilderScreen
 import app.deckbox.core.coroutines.DispatcherProvider
@@ -240,7 +241,14 @@ class DeckBuilderPresenter(
     when (event) {
       NavigateBack -> navigator.pop()
       is AddCards -> navigator.goTo(BrowseScreen(deckId = deckId, superType = event.superType))
-      is CardClick -> navigator.goTo(CardDetailScreen(event.card, deckId))
+      is CardClick -> navigator.goTo(
+        CardDetailPagerScreen(
+          pagedCards = CardDetailPagerScreen.PagedCards.AsDeck(
+            initialCard = CardDetailScreen(event.card, deckId),
+            deckId = deckId,
+          ),
+        ),
+      )
 
       is EditName -> repository.editName(deckId, event.name)
       is EditDescription -> repository.editDescription(deckId, event.description)
