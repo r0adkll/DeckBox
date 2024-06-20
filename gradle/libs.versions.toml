@@ -27,7 +27,7 @@ spotless = "6.25.0"
 sqldelight = "2.0.2"
 serialization = "1.6.3"
 material3 = "1.2.1"
-firebase-crashlytics-buildtools = "3.0.0"
+firebase-crashlytics-buildtools = "3.0.2"
 core = "1.13.1"
 
 [plugins]
