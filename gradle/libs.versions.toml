@@ -72,7 +72,7 @@ circuitx-gesturenav = { module = "com.slack.circuit:circuitx-gesture-navigation"
 
 # Firebase
 google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.0.2"
-google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics-ktx:19.0.2"
+google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics-ktx:19.0.3"
 google-firebase-perf = "com.google.firebase:firebase-perf-ktx:21.0.1"
 
 #Lyricist
