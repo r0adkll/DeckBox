@@ -10,6 +10,8 @@ kotlin {
         implementation(projects.features.cards.public)
         implementation(projects.features.decks.public)
         implementation(projects.ui.filter)
+
+        implementation(compose.components.resources)
       }
     }
   }

@@ -101,6 +101,7 @@ sealed class Action {
           true
         }
 
+        // TODO: Cards can have multiple subtypes and these are no longer kept as enums.
 //        SuperType.TRAINER -> when (card.subtype) {
 //          SubType.POKEMON_TOOL -> {
 //            source.tools.add(card)

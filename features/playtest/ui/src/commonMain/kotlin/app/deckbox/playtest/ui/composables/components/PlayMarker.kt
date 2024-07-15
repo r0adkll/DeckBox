@@ -1,9 +1,10 @@
-package app.deckbox.playtest.ui.composables
+package app.deckbox.playtest.ui.composables.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.widgets.CardAspectRatio
 import app.deckbox.common.compose.widgets.CardCornerRadius
+import app.deckbox.playtest.ui.composables.LocalArenaCardWidth
 
 private val PlayMarkerBorderWidth = 4.dp
 
@@ -24,9 +26,11 @@ internal fun PlayMarker(
   borderColor: Color = MaterialTheme.colorScheme.surfaceVariant,
   content: @Composable BoxScope.() -> Unit = {},
 ) {
+  val areaCardWidth = LocalArenaCardWidth.current
   val shape = RoundedCornerShape(CardCornerRadius)
   Box(
     modifier = Modifier
+      .width(areaCardWidth)
       .aspectRatio(CardAspectRatio)
       .border(
         width = borderWidth,

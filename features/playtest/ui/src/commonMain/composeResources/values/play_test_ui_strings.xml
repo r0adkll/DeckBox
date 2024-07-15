@@ -1,0 +1,10 @@
+<resources>
+  <string name="play_mat_active">Active</string>
+  <string name="play_mat_stadium">Stadium</string>
+  <string name="play_mat_bench">Bench</string>
+  <string name="play_mat_deck">Deck</string>
+  <string name="play_mat_discard">Discard</string>
+  <string name="play_mat_lost_zone">Lost Zone</string>
+  <string name="play_mat_hand">Hand</string>
+  <string name="play_mat_prizes">Prizes</string>
+</resources>

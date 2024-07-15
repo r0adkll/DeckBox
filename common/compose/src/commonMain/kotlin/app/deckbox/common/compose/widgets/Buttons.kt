@@ -1,6 +1,7 @@
 package app.deckbox.common.compose.widgets
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonColors
@@ -44,6 +45,7 @@ fun OutlinedIconButton(
   modifier: Modifier = Modifier,
   colors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
   border: BorderStroke? = ButtonDefaults.outlinedButtonBorder,
+  contentPadding: PaddingValues = ButtonDefaults.ButtonWithIconContentPadding,
   enabled: Boolean = true,
 ) {
   OutlinedButton(
@@ -52,7 +54,7 @@ fun OutlinedIconButton(
     enabled = enabled,
     colors = colors,
     border = border,
-    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+    contentPadding = contentPadding,
   ) {
     CompositionLocalProvider(
       LocalIconSize provides ButtonDefaults.IconSize,

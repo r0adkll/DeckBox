@@ -11,12 +11,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Healing
+import androidx.compose.material.icons.rounded.LocalFireDepartment
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -55,8 +61,11 @@ internal fun InPlayCard(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val arenaCardWidth = LocalArenaCardWidth.current
+
   Layout(
-    modifier = modifier,
+    modifier = modifier
+      .width(arenaCardWidth),
     content = {
       card.pokemons.forEachIndexed { index, card ->
         PokemonCard(
@@ -190,7 +199,7 @@ internal fun InPlayCard(
        * _____________
        * |           |
        * |           |
-       * | [O]    |
+       * |    [O]    |
        * |           |
        * |           |
        * |___________|
@@ -232,33 +241,60 @@ internal fun BurnPoisonMarker(
   isBurned: Boolean,
   isPoisoned: Boolean,
   modifier: Modifier = Modifier,
-  size: Dp = 8.dp,
+  size: Dp = 24.dp,
 ) {
   OverlappingTypeRow(
     modifier = modifier,
   ) {
     if (isBurned) {
-      Spacer(
+      Box(
         modifier = Modifier
           .size(size)
           .background(
             color = Color.Red,
             shape = CircleShape,
+          )
+          .border(
+            width = 1.dp,
+            color = Color.White.copy(.5f),
+            shape = CircleShape,
           ),
-      )
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          Icons.Rounded.LocalFireDepartment,
+          contentDescription = null,
+          modifier = Modifier.size(18.dp),
+          tint = Color.White,
+        )
+      }
     }
     if (isPoisoned) {
-      Spacer(
+      Box(
         modifier = Modifier
           .size(size)
           .background(
             color = Color.Green,
             shape = CircleShape,
+          )
+          .border(
+            width = 1.dp,
+            color = Color.White.copy(.5f),
+            shape = CircleShape,
           ),
-      )
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          Icons.Rounded.Healing,
+          contentDescription = null,
+          modifier = Modifier.size(18.dp),
+          tint = Color.White,
+        )
+      }
     }
   }
 }
+
 
 @Composable
 internal fun EnergyRow(

@@ -100,11 +100,13 @@ fun PokemonCard(
   card: Card?,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
   onLongClick: () -> Unit = {},
   count: Int? = null,
   collected: Int? = null,
 ) {
   PokemonCard(
+    enabled = enabled,
     onClick = onClick,
     onLongClick = onLongClick,
     modifier = modifier,
@@ -141,12 +143,14 @@ fun PokemonCard(
 @Composable
 internal fun PokemonCard(
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
   onClick: () -> Unit = {},
   onLongClick: () -> Unit = {},
   counter: @Composable BoxScope.() -> Unit,
   content: @Composable BoxScope.() -> Unit,
 ) {
   TradingCard(
+    enabled = enabled,
     onClick = onClick,
     onLongClick = onLongClick,
     modifier = modifier,
@@ -240,7 +244,7 @@ private fun TradingCard(
 }
 
 @Composable
-private fun CardCounter(
+fun CardCounter(
   count: Int?,
   collected: Int?,
   modifier: Modifier = Modifier,

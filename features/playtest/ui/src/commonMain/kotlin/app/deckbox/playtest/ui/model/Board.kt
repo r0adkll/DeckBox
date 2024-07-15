@@ -104,7 +104,7 @@ data class Player(
 @Immutable
 data class Bench(
   val cards: ImmutableMap<Int, PlayedCard> = persistentMapOf(),
-  val size: Int = 5,
+  val size: Int = 7,
 )
 
 @Immutable

@@ -1,45 +1,57 @@
 package app.deckbox.playtest.ui.composables
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.deckbox.playtest.ui.composables.components.MatLabel
+import app.deckbox.playtest.ui.composables.components.PlayMarker
 import app.deckbox.playtest.ui.model.Bench
+import app.deckbox.playtest.ui.model.PlayedCard
+import deckbox.features.playtest.ui.generated.resources.Res
+import deckbox.features.playtest.ui.generated.resources.play_mat_bench
+import org.jetbrains.compose.resources.stringResource
 
-// FIXME: TEMPORARY! SHOULD NOT KEEP THIS
-val PlayCardWidth = 50.dp
+internal val BenchSpacing = 4.dp
 
 @Composable
 internal fun Bench(
   bench: Bench,
+  onClick: (PlayedCard) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(
     modifier = modifier
-      .wrapContentHeight(),
-    horizontalArrangement = Arrangement.spacedBy(4.dp),
+      .padding(horizontal = BenchSpacing)
+      .wrapContentHeight()
+      .horizontalScroll(rememberScrollState()),
+    horizontalArrangement = Arrangement.spacedBy(BenchSpacing),
   ) {
     for (index in 0 until bench.size) {
       val card = bench.cards[index]
       if (card != null) {
-        // TODO Render
         InPlayCard(
-          modifier = Modifier.weight(1f),
           card = card,
-          onClick = {
-          },
+          onClick = { onClick(card) },
         )
       } else {
         PlayMarker(
           modifier = Modifier
-//            .width(PlayCardWidth)
-            .weight(1f)
             // The PlayMarker will force the card aspect ratio and manage it's own width
             .fillMaxHeight(),
-        )
+        ) {
+          MatLabel(
+            text = stringResource(Res.string.play_mat_bench),
+            modifier = Modifier.align(Alignment.Center),
+          )
+        }
       }
     }
   }
