@@ -3,8 +3,8 @@ package app.deckbox.playtest.ui
 import androidx.compose.runtime.Immutable
 import app.deckbox.core.model.Card
 import app.deckbox.features.decks.api.validation.DeckValidation
-import app.deckbox.playtest.ui.model.Action
-import app.deckbox.playtest.ui.model.Board
+import app.deckbox.playtest.api.model.Action
+import app.deckbox.playtest.api.model.Board
 import com.slack.circuit.runtime.CircuitUiState
 import kotlinx.collections.immutable.ImmutableList
 

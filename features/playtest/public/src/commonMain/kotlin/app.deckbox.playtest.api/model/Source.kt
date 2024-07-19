@@ -1,4 +1,4 @@
-package app.deckbox.playtest.ui.model
+package app.deckbox.playtest.api.model
 
 import app.deckbox.core.model.Card
 import kotlinx.collections.immutable.ImmutableList

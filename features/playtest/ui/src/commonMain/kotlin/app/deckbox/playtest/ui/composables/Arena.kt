@@ -16,7 +16,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.deckbox.playtest.ui.model.Board
+import app.deckbox.playtest.api.model.Board
 import com.moriatsushi.insetsx.statusBars
 
 /**

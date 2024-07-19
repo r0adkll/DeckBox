@@ -13,7 +13,7 @@ import app.deckbox.core.di.MergeActivityScope
 import app.deckbox.core.model.flatten
 import app.deckbox.features.cards.public.CardRepository
 import app.deckbox.features.decks.api.validation.DeckValidator
-import app.deckbox.playtest.ui.model.newGame
+import app.deckbox.playtest.api.model.newGame
 import com.r0adkll.kotlininject.merge.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter

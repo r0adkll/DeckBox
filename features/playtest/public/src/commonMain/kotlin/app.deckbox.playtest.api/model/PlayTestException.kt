@@ -1,4 +1,4 @@
-package app.deckbox.playtest.ui.model
+package app.deckbox.playtest.api.model
 
 sealed class PlayTestException(message: String? = null) : Exception(message) {
 

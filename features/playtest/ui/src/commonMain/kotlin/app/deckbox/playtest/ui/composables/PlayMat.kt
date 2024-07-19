@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import app.deckbox.core.model.Card
-import app.deckbox.playtest.ui.model.PlayedCard
-import app.deckbox.playtest.ui.model.Player
+import app.deckbox.playtest.api.model.PlayedCard
+import app.deckbox.playtest.api.model.Player
 import deckbox.features.playtest.ui.generated.resources.Res
 import deckbox.features.playtest.ui.generated.resources.play_mat_deck
 import deckbox.features.playtest.ui.generated.resources.play_mat_discard

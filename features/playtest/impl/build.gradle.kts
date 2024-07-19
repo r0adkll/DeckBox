@@ -17,6 +17,7 @@ kotlin {
 
         api(projects.features.cards.public)
         api(projects.features.decks.public)
+        api(projects.features.playtest.public)
 
         implementation(libs.store)
         implementation(libs.kotlinx.atomicfu)

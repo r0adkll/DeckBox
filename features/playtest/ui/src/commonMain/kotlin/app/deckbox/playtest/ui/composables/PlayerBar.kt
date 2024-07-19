@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import app.deckbox.common.compose.extensions.plus
 import app.deckbox.common.compose.widgets.OutlinedIconButton
 import app.deckbox.common.compose.widgets.SizedIcon
-import app.deckbox.playtest.ui.model.Player
+import app.deckbox.playtest.api.model.Player
 import com.moriatsushi.insetsx.navigationBars
 import deckbox.features.playtest.ui.generated.resources.Res
 import deckbox.features.playtest.ui.generated.resources.play_mat_hand

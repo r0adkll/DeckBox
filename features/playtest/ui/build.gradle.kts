@@ -9,6 +9,7 @@ kotlin {
       dependencies {
         implementation(projects.features.cards.public)
         implementation(projects.features.decks.public)
+        implementation(projects.features.playtest.public)
         implementation(projects.ui.filter)
 
         implementation(compose.components.resources)

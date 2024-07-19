@@ -45,7 +45,7 @@ import app.deckbox.core.model.Card
 import app.deckbox.core.model.SubType
 import app.deckbox.core.model.Type
 import app.deckbox.core.model.energyTypeFromCardName
-import app.deckbox.playtest.ui.model.PlayedCard
+import app.deckbox.playtest.api.model.PlayedCard
 import app.deckbox.playtest.ui.util.CardWindowUtil
 import com.seiko.imageloader.rememberImagePainter
 import kotlin.math.roundToInt
